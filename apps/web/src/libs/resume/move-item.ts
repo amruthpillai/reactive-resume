@@ -236,3 +236,49 @@ export function createPageWithSection(
 	draft.customSections.push(makeCustomSection(newSectionId, type, sectionTitle, item) as WritableDraft<CustomSection>);
 	draft.metadata.layout.pages.push({ fullWidth: false, main: [newSectionId], sidebar: [] });
 }
+
+type MoveItemInput = {
+	itemId: string;
+	type: CustomSectionType;
+	customSectionId?: string | undefined;
+	target:
+		| { type: "section"; sectionId: string }
+		| { type: "new-section"; pageIndex: number; title: string }
+		| { type: "new-page"; title: string };
+};
+
+/** Moves an item atomically, then removes only custom source sections emptied by that move. */
+export function moveItem(draft: WritableDraft<ResumeData>, input: MoveItemInput): void {
+	const { itemId, type, customSectionId, target } = input;
+	const source = customSectionId
+		? draft.customSections.find((section) => section.id === customSectionId && section.type === type)
+		: draft.sections[type as SectionType];
+	if (!source?.items.some((item) => item.id === itemId)) return;
+
+	if (target.type === "section") {
+		if (target.sectionId === (customSectionId ?? type)) return;
+		const compatible = isStandardSectionId(target.sectionId, draft.sections)
+			? target.sectionId === type
+			: draft.customSections.some((section) => section.id === target.sectionId && section.type === type);
+		if (!compatible) return;
+	} else if (target.type === "new-section" && !draft.metadata.layout.pages[target.pageIndex]) return;
+
+	const item = removeItemFromSource(draft, itemId, type, customSectionId);
+	if (!item) return;
+	if (target.type === "section") addItemToSection(draft, item, target.sectionId, type);
+	else if (target.type === "new-section")
+		createCustomSectionWithItem(draft, item, type, target.title, target.pageIndex);
+	else createPageWithSection(draft, item, type, target.title);
+
+	// Insert first so removing the source page cannot change the chosen destination index.
+	if (!customSectionId || source.items.length > 0) return;
+	draft.customSections = draft.customSections.filter((section) => section.id !== customSectionId);
+	draft.metadata.layout.pages = draft.metadata.layout.pages.filter((page, index) => {
+		const affected = page.main.includes(customSectionId) || page.sidebar.includes(customSectionId);
+		if (!affected) return true;
+		page.main = page.main.filter((sectionId) => sectionId !== customSectionId);
+		page.sidebar = page.sidebar.filter((sectionId) => sectionId !== customSectionId);
+		// Keep the header page and any page with other references, even if those sections are hidden.
+		return index === 0 || page.main.length > 0 || page.sidebar.length > 0;
+	});
+}

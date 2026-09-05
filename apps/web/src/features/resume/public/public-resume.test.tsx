@@ -15,6 +15,7 @@ type PdfViewerProps = {
 };
 
 const publicResumeMock = vi.hoisted(() => ({
+	flags: { disableSignups: false },
 	onDownloadPDF: vi.fn(),
 	PdfViewer: vi.fn<(_props: PdfViewerProps) => ReactNode>(() => null),
 	useResumeExport: vi.fn(),
@@ -29,7 +30,10 @@ const publicResumeMock = vi.hoisted(() => ({
 
 vi.mock("@tanstack/react-query", () => ({ useQuery: () => ({ data: publicResumeMock.resume }) }));
 vi.mock("@tanstack/react-router", () => ({
-	getRouteApi: () => ({ useParams: () => ({ username: "amruth", slug: "sample" }) }),
+	getRouteApi: () => ({
+		useParams: () => ({ username: "amruth", slug: "sample" }),
+		useRouteContext: () => ({ flags: publicResumeMock.flags }),
+	}),
 }));
 vi.mock("./pdf-viewer", () => ({ PdfViewer: publicResumeMock.PdfViewer }));
 vi.mock("@/libs/orpc/client", () => ({
@@ -44,6 +48,7 @@ const { PublicResumeRoute } = await import("./public-resume");
 beforeAll(() => i18n.loadAndActivate({ locale: "en", messages: {} }));
 
 beforeEach(() => {
+	publicResumeMock.flags.disableSignups = false;
 	publicResumeMock.resume = { data: sampleResumeData, name: "Sample Resume", slug: "sample" };
 	publicResumeMock.PdfViewer.mockClear();
 	publicResumeMock.useResumeExport.mockReset();
@@ -64,6 +69,20 @@ const renderPublicResumeRoute = () =>
 	);
 
 describe("PublicResumeRoute", () => {
+	it("shows the create-resume link when registration is enabled", () => {
+		renderPublicResumeRoute();
+
+		expect(screen.getByRole("link", { name: /Build your own resume/ })).toHaveAttribute("href", "/");
+	});
+
+	it("hides the create-resume link when registration is disabled", () => {
+		publicResumeMock.flags.disableSignups = true;
+		renderPublicResumeRoute();
+
+		expect(screen.queryByRole("link", { name: /Build your own resume/ })).not.toBeInTheDocument();
+		expect(screen.getByTestId("pdf-viewer")).toBeInTheDocument();
+	});
+
 	it("passes exposed source data directly to the browser viewer and export fallback", () => {
 		renderPublicResumeRoute();
 

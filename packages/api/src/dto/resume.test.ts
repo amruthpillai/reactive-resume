@@ -155,3 +155,17 @@ describe("resume DTO output validation", () => {
 		expect(resumeDto.restoreVersion.output.parse(resume)).toEqual(resume);
 	});
 });
+
+describe("resume DTO write bounds", () => {
+	it.each(["update", "import"] as const)("rejects invalid template in %s input before normalization", (operation) => {
+		const data = { ...defaultResumeData, metadata: { ...defaultResumeData.metadata, template: "unknown-template" } };
+		expect(resumeDto[operation].input.safeParse({ id: "resume-id", data }).success).toBe(false);
+	});
+
+	it("continues to accept metadata-only updates without resume data", () => {
+		expect(resumeDto.update.input.parse({ id: "resume-id", name: "Renamed" })).toEqual({
+			id: "resume-id",
+			name: "Renamed",
+		});
+	});
+});

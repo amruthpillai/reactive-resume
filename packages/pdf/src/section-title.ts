@@ -1,4 +1,5 @@
 import type { ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
+import sectionTitleCatalog from "./section-title-catalog.json";
 
 type SectionTitleResolverInput = {
 	sectionId: string;
@@ -27,7 +28,16 @@ const defaultEnglishSectionTitles: Record<"summary" | SectionType, string> = {
 };
 
 const defaultEnglishCustomSectionTitles: Record<string, string> = {
+	summary: "Summary",
 	"cover-letter": "Cover Letter",
+};
+
+const catalogs: Record<string, Record<string, string>> = sectionTitleCatalog;
+
+const defaultSectionTitleResolver: SectionTitleResolver = ({ locale, defaultEnglishTitle }) => {
+	if (!defaultEnglishTitle) return "";
+	const translated = Object.hasOwn(catalogs, locale) ? catalogs[locale]?.[defaultEnglishTitle] : undefined;
+	return translated ?? defaultEnglishTitle;
 };
 
 export const resolveSectionTitle = (
@@ -52,6 +62,7 @@ type RenderData = ResumeData & {
 
 export const getResumeSectionTitle = (data: RenderData, sectionId: string, legacyFallback?: string) => {
 	const locale = data.metadata.page.locale;
+	const resolver = data.resolveSectionTitle ?? defaultSectionTitleResolver;
 
 	if (sectionId === "summary") {
 		const defaultEnglishTitle = defaultEnglishSectionTitles.summary;
@@ -59,7 +70,7 @@ export const getResumeSectionTitle = (data: RenderData, sectionId: string, legac
 		return resolveSectionTitle(
 			data.summary.title,
 			{ sectionId, locale, sectionKind: "summary", defaultEnglishTitle },
-			data.resolveSectionTitle,
+			resolver,
 			legacyFallback,
 		);
 	}
@@ -71,7 +82,7 @@ export const getResumeSectionTitle = (data: RenderData, sectionId: string, legac
 		return resolveSectionTitle(
 			data.sections[sectionType].title,
 			{ sectionId, locale, sectionKind: "builtin", defaultEnglishTitle },
-			data.resolveSectionTitle,
+			resolver,
 			legacyFallback,
 		);
 	}
@@ -87,7 +98,7 @@ export const getResumeSectionTitle = (data: RenderData, sectionId: string, legac
 		return resolveSectionTitle(
 			customSection.title,
 			{ sectionId, locale, sectionKind: "custom", customSectionType: customSection.type, defaultEnglishTitle },
-			data.resolveSectionTitle,
+			resolver,
 			legacyFallback,
 		);
 	}

@@ -40,14 +40,7 @@ import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
 import { atsFindingItemElementId } from "@/libs/resume/ats";
-import {
-	addItemToSection,
-	createCustomSectionWithItem,
-	createPageWithSection,
-	getCompatibleMoveTargets,
-	getSourceSectionTitle,
-	removeItemFromSource,
-} from "@/libs/resume/move-item";
+import { getCompatibleMoveTargets, getSourceSectionTitle, moveItem } from "@/libs/resume/move-item";
 
 // ============================================================================
 // MoveItemSubmenu Component
@@ -85,27 +78,36 @@ function MoveItemSubmenu({ type, item, customSectionId }: MoveItemSubmenuProps) 
 	/** Handler: Move item to an existing section */
 	const handleMoveToSection = (targetSectionId: string) => {
 		updateResumeData((draft) => {
-			const removedItem = removeItemFromSource(draft, item.id, type, customSectionId);
-			if (!removedItem) return;
-			addItemToSection(draft, removedItem, targetSectionId, type);
+			moveItem(draft, {
+				itemId: item.id,
+				type,
+				customSectionId,
+				target: { type: "section", sectionId: targetSectionId },
+			});
 		});
 	};
 
 	/** Handler: Create a new custom section on an existing page and move the item there */
 	const handleNewSectionOnPage = (pageIndex: number) => {
 		updateResumeData((draft) => {
-			const removedItem = removeItemFromSource(draft, item.id, type, customSectionId);
-			if (!removedItem) return;
-			createCustomSectionWithItem(draft, removedItem, type, currentSectionTitle, pageIndex);
+			moveItem(draft, {
+				itemId: item.id,
+				type,
+				customSectionId,
+				target: { type: "new-section", title: currentSectionTitle, pageIndex },
+			});
 		});
 	};
 
 	/** Handler: Create a new page with a new custom section and move the item there */
 	const handleNewPage = () => {
 		updateResumeData((draft) => {
-			const removedItem = removeItemFromSource(draft, item.id, type, customSectionId);
-			if (!removedItem) return;
-			createPageWithSection(draft, removedItem, type, currentSectionTitle);
+			moveItem(draft, {
+				itemId: item.id,
+				type,
+				customSectionId,
+				target: { type: "new-page", title: currentSectionTitle },
+			});
 		});
 	};
 

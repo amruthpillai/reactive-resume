@@ -213,12 +213,14 @@ const properties = {
 			"flex-shrink",
 			"flex-basis",
 			"justify-content",
-			"gap",
-			"row-gap",
-			"column-gap",
 		],
 		{ category: "flexbox", inheritable: false, appliesTo: linkContainerNodes },
 	),
+	...entries(["gap", "row-gap", "column-gap"], {
+		category: "flexbox",
+		inheritable: false,
+		appliesTo: [...linkContainerNodes, "level"],
+	}),
 	...entries(["aspect-ratio", "bottom"], {
 		category: "layout",
 		inheritable: false,

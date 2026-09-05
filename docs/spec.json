@@ -3466,6 +3466,10 @@
 											"fontFamily"
 										],
 										"description": "The typography for the headings of the resume."
+									},
+									"hyphenation": {
+										"description": "Enable automatic PDF hyphenation using the resume language. Currently supports German. Defaults to false.",
+										"type": "boolean"
 									}
 								},
 								"required": [
@@ -13799,6 +13803,10 @@
 																		"lineHeight"
 																	],
 																	"description": "The typography for the headings of the resume."
+																},
+																"hyphenation": {
+																	"type": "boolean",
+																	"description": "Enable automatic PDF hyphenation using the resume language. Currently supports German. Defaults to false."
 																}
 															},
 															"required": [
@@ -17332,6 +17340,10 @@
 																		"lineHeight"
 																	],
 																	"description": "The typography for the headings of the resume."
+																},
+																"hyphenation": {
+																	"type": "boolean",
+																	"description": "Enable automatic PDF hyphenation using the resume language. Currently supports German. Defaults to false."
 																}
 															},
 															"required": [
@@ -21021,6 +21033,10 @@
 																		"lineHeight"
 																	],
 																	"description": "The typography for the headings of the resume."
+																},
+																"hyphenation": {
+																	"type": "boolean",
+																	"description": "Enable automatic PDF hyphenation using the resume language. Currently supports German. Defaults to false."
 																}
 															},
 															"required": [
@@ -24681,6 +24697,10 @@
 																		"lineHeight"
 																	],
 																	"description": "The typography for the headings of the resume."
+																},
+																"hyphenation": {
+																	"type": "boolean",
+																	"description": "Enable automatic PDF hyphenation using the resume language. Currently supports German. Defaults to false."
 																}
 															},
 															"required": [
@@ -28629,6 +28649,10 @@
 																		"lineHeight"
 																	],
 																	"description": "The typography for the headings of the resume."
+																},
+																"hyphenation": {
+																	"type": "boolean",
+																	"description": "Enable automatic PDF hyphenation using the resume language. Currently supports German. Defaults to false."
 																}
 															},
 															"required": [
@@ -28848,6 +28872,210 @@
 								"schema": {
 									"type": "number",
 									"description": "The number of GitHub stars."
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/health": {
+			"get": {
+				"operationId": "getHealth",
+				"tags": [
+					"System"
+				],
+				"summary": "Get application health and version",
+				"description": "Checks database and storage availability. Does not require authentication.",
+				"servers": [
+					{
+						"url": "https://rxresu.me"
+					}
+				],
+				"security": [],
+				"responses": {
+					"200": {
+						"description": "The application and its dependencies are healthy.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"service": {
+											"type": "string",
+											"enum": [
+												"reactive-resume"
+											]
+										},
+										"version": {
+											"type": "string",
+											"description": "The running application's build version."
+										},
+										"status": {
+											"type": "string",
+											"enum": [
+												"healthy",
+												"unhealthy"
+											]
+										},
+										"timestamp": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"uptime": {
+											"type": "string"
+										},
+										"database": {
+											"type": "object",
+											"properties": {
+												"status": {
+													"type": "string",
+													"enum": [
+														"healthy",
+														"unhealthy"
+													]
+												},
+												"latencyMs": {
+													"type": "number"
+												},
+												"error": {
+													"type": "string",
+													"description": "Generic failure message. Detailed diagnostics are logged on the server."
+												}
+											},
+											"required": [
+												"status",
+												"latencyMs"
+											],
+											"additionalProperties": true
+										},
+										"storage": {
+											"type": "object",
+											"properties": {
+												"status": {
+													"type": "string",
+													"enum": [
+														"healthy",
+														"unhealthy"
+													]
+												},
+												"latencyMs": {
+													"type": "number"
+												},
+												"error": {
+													"type": "string",
+													"description": "Generic failure message. Detailed diagnostics are logged on the server."
+												}
+											},
+											"required": [
+												"status",
+												"latencyMs"
+											],
+											"additionalProperties": true
+										}
+									},
+									"required": [
+										"service",
+										"version",
+										"status",
+										"timestamp",
+										"uptime",
+										"database",
+										"storage"
+									]
+								}
+							}
+						}
+					},
+					"503": {
+						"description": "One or more application dependencies are unhealthy.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"service": {
+											"type": "string",
+											"enum": [
+												"reactive-resume"
+											]
+										},
+										"version": {
+											"type": "string",
+											"description": "The running application's build version."
+										},
+										"status": {
+											"type": "string",
+											"enum": [
+												"healthy",
+												"unhealthy"
+											]
+										},
+										"timestamp": {
+											"type": "string",
+											"format": "date-time"
+										},
+										"uptime": {
+											"type": "string"
+										},
+										"database": {
+											"type": "object",
+											"properties": {
+												"status": {
+													"type": "string",
+													"enum": [
+														"healthy",
+														"unhealthy"
+													]
+												},
+												"latencyMs": {
+													"type": "number"
+												},
+												"error": {
+													"type": "string",
+													"description": "Generic failure message. Detailed diagnostics are logged on the server."
+												}
+											},
+											"required": [
+												"status",
+												"latencyMs"
+											],
+											"additionalProperties": true
+										},
+										"storage": {
+											"type": "object",
+											"properties": {
+												"status": {
+													"type": "string",
+													"enum": [
+														"healthy",
+														"unhealthy"
+													]
+												},
+												"latencyMs": {
+													"type": "number"
+												},
+												"error": {
+													"type": "string",
+													"description": "Generic failure message. Detailed diagnostics are logged on the server."
+												}
+											},
+											"required": [
+												"status",
+												"latencyMs"
+											],
+											"additionalProperties": true
+										}
+									},
+									"required": [
+										"service",
+										"version",
+										"status",
+										"timestamp",
+										"uptime",
+										"database",
+										"storage"
+									]
 								}
 							}
 						}

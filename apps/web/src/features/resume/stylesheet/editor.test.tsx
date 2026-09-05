@@ -6,8 +6,10 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { EditorView } from "@codemirror/view";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
+import { compileStylesheet } from "@reactive-resume/resume/stylesheet";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { TooltipProvider } from "@reactive-resume/ui/components/tooltip";
+import { collectCompiledColorTokens } from "./color-tokens";
 import StylesheetEditorShell, { StylesheetCodeEditor } from "./editor";
 import { LegacyStylesheetBanner } from "./legacy-banner";
 import { StylesheetStatus } from "./status";
@@ -109,6 +111,25 @@ beforeEach(() => {
 
 const renderWithI18n = (element: React.ReactNode) => render(<I18nProvider i18n={i18n}>{element}</I18nProvider>);
 
+function renderColorEditor(source: string) {
+	const onChange = vi.fn();
+	const editor = (value: string) => (
+		<I18nProvider i18n={i18n}>
+			<StylesheetCodeEditor
+				value={value}
+				diagnostics={[]}
+				colorTokens={collectCompiledColorTokens(value, compileStylesheet({ languageVersion: 1, text: value }).program)}
+				theme="light"
+				onChange={onChange}
+				onUndo={vi.fn()}
+				onRedo={vi.fn()}
+			/>
+		</I18nProvider>
+	);
+	const result = render(editor(source));
+	return { ...result, onChange, replaceSource: (value: string) => result.rerender(editor(value)) };
+}
+
 describe("stylesheet editor status", () => {
 	it("explains that fatal source falls back to base styles", () => {
 		renderWithI18n(<StylesheetStatus mode="semantic" status="idle" diagnostics={[fatalError]} />);
@@ -147,6 +168,84 @@ describe("stylesheet editor status", () => {
 });
 
 describe("StylesheetCodeEditor", () => {
+	it("preserves contextual currentcolor without exposing an editable literal swatch", () => {
+		const source = "@version 1;\nsection { color: red; border-color: currentcolor; }";
+		expect(compileStylesheet({ languageVersion: 1, text: source }).diagnostics).toEqual([]);
+		const { onChange } = renderColorEditor(source);
+
+		expect(screen.getByRole("button", { name: "Edit color red" })).toBeInTheDocument();
+		expect(screen.queryByRole("button", { name: "Edit color currentcolor" })).not.toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: "Semantic CSS stylesheet" })).toHaveTextContent(
+			"border-color: currentcolor",
+		);
+		expect(onChange).not.toHaveBeenCalled();
+	});
+
+	it("removes the temporary color trigger when the picker closes", async () => {
+		const { container } = renderColorEditor("@version 1;\nsection { color: #f00; }");
+		fireEvent.click(screen.getByRole("button", { name: "Edit color #f00" }));
+		fireEvent.click(await screen.findByRole("button", { name: "Use color rgba(231, 0, 11, 1)" }));
+		fireEvent.keyDown(document.activeElement ?? document.body, { key: "Escape" });
+
+		await waitFor(() => expect(screen.queryByText("Presets")).not.toBeInTheDocument());
+		expect(container.querySelector("[data-semantic-css-color-picker-trigger]")).not.toBeInTheDocument();
+	});
+
+	it("keeps the picker open for successive presets without replacing the next color", async () => {
+		const source = "@version 1;\nsection { color: #f00; background-color: #fff; }";
+		const { onChange, replaceSource } = renderColorEditor(source);
+		fireEvent.click(screen.getByRole("button", { name: "Edit color #f00" }));
+		fireEvent.click(await screen.findByRole("button", { name: "Use color rgba(0, 0, 0, 1)" }));
+		const first = source.replace("#f00", "#000000");
+		expect(onChange).toHaveBeenLastCalledWith(first);
+		replaceSource(first);
+
+		fireEvent.click(screen.getByRole("button", { name: "Use color rgba(231, 0, 11, 1)" }));
+		expect(onChange).toHaveBeenLastCalledWith(source.replace("#f00", "#e7000b"));
+		expect(screen.getByText("Presets")).toBeInTheDocument();
+	});
+
+	it.each([
+		["undo", "rgba(231, 0, 11, 1)", "#f00"],
+		["redo", "#f00", "rgba(231, 0, 11, 1)"],
+	])("closes a stale selection when %s replaces the document", async (_action, initial, replacement) => {
+		const source = `@version 1;\nsection { color: ${initial}; background-color: #fff; }`;
+		const { container, onChange, replaceSource } = renderColorEditor(source);
+		fireEvent.click(screen.getByRole("button", { name: `Edit color ${initial}` }));
+		await screen.findByText("Presets");
+		const nextSource = source.replace(initial, replacement);
+		replaceSource(nextSource);
+
+		await waitFor(() => expect(screen.queryByText("Presets")).not.toBeInTheDocument());
+		expect(container.querySelector("[data-semantic-css-color-picker-trigger]")).not.toBeInTheDocument();
+		expect(onChange).not.toHaveBeenCalled();
+
+		fireEvent.click(screen.getByRole("button", { name: "Edit color #fff" }));
+		fireEvent.click(await screen.findByRole("button", { name: "Use color rgba(0, 0, 0, 1)" }));
+		expect(onChange).toHaveBeenLastCalledWith(nextSource.replace("#fff", "#000000"));
+	});
+
+	it("closes the picker after text edits and rejects stale compiler color ranges", async () => {
+		const source = "@version 1;\nsection { color: #f00; background-color: #fff; }";
+		const { container, onChange } = renderColorEditor(source);
+		fireEvent.click(screen.getByRole("button", { name: "Edit color #f00" }));
+		await screen.findByText("Presets");
+		const view = EditorView.findFromDOM(screen.getByRole("textbox", { name: "Semantic CSS stylesheet" }));
+		if (!view) throw new Error("Missing editor view");
+		const from = source.indexOf("#f00");
+		act(() => view.dispatch({ changes: { from, to: from + 4, insert: "#00f" } }));
+
+		await waitFor(() => expect(screen.queryByText("Presets")).not.toBeInTheDocument());
+		expect(container.querySelector("[data-semantic-css-color-picker-trigger]")).not.toBeInTheDocument();
+		onChange.mockClear();
+
+		// The compile worker has not sent updated tokens yet; the old swatch must not overwrite the edited color.
+		fireEvent.click(screen.getByRole("button", { name: "Edit color #f00" }));
+		fireEvent.click(await screen.findByRole("button", { name: "Use color rgba(0, 0, 0, 1)" }));
+		expect(view.state.doc.toString()).toBe(source.replace("#f00", "#00f"));
+		expect(onChange).not.toHaveBeenCalled();
+	});
+
 	it("owns one LTR EditorView and ignores externally replaced documents", () => {
 		const onChange = vi.fn();
 		const destroy = vi.spyOn(EditorView.prototype, "destroy");
@@ -203,7 +302,7 @@ describe("StylesheetCodeEditor", () => {
 		const source = "section { color: #f00; background-color: #fff; }";
 		const first = source.indexOf("#f00");
 		const second = source.indexOf("#fff");
-		const { container } = render(
+		const { container } = renderWithI18n(
 			<StylesheetCodeEditor
 				value={source}
 				diagnostics={[]}
@@ -220,9 +319,10 @@ describe("StylesheetCodeEditor", () => {
 		const swatches = container.querySelectorAll<HTMLButtonElement>(".semantic-css-color-swatch");
 		expect(swatches).toHaveLength(2);
 
-		swatches[0]?.click();
+		if (!swatches[0] || !swatches[1]) throw new Error("Missing color swatches");
+		fireEvent.click(swatches[0]);
 		await waitFor(() => expect(container.querySelectorAll("[data-semantic-css-color-picker-trigger]")).toHaveLength(1));
-		swatches[1]?.click();
+		fireEvent.click(swatches[1]);
 		await waitFor(() => expect(container.querySelectorAll("[data-semantic-css-color-picker-trigger]")).toHaveLength(1));
 	});
 });

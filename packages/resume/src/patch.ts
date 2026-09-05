@@ -2,7 +2,7 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { JsonPatchError, Operation } from "fast-json-patch";
 import jsonpatch from "fast-json-patch";
 import z from "zod";
-import { parseResumeData } from "@reactive-resume/schema/resume/data";
+import { parseResumeDataForWrite } from "@reactive-resume/schema/resume/write";
 
 /**
  * A Zod schema that models JSON Patch (RFC 6902) operations as a discriminated union on `op`.
@@ -86,8 +86,8 @@ function toResumePatchError(error: JsonPatchError): ResumePatchError {
  * Applies an array of JSON Patch (RFC 6902) operations to a `ResumeData` object.
  *
  * This function validates the operations before applying them, then validates the
- * resulting document against the `resumeDataSchema` to ensure the patched data is
- * still a valid resume.
+ * resulting document against the published write constraints, rejecting invalid
+ * values rather than replacing them with read-time defaults.
  *
  * The original `data` object is not mutated; a deep clone is created internally.
  *
@@ -118,7 +118,7 @@ export function applyResumePatches(data: ResumeData, operations: Operation[]): R
 	}
 
 	try {
-		return parseResumeData(patched);
+		return parseResumeDataForWrite(patched);
 	} catch (error) {
 		throw new Error(`Patch produced invalid resume data: ${error instanceof Error ? error.message : String(error)}`, {
 			cause: error,

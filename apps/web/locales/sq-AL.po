@@ -8,7 +8,7 @@ msgstr ""
 "Language: sq\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 15:47\n"
 "Last-Translator: \n"
 "Language-Team: Albanian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -31,6 +31,11 @@ msgstr "\"{0} · {1}\" dhe e gjithë kronologjia e saj do të fshihen përgjithm
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "(hapet në skedë të re)"
+
+#. placeholder {0}: selected.length
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "{0, plural, one {# application to export} other {# applications to export}}"
+msgstr ""
 
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -519,6 +524,10 @@ msgstr "Ofruesit e inteligjencës artificiale kërkojnë që REDIS_URL dhe ENCRY
 msgid "Albanian"
 msgstr "Shqip"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "All applications (including archived)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
 msgstr "Lejo akses publik"
@@ -568,7 +577,7 @@ msgstr "Antropik Claude"
 msgid "Any tag"
 msgstr "Çdo etiketë"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "Kushdo që hap URL-në publike do të ketë nevojë për këtë fjalëkalim."
 
@@ -618,6 +627,14 @@ msgstr "Aplikimi u shtua në procesin tuaj."
 msgid "Application Copilot"
 msgstr "Kopilot i aplikimeve"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date from"
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date to"
+msgstr ""
+
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Application deleted."
@@ -645,6 +662,10 @@ msgstr "Aplikimet me kalimin e kohës"
 #: src/features/applications/components/insights-view.tsx
 msgid "Applications sent per week (last 8 weeks)"
 msgstr "Aplikimet e dërguara për javë (8 javët e fundit)"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Applications to export"
+msgstr ""
 
 #: src/features/applications/components/table-view.tsx
 msgid "Applied"
@@ -921,7 +942,9 @@ msgstr "A mund ta eksportoj CV-në time në PDF?"
 #: src/dialogs/resume/sections/section-item-dialog.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
+#: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1130,10 @@ msgstr "Paleta e komandave - {currentPage}"
 msgid "Community"
 msgstr "Komuniteti"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr "Kompakt"
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1167,10 @@ msgstr "Kompresoni ose hiqni imazhet e mëdha për t'i mbajtur ngarkimet të shp
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "Konfirmo"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr "Konfirmo fjalëkalimin"
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1520,6 +1551,10 @@ msgstr "Prit foton"
 msgid "CSV data"
 msgstr "Të dhënat CSV"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Current filters"
+msgstr ""
+
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "Fjalëkalimi aktual"
@@ -1527,6 +1562,10 @@ msgstr "Fjalëkalimi aktual"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Current stage"
 msgstr "Faza aktuale"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Currently available for German resumes. Uses the language set in Page."
+msgstr "Aktualisht i disponueshëm për rezumet gjermane. Përdor gjuhën e vendosur në faqe."
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1794,6 +1833,14 @@ msgstr "Shkarko"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Shkarkoni një kopje të të gjitha të dhënave tuaja, duke përfshirë profilin tuaj dhe çdo CV, si skedar JSON."
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download application details, contacts, notes, and timeline history as CSV."
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download CSV"
+msgstr ""
+
 #. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download options"
@@ -1978,8 +2025,8 @@ msgid "Enabled"
 msgstr "I aktivizuar"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "Po aktivizohet mbrojtja me fjalëkalim..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -2075,6 +2122,14 @@ msgstr "Skadon më {0}"
 #: src/libs/resume/section.tsx
 msgid "Export"
 msgstr "Exporto"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Export applications"
+msgstr ""
+
+#: src/routes/dashboard/applications/index.tsx
+msgid "Export CSV"
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
@@ -2649,6 +2704,10 @@ msgstr "https://gateway.example.com/v1"
 #: src/libs/locale.ts
 msgid "Hungarian"
 msgstr "Hungarisht"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Hyphenation"
+msgstr "Ndërprerja e fjalëve"
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3593,7 @@ msgstr "Nuk jeni i sigurt se çfarë të shkruani?"
 msgid "Note"
 msgstr "Shënim"
 
+#: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3748,14 +3808,19 @@ msgstr "Çelësat e kalimit & 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "Fjalëkalimi"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "Fjalëkalimi nuk mund të jetë bosh."
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr "Fjala e fshehtë duhet të ketë midis 6 dhe 64 karaktere."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3833,10 @@ msgstr "Mbrojtja me fjalëkalim është çaktivizuar."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "Mbrojtja me fjalëkalim është aktivizuar."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr "Fjalëkalimet nuk përputhen."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4057,7 @@ msgstr "Shtyllë progresi"
 msgid "Projects"
 msgstr "Projekte"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "Mbroni CV-në tuaj me një fjalëkalim"
 
@@ -4652,6 +4721,7 @@ msgstr "Serbisht"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "Vendosni një fjalëkalim nëse doni që URL-në publike ta hapin vetëm ata që e dinë."
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +5010,7 @@ msgstr "Diçka shkoi keq gjatë hyrjes suaj. Ju lutemi provoni sërish."
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Diçka shkoi keq. Ju lutemi provoni përsëri."
@@ -5037,6 +5108,10 @@ msgstr "Filloni të ndërtoni CV-në tuaj duke i dhënë një emër."
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Start building your resume from scratch"
 msgstr "Filloni të ndërtoni CV-në tuaj nga e para"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Start date must be on or before end date."
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Start each one with a concrete verb: built, led, reduced, migrated."
@@ -6049,6 +6124,10 @@ msgstr "Përdorni A4 ose US Letter që struktura t'i mbijetojë rikthimit."
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "Përdorni të paktën 9pt."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr "Përdorni midis 6 dhe 64 karaktereve."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

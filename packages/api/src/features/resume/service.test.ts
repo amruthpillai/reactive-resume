@@ -237,6 +237,17 @@ it("imports", () => {
 });
 
 describe("create", () => {
+	it("rejects out-of-range values before creating any record", async () => {
+		const data = structuredClone(defaultResumeData);
+		data.metadata.page.marginX = 500;
+		dbMock.insert.mockReturnValue({ values: vi.fn(() => Promise.resolve()) });
+		await expect(
+			resumeService.create({ userId: "u1", name: "Resume", slug: "resume", tags: [], locale: "en-US", data }),
+		).rejects.toMatchObject({ code: "BAD_REQUEST", status: 400 });
+		expect(dbMock.insert).not.toHaveBeenCalled();
+		expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
+	});
+
 	it("copies stylesheet content", async () => {
 		const data = createSemanticResumeData();
 		const values = vi.fn((_input: unknown) => Promise.resolve());
@@ -545,6 +556,22 @@ describe("update", () => {
 		);
 	});
 
+	it("rejects out-of-range PUT data before any update or notification", async () => {
+		const data = structuredClone(defaultResumeData);
+		data.metadata.typography.body.fontSize = 999;
+		const select = createLockedSelectChain([{ data: defaultResumeData, isLocked: false }]);
+		const update = createUpdateChain([createResumeRow(defaultResumeData)]);
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+			callback({ select: () => select.chain, update: () => update.chain }),
+		);
+		await expect(resumeService.update({ id: "r1", userId: "u1", data, skipAutoSnapshot: true })).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+			status: 400,
+		});
+		expect(update.set).not.toHaveBeenCalled();
+		expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
+	});
+
 	it("rejects renderer-unsafe data before updating the JSONB column", async () => {
 		const select = createLockedSelectChain([{ data: defaultResumeData, isLocked: false, updatedAt: new Date() }]);
 		const update = createUpdateChain([createResumeRow(defaultResumeData)]);
@@ -608,6 +635,10 @@ describe("patch", () => {
 		const lockedSelect = createLockedSelectChain([existing]);
 		const row = createResumeRow(existing.data, existing.updatedAt);
 		const update = createUpdateChain([row]);
+		update.returning.mockImplementation(() => {
+			const written = update.set.mock.calls.at(-1)?.[0] as { data: ResumeData };
+			return Promise.resolve([{ ...row, data: written.data }]);
+		});
 		const versionSelect = {
 			from: () => ({ where: () => ({ orderBy: () => ({ limit: () => [] }) }) }),
 		};
@@ -620,6 +651,49 @@ describe("patch", () => {
 
 		return { tx, update };
 	};
+
+	it.each([
+		["/metadata/template", "unknown-template"],
+		["/metadata/page/format", "a3"],
+		["/metadata/page/marginX", 500],
+		["/metadata/typography/body/fontSize", 999],
+	] as const)("rejects an invalid patch at %s atomically", async (path, value) => {
+		const data = structuredClone(defaultResumeData);
+		data.metadata.template = "chikorita";
+		data.metadata.page.marginX = 40;
+		const before = structuredClone(data);
+		const { tx, update } = createPatchTx({ data, isLocked: false, updatedAt: new Date() });
+		await expect(
+			resumeService.patchInTransaction(tx as never, {
+				id: "r1",
+				userId: "u1",
+				operations: [
+					{ op: "replace", path: "/basics/name", value: "Must not persist" },
+					{ op: "replace", path, value },
+				],
+			}),
+		).rejects.toMatchObject({ code: "INVALID_PATCH_OPERATIONS", status: 400 });
+		expect(update.set).not.toHaveBeenCalled();
+		expect(tx.insert).not.toHaveBeenCalled();
+		expect(data).toEqual(before);
+	});
+
+	it("normalizes stored legacy data before validating newly submitted patch values", async () => {
+		const data = structuredClone(defaultResumeData);
+		data.metadata.page.marginX = 500;
+		const { tx, update } = createPatchTx({ data, isLocked: false, updatedAt: new Date() });
+		await resumeService.patchInTransaction(tx as never, {
+			id: "r1",
+			userId: "u1",
+			operations: [{ op: "replace", path: "/basics/name", value: "Ada" }],
+		});
+		expect(update.set).toHaveBeenCalledWith({
+			data: expect.objectContaining({
+				basics: expect.objectContaining({ name: "Ada" }),
+				metadata: expect.objectContaining({ page: expect.objectContaining({ marginX: 14 }) }),
+			}),
+		});
+	});
 
 	it("persists stylesheet source through the ordinary patch path", async () => {
 		const data = createSemanticResumeData();

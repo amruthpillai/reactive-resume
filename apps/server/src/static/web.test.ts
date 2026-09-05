@@ -151,9 +151,9 @@ describe("web app fallback classification", () => {
 			expect(html).toContain('<link rel="canonical" href="https://rxresu.me/jane/resume">');
 			expect(html).toContain('<meta property="og:type" content="profile">');
 			expect(html).toContain('<meta property="og:title" content="Jane Doe — Staff Engineer">');
-			expect(html).toContain('<meta property="og:image" content="https://rxresu.me/templates/jpg/azurill.jpg">');
+			expect(html).toContain('<meta property="og:image" content="https://rxresu.me/opengraph/banner.jpg">');
 			expect(html).toContain('<meta name="twitter:card" content="summary_large_image">');
-			expect(html).toContain('<meta name="twitter:image" content="https://rxresu.me/templates/jpg/azurill.jpg">');
+			expect(html).toContain('<meta name="twitter:image" content="https://rxresu.me/opengraph/banner.jpg">');
 		});
 
 		it("escapes user-authored values so resume content cannot break out of the attribute", async () => {

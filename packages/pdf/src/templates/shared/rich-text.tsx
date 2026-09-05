@@ -1,8 +1,7 @@
 import type { Style } from "@react-pdf/types";
 import type { ReactElement, ReactNode } from "react";
 import { cloneElement, isValidElement } from "react";
-import { Html } from "react-pdf-html";
-import { Link as PdfLink, Text as PdfText, View } from "#react-pdf-renderer";
+import { View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { resolvedPdfFlowProps, resolvedPdfTextProps } from "../../semantic/adapter";
 import {
@@ -14,6 +13,7 @@ import {
 } from "../../semantic/context";
 import { semanticNodeKeys } from "../../semantic/node-keys";
 import { getRichTextSemanticNodeKey } from "../../semantic/rich-text-keys";
+import { Html, Link as PdfLink, Text as PdfText } from "../../text";
 import { useSectionStyleRule, useTemplateStyle } from "./context";
 import {
 	normalizeRichTextHtml,
@@ -74,7 +74,7 @@ const applyRtlDirectionRecursively = (node: ReactNode): ReactNode => {
 };
 
 export const RichText = ({ children, semanticField }: RichTextProps) => {
-	const { metadata, rtl } = useRender();
+	const { metadata, rtl, hyphenationCallback } = useRender();
 	const parentNodeKey = useSemanticNodeKey();
 	const fieldNodeKey =
 		parentNodeKey && semanticField ? semanticNodeKeys.field(parentNodeKey, semanticField) : undefined;
@@ -108,7 +108,10 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 	);
 	const proseSpacing = createRichTextProseSpacing(bodyLineHeight);
 
-	const normalizedHtml = normalizeRichTextHtml(children, { direction: rtl ? "rtl" : "ltr" });
+	const normalizedHtml = normalizeRichTextHtml(children, {
+		direction: rtl ? "rtl" : "ltr",
+		softHyphens: metadata.typography.hyphenation === true && /^de(?:-|$)/i.test(metadata.page.locale),
+	});
 	const html = richTextNodeKey
 		? projectNormalizedRichTextHtml(normalizedHtml, richTextNodeKey, renderedChildKeysFor)
 		: normalizedHtml;
@@ -221,7 +224,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 						...props,
 						style: props.style,
 						semanticStyle: resolved.style,
-						textProps: resolvedPdfTextProps(resolved),
+						textProps: { ...resolvedPdfTextProps(resolved), hyphenationCallback },
 						rtl,
 						...(rtlTextWrapStyle ? { rtlTextWrapStyle } : {}),
 						...(rtl ? { applyRtlDirection: applyRtlDirectionRecursively } : {}),

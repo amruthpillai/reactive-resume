@@ -8,7 +8,7 @@ msgstr ""
 "Language: az\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 15:47\n"
 "Last-Translator: \n"
 "Language-Team: Azerbaijani\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -31,6 +31,11 @@ msgstr "\"{0} · {1}\" və onun tam zaman xətti həmişəlik silinəcək. Bu ə
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "(yeni vərəqdə açılır)"
+
+#. placeholder {0}: selected.length
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "{0, plural, one {# application to export} other {# applications to export}}"
+msgstr ""
 
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -519,6 +524,10 @@ msgstr "Süni intellekt provayderləri REDIS_URL və ENCRYPTION_SECRET-in konfiq
 msgid "Albanian"
 msgstr "Albanca"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "All applications (including archived)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
 msgstr "İctimai Girişi İcazə ver"
@@ -568,7 +577,7 @@ msgstr "Antropik Klod"
 msgid "Any tag"
 msgstr "İstənilən etiket"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "İctimai URL-i açan hər kəsə bu parol lazım olacaq."
 
@@ -618,6 +627,14 @@ msgstr "Müraciət prosesinizə əlavə edildi."
 msgid "Application Copilot"
 msgstr "Müraciət Kopilotu"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date from"
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date to"
+msgstr ""
+
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Application deleted."
@@ -645,6 +662,10 @@ msgstr "Zaman üzrə müraciətlər"
 #: src/features/applications/components/insights-view.tsx
 msgid "Applications sent per week (last 8 weeks)"
 msgstr "Həftəlik göndərilən müraciətlər (son 8 həftə)"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Applications to export"
+msgstr ""
 
 #: src/features/applications/components/table-view.tsx
 msgid "Applied"
@@ -921,7 +942,9 @@ msgstr "Özgeçmişimi PDF‑ə ixrac edə bilərəm?"
 #: src/dialogs/resume/sections/section-item-dialog.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
+#: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1130,10 @@ msgstr "Əmrlər palitrası - {currentPage}"
 msgid "Community"
 msgstr "İcma"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr "Sıx"
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1167,10 @@ msgstr "Yükləmələri sürətli saxlamaq üçün böyük şəkilləri sıxın 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "Təsdiqlə"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr "Şifrəni təsdiqləyin"
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1520,6 +1551,10 @@ msgstr "Şəkli kəsin"
 msgid "CSV data"
 msgstr "CSV məlumatları"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Current filters"
+msgstr ""
+
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "Cari Parol"
@@ -1527,6 +1562,10 @@ msgstr "Cari Parol"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Current stage"
 msgstr "Cari mərhələ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Currently available for German resumes. Uses the language set in Page."
+msgstr "Hazırda alman dilindəki CV-lər üçün mövcuddur. Səhifədə təyin olunmuş dili istifadə edir."
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1794,6 +1833,14 @@ msgstr "Endir"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Profiliniz və hər bir CV-niz daxil olmaqla bütün məlumatlarınızın surətini JSON faylı olaraq yükləyin."
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download application details, contacts, notes, and timeline history as CSV."
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download CSV"
+msgstr ""
+
 #. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download options"
@@ -1978,8 +2025,8 @@ msgid "Enabled"
 msgstr "Aktiv edilib"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "Parol qorunması aktivləşdirilir..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -2075,6 +2122,14 @@ msgstr "{0} tarixində başa çatır"
 #: src/libs/resume/section.tsx
 msgid "Export"
 msgstr "İxrac"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Export applications"
+msgstr ""
+
+#: src/routes/dashboard/applications/index.tsx
+msgid "Export CSV"
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
@@ -2649,6 +2704,10 @@ msgstr "https://gateway.example.com/v1"
 #: src/libs/locale.ts
 msgid "Hungarian"
 msgstr "Macar"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Hyphenation"
+msgstr "Birləşdirilmiş bölmə"
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3593,7 @@ msgstr "Nə yazacağınızdan əmin deyilsiniz?"
 msgid "Note"
 msgstr "Qeyd"
 
+#: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3748,14 +3808,19 @@ msgstr "Keçid Açarları və 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "Parol"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "Parol boş ola bilməz."
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr "Şifrə 6 ilə 64 simvol arasında olmalıdır."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3833,10 @@ msgstr "Parol qorunması deaktiv edilib."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "Parol qorunması aktiv edilib."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr "Şifrələr uyğun gəlmir."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4057,7 @@ msgstr "Proqres Zolağı"
 msgid "Projects"
 msgstr "Layihələr"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "CV-nizi parolla qoruyun"
 
@@ -4652,6 +4721,7 @@ msgstr "Serb"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "İctimai URL-i yalnız parolu bilənlərin açmasını istəyirsinizsə, parol təyin edin."
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +5010,7 @@ msgstr "Sizi daxil edərkən nəsə səhv getdi. Zəhmət olmasa yenidən cəhd 
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Nəsə səhv getdi. Zəhmət olmasa, yenidən cəhd edin."
@@ -5037,6 +5108,10 @@ msgstr "Özgeçmişinizi ona ad verərək qurmağa başlayın."
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Start building your resume from scratch"
 msgstr "Özgeçmişinizi sıfırdan qurmağa başlayın"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Start date must be on or before end date."
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Start each one with a concrete verb: built, led, reduced, migrated."
@@ -6049,6 +6124,10 @@ msgstr "Düzənin yenidən render edildikdə qorunması üçün A4 və ya US Let
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "Ən azı 9pt istifadə edin."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr "6 ilə 64 simvol arasında istifadə edin."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

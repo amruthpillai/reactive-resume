@@ -1,6 +1,20 @@
 import { ORPCError } from "@orpc/client";
 
 export function getReadableErrorMessage(error: unknown, fallback: string): string {
+	if (error instanceof ORPCError && error.code === "BAD_REQUEST") {
+		const data: unknown = error.data;
+		if (typeof data === "object" && data !== null && "issues" in data && Array.isArray(data.issues)) {
+			const messages = new Set<string>();
+			for (const issue of data.issues) {
+				if (typeof issue !== "object" || issue === null || typeof issue.message !== "string") continue;
+				const message = issue.message.trim();
+				if (message) messages.add(message);
+				if (messages.size === 3) break;
+			}
+			if (messages.size > 0) return [...messages].join(" ");
+		}
+	}
+
 	if (typeof error === "string" && error) return error;
 	if (error instanceof Error && error.message) return error.message;
 	// Better Auth client errors are plain objects ({ code, message, status }), not Error instances.

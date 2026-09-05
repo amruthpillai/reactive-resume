@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import z from "zod";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
+import { writableResumeDataSchema } from "@reactive-resume/schema/resume/write";
 
 // Spec generation reads procedure contracts without executing authentication. Keep the
 // provider's resource seeding out of this unit test; real OAuth initialization is covered
@@ -85,6 +86,29 @@ describe("generateOpenApiSpec", () => {
 		});
 	}, 15_000);
 
+	it("documents the public health endpoint at its actual URL", async () => {
+		const spec = await generateSpec();
+		const health = spec.paths?.["/api/health"]?.get;
+
+		expect(health).toMatchObject({
+			operationId: "getHealth",
+			security: [],
+			servers: [{ url: "https://rxresu.me" }],
+		});
+		for (const status of ["200", "503"]) {
+			expect(health?.responses?.[status]).toMatchObject({
+				content: {
+					"application/json": {
+						schema: {
+							required: expect.arrayContaining(["service", "version", "status"]),
+							properties: { version: { type: "string" } },
+						},
+					},
+				},
+			});
+		}
+	});
+
 	it("uses the canonical input-side ResumeData schema in update requests", async () => {
 		const spec = (await generateSpec()) as GeneratedSpecView;
 		const { $schema: _dialect, ...canonicalInputSchema } = createResumeDataJsonSchema();
@@ -118,6 +142,18 @@ describe("generateOpenApiSpec", () => {
 		};
 
 		expect(schema.safeParse(mismatched).success).toBe(false);
+	});
+
+	it("enforces the same submitted bounds as the published request schema", async () => {
+		const spec = (await generateSpec()) as GeneratedSpecView;
+		const published = z.fromJSONSchema(spec.components?.schemas?.ResumeData as Parameters<typeof z.fromJSONSchema>[0]);
+		for (const marginX of [0, 100, -1, 500]) {
+			const data = structuredClone(defaultResumeData);
+			data.metadata.page.marginX = marginX;
+			const expected = marginX === 0 || marginX === 100;
+			expect(published.safeParse(data).success).toBe(expected);
+			expect(writableResumeDataSchema.safeParse(data).success).toBe(expected);
+		}
 	});
 
 	it("does not publish impossible request schemas", async () => {

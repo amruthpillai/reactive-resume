@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 15:47\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -31,6 +31,11 @@ msgstr "\"{0} · {1}\" ja sen koko aikajana poistetaan pysyvästi. Tätä ei voi
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "(avautuu uuteen välilehteen)"
+
+#. placeholder {0}: selected.length
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "{0, plural, one {# application to export} other {# applications to export}}"
+msgstr ""
 
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -519,6 +524,10 @@ msgstr "Tekoälypalveluntarjoajat vaativat REDIS_URL- ja ENCRYPTION_SECRET-mää
 msgid "Albanian"
 msgstr "albania"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "All applications (including archived)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
 msgstr "Salli julkinen käyttö"
@@ -568,7 +577,7 @@ msgstr "Antrooppinen Claude"
 msgid "Any tag"
 msgstr "Mikä tahansa tunniste"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "Jokainen, joka avaa julkisen URL-osoitteen, tarvitsee tämän salasanan."
 
@@ -618,6 +627,14 @@ msgstr "Hakemus lisättiin prosessiisi."
 msgid "Application Copilot"
 msgstr "Hakemusavustaja"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date from"
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date to"
+msgstr ""
+
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Application deleted."
@@ -645,6 +662,10 @@ msgstr "Hakemukset ajan kuluessa"
 #: src/features/applications/components/insights-view.tsx
 msgid "Applications sent per week (last 8 weeks)"
 msgstr "Lähetetyt hakemukset viikoittain (viimeiset 8 viikkoa)"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Applications to export"
+msgstr ""
 
 #: src/features/applications/components/table-view.tsx
 msgid "Applied"
@@ -921,7 +942,9 @@ msgstr "Voinko viedä ansioluetteloni PDF-muotoon?"
 #: src/dialogs/resume/sections/section-item-dialog.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
+#: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1130,10 @@ msgstr "Komentopaletti - {currentPage}"
 msgid "Community"
 msgstr "Yhteisö"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr "Kompakti"
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1167,10 @@ msgstr "Pakkaa tai poista suuria kuvia, jotta lataukset pysyvät nopeina."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "Vahvista"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr "Vahvista salasana"
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1520,6 +1551,10 @@ msgstr "Rajaa kuvaa"
 msgid "CSV data"
 msgstr "CSV-tiedot"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Current filters"
+msgstr ""
+
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "Nykyinen salasana"
@@ -1527,6 +1562,10 @@ msgstr "Nykyinen salasana"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Current stage"
 msgstr "Nykyinen vaihe"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Currently available for German resumes. Uses the language set in Page."
+msgstr "Saatavilla tällä hetkellä saksankielisille ansioluetteloille. Käyttää Sivut-kohdassa määritettyä kieltä."
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1794,6 +1833,14 @@ msgstr "Lataa"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "Lataa kopio kaikista tiedoistasi, mukaan lukien profiilisi ja jokainen ansioluettelosi, JSON-tiedostona."
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download application details, contacts, notes, and timeline history as CSV."
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download CSV"
+msgstr ""
+
 #. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download options"
@@ -1978,8 +2025,8 @@ msgid "Enabled"
 msgstr "Käytössä"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "Otetaan salasanasuojaus käyttöön..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -2075,6 +2122,14 @@ msgstr "Vanhenee {0}"
 #: src/libs/resume/section.tsx
 msgid "Export"
 msgstr "Vienti"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Export applications"
+msgstr ""
+
+#: src/routes/dashboard/applications/index.tsx
+msgid "Export CSV"
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
@@ -2649,6 +2704,10 @@ msgstr "https://yhdyskäytävä.esimerkki.com/v1"
 #: src/libs/locale.ts
 msgid "Hungarian"
 msgstr "unkari"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Hyphenation"
+msgstr "Tavutus"
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3593,7 @@ msgstr "Etkö ole varma, mitä kirjoittaa?"
 msgid "Note"
 msgstr "Huom"
 
+#: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3748,14 +3808,19 @@ msgstr "Avaimet & 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "Salasana"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "Salasana ei voi olla tyhjä."
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr "Salasanan pituuden on oltava 6–64 merkkiä."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3833,10 @@ msgstr "Salasanasuojaus on poistettu käytöstä."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "Salasanasuojaus on otettu käyttöön."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr "Salasanat eivät täsmää."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4057,7 @@ msgstr "Edistymispalkki"
 msgid "Projects"
 msgstr "Projektit"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "Suojaa ansioluettelosi salasanalla"
 
@@ -4652,6 +4721,7 @@ msgstr "serbia"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "Aseta salasana, jos haluat että julkisen URL-osoitteen voivat avata vain ne, jotka tietävät sen."
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +5010,7 @@ msgstr "Kirjautumisessa tapahtui virhe. Yritä uudelleen."
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "Jokin meni pieleen. Yritä uudelleen."
@@ -5037,6 +5108,10 @@ msgstr "Aloita ansioluettelon laatiminen antamalla sille nimi."
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Start building your resume from scratch"
 msgstr "Aloita ansioluettelon laatiminen alusta"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Start date must be on or before end date."
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Start each one with a concrete verb: built, led, reduced, migrated."
@@ -6049,6 +6124,10 @@ msgstr "Käytä A4- tai US Letter -kokoa, jotta asettelu säilyy uudelleenrender
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "Käytä vähintään 9 pt:n kokoa."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr "Käytä 6–64 merkkiä."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

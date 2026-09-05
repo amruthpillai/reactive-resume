@@ -224,7 +224,7 @@ async function createPublicResumeSeoMarkup(pathname: string, origin: string) {
 	if (!meta) return null;
 
 	const canonicalUrl = `${origin}/${username}/${slug}`;
-	const imageUrl = `${origin}/templates/jpg/${meta.template}.jpg`;
+	const imageUrl = `${origin}/opengraph/banner.jpg`;
 	const pageTitle = escapeAttribute(`${meta.name} - Reactive Resume`);
 	const title = escapeAttribute(meta.title);
 	const description = escapeAttribute(meta.description);

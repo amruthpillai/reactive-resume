@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 15:47\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -31,6 +31,11 @@ msgstr "\"{0} · {1}\" 及其完整时间线将被永久删除。此操作无法
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "（在新标签页中打开）"
+
+#. placeholder {0}: selected.length
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "{0, plural, one {# application to export} other {# applications to export}}"
+msgstr ""
 
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -519,6 +524,10 @@ msgstr "AI 提供商需要配置 REDIS_URL 和 ENCRYPTION_SECRET。"
 msgid "Albanian"
 msgstr "阿尔巴尼亚语"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "All applications (including archived)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
 msgstr "允许公开访问"
@@ -568,7 +577,7 @@ msgstr "克劳德人类学"
 msgid "Any tag"
 msgstr "任意标签"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "任何打开该公开 URL 的人都需要这个密码。"
 
@@ -618,6 +627,14 @@ msgstr "申请已添加到你的流程。"
 msgid "Application Copilot"
 msgstr "申请 Copilot"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date from"
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date to"
+msgstr ""
+
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Application deleted."
@@ -645,6 +662,10 @@ msgstr "申请随时间变化"
 #: src/features/applications/components/insights-view.tsx
 msgid "Applications sent per week (last 8 weeks)"
 msgstr "每周发送的申请（最近 8 周）"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Applications to export"
+msgstr ""
 
 #: src/features/applications/components/table-view.tsx
 msgid "Applied"
@@ -921,7 +942,9 @@ msgstr "我可以把简历导出为 PDF 吗？"
 #: src/dialogs/resume/sections/section-item-dialog.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
+#: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1130,10 @@ msgstr "命令调板 - {currentPage}"
 msgid "Community"
 msgstr "社区"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr "紧凑型"
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1167,10 @@ msgstr "压缩或移除较大的图片，以保持上传速度。"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "确认"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr "确认密码"
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1520,6 +1551,10 @@ msgstr "裁剪图片"
 msgid "CSV data"
 msgstr "CSV 数据"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Current filters"
+msgstr ""
+
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "当前密码"
@@ -1527,6 +1562,10 @@ msgstr "当前密码"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Current stage"
 msgstr "当前阶段"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Currently available for German resumes. Uses the language set in Page."
+msgstr "目前支持德语简历。使用“页面”中设置的语言。"
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1794,6 +1833,14 @@ msgstr "下载"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "下载包含您的个人资料和所有简历在内的所有数据的副本，格式为 JSON 文件。"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download application details, contacts, notes, and timeline history as CSV."
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download CSV"
+msgstr ""
+
 #. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download options"
@@ -1978,8 +2025,8 @@ msgid "Enabled"
 msgstr "已启用"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "正在启用密码保护…"
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -2075,6 +2122,14 @@ msgstr "将于 {0} 过期"
 #: src/libs/resume/section.tsx
 msgid "Export"
 msgstr "导出"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Export applications"
+msgstr ""
+
+#: src/routes/dashboard/applications/index.tsx
+msgid "Export CSV"
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
@@ -2649,6 +2704,10 @@ msgstr "https://gateway.example.com/v1"
 #: src/libs/locale.ts
 msgid "Hungarian"
 msgstr "匈牙利语"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Hyphenation"
+msgstr "连字符"
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3593,7 @@ msgstr "不知道该写些什么？"
 msgid "Note"
 msgstr "注意"
 
+#: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3748,14 +3808,19 @@ msgstr "通行密钥与 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "密码"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "密码不能为空。"
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr "密码长度必须在 6 到 64 个字符之间。"
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3833,10 @@ msgstr "密码保护已被禁用。"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "密码保护已启用。"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr "密码不匹配。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4057,7 @@ msgstr "进度条"
 msgid "Projects"
 msgstr "项目"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "用密码保护你的简历"
 
@@ -4652,6 +4721,7 @@ msgstr "塞尔维亚语"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "如果你希望只有知道密码的人才能打开公开 URL，就设置一个密码。"
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +5010,7 @@ msgstr "登录时出错。请重试。"
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "出现了一些问题。请重试。"
@@ -5037,6 +5108,10 @@ msgstr "从给简历命名开始构建你的简历。"
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Start building your resume from scratch"
 msgstr "从头开始构建你的简历"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Start date must be on or before end date."
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Start each one with a concrete verb: built, led, reduced, migrated."
@@ -6049,6 +6124,10 @@ msgstr "使用 A4 或美国信纸尺寸，让版面在重新渲染后依然保�
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "至少使用 9pt。"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr "请使用 6 至 64 个字符。"
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

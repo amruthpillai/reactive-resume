@@ -90,6 +90,8 @@ services:
     env_file:
       - path: .env.example
         required: false
+      - path: .env
+        required: false
     volumes:
       - ./data:/app/data
     depends_on:

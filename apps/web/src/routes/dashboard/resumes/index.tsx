@@ -4,6 +4,7 @@ import { Trans } from "@lingui/react/macro";
 import {
 	DownloadSimpleIcon,
 	GridFourIcon,
+	GridNineIcon,
 	ListIcon,
 	MagnifyingGlassIcon,
 	PlusIcon,
@@ -25,6 +26,7 @@ import { orpc } from "@/libs/orpc/client";
 import { DashboardHeader } from "../-components/header";
 import { GridView } from "./-components/grid-view";
 import { ListView } from "./-components/list-view";
+import { resumeViewSchema, useResumeView } from "./-components/view-mode";
 
 type SortOption = "lastUpdatedAt" | "createdAt" | "name";
 
@@ -32,12 +34,12 @@ const searchSchema = z.object({
 	search: z.string().default(""),
 	tags: z.array(z.string()).default([]),
 	sort: z.enum(["lastUpdatedAt", "createdAt", "name"]).default("lastUpdatedAt"),
-	view: z.enum(["grid", "list"]).default("grid"),
+	view: resumeViewSchema.optional().catch(undefined),
 });
 
 type Search = z.output<typeof searchSchema>;
 
-const defaultSearch: Search = { search: "", tags: [], sort: "lastUpdatedAt", view: "grid" };
+const defaultSearch: Search = { search: "", tags: [], sort: "lastUpdatedAt" };
 
 export const Route = createFileRoute("/dashboard/resumes/")({
 	component: RouteComponent,
@@ -49,7 +51,9 @@ export const Route = createFileRoute("/dashboard/resumes/")({
 
 function RouteComponent() {
 	const { i18n } = useLingui();
-	const { search, tags, sort, view } = Route.useSearch();
+	const { search, tags, sort, view: searchView } = Route.useSearch();
+	const { session } = Route.useRouteContext();
+	const view = useResumeView(searchView, session.user.id);
 	const navigate = useNavigate({ from: Route.fullPath });
 	const { openDialog } = useDialogStore();
 
@@ -153,7 +157,7 @@ function RouteComponent() {
 				)}
 
 				<Tabs className="w-full sm:w-auto ltr:sm:ms-auto rtl:sm:me-auto" value={view}>
-					<TabsList className="grid w-full grid-cols-2 sm:inline-flex sm:w-fit">
+					<TabsList className="grid w-full grid-cols-3 sm:inline-flex sm:w-fit">
 						<TabsTrigger
 							value="grid"
 							nativeButton={false}
@@ -162,6 +166,16 @@ function RouteComponent() {
 						>
 							<GridFourIcon />
 							<Trans>Grid</Trans>
+						</TabsTrigger>
+
+						<TabsTrigger
+							value="compact"
+							nativeButton={false}
+							className="rounded-none"
+							render={<Link to="." search={(prev: Search) => ({ ...prev, view: "compact" })} />}
+						>
+							<GridNineIcon />
+							<Trans>Compact</Trans>
 						</TabsTrigger>
 
 						<TabsTrigger
@@ -180,7 +194,7 @@ function RouteComponent() {
 			{view === "list" ? (
 				<ListView resumes={filteredResumes} hasResumes={(resumes?.length ?? 0) > 0} />
 			) : (
-				<GridView resumes={filteredResumes} hasResumes={(resumes?.length ?? 0) > 0} />
+				<GridView resumes={filteredResumes} hasResumes={(resumes?.length ?? 0) > 0} compact={view === "compact"} />
 			)}
 		</div>
 	);

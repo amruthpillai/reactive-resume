@@ -43,6 +43,15 @@ describe("registerFonts", () => {
 		vi.restoreAllMocks();
 	});
 
+	it("retains the hyphenation preference when adding fallback font stacks", async () => {
+		vi.spyOn(Font, "register").mockImplementation(() => {});
+		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});
+		const { registerFonts } = await import("./use-register-fonts");
+		const configured = { ...typography, hyphenation: true };
+		expect(registerFonts(configured, "de-DE", false, new Set(["emoji"])).hyphenation).toBe(true);
+		expect(registerFonts(configured, "zh-CN").hyphenation).toBe(true);
+	});
+
 	it("registers CJK PDF fallbacks for normal and italic text styles", async () => {
 		const registerSpy = vi.spyOn(Font, "register").mockImplementation(() => {});
 		vi.spyOn(Font, "registerHyphenationCallback").mockImplementation(() => {});

@@ -2,26 +2,23 @@ diff --git a/lib/textkit.js b/lib/textkit.js
 index 2c0ec95..3683493 100644
 --- a/lib/textkit.js
 +++ b/lib/textkit.js
-@@ -709,6 +709,31 @@ const omit = (value, run) => {
+@@ -709,6 +709,28 @@ const omit = (value, run) => {
      return Object.assign({}, run, { attributes });
  };
  
 +/**
-+ * Resolve a fontkit Font's vertical metrics, preferring the OS/2
-+ * `sTypoAscender / sTypoDescender / sTypoLineGap` triple when available
-+ * and falling back to hhea. This matches Chromium's font-metrics
-+ * resolution and is what browsers (and the v5.0.x Puppeteer renderer)
-+ * use, giving compact, predictable line boxes for fonts whose hhea
-+ * values are inflated for Windows GDI compatibility (notably Source
-+ * Han Sans/Serif a.k.a. Noto Sans/Serif CJK).
-+ *
-+ * `f['OS/2']` is exposed by fontkit when the font carries an OS/2 table.
-+ * Standard PDF fonts (Helvetica/Courier/Times) and our internal
-+ * EmbeddedFont don't, so they keep their existing hhea-based metrics.
++ * Honor the font's USE_TYPO_METRICS flag instead of substituting OS/2
++ * metrics for every font. Roboto and IBM Plex Sans Condensed deliberately
++ * use hhea metrics; their unused typo ascenders move text above icons.
++ * Keep the compact metrics used by our Noto CJK / Source Han fallbacks
++ * to avoid restoring inflated line boxes and CJK clipping (#2986).
++ * Standard PDF fonts have no OS/2 table and retain their own metrics.
 + */
 +const resolveTypoMetrics = (font) => {
 +    const os2 = font?.['OS/2'];
-+    if (!os2 || typeof os2.typoAscender !== 'number' || typeof os2.typoDescender !== 'number') {
++    const isCjkFont = /^(?:Noto (?:Sans|Serif) (?:SC|TC|HK|JP|KR)|Source Han (?:Sans|Serif)(?: (?:SC|TC|HK|JP|KR))?)$/.test(font?.familyName || '');
++    const useTypoMetrics = os2?.fsSelection?.useTypoMetrics || isCjkFont;
++    if (!useTypoMetrics || typeof os2?.typoAscender !== 'number' || typeof os2?.typoDescender !== 'number') {
 +        return { ascent: font?.ascent || 0, descent: font?.descent || 0, lineGap: font?.lineGap || 0 };
 +    }
 +    return {

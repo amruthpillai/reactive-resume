@@ -158,20 +158,24 @@ function PictureGeometryFields({ form, onAutoSave }: PictureGeometryFieldsProps)
 							<Trans>Size</Trans>
 						</FormLabel>
 						<InputGroup>
-							<InputGroupInput
-								name={field.name}
-								value={field.state.value}
-								type="number"
-								min={32}
-								max={512}
-								step={1}
-								onBlur={field.handleBlur}
-								onChange={(e) => {
-									const value = e.target.value;
-									if (value === "") field.handleChange("" as unknown as number);
-									else field.handleChange(Number(value));
-									onAutoSave();
-								}}
+							<FormControl
+								render={
+									<InputGroupInput
+										name={field.name}
+										value={field.state.value}
+										type="number"
+										min={32}
+										max={512}
+										step={1}
+										onBlur={field.handleBlur}
+										onChange={(e) => {
+											const value = e.target.value;
+											if (value === "") field.handleChange("" as unknown as number);
+											else field.handleChange(Number(value));
+											onAutoSave();
+										}}
+									/>
+								}
 							/>
 
 							<InputGroupAddon align="inline-end">
@@ -381,7 +385,7 @@ function normalizePictureUrl(url: string, origin: string): string {
 	}
 }
 
-async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area): Promise<Blob> {
+async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area, mimeType: string): Promise<Blob> {
 	const image = await new Promise<HTMLImageElement>((resolve, reject) => {
 		const element = new Image();
 		element.addEventListener("load", () => {
@@ -399,24 +403,42 @@ async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area): Promise<B
 
 	canvas.width = Math.round(pixelCrop.width);
 	canvas.height = Math.round(pixelCrop.height);
-	context.drawImage(
-		image,
-		pixelCrop.x,
-		pixelCrop.y,
-		pixelCrop.width,
-		pixelCrop.height,
-		0,
-		0,
-		canvas.width,
-		canvas.height,
-	);
+	// Preserve transparency for lossless inputs and compressed formats for photos.
+	const outputType = mimeType === "image/jpeg" || mimeType === "image/webp" ? mimeType : "image/png";
+	const maxUploadBytes = 10 * 1024 * 1024;
 
-	return new Promise<Blob>((resolve, reject) => {
-		canvas.toBlob((blob) => {
-			if (blob) resolve(blob);
-			else reject(new Error("Canvas is empty"));
-		}, "image/png");
-	});
+	while (true) {
+		context.drawImage(
+			image,
+			pixelCrop.x,
+			pixelCrop.y,
+			pixelCrop.width,
+			pixelCrop.height,
+			0,
+			0,
+			canvas.width,
+			canvas.height,
+		);
+
+		const blob = await new Promise<Blob>((resolve, reject) => {
+			canvas.toBlob(
+				(result) => {
+					if (result) resolve(result);
+					else reject(new Error("Canvas is empty"));
+				},
+				outputType,
+				0.9,
+			);
+		});
+		if (blob.size <= maxUploadBytes) return blob;
+		if (canvas.width <= 1 && canvas.height <= 1) throw new Error("Cropped image exceeds the upload limit");
+
+		// Re-encoding even a JPEG can exceed the API limit. Reduce only oversized crops,
+		// drawing from the original each time to avoid accumulating resampling artifacts.
+		const scale = Math.min(0.9, Math.sqrt(maxUploadBytes / blob.size) * 0.95);
+		canvas.width = Math.max(1, Math.floor(canvas.width * scale));
+		canvas.height = Math.max(1, Math.floor(canvas.height * scale));
+	}
 }
 
 function usePictureSettingsForm(picture: PictureValues, persist: (data: PictureValues) => void) {
@@ -538,7 +560,7 @@ function PictureSectionForm() {
 		let fileToUpload: File = cropState.file;
 		try {
 			if (croppedAreaPixels) {
-				const blob = await getCroppedImageBlob(cropState.imageSrc, croppedAreaPixels);
+				const blob = await getCroppedImageBlob(cropState.imageSrc, croppedAreaPixels, cropState.file.type);
 				fileToUpload = new File([blob], cropState.file.name, { type: blob.type });
 			}
 		} catch {

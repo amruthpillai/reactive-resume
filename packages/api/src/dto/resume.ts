@@ -3,6 +3,7 @@ import z from "zod";
 import * as schema from "@reactive-resume/db/schema";
 import { jsonPatchOperationSchema } from "@reactive-resume/resume/patch";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { writableResumeDataSchema } from "@reactive-resume/schema/resume/write";
 
 const resumeSchema = createSelectSchema(schema.resume, {
 	id: z.string().describe("The ID of the resume."),
@@ -54,7 +55,7 @@ export const resumeDto = {
 	},
 
 	import: {
-		input: z.object({ data: resumeDataSchema }),
+		input: z.object({ data: writableResumeDataSchema }),
 		output: z.string().describe("The ID of the imported resume."),
 	},
 
@@ -62,7 +63,7 @@ export const resumeDto = {
 		input: resumeSchema
 			.pick({ name: true, slug: true, tags: true, data: true, isPublic: true })
 			.partial()
-			.extend({ id: z.string() }),
+			.extend({ id: z.string(), data: writableResumeDataSchema.optional() }),
 		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
 	},
 

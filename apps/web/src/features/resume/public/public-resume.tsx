@@ -15,6 +15,7 @@ const publicResumeRoute = getRouteApi("/$username/$slug");
 
 export function PublicResumeRoute() {
 	const { username, slug } = publicResumeRoute.useParams();
+	const { flags } = publicResumeRoute.useRouteContext();
 
 	const { data: resume } = useQuery(orpc.resume.getBySlug.queryOptions({ input: { username, slug } }));
 	const publicResume = useMemo(() => ({ username, slug }), [slug, username]);
@@ -51,15 +52,17 @@ export function PublicResumeRoute() {
 					<PdfViewer data={resume.data} className="block w-full" publicResume={publicResume} />
 				</main>
 
-				<footer className="flex justify-center print:hidden">
-					<a
-						href="/"
-						className="flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
-					>
-						<BrandIcon variant="icon" className="size-5" />
-						<Trans>Build your own resume</Trans>
-					</a>
-				</footer>
+				{!flags.disableSignups && (
+					<footer className="flex justify-center print:hidden">
+						<a
+							href="/"
+							className="flex items-center gap-2 text-muted-foreground text-sm transition-colors hover:text-foreground"
+						>
+							<BrandIcon variant="icon" className="size-5" />
+							<Trans>Build your own resume</Trans>
+						</a>
+					</footer>
+				)}
 			</div>
 
 			<Button

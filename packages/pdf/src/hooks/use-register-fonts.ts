@@ -315,6 +315,7 @@ export const registerFonts = (
 		headingFallbacks.length > 0 ? [headingFontFamily, ...headingFallbacks] : headingFontFamily;
 
 	return {
+		...pdfTypography,
 		body: { ...pdfTypography.body, fontFamily: bodyStack },
 		heading: { ...pdfTypography.heading, fontFamily: headingStack },
 	};

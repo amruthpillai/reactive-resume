@@ -27,6 +27,7 @@ import { Combobox } from "@/components/ui/combobox";
 import { ApplicationDetailSheet } from "@/features/applications/components/application-detail-sheet";
 import { ApplicationFormSheet } from "@/features/applications/components/application-form-sheet";
 import { ApplicationBoard } from "@/features/applications/components/board";
+import { ExportApplicationsSheet } from "@/features/applications/components/export-applications-sheet";
 import { ImportApplicationsSheet } from "@/features/applications/components/import-applications-sheet";
 import { ApplicationInsights } from "@/features/applications/components/insights-view";
 import { ApplicationTable } from "@/features/applications/components/table-view";
@@ -68,6 +69,7 @@ function RouteComponent() {
 
 	const [addOpen, setAddOpen] = useState(false);
 	const [importOpen, setImportOpen] = useState(false);
+	const [exportOpen, setExportOpen] = useState(false);
 	const [editing, setEditing] = useState<Application | null>(null);
 	const [selected, setSelected] = useState<Application | null>(null);
 
@@ -120,11 +122,16 @@ function RouteComponent() {
 	return (
 		<div className="flex h-[calc(100dvh-2rem)] flex-col gap-4">
 			<DashboardHeader
+				className="max-sm:flex-col max-sm:gap-y-3"
 				icon={BriefcaseIcon}
 				title={t`Applications`}
 				actions={
 					!isEmpty ? (
 						<>
+							<Button size="sm" variant="outline" onClick={() => setExportOpen(true)}>
+								<DownloadSimpleIcon />
+								<Trans>Export CSV</Trans>
+							</Button>
 							<Button size="sm" variant="outline" onClick={() => setImportOpen(true)}>
 								<DownloadSimpleIcon />
 								<Trans>Import CSV</Trans>
@@ -311,6 +318,12 @@ function RouteComponent() {
 			<ApplicationFormSheet open={addOpen} onOpenChange={setAddOpen} />
 			<ApplicationFormSheet open={!!editing} application={editing} onOpenChange={(open) => !open && setEditing(null)} />
 			<ImportApplicationsSheet open={importOpen} onOpenChange={setImportOpen} />
+			<ExportApplicationsSheet
+				open={exportOpen}
+				onOpenChange={setExportOpen}
+				applications={applications ?? []}
+				filtered={filtered}
+			/>
 			<ApplicationDetailSheet
 				application={selected}
 				onOpenChange={(open) => !open && setSelected(null)}

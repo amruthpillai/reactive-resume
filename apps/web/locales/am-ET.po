@@ -8,7 +8,7 @@ msgstr ""
 "Language: am\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 15:47\n"
 "Last-Translator: \n"
 "Language-Team: Amharic\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -31,6 +31,11 @@ msgstr "\"{0} · {1}\" እና ሙሉ የጊዜ መስመሩ በቋሚነት ይ�
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "(በአዲስ ታብ ይከፈታል)"
+
+#. placeholder {0}: selected.length
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "{0, plural, one {# application to export} other {# applications to export}}"
+msgstr ""
 
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -519,6 +524,10 @@ msgstr "የAI አቅራቢዎች REDIS_URL እና ENCRYPTION_SECRET እንዲዋ
 msgid "Albanian"
 msgstr "አልባኒኛ"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "All applications (including archived)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
 msgstr "ለሁሉም ይገናኛል"
@@ -568,7 +577,7 @@ msgstr "Anthropic Claude"
 msgid "Any tag"
 msgstr "ማንኛውም መለያ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "የሕዝብ URL የሚከፍት ማንኛውም ሰው ይህ የይለፍ ቃል ያስፈልገዋል።"
 
@@ -618,6 +627,14 @@ msgstr "ማመልከቻ ወደ ሂደትዎ ታክሏል።"
 msgid "Application Copilot"
 msgstr "የማመልከቻ ኮፓይለት"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date from"
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date to"
+msgstr ""
+
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Application deleted."
@@ -645,6 +662,10 @@ msgstr "ማመልከቻዎች በጊዜ ሂደት"
 #: src/features/applications/components/insights-view.tsx
 msgid "Applications sent per week (last 8 weeks)"
 msgstr "በሳምንት የተላኩ ማመልከቻዎች (ያለፉት 8 ሳምንታት)"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Applications to export"
+msgstr ""
 
 #: src/features/applications/components/table-view.tsx
 msgid "Applied"
@@ -921,7 +942,9 @@ msgstr "የየታሪክዬን ወደ PDF ልላክ እችላለሁ?"
 #: src/dialogs/resume/sections/section-item-dialog.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
+#: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1130,10 @@ msgstr "የትእዛዝ ፓሌት - {currentPage}"
 msgid "Community"
 msgstr "ማህበረሰብ"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr ""
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1167,10 @@ msgstr "ጭነቶች ፈጣን እንዲሆኑ ትላልቅ ምስሎችን ያ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "አረጋግጥ"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr ""
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1520,6 +1551,10 @@ msgstr "ስዕልን ይከርክሙ"
 msgid "CSV data"
 msgstr "የCSV ውሂብ"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Current filters"
+msgstr ""
+
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "አሁን ያለዎት የይለፍ ቃል"
@@ -1527,6 +1562,10 @@ msgstr "አሁን ያለዎት የይለፍ ቃል"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Current stage"
 msgstr "የአሁኑ ደረጃ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Currently available for German resumes. Uses the language set in Page."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1794,6 +1833,14 @@ msgstr "አውርድ"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "መገለጫዎን እና እያንዳንዱን የስራ ልምድዎን ጨምሮ የሁሉም ውሂብዎን ቅጂ እንደ JSON ፋይል ያውርዱ።"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download application details, contacts, notes, and timeline history as CSV."
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download CSV"
+msgstr ""
+
 #. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download options"
@@ -1978,8 +2025,8 @@ msgid "Enabled"
 msgstr "ተነስቷል"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "የይለፍ ቃል ጥበቃን በመነቃቃት ላይ…"
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -2075,6 +2122,14 @@ msgstr "በ{0} ያበቃል"
 #: src/libs/resume/section.tsx
 msgid "Export"
 msgstr "ወደ ውጪ አስመጣ"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Export applications"
+msgstr ""
+
+#: src/routes/dashboard/applications/index.tsx
+msgid "Export CSV"
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
@@ -2649,6 +2704,10 @@ msgstr "https://gateway.example.com/v1"
 #: src/libs/locale.ts
 msgid "Hungarian"
 msgstr "ሀንጋሪኛ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Hyphenation"
+msgstr ""
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3593,7 @@ msgstr "ምን መጻፍ እንዳለብህ እርግጠኛ አይደለህም?"
 msgid "Note"
 msgstr "ማስታወሻ"
 
+#: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3748,14 +3808,19 @@ msgstr "ፓስኪዎች እና 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "የይለፍ ቃል"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "የይለፍ ቃል ባዶ ሊሆን አይችልም።"
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3833,10 @@ msgstr "የይለፍ ቃል ጥበቃ ተሰናክሏል።"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "የይለፍ ቃል ጥበቃ ተነስቷል።"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4057,7 @@ msgstr "የሂደት አሰሳ ማስመሪያ"
 msgid "Projects"
 msgstr "ፕሮጀክቶች"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "የስራ ልምድ ማስረጃዎን በይለፍ ቃል ይጠብቁ"
 
@@ -4652,6 +4721,7 @@ msgstr "ሰርቢኛ"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "የሕዝብ URL የሚከፍቱት የይለፍ ቃሉን የሚያውቁ ብቻ እንዲሆኑ ከፈለጉ የይለፍ ቃል ያዘጋጁ።"
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +5010,7 @@ msgstr "ስንገባዎት የሆነ ችግር ተፈጥሯል። እባክዎ �
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "የተሳሳተ ነገር ተፈጥሯል። እባክዎን ደግመው ይሞክሩ።"
@@ -5037,6 +5108,10 @@ msgstr "የየታሪክዎን ማቅረቢያ በስም በመስጠት መገ�
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Start building your resume from scratch"
 msgstr "የየታሪክዎን ማቅረቢያ ከመጀመሪያው በሙሉ ጀምሩ"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Start date must be on or before end date."
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Start each one with a concrete verb: built, led, reduced, migrated."
@@ -6049,6 +6124,10 @@ msgstr "እቅዱ እንደገና ሲታይ እንዲቆይ A4 ወይም US Lett
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "ቢያንስ 9pt ይጠቀሙ።"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

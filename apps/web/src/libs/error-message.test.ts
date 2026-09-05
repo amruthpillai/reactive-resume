@@ -3,6 +3,46 @@ import { ORPCError } from "@orpc/client";
 import { getOrpcErrorMessage, getReadableErrorMessage, getResumeErrorMessage } from "./error-message";
 
 describe("getReadableErrorMessage", () => {
+	it("shows the upload size validation message instead of the generic oRPC error", () => {
+		const error = new ORPCError("BAD_REQUEST", {
+			message: "Input validation failed",
+			data: { issues: [{ message: "File size must be less than 10MB", path: [] }] },
+		});
+		expect(getReadableErrorMessage(error, "Failed to upload picture.")).toBe("File size must be less than 10MB");
+	});
+
+	it("limits validation messages, removes duplicates, and ignores malformed issues", () => {
+		const error = new ORPCError("BAD_REQUEST", {
+			message: "Input validation failed",
+			data: {
+				issues: [
+					null,
+					{},
+					{ message: 42 },
+					{ message: " " },
+					...["First", "First", "Second", "Third", "Fourth"].map((message) => ({ message })),
+				],
+			},
+		});
+		expect(getReadableErrorMessage(error, "fallback")).toBe("First Second Third");
+	});
+
+	it.each([null, {}, { issues: null }, { issues: "invalid" }, { issues: [{ message: "" }] }])(
+		"retains the error message for malformed validation data %j",
+		(data) => {
+			const error = new ORPCError("BAD_REQUEST", { message: "Input validation failed", data });
+			expect(getReadableErrorMessage(error, "fallback")).toBe("Input validation failed");
+		},
+	);
+
+	it("does not interpret unrelated server errors as input validation", () => {
+		const error = new ORPCError("INTERNAL_SERVER_ERROR", {
+			message: "Unexpected failure",
+			data: { issues: [{ message: "Internal detail" }] },
+		});
+		expect(getReadableErrorMessage(error, "fallback")).toBe("Unexpected failure");
+	});
+
 	it("returns the string error directly", () => {
 		expect(getReadableErrorMessage("explicit error", "fallback")).toBe("explicit error");
 	});

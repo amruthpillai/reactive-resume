@@ -8,7 +8,7 @@ msgstr ""
 "Language: te\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 15:47\n"
 "Last-Translator: \n"
 "Language-Team: Telugu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -31,6 +31,11 @@ msgstr "\"{0} · {1}\" మరియు దాని పూర్తి టైమ
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "(కొత్త ట్యాబ్‌లో తెరవబడుతుంది)"
+
+#. placeholder {0}: selected.length
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "{0, plural, one {# application to export} other {# applications to export}}"
+msgstr ""
 
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -519,6 +524,10 @@ msgstr "AI ప్రొవైడర్లకు REDIS_URL మరియు ENCRYP
 msgid "Albanian"
 msgstr "అల్బేనియన్"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "All applications (including archived)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
 msgstr "ప్రజా యాక్సెస్‌ని అనుమతించండి"
@@ -568,7 +577,7 @@ msgstr "ఆంత్రోపిక్ క్లాడ్"
 msgid "Any tag"
 msgstr "ఏదైనా ట్యాగ్"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "పబ్లిక్ URL తెరిచే ప్రతి ఒక్కరికీ ఈ పాస్‌వర్డ్ అవసరమవుతుంది."
 
@@ -618,6 +627,14 @@ msgstr "దరఖాస్తు మీ పైప్‌లైన్‌కు జ
 msgid "Application Copilot"
 msgstr "దరఖాస్తు కోపైలట్"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date from"
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date to"
+msgstr ""
+
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Application deleted."
@@ -645,6 +662,10 @@ msgstr "కాలక్రమంలో దరఖాస్తులు"
 #: src/features/applications/components/insights-view.tsx
 msgid "Applications sent per week (last 8 weeks)"
 msgstr "వారానికి పంపిన దరఖాస్తులు (చివరి 8 వారాలు)"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Applications to export"
+msgstr ""
 
 #: src/features/applications/components/table-view.tsx
 msgid "Applied"
@@ -921,7 +942,9 @@ msgstr "నేను నా రిజ్యూమ్‌ని PDFగా ఎగ�
 #: src/dialogs/resume/sections/section-item-dialog.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
+#: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1130,10 @@ msgstr "కమాండ్ ప్యాలెట్ - {currentPage}"
 msgid "Community"
 msgstr "కమ్యూనిటీ"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr "సంక్షిప్త"
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1167,10 @@ msgstr "అప్‌లోడ్‌లను వేగంగా ఉంచడా�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "నిర్ధారించండి"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr "పాస్‌వర్డ్‌ను నిర్ధారించండి"
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1520,6 +1551,10 @@ msgstr "చిత్రాన్ని కత్తిరించండి"
 msgid "CSV data"
 msgstr "CSV డేటా"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Current filters"
+msgstr ""
+
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "ప్రస్తుత పాస్‌వర్డ్"
@@ -1527,6 +1562,10 @@ msgstr "ప్రస్తుత పాస్‌వర్డ్"
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Current stage"
 msgstr "ప్రస్తుత దశ"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Currently available for German resumes. Uses the language set in Page."
+msgstr "ప్రస్తుతం జర్మన్ రెస్యూమ్‌ల కోసం అందుబాటులో ఉంది. పేజీలో సెట్ చేసిన భాషను ఉపయోగిస్తుంది."
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1794,6 +1833,14 @@ msgstr "డౌన్‌లోడ్ చేయండి"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "మీ ప్రొఫైల్ మరియు ప్రతి రెజ్యూమెతో సహా మీ మొత్తం డేటా కాపీని JSON ఫైల్‌గా డౌన్‌లోడ్ చేసుకోండి."
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download application details, contacts, notes, and timeline history as CSV."
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download CSV"
+msgstr ""
+
 #. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download options"
@@ -1978,8 +2025,8 @@ msgid "Enabled"
 msgstr "ప్రారంభించబడింది"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "పాస్‌వర్డ్ రక్షణను ప్రారంభిస్తోంది..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -2075,6 +2122,14 @@ msgstr "{0}న గడువు ముగుస్తుంది"
 #: src/libs/resume/section.tsx
 msgid "Export"
 msgstr "ఎగుమతి"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Export applications"
+msgstr ""
+
+#: src/routes/dashboard/applications/index.tsx
+msgid "Export CSV"
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
@@ -2649,6 +2704,10 @@ msgstr "https://gateway.example.com/v1"
 #: src/libs/locale.ts
 msgid "Hungarian"
 msgstr "హంగేరియన్"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Hyphenation"
+msgstr "సంధి విచ్ఛిన్నం"
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3593,7 @@ msgstr "ఏం రాయాలో తెలియడం లేదా?"
 msgid "Note"
 msgstr "గమనిక"
 
+#: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3748,14 +3808,19 @@ msgstr "పాస్‌కీస్ & 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "పాస్‌వర్డ్"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "పాస్‌వర్డ్ ఖాళీగా ఉండకూడదు."
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr "పాస్‌వర్డ్ 6 నుండి 64 అక్షరాల మధ్య ఉండాలి."
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3833,10 @@ msgstr "పాస్‌వర్డ్ రక్షణను నిలిపి�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "పాస్‌వర్డ్ రక్షణను ప్రారంభించారు."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr "పాస్‌వర్డ్‌లు సరిపోలడం లేదు."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4057,7 @@ msgstr "ప్రోగ్రెస్ బార్"
 msgid "Projects"
 msgstr "ప్రాజెక్ట్స్"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "మీ రెజ్యూమ్‌ను పాస్‌వర్డ్‌తో రక్షించుకోండి"
 
@@ -4652,6 +4721,7 @@ msgstr "సెర్బియన్"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "పాస్‌వర్డ్ తెలిసినవాళ్లు మాత్రమే పబ్లిక్ URL తెరవాలనుకుంటే, ఒక పాస్‌వర్డ్‌ను సెట్ చేయండి."
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +5010,7 @@ msgstr "మిమ్మల్ని సైన్ ఇన్ చేస్తున
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "ఏదో తప్పు జరిగింది. దయచేసి మళ్లీ ప్రయత్నించండి."
@@ -5037,6 +5108,10 @@ msgstr "మీ రెజ్యూమేను పేరు పెట్టడం
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Start building your resume from scratch"
 msgstr "స్క్రాచ్ నుండి మీ రెజ్యూమే నిర్మించడం ప్రారంభించండి"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Start date must be on or before end date."
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Start each one with a concrete verb: built, led, reduced, migrated."
@@ -6049,6 +6124,10 @@ msgstr "లేఅవుట్ మళ్లీ రెండర్ అయినప
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "కనీసం 9pt ఉపయోగించండి."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr "6 నుండి 64 అక్షరాల మధ్య ఉపయోగించండి."
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

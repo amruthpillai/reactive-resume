@@ -43,7 +43,7 @@ describe("SectionShell", () => {
 		);
 
 		expect(headingContainerBlock?.groups?.body).toContain('alignItems: "flex-start"');
-		expect(source).toContain("getSectionHeadingTextStyle(sectionHeadingStyle, sectionHeadingRuleStyle)");
+		expect(source).toMatch(/getSectionHeadingTextStyle\(\s*sectionHeadingStyle,\s*sectionHeadingRuleStyle(?:,|\))/);
 		expect(source).toContain("width: _width");
 		expect(source).not.toContain('width: "auto"');
 	});

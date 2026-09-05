@@ -1,9 +1,11 @@
+import type { OpenAPI } from "@orpc/openapi";
 import { OpenAPIGenerator } from "@orpc/openapi";
 import { JSON_SCHEMA_INPUT_REGISTRY, ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { downloadResumePdfProcedure } from "@reactive-resume/api/features/resume/export";
 import router from "@reactive-resume/api/routers";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
+import { writableResumeDataSchema } from "@reactive-resume/schema/resume/write";
 
 export const openAPIRouter = {
 	...router,
@@ -16,6 +18,7 @@ export const openAPIRouter = {
 const { $schema: _dialect, ...resumeDataInputSchema } = createResumeDataJsonSchema();
 type ResumeDataInputJsonSchema = Parameters<typeof JSON_SCHEMA_INPUT_REGISTRY.add<typeof resumeDataSchema>>[1];
 JSON_SCHEMA_INPUT_REGISTRY.add(resumeDataSchema, resumeDataInputSchema as unknown as ResumeDataInputJsonSchema);
+JSON_SCHEMA_INPUT_REGISTRY.add(writableResumeDataSchema, resumeDataInputSchema as unknown as ResumeDataInputJsonSchema);
 const importResumeInputSchema = openAPIRouter.resume.import["~orpc"].inputSchema;
 if (importResumeInputSchema) {
 	JSON_SCHEMA_INPUT_REGISTRY.add(importResumeInputSchema, {
@@ -50,6 +53,31 @@ type GenerateOpenApiSpecOptions = {
 	version: string;
 };
 
+const healthDependencySchema = {
+	type: "object",
+	properties: {
+		status: { type: "string", enum: ["healthy", "unhealthy"] },
+		latencyMs: { type: "number" },
+		error: { type: "string", description: "Generic failure message. Detailed diagnostics are logged on the server." },
+	},
+	required: ["status", "latencyMs"],
+	additionalProperties: true,
+} satisfies OpenAPI.SchemaObject;
+
+const healthResponseSchema = {
+	type: "object",
+	properties: {
+		service: { type: "string", enum: ["reactive-resume"] },
+		version: { type: "string", description: "The running application's build version." },
+		status: { type: "string", enum: ["healthy", "unhealthy"] },
+		timestamp: { type: "string", format: "date-time" },
+		uptime: { type: "string" },
+		database: healthDependencySchema,
+		storage: healthDependencySchema,
+	},
+	required: ["service", "version", "status", "timestamp", "uptime", "database", "storage"],
+} satisfies OpenAPI.SchemaObject;
+
 export async function generateOpenApiSpec({ appUrl, version }: GenerateOpenApiSpecOptions) {
 	return await openAPIGenerator.generate(openAPIRouter, {
 		info: {
@@ -60,9 +88,31 @@ export async function generateOpenApiSpec({ appUrl, version }: GenerateOpenApiSp
 			contact: { name: "Amruth Pillai", email: "hello@amruthpillai.com", url: "https://amruthpillai.com" },
 		},
 		servers: [{ url: `${appUrl}/api/openapi` }],
+		paths: {
+			"/api/health": {
+				get: {
+					operationId: "getHealth",
+					tags: ["System"],
+					summary: "Get application health and version",
+					description: "Checks database and storage availability. Does not require authentication.",
+					servers: [{ url: appUrl }],
+					security: [],
+					responses: {
+						"200": {
+							description: "The application and its dependencies are healthy.",
+							content: { "application/json": { schema: healthResponseSchema } },
+						},
+						"503": {
+							description: "One or more application dependencies are unhealthy.",
+							content: { "application/json": { schema: healthResponseSchema } },
+						},
+					},
+				},
+			},
+		},
 		externalDocs: { url: "https://docs.rxresu.me", description: "Reactive Resume Documentation" },
 		commonSchemas: {
-			ResumeData: { schema: resumeDataSchema, strategy: "input" },
+			ResumeData: { schema: writableResumeDataSchema, strategy: "input" },
 		},
 		components: {
 			securitySchemes: {

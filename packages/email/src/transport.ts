@@ -13,23 +13,17 @@ type SendEmailOptions = {
 	from?: string;
 };
 
-const isSmtpEnabled = () => !!env.SMTP_HOST && !!env.SMTP_USER && !!env.SMTP_PASS && !!env.SMTP_FROM;
-
 let cachedTransport: Transporter | undefined;
 
 const getTransport = () => {
-	if (!isSmtpEnabled()) return;
+	const { SMTP_HOST: host, SMTP_USER: user, SMTP_PASS: pass, SMTP_FROM: from } = env;
+	if (!host || !user || !pass || !from) return;
 
 	cachedTransport ??= nodemailer.createTransport({
-		host: env.SMTP_HOST,
+		host,
 		port: env.SMTP_PORT,
 		secure: env.SMTP_SECURE,
-		auth: {
-			// biome-ignore lint/style/noNonNullAssertion: guarded by isSmtpEnabled
-			user: env.SMTP_USER!,
-			// biome-ignore lint/style/noNonNullAssertion: guarded by isSmtpEnabled
-			pass: env.SMTP_PASS!,
-		},
+		auth: { user, pass },
 	});
 
 	return cachedTransport;
@@ -42,8 +36,8 @@ export const sendEmail = async (options: SendEmailOptions) => {
 		to: options.to,
 		from,
 		subject: options.subject,
-		text: options.text,
-		html: options.html,
+		...(options.text === undefined ? {} : { text: options.text }),
+		...(options.html === undefined ? {} : { html: options.html }),
 	};
 
 	if (options.react) {

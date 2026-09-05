@@ -8,7 +8,7 @@ msgstr ""
 "Language: km\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 15:47\n"
 "Last-Translator: \n"
 "Language-Team: Khmer\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -31,6 +31,11 @@ msgstr "\"{0} · {1}\" និងប្រវត្តិពេលវេលាទ
 #: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "(បើក​ក្នុងផ្ទាំង​ថ្មី)"
+
+#. placeholder {0}: selected.length
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "{0, plural, one {# application to export} other {# applications to export}}"
+msgstr ""
 
 #. placeholder {0}: section.items.length
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -519,6 +524,10 @@ msgstr "អ្នកផ្តល់សេវា AI តម្រូវឱ្យ R
 msgid "Albanian"
 msgstr "Albanian"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "All applications (including archived)"
+msgstr ""
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
 msgstr "អនុញ្ញាត​ឱ្យ​ចូល​ដំណើរការ​សាធារណៈ"
@@ -568,7 +577,7 @@ msgstr "Anthropic Claude"
 msgid "Any tag"
 msgstr "ស្លាកណាមួយ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "អ្នកណាដែលបើក URL សាធារណៈនឹងត្រូវការពាក្យសម្ងាត់នេះ។"
 
@@ -618,6 +627,14 @@ msgstr "បានបន្ថែមពាក្យសុំទៅដំណើរ
 msgid "Application Copilot"
 msgstr "Copilot សម្រាប់ពាក្យសុំ"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date from"
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Application date to"
+msgstr ""
+
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Application deleted."
@@ -645,6 +662,10 @@ msgstr "ពាក្យសុំតាមពេលវេលា"
 #: src/features/applications/components/insights-view.tsx
 msgid "Applications sent per week (last 8 weeks)"
 msgstr "ពាក្យសុំបានផ្ញើក្នុងមួយសប្តាហ៍ (៨ សប្តាហ៍ចុងក្រោយ)"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Applications to export"
+msgstr ""
 
 #: src/features/applications/components/table-view.tsx
 msgid "Applied"
@@ -921,7 +942,9 @@ msgstr "តើ​ខ្ញុំ​អាច​នាំចេញ​ប្រវ
 #: src/dialogs/resume/sections/section-item-dialog.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
+#: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1130,10 @@ msgstr "បន្ទះពាក្យបញ្ជា - {currentPage}"
 msgid "Community"
 msgstr "សហគមន៍"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr ""
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1167,10 @@ msgstr "បង្រួម ឬលុបរូបភាពធំៗ ដើម្�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "អះអាង"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr ""
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1520,6 +1551,10 @@ msgstr "ច្រឹបរូបភាព"
 msgid "CSV data"
 msgstr "ទិន្នន័យ CSV"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Current filters"
+msgstr ""
+
 #: src/dialogs/auth/change-password.tsx
 msgid "Current Password"
 msgstr "ពាក្យសម្ងាត់​បច្ចុប្បន្ន"
@@ -1527,6 +1562,10 @@ msgstr "ពាក្យសម្ងាត់​បច្ចុប្បន្ន
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Current stage"
 msgstr "ដំណាក់កាលបច្ចុប្បន្ន"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Currently available for German resumes. Uses the language set in Page."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 msgid "Custom"
@@ -1794,6 +1833,14 @@ msgstr "ទាញយក"
 msgid "Download a copy of all your data, including your profile and every resume, as a JSON file."
 msgstr "ទាញយកច្បាប់ចម្លងនៃទិន្នន័យទាំងអស់របស់អ្នក រួមទាំងប្រវត្តិរូប និងប្រវត្តិរូបសង្ខេបនីមួយៗរបស់អ្នក ជាឯកសារ JSON។"
 
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download application details, contacts, notes, and timeline history as CSV."
+msgstr ""
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Download CSV"
+msgstr ""
+
 #. Primary action in the builder header to open resume download options
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Download options"
@@ -1978,8 +2025,8 @@ msgid "Enabled"
 msgstr "បានបើក"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "កំពុង​បើក​ការ​ការពារ​ដោយ​ពាក្យសម្ងាត់..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -2075,6 +2122,14 @@ msgstr "ផុតកំណត់​នៅ​ថ្ងៃទី {0}"
 #: src/libs/resume/section.tsx
 msgid "Export"
 msgstr "នាំចេញ"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Export applications"
+msgstr ""
+
+#: src/routes/dashboard/applications/index.tsx
+msgid "Export CSV"
+msgstr ""
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Export Data"
@@ -2649,6 +2704,10 @@ msgstr "https://gateway.example.com/v1"
 #: src/libs/locale.ts
 msgid "Hungarian"
 msgstr "Hungarian"
+
+#: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
+msgid "Hyphenation"
+msgstr ""
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3534,6 +3593,7 @@ msgstr "មិនប្រាកដថាត្រូវសរសេរអ្វ
 msgid "Note"
 msgstr "ចំណាំ"
 
+#: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/libs/resume/section.tsx
 msgid "Notes"
@@ -3748,14 +3808,19 @@ msgstr "កូនសោ​កំណត់​អត្តសញ្ញាណ & 2FA
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "ពាក្យសម្ងាត់"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "ពាក្យសម្ងាត់​មិន​អាច​ទុកទទេ​ឡើយ។"
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3833,10 @@ msgstr "ការ​ការពារ​ដោយ​ពាក្យសម្ង
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "ការ​ការពារ​ដោយ​ពាក្យសម្ងាត់​ត្រូវ​បាន​បើក។"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4057,7 @@ msgstr "របារ​វឌ្ឍនភាព"
 msgid "Projects"
 msgstr "គម្រោង"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "ការពារប្រវត្តិរូបសង្ខេបរបស់អ្នកដោយពាក្យសម្ងាត់"
 
@@ -4652,6 +4721,7 @@ msgstr "Serbian"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "កំណត់ពាក្យសម្ងាត់ ប្រសិនបើអ្នកចង់ឱ្យមានតែអ្នកដែលដឹងវាប៉ុណ្ណោះទើបអាចបើក URL សាធារណៈបាន។"
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +5010,7 @@ msgstr "មានបញ្ហាកើតឡើងពេលចូល។ សូ�
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "មាន​អ្វីមួយ​ខុសប្រក្រតី។ សូម​ព្យាយាម​ម្ដង​ទៀត។"
@@ -5037,6 +5108,10 @@ msgstr "ចាប់ផ្តើម​បង្កើត​ប្រវត្ត
 #: src/routes/dashboard/resumes/-components/list-view.tsx
 msgid "Start building your resume from scratch"
 msgstr "ចាប់ផ្តើម​បង្កើត​ប្រវត្តិរូប​របស់​អ្នក​ពី​សូន្យ"
+
+#: src/features/applications/components/export-applications-sheet.tsx
+msgid "Start date must be on or before end date."
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Start each one with a concrete verb: built, led, reduced, migrated."
@@ -6049,6 +6124,10 @@ msgstr "ប្រើទំហំ A4 ឬ US Letter ដើម្បីឱ្យប
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "ប្រើយ៉ាងតិច 9pt។"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

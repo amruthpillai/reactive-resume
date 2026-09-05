@@ -142,7 +142,7 @@ async function applyResumePatchTx(
 	let patchedData: ResumeData;
 
 	try {
-		patchedData = applyResumePatches(existing.data, input.operations);
+		patchedData = applyResumePatches(parseStoredResumeData(existing.data), input.operations);
 	} catch (error) {
 		if (error instanceof ResumePatchError) {
 			throw new ORPCError("INVALID_PATCH_OPERATIONS", {
