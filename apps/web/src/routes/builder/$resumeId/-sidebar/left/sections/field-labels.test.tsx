@@ -12,7 +12,7 @@ import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { BasicsSectionBuilder } from "./basics";
 import { PictureSectionBuilder } from "./picture";
 
-const state = vi.hoisted(() => ({ data: {} as ResumeData, update: vi.fn() }));
+const state = vi.hoisted(() => ({ data: {} as ResumeData, update: vi.fn(), uploadFile: vi.fn() }));
 
 vi.mock("@/features/resume/builder/draft", () => ({
 	useCurrentBuilderResumeSelector: (selector: (resume: { data: ResumeData }) => unknown) => selector(state),
@@ -27,7 +27,7 @@ vi.mock("@/libs/tanstack-form", async () => {
 vi.mock("@/libs/orpc/client", () => ({
 	orpc: {
 		storage: {
-			uploadFile: { mutationOptions: () => ({ mutationFn: vi.fn() }) },
+			uploadFile: { mutationOptions: () => ({ mutationFn: state.uploadFile }) },
 			deleteFile: { mutationOptions: () => ({ mutationFn: vi.fn() }) },
 		},
 	},
@@ -47,6 +47,8 @@ beforeEach(() => {
 	state.data = structuredClone(defaultResumeData);
 	state.update.mockReset();
 	state.update.mockImplementation((update: (draft: ResumeData) => void) => update(state.data));
+	state.uploadFile.mockReset();
+	state.uploadFile.mockResolvedValue({ url: "/uploads/picture.png" });
 });
 
 function renderSection(children: ReactNode) {
@@ -82,5 +84,61 @@ describe("builder field labels", () => {
 
 		fireEvent.change(input, { target: { value: "144" } });
 		await waitFor(() => expect(state.data.picture.size).toBe(144));
+	});
+
+	it("persists named fit choices and previews contain without cropping", async () => {
+		const user = userEvent.setup();
+		renderSection(<PictureSectionBuilder />);
+
+		expect(screen.getByRole("group", { name: "Fit" })).toBeInTheDocument();
+		await user.click(screen.getByRole("button", { name: "Contain" }));
+		await waitFor(() => expect(state.data.picture.fit).toBe("contain"));
+
+		const file = new File(["full-image"], "full.png", { type: "image/png" });
+		await user.upload(screen.getAllByLabelText("Upload picture")[0] as HTMLInputElement, file);
+
+		await waitFor(() => expect(state.uploadFile).toHaveBeenCalledOnce());
+		expect(state.uploadFile.mock.calls[0]?.[0]).toBe(file);
+		expect(document.querySelector("img.object-contain")).toBeInTheDocument();
+		expect(screen.queryByRole("dialog", { name: "Crop picture" })).not.toBeInTheDocument();
+	});
+
+	it("keeps cover uploads in cancelable crop flow", async () => {
+		const user = userEvent.setup();
+		renderSection(<PictureSectionBuilder />);
+
+		const file = new File(["crop-image"], "crop.png", { type: "image/png" });
+		await user.upload(screen.getAllByLabelText("Upload picture")[0] as HTMLInputElement, file);
+		const dialog = screen.getByRole("dialog", { name: "Crop picture" });
+		expect(dialog).toBeInTheDocument();
+
+		await user.click(screen.getByRole("button", { name: "Cancel" }));
+		expect(dialog).not.toBeInTheDocument();
+		expect(state.uploadFile).not.toHaveBeenCalled();
+	});
+
+	it("keeps the existing upload error path for full contain files", async () => {
+		state.uploadFile.mockRejectedValue(new Error("Upload failed"));
+		const user = userEvent.setup();
+		renderSection(<PictureSectionBuilder />);
+
+		await user.click(screen.getByRole("button", { name: "Contain" }));
+		const file = new File(["full-image"], "full.png", { type: "image/png" });
+		await user.upload(screen.getAllByLabelText("Upload picture")[0] as HTMLInputElement, file);
+
+		await waitFor(() => expect(state.uploadFile).toHaveBeenCalledOnce());
+		expect(state.data.picture.url).toBe("");
+		expect(screen.queryByRole("dialog", { name: "Crop picture" })).not.toBeInTheDocument();
+	});
+
+	it("disables fit and upload controls inside the builder lock fieldset", () => {
+		renderSection(
+			<fieldset disabled>
+				<PictureSectionBuilder />
+			</fieldset>,
+		);
+
+		expect(screen.getByRole("button", { name: "Contain" })).toBeDisabled();
+		expect(screen.getAllByLabelText("Upload picture")[0]).toBeDisabled();
 	});
 });

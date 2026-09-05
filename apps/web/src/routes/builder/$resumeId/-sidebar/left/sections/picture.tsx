@@ -94,7 +94,7 @@ function PicturePreviewControls({
 					<img
 						alt=""
 						src={normalizedPictureUrl}
-						className="fade-in relative z-10 size-full animate-in rounded-md object-cover transition-opacity group-hover/picture:opacity-20"
+						className={`fade-in relative z-10 size-full animate-in rounded-md transition-opacity group-hover/picture:opacity-20 ${picture.fit === "contain" ? "object-contain" : "object-cover"}`}
 					/>
 				)}
 
@@ -147,6 +147,57 @@ type PictureGeometryFieldsProps = {
 	form: PictureSettingsForm;
 	onAutoSave: () => void;
 };
+
+type PictureFitFieldProps = {
+	form: PictureSettingsForm;
+	onAutoSave: () => void;
+};
+
+function PictureFitField({ form, onAutoSave }: PictureFitFieldProps) {
+	return (
+		<form.Field name="fit">
+			{(field) => (
+				<div className="space-y-1.5">
+					<div className="font-medium text-sm">
+						<Trans>Fit</Trans>
+					</div>
+					<ButtonGroup role="group" aria-label={t`Fit`} className="w-full">
+						<Button
+							type="button"
+							variant={field.state.value === "cover" ? "default" : "outline"}
+							aria-pressed={field.state.value === "cover"}
+							className="flex-1"
+							onClick={() => {
+								field.handleChange("cover");
+								onAutoSave();
+							}}
+						>
+							<Trans>Cover</Trans>
+						</Button>
+						<Button
+							type="button"
+							variant={field.state.value === "contain" ? "default" : "outline"}
+							aria-pressed={field.state.value === "contain"}
+							className="flex-1"
+							onClick={() => {
+								field.handleChange("contain");
+								onAutoSave();
+							}}
+						>
+							<Trans>Contain</Trans>
+						</Button>
+					</ButtonGroup>
+					<p className="text-muted-foreground text-xs">
+						<Trans>
+							Cover crops the image to fill the frame. Contain shows the whole image. Reupload the original to restore
+							edges removed by an earlier crop.
+						</Trans>
+					</p>
+				</div>
+			)}
+		</form.Field>
+	);
+}
 
 function PictureGeometryFields({ form, onAutoSave }: PictureGeometryFieldsProps) {
 	return (
@@ -540,6 +591,10 @@ function PictureSectionForm() {
 	const onUploadPicture = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
+		if (form.state.values.fit === "contain") {
+			uploadPictureFile(file);
+			return;
+		}
 
 		// Open the interactive crop step instead of uploading immediately.
 		setCropState({ file, imageSrc: URL.createObjectURL(file) });
@@ -665,6 +720,8 @@ function PictureSectionForm() {
 					onSelectPicture={onSelectPicture}
 					onUploadPicture={onUploadPicture}
 				/>
+
+				<PictureFitField form={form} onAutoSave={handleAutoSave} />
 
 				<div className="grid @md:grid-cols-2 grid-cols-1 gap-4">
 					<PictureGeometryFields form={form} onAutoSave={handleAutoSave} />

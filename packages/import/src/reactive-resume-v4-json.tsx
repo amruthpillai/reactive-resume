@@ -248,6 +248,7 @@ export function parseReactiveResumeV4JSON(json: string): ResumeData {
 		const transformed: ResumeData = {
 			picture: {
 				hidden: v4Data.basics.picture?.effects?.hidden ?? false,
+				fit: "cover",
 				url: v4Data.basics.picture?.url ?? "",
 				size: clamp(v4Data.basics.picture?.size ?? 80, 32, 512),
 				rotation: 0,
