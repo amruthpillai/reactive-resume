@@ -145,7 +145,6 @@ export function ApplicationAiCopilot({ application }: Props) {
 	const canScore = !!application.resumeId && !!application.jobDescription;
 	const score = application.matchScore;
 	const gaps = aiGaps(application);
-	// biome-ignore lint/correctness/useExhaustiveDependencies: keep review-requested callback dependencies explicit.
 	const copyDraft = useCallback(async () => {
 		try {
 			if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
@@ -157,7 +156,7 @@ export function ApplicationAiCopilot({ application }: Props) {
 				description: t`Could not copy to clipboard. Please copy the text manually.`,
 			});
 		}
-	}, [draft?.text, toast, t]);
+	}, [draft?.text]);
 
 	return (
 		<section className="overflow-hidden rounded-xl border border-primary/15 bg-primary/[0.04]">
