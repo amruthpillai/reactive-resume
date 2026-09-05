@@ -1,0 +1,40 @@
+diff --git a/lib/index.js b/lib/index.js
+index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..dbe7b6eaa6817e8cb0f526a68cdaa92b4ca78eb7 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -3196,7 +3196,34 @@ const splitChildren = (height, contentArea, node) => {
+ };
+ const splitView = (node, height, contentArea) => {
+     const [currentNode, nextNode] = splitNode(node, height);
+-    const [currentChilds, nextChildren] = splitChildren(height, contentArea, node);
++    let [currentChilds, nextChildren] = splitChildren(height, contentArea, node);
++    // Reactive Resume opts list rows into companion pagination. Use the text
++    // fragments after orphan/widow splitting, not estimated font line heights.
++    // Untagged rows and ordinary absolutely positioned nodes are unaffected.
++    if (node.props['data-resume-list-item']) {
++        const hasText = (child) => child && (child.type === P.Text
++            ? child.lines?.length > 0
++            : child.children?.some(hasText));
++        const content = (children) => children.find((child) => child.props['data-resume-list-content']);
++        const markerIndex = node.children.findIndex((child) => child.props['data-resume-list-marker']);
++        const contentIndex = node.children.findIndex((child) => child.props['data-resume-list-content']);
++        const hasMarker = (children) => children.some((child) => child.props['data-resume-list-marker']);
++        if (markerIndex !== -1 && !hasMarker(currentChilds) && hasMarker(nextChildren) && hasText(content(currentChilds))) {
++            // An authored presence hint can defer a marker that follows content
++            // in RTL or semantic order. Defer the unsplit content with it.
++            currentChilds = currentChilds.filter((child) => !child.props['data-resume-list-content']);
++            nextChildren = node.children.filter((child) => child.props['data-resume-list-content'] || child.props['data-resume-list-marker']);
++        } else if (markerIndex !== -1 && !hasText(content(currentChilds)) && hasText(content(nextChildren))) {
++            // The first text did not fit. Preserve the authored marker/content
++            // order when moving the marker to the next fragment of this row.
++            const marker = node.children[markerIndex];
++            const nextMarker = { ...marker, box: { ...marker.box, top: 0 } };
++            currentChilds = currentChilds.filter((child) => !child.props['data-resume-list-marker']);
++            nextChildren = nextChildren.filter((child) => !child.props['data-resume-list-marker']);
++            if (markerIndex < contentIndex) nextChildren.unshift(nextMarker);
++            else nextChildren.push(nextMarker);
++        }
++    }
+     return [
+         assingChildren(currentChilds, currentNode),
+         assingChildren(nextChildren, nextNode),

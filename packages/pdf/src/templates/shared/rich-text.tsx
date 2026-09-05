@@ -248,14 +248,14 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					const itemStyles = toRichTextStyleArray(style);
 					const contentItemStyles = itemStyles.map(stripRichTextVerticalMargins);
 
+					// The scoped @react-pdf/layout patch keeps these companions together using
+					// actual text fragments, including authored orphan counts and fallback fonts.
 					const markerNode = (
 						<PdfText
 							key="marker"
+							data-resume-list-marker
 							{...resolvedPdfTextProps(markerResolved)}
-							minPresenceAhead={
-								markerResolved.minPresenceAhead ?? bodyLineHeight ?? metadata.typography.body.lineHeight
-							}
-							style={composeStyles(richListItemMarkerStyle, markerResolved.style)}
+							style={composeStyles(richListItemMarkerStyle, { alignSelf: "flex-start" }, markerResolved.style)}
 						>
 							{marker}
 						</PdfText>
@@ -265,6 +265,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					const contentNode = rtl ? (
 						<PdfText
 							key="content"
+							data-resume-list-content
 							{...resolvedPdfTextProps(contentResolved)}
 							style={composeStyles(
 								richListItemContentStyle,
@@ -280,6 +281,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					) : (
 						<View
 							key="content"
+							data-resume-list-content
 							{...resolvedPdfFlowProps(contentResolved)}
 							style={composeStyles(
 								richListItemContentStyle,
@@ -311,6 +313,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					// (works fine for split-row/contact-list). Swap DOM order to position the marker.
 					return (
 						<View
+							data-resume-list-item
 							{...resolvedPdfFlowProps(itemResolved)}
 							style={composeStyles(
 								richListItemRowStyle,
@@ -320,6 +323,8 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 								itemResolved.style,
 							)}
 						>
+							{/* React PDF only honors an authored presence hint after a preceding sibling. */}
+							{markerResolved.minPresenceAhead ? <View style={{ position: "absolute", width: 0, height: 0 }} /> : null}
 							{renderedChildren}
 						</View>
 					);
