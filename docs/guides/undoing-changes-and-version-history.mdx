@@ -50,6 +50,8 @@ Reactive Resume snapshots your resume automatically:
 
 Snapshots are stored on the server, per resume, and are kept across sessions.
 
+Reactive Resume keeps a rolling window of the 30 most recent snapshots for each resume. Periodic editing snapshots are throttled to at most one every two minutes, while milestones such as imports, template changes, AI edits, and restores create their own checkpoints.
+
 ### Open version history
 
 Click the **clock** icon in the builder header, next to the resume name, to open the version history menu.
@@ -83,6 +85,15 @@ Restoring is **non-destructive**: it writes the older snapshot back through the 
   from the dashboard.
 </Info>
 
+## Keep longer owner-managed history with Git
+
+In-app version history and Git backups solve different problems:
+
+- **In-app version history** is automatic, stored by Reactive Resume, and limited to the 30 most recent rolling snapshots for one resume.
+- **Git history** contains only the JSON exports you choose to commit. It is stored in your own local repository, uses your commit messages, and follows the retention you choose.
+
+Git backup is manual. Reactive Resume does not create commits, synchronize with a repository, or upload files to a remote. To set up a local repository and recover a committed export as a new resume, see [Keep JSON backups in a local Git repository](/guides/exporting-your-resume#keep-json-backups-in-a-local-git-repository).
+
 ## Which to use when
 
 | Situation | Use |
@@ -92,3 +103,4 @@ Restoring is **non-destructive**: it writes the older snapshot back through the 
 | You imported a resume and want to compare with what you had before. | Version history |
 | The AI assistant applied edits you no longer want. | Undo the batch, or restore the pre-AI snapshot. |
 | You closed the browser and want to roll back yesterday's changes. | Version history |
+| You want selected backups beyond the 30-snapshot rolling window. | Export JSON and commit it to your own Git repository. |

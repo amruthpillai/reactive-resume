@@ -98,17 +98,78 @@ For examples and common workflows, see [Exporting a resume to Markdown](/guides/
 
 Choose **JSON** when you want a structured backup of your resume.
 
-The JSON export includes your full resume content and settings. You can import it later from the dashboard to restore the resume or create another version.
+The JSON export includes your full resume content and settings, including any cover letter sections embedded in that resume. You can import it later from the dashboard to restore the resume or create another version.
 
 JSON is also useful when working with AI assistants that understand structured data. Export JSON, ask an assistant to review or edit the fields, then import the revised JSON as a new resume.
 
 <Info>
-  JSON export is only available on the **Resume** tab. Cover letters are exported through PDF, DOCX, or Markdown.
+  JSON export in the download dialog is only available on the **Resume** tab. To export an independent letter as JSON, open it from **Cover letters** on the dashboard and select **Export JSON**.
 </Info>
 
 <Warning>
   Review AI-generated changes before importing or using them. AI assistants can make mistakes or add details that do not reflect your experience.
 </Warning>
+
+## Keep JSON backups in a local Git repository
+
+Git can keep owner-controlled versions of your exported resume and cover letter without changing Reactive Resume or connecting it to a Git provider. This workflow is manual and local only: Reactive Resume does not commit, synchronize, or upload the files for you.
+
+### Choose the right exports
+
+Reactive Resume provides three different JSON shapes:
+
+| Export | How to create it | What it contains | Can you import it as one resume? |
+| --- | --- | --- | --- |
+| **Single resume** | In the builder, open **Download**, stay on **Resume**, and download **JSON**. | Resume content and settings, including cover letter sections embedded in that resume. | Yes. |
+| **Independent cover letter** | Open a letter from **Cover letters** on the dashboard and select **Export JSON**. | That letter's content and copied resume styling in the Reactive Resume cover-letter format. | No. Import it through the cover-letter library instead. |
+| **Account archive** | Open **Settings**, go to **Account**, and select **Export my data**. | Account profile metadata, all owned resume records, independent cover letters, and an `exportedAt` timestamp. | No. It is an archive, not a single-resume import file. |
+
+Use the single-resume and independent-cover-letter exports for the Git workflow below. An account archive is an additional portability backup, not a replacement for those files. Because its `exportedAt` timestamp changes on every export, do not expect otherwise unchanged account archives to be byte-for-byte identical.
+
+### Create the local backup
+
+1. Create a folder outside your Reactive Resume source checkout.
+2. Export the resume and each independent cover letter you want to keep.
+3. Give the files stable, descriptive names. The example below uses `resume.json` and `cover-letter.json`; replace each file with its latest export instead of changing its name.
+4. From that folder, initialize Git and inspect exactly what you are about to commit:
+
+```bash
+git init
+git add -- resume.json cover-letter.json
+git diff --cached --stat
+git diff --cached -- resume.json cover-letter.json
+git commit -m "Back up resume and cover letter"
+```
+
+After the first commit, replace the JSON files with fresh exports and inspect the visible changes before committing again:
+
+```bash
+git diff -- resume.json
+```
+
+Stable filenames and the exports' two-space indentation make field changes easier to review. Repeat the add, diff, and commit steps only after the changes look correct.
+
+<Warning>
+  Resume JSON, cover-letter JSON, and especially an account archive can contain private data such as contact details, application text, profile metadata, and email address. A local Git repository does not publish anything. Inspect every diff and decide separately whether to publish it; if you use a remote, make it private and control who can access it.
+</Warning>
+
+<Info>
+  JSON exports store image URLs, not offline copies of image files. An imported backup can show an image only while the referenced storage remains available and accessible.
+</Info>
+
+### Recover an earlier resume without replacing the current one
+
+Choose the committed revision of `resume.json` that you want to recover. You can inspect the currently committed version from the backup folder with:
+
+```bash
+git show HEAD:resume.json
+```
+
+Save the selected earlier revision as a JSON file. On the Reactive Resume dashboard, select **Import an existing resume**, choose that file, and complete the import. Import creates a new resume, so the current resume remains available for comparison or further editing.
+
+Only a single-resume JSON export works for this recovery flow. Import independent cover letters through the cover-letter library. Restoring an account archive wholesale is outside this workflow.
+
+Git backups complement Reactive Resume's rolling snapshots; they do not replace or synchronize with [undo and version history](/guides/undoing-changes-and-version-history).
 
 ## Printing your resume
 
