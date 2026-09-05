@@ -136,6 +136,8 @@ export function PdfCanvasPage({
 				canvas.width = Math.floor(width * renderScale);
 				canvas.height = Math.floor(height * renderScale);
 
+				// PDF.js positions glyphs in physical coordinates, even inside an RTL resume page.
+				canvasContext.direction = "ltr";
 				canvasContext.setTransform(1, 0, 0, 1, 0, 0);
 				canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
