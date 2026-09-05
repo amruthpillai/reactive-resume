@@ -30,7 +30,7 @@ const createResumeThumbnailUrl = async (data: ResumeData, size: ResumeThumbnailS
 	const pdf = await createResumePdfBlob(data);
 	throwIfAborted(signal);
 
-	const url = await createPdfFirstPageImageUrl(pdf, size);
+	const url = await createPdfFirstPageImageUrl(pdf, size, signal);
 
 	if (signal.aborted) {
 		URL.revokeObjectURL(url);

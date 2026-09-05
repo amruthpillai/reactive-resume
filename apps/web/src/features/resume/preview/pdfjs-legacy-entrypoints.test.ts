@@ -6,7 +6,7 @@ const pdfjsMock = vi.hoisted(() => {
 	const page = {
 		cleanup: vi.fn(),
 		getViewport: vi.fn(({ scale }: { scale: number }) => ({ height: 200 * scale, width: 100 * scale })),
-		render: vi.fn(() => ({ promise: Promise.resolve() })),
+		render: vi.fn(() => ({ promise: Promise.resolve(), cancel: vi.fn() })),
 	};
 
 	const pdfDocument = {
@@ -15,7 +15,7 @@ const pdfjsMock = vi.hoisted(() => {
 	};
 
 	const loadingTask = {
-		destroy: vi.fn(),
+		destroy: vi.fn(async () => {}),
 		promise: Promise.resolve(pdfDocument),
 	};
 
@@ -99,5 +99,40 @@ describe("PDF.js browser entrypoints", () => {
 			expect.objectContaining({ annotationMode: 0, background: "white" }),
 		);
 		expect(pdfjsMock.loadingTask.destroy).toHaveBeenCalledTimes(1);
+	});
+
+	it("cancels obsolete thumbnail rasterization and releases the PDF loading task", async () => {
+		vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue({} as CanvasRenderingContext2D);
+		vi.spyOn(URL, "createObjectURL").mockImplementation(pdfjsMock.createObjectURL);
+		let rejectRender!: (error: Error) => void;
+		const promise = new Promise<never>((_resolve, reject) => {
+			rejectRender = reject;
+		});
+		const cancel = vi.fn(() => rejectRender(new pdfjsMock.legacyModule.RenderingCancelledException("cancelled")));
+		pdfjsMock.page.render.mockReturnValueOnce({ promise, cancel });
+		const controller = new AbortController();
+		const { createPdfFirstPageImageUrl } = await import("./pdf-thumbnail");
+		const pending = createPdfFirstPageImageUrl(new Blob(["%PDF"]), { width: 600, height: 900 }, controller.signal);
+		const rejected = expect(pending).rejects.toMatchObject({ name: "AbortError" });
+		await vi.waitFor(() => expect(pdfjsMock.page.render).toHaveBeenCalledTimes(1));
+		try {
+			controller.abort();
+			expect(cancel).toHaveBeenCalledTimes(1);
+		} finally {
+			rejectRender(new DOMException("cancelled", "AbortError"));
+			await rejected;
+		}
+		expect(pdfjsMock.loadingTask.destroy).toHaveBeenCalledTimes(1);
+		expect(pdfjsMock.createObjectURL).not.toHaveBeenCalled();
+	});
+
+	it("does not load a PDF for an already aborted thumbnail request", async () => {
+		const controller = new AbortController();
+		controller.abort();
+		const { createPdfFirstPageImageUrl } = await import("./pdf-thumbnail");
+		await expect(
+			createPdfFirstPageImageUrl(new Blob(["%PDF"]), { width: 600, height: 900 }, controller.signal),
+		).rejects.toMatchObject({ name: "AbortError" });
+		expect(pdfjsMock.legacyModule.getDocument).not.toHaveBeenCalled();
 	});
 });
