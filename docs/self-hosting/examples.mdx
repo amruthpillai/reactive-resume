@@ -27,6 +27,10 @@ If your homelab or hosting platform already manages PostgreSQL, reuse it by sett
 allowing the app container to reach it over the intended private network. Keep database credentials private and do not
 expose PostgreSQL to the public internet.
 
+When the database connection crosses a host or network boundary, require TLS with certificate and hostname verification.
+Use `sslmode=verify-full` in `DATABASE_URL` where the provider supports it, or the provider's equivalent verified-TLS
+configuration. Private routing limits exposure, but does not itself verify the database server's identity.
+
 For generic Unraid and homelab container fields, including the `localhost` networking warning, see
 [Unraid and other homelab platforms](/self-hosting/docker#unraid-and-other-homelab-platforms). The core resume workflow
 does not require Redis or S3. Redis is a separate optional dependency for the AI Agent workspace, while S3-compatible

@@ -46,11 +46,13 @@ You can pull the latest app image from:
 3. If S3 is disabled, mount persistent storage for app uploads at `/app/data`.
 4. Attach the `reactive-resume` app service and PostgreSQL service to the intended private container network. Do not
    expose PostgreSQL to the public internet.
-5. Launch the services with the existing [Docker Compose quickstart](#quickstart-using-docker-compose).
+5. Launch the services with the [Docker Compose quickstart](#quickstart-using-docker-compose) below.
 6. Wait for PostgreSQL, automatic migrations, and the app health check before opening the UI.
 
 The repository's full `compose.yml` also defines optional Redis and S3-compatible storage services. Those services are
 not required for the core resume workflow; use the two-service example below when you only need the app and PostgreSQL.
+The repository file is a broader source-build stack and publishes administration ports for local use. Before using it
+on an internet-facing host, remove those host port mappings, bind them to loopback, or restrict them with a firewall.
 
 ## Quickstart using Docker Compose
 
@@ -174,7 +176,7 @@ FLAG_ALLOW_UNSAFE_AI_BASE_URL="false"
 ```yaml compose.yml
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:17
     restart: unless-stopped
     environment:
       POSTGRES_DB: postgres
@@ -409,7 +411,7 @@ openssl rand -hex 32
 
 ## Updating your installation
 
-To update your Reactive Resume installation to the latest version:
+To update an installation created from the image-based quickstart above to the latest version:
 
 1. **Back up your database and uploads first.** Do this before every update.
 
@@ -427,6 +429,11 @@ To update your Reactive Resume installation to the latest version:
    ```bash
    docker compose up -d --no-deps reactive-resume
    ```
+
+   These commands target the `reactive-resume` image service from the quickstart. The repository's full `compose.yml`
+   instead names its build-only app service `reactive_resume`; after confirming its dependencies are healthy, rebuild
+   only that service with `docker compose up -d --build --no-deps reactive_resume`. Do not run `docker compose pull`
+   for that build-only service.
 
 4. **Check migration/startup logs** after deploy.
 
