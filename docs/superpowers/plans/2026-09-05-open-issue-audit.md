@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 114 issues audited; verification continues for reports needing exact fixtures or deployment reproduction.
-- 20 fix PRs created: 19 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
+- 21 fix PRs created: 20 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
 - Eight other issues closed with evidence: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341).
-- In progress: #3255 approved cover-letter library, #3017 picture borders/shadows, and OAuth CI verification.
+- In progress: #3017 picture borders/shadows, #3393 application CSV export, #3369 remaining label gaps, and OAuth CI verification.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -43,6 +43,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392) | [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421) | MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; CI test-isolation follow-up underway. |
 | [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | PDF page padding repeats across overflow while preserving template backgrounds; 42 actual-PDF geometry/raster cases pass. |
 | [#3175](https://github.com/amruthpillai/reactive-resume/issues/3175) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | Shared continuation-margin fix covers five affected templates, explicit headerless pages and full-width pages. |
+| [#3255](https://github.com/amruthpillai/reactive-resume/issues/3255) | [#3423](https://github.com/amruthpillai/reactive-resume/pull/3423) | Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios,325 API tests,598 web tests and combined migrations verified. |
 
 ## Product decisions
 
@@ -718,9 +719,11 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Implement owned cover-letter records and shared library/builder editor without duplicating new content inside resume JSON. Preserve embedded cover letters and support explicit Save copy to library. Reuse existing application PDF attachments; test deletion, export, ownership, and concurrent edits.
 
+**Implementation:** [PR #3423](https://github.com/amruthpillai/reactive-resume/pull/3423). Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios,325 API tests,598 web tests and combined migrations verified.
+
 **Product/scope note:** Approved: independently saved cover-letter library, editing shared document from library and builder, selected resume styling, applications attach exported snapshots. Styling refresh lifecycle pending precise choice.
 
-**Related PRs:** [#3395](https://github.com/amruthpillai/reactive-resume/pull/3395)
+**Related PRs:** [#3395](https://github.com/amruthpillai/reactive-resume/pull/3395), [#3423](https://github.com/amruthpillai/reactive-resume/pull/3423)
 
 ### [#3251](https://github.com/amruthpillai/reactive-resume/issues/3251) — [Bug] <title>Missing hover state styling on the builder download button
 
@@ -1160,16 +1163,19 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017) — [Bug] <title>Line width and Shadow width not working
 
-**Assessment:** `confirmed_bug`. **Confidence:** medium. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
 
 **Evidence:**
 
 - Picture style base-template-styles.ts:141-144 forwards borderColor/borderWidth and shadowColor/shadowWidth. SemanticHeaderPicture primitives.tsx:454 passes directly to React PDF Image.
 - Installed @react-pdf render/stylesheet/types sources contain no shadowWidth/shadowColor implementation; shadow is unsupported passthrough. Border width has normal support and requires separate exact reproduction.
+- Actual PDF regression on latest origin/main00a1357de: opaque100pt picture borderWidth10 has zero border pixels in Onyx/Ditto/Glalie; @react-pdf/render4.7.0 renderNode draws border before bitmap, bitmap uses full box and covers border. Dedicated primitive border inset fixes 5 raster tests, preserves photo bounds and semantic/legacy border settings. FullPDF58files688tests pass, PDFtypecheck/Biome pass.
+- Synthetic fixture /tmp/audit-3017.mts across14templates: shadowWidth10 produces identical raster SHA256 to shadowWidth0, despite host IMAGE correct shadowColor/shadowWidth. Renderer has no shadow or blur support. Shadow restoration requires chosen rendering treatment; no shadow code implemented.
 
 **Action plan:**
 
-- Reproduce shadow with known opaque PNG at nonzero width; implement supported shadow rendering behind picture if required; independently test border drawing rather than assume same cause.
+- Review/publish border inset fix from .worktrees/issue-3017-picture-effects; shadow remains distinct unresolved portion.
+- Await user decision on soft shadow restoration versus removing nonfunctional control; if restoring, implement deterministic portable Gaussian-mask PNG rendering and PDF raster tests, preserving geometry/rotation/rounding/semantic overrides.
 
 ### [#3010](https://github.com/amruthpillai/reactive-resume/issues/3010) — [Bug] Jsearch/RapidAPI missing from versions newer than 5.0.20?
 
