@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 115 issues triaged: the initial 114 plus new report #3433. Verification continues for reports needing exact fixtures or deployment reproduction.
-- 32 fix PRs created: 31 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416 and build-cache fix #3429. Draft audit PR #3418 is tracked separately.
-- 13 total issues closed, including #3391; other evidence-backed closures: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341).
-- In progress: remaining issue reproductions, including the new #3433 missing-letter report. Approved opt-in German hyphenation is published in #3435. OAuth, PDF shadow/font, color-picker, margin, cover-letter concurrency, health and Compose review follow-ups addressed; S3 ACL compatibility published. Turbo source dependency cache invalidation fixed in [#3429](https://github.com/amruthpillai/reactive-resume/pull/3429).
+- 34 fix PRs created: 33 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416 and build-cache fix #3429. Draft audit PR #3418 is tracked separately.
+- 14 total issues closed, including #3391; other evidence-backed closures: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341). Product decision closure: [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272) remains intentionally without a cover-letter heading.
+- In progress: bullet pagination (#3344), approved paragraph indentation (#3397), and remaining issue reproductions. New #3433 still needs exact reporter configuration. German hyphenation (#3435), skill-rating alignment (#3437), and imported rich-text preservation (#3438) are published. OAuth, PDF shadow/font, color-picker, margin, cover-letter concurrency, health and Compose review follow-ups addressed; S3 ACL compatibility published. Turbo source dependency cache invalidation fixed in [#3429](https://github.com/amruthpillai/reactive-resume/pull/3429).
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -54,6 +54,8 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#2684](https://github.com/amruthpillai/reactive-resume/issues/2684) | [#3432](https://github.com/amruthpillai/reactive-resume/pull/3432) | Removes unsupported S3 object ACLs. Real SDK wire-contract stub reproduces AWS documented rejection; real Ceph gateway separately verifies public proxy and private access behavior. Exact reported deployment cause remains unproven; PR relates to the issue without closing it. |
 | [#3040](https://github.com/amruthpillai/reactive-resume/issues/3040) | [#3434](https://github.com/amruthpillai/reactive-resume/pull/3434) | Head `2e29a4412`: permits Semantic CSS gap, row-gap and column-gap on level indicators. Seven actual-PDF raster regressions, 690 PDF tests and 1,349 resume-domain tests pass. Original vertical clipping and automatic pagination scope remain unproven; PR relates without closing #3040. |
 | [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340) | [#3435](https://github.com/amruthpillai/reactive-resume/pull/3435) | Head `27c17d8c1`: approved opt-in German hyphenation preserves default-off output and per-document isolation. 722 PDF tests across 59 files including 11 actual-PDF cases, 111 schema tests, 599 web tests, three package typechecks and production builds pass. Four Chromium locale/toggle exports, built-server PDF parity and exact shipped third-party notices verified. |
+| [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343) | [#3437](https://github.com/amruthpillai/reactive-resume/pull/3437) | Head `d154f31b8`: skill ratings align at the bottom of each multi-column row by default. Nine actual-PDF regressions and all 692 PDF tests pass. Single-column raster is byte-identical; CI and review approved. |
+| [#3196](https://github.com/amruthpillai/reactive-resume/issues/3196) | [#3438](https://github.com/amruthpillai/reactive-resume/pull/3438) | Head `165535b5f`: preserves imported rich text without individually addressable semantic descendants. Seven actual-PDF regressions, all 690 PDF tests and a production import/save/reload/export reproduction pass. Original missing-border report remains open; this is a separate regression discovered during its investigation. |
 
 ## Product decisions
 
@@ -62,6 +64,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 - #3255: approved — independently saved cover-letter library, editable from library and builder, selected resume styling, exported snapshots attached to applications. Existing attachment PR #3395 remains related.
 - #3291: approved — CSS picker writes hex, with alpha when needed; implemented in #3431.
 - #3340: approved — opt-in per-resume hyphenation using the resume locale, German first. Missing/false preserves existing output; implemented in unmerged #3435.
+- #3343: approved — align skill-rating bars at the bottom of each grid row by default; implemented in #3437.
+- #3272: approved — keep cover-letter headings omitted; explained and closed as not planned.
+- #3397: approved — indent the whole paragraph through the existing controls; implementation pending.
 - Other architecture and visual feature choices remain listed under individual issues.
 
 ## Priority order
@@ -99,6 +104,7 @@ Classification describes the reported problem against the audit baseline; implem
 - Current main controlled Onyx PDFs using IBM Plex Serif, Helvetica and IBM Plex Sans preserve all eight strings in both keyword/publisher fields, verified by raster and text extraction: /tmp/levelgap-fixture-3433-IBM-Plex-Serif.pdf and related fixtures.
 - Existing PR #3386 changes section-heading padding only; affected field paths in sections.tsx:1226 and :1332 do not consume getSectionHeadingTextStyle. No demonstrated duplicate/fix relationship.
 - Reported v5.2.9 uses renderer 4.8.1 versus current 4.9.0, and PDF.js 6.2.108 versus 6.3.289. Clean detached v5.2.9 with its original frozen dependencies also renders/extracts all eight strings intact in both fields for IBM Plex Serif, Helvetica and IBM Plex Sans: /tmp/v529-fixture-3433-*.pdf. No demonstrated fix across versions; reporter font/styles remain unknown.
+- Production Chromium (33.8 s) and Firefox 153 on macOS (35.2 s) browser workflows pass: typing 16 fields, DB save, reload and PDF download preserve EDH/EPFL/ADH/BDH/CDH/FDH/EEDH/eDH twice each in Azurill with IBM Plex Serif 400/600. Evidence: /tmp/issue-3433-ui-chromium.json and /tmp/issue-3433-ui-firefox.json. Exact reporter Firefox 155/Linux environment remains unverified; issue comment 5552405183 updated.
 
 **Action plan:**
 
@@ -148,7 +154,9 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Decide paragraph indentation units and range; add Tiptap paragraph/heading indent attribute with toolbar controls; preserve whitespace policy across PDF and DOCX; test non-list indentation persistence and exports.
+- Implement paragraph/heading indentation with bounded steps, preserving list behavior. Verify save/reload, PDF and DOCX, and investigate leading-space/tab preservation before claiming the full issue resolved.
+
+**Product/scope note:** User approved whole-paragraph indentation through the existing indent controls. Leading spaces and tabs remain part of the original request and require explicit export/persistence verification.
 
 ### [#3393](https://github.com/amruthpillai/reactive-resume/issues/3393) — [Feature] Export job applications as CSV / printable report
 
@@ -496,18 +504,23 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343) — Skill level icons not aligned horizontally when having multiple columns per row with different amount of lines for keywords
 
-**Assessment:** `product_decision`. **Confidence:** medium. **State:** Open pending resolution/merge.
+**Assessment:** `product_decision`. **Confidence:** high. **State:** Open pending resolution/merge.
 
 **Evidence:**
 
 - packages/pdf/src/templates/shared/sections.tsx:1146 SkillsSection renders each item header/proficiency/keywords/level in natural vertical flow; each column item has independent height.
 - Requested row-aligned icon bars require choosing bottom-aligned row layout versus present natural flow; open #3358 adds another skills layout, not this same request.
+- PR #3437: actual PDF reproduction fails before the change in legacy and Semantic CSS modes and passes afterward. Nine regression cases cover mixed heights, incomplete rows, custom sections, filtering, zero ratings, supported item padding and automatic pagination. All 692 PDF tests across 58 files, typecheck, formatting and boundaries pass; CI and review approved. Before/after visual inspection confirms alignment; single-column PNG bytes are identical.
 
 **Action plan:**
 
-- Decide whether default grid rows should bottom-align levels or expose option; verify mixed keyword heights, partial last row, and pagination.
+- Review and merge #3437 when authorized; keep the issue open until then. Existing inline-skills PR #3358 remains a separate layout feature.
 
-**Related PRs:** [#3358](https://github.com/amruthpillai/reactive-resume/pull/3358)
+**Implementation:** [PR #3437](https://github.com/amruthpillai/reactive-resume/pull/3437). Head `d154f31b8`: skill ratings align at the bottom of each multi-column row by default. Nine actual-PDF regressions and all 692 PDF tests pass. Single-column raster is byte-identical; CI and review approved.
+
+**Product/scope note:** User approved default bottom alignment for rating bars within each grid row; implemented in unmerged PR #3437, head d154f31b8.
+
+**Related PRs:** [#3358](https://github.com/amruthpillai/reactive-resume/pull/3358), [#3437](https://github.com/amruthpillai/reactive-resume/pull/3437)
 
 ### [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341) — Icons of Basics are offset vertically lower than following text
 
@@ -738,16 +751,19 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272) — [Bug] No Cover Letter header in Firefox and Chromium on Linux Mint
 
-**Assessment:** `product_decision`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `product_decision`. **Confidence:** high. **State:** Closed by product decision (not planned).
 
 **Evidence:**
 
 - CoverLetterSection in packages/pdf/src/templates/shared/sections.tsx:1441 hardcodes showHeading=false. semantic/tree.ts:431-434 intentionally omits cover-letter heading.
 - Cover-letter export removes resume chrome (8570c1c70); identical behavior across platforms, not Firefox/Linux rendering failure.
+- Verified current CoverLetterSection omits the heading while retaining recipient and content. Closed as not planned with the user-approved explanation: https://github.com/amruthpillai/reactive-resume/issues/3272#issuecomment-5552512328.
 
 **Action plan:**
 
-- Decide whether cover letters should expose optional title; if current behavior stands explain headings intentionally omitted and document distinction.
+- Closed by product decision: cover-letter section headings remain intentionally omitted across browsers.
+
+**Product/scope note:** User approved retaining omitted cover-letter section headings; explained intentional cross-browser behavior and closed as not planned.
 
 ### [#3265](https://github.com/amruthpillai/reactive-resume/issues/3265) — [Bug] The sections do not appear in the design
 
@@ -869,15 +885,22 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3196](https://github.com/amruthpillai/reactive-resume/issues/3196) — [Bug] The table have not rows and columms
 
-**Assessment:** `needs_reproduction`. **Confidence:** low. **State:** Open pending resolution/merge.
+**Assessment:** `needs_reproduction`. **Confidence:** medium. **State:** Open pending resolution/merge.
 
 **Evidence:**
 
 - No attachment JSON/version or exact table markup. Maintainer already requested sample on 2026-08-16. rich-input.tsx:64-90 has no table extension; PDF rich text delegates HTML renderer.
+- Original screenshot inspected directly: table text is visible in three columns but grid lines are absent. Exact HTML/JSON is still missing, so a content-loss reproduction is not evidence that its border problem is fixed.
+- Separate regression found and fixed in PR #3438, head 165535b5f: rich-text fields containing bare table cells or raw text in unknown wrappers lacked a semantic host and disappeared in Semantic CSS mode. Three actual-PDF cases failed before the fix; all seven regression cases pass afterward. All 690 PDF tests across 58 files, typecheck, boundaries, formatting and production builds pass.
+- Production Chromium JSON import, unrelated edit, save/reload and PDF export fails before the fix and passes afterward in 11.9 s; table cell coordinates and browser preview verified. Artifacts: /tmp/rr-3196-imported-table.pdf and /tmp/rr-3196-imported-table.png.
 
 **Action plan:**
 
-- Obtain minimal table HTML/JSON, version and expected rows/borders; distinguish editor import stripping from PDF table border regression. Keep open pending evidence.
+- Review #3438 as a separate imported-content regression; keep #3196 open for its original missing-border behavior. Obtain original JSON/HTML, including inline styles and table attributes, and distinguish renderer border handling from editor normalization. The custom heading concern is covered by verified Semantic CSS guidance from #3200.
+
+**Implementation:** [PR #3438](https://github.com/amruthpillai/reactive-resume/pull/3438). Head `165535b5f`: preserves imported rich text without individually addressable semantic descendants. Seven actual-PDF regressions, all 690 PDF tests and a production import/save/reload/export reproduction pass. Original missing-border report remains open; this is a separate regression discovered during its investigation.
+
+**Related PRs:** [#3438](https://github.com/amruthpillai/reactive-resume/pull/3438)
 
 ### [#3181](https://github.com/amruthpillai/reactive-resume/issues/3181) — [Bug] Move resumes from v4 to v5 again
 
@@ -1714,10 +1737,15 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Original logs POST /v1/responses HTTP 200 through Open WebUI/llama-swap; maintainer linked #2710 and requested post-fix reproduction twice.
 - Current ai/service.ts:107 uses .chat(model), :121-123 compatible adapter, but full original proxy response contract not available.
+- Original attached llama.cpp log confirms POST /v1/responses HTTP200 through OpenWebUI/llama-swap; no JSON response body or exact Reactive Resume version is supplied.
+- Merged release PR #2814 / commit5cd16a62d changed OpenAI .languageModel(model) to .chat(model), removing the documented Responses-selection incompatibility. Current packages/api/src/features/ai/service.ts:107 retains .chat and :121-123 uses the dedicated compatible adapter.
+- Independent current-service wire fixture: four tests pass, covering OpenAI and OpenAI-compatible against both /openai and /api base paths, exact /chat/completions request capture, success on a schema-correct reply, explanatory failure on malformed HTTP200 and a failing Responses negative control. This is a real SDK/HTTP contract fixture, not a full OpenWebUI/model reproduction. Artifacts /tmp/issue-2708-reproduction/{wire.test.ts,requests.json,malformed-result.json}.
 
 **Action plan:**
 
-- Reproduce Open WebUI /openai path on current version with exact provider selection and response; endpoint changes plausibly relevant but not enough to close generic Bad Gateway.
+- Keep open pending exact current OpenWebUI version/base path/provider/model and response body. Historical Responses-selection cause is fixed, but the reported HTTP200 mismatch cannot be proven identical without its response. Current official OpenWebUI API guidance documents /api/chat/completions, so /api is the corresponding compatible-provider base URL. No additional source change justified by the bounded fixture.
+
+**Related PRs:** [#2814](https://github.com/amruthpillai/reactive-resume/pull/2814)
 
 ### [#2705](https://github.com/amruthpillai/reactive-resume/issues/2705) — [Feature] Save JSON versions in a version control system
 
