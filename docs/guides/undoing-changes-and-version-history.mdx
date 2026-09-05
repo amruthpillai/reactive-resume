@@ -8,7 +8,7 @@ Reactive Resume keeps two layers of change history for every resume:
 - **Undo and redo**: a live timeline of the changes you've made in the current builder session.
 - **Version history**: server-side snapshots taken at meaningful moments, kept even after you close the builder.
 
-Use undo for a quick correction. Use version history to jump back to a template switch, an import, or an AI edit you made earlier.
+Use undo for a quick correction. Use version history to jump back to an earlier editing snapshot, import, or AI/API edit.
 
 ## Undo and redo
 
@@ -44,13 +44,13 @@ Undo history lives in your browser for the current session. Reloading the builde
 Reactive Resume snapshots your resume automatically:
 
 - when you import a resume;
-- when you switch templates;
-- when the AI assistant applies edits;
-- on periodic saves during editing.
+- when the AI assistant or API applies edits;
+- on periodic saves during editing, including template switches;
+- when you restore a version.
 
 Snapshots are stored on the server, per resume, and are kept across sessions.
 
-Reactive Resume keeps a rolling window of the 30 most recent snapshots for each resume. Periodic editing snapshots are throttled to at most one every two minutes, while milestones such as imports, template changes, AI edits, and restores create their own checkpoints.
+Reactive Resume keeps a rolling window of the 30 most recent snapshots for each resume. Periodic editing snapshots, including template changes, are throttled to at most one every two minutes. Imports, AI/API edits, and restores create their own checkpoints.
 
 ### Open version history
 
@@ -99,7 +99,7 @@ Git backup is manual. Reactive Resume does not create commits, synchronize with 
 | Situation | Use |
 | --- | --- |
 | You typed a wrong word or moved an item you didn't mean to. | Undo (`Cmd/Ctrl+Z`) |
-| You just switched templates and want the old one back. | Undo, or version history if you've kept editing since. |
+| You just switched templates and want the old one back. | Undo; version history can help only after a periodic editing snapshot captures the switch. |
 | You imported a resume and want to compare with what you had before. | Version history |
 | The AI assistant applied edits you no longer want. | Undo the batch, or restore the pre-AI snapshot. |
 | You closed the browser and want to roll back yesterday's changes. | Version history |
