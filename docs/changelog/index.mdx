@@ -763,7 +763,7 @@ rss: true
   - **No more Browserless / Chromium dependency.** From v5.1.0 onwards, you do **not** need to run a `printer`, Browserless, or headless Chrome service alongside Reactive Resume. PDF generation is now performed entirely in your browser via `@react-pdf/renderer`. The `BROWSERLESS_TOKEN`, `PRINTER_ENDPOINT`, `PRINTER_APP_URL`, and `FLAG_DEBUG_PRINTER` environment variables are no longer read and can be removed from your `.env`.
   - **Database migrations.** This release ships several new schema migrations to bring the resume model up to date. They run automatically on container start, but you should **back up your PostgreSQL database before upgrading** in case rollback is needed.
   - **Custom CSS has been removed.** Because the resume PDF is no longer produced by a headless browser, raw CSS no longer applies to the exported document. A first-class template-customization story is on the roadmap for a future release.
-  - **Job Listings has been removed.** The JSearch/RapidAPI-backed job listings feature and its settings were removed in the v5.1.0 transition. The old job-search settings path now redirects to **Integrations**. To tailor a resume, supply a job description to the AI Agent by pasting or attaching it; see [Using the AI Agent workspace](/guides/using-ai-agent#tailor-a-resume-to-a-supplied-job-description).
+  - **Job Listings has been removed.** The JSearch/RapidAPI-backed job listings feature and its settings were removed in the v5.1.0 transition. The old job-search settings path now redirects to **Integrations**. To tailor a resume, paste a job description into the AI Agent; see [Using the AI Agent workspace](/guides/using-ai-agent#tailor-a-resume-to-a-supplied-job-description).
 </Note>
 
 ## Highlights
