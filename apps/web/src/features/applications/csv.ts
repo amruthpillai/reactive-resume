@@ -114,6 +114,22 @@ function stripFormulaGuard(value: string) {
 	return value.startsWith("'") && isFormulaLike(value.slice(1)) ? value.slice(1) : value;
 }
 
+function parseTags(value: string) {
+	try {
+		const parsed: unknown = JSON.parse(value);
+		if (Array.isArray(parsed) && parsed.every((tag): tag is string => typeof tag === "string")) {
+			return parsed.map((tag) => tag.trim()).filter(Boolean);
+		}
+	} catch {
+		// Preserve support for existing comma, semicolon, and pipe-delimited imports.
+	}
+
+	return value
+		.split(/[;,|]/)
+		.map((tag) => tag.trim())
+		.filter(Boolean);
+}
+
 export type CsvMapResult = {
 	rows: ParsedApplication[];
 	skipped: number;
@@ -130,6 +146,9 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 	const headers = headerRow.map((h) => h.trim());
 	const fieldFor = headers.map((h) => HEADER_ALIASES[h.toLowerCase()]);
 	const recognized = [...new Set(fieldFor.filter((f): f is keyof ParsedApplication => !!f))];
+	const isReactiveResumeExport = ["Stage History", "Timeline", "Archived", "Created At", "Updated At"].every((header) =>
+		headers.includes(header),
+	);
 
 	const rows: ParsedApplication[] = [];
 	let skipped = 0;
@@ -138,13 +157,10 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 		const record: Partial<ParsedApplication> = {};
 		fieldFor.forEach((field, i) => {
 			if (!field) return;
-			const value = stripFormulaGuard(raw[i] ?? "").trim();
+			const rawValue = raw[i] ?? "";
+			const value = (isReactiveResumeExport ? stripFormulaGuard(rawValue) : rawValue).trim();
 			if (!value) return;
-			if (field === "tags")
-				record.tags = value
-					.split(/[;,|]/)
-					.map((t) => t.trim())
-					.filter(Boolean);
+			if (field === "tags") record.tags = parseTags(value);
 			else if (field === "status") {
 				const parsed = applicationStatusSchema.safeParse(value.toLowerCase());
 				if (parsed.success) record.status = parsed.data;
@@ -223,7 +239,7 @@ export function exportApplicationsCsv(applications: readonly Application[]): str
 			application.salary ?? "",
 			application.source ?? "",
 			application.sourceUrl ?? "",
-			application.tags.join(";"),
+			application.tags.length > 0 ? JSON.stringify(application.tags) : "",
 			application.contacts
 				.map(({ name, role, type }) => {
 					const details = [role, type].filter(Boolean).join(", ");

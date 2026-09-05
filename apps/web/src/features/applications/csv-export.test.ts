@@ -105,6 +105,18 @@ describe("application CSV export", () => {
 		]);
 	});
 
+	it("keeps an authored apostrophe before formula-like text in ordinary imports", () => {
+		expect(mapCsvToApplications(parseCsv(`Company,Role\r\n"'=1+1","Engineer"\r\n`)).rows).toEqual([
+			{ company: "'=1+1", role: "Engineer" },
+		]);
+	});
+
+	it("round-trips tags containing supported legacy delimiters", () => {
+		const tags = ["customer, success", "typescript|react", "remote;eu"];
+		const csv = exportApplicationsCsv([{ ...application, tags }]);
+		expect(mapCsvToApplications(parseCsv(csv)).rows[0]?.tags).toEqual(tags);
+	});
+
 	it("exports headers for empty results and empty optional values without inventing history", () => {
 		expect(parseCsv(exportApplicationsCsv([]))).toHaveLength(1);
 		expect(exportedRecord({ ...application, activity: [], contacts: [], notes: null, sourceUrl: null })).toMatchObject({
