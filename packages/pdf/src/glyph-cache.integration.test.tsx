@@ -65,6 +65,21 @@ describe("cached font glyph character identity", () => {
 		expect(mark.bbox).toEqual(symbol.bbox);
 	});
 
+	it("does not retain character aliases in the glyph cache", { timeout: 60_000 }, async () => {
+		const font = await fontForProbe("Alias cache size");
+		const cached = font.glyphForCodePoint(0x1f984);
+		const glyphCache: unknown = Reflect.get(font, "_glyphs");
+		if (!glyphCache || typeof glyphCache !== "object") throw new Error("Missing font glyph cache");
+		const initialSize = Object.keys(glyphCache).length;
+		const codePoints = Array.from({ length: 1_000 }, (_, index) => 0xf0000 + index);
+		expect(codePoints.every((codePoint) => !font.hasGlyphForCodePoint(codePoint))).toBe(true);
+
+		const aliases = codePoints.map((codePoint) => font.glyphForCodePoint(codePoint));
+		expect(aliases.every((alias) => alias.id === cached.id && alias !== cached)).toBe(true);
+		expect(Object.keys(glyphCache)).toHaveLength(initialSize);
+		expect(font.glyphForCodePoint(0x1f984)).toBe(cached);
+	});
+
 	it("keeps CJK spaces unchanged after a Unicode-only PDF export", { timeout: 60_000 }, async () => {
 		const data = structuredClone(defaultResumeData);
 		data.picture.hidden = true;
