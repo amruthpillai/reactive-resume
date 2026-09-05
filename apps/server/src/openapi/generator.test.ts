@@ -1,7 +1,12 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import z from "zod";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
+
+// Spec generation reads procedure contracts without executing authentication. Keep the
+// provider's resource seeding out of this unit test; real OAuth initialization is covered
+// by the opt-in PostgreSQL integration suite after migrations run.
+vi.mock("@reactive-resume/auth/config", () => ({ auth: {}, verifyOAuthToken: vi.fn() }));
 
 type GeneratedSpecView = {
 	components?: { schemas?: Record<string, unknown> };
