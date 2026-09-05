@@ -107,6 +107,24 @@ describe("FormControl", () => {
 		expect(sliderInput.getAttribute("aria-labelledby")).toBe(labelId);
 	});
 
+	it("leaves the Slider control ids unique when the FormControl wraps a range slider", () => {
+		render(
+			<FormItem>
+				<FormLabel>Range</FormLabel>
+				<FormControl render={<Slider defaultValue={[20, 40]} />} />
+			</FormItem>,
+		);
+
+		const label = screen.getByText("Range");
+		const rangeInputs = Array.from(document.querySelectorAll('input[type="range"]'));
+
+		expect(rangeInputs).toHaveLength(2);
+		expect(new Set(rangeInputs.map((input) => input.id)).size).toBe(2);
+		for (const input of rangeInputs) {
+			expect(input).toHaveAttribute("aria-labelledby", label.id);
+		}
+	});
+
 	it("reflects the FormControl error state as aria-invalid on the Slider control", () => {
 		render(
 			<FormItem hasError>

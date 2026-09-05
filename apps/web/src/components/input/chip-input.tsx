@@ -381,7 +381,10 @@ export function ChipInput({
 								id={controlId}
 								value={input}
 								autoComplete="off"
-								aria-label={labelId ? undefined : isEditingKeyword ? t`Edit keyword` : t`Add keyword`}
+								// A resolvable aria-labelledby outranks aria-label, so a rendered FormLabel still wins;
+								// when the FormControl has no FormLabel the reference dangles and the accessible name
+								// falls back to aria-label instead of going empty.
+								aria-label={isEditingKeyword ? t`Edit keyword` : t`Add keyword`}
 								aria-labelledby={labelId}
 								aria-describedby={describedBy}
 								aria-invalid={invalid}

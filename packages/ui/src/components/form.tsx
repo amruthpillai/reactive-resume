@@ -1,5 +1,4 @@
 import { useRender } from "@base-ui/react";
-import { LabelableProvider } from "@base-ui/react/internals/labelable-provider";
 import * as React from "react";
 import { Label } from "@reactive-resume/ui/components/label";
 import { cn } from "@reactive-resume/utils/style";
@@ -136,13 +135,7 @@ function FormControl({ render, ...props }: useRender.ComponentProps<"div">) {
 		},
 	});
 
-	return (
-		<FormControlContext.Provider value={contextValue}>
-			<LabelableProvider controlId={controlId} labelId={labelId}>
-				{element}
-			</LabelableProvider>
-		</FormControlContext.Provider>
-	);
+	return <FormControlContext.Provider value={contextValue}>{element}</FormControlContext.Provider>;
 }
 
 function FormDescription({ className, ...props }: React.ComponentProps<"p">) {

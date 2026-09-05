@@ -10,16 +10,17 @@ function Slider({
 	value,
 	min = 0,
 	max = 100,
-	// Inside FormControl the generated id is consumed by Base UI's
-	// LabelableProvider and applied to the real control input — re-applying
-	// it here would duplicate the id on the wrapper div. Standalone usage has
-	// no FormControl context, so an explicit caller id must survive there.
+	// Inside FormControl the generated id belongs to the real control
+	// (input[type=range]) that syncThumbInput applies it to — repeating it here
+	// would duplicate the id on the wrapper div. Standalone usage has no
+	// FormControl context, so an explicit caller id must survive there.
 	id: idProp,
+	"aria-labelledby": ariaLabelledBy,
 	"aria-describedby": ariaDescribedBy,
 	"aria-invalid": ariaInvalid,
 	...props
 }: SliderPrimitive.Root.Props) {
-	const { id: controlId } = useFormControl();
+	const { id: controlId, labelId } = useFormControl();
 	const id = controlId == null ? idProp : undefined;
 
 	const _values = Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max];
@@ -30,16 +31,20 @@ function Slider({
 				: (THUMB_POSITION_KEYS[position + 1] ?? `thumb-${position}-${thumbValue}`),
 	}));
 
-	// Base UI renders the accessible control (input[type=range]) from a fixed
-	// prop list and only applies aria-invalid through its own Field validation
-	// context, so bridge FormControl's error state onto the input via inputRef.
-	const syncThumbInputValidity = (input: HTMLInputElement | null) => {
+	// Base UI owns the accessible control (input[type=range]): it renders the input from a
+	// fixed prop list, generates the input's id internally, and only applies aria-invalid
+	// through its own Field validation context. Bridge FormControl's generated id and error
+	// state onto the input via inputRef. A range slider renders one input per thumb, so only
+	// a single-thumb slider may claim the id — the rule Base UI applies to its own ids too.
+	const ownsControlId = controlId != null && _values.length === 1;
+	const syncThumbInput = (input: HTMLInputElement | null) => {
 		if (!input) return;
 		if (ariaInvalid == null) {
 			input.removeAttribute("aria-invalid");
 		} else {
 			input.setAttribute("aria-invalid", String(ariaInvalid));
 		}
+		if (ownsControlId) input.id = controlId;
 	};
 
 	return (
@@ -52,6 +57,7 @@ function Slider({
 			max={max}
 			thumbAlignment="edge"
 			data-slot="slider"
+			aria-labelledby={ariaLabelledBy ?? labelId}
 			{...props}
 		>
 			<SliderPrimitive.Control className="relative flex w-full touch-none select-none items-center data-vertical:h-full data-vertical:min-h-40 data-vertical:w-auto data-vertical:flex-col data-disabled:opacity-50">
@@ -69,7 +75,7 @@ function Slider({
 						data-slot="slider-thumb"
 						key={thumb.key}
 						aria-describedby={ariaDescribedBy}
-						inputRef={syncThumbInputValidity}
+						inputRef={syncThumbInput}
 						className="relative block size-3 shrink-0 select-none rounded-full border border-ring bg-white ring-ring/50 transition-[color,box-shadow] after:absolute after:-inset-2 hover:ring-3 focus-visible:outline-hidden focus-visible:ring-3 active:ring-3 disabled:pointer-events-none disabled:opacity-50"
 					/>
 				))}

@@ -83,7 +83,7 @@ describe("ChipInput", () => {
 		expect(container.querySelector("kbd")).not.toBeNull();
 	});
 
-	it("wires the inner input to a FormLabel and drops the generic aria-label", () => {
+	it("wires the inner input to a FormLabel and lets it outrank the generic aria-label", () => {
 		render(
 			<I18nProvider i18n={i18n}>
 				<FormItem>
@@ -99,7 +99,22 @@ describe("ChipInput", () => {
 		expect(input).toHaveAttribute("id");
 		expect(input.id).toMatch(/-form-item$/);
 		expect(label).toHaveAttribute("for", input.id);
-		expect(input).not.toHaveAttribute("aria-label");
 		expect(input).toHaveAttribute("aria-labelledby", label.id);
+		expect(input).toHaveAccessibleName("Tags");
+	});
+
+	it("keeps a generic accessible name when the FormControl has no FormLabel", () => {
+		render(
+			<I18nProvider i18n={i18n}>
+				<FormItem>
+					<FormControl render={<ChipInput defaultValue={[]} onChange={vi.fn()} />} />
+				</FormItem>
+			</I18nProvider>,
+		);
+
+		const input = document.querySelector("input") as HTMLInputElement;
+
+		expect(document.getElementById(input.getAttribute("aria-labelledby") ?? "")).toBeNull();
+		expect(input).toHaveAccessibleName("Add keyword");
 	});
 });
