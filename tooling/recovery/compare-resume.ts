@@ -35,7 +35,7 @@ export type RecoveryManifest = {
 
 function parseResume(value: unknown): ResumeData | null {
 	try {
-		const json = JSON.parse(typeof value === "string" ? value : JSON.stringify(value));
+		const json = typeof value === "string" ? JSON.parse(value) : value;
 		const result = resumeDataSchema.safeParse(json);
 		if (!result.success || canonicalize(json) !== canonicalize(result.data)) return null;
 		return result.data;

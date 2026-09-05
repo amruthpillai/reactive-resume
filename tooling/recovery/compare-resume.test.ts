@@ -120,10 +120,13 @@ describe("compareResumeRecovery", () => {
 		});
 	});
 
-	it("blocks schema-invalid source data instead of treating normalized content as identical", () => {
+	it("blocks schema-invalid source JSON text instead of treating normalized content as identical", () => {
 		expect(
 			compareResumeRecovery(
-				validInput({ source: resumeWithTemplate("not-a-template"), target: structuredClone(defaultResumeData) }),
+				validInput({
+					source: JSON.stringify(resumeWithTemplate("not-a-template")),
+					target: structuredClone(defaultResumeData),
+				}),
 			),
 		).toMatchObject({
 			sourceHash: null,
@@ -131,6 +134,46 @@ describe("compareResumeRecovery", () => {
 			outcome: "blocked",
 			blockedReason: "invalid-source-json",
 		});
+	});
+
+	it("blocks a boxed string before serialization can normalize it", () => {
+		const source = {
+			...structuredClone(defaultResumeData),
+			basics: {
+				...structuredClone(defaultResumeData.basics),
+				name: new String(""),
+			},
+		};
+
+		expect(compareResumeRecovery(validInput({ source, target: structuredClone(defaultResumeData) }))).toMatchObject({
+			sourceHash: null,
+			targetHash: null,
+			outcome: "blocked",
+			blockedReason: "invalid-source-json",
+		});
+	});
+
+	it("blocks a schema-invalid object without executing its toJSON method", () => {
+		let toJSONCalls = 0;
+		const source = {
+			...structuredClone(defaultResumeData),
+			basics: {
+				...structuredClone(defaultResumeData.basics),
+				name: 42,
+			},
+			toJSON() {
+				toJSONCalls += 1;
+				return structuredClone(defaultResumeData);
+			},
+		};
+
+		expect(compareResumeRecovery(validInput({ source, target: structuredClone(defaultResumeData) }))).toMatchObject({
+			sourceHash: null,
+			targetHash: null,
+			outcome: "blocked",
+			blockedReason: "invalid-source-json",
+		});
+		expect(toJSONCalls).toBe(0);
 	});
 
 	it("blocks schema-invalid target data instead of treating normalized content as identical", () => {
