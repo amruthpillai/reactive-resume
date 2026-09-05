@@ -185,6 +185,49 @@ describe("builder resume autosave", () => {
 		hook.unmount();
 	});
 
+	it("ends a stalled navigation wait without aborting or discarding the pending save", async () => {
+		const initial = makeResume("navigation-timeout");
+		useResumeStore.getState().initialize(initial);
+		routerParamsMock.value = { resumeId: initial.id };
+		const hook = renderHook(() => useResumeCleanup());
+		let complete!: (resume: Resume) => void;
+		orpcMocks.updateResume.mockImplementationOnce(
+			() =>
+				new Promise<Resume>((resolve) => {
+					complete = resolve;
+				}),
+		);
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Pending name";
+		});
+		const blocker = useBlockerMock.mock.lastCall?.[0];
+		let settled = false;
+		const result = blocker.shouldBlockFn({ next: { params: {} } }).then((blocked: boolean) => {
+			settled = true;
+			return blocked;
+		});
+		await vi.advanceTimersByTimeAsync(10000);
+		expect(settled).toBe(true);
+		expect(await result).toBe(true);
+		expect(useResumeStore.getState().saveStatus).toBe("saving");
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Pending name");
+		expect(orpcMocks.updateResume.mock.lastCall?.[1].signal.aborted).toBe(false);
+
+		orpcMocks.updateResume.mockResolvedValueOnce(withBasicsName(initial, "Latest name"));
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Latest name";
+		});
+		await vi.advanceTimersByTimeAsync(500);
+		expect(orpcMocks.updateResume).toHaveBeenCalledTimes(1);
+		complete(withBasicsName(initial, "Pending name"));
+		await flushMicrotasks();
+		expect(useResumeStore.getState().saveStatus).toBe("saved");
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Latest name");
+		expect(await blocker.shouldBlockFn({ next: { params: {} } })).toBe(false);
+		expect(orpcMocks.updateResume).toHaveBeenCalledTimes(2);
+		hook.unmount();
+	});
+
 	it("keeps a failed draft in the builder and retries on the next navigation", async () => {
 		const initial = makeResume("navigation-error");
 		useResumeStore.getState().initialize(initial);
