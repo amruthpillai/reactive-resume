@@ -204,8 +204,10 @@ const buildField = ({
 					direction,
 				)
 			: [];
+	// Imported HTML may contain only text inside wrappers without semantic kinds (for example table cells).
+	// Keep its rich-text host visible even when it has no individually addressable descendants.
 	const children =
-		RICH_TEXT_FIELDS.has(name) && typeof value === "string" && richTextChildren.length > 0
+		RICH_TEXT_FIELDS.has(name) && typeof value === "string"
 			? [
 					semanticNode({
 						key: semanticNodeKeys.richText(key, name),
