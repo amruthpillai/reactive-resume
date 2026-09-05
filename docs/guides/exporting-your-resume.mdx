@@ -159,10 +159,12 @@ Stable filenames and the exports' two-space indentation make field changes easie
 
 ### Recover an earlier resume without replacing the current one
 
-Choose the committed revision of `resume.json` that you want to recover. You can inspect the currently committed version from the backup folder with:
+Choose the committed revision of `resume.json` that you want to recover. List commits that changed the file, then inspect
+the selected revision from the backup folder:
 
 ```bash
-git show HEAD:resume.json
+git log --oneline -- resume.json
+git show <commit>:resume.json
 ```
 
 Save the selected earlier revision as a JSON file. On the Reactive Resume dashboard, select **Import an existing resume**, choose that file, and complete the import. Import creates a new resume, so the current resume remains available for comparison or further editing.
