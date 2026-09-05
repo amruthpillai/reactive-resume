@@ -8,7 +8,7 @@ test("keeps compact and list preferences through navigation and reload, with exp
 	await page.setViewportSize({ width: 1440, height: 1000 });
 	const name = await createSampleResumeFromDashboard(page, testInfo);
 	await page.goto("/dashboard/resumes");
-	const card = page.getByRole("link", { name: new RegExp(name) });
+	const card = page.getByRole("link").filter({ hasText: name });
 	await expect(card).toBeVisible();
 	const gridWidth = (await card.boundingBox())?.width;
 	if (!gridWidth) throw new Error("Resume card has no width.");
