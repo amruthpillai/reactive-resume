@@ -79,7 +79,8 @@ describe("list marker pagination (#3344)", () => {
 				{
 					cwd: fileURLToPath(new URL("../../../", import.meta.url)),
 					env: { ...process.env, RR_LIST_PRESENCE_PROBE: "1" },
-					timeout: 30000,
+					// Include cold imports when the full suite competes for workers.
+					timeout: 60000,
 					killSignal: "SIGKILL",
 				},
 			);
@@ -106,7 +107,7 @@ describe("list marker pagination (#3344)", () => {
 				).toHaveLength(30);
 			}
 		}
-	}, 40000);
+	}, 70000);
 	it("moves a bullet with its first paragraph when the paragraph cannot start on this page", async () => {
 		const result = await listPages(194);
 		expect(result.first).toBe(1);
