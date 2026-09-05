@@ -30,7 +30,7 @@ export const Route = createFileRoute("/$username/$slug")({
 
 		const base = getCanonicalRootUrl(typeof window === "undefined" ? undefined : window.location.origin);
 		const canonicalUrl = `${base}${params.username}/${params.slug}`;
-		const imageUrl = `${base}templates/jpg/${social.template}.jpg`;
+		const imageUrl = `${base}opengraph/banner.jpg`;
 
 		return {
 			meta: [
