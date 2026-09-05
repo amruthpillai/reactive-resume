@@ -493,6 +493,7 @@ export const SectionHeadingIcon = ({
 			{...iconPropsWithoutDisplay}
 			{...props}
 			{...(resolvedSize === undefined ? {} : { size: resolvedSize })}
+			{...(resolved.style?.color === undefined ? {} : { color: resolved.style.color })}
 			style={composeStyles(asStyleInput(iconStyle), asStyleInput(style), resolved.style)}
 		/>
 	);

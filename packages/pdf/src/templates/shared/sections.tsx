@@ -366,7 +366,13 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 						/>
 						<Heading
 							bindSemanticNode={false}
-							style={getSectionHeadingTextStyle(sectionHeadingStyle, sectionHeadingRuleStyle)}
+							style={getSectionHeadingTextStyle(
+								sectionHeadingStyle,
+								sectionHeadingRuleStyle,
+								sectionHeadingResolved.style?.color === undefined
+									? undefined
+									: { color: sectionHeadingResolved.style.color },
+							)}
 						>
 							{sectionTitle}
 						</Heading>
