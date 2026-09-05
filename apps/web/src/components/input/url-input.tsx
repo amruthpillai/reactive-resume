@@ -15,15 +15,16 @@ import { Label } from "@reactive-resume/ui/components/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@reactive-resume/ui/components/popover";
 import { cn } from "@reactive-resume/utils/style";
 
-const PREFIX = "https://";
+const DEFAULT_PREFIX = "https://";
+const HTTP_PREFIX = /^https?:\/\//i;
 
 function stripPrefix(url: string) {
-	return url.startsWith(PREFIX) ? url.slice(PREFIX.length) : url;
+	return url.replace(HTTP_PREFIX, "");
 }
 
-function ensurePrefix(url: string) {
+function ensurePrefix(url: string, prefix: string) {
 	if (url === "") return "";
-	return url.startsWith(PREFIX) ? url : PREFIX + url;
+	return HTTP_PREFIX.test(url) ? url : prefix + url;
 }
 
 type Props<TValue extends Website = Website> = Omit<React.ComponentProps<"input">, "value" | "onChange"> & {
@@ -33,14 +34,15 @@ type Props<TValue extends Website = Website> = Omit<React.ComponentProps<"input"
 };
 
 export function URLInput<TValue extends Website>({ value, onChange, hideLabelButton, ...props }: Props<TValue>) {
+	const prefix = value.url.match(HTTP_PREFIX)?.[0] ?? DEFAULT_PREFIX;
 	const handleUrlChange = useCallback(
 		(e: React.ChangeEvent<HTMLInputElement>) => {
 			onChange({
 				...value,
-				url: ensurePrefix(e.target.value),
+				url: ensurePrefix(e.target.value, prefix),
 			});
 		},
-		[onChange, value],
+		[onChange, value, prefix],
 	);
 
 	const handleLabelChange = useCallback(
@@ -55,7 +57,7 @@ export function URLInput<TValue extends Website>({ value, onChange, hideLabelBut
 	return (
 		<InputGroup>
 			<InputGroupAddon align="inline-start">
-				<InputGroupText>{PREFIX}</InputGroupText>
+				<InputGroupText>{prefix}</InputGroupText>
 			</InputGroupAddon>
 
 			<InputGroupInput
