@@ -171,6 +171,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.skills.items[].level` | `number` | yes | minimum: 0; maximum: 5; default: 0 | The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
 | `sections.skills.items[].keywords` | `array` | yes | default: [] | The keywords associated with the skill, if any. These are displayed as tags below the name. |
 | `sections.skills.items[].keywords[]` | `string` | — | — | — |
+| `sections.skills.layout` | `string` | no | enum: ["default","inline"]; default: "default" | The layout style for skill items. 'inline' places item fields next to name |
 | `sections.languages` | `object` | yes | — | The section to display the languages of the author. |
 | `sections.languages.title` | `string` | yes | — | The title of the section. |
 | `sections.languages.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |

@@ -876,6 +876,7 @@ The full JSON Schema for Reactive Resume follows. You can also fetch the latest 
 					"description": "The section to display the projects of the author."
 				},
 				"skills": {
+					"description": "The section to display the skills of the author.",
 					"type": "object",
 					"properties": {
 						"title": {
@@ -967,6 +968,15 @@ The full JSON Schema for Reactive Resume follows. You can also fetch the latest 
 								]
 							},
 							"description": "The items to display in the skills section."
+						},
+						"layout": {
+							"default": "default",
+							"description": "The layout style for skill items. 'inline' places item fields next to name",
+							"type": "string",
+							"enum": [
+								"default",
+								"inline"
+							]
 						}
 					},
 					"required": [
@@ -977,8 +987,7 @@ The full JSON Schema for Reactive Resume follows. You can also fetch the latest 
 						"keepTogether",
 						"startOnNewPage",
 						"items"
-					],
-					"description": "The section to display the skills of the author."
+					]
 				},
 				"languages": {
 					"type": "object",
