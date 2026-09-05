@@ -91,6 +91,18 @@ describe("application CSV export", () => {
 		const value = `${company},"next"`;
 		expect(exportedRecord({ ...application, company }).Company).toBe(`'${company}`);
 		expect(exportedRecord({ ...application, company: value }).Company).toBe(`'${value}`);
+		// The apostrophe is the export's own guard, so re-importing must not keep it.
+		const csv = exportApplicationsCsv([{ ...application, company, notes: company }]);
+		expect(mapCsvToApplications(parseCsv(csv)).rows[0]).toMatchObject({
+			company: company.trim(),
+			notes: company.trim(),
+		});
+	});
+
+	it("keeps an apostrophe the user typed themselves", () => {
+		expect(mapCsvToApplications(parseCsv(`Company,Role\r\n"'Tis Inc","Engineer"\r\n`)).rows).toEqual([
+			{ company: "'Tis Inc", role: "Engineer" },
+		]);
 	});
 
 	it("exports headers for empty results and empty optional values without inventing history", () => {

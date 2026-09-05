@@ -101,6 +101,19 @@ const HEADER_ALIASES: Record<string, keyof ParsedApplication> = {
 	tags: "tags",
 };
 
+// Values a spreadsheet would evaluate as a formula: leading =, +, -, @ (and full-width variants),
+// possibly hidden behind whitespace/control characters, or a leading tab/newline.
+function isFormulaLike(value: string) {
+	return /^[\s\p{Cc}]*[=+@\-＝＋－＠]/u.test(value) || /^[\t\r\n]/.test(value);
+}
+
+// Drops the apostrophe the export adds as a CSV-injection guard, so a re-imported cell reads back
+// as the value that was exported. A user value that genuinely starts with an apostrophe is only
+// touched when the rest would also have been guarded — the same ambiguity spreadsheets have.
+function stripFormulaGuard(value: string) {
+	return value.startsWith("'") && isFormulaLike(value.slice(1)) ? value.slice(1) : value;
+}
+
 export type CsvMapResult = {
 	rows: ParsedApplication[];
 	skipped: number;
@@ -125,7 +138,7 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 		const record: Partial<ParsedApplication> = {};
 		fieldFor.forEach((field, i) => {
 			if (!field) return;
-			const value = (raw[i] ?? "").trim();
+			const value = stripFormulaGuard(raw[i] ?? "").trim();
 			if (!value) return;
 			if (field === "tags")
 				record.tags = value
@@ -170,7 +183,7 @@ export function selectApplicationsForExport(
 function csvCell(value: string): string {
 	// Quote every cell to contain separators/newlines. Prefix formula-triggering values,
 	// including whitespace-obscured and full-width variants, so spreadsheets read text.
-	const safe = /^[\s\p{Cc}]*[=+@\-＝＋－＠]/u.test(value) || /^[\t\r\n]/.test(value) ? `'${value}` : value;
+	const safe = isFormulaLike(value) ? `'${value}` : value;
 	return `"${safe.replaceAll('"', '""')}"`;
 }
 
