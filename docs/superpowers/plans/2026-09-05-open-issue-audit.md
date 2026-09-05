@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 114 issues audited; verification continues for reports needing exact fixtures or deployment reproduction.
-- 21 fix PRs created: 20 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
+- 23 fix PRs created: 22 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
 - Eight other issues closed with evidence: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341).
-- In progress: #3017 picture borders/shadows, #3393 application CSV export, #3369 remaining label gaps, and #3247 compact resume views with session preferences.
+- In progress: #3017 picture borders/shadows, #3393 application CSV export, #3291 CSS color swatches, and deeper S3/font reproduction.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -44,6 +44,8 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | PDF page padding repeats across overflow while preserving template backgrounds; 42 actual-PDF geometry/raster cases pass. |
 | [#3175](https://github.com/amruthpillai/reactive-resume/issues/3175) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | Shared continuation-margin fix covers five affected templates, explicit headerless pages and full-width pages. |
 | [#3255](https://github.com/amruthpillai/reactive-resume/issues/3255) | [#3423](https://github.com/amruthpillai/reactive-resume/pull/3423) | Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios, 325 API tests, 598 web tests and combined migrations verified; browser CI and autofix pass. Codacy applies a SQL Server-only rule to the PostgreSQL migration. |
+| [#3369](https://github.com/amruthpillai/reactive-resume/issues/3369) | [#3424](https://github.com/amruthpillai/reactive-resume/pull/3424) | Connects remaining Basics Website, Picture Size and shared WebsiteField labels. Three missing-name reproductions corrected; 10 DOM tests and web typecheck pass. Complements #3387, whose standalone primitive prop regressions are recorded below. |
+| [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247) | [#3425](https://github.com/amruthpillai/reactive-resume/pull/3425) | Adds compact thumbnails and per-account tab-session Grid/Compact/List preference. Five hook tests plus production browser navigation, reload, explicit URL override and mobile sizing pass. |
 
 ## Product decisions
 
@@ -279,12 +281,17 @@ Classification describes the reported problem against the audit baseline; implem
 
 - PR #3387 open; covers FormControl/InputGroup/ChipInput/Slider id plumbing. Its body explicitly excludes dangling URLInput/RichTextField targets.
 - Issue requests dangling Picture Size and Website labels too, so PR closing claim should be checked against full acceptance matrix.
+- Reviewed PR #3387 head 6ea7d540: 58 supplied focused tests pass, but actual DOM probes reproduce unnamed Basics Website and Picture Size fields; shared WebsiteField has same missing FormControl.
+- Two standalone primitive compatibility probes pass main and fail PR #3387: Slider discards explicit id; InputGroup discards caller id and aria-describedby. No current app call site demonstrated an outage from those prop regressions.
 
 **Action plan:**
 
-- Review #3387, do not duplicate; verify missing targets and all issue-reported controls before closure, split residual findings if needed.
+- Merge complementary call-site fix with #3387 to cover all reported controls; keep issue open until both land.
+- In #3387 preserve standalone Slider/InputGroup caller props while moving only FormControl-generated attributes to native controls. Cover standalone and FormControl compositions with DOM tests.
 
-**Related PRs:** [#3387](https://github.com/amruthpillai/reactive-resume/pull/3387)
+**Implementation:** [PR #3424](https://github.com/amruthpillai/reactive-resume/pull/3424). Connects remaining Basics Website, Picture Size and shared WebsiteField labels. Three missing-name reproductions corrected; 10 DOM tests and web typecheck pass. Complements #3387, whose standalone primitive prop regressions are recorded below.
+
+**Related PRs:** [#3387](https://github.com/amruthpillai/reactive-resume/pull/3387), [#3424](https://github.com/amruthpillai/reactive-resume/pull/3424)
 
 ### [#3368](https://github.com/amruthpillai/reactive-resume/issues/3368) — Documented resume bounds are silently coerced instead of rejected: a write outside the published schema returns 200 and stores something the client never sent
 
@@ -767,7 +774,11 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Add compact grid density and session-persisted default without overriding explicit URL selection. Reuse grid cards. Test navigation away/back, storage fallback and explicit query precedence.
 
+**Implementation:** [PR #3425](https://github.com/amruthpillai/reactive-resume/pull/3425). Adds compact thumbnails and per-account tab-session Grid/Compact/List preference. Five hook tests plus production browser navigation, reload, explicit URL override and mobile sizing pass.
+
 **Product/scope note:** Requires small layout choice; existing thumbnail quality issue #3246 stays separate.
+
+**Related PRs:** [#3425](https://github.com/amruthpillai/reactive-resume/pull/3425)
 
 ### [#3246](https://github.com/amruthpillai/reactive-resume/issues/3246) — [Bug] The thumbnails are appearing in low quality.
 
