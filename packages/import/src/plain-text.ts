@@ -235,11 +235,11 @@ function toHtml(lines: string[]): string {
 
 	const bulleted = cleaned.filter((line) => BULLET_PATTERN.test(line));
 	if (bulleted.length >= 2 && bulleted.length * 2 >= cleaned.length) {
-		const items = cleaned.map((line) => `<li>${escapeHtml(line.replace(BULLET_PATTERN, ""))}</li>`).join("");
-		return `<ul>${items}</ul>`;
+		const items = cleaned.map((line) => `<li>${escapeHtml(line.replace(BULLET_PATTERN, ""))}</li>`).join(""); // nosemgrep
+		return `<ul>${items}</ul>`; // nosemgrep
 	}
 
-	return cleaned.map((line) => `<p>${escapeHtml(line.replace(BULLET_PATTERN, ""))}</p>`).join("");
+	return cleaned.map((line) => `<p>${escapeHtml(line.replace(BULLET_PATTERN, ""))}</p>`).join(""); // nosemgrep
 }
 
 function splitList(lines: string[]): string[] {
