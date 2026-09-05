@@ -19,7 +19,7 @@ import { semanticNodeKeys } from "../../semantic/node-keys";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplatePageNodeKey, useTemplateStyle } from "./context";
 import { resolveIconSize } from "./icon-size";
 import { safeTextStyle } from "./safe-text-style";
-import { composeLinkStyles, composeStyles } from "./styles";
+import { composeLinkStyles, composeStyles, mergeStyles } from "./styles";
 
 const asStyleInput = (style: unknown): StyleInput => style as StyleInput;
 
@@ -303,6 +303,9 @@ export const Icon = ({
 	const resolvedNodeKey = nodeKey ?? (parentKey ? semanticNodeKeys.icon(parentKey, "item") : undefined);
 	const resolved = useResolvedNode(resolvedNodeKey);
 	const visible = useSemanticNodeVisible(resolvedNodeKey);
+	const resolvedStyle = composeStyles(composedStyle, resolved.style);
+	// React PDF inherits SVG opacity from props, not the root SVG style.
+	const { opacity } = mergeStyles(resolvedStyle);
 	const resolvedSize =
 		resolveIconSize({
 			size: sizeProp,
@@ -316,7 +319,8 @@ export const Icon = ({
 			{...iconProps}
 			{...props}
 			{...(resolvedSize === undefined ? {} : { size: resolvedSize })}
-			style={composeStyles(composedStyle, resolved.style)}
+			{...(opacity === undefined ? {} : { opacity })}
+			style={resolvedStyle}
 		/>
 	);
 };
