@@ -32,7 +32,8 @@ export function PreviewPage() {
 					wheel={{ step: 0.001 }}
 					onPanningStart={blurFocusedElementOnPan}
 				>
-					<TransformComponent wrapperClass="h-full! w-full!">
+					{/* Zoom transforms use left-origin coordinates, regardless of the interface language. */}
+					<TransformComponent wrapperClass="h-full! w-full!" wrapperProps={{ dir: "ltr" }}>
 						<ResumePreview showPageNumbers pageLayout={pageLayout} />
 					</TransformComponent>
 
