@@ -1,5 +1,6 @@
 import type { ApplicationStatus } from "@reactive-resume/schema/applications/data";
-import { applicationStatusSchema } from "@reactive-resume/schema/applications/data";
+import type { Application } from "./types";
+import { applicationStatusSchema, STAGES } from "@reactive-resume/schema/applications/data";
 
 // Minimal RFC-4180-ish CSV parser: handles quoted fields, escaped quotes (""), commas and
 // newlines inside quotes, and \r\n. Enough for spreadsheet exports; not a full streaming parser.
@@ -147,4 +148,85 @@ export function mapCsvToApplications(table: string[][]): CsvMapResult {
 	}
 
 	return { rows, skipped, headers, recognized };
+}
+
+export type ApplicationExportOptions = {
+	scope: "filtered" | "all";
+	from?: string;
+	to?: string;
+};
+
+export function selectApplicationsForExport(
+	applications: readonly Application[],
+	filtered: readonly Application[],
+	{ scope, from, to }: ApplicationExportOptions,
+): Application[] {
+	return (scope === "all" ? applications : filtered).filter((application) => {
+		const date = new Date(application.appliedAt).toISOString().slice(0, 10);
+		return (!from || date >= from) && (!to || date <= to);
+	});
+}
+
+function csvCell(value: string): string {
+	// Quote every cell to contain separators/newlines. Prefix formula-triggering values,
+	// including whitespace-obscured and full-width variants, so spreadsheets read text.
+	const safe = /^[\s\p{Cc}]*[=+@\-＝＋－＠]/u.test(value) || /^[\t\r\n]/.test(value) ? `'${value}` : value;
+	return `"${safe.replaceAll('"', '""')}"`;
+}
+
+export function exportApplicationsCsv(applications: readonly Application[]): string {
+	const headers = [
+		"Company",
+		"Role",
+		"Stage",
+		"Stage Date",
+		"Application Date",
+		"Location",
+		"Salary",
+		"Source",
+		"URL",
+		"Tags",
+		"Contacts",
+		"Notes",
+		"Stage History",
+		"Timeline",
+		"Archived",
+		"Created At",
+		"Updated At",
+	];
+	const dateOnly = (date: Date) => new Date(date).toISOString().slice(0, 10);
+	const stageLabel = (stage: ApplicationStatus) => STAGES.find((item) => item.value === stage)?.label ?? stage;
+	const rows = applications.map((application) => {
+		const timeline = [...application.activity].sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime());
+		const stages = timeline.filter((entry) => entry.type === "stage");
+		const currentStage = stages.findLast((entry) => entry.stage === application.status);
+		return [
+			application.company,
+			application.role,
+			application.status,
+			currentStage ? dateOnly(currentStage.at) : "",
+			dateOnly(application.appliedAt),
+			application.location ?? "",
+			application.salary ?? "",
+			application.source ?? "",
+			application.sourceUrl ?? "",
+			application.tags.join(";"),
+			application.contacts
+				.map(({ name, role, type }) => {
+					const details = [role, type].filter(Boolean).join(", ");
+					return details ? `${name} (${details})` : name;
+				})
+				.join("\n"),
+			application.notes ?? "",
+			stages.map((entry) => `${stageLabel(entry.stage)} (${dateOnly(entry.at)})`).join(" → "),
+			timeline
+				.map((entry) => `${dateOnly(entry.at)}: ${entry.type === "stage" ? stageLabel(entry.stage) : entry.text}`)
+				.join("\n"),
+			String(application.archived),
+			new Date(application.createdAt).toISOString(),
+			new Date(application.updatedAt).toISOString(),
+		];
+	});
+	// UTF-8 BOM lets spreadsheet apps recognize international names without an import wizard.
+	return `\uFEFF${[headers, ...rows].map((row) => row.map(csvCell).join(",")).join("\r\n")}\r\n`;
 }
