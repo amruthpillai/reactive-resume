@@ -93,12 +93,12 @@ Use this controlled workflow to test tailoring without relying on live web resea
     In **Dashboard → Settings → Integrations**, configure a supported AI provider, test it, and make sure it is enabled. Then return to **Agents**.
   </Step>
 
-  <Step title="Open a synthetic resume draft">
-    Start a new thread and select a resume containing synthetic experience data. The agent creates an isolated AI draft, so the source resume remains unchanged.
+  <Step title="Open a sample resume draft">
+    Start a new thread and select a resume containing sample experience data. The agent creates an isolated AI draft, so the source resume remains unchanged.
   </Step>
 
   <Step title="Supply the target role">
-    Paste this synthetic job description into the chat:
+    Paste this sample job description into the chat:
 
     ```text
     Target role: backend engineer. Required: TypeScript and PostgreSQL.
@@ -108,13 +108,13 @@ Use this controlled workflow to test tailoring without relying on live web resea
   </Step>
 
   <Step title="Review the draft">
-    Review the updated draft. To approve patches before they are applied, inspect their JSON, or restore an earlier state, follow [Review patches](#review-patches).
+    Review the updated draft. To approve patches before they are applied, inspect their JSON, or restore an earlier state, follow [Review edits and patches](#review-edits-and-patches).
   </Step>
 </Steps>
 
 This workflow also works when the selected provider/model has no live web search. Supplying the job description gives the agent the context it needs for ordinary resume editing.
 
-## Review patches
+## Review edits and patches
 
 By default, the agent applies resume patches immediately to the AI draft. Turn on **Review edits** in the thread menu if you want to approve or deny patches before they are applied. Applied patches appear in chat as a small **Patch applied** line.
 
