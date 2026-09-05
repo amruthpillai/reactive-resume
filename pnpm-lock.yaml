@@ -69,6 +69,9 @@ importers:
       markdownlint-cli2:
         specifier: 0.23.2
         version: 0.23.2(supports-color@7.2.0)
+      pdfjs-dist:
+        specifier: 6.3.289
+        version: 6.3.289
       pg:
         specifier: ^8.23.0
         version: 8.23.0
@@ -168,6 +171,9 @@ importers:
       '@orpc/zod':
         specifier: ^1.15.0
         version: 1.15.0(@orpc/contract@1.15.0)(@orpc/server@1.15.0(ws@8.21.3))(ws@8.21.3)(zod@4.5.4)
+      '@react-pdf/hyphenate':
+        specifier: 0.1.0
+        version: 0.1.0
       '@react-pdf/renderer':
         specifier: ^4.9.0
         version: 4.9.0(react@19.2.8)
@@ -1079,6 +1085,9 @@ importers:
 
   packages/pdf:
     dependencies:
+      '@react-pdf/hyphenate':
+        specifier: 0.1.0
+        version: 0.1.0
       '@react-pdf/renderer':
         specifier: ^4.9.0
         version: 4.9.0(react@19.2.8)

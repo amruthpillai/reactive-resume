@@ -148,18 +148,27 @@ export const convertPseudoBulletParagraphs = (html: string): string =>
 		return converted ?? full;
 	});
 
+const decodeSoftHyphens = (node: Node): void => {
+	if (node.nodeType === NodeType.TEXT_NODE) {
+		node.rawText = node.rawText.replace(/&(?:shy|#0*173|#[xX]0*[aA][dD]);/g, "\u00AD");
+	}
+	for (const child of node.childNodes) decodeSoftHyphens(child);
+};
+
 type NormalizeRichTextHtmlOptions = {
 	direction?: "ltr" | "rtl";
+	softHyphens?: boolean;
 };
 
 export const normalizeRichTextHtml = (
 	html: string,
-	{ direction = "ltr" }: NormalizeRichTextHtmlOptions = {},
+	{ direction = "ltr", softHyphens = false }: NormalizeRichTextHtmlOptions = {},
 ): string => {
 	const root = parse(html.trim(), { comment: false });
 	const normalized: string[] = [];
 	let inlineNodes: string[] = [];
 
+	if (softHyphens) decodeSoftHyphens(root);
 	normalizeBoldBoundaryWhitespace(root);
 	normalizeMarkElements(root);
 	unwrapSingleParagraphListItems(root);

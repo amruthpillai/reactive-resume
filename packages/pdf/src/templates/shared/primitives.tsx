@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 import type { StyleInput } from "./styles";
 import { Icon as PhosphorIcon } from "phosphor-icons-react-pdf/dynamic";
 import { Children, isValidElement } from "react";
-import { Image, Link as PdfLink, Text as PdfText, View } from "#react-pdf-renderer";
+import { Image, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { resolvedPdfFlowProps, resolvedPdfTextProps } from "../../semantic/adapter";
 import {
@@ -16,6 +16,7 @@ import {
 	useSemanticNodeVisible,
 } from "../../semantic/context";
 import { semanticNodeKeys } from "../../semantic/node-keys";
+import { Link as PdfLink, Text as PdfText } from "../../text";
 import { useSectionStyleRule, useTemplateIconSlot, useTemplatePageNodeKey, useTemplateStyle } from "./context";
 import { resolveIconSize } from "./icon-size";
 import { safeTextStyle } from "./safe-text-style";

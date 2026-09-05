@@ -501,6 +501,12 @@ const designSchema = z.object({
 export const typographySchema = z.object({
 	body: typographyItemSchema.describe("The typography for the body of the resume."),
 	heading: typographyItemSchema.describe("The typography for the headings of the resume."),
+	hyphenation: z
+		.boolean()
+		.optional()
+		.describe(
+			"Enable automatic PDF hyphenation using the resume language. Currently supports German. Defaults to false.",
+		),
 });
 
 const styleSlotSchema = z.enum([

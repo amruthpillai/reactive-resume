@@ -9,6 +9,15 @@ type PdfElement = ReactElement<{ children?: unknown; element?: { tag: string } }
 const getPdfElementProps = (element: unknown) => (element as PdfElement).props;
 
 describe("normalizeRichTextHtml", () => {
+	it("decodes opted-in soft hyphens in text without changing links or escaped literals", () => {
+		const html =
+			'<p title="&shy;">Soft&shy;ware &#173; &#xAD; &amp;shy; <a href="https://example.com/&shy;">link</a></p>';
+		expect(normalizeRichTextHtml(html)).toBe(html);
+		expect(normalizeRichTextHtml(html, { softHyphens: true })).toBe(
+			'<p title="&shy;">Soft\u00ADware \u00AD \u00AD &amp;shy; <a href="https://example.com/&shy;">link</a></p>',
+		);
+	});
+
 	it("wraps loose inline content in a <p>", () => {
 		expect(normalizeRichTextHtml("hello world")).toBe("<p>hello world</p>");
 	});
