@@ -168,6 +168,19 @@ describe("stylesheet editor status", () => {
 });
 
 describe("StylesheetCodeEditor", () => {
+	it("preserves contextual currentcolor without exposing an editable literal swatch", () => {
+		const source = "@version 1;\nsection { color: red; border-color: currentcolor; }";
+		expect(compileStylesheet({ languageVersion: 1, text: source }).diagnostics).toEqual([]);
+		const { onChange } = renderColorEditor(source);
+
+		expect(screen.getByRole("button", { name: "Edit color red" })).toBeInTheDocument();
+		expect(screen.queryByRole("button", { name: "Edit color currentcolor" })).not.toBeInTheDocument();
+		expect(screen.getByRole("textbox", { name: "Semantic CSS stylesheet" })).toHaveTextContent(
+			"border-color: currentcolor",
+		);
+		expect(onChange).not.toHaveBeenCalled();
+	});
+
 	it("removes the temporary color trigger when the picker closes", async () => {
 		const { container } = renderColorEditor("@version 1;\nsection { color: #f00; }");
 		fireEvent.click(screen.getByRole("button", { name: "Edit color #f00" }));

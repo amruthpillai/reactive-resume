@@ -7,8 +7,9 @@ export type SemanticCssColorToken = {
 	value: string;
 };
 
+// Contextual currentcolor cannot be resolved by the literal color picker.
 const colorValue =
-	/^(?:#[\da-f]{3,8}|(?:rgb|rgba|hsl|hsla)\([^)]*\)|(?:aqua|black|blue|currentcolor|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|transparent|white|yellow))$/i;
+	/^(?:#[\da-f]{3,8}|(?:rgb|rgba|hsl|hsla)\([^)]*\)|(?:aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|transparent|white|yellow))$/i;
 
 // Keep comments and strings whole so their contents cannot be mistaken for editable color values.
 const declarationToken =
