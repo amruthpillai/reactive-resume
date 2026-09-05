@@ -16,8 +16,8 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 115 issues triaged: the initial 114 plus new report #3433. Verification continues for reports needing exact fixtures or deployment reproduction.
-- 35 fix PRs created: 3 open; 32 merged by the repository owner. Audit PRs #3418 and #3440 are tracked separately and are also merged.
-- 43 total issues closed, including #3391; other evidence-backed closures: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2735](https://github.com/amruthpillai/reactive-resume/issues/2735), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247), [#3251](https://github.com/amruthpillai/reactive-resume/issues/3251), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3291](https://github.com/amruthpillai/reactive-resume/issues/3291), [#3305](https://github.com/amruthpillai/reactive-resume/issues/3305), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3312](https://github.com/amruthpillai/reactive-resume/issues/3312), [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337), [#3338](https://github.com/amruthpillai/reactive-resume/issues/3338), [#3339](https://github.com/amruthpillai/reactive-resume/issues/3339), [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341), [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343), [#3347](https://github.com/amruthpillai/reactive-resume/issues/3347), [#3348](https://github.com/amruthpillai/reactive-resume/issues/3348), [#3352](https://github.com/amruthpillai/reactive-resume/issues/3352), [#3359](https://github.com/amruthpillai/reactive-resume/issues/3359), [#3361](https://github.com/amruthpillai/reactive-resume/issues/3361), [#3366](https://github.com/amruthpillai/reactive-resume/issues/3366), [#3368](https://github.com/amruthpillai/reactive-resume/issues/3368), [#3369](https://github.com/amruthpillai/reactive-resume/issues/3369), [#3370](https://github.com/amruthpillai/reactive-resume/issues/3370), [#3374](https://github.com/amruthpillai/reactive-resume/issues/3374), [#3380](https://github.com/amruthpillai/reactive-resume/issues/3380), [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392), [#3393](https://github.com/amruthpillai/reactive-resume/issues/3393), [#3401](https://github.com/amruthpillai/reactive-resume/issues/3401), [#3433](https://github.com/amruthpillai/reactive-resume/issues/3433). Product decision closure: [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272) remains intentionally without a cover-letter heading.
+- 35 implementation PRs created by this audit: 32 merged by the repository owner; #3419, #3423, and #3443 remain open. Audit-only documentation PRs #3418 and #3440 are excluded from those 35 and are both merged.
+- 43 audited issues closed: 42 evidence-backed or reporter-confirmed closures plus one product-decision closure (#3272). Complete closure set: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2735](https://github.com/amruthpillai/reactive-resume/issues/2735), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247), [#3251](https://github.com/amruthpillai/reactive-resume/issues/3251), [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3291](https://github.com/amruthpillai/reactive-resume/issues/3291), [#3305](https://github.com/amruthpillai/reactive-resume/issues/3305), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3312](https://github.com/amruthpillai/reactive-resume/issues/3312), [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337), [#3338](https://github.com/amruthpillai/reactive-resume/issues/3338), [#3339](https://github.com/amruthpillai/reactive-resume/issues/3339), [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341), [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343), [#3347](https://github.com/amruthpillai/reactive-resume/issues/3347), [#3348](https://github.com/amruthpillai/reactive-resume/issues/3348), [#3352](https://github.com/amruthpillai/reactive-resume/issues/3352), [#3359](https://github.com/amruthpillai/reactive-resume/issues/3359), [#3361](https://github.com/amruthpillai/reactive-resume/issues/3361), [#3366](https://github.com/amruthpillai/reactive-resume/issues/3366), [#3368](https://github.com/amruthpillai/reactive-resume/issues/3368), [#3369](https://github.com/amruthpillai/reactive-resume/issues/3369), [#3370](https://github.com/amruthpillai/reactive-resume/issues/3370), [#3374](https://github.com/amruthpillai/reactive-resume/issues/3374), [#3380](https://github.com/amruthpillai/reactive-resume/issues/3380), [#3391](https://github.com/amruthpillai/reactive-resume/issues/3391), [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392), [#3393](https://github.com/amruthpillai/reactive-resume/issues/3393), [#3401](https://github.com/amruthpillai/reactive-resume/issues/3401), [#3433](https://github.com/amruthpillai/reactive-resume/issues/3433).
 - In progress: bullet pagination (#3344), approved paragraph indentation (#3397), and remaining issue reproductions. Reporter confirmed #3433 no longer reproduces after restarting their setup; issue closed without an attributed code fix. #3196 remains open because merged #3438 addressed a separate content-loss regression, not missing table borders. GitHub state refreshed against the current open-issue and PR inventories.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
@@ -56,7 +56,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340) | [#3435](https://github.com/amruthpillai/reactive-resume/pull/3435) | Head `27c17d8c1`: approved opt-in German hyphenation preserves default-off output and per-document isolation. 722 PDF tests across 59 files including 11 actual-PDF cases, 111 schema tests, 599 web tests, three package typechecks and production builds pass. Four Chromium locale/toggle exports, built-server PDF parity and exact shipped third-party notices verified. |
 | [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343) | [#3437](https://github.com/amruthpillai/reactive-resume/pull/3437) | Head `d154f31b8`: skill ratings align at the bottom of each multi-column row by default. Nine actual-PDF regressions and all 692 PDF tests pass. Single-column raster is byte-identical; CI and review approved. |
 | [#3196](https://github.com/amruthpillai/reactive-resume/issues/3196) | [#3438](https://github.com/amruthpillai/reactive-resume/pull/3438) | Head `165535b5f`: preserves imported rich text without individually addressable semantic descendants. Seven actual-PDF regressions, all 690 PDF tests and a production import/save/reload/export reproduction pass. Original missing-border report remains open; this is a separate regression discovered during its investigation. |
-| [#3344](https://github.com/amruthpillai/reactive-resume/issues/3344) | [#3443](https://github.com/amruthpillai/reactive-resume/pull/3443) | Head `4ad69f2a9`: scoped React PDF layout patch keeps list markers with their first text fragments, respecting orphan counts, reordering, RTL and explicit pagination hints. 36 targeted cases and 847 PDF tests pass; current-main failure reproduced, single-page raster byte-identical. Independent review clean; 36 focused tests and a separate 250-word content-break probe pass. Extreme orphan/font-size limitations also reproduce on unchanged main. Issue remains open until merge. |
+| [#3344](https://github.com/amruthpillai/reactive-resume/issues/3344) | [#3443](https://github.com/amruthpillai/reactive-resume/pull/3443) | Head `45a38fdc9`: scoped React PDF layout patch keeps list markers with their first text fragments, respecting orphan counts, reordering, RTL and explicit pagination hints. 36 targeted cases and 847 PDF tests pass; current-main failure reproduced, single-page raster byte-identical. Independent review clean; 36 focused tests and a separate 250-word content-break probe pass. Extreme orphan/font-size limitations also reproduce on unchanged main. Issue remains open until merge. |
 
 ## Product decisions
 
@@ -110,9 +110,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Issue closed; relevant merged PRs: #3386. No further implementation planned for this report. See evidence for the contribution of each fix.
-
-**Related PRs:** [#3386](https://github.com/amruthpillai/reactive-resume/pull/3386)
+- Issue closed after reporter-confirmed recovery. No code fix is attributed to this report.
 
 ### [#3401](https://github.com/amruthpillai/reactive-resume/issues/3401) — Remove "Build your own resume" from footer
 
@@ -141,7 +139,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Same main DCR path as #3392: auth config enables unauthenticated DCR while schema/auth.ts:250-292 omits clientDiscoveryId that installed plugin registration writes.
 - Cloud exact HTTP response/server log unavailable; do not conflate possible redirect allowlist failure with missing-schema failure.
-- Current unmerged #3421 covers reproduced schema-related registration HTTP500; cloud cause still needs deployment logs/retest. Linked fix without premature duplicate closure: https://github.com/amruthpillai/reactive-resume/issues/3398#issuecomment-5553215414.
+- Merged #3421 covers the reproduced schema-related registration HTTP500; cloud cause still needs deployment logs/retest. Linked fix without premature duplicate closure: https://github.com/amruthpillai/reactive-resume/issues/3398#issuecomment-5553215414.
 
 **Action plan:**
 
@@ -188,7 +186,7 @@ Classification describes the reported problem against the audit baseline; implem
 - Main e549d114e packages/auth/src/config.ts:302-310 uses validAudiences rather than resources and omits clientRegistrationDefaultResources.
 - packages/db/src/schema/auth.ts:250-377 lacks clientDiscoveryId and new OAuth resource/client-resource/assertion models; installed oauth-provider dist/oauth-1Ud-hvZY.d.mts declares them and authorize-BmTe2VYG.mjs:1955 writes clientDiscoveryId.
 - apps/web/src/features/auth/pages/login.tsx:72,78 drops callbackURL when navigating to 2FA/dashboard.
-- PR #3421 head3421af6f6: 98 server tests with real PostgreSQL, 636 web tests and production E2E CI pass. Real advertised-root and /mcp access tokens initialize MCP with HTTP200; issued client-audience ID token gets HTTP401. SDK1.30 selects root/slash from advertised metadata; service aliases deliberately preserved.
+- PR #3421 merged at verified head `895fec352`: 98 server tests with real PostgreSQL, 636 web tests and production E2E CI pass. Real advertised-root and /mcp access tokens initialize MCP with HTTP200; issued client-audience ID token gets HTTP401. SDK1.30 selects root/slash from advertised metadata; service aliases deliberately preserved.
 
 **Action plan:**
 
@@ -222,8 +220,8 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Evidence:**
 
-- Open PR #3386 explicitly fixes #3380; gh pr view confirms OPEN, head 621ba923d953de5fd78b4ace205ad3daab2a5adb.
-- packages/pdf/src/templates/shared/sections.tsx:191 getSectionHeadingTextStyle; icon-bearing heading at :367 uses stripped text layout. Main lacks PR padding change.
+- PR #3386 merged at head `a3053e206`; its section-heading padding fix is now on main.
+- packages/pdf/src/templates/shared/sections.tsx:191 getSectionHeadingTextStyle; icon-bearing heading at :367 uses the corrected text padding.
 
 **Action plan:**
 
@@ -278,7 +276,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Evidence:**
 
-- packages/api/src/features/ai/service.ts:94,265 hardcodes 30_000 ms; PR #3384 open and covers timeout with turbo globalEnv and tests.
+- Baseline packages/api/src/features/ai/service.ts:94,265 hardcoded 30_000 ms; PR #3384 merged at head `8a96b7c9f` with turbo globalEnv coverage and tests.
 
 **Action plan:**
 
@@ -651,7 +649,7 @@ Classification describes the reported problem against the audit baseline; implem
 **Evidence:**
 
 - packages/api/src/features/applications/ai.ts:32-34 generatePlainText forwards provider error without translation; other procedures call generateJson.
-- PR #3333 open explicitly addresses #3312 with gateway error mapping and tests.
+- PR #3333 merged at head `5a29dadf8` with gateway error mapping and tests.
 
 **Action plan:**
 
