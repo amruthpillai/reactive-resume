@@ -381,7 +381,7 @@ function normalizePictureUrl(url: string, origin: string): string {
 	}
 }
 
-async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area): Promise<Blob> {
+async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area, mimeType: string): Promise<Blob> {
 	const image = await new Promise<HTMLImageElement>((resolve, reject) => {
 		const element = new Image();
 		element.addEventListener("load", () => {
@@ -411,11 +411,17 @@ async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area): Promise<B
 		canvas.height,
 	);
 
+	// Preserve compressed photo formats so cropping cannot inflate a JPEG into a much larger PNG.
+	const outputType = mimeType === "image/jpeg" || mimeType === "image/webp" ? mimeType : "image/png";
 	return new Promise<Blob>((resolve, reject) => {
-		canvas.toBlob((blob) => {
-			if (blob) resolve(blob);
-			else reject(new Error("Canvas is empty"));
-		}, "image/png");
+		canvas.toBlob(
+			(blob) => {
+				if (blob) resolve(blob);
+				else reject(new Error("Canvas is empty"));
+			},
+			outputType,
+			0.9,
+		);
 	});
 }
 
@@ -538,7 +544,7 @@ function PictureSectionForm() {
 		let fileToUpload: File = cropState.file;
 		try {
 			if (croppedAreaPixels) {
-				const blob = await getCroppedImageBlob(cropState.imageSrc, croppedAreaPixels);
+				const blob = await getCroppedImageBlob(cropState.imageSrc, croppedAreaPixels, cropState.file.type);
 				fileToUpload = new File([blob], cropState.file.name, { type: blob.type });
 			}
 		} catch {
