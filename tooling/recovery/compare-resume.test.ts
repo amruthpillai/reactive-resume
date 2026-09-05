@@ -6,6 +6,7 @@ import { compareResumeRecovery } from "./compare-resume";
 const SYNTHETIC_SOURCE_HASH = "68cbff28a704f3859c7f5385e9e82a3517521374d99ec2f65ca15887f81310cc";
 const RECOVERED_COPY_HASH = "56d3e7d3ecd336b6d910224e2ecb64c7a3c010ff980782f3bea985682018e3a6";
 const CURRENT_COPY_HASH = "40cb0aba1e7b3d0950314c3ad20a74b30785545658b296fea97885d6364c9b2f";
+const DEFAULT_RESUME_HASH = "15c8a97e15f248c630a6e1c16e5e257a5b02959ef749acbc18c41cd150e853a4";
 
 function resumeWithName(name: string) {
 	const resume = structuredClone(defaultResumeData);
@@ -13,7 +14,19 @@ function resumeWithName(name: string) {
 	return resume;
 }
 
-function validInput(overrides: Partial<RecoveryComparisonInput> = {}): RecoveryComparisonInput {
+function resumeWithTemplate(template: string): unknown {
+	const resume = structuredClone(defaultResumeData);
+	return { ...resume, metadata: { ...resume.metadata, template } };
+}
+
+function validInput(
+	overrides: Partial<
+		Omit<RecoveryComparisonInput, "targetResumeId" | "target"> & {
+			targetResumeId: string | null;
+			target: unknown | null;
+		}
+	> = {},
+): RecoveryComparisonInput {
 	return {
 		caseId: "case-synthetic-001",
 		sourceResumeId: "resume-v4-synthetic-001",
@@ -24,7 +37,7 @@ function validInput(overrides: Partial<RecoveryComparisonInput> = {}): RecoveryC
 		source: resumeWithName("Synthetic source"),
 		target: resumeWithName("Synthetic source"),
 		...overrides,
-	};
+	} as RecoveryComparisonInput;
 }
 
 describe("compareResumeRecovery", () => {
@@ -104,6 +117,49 @@ describe("compareResumeRecovery", () => {
 			targetHash: null,
 			outcome: "blocked",
 			blockedReason: "invalid-target-json",
+		});
+	});
+
+	it("blocks schema-invalid source data instead of treating normalized content as identical", () => {
+		expect(
+			compareResumeRecovery(
+				validInput({ source: resumeWithTemplate("not-a-template"), target: structuredClone(defaultResumeData) }),
+			),
+		).toMatchObject({
+			sourceHash: null,
+			targetHash: null,
+			outcome: "blocked",
+			blockedReason: "invalid-source-json",
+		});
+	});
+
+	it("blocks schema-invalid target data instead of treating normalized content as identical", () => {
+		expect(
+			compareResumeRecovery(
+				validInput({ source: structuredClone(defaultResumeData), target: resumeWithTemplate("not-a-template") }),
+			),
+		).toMatchObject({
+			sourceHash: DEFAULT_RESUME_HASH,
+			targetHash: null,
+			outcome: "blocked",
+			blockedReason: "invalid-target-json",
+		});
+	});
+
+	it.each([
+		[{ targetResumeId: null }, null],
+		[{ target: null }, "resume-v5-synthetic-001"],
+	] as const)("blocks contradictory target presence for %s", (overrides, targetResumeId) => {
+		const input = { ...validInput(), ...overrides } as unknown as RecoveryComparisonInput;
+
+		expect(compareResumeRecovery(input)).toEqual({
+			caseId: "case-synthetic-001",
+			sourceResumeId: "resume-v4-synthetic-001",
+			targetResumeId,
+			sourceHash: null,
+			targetHash: null,
+			outcome: "blocked",
+			blockedReason: "target-presence-mismatch",
 		});
 	});
 

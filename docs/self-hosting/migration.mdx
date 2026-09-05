@@ -66,6 +66,8 @@ Git because it may connect account and resume identifiers. Record these fields b
 - Source and target content hashes
 - Proposed outcome: `no-op`, `export-copy`, or `blocked`
 
+These hashes prove content equality only; they never prove ownership, source authenticity, or recipient identity.
+
 An authorized operator should follow this order:
 
 <Steps>
@@ -80,9 +82,10 @@ An authorized operator should follow this order:
   </Step>
 
   <Step title="Compare without writing">
-    Validate already-exported source JSON and current resume data, then calculate content hashes. Identical content is a
-    `no-op`. Source-only or divergent content is an `export-copy`. Missing identity evidence, mapping, valid JSON, or a
-    source snapshot is `blocked`.
+    Validate source JSON text only after it already conforms exactly to the current v5 resume-data schema, then compare it
+    with current v5 resume data and calculate content hashes. Raw v4 exports are unsupported, and the comparator performs
+    no format conversion. Identical content is a `no-op`. Source-only or divergent content is an `export-copy`. Missing
+    identity evidence, mapping, valid current-v5 data, or a source snapshot is `blocked`.
   </Step>
 
   <Step title="Deliver a separate private export">
@@ -93,8 +96,10 @@ An authorized operator should follow this order:
 </Steps>
 
 Repository contributors can rehearse this decision with the pure comparator in
-`tooling/recovery/compare-resume.ts`. It accepts exported JSON or current resume-shaped data, produces a deterministic
-dry-run manifest, and has no database, network, or write path. Use synthetic IDs and content only; keep any operational
+`tooling/recovery/compare-resume.ts`. It accepts JSON text or objects only when they already conform exactly to the
+current v5 resume-data schema. It does not accept raw v4 exports or perform legacy conversion; review the historical
+converter at tag `v5.0.20` separately before processing legacy-format data. The comparator produces a deterministic
+dry-run manifest and has no database, network, or write path. Use synthetic IDs and content only; keep any operational
 manifest outside the repository.
 
 ## Manual migration (small instances)

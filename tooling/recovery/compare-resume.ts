@@ -8,18 +8,20 @@ export type RecoveryBlockReason =
 	| "owner-unverified"
 	| "owner-mapping-missing"
 	| "invalid-source-json"
-	| "invalid-target-json";
+	| "invalid-target-json"
+	| "target-presence-mismatch";
 
-export type RecoveryComparisonInput = {
+type RecoveryComparisonBase = {
 	caseId: string;
 	sourceResumeId: string;
-	targetResumeId: string | null;
 	ownerVerified: boolean;
 	ownerMappingPresent: boolean;
 	sourceAvailable: boolean;
 	source: unknown;
-	target: unknown | null;
 };
+
+export type RecoveryComparisonInput = RecoveryComparisonBase &
+	({ targetResumeId: null; target: null } | { targetResumeId: string; target: unknown });
 
 export type RecoveryManifest = {
 	caseId: string;
@@ -35,7 +37,8 @@ function parseResume(value: unknown): ResumeData | null {
 	try {
 		const json = JSON.parse(typeof value === "string" ? value : JSON.stringify(value));
 		const result = resumeDataSchema.safeParse(json);
-		return result.success ? result.data : null;
+		if (!result.success || canonicalize(json) !== canonicalize(result.data)) return null;
+		return result.data;
 	} catch {
 		return null;
 	}
@@ -72,6 +75,9 @@ export function compareResumeRecovery(input: RecoveryComparisonInput): RecoveryM
 	if (!input.sourceAvailable) return { ...manifest, blockedReason: "source-unavailable" };
 	if (!input.ownerVerified) return { ...manifest, blockedReason: "owner-unverified" };
 	if (!input.ownerMappingPresent) return { ...manifest, blockedReason: "owner-mapping-missing" };
+	if ((input.targetResumeId === null) !== (input.target === null)) {
+		return { ...manifest, blockedReason: "target-presence-mismatch" };
+	}
 
 	const source = parseResume(input.source);
 	if (!source) return { ...manifest, blockedReason: "invalid-source-json" };
