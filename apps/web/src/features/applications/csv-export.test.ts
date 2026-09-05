@@ -14,7 +14,7 @@ const application: Application = {
 	sourceUrl: "https://example.com/job",
 	notes: "First line\nSecond line",
 	tags: ["remote", "typescript"],
-	contacts: [{ name: "Ada", role: "Recruiter", type: "Referral" }],
+	contacts: [{ name: "Ada", role: "Recruiter", type: "Referral", email: "ada@example.com", phone: "+49 30 123456" }],
 	activity: [
 		{ id: "interview", type: "stage", stage: "interview", at: new Date("2026-08-12T12:00:00Z") },
 		{ id: "note", type: "note", text: "Called recruiter", at: new Date("2026-08-08T12:00:00Z") },
