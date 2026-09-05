@@ -18,7 +18,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 - 114 issues audited; verification continues for reports needing exact fixtures or deployment reproduction.
 - 21 fix PRs created: 20 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
 - Eight other issues closed with evidence: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341).
-- In progress: #3017 picture borders/shadows, #3393 application CSV export, #3369 remaining label gaps, and OAuth CI verification.
+- In progress: #3017 picture borders/shadows, #3393 application CSV export, #3369 remaining label gaps, and #3247 compact resume views with session preferences.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -40,10 +40,10 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180) | [#3417](https://github.com/amruthpillai/reactive-resume/pull/3417) | Moving items validates destinations and prunes only emptied custom source sections and affected empty pages; exact round-trip JSON, undo, 605 web tests and typecheck verified. |
 | [#3360](https://github.com/amruthpillai/reactive-resume/issues/3360) | [#3419](https://github.com/amruthpillai/reactive-resume/pull/3419) | Approved per-resume download-button preference persists, backs up with account data, and hides both public buttons. Browser E2E and combined migration fresh/upgrade verification passed. |
 | [#3305](https://github.com/amruthpillai/reactive-resume/issues/3305) | [#3420](https://github.com/amruthpillai/reactive-resume/pull/3420) | JPEG/WebP encoding is preserved and oversized crops shrink proportionally until within 10MiB. Near-limit JPEG browser reproduction now uploads successfully; transparency is preserved for PNG/WebP. Validation errors explain the upload limit. |
-| [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392) | [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421) | MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; CI test-isolation follow-up underway. |
+| [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392) | [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421) | MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; schema-isolation and missing callback-search regressions corrected. Browser CI and autofix now pass. |
 | [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | PDF page padding repeats across overflow while preserving template backgrounds; 42 actual-PDF geometry/raster cases pass. |
 | [#3175](https://github.com/amruthpillai/reactive-resume/issues/3175) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | Shared continuation-margin fix covers five affected templates, explicit headerless pages and full-width pages. |
-| [#3255](https://github.com/amruthpillai/reactive-resume/issues/3255) | [#3423](https://github.com/amruthpillai/reactive-resume/pull/3423) | Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios,325 API tests,598 web tests and combined migrations verified. |
+| [#3255](https://github.com/amruthpillai/reactive-resume/issues/3255) | [#3423](https://github.com/amruthpillai/reactive-resume/pull/3423) | Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios, 325 API tests, 598 web tests and combined migrations verified; browser CI and autofix pass. Codacy applies a SQL Server-only rule to the PostgreSQL migration. |
 
 ## Product decisions
 
@@ -150,7 +150,7 @@ Classification describes the reported problem against the audit baseline; implem
 - Do not blindly accept generated drops, nullability, unique/index changes. Verify existing populated OAuth rows survive upgrade.
 - Integration: fresh and upgraded DB DCR -> consent -> code -> token -> MCP; anonymous and existing session; TOTP and backup code; reject external/protocol-relative/backslash callback URLs.
 
-**Implementation:** [PR #3421](https://github.com/amruthpillai/reactive-resume/pull/3421). MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; CI test-isolation follow-up underway.
+**Implementation:** [PR #3421](https://github.com/amruthpillai/reactive-resume/pull/3421). MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; schema-isolation and missing callback-search regressions corrected. Browser CI and autofix now pass.
 
 **Related PRs:** [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421)
 
@@ -719,7 +719,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Implement owned cover-letter records and shared library/builder editor without duplicating new content inside resume JSON. Preserve embedded cover letters and support explicit Save copy to library. Reuse existing application PDF attachments; test deletion, export, ownership, and concurrent edits.
 
-**Implementation:** [PR #3423](https://github.com/amruthpillai/reactive-resume/pull/3423). Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios,325 API tests,598 web tests and combined migrations verified.
+**Implementation:** [PR #3423](https://github.com/amruthpillai/reactive-resume/pull/3423). Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios, 325 API tests, 598 web tests and combined migrations verified; browser CI and autofix pass. Codacy applies a SQL Server-only rule to the PostgreSQL migration.
 
 **Product/scope note:** Approved: independently saved cover-letter library, editing shared document from library and builder, selected resume styling, applications attach exported snapshots. Styling refresh lifecycle pending precise choice.
 
