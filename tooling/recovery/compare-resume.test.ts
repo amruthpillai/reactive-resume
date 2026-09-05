@@ -7,6 +7,13 @@ const RECOVERED_COPY_HASH = "56d3e7d3ecd336b6d910224e2ecb64c7a3c010ff980782f3bea
 const CURRENT_COPY_HASH = "40cb0aba1e7b3d0950314c3ad20a74b30785545658b296fea97885d6364c9b2f";
 const DEFAULT_RESUME_HASH = "15c8a97e15f248c630a6e1c16e5e257a5b02959ef749acbc18c41cd150e853a4";
 
+const FORMAT_CHARACTERS = [
+	["zero-width space (U+200B)", "\u200B"],
+	["left-to-right isolate (U+2066)", "\u2066"],
+	["right-to-left override (U+202E)", "\u202E"],
+	["byte-order mark (U+FEFF)", "\uFEFF"],
+] as const;
+
 const INVALID_INPUT_MANIFEST = {
 	caseId: "invalid-input",
 	sourceResumeId: "invalid-input",
@@ -151,6 +158,14 @@ describe("compareResumeRecovery", () => {
 			["embedded control character", "valid\u001fid"],
 		] as const)("rejects %s", (_description, value) => {
 			expect(compareResumeRecovery(validRequest({ [field]: value }))).toEqual(INVALID_INPUT_MANIFEST);
+		});
+
+		it.each(FORMAT_CHARACTERS)("rejects embedded %s", (_description, character) => {
+			expect(compareResumeRecovery(validRequest({ [field]: `valid${character}id` }))).toEqual(INVALID_INPUT_MANIFEST);
+		});
+
+		it.each(FORMAT_CHARACTERS)("rejects format-only %s", (_description, character) => {
+			expect(compareResumeRecovery(validRequest({ [field]: character }))).toEqual(INVALID_INPUT_MANIFEST);
 		});
 	});
 

@@ -56,7 +56,7 @@ const INVALID_INPUT_MANIFEST = {
 	blockedReason: "invalid-input",
 } satisfies RecoveryManifest;
 
-const UNICODE_CONTROL_CHARACTER = /\p{Cc}/u;
+const UNICODE_CONTROL_OR_FORMAT_CHARACTER = /[\p{Cc}\p{Cf}]/u;
 
 function hasDuplicateJsonMembers(input: string): boolean {
 	let position = 0;
@@ -183,7 +183,7 @@ function hasDuplicateJsonMembers(input: string): boolean {
 }
 
 function isManifestId(value: unknown): value is string {
-	return typeof value === "string" && value.trim().length > 0 && !UNICODE_CONTROL_CHARACTER.test(value);
+	return typeof value === "string" && value.trim().length > 0 && !UNICODE_CONTROL_OR_FORMAT_CHARACTER.test(value);
 }
 
 function hasDuplicateSerializedResumeMembers(value: unknown): boolean {
