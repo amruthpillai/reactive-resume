@@ -20,6 +20,8 @@ export type ExtractProgress = HarvestProgress | { phase: "loading"; page: 0; pag
 export type ExtractOptions = {
 	onProgress?: (progress: ExtractProgress) => void;
 	signal?: AbortSignal;
+	/** Set to 0 to skip the operator pass; a caller that only wants the text layer has no use for it. */
+	operatorBudgetMs?: number;
 };
 
 export class PdfPasswordRequiredError extends Error {
@@ -81,6 +83,7 @@ export async function extractPdf(file: File, options: ExtractOptions = {}): Prom
 		return await harvestPdfDocument(document, {
 			file: { name: file.name, sizeBytes: file.size, magicBytesOk },
 			maxPages: HARVEST_DEFAULTS.maxPages,
+			...(options.operatorBudgetMs === undefined ? {} : { operatorBudgetMs: options.operatorBudgetMs }),
 			...(options.onProgress ? { onProgress: options.onProgress } : {}),
 			...(options.signal ? { signal: options.signal } : {}),
 		});

@@ -20,6 +20,7 @@ type RawEntry = {
 
 const MAX_HEADING_WORDS = 4;
 const MAX_HEADING_LENGTH = 48;
+const MAX_ENTRY_HEADER_WORDS = 8;
 const MAX_LIST_ITEMS = 60;
 const MIN_PHONE_DIGITS = 7;
 const MAX_PHONE_DIGITS = 15;
@@ -91,6 +92,7 @@ const ENTRY_PREAMBLE_LOOKAHEAD = 4;
 const PERIOD_CANDIDATE =
 	/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}\s*(?:[-–—~]|to|until|through)\s*(?:(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}|\p{L}+)/giu;
 const STRONG_SEPARATOR = /\s*[|•·]\s*|\s{2,}|\s+[–—]\s+/;
+const SENTENCE_END = /[.!?]$/;
 const TRAILING_DATES = [/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?(?:19|20)\d{2}$/u, /(?:\d{1,2}[/.])?(?:19|20)\d{2}$/];
 
 const escapeHtml = (value: string) =>
@@ -128,6 +130,34 @@ function looksLikeHeading(line: string): boolean {
 	return letters === letters.toLocaleUpperCase() && letters !== letters.toLocaleLowerCase();
 }
 
+function looksLikeTitleCaseHeading(line: string): boolean {
+	const trimmed = line.trim().replace(/[:：]$/, "");
+	if (!trimmed || trimmed.length > MAX_HEADING_LENGTH || /\d/.test(trimmed)) return false;
+	const words = trimmed.split(/\s+/);
+	if (words.length > MAX_HEADING_WORDS) return false;
+
+	return words.every((word) => {
+		const letters = word.replace(/[^\p{L}]/gu, "");
+		if (letters.length === 0) return false;
+		return letters[0] === letters[0]?.toLocaleUpperCase() && letters.slice(1) === letters.slice(1).toLocaleLowerCase();
+	});
+}
+
+/**
+ * Whether a line could be the header of an entry rather than prose belonging to the previous one.
+ *
+ * Unbulleted descriptions are common, and without this test any narrative line that happens to sit
+ * within the lookahead of the next role's dates would be promoted to a header, stealing the current
+ * entry's description and seeding a garbage item from a sentence.
+ */
+function looksLikeEntryHeader(line: string): boolean {
+	const trimmed = line.trim();
+	if (STRONG_SEPARATOR.test(trimmed)) return true;
+	if (SENTENCE_END.test(trimmed)) return false;
+
+	return trimmed.split(/\s+/).length <= MAX_ENTRY_HEADER_WORDS;
+}
+
 function findPeriod(line: string): string {
 	PERIOD_CANDIDATE.lastIndex = 0;
 
@@ -161,18 +191,21 @@ function extractPhone(text: string): string {
 	return "";
 }
 
-function isDateLine(line: string): boolean {
+function isDateLine(line: string, allowSingleDate = true): boolean {
 	if (findPeriod(line)) return true;
+	// A section grouped without single dates reads a bare "2022" as text, so the lookahead has to
+	// agree with it: otherwise that line closes an entry that groupEntries then never reopens.
+	if (!allowSingleDate) return false;
 
 	const bare = line.replace(BULLET_PATTERN, "").trim();
 	return bare !== "" && parseSingleDate(bare) !== null;
 }
 
-function introducesEntry(lines: readonly string[], index: number): boolean {
+function introducesEntry(lines: readonly string[], index: number, allowSingleDate = true): boolean {
 	for (let offset = 1; offset <= ENTRY_PREAMBLE_LOOKAHEAD; offset++) {
 		const line = lines[index + offset];
 		if (line === undefined || BULLET_PATTERN.test(line)) return false;
-		if (isDateLine(line)) return true;
+		if (isDateLine(line, allowSingleDate)) return true;
 	}
 
 	return false;
@@ -222,6 +255,18 @@ function splitList(lines: string[]): string[] {
 	return [...new Set(values)].slice(0, MAX_LIST_ITEMS);
 }
 
+/**
+ * Guarantees an entry has header text, because every section shape maps `headerParts[0]` onto a
+ * field the resume schema requires to be non-empty. A section whose first line is a date opens an
+ * entry with an empty header, and without this the whole import fails validation on that one item.
+ */
+function withHeaderText(entry: RawEntry): RawEntry {
+	if (entry.headerParts.length > 0) return entry;
+
+	const [first, ...rest] = entry.body;
+	return { ...entry, headerParts: splitHeaderParts(first ?? ""), body: rest };
+}
+
 function groupEntries(lines: string[], allowSingleDate = false): RawEntry[] {
 	const cleaned = lines.map((line) => line.trim()).filter(Boolean);
 	const entries: RawEntry[] = [];
@@ -259,7 +304,7 @@ function groupEntries(lines: string[], allowSingleDate = false): RawEntry[] {
 		}
 
 		const isBullet = BULLET_PATTERN.test(line);
-		const leadsToDate = !isBullet && introducesEntry(cleaned, index);
+		const leadsToDate = !isBullet && looksLikeEntryHeader(line) && introducesEntry(cleaned, index, allowSingleDate);
 
 		if (leadsToDate && !current.period && current.body.length === 0) {
 			current.headerParts.push(...splitHeaderParts(line));
@@ -277,7 +322,7 @@ function groupEntries(lines: string[], allowSingleDate = false): RawEntry[] {
 
 	if (current) entries.push(current);
 
-	return entries.filter((entry) => entry.period || entry.headerParts.length > 0 || entry.body.length > 0);
+	return entries.map(withHeaderText).filter((entry) => entry.headerParts.length > 0);
 }
 
 function entryDescription(entry: RawEntry, usedParts: number): string {
@@ -428,15 +473,25 @@ function buildSectionItems(key: SectionKey, lines: string[]): unknown[] {
 }
 
 function segment(lines: string[]): { header: string[]; segments: Segment[] } {
-	const cleaned = lines.map((line) => line.trim()).filter(Boolean);
+	const records = lines
+		.map((line, index) => ({ line: line.trim(), precededByBlank: index > 0 && !lines[index - 1]?.trim() }))
+		.filter((record) => record.line);
+	const cleaned = records.map((record) => record.line);
 	const boundary = headerBoundary(cleaned);
 	const header: string[] = [];
 	const segments: Segment[] = [];
 	let current: Segment | null = null;
 
-	for (const [index, line] of cleaned.entries()) {
+	for (const [index, { line, precededByBlank }] of records.entries()) {
 		const key = knownHeading(line);
-		const unknown = key === null && index > boundary && !introducesEntry(cleaned, index) && looksLikeHeading(line);
+		const isolatedTitleCase = precededByBlank && looksLikeTitleCaseHeading(line);
+		// With no section open the entry-preamble guard has nothing to protect: skipping it there keeps
+		// a dated custom section that opens the body from being swallowed into the contact header.
+		const unknown =
+			key === null &&
+			index > boundary &&
+			(looksLikeHeading(line) || isolatedTitleCase) &&
+			(current === null || isolatedTitleCase || !introducesEntry(cleaned, index));
 
 		if (key !== null || unknown) {
 			if (current) segments.push(current);

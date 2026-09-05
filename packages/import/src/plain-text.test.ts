@@ -249,7 +249,73 @@ describe("parseResumeText four-line entry preambles", () => {
 		expect(data.sections.education.items[0]).toMatchObject({
 			school: "UNIVERSITY OF LONDON",
 			degree: "BSc Mathematics",
+			location: "London, UK",
 			period: "2012 - 2016",
 		});
+	});
+});
+
+describe("parseResumeText keeps content the layout hides", () => {
+	it("recognizes isolated title-case custom section headings", () => {
+		const initial = parseResumeText(
+			"Ada Lovelace\nada@example.com\n\nConferences\nReactConf\nBerlin\n2021\nSpoke about parsers\n",
+		);
+		const subsequent = parseResumeText(
+			"Ada Lovelace\nada@example.com\n\nEXPERIENCE\nAcme  Engineer\n2020 - 2022\nBuilt products.\n\nConferences\nReactConf\nBerlin\n2021\nSpoke about parsers\n",
+		);
+
+		expect(initial.customSections[0]).toMatchObject({ title: "Conferences" });
+		expect(subsequent.customSections[0]).toMatchObject({ title: "Conferences" });
+		expect(subsequent.sections.experience.items).toHaveLength(1);
+	});
+
+	it("keeps a dated custom section that opens the body", () => {
+		const data = parseResumeText(
+			"Ada Lovelace\nada@example.com\n\nCONFERENCES\nReactConf\nBerlin\n2021\nSpoke about parsers\n",
+		);
+
+		expect(data.basics.headline).not.toBe("CONFERENCES");
+		expect(data.customSections).toHaveLength(1);
+		expect(data.customSections[0]).toMatchObject({ title: "CONFERENCES" });
+
+		const content = data.customSections[0]?.items[0]?.content ?? "";
+		for (const line of ["ReactConf", "Berlin", "2021", "Spoke about parsers"]) {
+			expect(content).toContain(line);
+		}
+	});
+
+	it("keeps unbulleted descriptions with their own role", () => {
+		const data = parseResumeText(
+			"EXPERIENCE\nAcme  Engineer  Berlin\nJan 2020 - Present\nBuilt the thing end to end.\nWorked with a team of five.\nBabbage Ltd  Engineer  London\nMar 2016 - Dec 2019\nDid other work.\n",
+		);
+
+		expect(data.sections.experience.items).toHaveLength(2);
+		expect(data.sections.experience.items[0]?.description).toContain("Built the thing end to end.");
+		expect(data.sections.experience.items[0]?.description).toContain("Worked with a team of five.");
+		expect(data.sections.experience.items[1]).toMatchObject({ company: "Babbage Ltd", location: "London" });
+	});
+
+	it("does not split an entry on a bare year in a section that ignores single dates", () => {
+		const data = parseResumeText(
+			"EXPERIENCE\nAcme  Engineer\nJan 2020 - Present\nGrew the team.\nMore work here.\n2022\n",
+		);
+
+		expect(data.sections.experience.items).toHaveLength(1);
+
+		const description = data.sections.experience.items[0]?.description ?? "";
+		for (const line of ["Grew the team.", "More work here.", "2022"]) {
+			expect(description).toContain(line);
+		}
+	});
+
+	it("stays schema-valid when a section starts with its dates", () => {
+		const data = parseResumeText(
+			"EXPERIENCE\nJan 2020 - Present\nAcme Corp\nSenior Engineer\n\nEDUCATION\n2012 - 2016\nUniversity of London\n\nCERTIFICATIONS\n2021\n",
+		);
+
+		expect(() => resumeDataSchema.parse(data)).not.toThrow();
+		expect(data.sections.experience.items[0]).toMatchObject({ company: "Acme Corp", period: "Jan 2020 - Present" });
+		expect(data.sections.education.items[0]).toMatchObject({ school: "University of London" });
+		expect(data.sections.certifications.items).toHaveLength(0);
 	});
 });

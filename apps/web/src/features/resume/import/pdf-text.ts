@@ -1,115 +1,82 @@
-let pdfModule: Promise<typeof import("pdfjs-dist/legacy/build/pdf.mjs")>;
+import type { ExtractedDocument } from "@reactive-resume/resume/ats-pdf";
+import { buildExtractedDocument } from "@reactive-resume/resume/ats-pdf";
+import { extractPdf } from "@/features/ats-checker/extract-client";
 
-const loadPdfModule = () => (pdfModule ??= import("pdfjs-dist/legacy/build/pdf.mjs"));
+/**
+ * Turns a PDF into the plain lines `parseResumeText` reads.
+ *
+ * The extraction itself is the ATS checker's — same worker configuration, same size and password
+ * guards, same font-relative line clustering and column-gutter detection. Only the joining differs:
+ * the ATS text is prose, while the importer splits header rows on runs of two or more spaces, so a
+ * tabbed "Company    Role    Location" has to survive as three fields rather than one phrase.
+ */
 
-const createNestedWorker = () =>
-	new Worker(new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url), {
-		type: "module",
-		name: "import-pdfjs",
-	});
+/** Horizontal gap, relative to font size, above which two spans are separate header fields. */
+const FIELD_GAP_RATIO = 1.5;
+/** Narrower gaps are still a word break; matches the ratio the ATS extractor joins prose with. */
+const SPACE_GAP_RATIO = 0.25;
 
-const LINE_TOLERANCE = 3;
-const COLUMN_GAP = 12;
-const WORD_GAP = 1;
+/** The evidence the ATS layout rules require before calling a page two-column. */
+const GUTTER_COVERAGE = 0.85;
+const GUTTER_SPLIT_RATIO = 0.25;
 
-type PdfTextItem = {
-	str?: unknown;
-	width?: unknown;
-	transform?: unknown;
-};
+type PageGeometry = ExtractedDocument["pages"][number];
+type TextSpan = PageGeometry["lines"][number]["spans"][number];
 
-type PositionedItem = {
-	text: string;
-	x: number;
-	y: number;
-	width: number;
-};
-
-function toPositionedItem(item: PdfTextItem): PositionedItem | null {
-	if (typeof item.str !== "string" || !item.str.trim()) return null;
-
-	const transform = Array.isArray(item.transform) ? (item.transform as unknown[]) : [];
-	const x = typeof transform[4] === "number" ? transform[4] : 0;
-	const y = typeof transform[5] === "number" ? transform[5] : 0;
-
-	return { text: item.str, x, y, width: typeof item.width === "number" ? item.width : 0 };
-}
-
-function joinRow(items: PositionedItem[]): string {
-	const sorted = [...items].sort((a, b) => a.x - b.x);
+function joinSpans(spans: readonly TextSpan[]): string {
 	let text = "";
-	let previousEnd: number | null = null;
+	let previous: TextSpan | null = null;
 
-	for (const item of sorted) {
-		if (previousEnd !== null) {
-			const gap = item.x - previousEnd;
-			if (gap > COLUMN_GAP) text += "  ";
-			else if (gap > WORD_GAP && !text.endsWith(" ")) text += " ";
+	for (const span of spans) {
+		if (previous) {
+			const gap = span.x - (previous.x + previous.width);
+			const fontSize = Math.max(previous.fontSize, span.fontSize, 1);
+
+			if (gap > FIELD_GAP_RATIO * fontSize) text += "  ";
+			else if (gap > SPACE_GAP_RATIO * fontSize && !/\s$/.test(text) && !/^\s/.test(span.text)) text += " ";
 		}
 
-		text += item.text;
-		previousEnd = item.x + item.width;
+		text += span.text;
+		previous = span;
 	}
 
-	return text.replace(/\s+$/, "");
+	return text.trim();
 }
 
-export function itemsToLines(rawItems: readonly unknown[]): string[] {
-	const items = rawItems
-		.map((item) => toPositionedItem(item as PdfTextItem))
-		.filter((item): item is PositionedItem => item !== null)
-		.sort((a, b) => b.y - a.y);
+/** Mid-point of a convincing gutter, or null on a page that reads as one column. */
+function columnSplitX(page: PageGeometry): number | null {
+	const gutter = page.gutter;
+	if (!gutter || gutter.coverage < GUTTER_COVERAGE || gutter.splitRatio < GUTTER_SPLIT_RATIO) return null;
 
-	const lines: string[] = [];
-	let row: PositionedItem[] = [];
-	let rowY: number | null = null;
-
-	for (const item of items) {
-		if (rowY === null || Math.abs(item.y - rowY) <= LINE_TOLERANCE) {
-			rowY ??= item.y;
-			row.push(item);
-			continue;
-		}
-
-		lines.push(joinRow(row));
-		row = [item];
-		rowY = item.y;
-	}
-
-	if (row.length > 0) lines.push(joinRow(row));
-
-	return lines.filter((line) => line.trim().length > 0);
+	return gutter.x + gutter.width / 2;
 }
 
-export async function extractPdfLines(
-	pdf: ArrayBuffer,
-	createWorker: () => Worker = createNestedWorker,
-): Promise<string[]> {
-	const { PDFWorker, getDocument } = await loadPdfModule();
-	const nestedWorker = createWorker();
-	let loadingTask: ReturnType<typeof getDocument> | undefined;
-	let worker: InstanceType<typeof PDFWorker> | undefined;
+/**
+ * Lines grouped by baseline alone interleave a sidebar with the body, which drops a whole work
+ * history into the skills section. On a two-column page each column is read out in full instead.
+ */
+function pageToLines(page: PageGeometry): string[] {
+	const splitX = columnSplitX(page);
+	if (splitX === null) return page.lines.map((line) => joinSpans(line.spans));
 
-	try {
-		const WorkerWithPort = PDFWorker as unknown as new (options: { port: Worker }) => InstanceType<typeof PDFWorker>;
-		worker = new WorkerWithPort({ port: nestedWorker });
-		loadingTask = getDocument({ data: pdf.slice(0), worker });
-		const document = await loadingTask.promise;
-		const lines: string[] = [];
+	const left: string[] = [];
+	const right: string[] = [];
 
-		for (let index = 1; index <= document.numPages; index++) {
-			const page = await document.getPage(index);
-			const content = await page.getTextContent();
-			lines.push(...itemsToLines(content.items));
-		}
+	for (const line of page.lines) {
+		const leftSpans = line.spans.filter((span) => span.x + span.width / 2 < splitX);
+		if (leftSpans.length > 0) left.push(joinSpans(leftSpans));
 
-		return lines;
-	} finally {
-		try {
-			if (loadingTask) await loadingTask.destroy();
-			else worker?.destroy();
-		} finally {
-			nestedWorker.terminate();
-		}
+		const rightSpans = line.spans.filter((span) => span.x + span.width / 2 >= splitX);
+		if (rightSpans.length > 0) right.push(joinSpans(rightSpans));
 	}
+
+	return [...left, ...right];
+}
+
+export function documentToLines(doc: ExtractedDocument): string[] {
+	return doc.pages.flatMap(pageToLines).filter((line) => line.length > 0);
+}
+
+export async function extractPdfLines(file: File): Promise<string[]> {
+	return documentToLines(buildExtractedDocument(await extractPdf(file, { operatorBudgetMs: 0 })));
 }
