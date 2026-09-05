@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import { authSearchSchema, getAuthRedirectOptions, getOAuthPasskeyOptions, getOAuthSignInOptions } from "./redirect";
 
 describe("authentication callback", () => {
+	it.each([{}, { reauthenticate: true }])("accepts auth routes without a callback query: %j", (search) => {
+		expect(authSearchSchema.parse(search)).toEqual(search);
+	});
 	it("preserves a signed OAuth callback including repeated resources", () => {
 		const callbackURL =
 			"/api/auth/oauth?client_id=client&resource=https%3A%2F%2Fapp.example%2Fmcp&resource=https%3A%2F%2Fapp.example&exp=123&sig=signed";

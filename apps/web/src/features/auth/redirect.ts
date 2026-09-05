@@ -19,7 +19,7 @@ function safeCallbackURL(value: unknown): string | undefined {
 }
 
 export const authSearchSchema = z.object({
-	callbackURL: z.unknown().transform(safeCallbackURL),
+	callbackURL: z.unknown().transform(safeCallbackURL).optional(),
 	reauthenticate: z.boolean().optional().catch(undefined),
 });
 
