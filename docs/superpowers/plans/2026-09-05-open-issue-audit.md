@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 115 issues triaged: the initial 114 plus new report #3433. Verification continues for reports needing exact fixtures or deployment reproduction.
-- 37 implementation PRs created by this audit; all 37 were merged by the repository owner. Audit-only documentation PRs #3418 and #3440 are excluded and are both merged.
+- 37 implementation PRs created by this audit: 37 merged by the repository owner; none remain open. Audit-only documentation PRs #3418 and #3440 are excluded and are both merged.
 - 50 audited issues closed: 49 evidence-backed or reporter-confirmed closures plus one product-decision closure (#3272). Complete closure set: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2735](https://github.com/amruthpillai/reactive-resume/issues/2735), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2745](https://github.com/amruthpillai/reactive-resume/issues/2745), [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3068](https://github.com/amruthpillai/reactive-resume/issues/3068), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3175](https://github.com/amruthpillai/reactive-resume/issues/3175), [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247), [#3251](https://github.com/amruthpillai/reactive-resume/issues/3251), [#3255](https://github.com/amruthpillai/reactive-resume/issues/3255), [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3291](https://github.com/amruthpillai/reactive-resume/issues/3291), [#3305](https://github.com/amruthpillai/reactive-resume/issues/3305), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3312](https://github.com/amruthpillai/reactive-resume/issues/3312), [#3334](https://github.com/amruthpillai/reactive-resume/issues/3334), [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337), [#3338](https://github.com/amruthpillai/reactive-resume/issues/3338), [#3339](https://github.com/amruthpillai/reactive-resume/issues/3339), [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341), [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343), [#3344](https://github.com/amruthpillai/reactive-resume/issues/3344), [#3347](https://github.com/amruthpillai/reactive-resume/issues/3347), [#3348](https://github.com/amruthpillai/reactive-resume/issues/3348), [#3352](https://github.com/amruthpillai/reactive-resume/issues/3352), [#3359](https://github.com/amruthpillai/reactive-resume/issues/3359), [#3360](https://github.com/amruthpillai/reactive-resume/issues/3360), [#3361](https://github.com/amruthpillai/reactive-resume/issues/3361), [#3366](https://github.com/amruthpillai/reactive-resume/issues/3366), [#3368](https://github.com/amruthpillai/reactive-resume/issues/3368), [#3369](https://github.com/amruthpillai/reactive-resume/issues/3369), [#3370](https://github.com/amruthpillai/reactive-resume/issues/3370), [#3374](https://github.com/amruthpillai/reactive-resume/issues/3374), [#3380](https://github.com/amruthpillai/reactive-resume/issues/3380), [#3391](https://github.com/amruthpillai/reactive-resume/issues/3391), [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392), [#3393](https://github.com/amruthpillai/reactive-resume/issues/3393), [#3401](https://github.com/amruthpillai/reactive-resume/issues/3401), [#3433](https://github.com/amruthpillai/reactive-resume/issues/3433).
-- In progress: approved paragraph indentation (#3397) and remaining issue reproductions. Bullet pagination (#3344), Ditgar alignment (#3068), and Arabic preview centering (#2745) are owner-merged. Reporter confirmed #3433 no longer reproduces after restarting their setup; issue closed without an attributed code fix. #3196 remains open because merged #3438 addressed a separate content-loss regression, not missing table borders. GitHub state refreshed against the current open-issue and PR inventories.
+- In progress: approved paragraph indentation (#3397), verified RTL canvas glyph placement (#3275), ordered-list marker overlap (#2751), and remaining issue reproductions. Bullet pagination (#3344), Ditgar alignment (#3068), and Arabic preview centering (#2745) are owner-merged. Reporter confirmed #3433 no longer reproduces after restarting their setup; issue closed without an attributed code fix. #3196 remains open because merged #3438 addressed a separate content-loss regression, not missing table borders. GitHub state refreshed against the current open-issue and PR inventories.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -154,11 +154,14 @@ Classification describes the reported problem against the audit baseline; implem
 **Evidence:**
 
 - apps/web/src/components/input/rich-input.tsx:64-90 registers StarterKit, TextStyle, Color, Highlight, TextAlign; indentation commands at 305 are list-specific.
-- Unpublished implementation passes editor persistence, PDF/DOCX, RTL and quoted-code review checks. Final width probes found introduced data loss at indent level8 in narrow Chikorita sidebars versus level0/1/4 controls; publication held for width-aware correction and regression coverage.
+- Unpublished implementation passes editor persistence, PDF/DOCX, RTL, and quoted-code review checks. Final width probes found introduced data loss at indent level 8 in narrow Chikorita sidebars versus level 0/1/4 controls; publication held for width-aware correction and regression coverage.
+- Approved implementation supports whole paragraphs/headings through existing indentation controls; literal leading whitespace and tabs remain separate. Editor, PDF and DOCX share levels0–8 (24px/18pt/360twips per level).
+- Independent final narrow-width matrix passes all16 Chikorita scenarios:25%/35%sidebars, main quote and narrow sidebar quote at levels0/1/4/8 preserve exact full text with no out-of-page coordinates. PDF inset is capped at half actual available width. Separate22-case regression suite verifies LTR/RTL and text/inset continuity across physical pages.
+- Existing heading words wider than remaining line can still clip, exactly matching unchanged renderer at equivalent CSS width. This limitation is characterized without introducing forced hyphenation.
 
 **Action plan:**
 
-- Finish width-aware PDF indentation safeguard, reproduce narrow-sidebar failure before/after, and repeat scoped review. Then publish separate PR referencing this issue; literal leading spaces/tabs remain a distinct request.
+- Finish integrated checks and publish approved paragraph indentation PR using Refs#3397. Keep literal leading spaces/tabs outside the implemented alternative; document bounded PDF inset and existing overlong-word behavior.
 
 **Product/scope note:** User approved whole-paragraph indentation through the existing indent controls. Leading spaces and tabs remain part of the original request and require explicit export/persistence verification.
 
@@ -322,9 +325,9 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Evidence:**
 
-- PR #3387 open; covers FormControl/InputGroup/ChipInput/Slider id plumbing. Its body explicitly excludes dangling URLInput/RichTextField targets.
+- PR #3387 subsequently merged at head `f568b8feb`; it covers FormControl/InputGroup/ChipInput/Slider ID plumbing. Its body explicitly excludes dangling URLInput/RichTextField targets.
 - Issue requests dangling Picture Size and Website labels too, so PR closing claim should be checked against full acceptance matrix.
-- Reviewed PR #3387 head 6ea7d540: 58 supplied focused tests pass, but actual DOM probes reproduce unnamed Basics Website and Picture Size fields; shared WebsiteField has same missing FormControl.
+- Earlier reviewed PR #3387 head `6ea7d540` passed 58 supplied focused tests, but actual DOM probes reproduced unnamed Basics Website and Picture Size fields; shared WebsiteField had the same missing FormControl.
 - Two standalone primitive compatibility probes pass main and fail PR #3387: Slider discards explicit id; InputGroup discards caller id and aria-describedby. No current app call site demonstrated an outage from those prop regressions.
 
 **Action plan:**
@@ -497,8 +500,8 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Report 5.2.6 is later than merged list-marker fixes #3236 (ed5d10c49) and #3242 (d536b1921); cannot close against those earlier fixes.
 - Current rich-text renderer has marker/content pagination handling; generic PDF suite passes but no exact issue JSON fixture exists.
-- ActualPDF controlledboundarysweep currentmain: Onyx300x300pt/Helvetica10, summarylistparagraph withrichtextmargin-top194pt leavesbulletpage1 andTARGET firstlinepage2;192pt control textstartspage1. /tmp/3344-repro.pdf,/tmp/issue-3344-controlled.json,/tmp/3344-sweep.json. This is controlledcurrentreproduction; nooriginalJSON supplied.
-- History#3178/5080fddf5 nestedmarker/content;#3236/ed5d10c49 laterreplacedwithmarker minPresenceAhead. CurrentlegacyReactPDFpaginator splitsrowchildrenindependently; markerone-line canremain whileparagraph defaultorphans2 movescontent. Existingguarddoesnotpreventthiscase.
+- Actual PDF controlled boundary sweep on current main: Onyx at 300 × 300 pt with Helvetica 10, a summary list paragraph with rich-text margin-top 194 pt leaves the bullet on page 1 and the target first line on page 2; the 192 pt control starts text on page 1. Artifacts: `/tmp/3344-repro.pdf`, `/tmp/issue-3344-controlled.json`, and `/tmp/3344-sweep.json`. This is a controlled current reproduction; no original JSON was supplied.
+- History: #3178 (`5080fddf5`) nested marker/content; #3236 (`ed5d10c49`) later replaced it with marker `minPresenceAhead`. The current legacy React PDF paginator splits row children independently; a one-line marker can remain while the paragraph's default `orphans={2}` moves content. The existing guard does not prevent this case.
 - Earlier PR #3443 head 4ad69f2a9 passed 847 PDF tests, 36 focused pagination regressions, actual-main red/green and byte-identical single-page PNG parity. Independent review /tmp/rr-3344-independent-review.md is clean, including an extra 250-word content-break probe. Current synchronized head/test totals appear under Implementation.
 - GitHub now confirms PR #3443 merged and issue closed by repository owner.
 
@@ -630,7 +633,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Issue closed after repository owner merged PR #3400. Retain scoped regression coverage; hosted availability depends on deployment.
 
-**Product/scope note:** PR #3400 remains unmerged.
+**Product/scope note:** PR #3400 merged at head `d23d7566d`; hosted availability depends on deployment.
 
 **Related PRs:** [#3400](https://github.com/amruthpillai/reactive-resume/pull/3400)
 
@@ -751,10 +754,12 @@ Classification describes the reported problem against the audit baseline; implem
 
 - use-register-fonts.ts:158-177,270-295 detects Arabic/Hebrew and registers script fallback families; shared rtl helpers and template RTL layout exist.
 - Merged #3099 concerns Rhyhorn, not proof that every template or Persian/Hebrew shaping works; #3151 is closed but report is broader.
+- Current production browser reproduces a distinct canvas failure: both Arabic-resume cases differ by 35,009 pixels from an independent left-origin PDF.js rendering of the same original PDF; both English-resume controls match exactly. Generated Latin glyph sequences and widths are identical between locale controls.
+- PDF.js canvas drawing inherited RTL direction, changing physical fillText anchors. Setting canvasContext.direction after dimension resets restores exact raster parity in isolated probes. Public PDF.js pages already set direction:ltr.
 
 **Action plan:**
 
-- Render Arabic/Hebrew/Persian samples in affected template and fonts; verify joined characters, mixed Latin numerals, RTL ordering and location/date alignment independently.
+- Finish production browser verification and publish a separate builder canvas fix. Keep this issue open for the broader historical exported-PDF claims, which are not established by the canvas reproduction.
 
 **Related PRs:** [#3099](https://github.com/amruthpillai/reactive-resume/pull/3099), [#3158](https://github.com/amruthpillai/reactive-resume/pull/3158), [#3331](https://github.com/amruthpillai/reactive-resume/pull/3331)
 
@@ -1208,7 +1213,7 @@ Classification describes the reported problem against the audit baseline; implem
 - DitgarPage.tsx:320-331 item headers now share accent border/padding rules applied to main placement; recent #3357 applied item-header uniformly.
 - Original report Projects two-column title alignment has screenshot only; uniform binding fix not evidence of identical geometric issue solved.
 - Current main 0207e5dfc reproduces 1.5pt title-to-description/link offset on all eight Projects items across legacy/semantic. DitgarPage.tsx border plus gap-dependent padding/margin explains exact offset. Real PDFs/raster, failing verify-3068.py and source fixtures: /tmp/rr-remaining-evidence/.
-- PR #3445 published at f95d21665 after independent review. Exact PDF geometry reproduces 1.5pt shared main header offset; correction passes all 21 matrix cases and 879 PDF tests.
+- Earlier PR #3445 head `f95d21665` passed all 21 geometry matrix cases and 879 PDF tests after independent review. The merged head and final 923-test result are recorded under **Implementation** below.
 
 **Action plan:**
 
@@ -1566,6 +1571,7 @@ Classification describes the reported problem against the audit baseline; implem
 **Evidence:**
 
 - packages/pdf/src/templates/shared/sections.tsx:1171 joins skill keywords with comma+space. PR #3358 adds inline SKILL ITEM layout, not per-keyword list, so not a duplicate or existing implementation.
+- Current shared skill and interest renderers still join keyword strings with comma-space into one Small semanticField="keywords" node (packages/pdf/src/templates/shared/sections.tsx). DOCX similarly joins keywords in one text run. Semantic CSS can style that field but cannot independently place individual keywords on separate lines; feature remains valid.
 
 **Action plan:**
 
@@ -1647,10 +1653,12 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Report Rhyhorn 5.0.10 numbered list digits truncated on export, screenshot only. Current React PDF rich-text list renderer replaced Chromium pipeline.
 - Later list fixes #3178/#3236/#3242 concern page-break markers; not proof of original multi-digit marker-width clipping fixed.
+- Original missing leading digit in 10/11 was not reproduced: digits remain present in extracted PDF text and raster output. Current renderer instead has a verified related defect: ordered markers overlap body text by 2.395pt for 10–99 and 7.869pt for 100–102 with Helvetica at10pt; Noto Serif SC and Courier also reproduce.
+- Investigating ordered-only intrinsic marker sizing with a uniform list gutter, preserving list pagination and supported marker font-size/row-gap overrides. Semantic CSS does not currently permit width/min-width/max-width or flex-basis on list markers.
 
 **Action plan:**
 
-- Render ordered lists 1-12 and 98-102 in Rhyhorn at narrow columns; inspect every numeral at PDF level and at page breaks; obtain original JSON if mismatch persists.
+- Complete actual-PDF regressions for digit transitions, fonts, RTL, columns, page breaks and authored marker sizing; publish related overlap fix without closing the historical missing-digit report.
 
 **Related PRs:** [#3178](https://github.com/amruthpillai/reactive-resume/pull/3178), [#3236](https://github.com/amruthpillai/reactive-resume/pull/3236), [#3242](https://github.com/amruthpillai/reactive-resume/pull/3242)
 
