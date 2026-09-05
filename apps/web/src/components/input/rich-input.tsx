@@ -33,6 +33,7 @@ import {
 } from "@phosphor-icons/react";
 import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
+import { Table, TableCell, TableHeader, TableRow } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, EditorContext, useEditor, useEditorState } from "@tiptap/react";
@@ -62,6 +63,129 @@ import { defaultHighlightColor, resolveHighlightToolbarState } from "./rich-inpu
 
 const defaultTextColor = "rgba(0, 0, 0, 1)";
 
+const borderStyleProperties = [
+	"border",
+	"border-top",
+	"border-right",
+	"border-bottom",
+	"border-left",
+	"border-width",
+	"border-style",
+	"border-color",
+	"border-top-width",
+	"border-top-style",
+	"border-top-color",
+	"border-right-width",
+	"border-right-style",
+	"border-right-color",
+	"border-bottom-width",
+	"border-bottom-style",
+	"border-bottom-color",
+	"border-left-width",
+	"border-left-style",
+	"border-left-color",
+] as const;
+
+const tableStyleProperties = new Set([
+	"width",
+	"min-width",
+	"max-width",
+	"border-collapse",
+	"border-spacing",
+	...borderStyleProperties,
+]);
+const rowStyleProperties = new Set(["height", ...borderStyleProperties]);
+const cellStyleProperties = new Set([
+	"width",
+	"min-width",
+	"max-width",
+	"height",
+	"padding",
+	"padding-top",
+	"padding-right",
+	"padding-bottom",
+	"padding-left",
+	"vertical-align",
+	"text-align",
+	"background-color",
+	...borderStyleProperties,
+]);
+
+const hasOnlySupportedStyles = (element: Element, supported: ReadonlySet<string>) => {
+	const style = element.getAttribute("style");
+	if (!style) return true;
+	const declarations = style
+		.split(";")
+		.map((declaration) => declaration.trim())
+		.filter(Boolean);
+	return declarations.every((declaration) => {
+		const separator = declaration.indexOf(":");
+		return separator > 0 && supported.has(declaration.slice(0, separator).trim().toLowerCase());
+	});
+};
+
+const hasOnlyAttributes = (element: Element, supported: ReadonlySet<string>) =>
+	Array.from(element.attributes).every((attribute) => supported.has(attribute.name.toLowerCase()));
+
+const hasUnsupportedTableMarkup = (html: string) => {
+	if (typeof DOMParser === "undefined" || !html.toLowerCase().includes("<table")) return false;
+	const document = new DOMParser().parseFromString(html, "text/html");
+	for (const table of document.querySelectorAll("table")) {
+		if (!hasOnlyAttributes(table, new Set(["style"])) || !hasOnlySupportedStyles(table, tableStyleProperties))
+			return true;
+		for (const element of table.querySelectorAll("caption, colgroup, col, thead, tfoot")) {
+			if (element) return true;
+		}
+		for (const body of table.querySelectorAll("tbody")) {
+			if (!hasOnlyAttributes(body, new Set())) return true;
+		}
+		for (const row of table.querySelectorAll("tr")) {
+			if (!hasOnlyAttributes(row, new Set(["style"])) || !hasOnlySupportedStyles(row, rowStyleProperties)) return true;
+		}
+		for (const cell of table.querySelectorAll("td, th")) {
+			if (
+				!hasOnlyAttributes(cell, new Set(["colspan", "rowspan", "colwidth", "align", "style"])) ||
+				!hasOnlySupportedStyles(cell, cellStyleProperties)
+			)
+				return true;
+		}
+	}
+	return false;
+};
+
+const preservedStyle = {
+	default: null,
+	parseHTML: (element: HTMLElement) => element.getAttribute("style"),
+	renderHTML: (attributes: { style?: string | null }) => (attributes.style ? { style: attributes.style } : {}),
+};
+
+const StyledTable = Table.extend({
+	addAttributes() {
+		return { ...this.parent?.(), style: preservedStyle };
+	},
+	renderHTML({ HTMLAttributes }) {
+		return ["table", HTMLAttributes, ["tbody", 0]];
+	},
+});
+
+const StyledTableRow = TableRow.extend({
+	addAttributes() {
+		return { ...this.parent?.(), style: preservedStyle };
+	},
+});
+
+const StyledTableHeader = TableHeader.extend({
+	addAttributes() {
+		return { ...this.parent?.(), style: preservedStyle };
+	},
+});
+
+const StyledTableCell = TableCell.extend({
+	addAttributes() {
+		return { ...this.parent?.(), style: preservedStyle };
+	},
+});
+
 const extensions = [
 	StarterKit.configure({
 		heading: {
@@ -88,6 +212,10 @@ const extensions = [
 	}),
 	TextAlign.configure({ types: ["heading", "paragraph", "listItem"] }),
 	ParagraphIndent,
+	StyledTable,
+	StyledTableRow,
+	StyledTableHeader,
+	StyledTableCell,
 ];
 
 type Props = UseEditorOptions & {
@@ -109,14 +237,18 @@ export function RichInput({
 	...options
 }: Props) {
 	const { i18n } = useLingui();
+	const prompt = usePrompt();
 	const textDirection = isRTL(i18n.locale) ? "rtl" : undefined;
 	const [isFullscreen, setIsFullscreen] = useState(false);
+	const hasUnsupportedTable = useMemo(() => hasUnsupportedTableMarkup(value), [value]);
+	const requestedEditable = options.editable ?? true;
 
 	const editor = useEditor({
 		...options,
 		extensions,
 		textDirection,
 		content: value,
+		editable: requestedEditable && !hasUnsupportedTable,
 		immediatelyRender: false,
 		shouldRerenderOnTransaction: false,
 		editorProps: {
@@ -136,6 +268,7 @@ export function RichInput({
 			},
 		},
 		onUpdate: ({ editor }) => {
+			if (hasUnsupportedTable) return;
 			onChange(editor.getHTML());
 		},
 	});
@@ -147,11 +280,47 @@ export function RichInput({
 		editor.commands.setContent(value, { emitUpdate: false });
 	}, [editor, value]);
 
+	useEffect(() => {
+		if (!editor) return;
+		editor.setEditable(requestedEditable && !hasUnsupportedTable, false);
+	}, [editor, hasUnsupportedTable, requestedEditable]);
+
 	if (!editor) return null;
+
+	const convertUnsupportedTable = async () => {
+		const confirmed = await prompt(t`Convert table to editable text?`, {
+			description: t`Unsupported table formatting will be removed. The original remains unchanged unless you confirm.`,
+			confirmText: t`Convert`,
+		});
+		if (confirmed === null) return;
+		onChange(editor.getHTML());
+	};
 
 	const editorElement = (
 		<div className="relative">
-			<EditorToolbar editor={editor} isFullscreen={isFullscreen} />
+			{hasUnsupportedTable ? (
+				<div
+					role="status"
+					className="flex items-center justify-between gap-3 rounded-md rounded-b-none border border-b-0 bg-muted px-3 py-2 text-sm"
+				>
+					<span>
+						<Trans>
+							Original table formatting is preserved. This content is read-only because it cannot be edited safely.
+						</Trans>
+					</span>
+					<Button
+						type="button"
+						size="sm"
+						variant="outline"
+						disabled={!requestedEditable}
+						onClick={() => void convertUnsupportedTable()}
+					>
+						<Trans>Convert to editable text</Trans>
+					</Button>
+				</div>
+			) : (
+				<EditorToolbar editor={editor} isFullscreen={isFullscreen} />
+			)}
 
 			<EditorContent editor={editor} />
 
