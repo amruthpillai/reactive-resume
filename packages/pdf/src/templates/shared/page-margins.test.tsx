@@ -15,10 +15,12 @@ const renderOverflow = async (
 	locale = "en-US",
 	mode: "semantic" | "legacy" = "semantic",
 	explicitPage?: { fullWidth: boolean },
+	stylesheet = "@version 1;",
+	fullWidth = false,
 ) => {
 	const data = structuredClone(defaultResumeData);
 	data.basics.name = "Margin Audit";
-	data.metadata.stylesheet = { mode, source: { languageVersion: 1, text: "@version 1;" } };
+	data.metadata.stylesheet = { mode, source: { languageVersion: 1, text: stylesheet } };
 	data.metadata.typography.body.fontFamily = "Helvetica";
 	data.metadata.typography.heading.fontFamily = "Helvetica";
 	data.metadata.page.marginY = 48;
@@ -26,7 +28,7 @@ const renderOverflow = async (
 	data.metadata.page.marginX = 30;
 	data.metadata.layout.pages = [
 		{
-			fullWidth: explicitPage?.fullWidth ?? false,
+			fullWidth: explicitPage?.fullWidth ?? fullWidth,
 			main: placement === "main" ? ["experience"] : [],
 			sidebar: placement === "sidebar" ? ["experience"] : [],
 		},
@@ -75,7 +77,38 @@ const renderOverflow = async (
 	}
 };
 
+function backgroundAt(raster: Awaited<ReturnType<typeof rasterizePdf>>[number], x: number, y: number) {
+	return [...raster.data.slice((y * raster.width + x) * 4, (y * raster.width + x) * 4 + 3)];
+}
+
 describe("physical page margins (#3337, #3175)", () => {
+	it.each(["#00ff00", "rgba(0, 255, 0, 0.5)"])(
+		"keeps Glalie semantic background continuous through margins (%s)",
+		async (color) => {
+			const { rasters } = await renderOverflow(
+				"glalie",
+				"main",
+				"en-US",
+				"semantic",
+				undefined,
+				`@version 1; template-part[name="sidebar-background"] { background-color: ${color}; }`,
+			);
+			const overflow = rasters[1];
+			if (!overflow) throw new Error("Missing overflow raster");
+			const inside = backgroundAt(overflow, 3, 100);
+			expect(inside).not.toEqual([242, 178, 178]);
+			expect(backgroundAt(overflow, 3, 3)).toEqual(inside);
+			expect(backgroundAt(overflow, 3, overflow.height - 4)).toEqual(inside);
+		},
+	);
+	it("preserves the existing Glalie sidebar background on full-width overflow", async () => {
+		const { rasters } = await renderOverflow("glalie", "main", "en-US", "semantic", undefined, "@version 1;", true);
+		const overflow = rasters[1];
+		if (!overflow) throw new Error("Missing overflow raster");
+		expect(backgroundAt(overflow, 3, 100)).toEqual([242, 178, 178]);
+		expect(backgroundAt(overflow, 3, 3)).toEqual([242, 178, 178]);
+		expect(backgroundAt(overflow, 3, overflow.height - 4)).toEqual([242, 178, 178]);
+	});
 	for (const placement of ["main", "sidebar"] as const) {
 		it.each(templates)(`keeps overflowing ${placement} content inside vertical margins (%s)`, async (template) => {
 			const { pages, rasters } = await renderOverflow(template, placement);
