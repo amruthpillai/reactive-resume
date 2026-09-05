@@ -20,6 +20,12 @@ Once translations are submitted and approved on Crowdin, they are automatically 
 
 ---
 
+## Updating catalogs in a checkout
+
+The PDF renderer uses a generated subset of the same translations for default section headings. Run `pnpm pdf:translations` after editing or syncing the PO catalogs. The root `pnpm lingui:extract`, `pnpm check`, and `pnpm build` commands also regenerate this file automatically.
+
+Commit `packages/pdf/src/section-title-catalog.json` with the catalog updates. Edit the source PO files rather than the generated JSON; a tooling test checks that they stay synchronized.
+
 ## Getting started
 
 <Steps>

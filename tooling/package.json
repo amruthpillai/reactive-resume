@@ -9,12 +9,14 @@
 		"fonts:generate": "tsx fonts/generate.ts",
 		"test": "vitest run --passWithNoTests",
 		"test:ci": "vitest run --coverage --reporter=default --reporter=github-actions --reporter=json --reporter=junit --outputFile.json=reports/vitest-results.json --outputFile.junit=reports/vitest-junit.xml --passWithNoTests",
-		"typecheck": "tsgo --noEmit"
+		"typecheck": "tsgo --noEmit",
+		"pdf:translations": "tsx locales/generate.ts"
 	},
 	"dependencies": {
 		"@reactive-resume/schema": "workspace:*"
 	},
 	"devDependencies": {
+		"@lingui/format-po": "^6.6.0",
 		"@reactive-resume/config": "workspace:*",
 		"@reactive-resume/env": "workspace:*",
 		"@reactive-resume/resume": "workspace:*",

@@ -86,7 +86,7 @@ describe("semantic pagination cancellation", () => {
 		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
 		const instance = pdf(element);
 		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
-		const section = findSectionView(instance.container.document as HostNode, "Pagination sentinel");
+		const section = findSectionView(instance.container.document as HostNode, "SummaryPagination sentinel");
 
 		expect(flowProps(section)).toEqual({ break: breakBefore, wrap });
 	});
