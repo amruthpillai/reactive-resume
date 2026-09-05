@@ -56,7 +56,7 @@ const healthDependencySchema = {
 	properties: {
 		status: { type: "string", enum: ["healthy", "unhealthy"] },
 		latencyMs: { type: "number" },
-		error: { type: "string" },
+		error: { type: "string", description: "Generic failure message. Detailed diagnostics are logged on the server." },
 	},
 	required: ["status", "latencyMs"],
 	additionalProperties: true,

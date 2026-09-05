@@ -32,6 +32,16 @@ async function runCheck(check: () => Promise<object>): Promise<CheckResult> {
 	}
 }
 
+function publicCheck(check: CheckResult, name: "Database" | "Storage"): CheckResult {
+	if (check.status === "healthy") return check;
+	return {
+		status: check.status,
+		latencyMs: check.latencyMs,
+		error: `${name} health check failed.`,
+		...(check.type === "local" || check.type === "s3" ? { type: check.type } : {}),
+	};
+}
+
 // ponytail: inner try/catches removed; runCheck's outer catch handles all errors
 async function checkDatabase() {
 	await db.execute(sql`SELECT 1`);
@@ -50,8 +60,8 @@ export async function handleHealth() {
 		status,
 		timestamp: new Date().toISOString(),
 		uptime: `${process.uptime().toFixed(2)}s`,
-		database,
-		storage,
+		database: publicCheck(database, "Database"),
+		storage: publicCheck(storage, "Storage"),
 	};
 
 	if (status === "unhealthy") {

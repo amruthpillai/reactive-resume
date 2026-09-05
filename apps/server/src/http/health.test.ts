@@ -44,4 +44,53 @@ describe("health version reporting", () => {
 		expect(response.status).toBe(503);
 		expect(await response.json()).toMatchObject({ version: "9.8.7", status: "unhealthy" });
 	});
+	it.each(["database", "storage"])("keeps thrown %s error details in server logs only", async (dependency) => {
+		const detail = "Connection failed for private-user at internal.example:5432";
+		const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+		(dependency === "database" ? execute : healthcheck).mockRejectedValueOnce(new Error(detail));
+
+		const response = await handleHealth();
+		const body = await response.json();
+
+		expect(response.status).toBe(503);
+		expect(JSON.stringify(body)).not.toContain(detail);
+		expect(body[dependency]).toMatchObject({
+			status: "unhealthy",
+			error: expect.stringContaining("health check failed"),
+		});
+		expect(warn).toHaveBeenCalledWith(
+			"[Healthcheck]",
+			expect.objectContaining({
+				[dependency]: expect.objectContaining({ error: detail }),
+			}),
+		);
+	});
+
+	it("redacts returned storage failures while preserving diagnostics in server logs", async () => {
+		const detail = "Access denied to bucket private-bucket on internal.example";
+		const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+		healthcheck.mockResolvedValueOnce({
+			status: "unhealthy",
+			type: "s3",
+			message: detail,
+			error: detail,
+			internalDetail: detail,
+		});
+
+		const response = await handleHealth();
+		const body = await response.json();
+
+		expect(response.status).toBe(503);
+		expect(body.storage).toEqual({
+			status: "unhealthy",
+			type: "s3",
+			latencyMs: expect.any(Number),
+			error: "Storage health check failed.",
+		});
+		expect(JSON.stringify(body)).not.toContain(detail);
+		expect(warn).toHaveBeenCalledWith(
+			"[Healthcheck]",
+			expect.objectContaining({ storage: expect.objectContaining({ error: detail, message: detail }) }),
+		);
+	});
 });
