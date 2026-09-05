@@ -703,7 +703,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Implementation:** [PR #3431](https://github.com/amruthpillai/reactive-resume/pull/3431). Head `b15f4983b`: color picker tracks current CSS through repeated presets, external edits and undo; spaced RGB/HSL tokens regain swatches. Approved hex output preserves optional alpha and named/modern RGB roundtrips. 78 focused tests and four previously verified production browser scenarios pass; all review feedback resolved.
 
-**Product/scope note:** User-approved hex output with alpha when needed implemented and owner-merged in #3431 at b15f4983b.
+**Product/scope note:** User-approved hex output with alpha when needed was implemented and owner-merged in #3431 at b15f4983b.
 
 **Related PRs:** [#3293](https://github.com/amruthpillai/reactive-resume/pull/3293), [#3431](https://github.com/amruthpillai/reactive-resume/pull/3431)
 
@@ -826,7 +826,7 @@ Classification describes the reported problem against the audit baseline; implem
 - patches/@react-pdf__textkit.patch introduced unconditional OS/2 typo metrics in dd7623f11 (#3070). Roboto/Roboto Condensed fsSelection.useTypoMetrics=false hhea1900→typo1536/2048; IBM Plex Sans Condensed false1025→780/1000. Actual PDF baseline RED3 cases; corrected flag-aware selection restores 1.7773pt/2.45pt at10pt.
 - Draft worktree .worktrees/issue-3249-font-alignment retains explicit Noto Sans/Serif SC/TC/JP/KR and Source Han CJK metric exception plus intrinsic-height safeguard. Actual PDF15 tests pass including all8 configured Noto CJK fallback families at tight lineheight.
 - Exact fixture remains1page. IBM Sans, Roboto Flex, Geist, and Ropa Sans controlled fixtures have byte-identical raster PNGs before/after. Ropa Sans historical claim not explained by this cause (hhea equals typo); do not claim universal font alignment resolved. See /tmp/3249-font-metrics.json and /tmp/current-fixture-3249-1.png vs /tmp/fixed-fixture-3249-1.png.
-- Published PR3430 commit af3bb7faf; full PDF58files698tests19.57s, final15targeted20.19s, PDFtypecheck, boundaries, pnpmcheck, frozenofflineinstall and web11.58s/serverproductionbuilds pass.
+- Published PR #3430 commit af3bb7faf; all 698 PDF tests across 58 files passed in 19.57 s, as did the final 15 targeted tests in 20.19 s, PDF typecheck, boundaries, pnpm check, frozen offline install, and web (11.58 s) and server production builds.
 - PR #3430 review follow-up 50bac62: actual selectable Noto Sans HK revealed missing exception (baseline23.2 vs18pt). Narrow HK regex addition restores18pt baseline and21.6pt line spacing; all16font PDF tests and699PDF tests pass, types/Biome/boundaries/frozenofflineinstall pass. fsSelection integer suggestion disproved by fontkit2.0.4 OS2 Bitfield decoder and actual font objects.
 
 **Action plan:**
