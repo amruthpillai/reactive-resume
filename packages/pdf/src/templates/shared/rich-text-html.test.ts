@@ -152,6 +152,19 @@ describe("normalizeRichTextHtml", () => {
 		expect(normalizeRichTextHtml("   text   ")).toBe("<p>text</p>");
 	});
 
+	it("preserves authored Unicode spaces around bare rich text", () => {
+		expect(normalizeRichTextHtml("\u3000text\u00a0")).toBe("<p>\u3000text\u00a0</p>");
+	});
+
+	it("retains an inline ideographic-space paragraph", () => {
+		expect(normalizeRichTextHtml("\u3000")).toBe("<p>\u3000</p>");
+	});
+
+	it("does not discard a Unicode-space sibling when unwrapping a list paragraph", () => {
+		const html = "<ul><li>\u3000<p>text</p></li></ul>";
+		expect(normalizeRichTextHtml(html)).toBe(html);
+	});
+
 	it("returns empty string for empty input", () => {
 		expect(normalizeRichTextHtml("")).toBe("");
 	});

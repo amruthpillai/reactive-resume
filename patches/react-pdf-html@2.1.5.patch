@@ -1,0 +1,50 @@
+diff --git a/dist/cjs/render.js b/dist/cjs/render.js
+index cea3de37aceb8e98b7698087639a6e98205d40e3..a1e34ea0bf60f3bca2d7e79e0354eda5245b927d 100644
+--- a/dist/cjs/render.js
++++ b/dist/cjs/render.js
+@@ -72,8 +72,9 @@ const hasBlockContent = (element) => {
+     return true;
+ };
+ exports.hasBlockContent = hasBlockContent;
+-const ltrim = (text) => text.replace(/^\s+/, '');
+-const rtrim = (text) => text.replace(/\s+$/, '');
++// Collapse HTML document whitespace, preserving authored Unicode spaces.
++const ltrim = (text) => text.replace(/^[\t\n\f\r ]+/, '');
++const rtrim = (text) => text.replace(/[\t\n\f\r ]+$/, '');
+ const isCustomElement = (element) => {
+     if (!element || typeof element === 'string')
+         return false;
+@@ -160,7 +161,7 @@ const renderElement = (element, stylesheets, renderers, children, index) => {
+     return (React.createElement(Element, { key: index, style: element.style, children: children, element: element, stylesheets: stylesheets }));
+ };
+ exports.renderElement = renderElement;
+-const collapseWhitespace = (string) => string.replace(/(\s+)/g, ' ');
++const collapseWhitespace = (string) => string.replace(/[\t\n\f\r ]+/g, ' ');
+ exports.collapseWhitespace = collapseWhitespace;
+ const renderBucketElement = (element, options, index) => {
+     if (typeof element === 'string') {
+diff --git a/dist/esm/render.js b/dist/esm/render.js
+index 30365527b67332d0a29f684152cad1d8417ae90d..18b24f488e81404df50d772bf5868bfcb61b810d 100644
+--- a/dist/esm/render.js
++++ b/dist/esm/render.js
+@@ -40,8 +40,9 @@ export const hasBlockContent = (element) => {
+     }
+     return true;
+ };
+-const ltrim = (text) => text.replace(/^\s+/, '');
+-const rtrim = (text) => text.replace(/\s+$/, '');
++// Collapse HTML document whitespace, preserving authored Unicode spaces.
++const ltrim = (text) => text.replace(/^[\t\n\f\r ]+/, '');
++const rtrim = (text) => text.replace(/[\t\n\f\r ]+$/, '');
+ const isCustomElement = (element) => {
+     if (!element || typeof element === 'string')
+         return false;
+@@ -126,7 +127,7 @@ export const renderElement = (element, stylesheets, renderers, children, index)
+     }
+     return (React.createElement(Element, { key: index, style: element.style, children: children, element: element, stylesheets: stylesheets }));
+ };
+-export const collapseWhitespace = (string) => string.replace(/(\s+)/g, ' ');
++export const collapseWhitespace = (string) => string.replace(/[\t\n\f\r ]+/g, ' ');
+ export const renderBucketElement = (element, options, index) => {
+     if (typeof element === 'string') {
+         return renderElement(options.collapse ? collapseWhitespace(element) : element, options.stylesheets, options.renderers, undefined, index);

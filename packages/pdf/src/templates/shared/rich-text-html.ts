@@ -64,8 +64,11 @@ const normalizeMarkElements = (root: ReturnType<typeof parse>) => {
 	}
 };
 
+// Match HTML document whitespace, not Unicode spaces authored as visible content.
+const trimHtmlWhitespace = (text: string): string => text.replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g, "");
+
 const isMeaningfulNode = (node: Node): boolean =>
-	node.nodeType !== NodeType.TEXT_NODE || node.toString().trim().length > 0;
+	node.nodeType !== NodeType.TEXT_NODE || trimHtmlWhitespace(node.toString()).length > 0;
 
 const isElement = (node: Node): node is HTMLElement => node.nodeType === NodeType.ELEMENT_NODE;
 
@@ -189,7 +192,7 @@ export const normalizeRichTextHtml = (
 	html: string,
 	{ direction = "ltr", softHyphens = false }: NormalizeRichTextHtmlOptions = {},
 ): string => {
-	const root = parse(html.trim(), { comment: false });
+	const root = parse(trimHtmlWhitespace(html), { comment: false });
 	const normalized: string[] = [];
 	let inlineNodes: string[] = [];
 
@@ -202,7 +205,7 @@ export const normalizeRichTextHtml = (
 	const flushInlineNodes = () => {
 		const inlineHtml = inlineNodes.join("");
 
-		if (inlineHtml.trim()) normalized.push(`<p>${inlineHtml}</p>`);
+		if (trimHtmlWhitespace(inlineHtml)) normalized.push(`<p>${inlineHtml}</p>`);
 
 		inlineNodes = [];
 	};

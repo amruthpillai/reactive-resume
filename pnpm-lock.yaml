@@ -15,6 +15,7 @@ patchedDependencies:
   '@react-pdf/layout@5.2.0': 75dac7cb8260f9c96cd9ab5522d095a3aa047881a9e9d1d2a597409b45944494
   '@react-pdf/textkit': 092a6fe8baf3c472a81cdf2ab52a00ec98ef3364e1b8e744005dbcf219a8a213
   fontkit@2.0.4: 90f4c51c676a88b91dcc397d60a677c77b5e6dc8e15ffb3538310965ef5c05a4
+  react-pdf-html@2.1.5: f0618f9c9f654758495189f6c15e1ff2d45fbd1a4645c4a18885573aeadbbd10
 
 importers:
 
@@ -271,7 +272,7 @@ importers:
         version: 6.9.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(supports-color@7.2.0)
       react-pdf-html:
         specifier: ^2.1.5
-        version: 2.1.5(@react-pdf/renderer@4.9.0(react@19.2.8))(react@19.2.8)
+        version: 2.1.5(patch_hash=f0618f9c9f654758495189f6c15e1ff2d45fbd1a4645c4a18885573aeadbbd10)(@react-pdf/renderer@4.9.0(react@19.2.8))(react@19.2.8)
       resumable-stream:
         specifier: ^2.2.12
         version: 2.2.12
@@ -1140,7 +1141,7 @@ importers:
         version: 19.2.8
       react-pdf-html:
         specifier: ^2.1.5
-        version: 2.1.5(@react-pdf/renderer@4.9.0(react@19.2.8))(react@19.2.8)
+        version: 2.1.5(patch_hash=f0618f9c9f654758495189f6c15e1ff2d45fbd1a4645c4a18885573aeadbbd10)(@react-pdf/renderer@4.9.0(react@19.2.8))(react@19.2.8)
     devDependencies:
       '@napi-rs/canvas':
         specifier: 1.0.8
@@ -15209,7 +15210,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  react-pdf-html@2.1.5(@react-pdf/renderer@4.9.0(react@19.2.8))(react@19.2.8):
+  react-pdf-html@2.1.5(patch_hash=f0618f9c9f654758495189f6c15e1ff2d45fbd1a4645c4a18885573aeadbbd10)(@react-pdf/renderer@4.9.0(react@19.2.8))(react@19.2.8):
     dependencies:
       '@react-pdf/renderer': 4.9.0(react@19.2.8)
       css-tree: 1.1.3
