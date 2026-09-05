@@ -1,5 +1,6 @@
 import type { PreviewPageSize } from "./preview.shared.utils";
-import { getResumeThumbnailRenderSize, RESUME_THUMBNAIL_TARGET_WIDTH } from "./resume-thumbnail.shared";
+import type { ResumeThumbnailSize } from "./resume-thumbnail.shared";
+import { getResumeThumbnailRenderSize } from "./resume-thumbnail.shared";
 
 const canvasToBlob = (canvas: HTMLCanvasElement) =>
 	new Promise<Blob>((resolve, reject) => {
@@ -13,7 +14,7 @@ const canvasToBlob = (canvas: HTMLCanvasElement) =>
 		}, "image/png");
 	});
 
-export const createPdfFirstPageImageUrl = async (file: Blob) => {
+export const createPdfFirstPageImageUrl = async (file: Blob, targetSize: ResumeThumbnailSize) => {
 	const { AnnotationMode, GlobalWorkerOptions, getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
 	GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.mjs", import.meta.url).toString();
 
@@ -28,11 +29,7 @@ export const createPdfFirstPageImageUrl = async (file: Blob) => {
 		try {
 			const baseViewport = page.getViewport({ scale: 1 });
 			const pageSize: PreviewPageSize = { height: baseViewport.height, width: baseViewport.width };
-			const renderSize = getResumeThumbnailRenderSize(
-				pageSize,
-				RESUME_THUMBNAIL_TARGET_WIDTH,
-				window.devicePixelRatio || 1,
-			);
+			const renderSize = getResumeThumbnailRenderSize(pageSize, targetSize);
 
 			const canvas = document.createElement("canvas");
 			const canvasContext = canvas.getContext("2d");

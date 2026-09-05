@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	getResumeThumbnailCacheKey,
 	getResumeThumbnailRenderSize,
-	RESUME_THUMBNAIL_TARGET_WIDTH,
+	getResumeThumbnailSize,
 } from "./resume-thumbnail.shared";
 
 describe("getResumeThumbnailCacheKey", () => {
@@ -20,45 +20,40 @@ describe("getResumeThumbnailCacheKey", () => {
 });
 
 describe("getResumeThumbnailRenderSize", () => {
-	it("uses the default target width when not provided", () => {
-		const size = getResumeThumbnailRenderSize({ width: 800, height: 1200 });
-
-		expect(size.width).toBe(RESUME_THUMBNAIL_TARGET_WIDTH);
-		// Scale = 420/800 = 0.525 → height rounds to 630
-		expect(size.height).toBe(630);
-		expect(size.scale).toBeCloseTo(0.525, 5);
+	it("covers the measured 607 CSS pixel card at DPR 3", () => {
+		const target = getResumeThumbnailSize({ width: 607, height: 858.47 }, 3);
+		const size = getResumeThumbnailRenderSize({ width: 595.28, height: 841.89 }, target);
+		expect(size.width).toBeGreaterThanOrEqual(1821);
+		expect(size.height).toBeGreaterThanOrEqual(2575);
 	});
 
-	it("scales relative to the provided target width", () => {
-		const size = getResumeThumbnailRenderSize({ width: 800, height: 1200 }, 400);
-		expect(size.width).toBe(400);
-		expect(size.scale).toBeCloseTo(0.5, 5);
-		expect(size.height).toBe(600);
+	it("fits landscape pages within the measured container", () => {
+		const size = getResumeThumbnailRenderSize({ width: 1200, height: 800 }, { width: 600, height: 900 });
+		expect(size).toEqual({ width: 600, height: 400, scale: 0.5 });
 	});
 
-	it("clamps pixelRatio to a minimum of 1", () => {
-		const a = getResumeThumbnailRenderSize({ width: 800, height: 1200 }, 400, 0.5);
-		const b = getResumeThumbnailRenderSize({ width: 800, height: 1200 }, 400, 1);
+	it("fits tall unpaginated pages by height rather than allocating their full width", () => {
+		const size = getResumeThumbnailRenderSize({ width: 600, height: 12000 }, { width: 600, height: 900 });
+		expect(size).toEqual({ width: 45, height: 900, scale: 0.075 });
+	});
+
+	it("bounds extreme zoom and viewport sizes without stretching the page", () => {
+		const target = getResumeThumbnailSize({ width: 5000, height: 7071 }, 8);
+		const size = getResumeThumbnailRenderSize({ width: 595.28, height: 841.89 }, target);
+		expect(size.width * size.height).toBeLessThanOrEqual(2048 * 3072);
+		expect(Math.max(size.width, size.height)).toBeLessThanOrEqual(3072);
+		expect(size.width / size.height).toBeCloseTo(595.28 / 841.89, 2);
+	});
+
+	it("enforces the canvas budget when retained width and height came from different size buckets", () => {
+		const size = getResumeThumbnailRenderSize({ width: 595.28, height: 841.89 }, { width: 2112, height: 2985 });
+		expect(size.width * size.height).toBeLessThanOrEqual(2048 * 3072);
+	});
+
+	it("groups small fractional layout changes into the same physical size", () => {
+		const a = getResumeThumbnailSize({ width: 295.5, height: 417.93 }, 2);
+		const b = getResumeThumbnailSize({ width: 296, height: 418.64 }, 2);
 		expect(a).toEqual(b);
-	});
-
-	it("clamps pixelRatio to a maximum of 2", () => {
-		const a = getResumeThumbnailRenderSize({ width: 800, height: 1200 }, 400, 3);
-		const b = getResumeThumbnailRenderSize({ width: 800, height: 1200 }, 400, 2);
-		expect(a).toEqual(b);
-	});
-
-	it("multiplies width/height by pixelRatio when within bounds", () => {
-		const size = getResumeThumbnailRenderSize({ width: 800, height: 1200 }, 400, 2);
-		// pageScale = 0.5, outputScale = 2 → width = 800, height = 1200
-		expect(size.width).toBe(800);
-		expect(size.height).toBe(1200);
-		expect(size.scale).toBeCloseTo(1, 5);
-	});
-
-	it("rounds the output dimensions to integers", () => {
-		const size = getResumeThumbnailRenderSize({ width: 793, height: 1123 }, 421, 1.5);
-		expect(Number.isInteger(size.width)).toBe(true);
-		expect(Number.isInteger(size.height)).toBe(true);
+		expect(a.width).toBeGreaterThanOrEqual(592);
 	});
 });

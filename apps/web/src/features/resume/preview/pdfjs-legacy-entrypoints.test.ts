@@ -85,9 +85,9 @@ describe("PDF.js browser entrypoints", () => {
 
 		const { createPdfFirstPageImageUrl } = await import("./pdf-thumbnail");
 
-		await expect(createPdfFirstPageImageUrl(new Blob(["%PDF"], { type: "application/pdf" }))).resolves.toBe(
-			"blob:thumbnail",
-		);
+		await expect(
+			createPdfFirstPageImageUrl(new Blob(["%PDF"], { type: "application/pdf" }), { width: 600, height: 900 }),
+		).resolves.toBe("blob:thumbnail");
 
 		expect(pdfjsMock.legacyModule.GlobalWorkerOptions.workerSrc).toContain(
 			"pdfjs-dist/legacy/build/pdf.worker.min.mjs",
