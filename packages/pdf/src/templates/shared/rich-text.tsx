@@ -324,7 +324,9 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 							)}
 						>
 							{/* React PDF only honors an authored presence hint after a preceding sibling. */}
-							{markerResolved.minPresenceAhead ? <View style={{ position: "absolute", width: 0, height: 0 }} /> : null}
+							{markerResolved.minPresenceAhead ? (
+								<View key="presence-spacer" style={{ position: "absolute", width: 0, height: 0 }} />
+							) : null}
 							{renderedChildren}
 						</View>
 					);
