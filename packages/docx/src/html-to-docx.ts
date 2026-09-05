@@ -1,4 +1,4 @@
-import type { IShadingAttributesProperties, ISpacingProperties } from "docx";
+import type { IShadingAttributesProperties } from "docx";
 import { ExternalHyperlink, HeadingLevel, Paragraph, TextRun } from "docx";
 import { isDarkColor, parseColorString } from "@reactive-resume/utils/color";
 import { toSafeDocxLink } from "./link-utils";
@@ -122,13 +122,20 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 	return children;
 }
 
-function processBlockElement(el: HTMLElement, style: InlineStyle, paragraphs: Paragraph[], listLevel?: number): void {
+function processBlockElement(
+	el: HTMLElement,
+	style: InlineStyle,
+	paragraphs: Paragraph[],
+	listLevel?: number,
+	quoteIndent = 0,
+): void {
 	const tag = el.tagName;
 	const mergedStyle = mergeStyle(style, tag, el);
 	const level = Number(el.getAttribute("data-indent"));
 	// 24 CSS px = 18 pt = 360 twips. Lists retain their existing numbering indentation.
-	const indent =
-		listLevel == null && Number.isInteger(level) && level > 0 && level <= 8 ? { start: level * 360 } : undefined;
+	const paragraphIndent = listLevel == null && Number.isInteger(level) && level > 0 && level <= 8 ? level * 360 : 0;
+	const start = quoteIndent + paragraphIndent;
+	const indent = start ? { start } : undefined;
 
 	if (HEADING_MAP[tag]) {
 		const inlineChildren = collectInlineChildren(el, mergedStyle);
@@ -143,7 +150,12 @@ function processBlockElement(el: HTMLElement, style: InlineStyle, paragraphs: Pa
 	if (tag === "P" || tag === "DIV") {
 		const inlineChildren = collectInlineChildren(el, mergedStyle);
 		if (inlineChildren.length > 0) {
-			paragraphs.push(new Paragraph({ children: inlineChildren, ...(tag === "P" && indent ? { indent } : {}) }));
+			paragraphs.push(
+				new Paragraph({
+					children: inlineChildren,
+					...(tag === "P" && indent ? { indent } : quoteIndent ? { indent: { start: quoteIndent } } : {}),
+				}),
+			);
 		}
 		return;
 	}
@@ -167,7 +179,7 @@ function processBlockElement(el: HTMLElement, style: InlineStyle, paragraphs: Pa
 							paragraphs.push(new Paragraph({ children: [new TextRun({ text, ...mergedStyle })], bullet: { level } }));
 						}
 					} else if (liChild.nodeType === Node.ELEMENT_NODE) {
-						processBlockElement(liChild as HTMLElement, mergedStyle, paragraphs, level);
+						processBlockElement(liChild as HTMLElement, mergedStyle, paragraphs, level, quoteIndent);
 					}
 				}
 			} else {
@@ -181,17 +193,28 @@ function processBlockElement(el: HTMLElement, style: InlineStyle, paragraphs: Pa
 	}
 
 	if (tag === "BLOCKQUOTE") {
-		const indent: ISpacingProperties = {};
-		const inlineChildren = collectInlineChildren(el, { ...mergedStyle, italics: true });
-		if (inlineChildren.length > 0) {
-			paragraphs.push(
-				new Paragraph({
-					children: inlineChildren,
-					indent: { left: 720 },
-					spacing: indent,
-				}),
-			);
+		const quoteStyle = { ...mergedStyle, italics: true };
+		const inline = el.ownerDocument.createElement("p");
+		const flushInline = () => {
+			if (!inline.hasChildNodes()) return;
+			processBlockElement(inline, quoteStyle, paragraphs, listLevel, quoteIndent + 720);
+			inline.replaceChildren();
+		};
+		// Keep each semantic paragraph's own offset and preserve adjacent inline
+		// content as one paragraph. Nested quotes add their existing 720-twip inset.
+		for (const child of el.childNodes) {
+			if (child.nodeType === Node.ELEMENT_NODE) {
+				const element = child as HTMLElement;
+				if (HEADING_MAP[element.tagName] || /^(P|DIV|UL|OL|BLOCKQUOTE|PRE|HR)$/.test(element.tagName)) {
+					flushInline();
+					processBlockElement(element, quoteStyle, paragraphs, listLevel, quoteIndent + 720);
+					continue;
+				}
+			}
+			if (child.nodeType === Node.TEXT_NODE && !child.textContent?.trim() && !inline.hasChildNodes()) continue;
+			inline.appendChild(child.cloneNode(true));
 		}
+		flushInline();
 		return;
 	}
 

@@ -68,6 +68,17 @@ describe("actual PDF paragraph indentation (#3397)", () => {
 		expect(await readParagraphs(marked, locale)).toEqual(await readParagraphs(plain, locale));
 	});
 
+	it.each(["en-US", "he-IL"])("preserves the quote inset while indenting one paragraph in %s", async (locale) => {
+		const plain = await readParagraphs("<blockquote><p>First</p><p>Second</p></blockquote>", locale);
+		const indented = await readParagraphs('<blockquote><p data-indent="2">First</p><p>Second</p></blockquote>', locale);
+		for (const text of ["First", "Second"]) {
+			const baseline = plain.items.find((item) => item.text === text);
+			const moved = indented.items.find((item) => item.text === text);
+			if (!baseline || !moved) throw new Error(`Expected ${text} in PDF`);
+			expect(moved.x - baseline.x).toBeCloseTo(text === "Second" ? 0 : locale === "en-US" ? 36 : -36, 2);
+		}
+	});
+
 	it("moves every wrapped line, not only the first line", async () => {
 		const content = "Wrapped paragraph text stays within its own block. ".repeat(18);
 		const plain = await readParagraphs(`<p>${content}</p>`);

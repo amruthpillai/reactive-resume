@@ -91,6 +91,17 @@ describe("RichInput paragraph indentation (#3397)", () => {
 		expect(levels(editor).slice(0, 2)).toEqual([1, 3]);
 	});
 
+	it("indents the selected paragraph inside a blockquote", async () => {
+		const { editor } = await input("<blockquote><p>First</p><p>Second</p></blockquote>");
+		act(() => {
+			editor.commands.setTextSelection(2);
+		});
+		increase();
+		expect(editor.getHTML()).toContain(
+			'<blockquote><p data-indent="1" style="margin-inline-start: 24px;">First</p><p>Second</p></blockquote>',
+		);
+	});
+
 	it("disables indent at eight without an update", async () => {
 		const { editor, onChange } = await input('<p data-indent="8">First</p>');
 		expect(screen.getByTitle("Increase indent")).toBeDisabled();
