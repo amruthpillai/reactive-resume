@@ -90,19 +90,35 @@
 		"FLAG_ALLOW_UNSAFE_AI_BASE_URL"
 	],
 	"tasks": {
+		"transit": {
+			"dependsOn": ["^transit"]
+		},
 		"build": {
 			"inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env*"],
-			"outputs": ["dist/**", ".vercel/**"]
+			"outputs": ["dist/**", ".vercel/**"],
+			"dependsOn": ["transit"]
 		},
-		"check": {},
-		"typecheck": {},
-		"test": {},
-		"test:coverage": {},
-		"test:ci": {},
+		"check": {
+			"dependsOn": ["transit"]
+		},
+		"typecheck": {
+			"dependsOn": ["transit"]
+		},
+		"test": {
+			"dependsOn": ["transit"]
+		},
+		"test:coverage": {
+			"dependsOn": ["transit"]
+		},
+		"test:ci": {
+			"dependsOn": ["transit"]
+		},
 		"test:e2e": {
 			"cache": false
 		},
-		"test:agent": {},
+		"test:agent": {
+			"dependsOn": ["transit"]
+		},
 		"dev": {
 			"cache": false,
 			"persistent": true
