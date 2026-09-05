@@ -127,7 +127,8 @@ describe("RichInput paragraph indentation (#3397)", () => {
 		async (command) => {
 			const { editor } = await input('<p data-indent="2">First</p>');
 			act(() => {
-				editor.commands[command]();
+				if (command === "toggleBulletList") editor.commands.toggleBulletList();
+				else editor.commands.toggleOrderedList();
 			});
 			expect(editor.getHTML()).not.toContain("data-indent");
 			act(() => {
@@ -136,7 +137,8 @@ describe("RichInput paragraph indentation (#3397)", () => {
 			expect(levels(editor)[0]).toBe(2);
 			act(() => {
 				editor.commands.redo();
-				editor.commands[command]();
+				if (command === "toggleBulletList") editor.commands.toggleBulletList();
+				else editor.commands.toggleOrderedList();
 			});
 			expect(editor.getHTML()).not.toContain("data-indent");
 			expect(editor.getHTML()).not.toContain("<li>");
