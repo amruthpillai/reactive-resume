@@ -1,4 +1,5 @@
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
+import { useFormControl } from "@reactive-resume/ui/components/form";
 import { cn } from "@reactive-resume/utils/style";
 
 const THUMB_POSITION_KEYS = ["single", "start", "end"] as const;
@@ -9,13 +10,18 @@ function Slider({
 	value,
 	min = 0,
 	max = 100,
-	// Consumed by Base UI's LabelableProvider and applied to the real control
-	// input — re-applying it here would duplicate the id on the wrapper div.
-	id: _id,
+	// Inside FormControl the generated id is consumed by Base UI's
+	// LabelableProvider and applied to the real control input — re-applying
+	// it here would duplicate the id on the wrapper div. Standalone usage has
+	// no FormControl context, so an explicit caller id must survive there.
+	id: idProp,
 	"aria-describedby": ariaDescribedBy,
 	"aria-invalid": ariaInvalid,
 	...props
 }: SliderPrimitive.Root.Props) {
+	const { id: controlId } = useFormControl();
+	const id = controlId == null ? idProp : undefined;
+
 	const _values = Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max];
 	const thumbDescriptors = _values.map((thumbValue, position) => ({
 		key:
@@ -39,6 +45,7 @@ function Slider({
 	return (
 		<SliderPrimitive.Root
 			className={cn("data-vertical:h-full data-horizontal:w-full", className)}
+			id={id}
 			defaultValue={defaultValue}
 			value={value}
 			min={min}
