@@ -125,11 +125,17 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 function processBlockElement(el: HTMLElement, style: InlineStyle, paragraphs: Paragraph[], listLevel?: number): void {
 	const tag = el.tagName;
 	const mergedStyle = mergeStyle(style, tag, el);
+	const level = Number(el.getAttribute("data-indent"));
+	// 24 CSS px = 18 pt = 360 twips. Lists retain their existing numbering indentation.
+	const indent =
+		listLevel == null && Number.isInteger(level) && level > 0 && level <= 8 ? { start: level * 360 } : undefined;
 
 	if (HEADING_MAP[tag]) {
 		const inlineChildren = collectInlineChildren(el, mergedStyle);
 		if (inlineChildren.length > 0) {
-			paragraphs.push(new Paragraph({ heading: HEADING_MAP[tag], children: inlineChildren }));
+			paragraphs.push(
+				new Paragraph({ heading: HEADING_MAP[tag], children: inlineChildren, ...(indent ? { indent } : {}) }),
+			);
 		}
 		return;
 	}
@@ -137,7 +143,7 @@ function processBlockElement(el: HTMLElement, style: InlineStyle, paragraphs: Pa
 	if (tag === "P" || tag === "DIV") {
 		const inlineChildren = collectInlineChildren(el, mergedStyle);
 		if (inlineChildren.length > 0) {
-			paragraphs.push(new Paragraph({ children: inlineChildren }));
+			paragraphs.push(new Paragraph({ children: inlineChildren, ...(tag === "P" && indent ? { indent } : {}) }));
 		}
 		return;
 	}

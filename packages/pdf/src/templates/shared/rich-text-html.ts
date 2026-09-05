@@ -106,6 +106,24 @@ const unwrapSingleParagraphListItems = (root: ReturnType<typeof parse>) => {
 	}
 };
 
+const normalizeParagraphIndentation = (root: ReturnType<typeof parse>, direction: "ltr" | "rtl") => {
+	for (const element of root.querySelectorAll("p,h1,h2,h3,h4,h5,h6")) {
+		if (!element.hasAttribute("data-indent")) continue;
+		// react-pdf-html does not support CSS logical margins. Convert only the editor's
+		// explicit indentation contract to PDF points, keeping semantic ancestry intact.
+		const style = (element.getAttribute("style") ?? "").replace(/(?:^|;)\s*margin-inline-start\s*:[^;]*(?:;|$)/gi, ";");
+		const level = Number(element.getAttribute("data-indent"));
+		const insideList = element.closest("li") !== null;
+		const indent =
+			!insideList && Number.isInteger(level) && level > 0 && level <= 8
+				? `margin-${direction === "rtl" ? "right" : "left"}: ${level * 18}pt`
+				: "";
+		const nextStyle = [style, indent].filter(Boolean).join(";");
+		if (nextStyle) element.setAttribute("style", nextStyle);
+		else element.removeAttribute("style");
+	}
+};
+
 const isInlineNode = (node: Node): boolean => {
 	if (node.nodeType === NodeType.TEXT_NODE || node.nodeType === NodeType.COMMENT_NODE) return true;
 	if (node.nodeType !== NodeType.ELEMENT_NODE) return false;
@@ -142,10 +160,14 @@ const tryConvertPseudoBulletParagraph = (paragraphInnerHtml: string): string | n
 	return `<ul>${items.map((item) => `<li>${item}</li>`).join("")}</ul>`;
 };
 
-export const convertPseudoBulletParagraphs = (html: string): string =>
+export const convertPseudoBulletParagraphs = (html: string, direction: "ltr" | "rtl" = "ltr"): string =>
 	html.replace(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi, (full, _attrs, inner) => {
 		const converted = tryConvertPseudoBulletParagraph(inner);
-		return converted ?? full;
+		if (!converted) return full;
+		const level = Number(parse(full).querySelector("p")?.getAttribute("data-indent"));
+		if (!Number.isInteger(level) || level <= 0 || level > 8) return converted;
+		// Keep the original paragraph's offset around the entire generated list.
+		return converted.replace("<ul>", `<ul style="margin-${direction === "rtl" ? "right" : "left"}: ${level * 18}pt">`);
 	});
 
 const decodeSoftHyphens = (node: Node): void => {
@@ -171,6 +193,7 @@ export const normalizeRichTextHtml = (
 	if (softHyphens) decodeSoftHyphens(root);
 	normalizeBoldBoundaryWhitespace(root);
 	normalizeMarkElements(root);
+	normalizeParagraphIndentation(root, direction);
 	unwrapSingleParagraphListItems(root);
 
 	const flushInlineNodes = () => {
@@ -201,7 +224,7 @@ export const normalizeRichTextHtml = (
 	// RTL pseudo-bullets must become real list items before both the semantic
 	// descriptor and renderer traverse the HTML. RLM anchors each independent
 	// react-pdf-html text frame without changing element ancestry or indices.
-	return convertPseudoBulletParagraphs(normalizedHtml).replace(
+	return convertPseudoBulletParagraphs(normalizedHtml, direction).replace(
 		/<(p|li)\b([^>]*)>/gi,
 		(_match, tag, rest) => `<${tag}${rest}>‏`,
 	);
