@@ -16,7 +16,7 @@ index 2c0ec95..3683493 100644
 + */
 +const resolveTypoMetrics = (font) => {
 +    const os2 = font?.['OS/2'];
-+    const isCjkFont = /^(?:Noto (?:Sans|Serif) (?:SC|TC|JP|KR)|Source Han (?:Sans|Serif)(?: (?:SC|TC|JP|KR))?)$/.test(font?.familyName || '');
++    const isCjkFont = /^(?:Noto (?:Sans|Serif) (?:SC|TC|HK|JP|KR)|Source Han (?:Sans|Serif)(?: (?:SC|TC|HK|JP|KR))?)$/.test(font?.familyName || '');
 +    const useTypoMetrics = os2?.fsSelection?.useTypoMetrics || isCjkFont;
 +    if (!useTypoMetrics || typeof os2?.typoAscender !== 'number' || typeof os2?.typoDescender !== 'number') {
 +        return { ascent: font?.ascent || 0, descent: font?.descent || 0, lineGap: font?.lineGap || 0 };

@@ -80,6 +80,7 @@ describe("font baselines in generated PDFs (#3249)", () => {
 		expect(baselineAt(rows, 0) - 20).toBeCloseTo(expected, 3);
 	});
 	it.each([
+		"Noto Sans HK",
 		"Noto Sans SC",
 		"Noto Serif SC",
 		"Noto Sans TC",
