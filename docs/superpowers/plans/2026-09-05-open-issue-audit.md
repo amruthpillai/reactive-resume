@@ -16,7 +16,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 115 issues triaged: the initial 114 plus new report #3433. Verification continues for reports needing exact fixtures or deployment reproduction.
-- 34 fix PRs created: 5 open; 29 merged by the repository owner. Audit PRs #3418 and #3440 are tracked separately and are also merged.
+- 35 fix PRs created: 6 open; 29 merged by the repository owner. Audit PRs #3418 and #3440 are tracked separately and are also merged.
 - 36 total issues closed, including #3391; other evidence-backed closures: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2735](https://github.com/amruthpillai/reactive-resume/issues/2735), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247), [#3251](https://github.com/amruthpillai/reactive-resume/issues/3251), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3291](https://github.com/amruthpillai/reactive-resume/issues/3291), [#3305](https://github.com/amruthpillai/reactive-resume/issues/3305), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3338](https://github.com/amruthpillai/reactive-resume/issues/3338), [#3339](https://github.com/amruthpillai/reactive-resume/issues/3339), [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341), [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343), [#3347](https://github.com/amruthpillai/reactive-resume/issues/3347), [#3348](https://github.com/amruthpillai/reactive-resume/issues/3348), [#3352](https://github.com/amruthpillai/reactive-resume/issues/3352), [#3359](https://github.com/amruthpillai/reactive-resume/issues/3359), [#3361](https://github.com/amruthpillai/reactive-resume/issues/3361), [#3368](https://github.com/amruthpillai/reactive-resume/issues/3368), [#3370](https://github.com/amruthpillai/reactive-resume/issues/3370), [#3393](https://github.com/amruthpillai/reactive-resume/issues/3393), [#3401](https://github.com/amruthpillai/reactive-resume/issues/3401), [#3433](https://github.com/amruthpillai/reactive-resume/issues/3433). Product decision closure: [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272) remains intentionally without a cover-letter heading.
 - In progress: bullet pagination (#3344), approved paragraph indentation (#3397), and remaining issue reproductions. Reporter confirmed #3433 no longer reproduces after restarting their setup; issue closed without an attributed code fix. #3196 remains open because merged #3438 addressed a separate content-loss regression, not missing table borders. GitHub state refreshed against the current open-issue and PR inventories.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
@@ -56,6 +56,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340) | [#3435](https://github.com/amruthpillai/reactive-resume/pull/3435) | Head `27c17d8c1`: approved opt-in German hyphenation preserves default-off output and per-document isolation. 722 PDF tests across 59 files including 11 actual-PDF cases, 111 schema tests, 599 web tests, three package typechecks and production builds pass. Four Chromium locale/toggle exports, built-server PDF parity and exact shipped third-party notices verified. |
 | [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343) | [#3437](https://github.com/amruthpillai/reactive-resume/pull/3437) | Head `d154f31b8`: skill ratings align at the bottom of each multi-column row by default. Nine actual-PDF regressions and all 692 PDF tests pass. Single-column raster is byte-identical; CI and review approved. |
 | [#3196](https://github.com/amruthpillai/reactive-resume/issues/3196) | [#3438](https://github.com/amruthpillai/reactive-resume/pull/3438) | Head `165535b5f`: preserves imported rich text without individually addressable semantic descendants. Seven actual-PDF regressions, all 690 PDF tests and a production import/save/reload/export reproduction pass. Original missing-border report remains open; this is a separate regression discovered during its investigation. |
+| [#3344](https://github.com/amruthpillai/reactive-resume/issues/3344) | [#3443](https://github.com/amruthpillai/reactive-resume/pull/3443) | Head `4ad69f2a9`: scoped React PDF layout patch keeps list markers with their first text fragments, respecting orphan counts, reordering, RTL and explicit pagination hints. 36 targeted cases and 847 PDF tests pass; current-main failure reproduced, single-page raster byte-identical. Independent review pending; issue remains open until merge. |
 
 ## Product decisions
 
@@ -83,11 +84,11 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | Classification | Count |
 | --- | ---: |
 | already_fixed | 11 |
-| confirmed_bug | 26 |
+| confirmed_bug | 27 |
 | duplicate | 1 |
 | existing_pr | 5 |
 | feature | 10 |
-| needs_reproduction | 41 |
+| needs_reproduction | 40 |
 | product_decision | 21 |
 
 Classification describes the reported problem against the audit baseline; implementation and closure state are tracked separately.
@@ -501,7 +502,9 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Reproduce bullet break using sanitized source and report page margins; record marker and first text-line page numbers; add real PDF geometry fixture before changing marker break handling.
 
-**Related PRs:** [#3178](https://github.com/amruthpillai/reactive-resume/pull/3178), [#3236](https://github.com/amruthpillai/reactive-resume/pull/3236)
+**Implementation:** [PR #3443](https://github.com/amruthpillai/reactive-resume/pull/3443). Head `4ad69f2a9`: scoped React PDF layout patch keeps list markers with their first text fragments, respecting orphan counts, reordering, RTL and explicit pagination hints. 36 targeted cases and 847 PDF tests pass; current-main failure reproduced, single-page raster byte-identical. Independent review pending; issue remains open until merge.
+
+**Related PRs:** [#3178](https://github.com/amruthpillai/reactive-resume/pull/3178), [#3236](https://github.com/amruthpillai/reactive-resume/pull/3236), [#3443](https://github.com/amruthpillai/reactive-resume/pull/3443)
 
 ### [#3343](https://github.com/amruthpillai/reactive-resume/issues/3343) — Skill level icons not aligned horizontally when having multiple columns per row with different amount of lines for keywords
 
@@ -1078,6 +1081,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Chikorita shared SkillsSection now gives skill-name flex:1 at sections.tsx:1163 from e34e7be6e / #3253, but issue specifically keyword text clipping into primary text in sidebar.
 - #3253 addressed skill-name horizontal overflow; not positive evidence for keyword overlap across multiple section types.
+- Fresh current-main screenshot-text reconstruction in Chikorita/IBM Plex Serif: eight renders across legacy/semantic, lineHeight 0.8/1/1.5, plus 25% sidebar and wrapped titles/keywords, remain unclipped. Artifacts /tmp/rr-remaining-evidence/3147-* and narrow-results.json. Original JSON/settings still required; no closure justified.
 
 **Action plan:**
 
@@ -1189,16 +1193,17 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3068](https://github.com/amruthpillai/reactive-resume/issues/3068) — [Bug] Text alignment issue in Ditgar template with two-column layout
 
-**Assessment:** `needs_reproduction`. **Confidence:** medium. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
 
 **Evidence:**
 
 - DitgarPage.tsx:320-331 item headers now share accent border/padding rules applied to main placement; recent #3357 applied item-header uniformly.
 - Original report Projects two-column title alignment has screenshot only; uniform binding fix not evidence of identical geometric issue solved.
+- Current main 0207e5dfc reproduces 1.5pt title-to-description/link offset on all eight Projects items across legacy/semantic. DitgarPage.tsx border plus gap-dependent padding/margin explains exact offset. Real PDFs/raster, failing verify-3068.py and source fixtures: /tmp/rr-remaining-evidence/.
 
 **Action plan:**
 
-- Reproduce two-column Projects with original fields and styles; inspect title origin against description and left border; test main vs sidebar before narrowing template offset.
+- Compensate the decorated project-header border using its actual width and intended padding; verify x alignment across spacing, 1/2 columns and both style modes, RTL where applicable, and retain header decoration. Implement in isolated branch codex/issue-3068-project-alignment.
 
 **Related PRs:** [#3357](https://github.com/amruthpillai/reactive-resume/pull/3357)
 
