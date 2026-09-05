@@ -11,6 +11,10 @@ description: "How to self-host Reactive Resume with Docker (Postgres only), with
 
 Reactive Resume can be self-hosted with Docker. These are the services you'll need:
 
+The official image runs one application container that serves both the web app and API. PostgreSQL must run as a
+separate service and the app connects to it through `DATABASE_URL`; no all-in-one image with an embedded database is
+planned. Follow the [Docker Compose quickstart](#quickstart-using-docker-compose) below for the supported setup.
+
 <CardGroup cols={2}>
   <Card title="PostgreSQL">Stores accounts, resumes, and application data.</Card>
   <Card title="Email (optional)">
@@ -33,6 +37,20 @@ You can pull the latest app image from:
   <Card title="Compute">1 vCPU / 1 GB RAM minimum (2 GB recommended if Postgres runs on the same host).</Card>
   <Card title="Storage">Enough for Postgres + uploads (start with 10-20 GB and scale as needed).</Card>
 </CardGroup>
+
+## Smallest supported setup
+
+1. Provide a separate, healthy PostgreSQL service. In the example below, its service name is `postgres`.
+2. Put `APP_URL`, `DATABASE_URL`, and `AUTH_SECRET` in a private `.env` file. Set the database host in `DATABASE_URL`
+   to a name or address reachable from the app container.
+3. If S3 is disabled, mount persistent storage for app uploads at `/app/data`.
+4. Attach the `reactive-resume` app service and PostgreSQL service to the intended private container network. Do not
+   expose PostgreSQL to the public internet.
+5. Launch the services with the existing [Docker Compose quickstart](#quickstart-using-docker-compose).
+6. Wait for PostgreSQL, automatic migrations, and the app health check before opening the UI.
+
+The repository's full `compose.yml` also defines optional Redis and S3-compatible storage services. Those services are
+not required for the core resume workflow; use the two-service example below when you only need the app and PostgreSQL.
 
 ## Quickstart using Docker Compose
 
@@ -230,6 +248,28 @@ docker compose logs -f reactive-resume
   </Step>
 </Steps>
 
+## Unraid and other homelab platforms
+
+Use your platform's generic container configuration to create two separately managed containers: one for Reactive
+Resume and one for PostgreSQL. No official Unraid Community Applications template is provided.
+
+- Use the official `amruthpillai/reactive-resume:latest` or `ghcr.io/amruthpillai/reactive-resume:latest` image for the
+  app container.
+- Map the app's container port `3000` to the host port you want to use.
+- Connect both containers to a private container network. Set the host in `DATABASE_URL` to the PostgreSQL container or
+  service name reachable on that network.
+- Set `APP_URL`, `DATABASE_URL`, and `AUTH_SECRET` as private environment variables.
+- When S3 is disabled, map persistent app upload storage to `/app/data`.
+- Give PostgreSQL its own persistent data volume and manage it independently from the app container.
+
+<Warning>
+  `localhost` inside the Reactive Resume container refers to that app container. It cannot reach a separate PostgreSQL
+  container. Use the PostgreSQL container or service name on the private network instead.
+</Warning>
+
+After starting both containers, wait for PostgreSQL to become healthy and check the app logs while automatic migrations
+run. Open the UI only after the app health check succeeds.
+
 ## How startup works (database migrations)
 
 <Info>
@@ -373,6 +413,9 @@ To update your Reactive Resume installation to the latest version:
 
 1. **Back up your database and uploads first.** Do this before every update.
 
+   The database and upload storage are independent resources. Recreating the app container must preserve both the
+   PostgreSQL data volume or managed database and the `/app/data` mount or S3 bucket.
+
 2. **Pull the latest images** for all services defined in your Docker Compose file.
 
    ```bash
@@ -398,9 +441,15 @@ To update your Reactive Resume installation to the latest version:
 
 This process updates app services and automatically runs DB migrations on startup. If migration fails, restore from backup and fix configuration before retrying.
 
+Update PostgreSQL separately from the app. For a PostgreSQL major-version upgrade, follow the upgrade procedure for your
+database image, host, or managed provider; pulling a new app image does not upgrade or migrate the PostgreSQL server.
+
 ## Backups (recommended)
 
 Reactive Resume stores data in two places: the PostgreSQL database and file uploads (either local storage or S3). Back up both on a regular schedule.
+
+Test restores for both resources. An app container backup alone does not include the separate database or uploads, and
+recreating the app container must not replace either persistent resource.
 
 ### Database backups
 

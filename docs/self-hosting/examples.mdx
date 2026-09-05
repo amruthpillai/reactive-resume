@@ -20,6 +20,21 @@ They go further than the basic setup in the [Self-hosting with Docker](/self-hos
 
 ---
 
+## Reuse an existing PostgreSQL service
+
+Reactive Resume always uses a separate PostgreSQL service; do not embed another database server in the app container.
+If your homelab or hosting platform already manages PostgreSQL, reuse it by setting `DATABASE_URL` to that service and
+allowing the app container to reach it over the intended private network. Keep database credentials private and do not
+expose PostgreSQL to the public internet.
+
+For generic Unraid and homelab container fields, including the `localhost` networking warning, see
+[Unraid and other homelab platforms](/self-hosting/docker#unraid-and-other-homelab-platforms). The core resume workflow
+does not require Redis or S3. Redis is a separate optional dependency for the AI Agent workspace, while S3-compatible
+storage is optional unless you need features that require private object storage; see the
+[environment variable reference](/self-hosting/docker#environment-variables) for those boundaries.
+
+---
+
 ## Docker with Traefik
 
 This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Postgres stays on an internal network. The Traefik dashboard is also routed, at `traefik.${DOMAIN}` behind basic auth — drop those labels if you do not want it reachable.
