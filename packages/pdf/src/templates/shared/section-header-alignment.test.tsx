@@ -64,6 +64,14 @@ const findText = (items: TextItem[], text: string) => {
 	return item;
 };
 
+const expectTrailingAlignment = (items: TextItem[]) => {
+	const expectedText = ["2010", "2011", "2012", "Paris • 2020", "Paris • 2021", "Paris • 2022", "Paris • 2023"];
+	for (const text of expectedText) {
+		const item = findText(items, text);
+		expect(item.transform[4] + item.width, text).toBeCloseTo(565.28, 1);
+	}
+};
+
 describe("optional experience and education header fields (#3338)", () => {
 	it.each(["legacy", "semantic"] as const)(
 		"keeps dates at the trailing edge with empty leading fields in %s mode",
@@ -71,10 +79,7 @@ describe("optional experience and education header fields (#3338)", () => {
 			const data = fixture();
 			data.metadata.stylesheet = { mode, source: { languageVersion: 1, text: "@version 1;" } };
 			const items = await renderText(data);
-			for (const text of ["2010", "2011", "2012", "Paris • 2020", "Paris • 2021", "Paris • 2022", "Paris • 2023"]) {
-				const item = findText(items, text);
-				expect(item.transform[4] + item.width, text).toBeCloseTo(565.28, 1);
-			}
+			expectTrailingAlignment(items);
 		},
 	);
 
@@ -82,10 +87,7 @@ describe("optional experience and education header fields (#3338)", () => {
 		const data = fixture();
 		data.metadata.page.locale = "ar-SA";
 		const items = await renderText(data);
-		for (const text of ["2010", "2011", "2012", "Paris • 2020", "Paris • 2021", "Paris • 2022", "Paris • 2023"]) {
-			const item = findText(items, text);
-			expect(item.transform[4] + item.width, text).toBeCloseTo(565.28, 1);
-		}
+		expectTrailingAlignment(items);
 	});
 
 	it("preserves the leading alignment of stacked sidebar fields", async () => {

@@ -906,7 +906,7 @@ const ExperienceSection = ({ sectionId = "experience", sectionData }: ItemSectio
 							</View>
 
 							{(hasPosition || hasSplitRowText(headerPeriod)) && (
-								<View style={hasPosition ? composeStyles(splitRowStyle) : getTrailingOnlySplitRowStyle(splitRowStyle)}>
+								<View style={hasPosition ? splitRowStyle : getTrailingOnlySplitRowStyle(splitRowStyle)}>
 									{hasPosition && <Text semanticField="position">{item.position}</Text>}
 									{hasSplitRowText(headerPeriod) && (
 										<SemanticTextRuns
@@ -1082,7 +1082,7 @@ const EducationSection = ({ sectionId = "education", sectionData }: ItemSectionP
 							</View>
 
 							{(hasArea || (hasDegreeOrGrade && hasLocationOrPeriod)) && (
-								<View style={hasArea ? composeStyles(splitRowStyle) : getTrailingOnlySplitRowStyle(splitRowStyle)}>
+								<View style={hasArea ? splitRowStyle : getTrailingOnlySplitRowStyle(splitRowStyle)}>
 									{hasArea && <Text semanticField="area">{item.area}</Text>}
 									{hasDegreeOrGrade && hasLocationOrPeriod && (
 										<SemanticTextRuns
