@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { env } from "@reactive-resume/env/server";
+import { coverLetterSchema } from "@reactive-resume/schema/cover-letter/data";
 import { getStorageService } from "../storage/service";
 
 export type ProviderList = Partial<Record<AuthProvider, string>>;
@@ -59,7 +60,13 @@ export const authService = {
 			.from(schema.resume)
 			.where(eq(schema.resume.userId, input.userId));
 
-		return { exportedAt: new Date().toISOString(), user: userRecord, resumes };
+		const coverLetters = await db.select().from(schema.coverLetter).where(eq(schema.coverLetter.userId, input.userId));
+		return {
+			exportedAt: new Date().toISOString(),
+			user: userRecord,
+			resumes,
+			coverLetters: coverLetters.map((letter) => coverLetterSchema.parse(letter)),
+		};
 	},
 
 	deleteAccount: async (input: { userId: string }): Promise<void> => {

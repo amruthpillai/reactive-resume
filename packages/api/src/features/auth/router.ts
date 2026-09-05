@@ -26,7 +26,7 @@ export const authRouter = {
 			operationId: "exportAccountData",
 			summary: "Export user account data",
 			description:
-				"Returns a JSON-serializable export of the authenticated user's data, including their public profile fields and all of their resumes. Secrets such as password hashes, tokens, and API keys are never included. Requires authentication.",
+				"Returns a JSON-serializable export of the authenticated user's data, including their public profile fields, resumes, and independent cover letters. Images remain URL references. Secrets such as password hashes, tokens, and API keys are never included. Requires authentication.",
 			successDescription: "The user's exported account data.",
 		})
 		.handler(({ context }) => authService.exportData({ userId: context.user.id })),

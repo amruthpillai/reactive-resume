@@ -12,7 +12,8 @@ import { Separator } from "@reactive-resume/ui/components/separator";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { getInitials } from "@reactive-resume/utils/string";
-import { useCurrentResume, useIsResumeLocked, usePatchResume } from "@/features/resume/builder/draft";
+import { CoverLetterLibraryDialog } from "@/features/cover-letters/library";
+import { useCurrentResume, useIsResumeLocked, usePatchResume, useResumeStore } from "@/features/resume/builder/draft";
 import { UserDropdownMenu } from "@/features/user/dropdown-menu";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -60,6 +61,8 @@ function getSectionComponent(type: LeftSidebarSection) {
 export function BuilderSidebarLeft() {
 	const scrollAreaRef = useRef<HTMLDivElement | null>(null);
 	const isLocked = useIsResumeLocked();
+	const resume = useCurrentResume();
+	const resumeReady = useResumeStore((state) => state.saveStatus !== "saving" && state.saveStatus !== "error");
 
 	return (
 		<>
@@ -68,6 +71,7 @@ export function BuilderSidebarLeft() {
 			<ScrollArea ref={scrollAreaRef} className="@container h-[calc(100svh-3.5rem)] bg-background sm:ms-12">
 				<div className="space-y-4 p-4">
 					{isLocked && <LockBanner />}
+					<CoverLetterLibraryDialog initialResumeId={resume.id} resumeReady={resumeReady} />
 
 					<fieldset disabled={isLocked} className="m-0 min-w-0 space-y-4 border-0 p-0">
 						{leftSidebarSections.map((section) => (

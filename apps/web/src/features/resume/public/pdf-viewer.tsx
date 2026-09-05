@@ -15,6 +15,7 @@ GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
+	includeCoverLetterHeader?: boolean;
 	publicResume?: {
 		username: string;
 		slug: string;
@@ -72,7 +73,7 @@ function pdfViewerReducer(state: PdfViewerState, action: PdfViewerAction): PdfVi
 	}
 }
 
-export function PdfViewer({ className, data, publicResume }: PdfViewerProps) {
+export function PdfViewer({ className, data, publicResume, includeCoverLetterHeader }: PdfViewerProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const viewerRef = useRef<HTMLDivElement>(null);
@@ -88,8 +89,12 @@ export function PdfViewer({ className, data, publicResume }: PdfViewerProps) {
 		fileRef.current = null;
 		dispatch({ type: "resetForData" });
 
-		const createPdf = () =>
-			publicResume ? resolvePublicResumePdfBlob({ data, publicResume }) : createResumePdfBlob(data);
+		const createPdf = () => {
+			if (publicResume) return resolvePublicResumePdfBlob({ data, publicResume });
+			return includeCoverLetterHeader
+				? createResumePdfBlob(data, undefined, { includeCoverLetterHeader: true })
+				: createResumePdfBlob(data);
+		};
 
 		void createPdf()
 			.then((blob) => {
@@ -108,7 +113,7 @@ export function PdfViewer({ className, data, publicResume }: PdfViewerProps) {
 		return () => {
 			isCancelled = true;
 		};
-	}, [data, publicResume]);
+	}, [data, publicResume, includeCoverLetterHeader]);
 
 	useEffect(() => {
 		void fileVersion;

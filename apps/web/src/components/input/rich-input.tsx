@@ -89,6 +89,7 @@ const extensions = [
 ];
 
 type Props = UseEditorOptions & {
+	"aria-label"?: string;
 	value: string;
 	onChange: (value: string) => void;
 	style?: React.CSSProperties;
@@ -96,7 +97,15 @@ type Props = UseEditorOptions & {
 	editorClassName?: string;
 };
 
-export function RichInput({ value, onChange, style, className, editorClassName, ...options }: Props) {
+export function RichInput({
+	value,
+	onChange,
+	style,
+	className,
+	editorClassName,
+	"aria-label": ariaLabel,
+	...options
+}: Props) {
 	const { i18n } = useLingui();
 	const textDirection = isRTL(i18n.locale) ? "rtl" : undefined;
 	const [isFullscreen, setIsFullscreen] = useState(false);
@@ -110,6 +119,7 @@ export function RichInput({ value, onChange, style, className, editorClassName, 
 		shouldRerenderOnTransaction: false,
 		editorProps: {
 			attributes: {
+				...(ariaLabel ? { "aria-label": ariaLabel } : {}),
 				spellcheck: "false",
 				"data-editor": "true",
 				"data-fullscreen": isFullscreen ? "true" : "false",

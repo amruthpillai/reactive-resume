@@ -1,4 +1,3 @@
-import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Application } from "../types";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
@@ -7,70 +6,18 @@ import {
 	CaretRightIcon,
 	CopyIcon,
 	EnvelopeSimpleIcon,
-	FilePdfIcon,
 	MagicWandIcon,
 	PaperPlaneTiltIcon,
 	SparkleIcon,
 	SpinnerGapIcon,
 } from "@phosphor-icons/react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useState } from "react";
 import { toast } from "@reactive-resume/ui/components/toast";
-import { generateFilename } from "@reactive-resume/utils/file";
 import { cn } from "@reactive-resume/utils/style";
-import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
+import { CoverLetterEditorDialog } from "@/features/cover-letters/editor-dialog";
 import { orpc } from "@/libs/orpc/client";
 import { applicationsListQueryKey } from "../queries";
-
-const COPILOT_COVER_LETTER_SECTION_ID = "copilot-cover-letter";
-
-const escapeHtml = (value: string) =>
-	value
-		.replace(/&/g, "&amp;")
-		.replace(/</g, "&lt;")
-		.replace(/>/g, "&gt;")
-		.replace(/"/g, "&quot;")
-		.replace(/'/g, "&#039;");
-
-const toHtmlParagraphs = (value: string) =>
-	value
-		.trim()
-		.split(/\n\s*\n/)
-		.map((paragraph) => `<p>${escapeHtml(paragraph).replace(/\n/g, "<br />")}</p>`)
-		.join("");
-
-function createCoverLetterPdfData(data: ResumeData, text: string): ResumeData {
-	return {
-		...data,
-		customSections: [
-			{
-				id: COPILOT_COVER_LETTER_SECTION_ID,
-				type: "cover-letter",
-				title: "",
-				icon: "",
-				columns: 1,
-				hidden: false,
-				keepTogether: false,
-				startOnNewPage: false,
-				items: [
-					{
-						id: `${COPILOT_COVER_LETTER_SECTION_ID}-item`,
-						hidden: false,
-						recipient: "",
-						content: toHtmlParagraphs(text),
-					},
-				],
-			},
-		],
-		metadata: {
-			...data.metadata,
-			layout: {
-				...data.metadata.layout,
-				pages: [{ fullWidth: true, main: [COPILOT_COVER_LETTER_SECTION_ID], sidebar: [] }],
-			},
-		},
-	};
-}
 
 // Score bands drive the ring color and the label — a job-fit gauge, not a generic percentage.
 function band(score: number) {
@@ -156,11 +103,7 @@ type Props = { application: Application };
 export function ApplicationAiCopilot({ application }: Props) {
 	const queryClient = useQueryClient();
 	const [draft, setDraft] = useState<{ kind: string; text: string } | null>(null);
-	const [isGeneratingCoverLetter, setIsGeneratingCoverLetter] = useState(false);
-	const { data: resume } = useQuery({
-		...orpc.resume.getById.queryOptions({ input: { id: application.resumeId ?? "" } }),
-		enabled: !!application.resumeId,
-	});
+	const [coverLetterId, setCoverLetterId] = useState<string | null>(null);
 
 	const invalidate = () => {
 		void queryClient.invalidateQueries({ queryKey: applicationsListQueryKey() });
@@ -186,55 +129,22 @@ export function ApplicationAiCopilot({ application }: Props) {
 	);
 	const draftMessage = useMutation(
 		orpc.applications.ai.draftMessage.mutationOptions({
-			onSuccess: (result, variables) => setDraft({ kind: variables.kind, text: result.text }),
+			onSuccess: (result, variables) => {
+				if (result.coverLetterId) {
+					setDraft(null);
+					setCoverLetterId(result.coverLetterId);
+					void queryClient.invalidateQueries({ queryKey: orpc.coverLetters.list.key() });
+				} else {
+					setDraft({ kind: variables.kind, text: result.text });
+				}
+			},
 			onError: (error) => toast.add({ type: "error", description: error.message || t`Drafting failed.` }),
 		}),
 	);
-	const attachCoverLetter = useMutation(
-		orpc.applications.attachDocument.mutationOptions({
-			onSuccess: () => {
-				invalidate();
-				toast.add({ type: "success", description: t`Cover letter PDF attached to this application.` });
-			},
-			onError: (error) =>
-				toast.add({ type: "error", description: error.message || t`Could not attach the cover letter PDF.` }),
-		}),
-	);
-
-	const pending =
-		matchScore.isPending || tailorResume.isPending || draftMessage.isPending || attachCoverLetter.isPending;
+	const pending = matchScore.isPending || tailorResume.isPending || draftMessage.isPending;
 	const canScore = !!application.resumeId && !!application.jobDescription;
 	const score = application.matchScore;
 	const gaps = aiGaps(application);
-	const attachDraftAsPdf = async () => {
-		if (draft?.kind !== "cover-letter" || isGeneratingCoverLetter) return;
-		if (!resume) {
-			toast.add({ type: "error", description: t`Link a resume to generate a cover letter PDF.` });
-			return;
-		}
-
-		setIsGeneratingCoverLetter(true);
-		let file: File;
-		try {
-			const blob = await createResumePdfBlob(createCoverLetterPdfData(resume.data, draft.text));
-			file = new File([blob], generateFilename(`Cover Letter - ${application.company || "Untitled"}`, "pdf"), {
-				type: "application/pdf",
-			});
-		} catch {
-			toast.add({ type: "error", description: t`Could not generate the cover letter PDF.` });
-			setIsGeneratingCoverLetter(false);
-			return;
-		}
-
-		try {
-			await attachCoverLetter.mutateAsync({ id: application.id, kind: "cover-letter", file });
-		} catch {
-			// Mutation onError displays the upload failure.
-		} finally {
-			setIsGeneratingCoverLetter(false);
-		}
-	};
-
 	// biome-ignore lint/correctness/useExhaustiveDependencies: keep review-requested callback dependencies explicit.
 	const copyDraft = useCallback(async () => {
 		try {
@@ -359,23 +269,6 @@ export function ApplicationAiCopilot({ application }: Props) {
 							>
 								<CopyIcon className="size-3.5" /> <Trans>Copy</Trans>
 							</button>
-							{draft.kind === "cover-letter" && (
-								<button
-									type="button"
-									disabled={isGeneratingCoverLetter || attachCoverLetter.isPending}
-									className="inline-flex items-center gap-1 text-muted-foreground text-xs hover:text-foreground disabled:opacity-50"
-									onClick={() => void attachDraftAsPdf()}
-								>
-									<FilePdfIcon className="size-3.5" />
-									{isGeneratingCoverLetter ? (
-										<Trans>Generating PDF…</Trans>
-									) : attachCoverLetter.isPending ? (
-										<Trans>Attaching…</Trans>
-									) : (
-										<Trans>Generate PDF & attach</Trans>
-									)}
-								</button>
-							)}
 							<button
 								type="button"
 								className="text-muted-foreground text-xs hover:text-foreground"
@@ -390,6 +283,7 @@ export function ApplicationAiCopilot({ application }: Props) {
 					</p>
 				</div>
 			)}
+			{coverLetterId && <CoverLetterEditorDialog letterId={coverLetterId} onClose={() => setCoverLetterId(null)} />}
 		</section>
 	);
 }
