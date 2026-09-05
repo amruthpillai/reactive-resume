@@ -8,7 +8,7 @@ msgstr ""
 "Language: fa\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 14:33\n"
 "Last-Translator: \n"
 "Language-Team: Persian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -568,7 +568,7 @@ msgstr "کلود آنتروپیک"
 msgid "Any tag"
 msgstr "هر برچسبی"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "هر کسی که نشانی عمومی را باز کند به این رمز عبور نیاز دارد."
 
@@ -922,6 +922,7 @@ msgstr "آیا می‌توانم رزومه‌ام را به PDF خروجی بگ
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1108,10 @@ msgstr "پالت فرمان {currentPage}"
 msgid "Community"
 msgstr "انجمن"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr ""
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1145,10 @@ msgstr "برای سریع نگه داشتن آپلود، تصاویر بزرگ �
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "تأیید"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr ""
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1978,8 +1987,8 @@ msgid "Enabled"
 msgstr "فعال"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "در حال فعال‌کردن حفاظت با گذرواژه..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -3748,14 +3757,19 @@ msgstr "کلیدهای عبور و 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "رمز عبور"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "گذرواژه نمی‌تواند خالی باشد."
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3782,10 @@ msgstr "حفاظت با گذرواژه غیرفعال شده است."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "حفاظت با گذرواژه فعال شده است."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4006,7 @@ msgstr "نوار پیشرفت"
 msgid "Projects"
 msgstr "پروژه‌ها"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "از رزومهٔ خود با رمز عبور محافظت کنید"
 
@@ -4652,6 +4670,7 @@ msgstr "صربی"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "اگر می‌خواهید فقط کسانی که رمز را می‌دانند نشانی عمومی را باز کنند، یک رمز عبور تعیین کنید."
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +4959,7 @@ msgstr "هنگام ورود شما مشکلی پیش آمد. لطفاً دوبا
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "مشکلی پیش آمد. لطفاً دوباره تلاش کنید."
@@ -6049,6 +6069,10 @@ msgstr "از قطع A4 یا US Letter استفاده کنید تا چیدمان 
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "حداقل از اندازهٔ ۹pt استفاده کنید."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

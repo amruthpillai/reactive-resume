@@ -8,7 +8,7 @@ msgstr ""
 "Language: or\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 14:33\n"
 "Last-Translator: \n"
 "Language-Team: Odia\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -568,7 +568,7 @@ msgstr "Anthropic Claude"
 msgid "Any tag"
 msgstr "ଯେକୌଣସି ଟ୍ୟାଗ୍"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "ସର୍ବସାଧାରଣ URL ଖୋଲୁଥିବା ଯେକୌଣସି ବ୍ୟକ୍ତିଙ୍କୁ ଏହି ପାସୱାର୍ଡ ଆବଶ୍ୟକ ହେବ।"
 
@@ -922,6 +922,7 @@ msgstr "ମୁଁ ମୋର ରେଜ୍ୟୁମେକୁ PDF କୁ ନିର�
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1108,10 @@ msgstr "କମାଣ୍ଡ ପ୍ୟାଲେଟ୍ - {currentPage}"
 msgid "Community"
 msgstr "ସମୁଦାୟ"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr ""
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1145,10 @@ msgstr "ଅପଲୋଡ୍ ଶୀଘ୍ର ରଖିବା ପାଇଁ ବଡ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "ନିଶ୍ଚିତ କରନ୍ତୁ"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr ""
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1978,8 +1987,8 @@ msgid "Enabled"
 msgstr "ସକ୍ରିୟ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "ପାସୱାର୍ଡ ସୁରକ୍ଷା ସକ୍ରିୟ କରାଯାଉଛି..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -3748,14 +3757,19 @@ msgstr "ପାସକି ଏବଂ 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "ପାସୱାର୍ଡ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "ପାସୱାର୍ଡ ଖାଲି ରହି ପାରିବ ନାହିଁ।"
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3782,10 @@ msgstr "ପାସୱାର୍ଡ ସୁରକ୍ଷା ଅସକ୍ରିୟ କ
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "ପାସୱାର୍ଡ ସୁରକ୍ଷା ସକ୍ରିୟ କରାଯାଇଛି।"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4006,7 @@ msgstr "ପ୍ରଗତି ବାର୍"
 msgid "Projects"
 msgstr "ପ୍ରକଳ୍ପଗୁଡିକ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "ଆପଣଙ୍କ ରେଜ୍ୟୁମେକୁ ପାସୱାର୍ଡ ଦ୍ୱାରା ସୁରକ୍ଷିତ କରନ୍ତୁ"
 
@@ -4652,6 +4670,7 @@ msgstr "ସର୍ବିଆନ୍"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "ଯଦି ଆପଣ ଚାହାଁନ୍ତି ଯେ ପାସୱାର୍ଡ ଜାଣିଥିବା ଲୋକମାନେ ହିଁ ସର୍ବସାଧାରଣ URL ଖୋଲନ୍ତୁ, ତେବେ ଏକ ପାସୱାର୍ଡ ସେଟ୍ କରନ୍ତୁ।"
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +4959,7 @@ msgstr "ଆପଣଙ୍କୁ ସାଇନ୍ ଇନ୍ କରିବା ସମ�
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "କିଛି ଭୁଲ୍ ହୋଇଛି। ଦୟାକରି ପୁନଃ ଚେଷ୍ଟା କରନ୍ତୁ।"
@@ -6049,6 +6069,10 @@ msgstr "A4 କିମ୍ବା US Letter ବ୍ୟବହାର କରନ୍ତୁ
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "ଅତିକମରେ 9pt ବ୍ୟବହାର କରନ୍ତୁ।"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

@@ -8,7 +8,7 @@ msgstr ""
 "Language: ml\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 14:33\n"
 "Last-Translator: \n"
 "Language-Team: Malayalam\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -568,7 +568,7 @@ msgstr "ആന്ത്രോപിക് ക്ലോഡ്"
 msgid "Any tag"
 msgstr "ഏതെങ്കിലും ടാഗ്"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "പൊതു URL തുറക്കുന്ന ആർക്കും ഈ പാസ്‌വേഡ് വേണ്ടിവരും."
 
@@ -922,6 +922,7 @@ msgstr "എന്റെ റിസ്യൂം PDF ആയി എക്സ്പ�
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1108,10 @@ msgstr "കമാൻഡ് പാലറ്റ് - {currentPage}"
 msgid "Community"
 msgstr "കമ്മ്യൂണിറ്റി"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr ""
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1145,10 @@ msgstr "അപ്‌ലോഡുകൾ വേഗത്തിലാക്കാ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "സ്ഥിരീകരിക്കുക"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr ""
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1978,8 +1987,8 @@ msgid "Enabled"
 msgstr "പ്രാപ്തമാക്കിയിരിക്കുന്നു"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "പാസ്‌വേഡ് സംരക്ഷണം പ്രാപ്തമാക്കുന്നു..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -3748,14 +3757,19 @@ msgstr "പാസ്‌കികളും 2FAയും"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "പാസ്‌വേഡ്"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "പാസ്‌വേഡ് ശൂന്യമാകാൻ പാടില്ല."
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3782,10 @@ msgstr "പാസ്‌വേഡ് സംരക്ഷണം അപ്രാപ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "പാസ്‌വേഡ് സംരക്ഷണം പ്രാപ്തമാക്കി."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4006,7 @@ msgstr "പ്രോഗ്രസ് ബാർ"
 msgid "Projects"
 msgstr "പ്രോജക്ടുകൾ"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "നിങ്ങളുടെ റിസ്യൂം പാസ്‌വേഡ് കൊണ്ട് സംരക്ഷിക്കുക"
 
@@ -4652,6 +4670,7 @@ msgstr "സെർബിയൻ"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "പാസ്‌വേഡ് അറിയുന്നവർ മാത്രം പൊതു URL തുറക്കണമെന്ന് ആഗ്രഹിക്കുന്നുവെങ്കിൽ, ഒരു പാസ്‌വേഡ് സജ്ജമാക്കുക."
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +4959,7 @@ msgstr "നിങ്ങളെ സൈൻ ഇൻ ചെയ്യുമ്പോൾ
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "എന്തോ പിശക് സംഭവിച്ചു. ദയവായി വീണ്ടും ശ്രമിക്കുക."
@@ -6049,6 +6069,10 @@ msgstr "ലേഔട്ട് വീണ്ടും റെൻഡർ ചെയ്
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "കുറഞ്ഞത് 9pt ഉപയോഗിക്കുക."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx

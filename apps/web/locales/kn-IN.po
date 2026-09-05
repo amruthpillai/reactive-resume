@@ -8,7 +8,7 @@ msgstr ""
 "Language: kn\n"
 "Project-Id-Version: reactive-resume\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-29 04:29\n"
+"PO-Revision-Date: 2026-09-05 14:33\n"
 "Last-Translator: \n"
 "Language-Team: Kannada\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -568,7 +568,7 @@ msgstr "Anthropic Claude"
 msgid "Any tag"
 msgstr "ಯಾವುದೇ ಟ್ಯಾಗ್"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Anyone who opens the public URL will need this password."
 msgstr "ಸಾರ್ವಜನಿಕ URL ಅನ್ನು ತೆರೆಯುವ ಯಾರಿಗಾದರೂ ಈ ಪಾಸ್‌ವರ್ಡ್ ಬೇಕಾಗುತ್ತದೆ."
 
@@ -922,6 +922,7 @@ msgstr "ನಾನು ನನ್ನ ರೆಸ್ಯೂಮ್ ಅನ್ನು PDF �
 #: src/features/applications/components/application-detail-sheet.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
 #: src/features/settings/pages/api-keys.tsx
@@ -1107,6 +1108,10 @@ msgstr "ಕಮಾಂಡ್ ಪ್ಯಾಲೆಟ್ - {currentPage}"
 msgid "Community"
 msgstr "ಸಮುದಾಯ"
 
+#: src/routes/dashboard/resumes/index.tsx
+msgid "Compact"
+msgstr ""
+
 #: src/dialogs/resume/sections/experience.tsx
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Company"
@@ -1140,6 +1145,10 @@ msgstr "ಅಪ್‌ಲೋಡ್‌ಗಳನ್ನು ವೇಗವಾಗಿಡ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Confirm"
 msgstr "ದೃಢೀಕರಿಸಿ"
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Confirm Password"
+msgstr ""
 
 #. Authentication settings action to link a social login provider
 #: src/features/settings/authentication/components/social-provider.tsx
@@ -1978,8 +1987,8 @@ msgid "Enabled"
 msgstr "ಸಕ್ರಿಯಗೊಂಡಿದೆ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Enabling password protection..."
-msgstr "ಪಾಸ್‌ವರ್ಡ್ ರಕ್ಷಣೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗುತ್ತಿದೆ..."
+#~ msgid "Enabling password protection..."
+#~ msgstr "Enabling password protection..."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Enabling two-factor authentication…"
@@ -3748,14 +3757,19 @@ msgstr "ಪಾಸ್‌ಕೀಗಳು ಹಾಗೂ 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
 msgid "Password"
 msgstr "ಗುಪ್ತಪದ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
-msgid "Password cannot be empty."
-msgstr "ಪಾಸ್‌ವರ್ಡ್ ಖಾಲಿಯಾಗಿರಬಾರದು."
+#~ msgid "Password cannot be empty."
+#~ msgstr "Password cannot be empty."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Password must be between 6 and 64 characters."
+msgstr ""
 
 #: src/routes/_home/-sections/features.tsx
 msgid "Password Protection"
@@ -3768,6 +3782,10 @@ msgstr "ಪಾಸ್‌ವರ್ಡ್ ರಕ್ಷಣೆಯನ್ನು ನಿ�
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "ಪಾಸ್‌ವರ್ಡ್ ರಕ್ಷಣೆಯನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಲಾಗಿದೆ."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Passwords do not match."
+msgstr ""
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "Paste a posting to see which of its terms already appear in your resume."
@@ -3988,7 +4006,7 @@ msgstr "ಪ್ರಗತಿ ಪಟ್ಟೆ"
 msgid "Projects"
 msgstr "ಯೋಜನೆಗಳು"
 
-#: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
+#: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ಅನ್ನು ಪಾಸ್‌ವರ್ಡ್‌ನಿಂದ ರಕ್ಷಿಸಿ"
 
@@ -4652,6 +4670,7 @@ msgstr "ಸರ್ಬಿಯನ್"
 msgid "Set a password if you want only people who know it to open the public URL."
 msgstr "ಪಾಸ್‌ವರ್ಡ್ ಗೊತ್ತಿರುವವರು ಮಾತ್ರ ಸಾರ್ವಜನಿಕ URL ಅನ್ನು ತೆರೆಯಬೇಕೆಂದು ಬಯಸಿದರೆ, ಒಂದು ಪಾಸ್‌ವರ್ಡ್ ಅನ್ನು ಹೊಂದಿಸಿ."
 
+#: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/password.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set Password"
@@ -4940,6 +4959,7 @@ msgstr "ನಿಮ್ಮನ್ನು ಸೈನ್ ಇನ್ ಮಾಡುವಾಗ
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/application-detail-sheet.tsx
+#: src/features/resume/builder/password-dialog.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Something went wrong. Please try again."
 msgstr "ಏನೋ ತಪ್ಪಾಗಿದೆ. ದಯವಿಟ್ಟು ಮರುಪ್ರಯತ್ನಿಸಿ."
@@ -6049,6 +6069,10 @@ msgstr "ವಿನ್ಯಾಸ ಮರು-ರೆಂಡರ್ ಆದಾಗಲೂ �
 #: src/features/ats-checker/messages.ts
 msgid "Use at least 9pt."
 msgstr "ಕನಿಷ್ಠ 9pt ಬಳಸಿ."
+
+#: src/features/resume/builder/password-dialog.tsx
+msgid "Use between 6 and 64 characters."
+msgstr ""
 
 #: src/components/input/color-picker.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
