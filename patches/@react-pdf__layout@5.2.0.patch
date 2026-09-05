@@ -1,5 +1,5 @@
 diff --git a/lib/index.js b/lib/index.js
-index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..d4471eda64ee99695bedf01f7a0098806d2fc961 100644
+index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..79e1898aadcbbfc78a206e235d868cb178683a07 100644
 --- a/lib/index.js
 +++ b/lib/index.js
 @@ -3163,7 +3163,10 @@ const splitNodes = (height, contentArea, nodes) => {
@@ -14,7 +14,7 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..d4471eda64ee99695bedf01f7a009880
                  // But if the current page is empty then we can just include the parent on the current page
                  if (currentChildren.length === 0) {
                      currentChildren.push(child, ...futureFixedNodes);
-@@ -3196,7 +3199,45 @@ const splitChildren = (height, contentArea, node) => {
+@@ -3196,7 +3199,52 @@ const splitChildren = (height, contentArea, node) => {
  };
  const splitView = (node, height, contentArea) => {
      const [currentNode, nextNode] = splitNode(node, height);
@@ -32,6 +32,13 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..d4471eda64ee99695bedf01f7a009880
 +        const contentIndex = node.children.findIndex((child) => child.props['data-resume-list-content']);
 +        const hasMarker = (children) => children.some((child) => child.props['data-resume-list-marker']);
 +        const deferredMarker = nextChildren.find((child) => child.props['data-resume-list-marker']);
++        // Presence is advisory once the whole row moves to a fresh page. Consume
++        // the hint on continuation so an impossible window cannot rewind the
++        // same unsplit content indefinitely (including content-first rows).
++        const continuedMarkerProps = (marker) => ({
++            ...(deferredMarker?.props || marker.props),
++            minPresenceAhead: 0,
++        });
 +        if (markerIndex !== -1 && !hasMarker(currentChilds) && hasMarker(nextChildren) && hasText(content(currentChilds))) {
 +            // A presence hint or page break can defer a marker after content.
 +            // Defer unsplit content while retaining the marker's consumed flags.
@@ -39,7 +46,7 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..d4471eda64ee99695bedf01f7a009880
 +            nextChildren = node.children
 +                .filter((child) => child.props['data-resume-list-content'] || child.props['data-resume-list-marker'])
 +                .map((child) => child.props['data-resume-list-marker']
-+                    ? { ...child, props: deferredMarker.props }
++                    ? { ...child, props: continuedMarkerProps(child) }
 +                    : child);
 +        } else if (markerIndex !== -1 && !hasText(content(currentChilds)) && hasText(content(nextChildren))) {
 +            // The first text did not fit. Preserve the authored marker/content
@@ -49,7 +56,7 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..d4471eda64ee99695bedf01f7a009880
 +            // page break; restoring the original props would replay it.
 +            const nextMarker = {
 +                ...marker,
-+                props: deferredMarker?.props || marker.props,
++                props: continuedMarkerProps(marker),
 +                box: { ...marker.box, top: 0 },
 +            };
 +            currentChilds = currentChilds.filter((child) => !child.props['data-resume-list-marker']);

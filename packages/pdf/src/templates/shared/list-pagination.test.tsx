@@ -1,3 +1,8 @@
+import { execFile } from "node:child_process";
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { describe, expect, it } from "vitest";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
@@ -54,6 +59,54 @@ async function listPages(
 }
 
 describe("list marker pagination (#3344)", () => {
+	it("terminates when an authored marker presence hint exceeds a whole page", async () => {
+		if (process.env.RR_LIST_PRESENCE_PROBE !== "1") {
+			// The renderer's pagination loop is synchronous. A test timeout cannot
+			// interrupt it, so run this probe in a killable process with thread workers.
+			const vitest = join(dirname(createRequire(import.meta.url).resolve("vitest/package.json")), "vitest.mjs");
+			await promisify(execFile)(
+				process.execPath,
+				[
+					vitest,
+					"run",
+					"src/templates/shared/list-pagination.test.tsx",
+					"-t",
+					"terminates when an authored marker presence hint exceeds a whole page",
+					"--pool=threads",
+					"--maxWorkers=1",
+					"--passWithNoTests=false",
+				],
+				{
+					cwd: fileURLToPath(new URL("../../../", import.meta.url)),
+					env: { ...process.env, RR_LIST_PRESENCE_PROBE: "1" },
+					timeout: 30000,
+					killSignal: "SIGKILL",
+				},
+			);
+			return;
+		}
+		for (const rtl of [false, true]) {
+			for (const first of ["list-item-content", "list-marker"]) {
+				const result = await listPages(
+					180,
+					30,
+					`${first} { order: -1; } list-marker { -resume-min-presence-ahead: 1000pt; }`,
+					{ rtl },
+				);
+				expect(result.first).toBe(1);
+				expect(result.marker).toBe(result.first);
+				expect(result.last).toBeGreaterThan(result.first);
+				expect(result.pages.length).toBeLessThanOrEqual(4);
+				expect(result.pages.flat().join(" ").match(/•/g)).toHaveLength(1);
+				expect(
+					result.pages
+						.flat()
+						.join(" ")
+						.match(/\bSome\b/g),
+				).toHaveLength(30);
+			}
+		}
+	}, 40000);
 	it("moves a bullet with its first paragraph when the paragraph cannot start on this page", async () => {
 		const result = await listPages(194);
 		expect(result.first).toBe(1);
