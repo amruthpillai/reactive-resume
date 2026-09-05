@@ -4,7 +4,7 @@ import type { WritableDraft } from "immer";
 import { t } from "@lingui/core/macro";
 import { consumeEventIterator } from "@orpc/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
+import { useBlocker, useParams } from "@tanstack/react-router";
 import { debounce, isEqual } from "es-toolkit";
 import { useCallback, useEffect, useState } from "react";
 import { immer } from "zustand/middleware/immer";
@@ -664,10 +664,42 @@ export function useBuilderResumeUpdateSubscription() {
 	useResumeUpdateSubscription({ resumeId, onUpdate, onError });
 }
 
+// Route transitions can await a save; unmount cleanup and browser unload cannot.
+function saveResumeBeforeLeaving(id: string): boolean | Promise<boolean> {
+	const runtime = runtimes.get(id);
+	const current = useResumeStore.getState().resume;
+	if (!runtime?.hasPendingLocalChanges || current?.id !== id) return true;
+
+	runtime.syncResume.cancel();
+	runtime.pendingResume = cloneResume(current);
+	useResumeStore.getState().setSaveStatus("saving");
+
+	return new Promise<boolean>((resolve) => {
+		const unsubscribe = useResumeStore.subscribe((state) => {
+			if (state.resume?.id !== id || state.saveStatus === "error") {
+				unsubscribe();
+				resolve(false);
+			} else if (state.saveStatus === "saved" && !runtime.hasPendingLocalChanges) {
+				unsubscribe();
+				resolve(true);
+			}
+		});
+		void flushResumeSave(id);
+	});
+}
+
 export function useResumeCleanup() {
 	const params = useParams({ strict: false }) as { resumeId?: string };
 	const resumeId = params.resumeId;
 	const reset = useResumeStore((state) => state.reset);
+
+	useBlocker({
+		shouldBlockFn: async ({ next }) => {
+			if (!resumeId || ("resumeId" in next.params && next.params.resumeId === resumeId)) return false;
+			return !(await saveResumeBeforeLeaving(resumeId));
+		},
+		enableBeforeUnload: () => !!resumeId && (runtimes.get(resumeId)?.hasPendingLocalChanges ?? false),
+	});
 
 	useEffect(() => {
 		if (!resumeId) return;
