@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
 	getSession: vi.fn(),
 	consent: vi.fn(),
+	continueOAuth: vi.fn(),
 	handler: vi.fn(),
 	env: {
 		SERVER_PORT: 3001,
@@ -16,6 +17,7 @@ vi.mock("@reactive-resume/auth/config", () => ({
 		api: {
 			getSession: mocks.getSession,
 			oauth2Consent: mocks.consent,
+			oauth2Continue: mocks.continueOAuth,
 		},
 		handler: mocks.handler,
 	},
@@ -34,7 +36,7 @@ beforeEach(() => {
 });
 
 describe("handleAuth", () => {
-	it.each([null, false, 42, "client", [], [{ redirect_uris: [] }]])(
+	it.for([null, false, 42, "client", [], [{ redirect_uris: [] }]])(
 		"rejects non-object registration payload %j",
 		async (body) => {
 			const { handleAuth } = await import("./auth");
@@ -164,23 +166,26 @@ describe("handleOAuth", () => {
 		expect(callbackUrl.searchParams.get("exp")).toBe("123");
 		expect(callbackUrl.searchParams.get("sig")).toBe("456");
 	});
-	it("delegates signed authorization to the provider instead of minting an unvalidated code", async () => {
+	it("continues signed authorization without approving consent on GET", async () => {
 		const { handleOAuth } = await import("./auth");
 		mocks.getSession.mockResolvedValueOnce({ user: { id: "owner" } });
-		mocks.consent.mockResolvedValueOnce(
-			Response.json({ redirect: true, url: "https://claude.ai/api/mcp/auth_callback?code=code" }),
+		mocks.continueOAuth.mockResolvedValueOnce(
+			Response.json({ redirect: true, url: "/auth/consent?client_id=client&sig=signed" }),
 		);
 		const query = "client_id=client&resource=one&resource=two&exp=123&sig=456";
 		const response = await handleOAuth(new Request(`http://localhost:3000/api/auth/oauth?${query}`));
-		expect(mocks.consent).toHaveBeenCalledWith(expect.objectContaining({ body: { accept: true, oauth_query: query } }));
+		expect(mocks.continueOAuth).toHaveBeenCalledWith(
+			expect.objectContaining({ body: { postLogin: true, oauth_query: query } }),
+		);
+		expect(mocks.consent).not.toHaveBeenCalled();
 		expect(response.status).toBe(302);
-		expect(response.headers.get("location")).toBe("https://claude.ai/api/mcp/auth_callback?code=code");
+		expect(response.headers.get("location")).toBe("/auth/consent?client_id=client&sig=signed");
 	});
 
 	it("preserves provider failures instead of issuing an authorization code", async () => {
 		const { handleOAuth } = await import("./auth");
 		mocks.getSession.mockResolvedValueOnce({ user: { id: "owner" } });
-		mocks.consent.mockResolvedValueOnce(Response.json({ error: "invalid_signature" }, { status: 400 }));
+		mocks.continueOAuth.mockResolvedValueOnce(Response.json({ error: "invalid_signature" }, { status: 400 }));
 		const response = await handleOAuth(new Request("http://localhost:3000/api/auth/oauth?sig=invalid"));
 		expect(response.status).toBe(400);
 		expect(response.headers.get("location")).toBeNull();
@@ -192,7 +197,7 @@ describe("handleOAuth", () => {
 		const headers = new Headers({ "cache-control": "no-store", "content-length": "123" });
 		headers.append("set-cookie", "oauth_state=state; Path=/; HttpOnly");
 		headers.append("set-cookie", "session=refreshed; Path=/; HttpOnly");
-		mocks.consent.mockResolvedValueOnce(
+		mocks.continueOAuth.mockResolvedValueOnce(
 			Response.json({ redirect: true, url: "/api/auth/oauth?prompt=login&sig=signed" }, { headers }),
 		);
 		const response = await handleOAuth(new Request("http://localhost:3000/api/auth/oauth?sig=original"));
@@ -203,4 +208,19 @@ describe("handleOAuth", () => {
 		expect(response.headers.get("content-type")).toBeNull();
 		expect(response.headers.get("content-length")).toBeNull();
 	});
+});
+
+describe("OAuth provider response validation", () => {
+	it.for([{}, { url: null }, { url: 7 }, { url: "" }, { url: "undefined" }, { url: "javascript:alert(1)" }])(
+		"fails closed for malformed provider response %j",
+		async (body) => {
+			const { handleOAuth } = await import("./auth");
+			mocks.getSession.mockResolvedValueOnce({ user: { id: "owner" } });
+			mocks.continueOAuth.mockResolvedValueOnce(Response.json(body));
+			const response = await handleOAuth(new Request("http://localhost:3000/api/auth/oauth?sig=signed"));
+			expect(response.status).toBe(502);
+			expect(response.headers.get("location")).toBeNull();
+			expect(mocks.consent).not.toHaveBeenCalled();
+		},
+	);
 });

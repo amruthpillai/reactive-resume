@@ -155,21 +155,35 @@ async function resumeOAuth(request: Request) {
 	const url = new URL(request.url);
 
 	if (session?.user) {
-		// Keep validation, resource binding, PKCE, and code issuance in the provider.
+		// Resume authorization without granting consent. The provider decides whether
+		// the user must sign in, explicitly approve a client, or reuse an existing grant.
 		// Its signed query must survive the login round trip byte-for-byte.
-		const response = await auth.api.oauth2Consent({
+		const response = await auth.api.oauth2Continue({
 			asResponse: true,
 			request,
 			headers: request.headers,
-			body: { accept: true, oauth_query: url.search.slice(1) },
+			body: { postLogin: true, oauth_query: url.search.slice(1) },
 		});
 		if (!(response instanceof Response)) throw new Error("OAuth provider did not return a response");
 		if (!response.ok) return response;
-		const result = (await response.json()) as { url: string };
+		const result: unknown = await response.json().catch(() => null);
+		if (
+			!result ||
+			typeof result !== "object" ||
+			!("url" in result) ||
+			typeof result.url !== "string" ||
+			!result.url ||
+			!(result.url.startsWith("/") || URL.canParse(result.url)) ||
+			!URL.canParse(result.url, env.APP_URL)
+		)
+			return Response.json({ error: "invalid_provider_response" }, { status: 502 });
 		const headers = new Headers(response.headers);
 		headers.delete("content-type");
 		headers.delete("content-length");
 		const target = new URL(result.url, env.APP_URL);
+		if (["javascript:", "data:", "vbscript:", "file:", "blob:"].includes(target.protocol)) {
+			return Response.json({ error: "invalid_provider_response" }, { status: 502 });
+		}
 		if (target.origin === new URL(env.APP_URL).origin && target.pathname === "/api/auth/oauth") {
 			return redirectToOAuthLogin(target, true, headers);
 		}

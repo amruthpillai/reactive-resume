@@ -13,6 +13,9 @@ describe.skipIf(!databaseURL)("MCP OAuth flow with PostgreSQL", () => {
 		process.env.APP_URL = "http://localhost:33920";
 		process.env.AUTH_SECRET = "oauth-integration-test-secret-only";
 		const { handleAuth, handleOAuth } = await import("./auth");
+		// Better Auth disables origin checks by default in test mode; exercise production behavior.
+		const { auth } = await import("@reactive-resume/auth/config");
+		(await auth.$context).skipOriginCheck = false;
 		const origin = process.env.APP_URL;
 		const redirectURI = "http://127.0.0.1:33921/callback";
 		const request = (path: string, body: object, cookie = "") =>
@@ -80,7 +83,53 @@ describe.skipIf(!databaseURL)("MCP OAuth flow with PostgreSQL", () => {
 		await expect(tampered.json()).resolves.toMatchObject({ error: "invalid_signature" });
 		const callback = await handleOAuth(new Request(`${origin}${callbackURL}`, { headers: { cookie } }));
 		expect(callback.status, await callback.clone().text()).toBe(302);
-		const codeURL = new URL(callback.headers.get("location") ?? "");
+		const consentURL = new URL(callback.headers.get("location") ?? "", origin);
+		expect(consentURL.pathname).toBe("/auth/consent");
+		expect(consentURL.searchParams.has("code")).toBe(false);
+		const oauth_query = consentURL.search.slice(1);
+		const consents = async () => {
+			const response = await handleAuth(new Request(`${origin}/api/auth/oauth2/get-consents`, { headers: { cookie } }));
+			expect(response.status).toBe(200);
+			return response.json();
+		};
+		expect(await consents()).toEqual([]);
+		const silent = await handleAuth(
+			new Request(`${origin}/api/auth/oauth2/authorize?${query}&prompt=none`, { headers: { cookie } }),
+		);
+		expect(new URL(silent.headers.get("location") ?? "").searchParams.get("error")).toBe("consent_required");
+		const tamperedConsentQuery = new URLSearchParams(oauth_query);
+		tamperedConsentQuery.set("scope", "openid profile email offline_access");
+		const tamperedConsent = await handleAuth(
+			request(
+				"oauth2/consent",
+				{
+					accept: true,
+					oauth_query: tamperedConsentQuery.toString(),
+				},
+				cookie,
+			),
+		);
+		expect(tamperedConsent.status).toBe(400);
+		expect(await consents()).toEqual([]);
+		const csrf = await handleAuth(
+			new Request(`${origin}/api/auth/oauth2/consent`, {
+				method: "POST",
+				headers: { cookie, origin: "https://untrusted.example", "content-type": "application/json" },
+				body: JSON.stringify({ accept: true, oauth_query }),
+			}),
+		);
+		expect(csrf.status).toBe(403);
+		const denied = await handleAuth(request("oauth2/consent", { accept: false, oauth_query }, cookie));
+		expect(denied.status, await denied.clone().text()).toBe(200);
+		const deniedURL = new URL((await denied.json()).url);
+		expect(deniedURL.searchParams.get("error")).toBe("access_denied");
+		expect(deniedURL.searchParams.get("state")).toBe("opaque-state");
+		expect(deniedURL.searchParams.has("code")).toBe(false);
+		expect(await consents()).toEqual([]);
+		const accepted = await handleAuth(request("oauth2/consent", { accept: true, oauth_query }, cookie));
+		expect(accepted.status, await accepted.clone().text()).toBe(200);
+		expect(await consents()).toHaveLength(1);
+		const codeURL = new URL((await accepted.json()).url);
 		expect(codeURL.origin).toBe(new URL(redirectURI).origin);
 		expect(codeURL.searchParams.get("state")).toBe("opaque-state");
 		const code = codeURL.searchParams.get("code");
@@ -193,6 +242,10 @@ describe.skipIf(!databaseURL)("MCP OAuth flow with PostgreSQL", () => {
 				expect(response.status, await response.clone().text()).toBe(302);
 				target = new URL(response.headers.get("location") ?? "", origin);
 			}
+			expect(target.pathname).toBe("/auth/consent");
+			const accepted = await post("oauth2/consent", { accept: true, oauth_query: target.search.slice(1) }, newCookie);
+			expect(accepted.status, await accepted.clone().text()).toBe(200);
+			target = new URL((await accepted.json()).url, origin);
 			expect(target.origin).toBe("http://127.0.0.1:33921");
 			expect(target.searchParams.get("code")).toBeTruthy();
 		},

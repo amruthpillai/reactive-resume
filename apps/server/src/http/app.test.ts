@@ -205,3 +205,17 @@ describe("createApp", () => {
 		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
 	});
 });
+
+it.each(["/auth/consent", "/auth/consent/", "/auth/login"])("prevents framing or caching %s", async (path) => {
+	const { createApp } = await import("./app");
+	mocks.serveWebDistStatic.mockImplementationOnce(async (_context: unknown, next: () => Promise<void>) => {
+		await next();
+	});
+	const response = await createApp().request(`http://localhost:3000${path}?sig=signed`);
+	expect(response.status).toBe(200);
+	expect(await response.text()).toBe("web");
+	expect(response.headers.get("content-security-policy")).toBe("frame-ancestors 'none'");
+	expect(response.headers.get("x-frame-options")).toBe("DENY");
+	expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+	expect(response.headers.get("cache-control")).toBe("no-store");
+});

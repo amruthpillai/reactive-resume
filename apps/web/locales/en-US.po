@@ -229,6 +229,10 @@ msgstr "A web address is written without https://."
 msgid "A4"
 msgstr "A4"
 
+#: src/features/auth/pages/consent.tsx
+msgid "Access your account through the API, including reading and changing your resumes and job applications."
+msgstr "Access your account through the API, including reading and changing your resumes and job applications."
+
 #: src/routes/_home/-sections/features.tsx
 msgid "Access your resumes and data programmatically using the API."
 msgstr "Access your resumes and data programmatically using the API."
@@ -513,6 +517,10 @@ msgstr "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
 #: src/libs/locale.ts
 msgid "Albanian"
 msgstr "Albanian"
+
+#: src/features/auth/pages/consent.tsx
+msgid "Allow access"
+msgstr "Allow access"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Allow Public Access"
@@ -1070,6 +1078,10 @@ msgstr "Clear selection"
 msgid "Click here to select a file to import"
 msgstr "Click here to select a file to import"
 
+#: src/features/auth/pages/consent.tsx
+msgid "Client ID"
+msgstr "Client ID"
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Close AI assistant"
 msgstr "Close AI assistant"
@@ -1140,6 +1152,10 @@ msgstr "Confirm"
 #: src/features/settings/authentication/components/social-provider.tsx
 msgid "Connect"
 msgstr "Connect"
+
+#: src/features/auth/pages/consent.tsx
+msgid "Connect an application"
+msgstr "Connect an application"
 
 #: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
@@ -1263,6 +1279,10 @@ msgstr "Correct the year, or use \"Present\" for ongoing work."
 #: src/features/ats-checker/messages.ts
 msgid "Correct the year, or write \"Present\" for ongoing work."
 msgstr "Correct the year, or write \"Present\" for ongoing work."
+
+#: src/features/auth/pages/consent.tsx
+msgid "Could not complete this connection. Restart the connection from your client and try again."
+msgstr "Could not complete this connection. Restart the connection from your client and try again."
 
 #: src/features/resume/export/use-resume-export.ts
 msgid "Could not generate the DOCX. Please try again."
@@ -1683,6 +1703,7 @@ msgstr "Deleting your resume..."
 msgid "Denied, waiting for the agent…"
 msgstr "Denied, waiting for the agent…"
 
+#: src/features/auth/pages/consent.tsx
 #: src/routes/agent/-components/patch-approval-card.tsx
 msgid "Deny"
 msgstr "Deny"
@@ -2866,6 +2887,10 @@ msgstr "Kannada"
 msgid "Keep a single address, so software does not have to guess which one to use."
 msgstr "Keep a single address, so software does not have to guess which one to use."
 
+#: src/features/auth/pages/consent.tsx
+msgid "Keep access when you are not using the application."
+msgstr "Keep access when you are not using the application."
+
 #: src/features/ats-checker/messages.ts
 msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
 msgstr "Keep it under 2.5 MB, usually by removing or shrinking images."
@@ -3098,6 +3123,10 @@ msgstr "Loading AI providers. Please try again in a moment."
 #: src/features/command-palette/pages/resumes.tsx
 msgid "Loading applications…"
 msgstr "Loading applications…"
+
+#: src/features/auth/pages/consent.tsx
+msgid "Loading connection request..."
+msgstr "Loading connection request..."
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
@@ -3569,6 +3598,10 @@ msgstr "One-Click Sign-In"
 #: src/routes/_home/-sections/donate.tsx
 msgid "Ongoing Maintenance"
 msgstr "Ongoing Maintenance"
+
+#: src/features/auth/pages/consent.tsx
+msgid "Only allow applications you trust. This application will be able to:"
+msgstr "Only allow applications you trust. This application will be able to:"
 
 #. Helper note explaining the keep-together limitation
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
@@ -4103,6 +4136,14 @@ msgstr "Read the Applying Custom Styles guide."
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read the resume"
 msgstr "Read the resume"
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your email address."
+msgstr "Read your email address."
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your profile information."
+msgstr "Read your profile information."
 
 #: src/features/ats-checker/messages.ts
 msgid "Readability"
@@ -4811,6 +4852,10 @@ msgstr "Sign up"
 msgid "Sign-in didn't complete"
 msgstr "Sign-in didn't complete"
 
+#: src/features/auth/pages/consent.tsx
+msgid "Signed in as {email}"
+msgstr "Signed in as {email}"
+
 #: src/features/auth/components/social-auth.tsx
 #: src/features/auth/pages/login.tsx
 msgid "Signing in..."
@@ -5419,6 +5464,10 @@ msgstr "This check does not apply to this file."
 #: src/features/ats-checker/messages.ts
 msgid "This check only runs on resumes written in English."
 msgstr "This check only runs on resumes written in English."
+
+#: src/features/auth/pages/consent.tsx
+msgid "This connection request is invalid or has expired."
+msgstr "This connection request is invalid or has expired."
 
 #: src/dialogs/api-key/create.tsx
 msgid "This creates a new API key, which lets other programs read and change your resume data through the Reactive Resume API."
