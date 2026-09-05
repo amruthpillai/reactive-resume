@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 114 issues audited; verification continues for reports needing exact fixtures or deployment reproduction.
-- 23 fix PRs created: 22 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
+- 25 fix PRs created: 24 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
 - Eight other issues closed with evidence: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341).
-- In progress: #3017 picture borders/shadows, #3393 application CSV export, #3291 CSS color swatches, and deeper S3/font reproduction.
+- In progress: #2804 server PDF localization, #3291 CSS color swatches, and deeper S3/font reproduction.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -46,6 +46,8 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3255](https://github.com/amruthpillai/reactive-resume/issues/3255) | [#3423](https://github.com/amruthpillai/reactive-resume/pull/3423) | Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios, 325 API tests, 598 web tests and combined migrations verified; browser CI and autofix pass. Codacy applies a SQL Server-only rule to the PostgreSQL migration. |
 | [#3369](https://github.com/amruthpillai/reactive-resume/issues/3369) | [#3424](https://github.com/amruthpillai/reactive-resume/pull/3424) | Connects remaining Basics Website, Picture Size and shared WebsiteField labels. Three missing-name reproductions corrected; 10 DOM tests and web typecheck pass. Complements #3387, whose standalone primitive prop regressions are recorded below. |
 | [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247) | [#3425](https://github.com/amruthpillai/reactive-resume/pull/3425) | Adds compact thumbnails and per-account tab-session Grid/Compact/List preference. Five hook tests plus production browser navigation, reload, explicit URL override and mobile sizing pass. |
+| [#3393](https://github.com/amruthpillai/reactive-resume/issues/3393) | [#3426](https://github.com/amruthpillai/reactive-resume/pull/3426) | CSV exports current filters or all applications with date range, contacts, notes and chronological history. 611 web tests and production browser downloads, owner isolation and mobile header checks pass. |
+| [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017) | [#3427](https://github.com/amruthpillai/reactive-resume/pull/3427) | Restores visible picture borders and original soft shadows. 700 PDF tests, real server PDF pixels, Chromium/Node image parity and production builds pass. Layout-dependent percentage picture dimensions remain a documented shadow limitation. |
 
 ## Product decisions
 
@@ -68,11 +70,11 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | Classification | Count |
 | --- | ---: |
 | already_fixed | 7 |
-| confirmed_bug | 22 |
+| confirmed_bug | 23 |
 | duplicate | 1 |
 | existing_pr | 5 |
 | feature | 11 |
-| needs_reproduction | 45 |
+| needs_reproduction | 44 |
 | product_decision | 23 |
 
 Classification describes the reported problem against the audit baseline; implementation and closure state are tracked separately.
@@ -134,7 +136,11 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Add CSV serializer with escaping, formula-injection handling, dates, contacts, notes and stage history. Export filtered or all applications; add date range. Test quotes/newlines, empty data, Unicode, timeline ordering, formula cells. Printable reports follow separately.
 
+**Implementation:** [PR #3426](https://github.com/amruthpillai/reactive-resume/pull/3426). CSV exports current filters or all applications with date range, contacts, notes and chronological history. 611 web tests and production browser downloads, owner isolation and mobile header checks pass.
+
 **Product/scope note:** Scope CSV first; no compliance guarantees.
+
+**Related PRs:** [#3426](https://github.com/amruthpillai/reactive-resume/pull/3426)
 
 ### [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392) — [Bug] MCP OAuth flow is broken end-to-end for self-hosted instances: incomplete oauth-provider schema, wrong resource config option, and callbackURL dropped after login
 
@@ -1182,11 +1188,16 @@ Classification describes the reported problem against the audit baseline; implem
 - Installed @react-pdf render/stylesheet/types sources contain no shadowWidth/shadowColor implementation; shadow is unsupported passthrough. Border width has normal support and requires separate exact reproduction.
 - Actual PDF regression on latest origin/main00a1357de: opaque100pt picture borderWidth10 has zero border pixels in Onyx/Ditto/Glalie; @react-pdf/render4.7.0 renderNode draws border before bitmap, bitmap uses full box and covers border. Dedicated primitive border inset fixes 5 raster tests, preserves photo bounds and semantic/legacy border settings. FullPDF58files688tests pass, PDFtypecheck/Biome pass.
 - Synthetic fixture /tmp/audit-3017.mts across14templates: shadowWidth10 produces identical raster SHA256 to shadowWidth0, despite host IMAGE correct shadowColor/shadowWidth. Renderer has no shadow or blur support. Shadow restoration requires chosen rendering treatment; no shadow code implemented.
+- PR3427 commit a358d2682 restores both standard picture border and centered soft blur. Final59files700PDFtests, PDFtypecheck, pnpmcheck, boundaries, productionweb/serverbuilds pass; builtserverexportactualPDF7591bytes with8040border/7624shadowpixels. Chromium151/NodePNGbyteparity verified. Directserverfast-png dependency and knip exemption validated after productionchunk import first failed missingdependency. Percentage corner radii supported; custompercentage dimensions omit shadow pending layout-dependent geometry.
 
 **Action plan:**
 
-- Review/publish border inset fix from .worktrees/issue-3017-picture-effects; shadow remains distinct unresolved portion.
-- Await user decision on soft shadow restoration versus removing nonfunctional control; if restoring, implement deterministic portable Gaussian-mask PNG rendering and PDF raster tests, preserving geometry/rotation/rounding/semantic overrides.
+- Review/merge unmerged PR3427 when authorized; no remaining standard-control fix required.
+- Custom percentage picture dimensions remain documented shadow limitation; preserve as separate future enhancement if requested.
+
+**Implementation:** [PR #3427](https://github.com/amruthpillai/reactive-resume/pull/3427). Restores visible picture borders and original soft shadows. 700 PDF tests, real server PDF pixels, Chromium/Node image parity and production builds pass. Layout-dependent percentage picture dimensions remain a documented shadow limitation.
+
+**Related PRs:** [#3427](https://github.com/amruthpillai/reactive-resume/pull/3427)
 
 ### [#3010](https://github.com/amruthpillai/reactive-resume/issues/3010) — [Bug] Jsearch/RapidAPI missing from versions newer than 5.0.20?
 
@@ -1399,15 +1410,17 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804) — [Bug] Link sharing non-english resume results in english titles
 
-**Assessment:** `needs_reproduction`. **Confidence:** medium. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
 
 **Evidence:**
 
 - PDF title resolution now reads data.metadata.page.locale (packages/pdf/src/section-title.ts:54). Browser PDF creation builds locale-specific resolver (apps/web/src/features/resume/export/pdf-document.tsx:33-39). Public viewer has distinct resolvePublicResumePdfBlob path (pdf-viewer.tsx:92), not verified live.
+- Production Chromium reproduction on 2026-09-05: anonymous Spanish viewer and browser PDF include Experiencia/Resumen; direct server PDF fallback with identical data omits default section headings because no locale resolver is provided. Actual PDF text captured in /tmp/rr-2804-actual.json.
 
 **Action plan:**
 
-- Reproduce Spanish resume with empty default titles via anonymous public link; verify stored resume locale, cached PDF fingerprint, server and browser resolver. Keep account UI-language sync separate from resume language.
+- Provide default PDF section-title localization from existing translation catalogs, preserving custom titles and caller translators. Verify anonymous browser, direct server and forced browser-to-server fallback exports.
+- Keep per-browser interface language separate from stored resume language; no account preference syncing change in this fix.
 
 ### [#2794](https://github.com/amruthpillai/reactive-resume/issues/2794) — [Bug] Off-center cropping/padding in resume square picture
 
