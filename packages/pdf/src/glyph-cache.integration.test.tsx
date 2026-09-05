@@ -76,6 +76,7 @@ describe("cached font glyph character identity", () => {
 
 		const aliases = codePoints.map((codePoint) => font.glyphForCodePoint(codePoint));
 		expect(aliases.every((alias) => alias.id === cached.id && alias !== cached)).toBe(true);
+		expect(new Set(aliases).size).toBe(codePoints.length);
 		expect(Object.keys(glyphCache)).toHaveLength(initialSize);
 		expect(font.glyphForCodePoint(0x1f984)).toBe(cached);
 	});
