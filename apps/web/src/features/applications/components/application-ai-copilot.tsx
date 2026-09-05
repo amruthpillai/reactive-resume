@@ -243,14 +243,16 @@ export function ApplicationAiCopilot({ application }: Props) {
 					icon={<EnvelopeSimpleIcon />}
 					title={<Trans>Draft a cover letter</Trans>}
 					description={t`From your resume and the posting`}
-					pending={draftMessage.isPending && draft?.kind !== "follow-up"}
+					disabled={draftMessage.isPending}
+					pending={draftMessage.isPending && draftMessage.variables?.kind === "cover-letter"}
 					onClick={() => draftMessage.mutate({ id: application.id, kind: "cover-letter" })}
 				/>
 				<ActionRow
 					icon={<PaperPlaneTiltIcon />}
 					title={<Trans>Draft a follow-up</Trans>}
 					description={t`A friendly nudge for the recruiter`}
-					pending={draftMessage.isPending && draft?.kind === "follow-up"}
+					disabled={draftMessage.isPending}
+					pending={draftMessage.isPending && draftMessage.variables?.kind === "follow-up"}
 					onClick={() => draftMessage.mutate({ id: application.id, kind: "follow-up" })}
 				/>
 			</div>
