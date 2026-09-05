@@ -141,7 +141,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 				{textChildren}
 			</PdfText>
 		);
-		return /^H[1-6]$/.test(element.tagName) && Number(element.attributes["data-indent"]) > 0
+		return /^h[1-6]$/i.test(element.rawTagName) && Number(element.getAttribute("data-indent")) > 0
 			? renderWithBoundedIndent(text, rtl)
 			: text;
 	};
@@ -163,7 +163,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 				{viewChildren}
 			</View>
 		);
-		return Number(element.attributes["data-paragraph-indent"]) > 0 ? renderWithBoundedIndent(view, rtl) : view;
+		return Number(element.getAttribute("data-paragraph-indent")) > 0 ? renderWithBoundedIndent(view, rtl) : view;
 	};
 
 	return (
@@ -228,7 +228,7 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 					const paragraphProps = {
 						...props,
 						style: props.style,
-						indent: Number(props.element.attributes["data-indent"]),
+						indent: Number(props.element.getAttribute("data-indent")),
 						semanticStyle: resolved.style,
 						textProps: { ...resolvedPdfTextProps(resolved), hyphenationCallback },
 						rtl,

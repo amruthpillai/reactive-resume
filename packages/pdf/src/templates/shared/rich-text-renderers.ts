@@ -54,13 +54,16 @@ export const renderRichTextParagraph = ({
 
 	const content = rtl && applyRtlDirection ? applyRtlDirection(children) : children;
 
-	const paragraph = createElement(PdfText, { ...textProps, style: composedStyle }, content);
+	// Renderer Text also accepts SVG props; this instance uses paragraph styles.
+	const paragraph = createElement(PdfText, { ...textProps, style: composedStyle }, content) as ReactElement<{
+		style: Style[];
+	}>;
 	return indent && !isRichTextElementInsideListItem(element) ? renderWithBoundedIndent(paragraph, rtl) : paragraph;
 };
 
 /** Keep at least half the available width for text, even inside narrow sidebars.
  * Flex resolves the inset against its actual parent rather than the page width. */
-export const renderWithBoundedIndent = (node: ReactElement<{ style?: Style | Style[] }>, rtl = false) => {
+export const renderWithBoundedIndent = (node: ReactElement<{ style?: Style | Style[] | undefined }>, rtl = false) => {
 	const side = rtl ? "marginRight" : "marginLeft";
 	const rawOffset = mergeStyles(node.props.style)[side];
 	const offset =
