@@ -192,6 +192,12 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 						</a>
 					)}
 
+					{current.notes?.trim() && (
+						<Section title={t`Notes`}>
+							<p className="wrap-break-word whitespace-pre-wrap text-sm">{current.notes}</p>
+						</Section>
+					)}
+
 					{/* documents: linked resume + cover letter */}
 					<Section title={t`Documents sent`}>
 						{current.resumeId ? (
