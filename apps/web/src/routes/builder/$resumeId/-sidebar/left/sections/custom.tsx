@@ -127,9 +127,11 @@ export function CustomSectionBuilder() {
 	return (
 		<SectionBase type="custom" className={cn("space-y-4", customSections.length === 0 && "border-dashed")}>
 			<AnimatePresence>
-				{customSections.map((section) => (
-					<CustomSectionContainer key={section.id} section={section} />
-				))}
+				{customSections
+					.filter((section) => !section.hidden)
+					.map((section) => (
+						<CustomSectionContainer key={section.id} section={section} />
+					))}
 			</AnimatePresence>
 
 			{/* Add Custom Section Button */}
