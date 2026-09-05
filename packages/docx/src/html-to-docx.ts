@@ -163,6 +163,7 @@ function processBlockElement(
 	if (tag === "UL" || tag === "OL") {
 		// ponytail: ordered-list numbering (numberingRef path) was never reachable; always uses bullet
 		const level = listLevel != null ? listLevel + 1 : 0;
+		const listIndent = quoteIndent ? { start: (level + 1) * 720 + quoteIndent } : undefined;
 
 		for (const li of el.children) {
 			if (li.tagName !== "LI") continue;
@@ -176,7 +177,13 @@ function processBlockElement(
 					if (liChild.nodeType === Node.TEXT_NODE) {
 						const text = (liChild.textContent ?? "").trim();
 						if (text) {
-							paragraphs.push(new Paragraph({ children: [new TextRun({ text, ...mergedStyle })], bullet: { level } }));
+							paragraphs.push(
+								new Paragraph({
+									children: [new TextRun({ text, ...mergedStyle })],
+									bullet: { level },
+									...(listIndent ? { indent: listIndent } : {}),
+								}),
+							);
 						}
 					} else if (liChild.nodeType === Node.ELEMENT_NODE) {
 						processBlockElement(liChild as HTMLElement, mergedStyle, paragraphs, level, quoteIndent);
@@ -185,7 +192,13 @@ function processBlockElement(
 			} else {
 				const inlineChildren = collectInlineChildren(li, mergedStyle);
 				if (inlineChildren.length > 0) {
-					paragraphs.push(new Paragraph({ children: inlineChildren, bullet: { level } }));
+					paragraphs.push(
+						new Paragraph({
+							children: inlineChildren,
+							bullet: { level },
+							...(listIndent ? { indent: listIndent } : {}),
+						}),
+					);
 				}
 			}
 		}
