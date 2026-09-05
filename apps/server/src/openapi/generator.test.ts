@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import z from "zod";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
+import { writableResumeDataSchema } from "@reactive-resume/schema/resume/write";
 
 type GeneratedSpecView = {
 	components?: { schemas?: Record<string, unknown> };
@@ -113,6 +114,18 @@ describe("generateOpenApiSpec", () => {
 		};
 
 		expect(schema.safeParse(mismatched).success).toBe(false);
+	});
+
+	it("enforces the same submitted bounds as the published request schema", async () => {
+		const spec = (await generateSpec()) as GeneratedSpecView;
+		const published = z.fromJSONSchema(spec.components?.schemas?.ResumeData as Parameters<typeof z.fromJSONSchema>[0]);
+		for (const marginX of [0, 100, -1, 500]) {
+			const data = structuredClone(defaultResumeData);
+			data.metadata.page.marginX = marginX;
+			const expected = marginX === 0 || marginX === 100;
+			expect(published.safeParse(data).success).toBe(expected);
+			expect(writableResumeDataSchema.safeParse(data).success).toBe(expected);
+		}
 	});
 
 	it("does not publish impossible request schemas", async () => {

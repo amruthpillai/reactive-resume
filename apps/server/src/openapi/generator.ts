@@ -4,6 +4,7 @@ import { downloadResumePdfProcedure } from "@reactive-resume/api/features/resume
 import router from "@reactive-resume/api/routers";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
+import { writableResumeDataSchema } from "@reactive-resume/schema/resume/write";
 
 export const openAPIRouter = {
 	...router,
@@ -16,6 +17,7 @@ export const openAPIRouter = {
 const { $schema: _dialect, ...resumeDataInputSchema } = createResumeDataJsonSchema();
 type ResumeDataInputJsonSchema = Parameters<typeof JSON_SCHEMA_INPUT_REGISTRY.add<typeof resumeDataSchema>>[1];
 JSON_SCHEMA_INPUT_REGISTRY.add(resumeDataSchema, resumeDataInputSchema as unknown as ResumeDataInputJsonSchema);
+JSON_SCHEMA_INPUT_REGISTRY.add(writableResumeDataSchema, resumeDataInputSchema as unknown as ResumeDataInputJsonSchema);
 const importResumeInputSchema = openAPIRouter.resume.import["~orpc"].inputSchema;
 if (importResumeInputSchema) {
 	JSON_SCHEMA_INPUT_REGISTRY.add(importResumeInputSchema, {
@@ -62,7 +64,7 @@ export async function generateOpenApiSpec({ appUrl, version }: GenerateOpenApiSp
 		servers: [{ url: `${appUrl}/api/openapi` }],
 		externalDocs: { url: "https://docs.rxresu.me", description: "Reactive Resume Documentation" },
 		commonSchemas: {
-			ResumeData: { schema: resumeDataSchema, strategy: "input" },
+			ResumeData: { schema: writableResumeDataSchema, strategy: "input" },
 		},
 		components: {
 			securitySchemes: {
