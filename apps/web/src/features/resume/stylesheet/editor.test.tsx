@@ -183,12 +183,12 @@ describe("StylesheetCodeEditor", () => {
 		const { onChange, replaceSource } = renderColorEditor(source);
 		fireEvent.click(screen.getByRole("button", { name: "Edit color #f00" }));
 		fireEvent.click(await screen.findByRole("button", { name: "Use color rgba(0, 0, 0, 1)" }));
-		const first = source.replace("#f00", "rgba(0, 0, 0, 1)");
+		const first = source.replace("#f00", "#000000");
 		expect(onChange).toHaveBeenLastCalledWith(first);
 		replaceSource(first);
 
 		fireEvent.click(screen.getByRole("button", { name: "Use color rgba(231, 0, 11, 1)" }));
-		expect(onChange).toHaveBeenLastCalledWith(source.replace("#f00", "rgba(231, 0, 11, 1)"));
+		expect(onChange).toHaveBeenLastCalledWith(source.replace("#f00", "#e7000b"));
 		expect(screen.getByText("Presets")).toBeInTheDocument();
 	});
 
@@ -209,7 +209,7 @@ describe("StylesheetCodeEditor", () => {
 
 		fireEvent.click(screen.getByRole("button", { name: "Edit color #fff" }));
 		fireEvent.click(await screen.findByRole("button", { name: "Use color rgba(0, 0, 0, 1)" }));
-		expect(onChange).toHaveBeenLastCalledWith(nextSource.replace("#fff", "rgba(0, 0, 0, 1)"));
+		expect(onChange).toHaveBeenLastCalledWith(nextSource.replace("#fff", "#000000"));
 	});
 
 	it("closes the picker after text edits and rejects stale compiler color ranges", async () => {

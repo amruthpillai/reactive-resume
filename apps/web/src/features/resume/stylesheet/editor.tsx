@@ -35,6 +35,7 @@ import { ColorPicker } from "@/components/input/color-picker";
 import { useIsResumeLocked, useResumeData, useResumeStore, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useTheme } from "@/features/theme/provider";
 import { useBuilderSidebarStore } from "@/routes/builder/$resumeId/-store/sidebar";
+import { serializeStylesheetColor, toStylesheetPickerColor } from "./color-format";
 import { compositionAwareDocumentListener, createSemanticCssEditorExtensions } from "./editor-extensions";
 import { enterStylesheetFocusMode } from "./focus-mode";
 import { formatEditorDocument } from "./formatter";
@@ -275,7 +276,9 @@ export function StylesheetCodeEditor({
 		});
 	}, [value]);
 
-	const updateColor = (value: string) => {
+	const updateColor = (pickerValue: string) => {
+		const value = serializeStylesheetColor(pickerValue);
+		if (value === null) return;
 		const view = viewRef.current;
 		if (!view || !selectedColor) return;
 		const { from, to } = selectedColor.token;
@@ -319,7 +322,7 @@ export function StylesheetCodeEditor({
 								return;
 							if (!open) setSelectedColor(null);
 						}}
-						value={selectedColor.token.value}
+						value={toStylesheetPickerColor(selectedColor.token.value)}
 						onChange={updateColor}
 						trigger={
 							<PopoverTrigger
