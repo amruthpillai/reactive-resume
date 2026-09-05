@@ -99,7 +99,9 @@ describe("builder field labels", () => {
 
 		await waitFor(() => expect(state.uploadFile).toHaveBeenCalledOnce());
 		expect(state.uploadFile.mock.calls[0]?.[0]).toBe(file);
-		expect(document.querySelector("img.object-contain")).toBeInTheDocument();
+		const preview = screen.getByRole("button", { name: "Delete picture" }).querySelector("img");
+		expect(preview).toBeInTheDocument();
+		expect(getComputedStyle(preview as HTMLImageElement).objectFit).toBe("contain");
 		expect(screen.queryByRole("dialog", { name: "Crop picture" })).not.toBeInTheDocument();
 	});
 

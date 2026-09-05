@@ -94,7 +94,8 @@ function PicturePreviewControls({
 					<img
 						alt=""
 						src={normalizedPictureUrl}
-						className={`fade-in relative z-10 size-full animate-in rounded-md transition-opacity group-hover/picture:opacity-20 ${picture.fit === "contain" ? "object-contain" : "object-cover"}`}
+						style={{ objectFit: picture.fit }}
+						className="fade-in relative z-10 size-full animate-in rounded-md transition-opacity group-hover/picture:opacity-20"
 					/>
 				)}
 
@@ -143,17 +144,12 @@ function PicturePreviewControls({
 	);
 }
 
-type PictureGeometryFieldsProps = {
+type PictureFieldProps = {
 	form: PictureSettingsForm;
 	onAutoSave: () => void;
 };
 
-type PictureFitFieldProps = {
-	form: PictureSettingsForm;
-	onAutoSave: () => void;
-};
-
-function PictureFitField({ form, onAutoSave }: PictureFitFieldProps) {
+function PictureFitField({ form, onAutoSave }: PictureFieldProps) {
 	return (
 		<form.Field name="fit">
 			{(field) => (
@@ -199,7 +195,7 @@ function PictureFitField({ form, onAutoSave }: PictureFitFieldProps) {
 	);
 }
 
-function PictureGeometryFields({ form, onAutoSave }: PictureGeometryFieldsProps) {
+function PictureGeometryFields({ form, onAutoSave }: PictureFieldProps) {
 	return (
 		<>
 			<form.Field name="size">

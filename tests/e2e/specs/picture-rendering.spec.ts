@@ -147,7 +147,9 @@ test("uploads and persists full Contain image with browser/server PDF parity", a
 	await expect(page.getByRole("dialog", { name: "Crop picture" })).toHaveCount(0);
 	const pictureUrl = page.locator("#sidebar-picture input[name=url]");
 	await expect(pictureUrl).toHaveValue(/\/uploads\//);
-	await expect(page.locator("#sidebar-picture img.object-contain")).toBeVisible();
+	const sidebarPreview = page.getByRole("button", { name: "Delete picture" }).locator("img");
+	await expect(sidebarPreview).toBeVisible();
+	await expect(sidebarPreview).toHaveCSS("object-fit", "contain");
 	const storedUrl = await pictureUrl.inputValue();
 	const storedRequestUrl = storedUrl.startsWith("/uploads/") ? `/api${storedUrl}` : storedUrl;
 	const storedResponse = await page.request.get(storedRequestUrl);
