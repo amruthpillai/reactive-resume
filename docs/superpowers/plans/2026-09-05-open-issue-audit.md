@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 115 issues triaged: the initial 114 plus new report #3433. Verification continues for reports needing exact fixtures or deployment reproduction.
-- 34 fix PRs created: 33 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416 and build-cache fix #3429. Draft audit PR #3418 is tracked separately.
-- 14 total issues closed, including #3391; other evidence-backed closures: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341). Product decision closure: [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272) remains intentionally without a cover-letter heading.
-- In progress: bullet pagination (#3344), approved paragraph indentation (#3397), and remaining issue reproductions. New #3433 still needs exact reporter configuration. German hyphenation (#3435), skill-rating alignment (#3437), and imported rich-text preservation (#3438) are published. OAuth, PDF shadow/font, color-picker, margin, cover-letter concurrency, health and Compose review follow-ups addressed; S3 ACL compatibility published. Turbo source dependency cache invalidation fixed in [#3429](https://github.com/amruthpillai/reactive-resume/pull/3429).
+- 34 fix PRs created: 17 open; 17 merged by the repository owner. Audit PR #3418 is tracked separately and is also merged.
+- 25 total issues closed, including #3391; other evidence-backed closures: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2735](https://github.com/amruthpillai/reactive-resume/issues/2735), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3146](https://github.com/amruthpillai/reactive-resume/issues/3146), [#3174](https://github.com/amruthpillai/reactive-resume/issues/3174), [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180), [#3200](https://github.com/amruthpillai/reactive-resume/issues/3200), [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247), [#3251](https://github.com/amruthpillai/reactive-resume/issues/3251), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3291](https://github.com/amruthpillai/reactive-resume/issues/3291), [#3311](https://github.com/amruthpillai/reactive-resume/issues/3311), [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341), [#3361](https://github.com/amruthpillai/reactive-resume/issues/3361), [#3370](https://github.com/amruthpillai/reactive-resume/issues/3370), [#3401](https://github.com/amruthpillai/reactive-resume/issues/3401). Product decision closure: [#3272](https://github.com/amruthpillai/reactive-resume/issues/3272) remains intentionally without a cover-letter heading.
+- In progress: bullet pagination (#3344), approved paragraph indentation (#3397), and remaining issue reproductions. New #3433 still needs exact reporter configuration. Skill-rating alignment (#3437) remains open, clean, and approved. The repository owner merged German hyphenation (#3435), imported rich-text preservation (#3438), and 15 other audit fixes; #3196 remains open because #3438 addressed a separate regression.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -63,7 +63,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 - #3360: approved — per-resume option hiding download buttons; no limitation explanation in app.
 - #3255: approved — independently saved cover-letter library, editable from library and builder, selected resume styling, exported snapshots attached to applications. Existing attachment PR #3395 remains related.
 - #3291: approved — CSS picker writes hex, with alpha when needed; implemented in #3431.
-- #3340: approved — opt-in per-resume hyphenation using the resume locale, German first. Missing/false preserves existing output; implemented in unmerged #3435.
+- #3340: approved — opt-in per-resume hyphenation using the resume locale, German first. Missing/false preserves existing output; implemented and owner-merged in #3435.
 - #3343: approved — align skill-rating bars at the bottom of each grid row by default; implemented in #3437.
 - #3272: approved — keep cover-letter headings omitted; explained and closed as not planned.
 - #3397: approved — indent the whole paragraph through the existing controls; implementation pending.
@@ -115,15 +115,16 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3401](https://github.com/amruthpillai/reactive-resume/issues/3401) — Remove "Build your own resume" from footer
 
-**Assessment:** `product_decision`. **Confidence:** medium. **State:** Open pending resolution/merge.
+**Assessment:** `product_decision`. **Confidence:** medium. **State:** Closed with evidence.
 
 **Evidence:**
 
 - PublicResumeRoute always renders footer link to / (public-resume.tsx:54-62).
+- PR #3409 was merged by the repository owner and closed the issue on 2026-09-05. Public signup footer now hides when registration is disabled; four public-page tests passed.
 
 **Action plan:**
 
-- Use existing router flags; hide footer link when registration is disabled. Test enabled and disabled flags.
+- No remaining implementation. Monitor owner-merged PR #3409 in production.
 
 **Implementation:** [PR #3409](https://github.com/amruthpillai/reactive-resume/pull/3409). Public signup footer is hidden when registration is disabled, as approved. Four public-page tests passed.
 
@@ -297,7 +298,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3370](https://github.com/amruthpillai/reactive-resume/issues/3370) — The set-password dialog is one unlabelled field with no confirmation, and a password below the API's documented minimum is dropped in silence
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -306,8 +307,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Implement labelled password/confirmation dialog, explicit 6-64 validation and mismatch message, keep open on validation or server failure, submit exactly once, no generic prompt behavior change.
-- Test 0/3/5/6/64/65 chars, mismatch, matching submission, rejected mutation preserves dialog/value, cancel and reopen clear sensitive fields.
+- No remaining implementation. PR #3407 was merged by the repository owner and closed the issue on 2026-09-05 after labelled confirmation, validation, retained failures, 605 web tests, typecheck, and browser E2E passed.
 
 **Implementation:** [PR #3407](https://github.com/amruthpillai/reactive-resume/pull/3407). Labeled password and confirmation dialog validates length/matching and retains failures. 605 web tests, typecheck, and updated browser E2E passed.
 
@@ -369,7 +369,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3361](https://github.com/amruthpillai/reactive-resume/issues/3361) — .env in compose.yml
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -377,7 +377,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Load optional .env after sample defaults, document precedence; verify docker compose config under temporary env fixture shows custom nonsecret flags and APP_URL while defaults remain.
+- No remaining implementation. PR #3411 was merged by the repository owner and closed the issue on 2026-09-05 after both Compose configurations were verified.
 
 **Implementation:** [PR #3411](https://github.com/amruthpillai/reactive-resume/pull/3411). Compose loads optional .env after sample defaults; docs distinguish repository Compose from standalone quickstart. Both actual configurations verified.
 
@@ -537,7 +537,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3340](https://github.com/amruthpillai/reactive-resume/issues/3340) — Hyphenation defunct
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -547,11 +547,11 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Review PR #3435 and address supported feedback, leaving it unmerged; retain German-first scope, default-off behavior, authored soft-hyphen handling, CJK behavior and per-document callback isolation.
+- No remaining implementation. PR #3435 was merged by the repository owner and closed the issue on 2026-09-05; retain German-first scope and monitor default-off behavior.
 
 **Implementation:** [PR #3435](https://github.com/amruthpillai/reactive-resume/pull/3435). Head `27c17d8c1`: approved opt-in German hyphenation preserves default-off output and per-document isolation. 722 PDF tests across 59 files including 11 actual-PDF cases, 111 schema tests, 599 web tests, three package typechecks and production builds pass. Four Chromium locale/toggle exports, built-server PDF parity and exact shipped third-party notices verified.
 
-**Product/scope note:** User approved opt-in per-resume German hyphenation using resume locale; missing/false preserves existing output. Implemented in unmerged PR #3435, head 27c17d8c1.
+**Product/scope note:** User approved opt-in per-resume German hyphenation using resume locale; missing/false preserves existing output. Implemented and owner-merged in PR #3435, head 27c17d8c1.
 
 **Related PRs:** [#3435](https://github.com/amruthpillai/reactive-resume/pull/3435)
 
@@ -690,7 +690,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3291](https://github.com/amruthpillai/reactive-resume/issues/3291) — [Bug] color picker visual bug
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -699,11 +699,11 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Review unmerged PR #3431; approved hex output and optional alpha implemented. Latest 78 focused tests pass; four production browser scenarios previously verified; all review feedback resolved.
+- No remaining implementation. PR #3431 was merged by the repository owner and closed the issue on 2026-09-05.
 
 **Implementation:** [PR #3431](https://github.com/amruthpillai/reactive-resume/pull/3431). Head `b15f4983b`: color picker tracks current CSS through repeated presets, external edits and undo; spaced RGB/HSL tokens regain swatches. Approved hex output preserves optional alpha and named/modern RGB roundtrips. 78 focused tests and four previously verified production browser scenarios pass; all review feedback resolved.
 
-**Product/scope note:** User-approved hex output with alpha when needed implemented in #3431 at b15f4983b.
+**Product/scope note:** User-approved hex output with alpha when needed implemented and owner-merged in #3431 at b15f4983b.
 
 **Related PRs:** [#3293](https://github.com/amruthpillai/reactive-resume/pull/3293), [#3431](https://github.com/amruthpillai/reactive-resume/pull/3431)
 
@@ -798,15 +798,16 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3251](https://github.com/amruthpillai/reactive-resume/issues/3251) — [Bug] <title>Missing hover state styling on the builder download button
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
 - packages/ui/src/components/button.tsx:11 default variant restricts hover class to [a]:hover:bg-primary/80. Builder header.tsx:112-132 renders native default Button, so that hover selector cannot match.
+- PR #3405 was merged by the repository owner and closed the issue on 2026-09-05 after compiled Tailwind hover behavior was verified.
 
 **Action plan:**
 
-- Apply default hover to native buttons too; inspect generated selector and hover in browser for builder and dialog, light/dark. Run UI/web typecheck and Biome.
+- No remaining implementation. Monitor owner-merged PR #3405.
 
 **Implementation:** [PR #3405](https://github.com/amruthpillai/reactive-resume/pull/3405). Primary button hover applies to native buttons and links. Compiled Tailwind behavior verified.
 
@@ -830,7 +831,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Review and merge PR3430 when authorized; retain Ropa Sans limitation until exact reproduction.
+- PR #3430 was merged by the repository owner on 2026-09-05; retain Ropa Sans limitation and keep the issue open until that separate historical report is reproduced.
 
 **Implementation:** [PR #3430](https://github.com/amruthpillai/reactive-resume/pull/3430). Head `50bac62ed`: font metrics respect USE_TYPO_METRICS while preserving CJK fallbacks, including the selectable Noto Sans HK review correction. 699 PDF tests and 16 actual-font cases pass. Exact Roboto Condensed and controlled IBM fixtures improve; current Ropa Sans remains unchanged and historical optical alignment scope stays separate.
 
@@ -838,15 +839,16 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247) — [Feature] More viewing options on the résumé page.
 
-**Assessment:** `feature`. **Confidence:** medium. **State:** Open pending resolution/merge.
+**Assessment:** `feature`. **Confidence:** medium. **State:** Closed with evidence.
 
 **Evidence:**
 
 - dashboard/resumes/index.tsx:31-40 offers grid/list URL search only, default grid; no compact option or persistent preference.
+- PR #3425 was merged by the repository owner and closed the issue on 2026-09-05. Five hook tests plus production navigation, reload, URL precedence, and mobile sizing were verified.
 
 **Action plan:**
 
-- Add compact grid density and session-persisted default without overriding explicit URL selection. Reuse grid cards. Test navigation away/back, storage fallback and explicit query precedence.
+- No remaining implementation. Thumbnail-quality issue #3246 remains separate.
 
 **Implementation:** [PR #3425](https://github.com/amruthpillai/reactive-resume/pull/3425). Adds compact thumbnails and per-account tab-session Grid/Compact/List preference. Five hook tests plus production browser navigation, reload, explicit URL override and mobile sizing pass.
 
@@ -893,10 +895,11 @@ Classification describes the reported problem against the audit baseline; implem
 - Original screenshot inspected directly: table text is visible in three columns but grid lines are absent. Exact HTML/JSON is still missing, so a content-loss reproduction is not evidence that its border problem is fixed.
 - Separate regression found and fixed in PR #3438, head 165535b5f: rich-text fields containing bare table cells or raw text in unknown wrappers lacked a semantic host and disappeared in Semantic CSS mode. Three actual-PDF cases failed before the fix; all seven regression cases pass afterward. All 690 PDF tests across 58 files, typecheck, boundaries, formatting and production builds pass.
 - Production Chromium JSON import, unrelated edit, save/reload and PDF export fails before the fix and passes afterward in 11.9 s; table cell coordinates and browser preview verified. Artifacts: /tmp/rr-3196-imported-table.pdf and /tmp/rr-3196-imported-table.png.
+- Issue follow-up https://github.com/amruthpillai/reactive-resume/issues/3196#issuecomment-5552909919 links merged PR #3438 as a separate regression and requests the exact JSON/HTML, inline table styles, version, and template needed to diagnose the still-open border report.
 
 **Action plan:**
 
-- Review #3438 as a separate imported-content regression; keep #3196 open for its original missing-border behavior. Obtain original JSON/HTML, including inline styles and table attributes, and distinguish renderer border handling from editor normalization. The custom heading concern is covered by verified Semantic CSS guidance from #3200.
+- PR #3438 is owner-merged as a separate imported-content regression. Keep #3196 open for its original missing-border behavior; obtain original JSON/HTML, including inline styles and table attributes, and distinguish renderer border handling from editor normalization. The custom heading concern is covered by verified Semantic CSS guidance from #3200.
 
 **Implementation:** [PR #3438](https://github.com/amruthpillai/reactive-resume/pull/3438). Head `165535b5f`: preserves imported rich text without individually addressable semantic descendants. Seven actual-PDF regressions, all 690 PDF tests and a production import/save/reload/export reproduction pass. Original missing-border report remains open; this is a separate regression discovered during its investigation.
 
@@ -917,7 +920,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180) — [Bug] Blank page with empty section remains
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -927,7 +930,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Reproduce move-to-new-page then move-back; choose pruning only auto-created empty custom section/page versus preserving intentional blank authored pages; test sidebar content survives cleanup and no user-defined section data lost.
+- No remaining implementation. PR #3417 was merged by the repository owner and closed the issue on 2026-09-05; cleanup remains limited to affected empty custom sections/pages.
 
 **Implementation:** [PR #3417](https://github.com/amruthpillai/reactive-resume/pull/3417). Moving items validates destinations and prunes only emptied custom source sections and affected empty pages; exact round-trip JSON, undo, 605 web tests and typecheck verified.
 
@@ -1277,7 +1280,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017) — [Bug] <title>Line width and Shadow width not working
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -1290,7 +1293,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Review/merge unmerged PR3427 when authorized; no remaining standard-control fix required.
+- No remaining standard-control fix. PR #3427 was merged by the repository owner and closed the issue on 2026-09-05.
 - Custom percentage picture dimensions remain documented shadow limitation; preserve as separate future enhancement if requested.
 
 **Implementation:** [PR #3427](https://github.com/amruthpillai/reactive-resume/pull/3427). Head `c315633f6`: picture borders and soft shadows preserve authored padding and insets. 708 PDF tests across 59 files, 25 targeted cases, compiled-server raster checks, three Chromium/Node PNG parity fixtures and production builds pass. Percentage picture width/height shadows remain a documented limitation.
@@ -1508,7 +1511,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804) — [Bug] Link sharing non-english resume results in english titles
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -1517,8 +1520,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Provide default PDF section-title localization from existing translation catalogs, preserving custom titles and caller translators. Verify anonymous browser, direct server and forced browser-to-server fallback exports.
-- Keep per-browser interface language separate from stored resume language; no account preference syncing change in this fix.
+- No remaining implementation. PR #3428 was merged by the repository owner and closed the issue on 2026-09-05 after browser, server fallback, and locale-preservation paths passed.
 
 **Implementation:** [PR #3428](https://github.com/amruthpillai/reactive-resume/pull/3428). Server PDFs lacked default section headings despite correct browser rendering. Generated locale subset restores saved resume language; 689 PDF tests, API tests and production normal/fallback browser paths pass.
 
@@ -1661,7 +1663,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#2735](https://github.com/amruthpillai/reactive-resume/issues/2735) — [Feature] Don't force secure httpS on URLs
 
-**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Closed with evidence.
 
 **Evidence:**
 
@@ -1669,7 +1671,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Preserve explicit HTTP(S) scheme, retain HTTPS default for bare hosts and keep displayed prefix consistent. Regression tests for pasted HTTP, editing stored HTTP, HTTPS and clearing; web typecheck/Biome.
+- No remaining implementation. PR #3403 was merged by the repository owner and closed the issue on 2026-09-05 after 12 URL-input regressions passed.
 
 **Implementation:** [PR #3403](https://github.com/amruthpillai/reactive-resume/pull/3403). Explicit HTTP URLs survive paste and edits; bare hosts retain HTTPS defaults. 12 URL input tests passed.
 
@@ -1786,7 +1788,7 @@ Classification describes the reported problem against the audit baseline; implem
 
 **Action plan:**
 
-- Reproduce against ACL-disabled AWS-compatible fixture, capture underlying S3 error; if confirmed remove unnecessary object ACL or add explicit validated ACL opt-in while retaining authenticated proxy delivery, verify public and private attachments plus healthcheck.
+- PR #3432 was merged by the repository owner on 2026-09-05 and removes unsupported object ACL requests. Keep the issue open until the reporter confirms or supplies the original S3 error; authenticated proxy and private/public attachment behavior remain verified.
 
 **Implementation:** [PR #3432](https://github.com/amruthpillai/reactive-resume/pull/3432). Removes unsupported S3 object ACLs. Real SDK wire-contract stub reproduces AWS documented rejection; real Ceph gateway separately verifies public proxy and private access behavior. Exact reported deployment cause remains unproven; PR relates to the issue without closing it.
 
