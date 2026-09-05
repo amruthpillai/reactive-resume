@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
+import { getSectionHeadingTextStyle } from "./sections";
 
 const source = readFileSync(fileURLToPath(new URL("./sections.tsx", import.meta.url)), "utf8");
 
@@ -24,6 +25,11 @@ describe("ItemTitle", () => {
 });
 
 describe("SectionShell", () => {
+	it("keeps heading text safety padding separate from container padding", () => {
+		expect(getSectionHeadingTextStyle({ paddingLeft: 0 })).toEqual([{ paddingLeft: 1 }]);
+		expect(getSectionHeadingTextStyle({ paddingLeft: 6 })).toEqual([{ paddingLeft: 1 }]);
+	});
+
 	it("keeps section and heading style rules when section heading icons are hidden", () => {
 		expect(source).toContain(
 			"const resolvedSectionStyle = composeStyles(sectionStyle, sectionRuleStyle, resolved.style)",
