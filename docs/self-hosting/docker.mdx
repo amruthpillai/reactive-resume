@@ -46,7 +46,7 @@ Create a new folder (for example `reactive-resume/`) with:
   <Step title="Create your .env">
     Start by creating a `.env` file next to your `compose.yml`.
 
-    The repository's Compose file loads `.env.example` defaults first, then overrides them with your `.env` values.
+    The Compose example below reads `.env` directly. If you use the repository's `compose.yml` instead, copy its `.env.example` into the same folder. That file supplies defaults before your `.env` overrides are applied.
 
 ```bash .env
 # --- Server ---
