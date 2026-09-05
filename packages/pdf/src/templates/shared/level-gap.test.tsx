@@ -6,6 +6,11 @@ import { ResumeDocument } from "../../document";
 import { resolveResumeRuntime } from "../../semantic/resolve";
 import { rasterizePdf } from "../../semantic/test/rasterize-pdf";
 
+// rasterizePdf renders at 1.5 pixels per PDF point. The default 10pt body
+// font produces 8pt level circles via resolveLevelDisplaySizes.
+const pdfRasterScale = 1.5;
+const circleDiameterPt = 8;
+
 async function circlePositions(declaration = "", mode: "semantic" | "legacy" = "semantic") {
 	const data = structuredClone(defaultResumeData);
 	data.metadata.typography.body.fontFamily = "Helvetica";
@@ -40,6 +45,7 @@ async function circlePositions(declaration = "", mode: "semantic" | "legacy" = "
 		let segment: { start: number; end: number } | undefined;
 		for (let x = 0; x < page.width; x++) {
 			const offset = (y * page.width + x) * 4;
+			// Select the red decorations while excluding black text and white/antialiased background.
 			const red = (page.data[offset] ?? 0) > 200 && (page.data[offset + 1] ?? 255) < 100;
 			if (red) {
 				if (segment) segment.end = x;
@@ -80,7 +86,7 @@ describe("semantic level gaps (#3040)", () => {
 			const previous = actual.centers[index - 1];
 			const current = actual.centers[index];
 			if (previous === undefined || current === undefined) throw new Error("Missing circle center");
-			expect(Math.abs(current - previous - (8 + expectedGap) * 1.5)).toBeLessThanOrEqual(0.5);
+			expect(Math.abs(current - previous - (circleDiameterPt + expectedGap) * pdfRasterScale)).toBeLessThanOrEqual(0.5);
 		}
 		expect(actual.diagnostics).toEqual([]);
 	});
