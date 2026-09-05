@@ -13,6 +13,12 @@ To move a Reactive Resume installation from **v4 to v5**, you set up a new v5 in
 </Info>
 
 <Warning>
+  This guide applies only to infrastructure and backups you are authorized to operate. It does not grant access to
+  hosted Reactive Resume data. Only the hosted service operator can verify whether a hosted snapshot exists and
+  authorize access to it.
+</Warning>
+
+<Warning>
   **Keep your v4 instance running** until you have migrated all data to v5 and checked that everything works. That way
   you have a fallback if the migration goes wrong.
 </Warning>
@@ -47,6 +53,49 @@ The best migration approach depends on the size of your instance:
     resumes automatically.
   </Card>
 </CardGroup>
+
+## Recover one owner's resumes without overwriting v5
+
+Use a recovery case when an owner changed resumes after an earlier migration. Keep the case record private and outside
+Git because it may connect account and resume identifiers. Record these fields before inspecting resume content:
+
+- Recovery case ID
+- Source snapshot capture time
+- Owner verification status
+- Source resume ID and mapped target resume ID, if one exists
+- Source and target content hashes
+- Proposed outcome: `no-op`, `export-copy`, or `blocked`
+
+An authorized operator should follow this order:
+
+<Steps>
+  <Step title="Verify source availability">
+    Confirm that a source snapshot exists and record when it was captured. If no source snapshot exists, report that
+    factual limit. Recovery tooling cannot reconstruct records that are absent from every available source.
+  </Step>
+
+  <Step title="Verify owner and mapping">
+    Verify the requester using the operator's approved account-ownership process. Confirm the old-to-new owner mapping;
+    a matching email address, resume title, or username alone is not ownership proof. Stop if either check is incomplete.
+  </Step>
+
+  <Step title="Compare without writing">
+    Validate already-exported source JSON and current resume data, then calculate content hashes. Identical content is a
+    `no-op`. Source-only or divergent content is an `export-copy`. Missing identity evidence, mapping, valid JSON, or a
+    source snapshot is `blocked`.
+  </Step>
+
+  <Step title="Deliver a separate private export">
+    Default to a private JSON export. Never overwrite the current v5 resume. After the recipient and delivery channel are
+    approved, deliver the recovered JSON privately so the owner can import it as a separate resume. Record source and
+    delivered hashes outside Git and confirm they match.
+  </Step>
+</Steps>
+
+Repository contributors can rehearse this decision with the pure comparator in
+`tooling/recovery/compare-resume.ts`. It accepts exported JSON or current resume-shaped data, produces a deterministic
+dry-run manifest, and has no database, network, or write path. Use synthetic IDs and content only; keep any operational
+manifest outside the repository.
 
 ## Manual migration (small instances)
 
@@ -213,8 +262,9 @@ Both migration scripts support graceful shutdown and resume:
 - **Resume migration**: Run the script again to continue from where you left off
 
 <Tip>
-  If you need to restart the migration from scratch, delete the progress files and the user ID mapping file before
-  running the scripts again.
+  Preserve progress files and the user ID mapping as recovery evidence. Do not delete them or replay the historical
+  scripts against a populated target as a recovery shortcut. Review the `v5.0.20` scripts, source backup, mapping, and
+  target state before any rerun.
 </Tip>
 
 ## Post-migration steps
@@ -290,8 +340,9 @@ After completing the migration:
 </Accordion>
 
 <Accordion title="Resume data parsing fails">
-  If a resume can't be parsed from v4 format, it will be created with default empty data. Check the console output for
-  warnings about specific resumes, and consider manually importing those using the Import Dialog.
+  Historical scripts can create default empty data when a v4 resume cannot be parsed. Treat that result as a failed
+  conversion, not a recovered resume. Preserve the source export, review the `v5.0.20` converter, and use the Import
+  Dialog only after valid source data is confirmed.
 </Accordion>
 
   <Accordion title="Migration is slow">
