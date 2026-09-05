@@ -82,10 +82,11 @@ An authorized operator should follow this order:
   </Step>
 
   <Step title="Compare without writing">
-    Validate source JSON text only after it already conforms exactly to the current v5 resume-data schema, then compare it
-    with current v5 resume data and calculate content hashes. Raw v4 exports are unsupported, and the comparator performs
-    no format conversion. Identical content is a `no-op`. Source-only or divergent content is an `export-copy`. Missing
-    identity evidence, mapping, valid current-v5 data, or a source snapshot is `blocked`.
+    Build one serialized JSON comparison request containing the case IDs, safety flags, and source and target values. The
+    comparator accepts only this request string, not an object argument. Source and target data must already conform
+    exactly to the current v5 resume-data schema before content hashes are calculated. Raw v4 exports are unsupported,
+    and the comparator performs no format conversion. Identical content is a `no-op`. Source-only or divergent content
+    is an `export-copy`. Missing identity evidence, mapping, valid current-v5 data, or a source snapshot is `blocked`.
   </Step>
 
   <Step title="Deliver a separate private export">
@@ -96,11 +97,11 @@ An authorized operator should follow this order:
 </Steps>
 
 Repository contributors can rehearse this decision with the pure comparator in
-`tooling/recovery/compare-resume.ts`. It accepts JSON text or objects only when they already conform exactly to the
-current v5 resume-data schema. It does not accept raw v4 exports or perform legacy conversion; review the historical
-converter at tag `v5.0.20` separately before processing legacy-format data. The comparator produces a deterministic
-dry-run manifest and has no database, network, or write path. Use synthetic IDs and content only; keep any operational
-manifest outside the repository.
+`tooling/recovery/compare-resume.ts`. It accepts one serialized JSON comparison request and rejects object arguments.
+The request's source and target values must already conform exactly to the current v5 resume-data schema. It does not
+accept raw v4 exports or perform legacy conversion; review the historical converter at tag `v5.0.20` separately before
+processing legacy-format data. The comparator produces a deterministic dry-run manifest and has no database, network,
+or write path. Use synthetic IDs and content only; keep any operational manifest outside the repository.
 
 ## Manual migration (small instances)
 
