@@ -67,7 +67,7 @@ describe("builder field labels", () => {
 		await user.click(screen.getByText("Website", { selector: "label" }));
 		expect(input).toHaveFocus();
 
-		fireEvent.change(input, { target: { value: "example.com/profile" } });
+		await user.type(input, "example.com/profile");
 		await waitFor(() => expect(state.data.basics.website.url).toBe("https://example.com/profile"));
 	});
 
