@@ -1166,7 +1166,7 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 							</View>
 						</SectionItemHeader>
 
-						<View>
+						<View style={{ flexGrow: skills.columns > 1 ? 1 : 0 }}>
 							{hasSplitRowText(item.proficiency) && <Text semanticField="proficiency">{item.proficiency}</Text>}
 							<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
 						</View>
