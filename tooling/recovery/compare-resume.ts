@@ -2,8 +2,8 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { createHash } from "node:crypto";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 
-export type RecoveryOutcome = "no-op" | "export-copy" | "blocked";
-export type RecoveryBlockReason =
+type RecoveryOutcome = "no-op" | "export-copy" | "blocked";
+type RecoveryBlockReason =
 	| "invalid-input"
 	| "source-unavailable"
 	| "owner-unverified"
