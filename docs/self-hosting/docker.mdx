@@ -411,7 +411,8 @@ openssl rand -hex 32
 
 ## Updating your installation
 
-To update an installation created from the image-based quickstart above to the latest version:
+To update an installation created from the image-based quickstart above to the latest version, follow only the numbered
+steps below. If you use the repository's full `compose.yml`, use the separate source-build path after these steps.
 
 1. **Back up your database and uploads first.** Do this before every update.
 
@@ -430,11 +431,6 @@ To update an installation created from the image-based quickstart above to the l
    docker compose up -d --no-deps reactive-resume
    ```
 
-   These commands target the `reactive-resume` image service from the quickstart. The repository's full `compose.yml`
-   instead names its build-only app service `reactive_resume`; after confirming its dependencies are healthy, rebuild
-   only that service with `docker compose up -d --build --no-deps reactive_resume`. Do not run `docker compose pull`
-   for that build-only service.
-
 4. **Check migration/startup logs** after deploy.
 
    ```bash
@@ -445,6 +441,18 @@ To update an installation created from the image-based quickstart above to the l
    ```bash
    docker image prune -f
    ```
+
+### Update from the repository Compose file
+
+The repository's full `compose.yml` names its build-only app service `reactive_resume`. After confirming its dependencies
+are healthy, rebuild that service and follow its migration/startup logs with:
+
+```bash
+docker compose up -d --build --no-deps reactive_resume
+docker compose logs -f reactive_resume
+```
+
+Do not run `docker compose pull` for this build-only service.
 
 This process updates the app container and automatically runs DB migrations on startup. If migration fails, restore from backup and fix configuration before retrying.
 
