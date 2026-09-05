@@ -80,6 +80,29 @@ describe("generateOpenApiSpec", () => {
 		});
 	}, 15_000);
 
+	it("documents the public health endpoint at its actual URL", async () => {
+		const spec = await generateSpec();
+		const health = spec.paths?.["/api/health"]?.get;
+
+		expect(health).toMatchObject({
+			operationId: "getHealth",
+			security: [],
+			servers: [{ url: "https://rxresu.me" }],
+		});
+		for (const status of ["200", "503"]) {
+			expect(health?.responses?.[status]).toMatchObject({
+				content: {
+					"application/json": {
+						schema: {
+							required: expect.arrayContaining(["service", "version", "status"]),
+							properties: { version: { type: "string" } },
+						},
+					},
+				},
+			});
+		}
+	});
+
 	it("uses the canonical input-side ResumeData schema in update requests", async () => {
 		const spec = (await generateSpec()) as GeneratedSpecView;
 		const { $schema: _dialect, ...canonicalInputSchema } = createResumeDataJsonSchema();

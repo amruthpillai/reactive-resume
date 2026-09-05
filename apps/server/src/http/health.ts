@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import { withTimeout } from "es-toolkit";
 import { getStorageService } from "@reactive-resume/api/features/storage";
 import { db } from "@reactive-resume/db/client";
+import { appVersion } from "../app-version";
 
 const HEALTHCHECK_TIMEOUT_MS = 1_500;
 
@@ -45,7 +46,7 @@ export async function handleHealth() {
 
 	const checks = {
 		service: "reactive-resume",
-		version: process.env.npm_package_version,
+		version: appVersion,
 		status,
 		timestamp: new Date().toISOString(),
 		uptime: `${process.uptime().toFixed(2)}s`,
