@@ -6,14 +6,14 @@ import { fileURLToPath } from "node:url";
 import { afterAll, beforeAll, expect, it } from "vitest";
 
 const root = fileURLToPath(new URL("../../", import.meta.url));
-const turbo = join(root, "node_modules", ".bin", process.platform === "win32" ? "turbo.cmd" : "turbo");
+const turbo = join(root, "node_modules", "turbo", "bin", "turbo");
 const tasks = ["build", "check", "typecheck", "test", "test:coverage", "test:ci", "test:agent"];
 type DryTask = { taskId: string; task: string; hash: string; command: string; dependencies: string[] };
 let directory: string;
 let baseline: Map<string, DryTask>;
 
 function dryRun() {
-	const output = execFileSync(turbo, ["run", ...tasks, "--dry=json"], {
+	const output = execFileSync(process.execPath, [turbo, "run", ...tasks, "--dry=json"], {
 		cwd: directory,
 		encoding: "utf8",
 		maxBuffer: 8 * 1024 * 1024,
