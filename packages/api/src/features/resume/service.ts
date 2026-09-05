@@ -177,6 +177,7 @@ async function applyResumePatchTx(
 			data: schema.resume.data,
 			isPublic: schema.resume.isPublic,
 			isLocked: schema.resume.isLocked,
+			showDownloadButtons: schema.resume.showDownloadButtons,
 			updatedAt: schema.resume.updatedAt,
 			hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 		});
@@ -352,6 +353,7 @@ function toSharedResumeResponse(
 		data: ResumeData;
 		isPublic: boolean;
 		isLocked: boolean;
+		showDownloadButtons: boolean;
 	},
 	hasPassword: boolean,
 ) {
@@ -363,6 +365,7 @@ function toSharedResumeResponse(
 		data: resume.data,
 		isPublic: resume.isPublic,
 		isLocked: resume.isLocked,
+		showDownloadButtons: resume.showDownloadButtons,
 		hasPassword,
 	};
 }
@@ -466,6 +469,7 @@ export const resumeService = {
 				tags: schema.resume.tags,
 				isPublic: schema.resume.isPublic,
 				isLocked: schema.resume.isLocked,
+				showDownloadButtons: schema.resume.showDownloadButtons,
 				createdAt: schema.resume.createdAt,
 				updatedAt: schema.resume.updatedAt,
 			})
@@ -496,6 +500,7 @@ export const resumeService = {
 				data: schema.resume.data,
 				isPublic: schema.resume.isPublic,
 				isLocked: schema.resume.isLocked,
+				showDownloadButtons: schema.resume.showDownloadButtons,
 				updatedAt: schema.resume.updatedAt,
 				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 			})
@@ -518,6 +523,7 @@ export const resumeService = {
 				data: schema.resume.data,
 				isPublic: schema.resume.isPublic,
 				isLocked: schema.resume.isLocked,
+				showDownloadButtons: schema.resume.showDownloadButtons,
 				passwordHash: schema.resume.password,
 				hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 			})
@@ -599,6 +605,7 @@ export const resumeService = {
 		tags?: string[];
 		data?: ResumeData;
 		isPublic?: boolean;
+		showDownloadButtons?: boolean;
 		skipAutoSnapshot?: boolean;
 	}) => {
 		const resume = await db
@@ -621,6 +628,7 @@ export const resumeService = {
 					...(input.tags !== undefined ? { tags: input.tags } : {}),
 					...(normalizedData ? { data: normalizedData } : {}),
 					...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
+					...(input.showDownloadButtons !== undefined ? { showDownloadButtons: input.showDownloadButtons } : {}),
 				};
 
 				const [updated] = await tx
@@ -641,6 +649,7 @@ export const resumeService = {
 						data: schema.resume.data,
 						isPublic: schema.resume.isPublic,
 						isLocked: schema.resume.isLocked,
+						showDownloadButtons: schema.resume.showDownloadButtons,
 						updatedAt: schema.resume.updatedAt,
 						hasPassword: sql<boolean>`${schema.resume.password} IS NOT NULL`,
 					});

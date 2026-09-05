@@ -154,6 +154,7 @@ export const crudRouter = {
 				...(input.tags !== undefined ? { tags: input.tags } : {}),
 				...(input.data !== undefined ? { data: input.data } : {}),
 				...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
+				...(input.showDownloadButtons !== undefined ? { showDownloadButtons: input.showDownloadButtons } : {}),
 			}),
 		),
 

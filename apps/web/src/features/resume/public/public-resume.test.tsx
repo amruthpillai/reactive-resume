@@ -2,7 +2,7 @@
 
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ReactNode } from "react";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
@@ -25,6 +25,7 @@ const publicResumeMock = vi.hoisted(() => ({
 				data: ResumeData;
 				name: string;
 				slug: string;
+				showDownloadButtons?: boolean;
 		  },
 }));
 
@@ -51,6 +52,7 @@ beforeEach(() => {
 	publicResumeMock.flags.disableSignups = false;
 	publicResumeMock.resume = { data: sampleResumeData, name: "Sample Resume", slug: "sample" };
 	publicResumeMock.PdfViewer.mockClear();
+	publicResumeMock.onDownloadPDF.mockClear();
 	publicResumeMock.useResumeExport.mockReset();
 	publicResumeMock.useResumeExport.mockReturnValue({
 		onDownloadPDF: publicResumeMock.onDownloadPDF,
@@ -81,6 +83,27 @@ describe("PublicResumeRoute", () => {
 
 		expect(screen.queryByRole("link", { name: /Build your own resume/ })).not.toBeInTheDocument();
 		expect(screen.getByTestId("pdf-viewer")).toBeInTheDocument();
+	});
+
+	it("shows both working download controls by default", () => {
+		renderPublicResumeRoute();
+		const buttons = screen.getAllByRole("button", { name: "Download PDF" });
+		expect(buttons).toHaveLength(2);
+		for (const button of buttons) fireEvent.click(button);
+		expect(publicResumeMock.onDownloadPDF).toHaveBeenCalledTimes(2);
+	});
+
+	it("hides both download controls while keeping the public PDF visible", () => {
+		publicResumeMock.resume = { data: sampleResumeData, name: "Sample", slug: "sample", showDownloadButtons: false };
+		renderPublicResumeRoute();
+		expect(screen.queryByRole("button", { name: "Download PDF" })).not.toBeInTheDocument();
+		expect(screen.getByTestId("pdf-viewer")).toBeVisible();
+	});
+
+	it("shows both controls when the owner enables downloads again", () => {
+		publicResumeMock.resume = { data: sampleResumeData, name: "Sample", slug: "sample", showDownloadButtons: true };
+		renderPublicResumeRoute();
+		expect(screen.getAllByRole("button", { name: "Download PDF" })).toHaveLength(2);
 	});
 
 	it("passes exposed source data directly to the browser viewer and export fallback", () => {

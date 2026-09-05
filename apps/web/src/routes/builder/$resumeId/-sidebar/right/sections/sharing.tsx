@@ -25,7 +25,7 @@ export function SharingSectionBuilder() {
 	const resume = useCurrentResume();
 	const patchResume = usePatchResume();
 
-	const { mutateAsync: updateResume } = useMutation(orpc.resume.update.mutationOptions());
+	const { mutateAsync: updateResume, isPending: isUpdating } = useMutation(orpc.resume.update.mutationOptions());
 	const { mutateAsync: setPassword } = useMutation(orpc.resume.setPassword.mutationOptions());
 	const { mutateAsync: removePassword } = useMutation(orpc.resume.removePassword.mutationOptions());
 
@@ -51,6 +51,21 @@ export function SharingSectionBuilder() {
 		[patchResume, resume.id, updateResume],
 	);
 
+	const onToggleDownloadButtons = useCallback(
+		async (checked: boolean) => {
+			try {
+				const updated = await updateResume({ id: resume.id, showDownloadButtons: checked });
+				patchResume((draft) => {
+					draft.showDownloadButtons = updated.showDownloadButtons;
+				});
+			} catch (error) {
+				const message = error instanceof ORPCError ? error.message : t`Something went wrong. Please try again.`;
+				toast.add({ type: "error", description: message });
+			}
+		},
+		[patchResume, resume.id, updateResume],
+	);
+
 	const onSetPassword = useCallback(
 		async (password: string) => {
 			await setPassword({ id: resume.id, password });
@@ -66,7 +81,7 @@ export function SharingSectionBuilder() {
 		if (!resume.hasPassword) return;
 
 		const confirmation = await confirm(t`Are you sure you want to remove password protection?`, {
-			description: t`Anyone with the public URL will be able to view and download your resume without a password.`,
+			description: t`Anyone with the public URL will be able to view your resume without a password.`,
 			confirmText: t`Confirm`,
 			cancelText: t`Cancel`,
 		});
@@ -106,13 +121,25 @@ export function SharingSectionBuilder() {
 					</span>
 
 					<span className="text-muted-foreground text-xs">
-						<Trans>Anyone with the link can view and download the resume.</Trans>
+						<Trans>Anyone with the link can view the resume.</Trans>
 					</span>
 				</Label>
 			</div>
 
 			{resume.isPublic && (
 				<div className="space-y-4 rounded-md border p-4">
+					<div className="flex items-center gap-x-4">
+						<Switch
+							id="sharing-downloads-switch"
+							checked={resume.showDownloadButtons !== false}
+							disabled={isUpdating || resume.isLocked}
+							onCheckedChange={(checked) => void onToggleDownloadButtons(checked)}
+						/>
+						<Label htmlFor="sharing-downloads-switch">
+							<Trans>Show Download Buttons</Trans>
+						</Label>
+					</div>
+
 					<div className="grid gap-2">
 						<Label htmlFor="sharing-url">
 							<Trans comment="Form field label for the generated public resume link in sharing settings">URL</Trans>

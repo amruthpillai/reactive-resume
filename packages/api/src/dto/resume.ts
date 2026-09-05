@@ -11,6 +11,7 @@ const resumeSchema = createSelectSchema(schema.resume, {
 	slug: z.string().trim().min(1).describe("The slug of the resume."),
 	tags: z.array(z.string()).describe("The tags of the resume."),
 	isPublic: z.boolean().describe("Whether the resume is public."),
+	showDownloadButtons: z.boolean().describe("Whether download buttons are shown on the public resume page."),
 	isLocked: z.boolean().describe("Whether the resume is locked."),
 	password: z.string().trim().min(6).max(64).nullable().describe("The password of the resume, if any."),
 	data: resumeDataSchema,
@@ -61,7 +62,7 @@ export const resumeDto = {
 
 	update: {
 		input: resumeSchema
-			.pick({ name: true, slug: true, tags: true, data: true, isPublic: true })
+			.pick({ name: true, slug: true, tags: true, data: true, isPublic: true, showDownloadButtons: true })
 			.partial()
 			.extend({ id: z.string(), data: writableResumeDataSchema.optional() }),
 		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),

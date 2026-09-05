@@ -22,6 +22,7 @@ export type Resume = {
 	updatedAt: Date;
 	hasPassword?: boolean;
 	isPublic?: boolean;
+	showDownloadButtons?: boolean;
 };
 
 // Mirrors the server-side ResumeUpdatedEvent discriminator (packages/api resume/events.ts).
@@ -411,6 +412,7 @@ export const useResumeStore = create<ResumeStore>()(
 				state.resume.updatedAt = resume.updatedAt;
 				state.resume.hasPassword = resume.hasPassword;
 				state.resume.isPublic = resume.isPublic;
+				state.resume.showDownloadButtons = resume.showDownloadButtons;
 			});
 		},
 

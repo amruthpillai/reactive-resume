@@ -26,6 +26,7 @@ export function PublicResumeRoute() {
 	if (!resume) return <LoadingScreen />;
 
 	const { basics, picture } = resume.data;
+	const showDownloadButtons = resume.showDownloadButtons !== false;
 
 	return (
 		<>
@@ -38,14 +39,16 @@ export function PublicResumeRoute() {
 						{basics.name && <h1 className="font-semibold text-2xl tracking-tight">{basics.name}</h1>}
 						{basics.headline && <p className="text-muted-foreground">{basics.headline}</p>}
 					</div>
-					<Button onClick={() => void onDownloadPDF()} disabled={isExporting}>
-						{isExporting ? (
-							<CircleNotchIcon className="size-4 animate-spin" />
-						) : (
-							<DownloadSimpleIcon className="size-4" />
-						)}
-						<Trans>Download PDF</Trans>
-					</Button>
+					{showDownloadButtons && (
+						<Button onClick={() => void onDownloadPDF()} disabled={isExporting}>
+							{isExporting ? (
+								<CircleNotchIcon className="size-4 animate-spin" />
+							) : (
+								<DownloadSimpleIcon className="size-4" />
+							)}
+							<Trans>Download PDF</Trans>
+						</Button>
+					)}
 				</header>
 
 				<main className="w-full max-w-5xl bg-white print:max-w-full">
@@ -65,17 +68,23 @@ export function PublicResumeRoute() {
 				)}
 			</div>
 
-			<Button
-				size="icon-lg"
-				variant="outline"
-				disabled={isExporting}
-				onClick={() => void onDownloadPDF()}
-				aria-label={t`Download PDF`}
-				title={t`Download PDF`}
-				className="fixed right-6 bottom-6 z-50 rounded-full bg-background/95 opacity-70 shadow-lg backdrop-blur transition-opacity hover:opacity-100 print:hidden"
-			>
-				{isExporting ? <CircleNotchIcon className="size-5 animate-spin" /> : <DownloadSimpleIcon className="size-5" />}
-			</Button>
+			{showDownloadButtons && (
+				<Button
+					size="icon-lg"
+					variant="outline"
+					disabled={isExporting}
+					onClick={() => void onDownloadPDF()}
+					aria-label={t`Download PDF`}
+					title={t`Download PDF`}
+					className="fixed right-6 bottom-6 z-50 rounded-full bg-background/95 opacity-70 shadow-lg backdrop-blur transition-opacity hover:opacity-100 print:hidden"
+				>
+					{isExporting ? (
+						<CircleNotchIcon className="size-5 animate-spin" />
+					) : (
+						<DownloadSimpleIcon className="size-5" />
+					)}
+				</Button>
+			)}
 		</>
 	);
 }

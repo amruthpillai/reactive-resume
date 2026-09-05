@@ -136,6 +136,17 @@ describe("builder resume autosave", () => {
 		useResumeStore.getState().reset();
 	});
 
+	it("refreshes sharing preferences without replacing local resume content", () => {
+		const initial = { ...makeResume("sharing"), showDownloadButtons: true };
+		useResumeStore.getState().initialize(initial);
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Unsaved edit";
+		});
+		useResumeStore.getState().mergeResumeMetadata({ ...initial, showDownloadButtons: false });
+		expect(useResumeStore.getState().resume?.showDownloadButtons).toBe(false);
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Unsaved edit");
+	});
+
 	it("coalesces rapid local edits into one full-data update", async () => {
 		const initial = makeResume("resume-rapid");
 		const updated = withBasicsName(initial, "Latest Name");

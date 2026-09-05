@@ -30,6 +30,7 @@ vi.mock("@reactive-resume/db/schema", () => ({
 		tags: "tags",
 		data: "data",
 		isPublic: "is_public",
+		showDownloadButtons: "show_download_buttons",
 		isLocked: "is_locked",
 		password: "password",
 		updatedAt: "updated_at",
@@ -461,6 +462,27 @@ describe("versions.restore", () => {
 });
 
 describe("update", () => {
+	it.each([false, true])(
+		"persists showDownloadButtons=%s without changing resume content",
+		async (showDownloadButtons) => {
+			const row = { ...createResumeRow(defaultResumeData), showDownloadButtons };
+			const select = createLockedSelectChain([{ data: defaultResumeData, isLocked: false }]);
+			const update = createUpdateChain([row]);
+			dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+				callback({ select: () => select.chain, update: () => update.chain }),
+			);
+
+			const result = await resumeService.update({ id: "r1", userId: "u1", showDownloadButtons });
+
+			expect(update.set).toHaveBeenCalledWith({ showDownloadButtons });
+			expect(update.returning).toHaveBeenCalledWith(
+				expect.objectContaining({ showDownloadButtons: "show_download_buttons" }),
+			);
+			expect(result.showDownloadButtons).toBe(showDownloadButtons);
+			expect(result.data).toEqual(defaultResumeData);
+		},
+	);
+
 	it("throws RESUME_LOCKED when the pre-read reports the resume is locked", async () => {
 		const select = createLockedSelectChain([{ data: defaultResumeData, isLocked: true, updatedAt: new Date() }]);
 		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
@@ -969,6 +991,43 @@ describe("statistics.increment", () => {
 
 		expect(dbMock.transaction).toHaveBeenCalledTimes(1);
 		expect(txInsert).toHaveBeenCalledTimes(2);
+	});
+});
+
+describe("sharing preferences", () => {
+	it("returns the saved preference when the owner reloads the builder", async () => {
+		const row = { ...createResumeRow(defaultResumeData), showDownloadButtons: false };
+		dbMock.select.mockReturnValue(createSelectChain([row]));
+		const result = await resumeService.getById({ id: "r1", userId: "u1" });
+		expect(dbMock.select).toHaveBeenCalledWith(
+			expect.objectContaining({ showDownloadButtons: "show_download_buttons" }),
+		);
+		expect(result.showDownloadButtons).toBe(false);
+	});
+
+	it.each([false, true])("returns saved showDownloadButtons=%s to public viewers", async (showDownloadButtons) => {
+		const row = {
+			...createResumeRow(defaultResumeData),
+			userId: "u1",
+			isPublic: true,
+			showDownloadButtons,
+			passwordHash: null,
+		};
+		dbMock.select.mockReturnValue({ from: () => ({ innerJoin: () => ({ where: () => Promise.resolve([row]) }) }) });
+		const increment = vi.spyOn(resumeService.statistics, "increment").mockResolvedValue();
+		try {
+			const result = await resumeService.getBySlug({
+				username: "owner",
+				slug: "resume",
+				requestHeaders: new Headers(),
+			});
+			expect(dbMock.select).toHaveBeenCalledWith(
+				expect.objectContaining({ showDownloadButtons: "show_download_buttons" }),
+			);
+			expect(result.showDownloadButtons).toBe(showDownloadButtons);
+		} finally {
+			increment.mockRestore();
+		}
 	});
 });
 

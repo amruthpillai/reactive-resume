@@ -16,6 +16,7 @@ export const resume = pg.pgTable(
 		slug: pg.text("slug").notNull(),
 		tags: pg.text("tags").array().notNull().default([]),
 		isPublic: pg.boolean("is_public").notNull().default(false),
+		showDownloadButtons: pg.boolean("show_download_buttons").notNull().default(true),
 		isLocked: pg.boolean("is_locked").notNull().default(false),
 		password: pg.text("password"),
 		data: pg

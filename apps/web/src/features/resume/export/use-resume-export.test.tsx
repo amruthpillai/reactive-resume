@@ -111,6 +111,14 @@ describe("useResumeExport public PDF", () => {
 		expect(result.current.isExporting).toBe(false);
 	});
 
+	it("keeps owner PDF exports available when public download buttons are hidden", async () => {
+		const resume = { name: "Owner", slug: "owner", data: sampleResumeData, showDownloadButtons: false };
+		const { result } = renderHook(() => useResumeExport(resume));
+		await act(() => result.current.onDownloadPDF());
+		expect(mocks.downloadWithAnchor).toHaveBeenCalledTimes(1);
+		expect(mocks.fetch).not.toHaveBeenCalled();
+	});
+
 	it("does not download a PDF when the renderer rejects", async () => {
 		mocks.createResumePdfBlob.mockRejectedValueOnce(new Error("PDF renderer failed"));
 		const { result } = renderHook(() => useResumeExport({ name: "Sample", slug: "sample", data: sampleResumeData }));

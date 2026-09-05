@@ -53,6 +53,7 @@ export const authService = {
 				tags: schema.resume.tags,
 				data: schema.resume.data,
 				isPublic: schema.resume.isPublic,
+				showDownloadButtons: schema.resume.showDownloadButtons,
 				isLocked: schema.resume.isLocked,
 				createdAt: schema.resume.createdAt,
 				updatedAt: schema.resume.updatedAt,

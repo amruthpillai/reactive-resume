@@ -10268,6 +10268,10 @@
 												"format": "date-time",
 												"x-native-type": "date",
 												"description": "The date and time the resume was last updated."
+											},
+											"showDownloadButtons": {
+												"type": "boolean",
+												"description": "Whether download buttons are shown on the public resume page."
 											}
 										},
 										"required": [
@@ -10278,7 +10282,8 @@
 											"isPublic",
 											"isLocked",
 											"createdAt",
-											"updatedAt"
+											"updatedAt",
+											"showDownloadButtons"
 										]
 									}
 								}
@@ -13891,6 +13896,10 @@
 										},
 										"hasPassword": {
 											"type": "boolean"
+										},
+										"showDownloadButtons": {
+											"type": "boolean",
+											"description": "Whether download buttons are shown on the public resume page."
 										}
 									},
 									"required": [
@@ -13902,7 +13911,8 @@
 										"isLocked",
 										"data",
 										"updatedAt",
-										"hasPassword"
+										"hasPassword",
+										"showDownloadButtons"
 									]
 								}
 							}
@@ -13957,6 +13967,10 @@
 									"isPublic": {
 										"type": "boolean",
 										"description": "Whether the resume is public."
+									},
+									"showDownloadButtons": {
+										"type": "boolean",
+										"description": "Whether download buttons are shown on the public resume page."
 									}
 								}
 							}
@@ -17428,6 +17442,10 @@
 										},
 										"hasPassword": {
 											"type": "boolean"
+										},
+										"showDownloadButtons": {
+											"type": "boolean",
+											"description": "Whether download buttons are shown on the public resume page."
 										}
 									},
 									"required": [
@@ -17439,7 +17457,8 @@
 										"isLocked",
 										"data",
 										"updatedAt",
-										"hasPassword"
+										"hasPassword",
+										"showDownloadButtons"
 									]
 								}
 							}
@@ -21121,6 +21140,10 @@
 										},
 										"hasPassword": {
 											"type": "boolean"
+										},
+										"showDownloadButtons": {
+											"type": "boolean",
+											"description": "Whether download buttons are shown on the public resume page."
 										}
 									},
 									"required": [
@@ -21132,7 +21155,8 @@
 										"isLocked",
 										"data",
 										"updatedAt",
-										"hasPassword"
+										"hasPassword",
+										"showDownloadButtons"
 									]
 								}
 							}
@@ -24779,6 +24803,10 @@
 										},
 										"name": {
 											"type": "string"
+										},
+										"showDownloadButtons": {
+											"type": "boolean",
+											"description": "Whether download buttons are shown on the public resume page."
 										}
 									},
 									"required": [
@@ -24788,7 +24816,8 @@
 										"isPublic",
 										"isLocked",
 										"data",
-										"name"
+										"name",
+										"showDownloadButtons"
 									]
 								}
 							}
@@ -28737,6 +28766,10 @@
 										},
 										"hasPassword": {
 											"type": "boolean"
+										},
+										"showDownloadButtons": {
+											"type": "boolean",
+											"description": "Whether download buttons are shown on the public resume page."
 										}
 									},
 									"required": [
@@ -28748,7 +28781,8 @@
 										"isLocked",
 										"data",
 										"updatedAt",
-										"hasPassword"
+										"hasPassword",
+										"showDownloadButtons"
 									]
 								}
 							}

@@ -60,6 +60,7 @@ function RouteComponent() {
 		resume.tags,
 		resume.isLocked,
 		resume.isPublic,
+		resume.showDownloadButtons,
 		resume.hasPassword,
 		resume.updatedAt,
 		resume,

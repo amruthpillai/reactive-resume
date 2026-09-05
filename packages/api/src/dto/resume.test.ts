@@ -4,6 +4,19 @@ import { redactResumeForViewer } from "../features/resume/access-policy";
 import { resumeDto } from "./resume";
 
 describe("resume DTO output validation", () => {
+	it.each([false, true])("accepts showDownloadButtons=%s in a partial update", (showDownloadButtons) => {
+		expect(resumeDto.update.input.parse({ id: "resume-id", showDownloadButtons })).toEqual({
+			id: "resume-id",
+			showDownloadButtons,
+		});
+	});
+
+	it("leaves the download preference absent from unrelated updates", () => {
+		expect(resumeDto.update.input.parse({ id: "resume-id", name: "Renamed" })).not.toHaveProperty(
+			"showDownloadButtons",
+		);
+	});
+
 	it("normalizes ordinary PUT data without losing compatible custom-section overlap", () => {
 		const parsed = resumeDto.update.input.parse({
 			id: "resume-id",
@@ -99,6 +112,7 @@ describe("resume DTO output validation", () => {
 			},
 			isPublic: true,
 			isLocked: false,
+			showDownloadButtons: true,
 			hasPassword: false,
 		};
 
@@ -134,6 +148,7 @@ describe("resume DTO output validation", () => {
 			).data,
 			isPublic: true,
 			isLocked: false,
+			showDownloadButtons: true,
 			hasPassword: false,
 		});
 
@@ -149,6 +164,7 @@ describe("resume DTO output validation", () => {
 			data: defaultResumeData,
 			isPublic: false,
 			isLocked: false,
+			showDownloadButtons: true,
 			updatedAt: new Date("2026-01-01T00:00:00Z"),
 			hasPassword: false,
 		};

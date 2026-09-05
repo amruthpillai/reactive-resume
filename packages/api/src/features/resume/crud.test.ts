@@ -103,3 +103,30 @@ describe("resume write route validation", () => {
 		expect(mocks.snapshot).not.toHaveBeenCalled();
 	});
 });
+
+describe("resume sharing update route", () => {
+	it.each([false, true])(
+		"passes showDownloadButtons=%s through the authenticated update procedure",
+		async (showDownloadButtons) => {
+			const row = {
+				id: "resume-id",
+				name: "Resume",
+				slug: "resume",
+				tags: [],
+				data: defaultResumeData,
+				isPublic: true,
+				isLocked: false,
+				hasPassword: false,
+				showDownloadButtons,
+				updatedAt: new Date(),
+			};
+			mocks.update.mockResolvedValue(row);
+			const client = createRouterClient(crudRouter, {
+				context: { locale: "en-US", reqHeaders: new Headers(), user: { id: "user-id" } } as never,
+			});
+			const result = await client.update({ id: "resume-id", showDownloadButtons });
+			expect(mocks.update).toHaveBeenCalledWith({ id: "resume-id", userId: "user-id", showDownloadButtons });
+			expect(result.showDownloadButtons).toBe(showDownloadButtons);
+		},
+	);
+});
