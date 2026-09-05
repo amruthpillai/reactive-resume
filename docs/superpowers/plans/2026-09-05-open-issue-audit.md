@@ -16,9 +16,9 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 ## Progress
 
 - 114 issues audited; verification continues for reports needing exact fixtures or deployment reproduction.
-- 25 fix PRs created: 24 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
+- 27 fix PRs created: 26 open; #3402 was merged by the repository owner and closed #3391. This includes the email typecheck fix #3416.
 - Eight other issues closed with evidence: [#2650](https://github.com/amruthpillai/reactive-resume/issues/2650), [#2739](https://github.com/amruthpillai/reactive-resume/issues/2739), [#2805](https://github.com/amruthpillai/reactive-resume/issues/2805), [#2878](https://github.com/amruthpillai/reactive-resume/issues/2878), [#3008](https://github.com/amruthpillai/reactive-resume/issues/3008), [#3051](https://github.com/amruthpillai/reactive-resume/issues/3051), [#3285](https://github.com/amruthpillai/reactive-resume/issues/3285), [#3341](https://github.com/amruthpillai/reactive-resume/issues/3341).
-- In progress: #2804 server PDF localization, #3291 CSS color swatches, and deeper S3/font reproduction.
+- In progress: OAuth #3421 explicit consent correction, #3291 CSS color swatches, #3249 font alignment, and #2684 S3 ACL compatibility reproduction. Turbo source dependency cache invalidation fixed in #3429.
 - Baseline server/API typecheck errors in `packages/email/src/transport.ts` are fixed separately by [#3416](https://github.com/amruthpillai/reactive-resume/pull/3416). All three affected package typechecks and existing email tests pass there.
 
 | Issue | Fix PR | Result |
@@ -40,7 +40,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3180](https://github.com/amruthpillai/reactive-resume/issues/3180) | [#3417](https://github.com/amruthpillai/reactive-resume/pull/3417) | Moving items validates destinations and prunes only emptied custom source sections and affected empty pages; exact round-trip JSON, undo, 605 web tests and typecheck verified. |
 | [#3360](https://github.com/amruthpillai/reactive-resume/issues/3360) | [#3419](https://github.com/amruthpillai/reactive-resume/pull/3419) | Approved per-resume download-button preference persists, backs up with account data, and hides both public buttons. Browser E2E and combined migration fresh/upgrade verification passed. |
 | [#3305](https://github.com/amruthpillai/reactive-resume/issues/3305) | [#3420](https://github.com/amruthpillai/reactive-resume/pull/3420) | JPEG/WebP encoding is preserved and oversized crops shrink proportionally until within 10MiB. Near-limit JPEG browser reproduction now uploads successfully; transparency is preserved for PNG/WebP. Validation errors explain the upload limit. |
-| [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392) | [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421) | MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; schema-isolation and missing callback-search regressions corrected. Browser CI and autofix now pass. |
+| [#3392](https://github.com/amruthpillai/reactive-resume/issues/3392) | [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421) | MCP registration/authorization and provider schema restored. PR marked draft while correcting verified GET consent bypass. Explicit consent screen and provider continuation pass real PostgreSQL approval/denial/CSRF/fresh-auth checks; browser verification and independent review underway. |
 | [#3337](https://github.com/amruthpillai/reactive-resume/issues/3337) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | PDF page padding repeats across overflow while preserving template backgrounds; 42 actual-PDF geometry/raster cases pass. |
 | [#3175](https://github.com/amruthpillai/reactive-resume/issues/3175) | [#3422](https://github.com/amruthpillai/reactive-resume/pull/3422) | Shared continuation-margin fix covers five affected templates, explicit headerless pages and full-width pages. |
 | [#3255](https://github.com/amruthpillai/reactive-resume/issues/3255) | [#3423](https://github.com/amruthpillai/reactive-resume/pull/3423) | Approved shared library with copied resume styling, explicit refresh, retained conflict drafts, JSON/PDF export and application snapshots. Three production browser scenarios, 325 API tests, 598 web tests and combined migrations verified; browser CI and autofix pass. Codacy applies a SQL Server-only rule to the PostgreSQL migration. |
@@ -48,6 +48,7 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247) | [#3425](https://github.com/amruthpillai/reactive-resume/pull/3425) | Adds compact thumbnails and per-account tab-session Grid/Compact/List preference. Five hook tests plus production browser navigation, reload, explicit URL override and mobile sizing pass. |
 | [#3393](https://github.com/amruthpillai/reactive-resume/issues/3393) | [#3426](https://github.com/amruthpillai/reactive-resume/pull/3426) | CSV exports current filters or all applications with date range, contacts, notes and chronological history. 611 web tests and production browser downloads, owner isolation and mobile header checks pass. |
 | [#3017](https://github.com/amruthpillai/reactive-resume/issues/3017) | [#3427](https://github.com/amruthpillai/reactive-resume/pull/3427) | Restores visible picture borders and original soft shadows. 700 PDF tests, real server PDF pixels, Chromium/Node image parity and production builds pass. Layout-dependent percentage picture dimensions remain a documented shadow limitation. |
+| [#2804](https://github.com/amruthpillai/reactive-resume/issues/2804) | [#3428](https://github.com/amruthpillai/reactive-resume/pull/3428) | Server PDFs lacked default section headings despite correct browser rendering. Generated locale subset restores saved resume language; 689 PDF tests, API tests and production normal/fallback browser paths pass. |
 
 ## Product decisions
 
@@ -70,11 +71,11 @@ Issues fixed only in unmerged PRs remain open. Already-fixed issues close only w
 | Classification | Count |
 | --- | ---: |
 | already_fixed | 7 |
-| confirmed_bug | 23 |
+| confirmed_bug | 24 |
 | duplicate | 1 |
 | existing_pr | 5 |
 | feature | 11 |
-| needs_reproduction | 44 |
+| needs_reproduction | 43 |
 | product_decision | 23 |
 
 Classification describes the reported problem against the audit baseline; implementation and closure state are tracked separately.
@@ -158,7 +159,7 @@ Classification describes the reported problem against the audit baseline; implem
 - Do not blindly accept generated drops, nullability, unique/index changes. Verify existing populated OAuth rows survive upgrade.
 - Integration: fresh and upgraded DB DCR -> consent -> code -> token -> MCP; anonymous and existing session; TOTP and backup code; reject external/protocol-relative/backslash callback URLs.
 
-**Implementation:** [PR #3421](https://github.com/amruthpillai/reactive-resume/pull/3421). MCP registration/authorization and provider schema restored. Real PostgreSQL PKCE/consent/reauth and combined migrations verified; schema-isolation and missing callback-search regressions corrected. Browser CI and autofix now pass.
+**Implementation:** [PR #3421](https://github.com/amruthpillai/reactive-resume/pull/3421). MCP registration/authorization and provider schema restored. PR marked draft while correcting verified GET consent bypass. Explicit consent screen and provider continuation pass real PostgreSQL approval/denial/CSRF/fresh-auth checks; browser verification and independent review underway.
 
 **Related PRs:** [#3421](https://github.com/amruthpillai/reactive-resume/pull/3421)
 
@@ -756,17 +757,22 @@ Classification describes the reported problem against the audit baseline; implem
 
 ### [#3249](https://github.com/amruthpillai/reactive-resume/issues/3249) — [Bug] multiple fonts are improperly aligned vertically
 
-**Assessment:** `needs_reproduction`. **Confidence:** medium. **State:** Open pending resolution/merge.
+**Assessment:** `confirmed_bug`. **Confidence:** high. **State:** Open pending resolution/merge.
 
 **Evidence:**
 
 - Font-specific reports reproduced by multiple commenters on 5.2.3; fonts include Roboto/Roboto Condensed/IBM Plex Sans Condensed and many templates.
 - Shared templates align icon/text center; use-register-fonts.ts registers font files; external textkit metric patch and source font metrics require inspection. No actual current font-matrix PDF comparison yet.
 - Exact attachment rendered: /tmp/fixture-3249.pdf and PNG; Roboto Condensed profile icon visibly sits below github label. Font baseline problem still reproduced visually; root cause not yet isolated.
+- Current main 00a1357de exact July14 Roboto Condensed fixture reproduces high baseline; July19 attachment ALSO Roboto Condensed and contains authored margin workaround rules. Controlled IBM Plex Sans Condensed variant reproduces same metric cause.
+- patches/@react-pdf__textkit.patch introduced unconditional OS/2 typo metrics in dd7623f11 (#3070). Roboto/Roboto Condensed fsSelection.useTypoMetrics=false hhea1900→typo1536/2048; IBM Plex Sans Condensed false1025→780/1000. Actual PDF baseline RED3 cases; corrected flag-aware selection restores 1.7773pt/2.45pt at10pt.
+- Draft worktree .worktrees/issue-3249-font-alignment retains explicit Noto Sans/Serif SC/TC/JP/KR and Source Han CJK metric exception plus intrinsic-height safeguard. Actual PDF15 tests pass including all8 configured Noto CJK fallback families at tight lineheight.
+- Exact fixture remains1page. IBM Sans, Roboto Flex, Geist, and Ropa Sans controlled fixtures have byte-identical raster PNGs before/after. Ropa Sans historical claim not explained by this cause (hhea equals typo); do not claim universal font alignment resolved. See /tmp/3249-font-metrics.json and /tmp/current-fixture-3249-1.png vs /tmp/fixed-fixture-3249-1.png.
 
 **Action plan:**
 
-- Use attached font-render-example.json plus #3341 JSON; compare glyph baseline/ink bounds to icon center using Roboto, IBM Plex Sans Condensed and Open Sans; fix metric/layout cause, not per-font magic margins.
+- Finish full PDF suite/typecheck/boundaries and independent review before publishing dedicated partial-scope metric fix PR.
+- Preserve separate Ropa Sans/optical alignment reports requiring reproduction; avoid broad line-leading adjustments.
 
 ### [#3247](https://github.com/amruthpillai/reactive-resume/issues/3247) — [Feature] More viewing options on the résumé page.
 
@@ -1421,6 +1427,10 @@ Classification describes the reported problem against the audit baseline; implem
 
 - Provide default PDF section-title localization from existing translation catalogs, preserving custom titles and caller translators. Verify anonymous browser, direct server and forced browser-to-server fallback exports.
 - Keep per-browser interface language separate from stored resume language; no account preference syncing change in this fix.
+
+**Implementation:** [PR #3428](https://github.com/amruthpillai/reactive-resume/pull/3428). Server PDFs lacked default section headings despite correct browser rendering. Generated locale subset restores saved resume language; 689 PDF tests, API tests and production normal/fallback browser paths pass.
+
+**Related PRs:** [#3428](https://github.com/amruthpillai/reactive-resume/pull/3428)
 
 ### [#2794](https://github.com/amruthpillai/reactive-resume/issues/2794) — [Bug] Off-center cropping/padding in resume square picture
 
