@@ -1,8 +1,20 @@
 diff --git a/lib/index.js b/lib/index.js
-index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..dbe7b6eaa6817e8cb0f526a68cdaa92b4ca78eb7 100644
+index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..d4471eda64ee99695bedf01f7a0098806d2fc961 100644
 --- a/lib/index.js
 +++ b/lib/index.js
-@@ -3196,7 +3196,34 @@ const splitChildren = (height, contentArea, node) => {
+@@ -3163,7 +3163,10 @@ const splitNodes = (height, contentArea, nodes) => {
+         if (shouldSplit) {
+             const [currentChild, nextChild] = split(child, height, contentArea);
+             // All children are moved to the next page, it doesn't make sense to show the parent on the current page
+-            if (child.children.length > 0 && currentChild.children.length === 0) {
++            // Tagged list companions can intentionally rewind all their children.
++            // Keep their empty fragment and already-consumed break state instead
++            // of restoring the unsplit row (which can exceed a whole page).
++            if (child.children.length > 0 && currentChild.children.length === 0 && !child.props['data-resume-list-item']) {
+                 // But if the current page is empty then we can just include the parent on the current page
+                 if (currentChildren.length === 0) {
+                     currentChildren.push(child, ...futureFixedNodes);
+@@ -3196,7 +3199,45 @@ const splitChildren = (height, contentArea, node) => {
  };
  const splitView = (node, height, contentArea) => {
      const [currentNode, nextNode] = splitNode(node, height);
@@ -19,16 +31,27 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..dbe7b6eaa6817e8cb0f526a68cdaa92b
 +        const markerIndex = node.children.findIndex((child) => child.props['data-resume-list-marker']);
 +        const contentIndex = node.children.findIndex((child) => child.props['data-resume-list-content']);
 +        const hasMarker = (children) => children.some((child) => child.props['data-resume-list-marker']);
++        const deferredMarker = nextChildren.find((child) => child.props['data-resume-list-marker']);
 +        if (markerIndex !== -1 && !hasMarker(currentChilds) && hasMarker(nextChildren) && hasText(content(currentChilds))) {
-+            // An authored presence hint can defer a marker that follows content
-+            // in RTL or semantic order. Defer the unsplit content with it.
++            // A presence hint or page break can defer a marker after content.
++            // Defer unsplit content while retaining the marker's consumed flags.
 +            currentChilds = currentChilds.filter((child) => !child.props['data-resume-list-content']);
-+            nextChildren = node.children.filter((child) => child.props['data-resume-list-content'] || child.props['data-resume-list-marker']);
++            nextChildren = node.children
++                .filter((child) => child.props['data-resume-list-content'] || child.props['data-resume-list-marker'])
++                .map((child) => child.props['data-resume-list-marker']
++                    ? { ...child, props: deferredMarker.props }
++                    : child);
 +        } else if (markerIndex !== -1 && !hasText(content(currentChilds)) && hasText(content(nextChildren))) {
 +            // The first text did not fit. Preserve the authored marker/content
 +            // order when moving the marker to the next fragment of this row.
 +            const marker = node.children[markerIndex];
-+            const nextMarker = { ...marker, box: { ...marker.box, top: 0 } };
++            // Preserve break: false after splitNodes has consumed an explicit
++            // page break; restoring the original props would replay it.
++            const nextMarker = {
++                ...marker,
++                props: deferredMarker?.props || marker.props,
++                box: { ...marker.box, top: 0 },
++            };
 +            currentChilds = currentChilds.filter((child) => !child.props['data-resume-list-marker']);
 +            nextChildren = nextChildren.filter((child) => !child.props['data-resume-list-marker']);
 +            if (markerIndex < contentIndex) nextChildren.unshift(nextMarker);

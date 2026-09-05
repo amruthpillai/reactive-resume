@@ -163,4 +163,43 @@ describe("list marker pagination (#3344)", () => {
 		expect(result.marker).toBe(0);
 		expect(result.first).toBe(0);
 	});
+	it.each([
+		[false, 0],
+		[false, 180],
+		[true, 0],
+		[true, 180],
+	] as const)(
+		"consumes reordered marker page breaks and continues long content (RTL %s, margin %i)",
+		async (rtl, margin) => {
+			const result = await listPages(
+				margin,
+				30,
+				"list-item-content { order: -1; } list-marker { break-before: page; }",
+				{ rtl },
+			);
+			expect(result.first).toBe(1);
+			expect(result.marker).toBe(result.first);
+			expect(result.last).toBeGreaterThan(result.first);
+			expect(result.pages.flat().join(" ").match(/•/g)).toHaveLength(1);
+			expect(
+				result.pages
+					.flat()
+					.join(" ")
+					.match(/\bSome\b/g),
+			).toHaveLength(30);
+		},
+	);
+	it.each([false, true])("consumes marker-first page breaks without overflowing (RTL %s)", async (rtl) => {
+		const result = await listPages(180, 30, "list-marker { order: -1; break-before: page; }", { rtl });
+		expect(result.first).toBe(1);
+		expect(result.marker).toBe(result.first);
+		expect(result.last).toBeGreaterThan(result.first);
+		expect(result.pages.flat().join(" ").match(/•/g)).toHaveLength(1);
+		expect(
+			result.pages
+				.flat()
+				.join(" ")
+				.match(/\bSome\b/g),
+		).toHaveLength(30);
+	});
 });
