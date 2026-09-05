@@ -213,6 +213,21 @@ list-item-content {
 }
 ```
 
+### Space level indicators
+
+Target `level` to adjust the space between a skill's circles, icons, or other level decorations:
+
+```css
+@version 1;
+
+section[type="skills"] level {
+	column-gap: 4pt;
+}
+```
+
+This sets a 4pt horizontal gap between decorations. `gap: 4pt` also works; `gap: 0` removes the gap.
+`row-gap` does not change horizontal spacing within the single level row.
+
 ### Style fields inside an item
 
 Named fields let you make a focused change without styling every item value. Use the selector only where that field

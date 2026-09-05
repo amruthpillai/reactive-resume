@@ -211,11 +211,13 @@ const expectedPropertyGroups = [
 			"flex-shrink",
 			"flex-basis",
 			"justify-content",
-			"gap",
-			"row-gap",
-			"column-gap",
 		],
 		appliesTo: linkContainerNodes,
+		inheritable: false,
+	},
+	{
+		names: ["gap", "row-gap", "column-gap"],
+		appliesTo: [...linkContainerNodes, "level"],
 		inheritable: false,
 	},
 	{
