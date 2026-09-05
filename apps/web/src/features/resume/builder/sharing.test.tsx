@@ -9,6 +9,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
 import { SharingSectionBuilder } from "@/routes/builder/$resumeId/-sidebar/right/sections/sharing";
 
+type SectionBaseProps = { children: React.ReactNode };
+
 const mocks = vi.hoisted(() => ({
 	setPassword: vi.fn(),
 	patchResume: vi.fn(),
@@ -32,7 +34,7 @@ vi.mock("@/libs/orpc/client", () => ({
 }));
 vi.mock("@/hooks/use-confirm", () => ({ useConfirm: () => vi.fn() }));
 vi.mock("@/routes/builder/$resumeId/-sidebar/right/shared/section-base", () => ({
-	SectionBase: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+	SectionBase: ({ children }: SectionBaseProps) => <div>{children}</div>,
 }));
 vi.mock("@reactive-resume/ui/components/toast", () => ({ toast: { add: vi.fn(), close: vi.fn() } }));
 

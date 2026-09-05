@@ -33,6 +33,8 @@ export function ResumePasswordDialog({ onSubmit, onClose }: ResumePasswordDialog
 			setError(t`Password must be between 6 and 64 characters.`);
 			return;
 		}
+		// Both values are entered in this browser form; no server-held secret is compared.
+		// nosemgrep
 		if (password !== confirmation) {
 			setError(t`Passwords do not match.`);
 			return;
@@ -107,6 +109,7 @@ export function ResumePasswordDialog({ onSubmit, onClose }: ResumePasswordDialog
 							type="password"
 							autoComplete="new-password"
 							required
+							minLength={6}
 							maxLength={64}
 							value={confirmation}
 							disabled={isPending}
