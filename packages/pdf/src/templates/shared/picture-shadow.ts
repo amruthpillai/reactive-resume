@@ -6,6 +6,7 @@ type PictureShadowStyle = Style & { shadowColor?: string; shadowWidth?: number }
 type ShadowImage = { src: string; extent: number };
 const cache = new Map<string, ShadowImage>();
 const maxRasterSize = 512;
+const maxBlurSigma = 16;
 
 function contains(x: number, y: number, width: number, height: number, radii: number[]) {
 	if (x < 0 || y < 0 || x >= width || y >= height) return false;
@@ -63,9 +64,14 @@ export function getPictureShadow(style: PictureShadowStyle): ShadowImage | undef
 	const cached = cache.get(key);
 	if (cached) return cached;
 	const extent = Math.ceil(blur * 1.5);
-	const scale = Math.min(2, maxRasterSize / Math.max(width + extent * 2, height + extent * 2));
-	const rasterWidth = Math.max(1, Math.ceil((width + extent * 2) * scale));
-	const rasterHeight = Math.max(1, Math.ceil((height + extent * 2) * scale));
+	const outerWidth = width + extent * 2;
+	const outerHeight = height + extent * 2;
+	if (!Number.isFinite(outerWidth) || !Number.isFinite(outerHeight)) return;
+	// Lower the raster scale with broad blur, preserving its point-space width
+	// while bounding the convolution kernel and synchronous render work.
+	const scale = Math.min(2, maxRasterSize / Math.max(outerWidth, outerHeight), (maxBlurSigma * 2) / blur);
+	const rasterWidth = Math.max(1, Math.ceil(outerWidth * scale));
+	const rasterHeight = Math.max(1, Math.ceil(outerHeight * scale));
 	const mask = new Float32Array(rasterWidth * rasterHeight);
 	for (let y = 0; y < rasterHeight; y++) {
 		for (let x = 0; x < rasterWidth; x++) {

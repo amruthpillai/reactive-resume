@@ -453,49 +453,49 @@ export const SemanticHeaderPicture = ({ style, ...props }: ComponentProps<typeof
 	if (!visible) return null;
 
 	const pictureStyle = mergeStyles(asStyleInput(style), resolved.style);
-	// React PDF draws images over their borders unless the bitmap is inset.
-	const borderPadding = {
-		paddingTop: pictureStyle.borderTopWidth ?? pictureStyle.borderWidth ?? 0,
-		paddingRight: pictureStyle.borderRightWidth ?? pictureStyle.borderWidth ?? 0,
-		paddingBottom: pictureStyle.borderBottomWidth ?? pictureStyle.borderWidth ?? 0,
-		paddingLeft: pictureStyle.borderLeftWidth ?? pictureStyle.borderWidth ?? 0,
-	};
 	const shadow = getPictureShadow(pictureStyle);
-	if (!shadow) return <Image {...props} style={composeStyles(borderPadding, asStyleInput(style), resolved.style)} />;
-	const frameStyle = { ...pictureStyle };
-	delete frameStyle.overflow;
+	const borderWidth = (value: Style["borderWidth"]) => (typeof value === "number" ? value : 0);
+	const borderInsets = {
+		top: borderWidth(pictureStyle.borderTopWidth ?? pictureStyle.borderWidth),
+		right: borderWidth(pictureStyle.borderRightWidth ?? pictureStyle.borderWidth),
+		bottom: borderWidth(pictureStyle.borderBottomWidth ?? pictureStyle.borderWidth),
+		left: borderWidth(pictureStyle.borderLeftWidth ?? pictureStyle.borderWidth),
+	};
+	const hasBorder = Object.values(borderInsets).some((width) => width > 0);
+	if (!shadow && !hasBorder) return <Image {...props} style={pictureStyle} />;
+	// The frame owns the border and authored padding. Yoga places the bitmap in
+	// its content box, including when padding or picture dimensions are percentages.
+	const { overflow: _overflow, ...frameStyle } = pictureStyle;
+
 	return (
-		<View
-			wrap={false}
-			style={composeStyles(frameStyle, {
-				borderWidth: 0,
-				borderTopWidth: 0,
-				borderRightWidth: 0,
-				borderBottomWidth: 0,
-				borderLeftWidth: 0,
-				padding: 0,
-				paddingTop: 0,
-				paddingRight: 0,
-				paddingBottom: 0,
-				paddingLeft: 0,
-				backgroundColor: "transparent",
-				opacity: 1,
-			})}
-		>
-			<Image
-				src={shadow.src}
-				style={{
-					position: "absolute",
-					left: -shadow.extent,
-					top: -shadow.extent,
-					right: -shadow.extent,
-					bottom: -shadow.extent,
-					opacity: pictureStyle.opacity ?? 1,
-				}}
-			/>
+		<View wrap={false} style={frameStyle}>
+			{shadow && (
+				<Image
+					src={shadow.src}
+					style={{
+						position: "absolute",
+						left: -shadow.extent - borderInsets.left,
+						top: -shadow.extent - borderInsets.top,
+						right: -shadow.extent - borderInsets.right,
+						bottom: -shadow.extent - borderInsets.bottom,
+						opacity: pictureStyle.opacity ?? 1,
+					}}
+				/>
+			)}
 			<Image
 				{...props}
-				style={composeStyles(borderPadding, pictureStyle, {
+				style={composeStyles(pictureStyle, {
+					padding: 0,
+					paddingTop: 0,
+					paddingRight: 0,
+					paddingBottom: 0,
+					paddingLeft: 0,
+					borderWidth: 0,
+					borderTopWidth: 0,
+					borderRightWidth: 0,
+					borderBottomWidth: 0,
+					borderLeftWidth: 0,
+					backgroundColor: "transparent",
 					position: "relative",
 					top: 0,
 					right: 0,
