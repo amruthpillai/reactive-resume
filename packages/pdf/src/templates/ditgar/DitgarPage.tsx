@@ -335,7 +335,8 @@ const useDitgarTemplate = (): DitgarTemplate => {
 								borderLeftColor: accentFor(context),
 								paddingLeft: metrics.gapX(0.5),
 								paddingVertical: metrics.gapY(0.125),
-								marginLeft: -metrics.gapX(0.625),
+								// Keep header text aligned with the body after its border and padding.
+								marginLeft: -(2 + metrics.gapX(0.5)),
 							}
 						: {}),
 				}),
