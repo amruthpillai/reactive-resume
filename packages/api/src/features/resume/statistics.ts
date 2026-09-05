@@ -1,8 +1,32 @@
 import z from "zod";
-import { protectedProcedure } from "../../context";
+import { protectedProcedure, publicProcedure } from "../../context";
+import { resumeDto } from "../../dto/resume";
+import { resumeDownloadRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
 
 export const resumeStatisticsRouter = {
+	recordDownload: publicProcedure
+		.route({
+			method: "POST",
+			path: "/resumes/{username}/{slug}/statistics/download",
+			tags: ["Resume Statistics"],
+			operationId: "recordResumeDownload",
+			summary: "Record a public resume PDF download",
+			description:
+				"Records a visitor's explicit PDF download after the browser starts saving the file. Requires access to the public resume, including its password when set. Owner downloads are excluded. Rate limited per resume and visitor.",
+			successDescription: "The download event was accepted.",
+		})
+		.input(resumeDto.getBySlug.input)
+		.use(resumeDownloadRateLimit)
+		.output(z.boolean())
+		.handler(({ context, input }) =>
+			resumeService.statistics.recordDownload({
+				...input,
+				requestHeaders: context.reqHeaders,
+				...(context.user?.id ? { currentUserId: context.user.id } : {}),
+			}),
+		),
+
 	getById: protectedProcedure
 		.route({
 			method: "GET",

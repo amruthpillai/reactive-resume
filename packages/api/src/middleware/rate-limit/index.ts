@@ -64,6 +64,7 @@ function getInputKeyPart(input: unknown): string {
 
 const resumePasswordLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.resumePassword);
 const pdfLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.pdfExport);
+const resumeDownloadLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.pdfExport);
 const aiLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.aiRequest);
 const storageUploadLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.storageUpload);
 const storageDeleteLimiter = new MemoryRatelimiter(rateLimitConfig.orpc.storageDelete);
@@ -89,6 +90,15 @@ export const resumePasswordRateLimit = createRatelimitMiddleware<
 export const pdfExportRateLimit = createRatelimitMiddleware<ContextWithHeaders, { id: string }>({
 	limiter: productionLimiter(pdfLimiter),
 	key: ({ context }, input) => `pdf-export:${getUserKey(context)}:${input.id}`,
+});
+
+export const resumeDownloadRateLimit = createRatelimitMiddleware<
+	ContextWithHeaders,
+	{ username: string; slug: string }
+>({
+	limiter: productionLimiter(resumeDownloadLimiter),
+	key: ({ context }, input) =>
+		`resume-download:${input.username}:${input.slug}:${getUserKey(context)}:${getClientKey(context.reqHeaders)}`,
 });
 
 export const aiRequestRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({

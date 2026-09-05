@@ -10,6 +10,7 @@ import { buildMarkdown } from "@reactive-resume/resume/markdown";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { resolvePublicResumePdfBlob } from "@/features/resume/public/public-pdf";
+import { client } from "@/libs/orpc/client";
 import { createSectionTitleResolverForLocale } from "@/libs/resume/section-title-locale";
 import { createResumePdfBlob } from "./pdf-document";
 
@@ -107,6 +108,12 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 								: undefined,
 						);
 				downloadWithAnchor(blob, generateFilename(getTargetExportName(resume, target), "pdf"));
+				if (exportOptions.publicResumePdf) {
+					// Statistics are best effort and must not delay or fail a completed browser download.
+					void client.resume.statistics
+						.recordDownload(exportOptions.publicResumePdf.publicResume)
+						.catch(() => undefined);
+				}
 			} catch {
 				toast.add({ type: "error", description: t`Could not generate the PDF. Please try again.` });
 			} finally {

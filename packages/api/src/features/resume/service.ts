@@ -210,6 +210,39 @@ const tags = {
 };
 
 const statistics = {
+	recordDownload: async (input: {
+		username: string;
+		slug: string;
+		requestHeaders: Headers;
+		currentUserId?: string;
+	}): Promise<boolean> => {
+		const [resume] = await db
+			.select({
+				id: schema.resume.id,
+				userId: schema.resume.userId,
+				isPublic: schema.resume.isPublic,
+				passwordHash: schema.resume.password,
+			})
+			.from(schema.resume)
+			.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
+			.where(and(eq(schema.resume.slug, input.slug), eq(schema.user.username, input.username)));
+
+		if (!resume) throw new ORPCError("NOT_FOUND");
+		const viewer = input.currentUserId ? { id: input.currentUserId } : null;
+		assertCanView(resume, viewer);
+		if (resume.passwordHash && !hasResumeAccess(input.requestHeaders, resume.id, resume.passwordHash)) {
+			throw new ORPCError("NEED_PASSWORD", {
+				status: 401,
+				data: { username: input.username, slug: input.slug },
+			});
+		}
+
+		if (shouldCountForStatistics(resume, viewer)) {
+			await statistics.increment({ id: resume.id, downloads: true });
+		}
+		return true;
+	},
+
 	getById: async (input: { id: string; userId: string }) => {
 		const [statistics] = await db
 			.select({
