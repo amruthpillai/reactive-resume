@@ -44,6 +44,7 @@ import { StylesheetToolbar } from "./toolbar";
 import { createCompileWorkerClient } from "./worker-client";
 
 const externalReplacement = Annotation.define<boolean>();
+const colorPickerEdit = Annotation.define<boolean>();
 const emptyMetadata: SemanticCssEditorMetadata = {
 	semanticTree: { key: "resume", kind: "resume", attributes: {}, roles: [], children: [] },
 	templateParts: [],
@@ -118,8 +119,6 @@ export function StylesheetCodeEditor({
 }: StylesheetCodeEditorProps) {
 	const hostRef = useRef<HTMLDivElement | null>(null);
 	const viewRef = useRef<EditorView | null>(null);
-	const colorTriggerRef = useRef<HTMLButtonElement | null>(null);
-	const openColorPickerRef = useRef(false);
 	const compartmentsRef = useRef<EditorCompartments | null>(null);
 	const initialPropsRef = useRef({ value, diagnostics, colorTokens, metadata, theme, readOnly, label });
 	const onChangeRef = useRef(onChange);
@@ -135,7 +134,6 @@ export function StylesheetCodeEditor({
 	const selectColor = useCallback((token: SemanticCssColorToken, rect: DOMRect) => {
 		const hostRect = hostRef.current?.getBoundingClientRect();
 		if (!hostRect) return;
-		openColorPickerRef.current = true;
 		setSelectedColor({ token, left: rect.left - hostRect.left, top: rect.top - hostRect.top });
 	}, []);
 
@@ -206,6 +204,15 @@ export function StylesheetCodeEditor({
 					(source) => onChangeRef.current(source),
 					(update) => update.transactions.some((transaction) => transaction.annotation(externalReplacement)),
 				),
+				EditorView.updateListener.of((update) => {
+					if (
+						update.transactions.some(
+							(transaction) => transaction.docChanged && !transaction.annotation(colorPickerEdit),
+						)
+					) {
+						setSelectedColor(null);
+					}
+				}),
 				compartments.theme.of(editorTheme(initial.theme === "dark")),
 				compartments.readOnly.of(readOnlyExtensions(initial.readOnly)),
 				compartments.intelligence.of(
@@ -268,19 +275,23 @@ export function StylesheetCodeEditor({
 		});
 	}, [value]);
 
-	useEffect(() => {
-		if (!selectedColor || !openColorPickerRef.current) return;
-		openColorPickerRef.current = false;
-		queueMicrotask(() => colorTriggerRef.current?.click());
-	}, [selectedColor]);
-
 	const updateColor = (value: string) => {
 		const view = viewRef.current;
 		if (!view || !selectedColor) return;
 		const { from, to } = selectedColor.token;
+		if (
+			view.state.readOnly ||
+			from < 0 ||
+			to > view.state.doc.length ||
+			from >= to ||
+			view.state.doc.sliceString(from, to) !== selectedColor.token.value
+		) {
+			setSelectedColor(null);
+			return;
+		}
 		view.dispatch({
 			changes: { from, to, insert: value },
-			annotations: Transaction.userEvent.of("input"),
+			annotations: [Transaction.userEvent.of("input"), colorPickerEdit.of(true)],
 		});
 		setSelectedColor((current) =>
 			current
@@ -297,13 +308,23 @@ export function StylesheetCodeEditor({
 			{selectedColor && (
 				<div className="pointer-events-none absolute z-20" style={{ left: selectedColor.left, top: selectedColor.top }}>
 					<ColorPicker
+						open
+						onOpenChange={(open, details) => {
+							const target = details.event.target;
+							if (
+								target instanceof Element &&
+								target.closest(".semantic-css-color-swatch") &&
+								hostRef.current?.contains(target)
+							)
+								return;
+							if (!open) setSelectedColor(null);
+						}}
 						value={selectedColor.token.value}
 						onChange={updateColor}
 						trigger={
 							<PopoverTrigger
 								render={
 									<button
-										ref={colorTriggerRef}
 										data-semantic-css-color-picker-trigger=""
 										type="button"
 										title={t`Edit color ${selectedColor.token.value}`}
