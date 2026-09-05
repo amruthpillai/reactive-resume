@@ -93,25 +93,26 @@ for (const { accept, login, metadataResource } of [
 		const tokenSet = await token.json();
 		const accessToken = tokenSet.access_token;
 		expect(accessToken).toBeTruthy();
+		const initializePayload = {
+			jsonrpc: "2.0",
+			id: "oauth-audience-check",
+			method: "initialize",
+			params: {
+				protocolVersion: "2025-11-25",
+				capabilities: {},
+				clientInfo: { name: "OAuth test", version: "1.0.0" },
+			},
+		};
 		const initialize = await page.request.post(`${origin}/mcp`, {
 			headers: { authorization: `Bearer ${accessToken}`, accept: "application/json, text/event-stream" },
-			data: {
-				jsonrpc: "2.0",
-				id: "oauth-audience-check",
-				method: "initialize",
-				params: {
-					protocolVersion: "2025-11-25",
-					capabilities: {},
-					clientInfo: { name: "OAuth test", version: "1.0.0" },
-				},
-			},
+			data: initializePayload,
 		});
 		expect(initialize.status(), await initialize.text()).toBe(200);
 		expect(await initialize.json()).toHaveProperty("result.serverInfo");
 		expect(tokenSet.id_token).toBeTruthy();
 		const wrongAudience = await page.request.post(`${origin}/mcp`, {
 			headers: { authorization: `Bearer ${tokenSet.id_token}`, accept: "application/json, text/event-stream" },
-			data: { jsonrpc: "2.0", id: "id-token-check", method: "initialize", params: {} },
+			data: initializePayload,
 		});
 		expect(wrongAudience.status()).toBe(401);
 	});
