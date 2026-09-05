@@ -66,6 +66,8 @@ const ditgarFeatures = {
 	stackSidebarItemHeader: true,
 } satisfies TemplateFeatures;
 
+const ditgarItemHeaderBorderWidth = 2;
+
 export const DitgarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
 	const pageNodeKey = semanticNodeKeys.page(pageNumber);
@@ -331,12 +333,12 @@ const useDitgarTemplate = (): DitgarTemplate => {
 					rowGap: 0,
 					...(context.placement === "main"
 						? {
-								borderLeftWidth: 2,
+								borderLeftWidth: ditgarItemHeaderBorderWidth,
 								borderLeftColor: accentFor(context),
 								paddingLeft: metrics.gapX(0.5),
 								paddingVertical: metrics.gapY(0.125),
 								// Keep header text aligned with the body after its border and padding.
-								marginLeft: -(2 + metrics.gapX(0.5)),
+								marginLeft: -(ditgarItemHeaderBorderWidth + metrics.gapX(0.5)),
 							}
 						: {}),
 				}),
