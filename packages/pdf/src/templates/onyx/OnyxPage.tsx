@@ -165,6 +165,7 @@ const useOnyxTemplate = (): OnyxTemplate => {
 				paddingBottom: metrics.page.paddingVertical,
 			},
 			headerTitle: {
+				flex: 1,
 				rowGap: metrics.gapY(0.5),
 			},
 			headerIdentity: {
