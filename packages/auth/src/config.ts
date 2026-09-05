@@ -302,7 +302,8 @@ const getAuthConfig = () => {
 			oauthProvider({
 				loginPage: "/api/auth/oauth",
 				consentPage: "/api/auth/oauth",
-				validAudiences: OAUTH_AUDIENCES,
+				resources: OAUTH_AUDIENCES,
+				clientRegistrationDefaultResources: OAUTH_AUDIENCES,
 				allowDynamicClientRegistration: true,
 				// Required for MCP client onboarding (RFC 7591). Phishing vector is closed by the
 				// redirect_uri policy in the hooks.before middleware above and server auth preflight.

@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
-import { Link } from "@tanstack/react-router";
+import { Link, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
@@ -13,6 +13,7 @@ import { toast } from "@reactive-resume/ui/components/toast";
 import { authClient } from "@/libs/auth/client";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SocialAuth } from "../components/social-auth";
+import { getOAuthSignInOptions, isOAuthRedirect } from "../redirect";
 
 const formSchema = z.object({
 	name: z.string().min(3).max(64),
@@ -34,6 +35,7 @@ type Props = {
 };
 
 export function RegisterPage({ disableEmailAuth }: Props) {
+	const { callbackURL, reauthenticate } = useSearch({ from: "/auth" });
 	const [submitted, setSubmitted] = useState(false);
 	const [showPassword, toggleShowPassword] = useToggle(false);
 
@@ -43,13 +45,16 @@ export function RegisterPage({ disableEmailAuth }: Props) {
 		onSubmit: async ({ value }) => {
 			const toastId = toast.add({ type: "loading", description: t`Signing up...` });
 
-			const { error } = await authClient.signUp.email({
+			const oauthOptions = getOAuthSignInOptions(callbackURL);
+			const createPrompt = new URLSearchParams(oauthOptions.oauth_query).get("prompt")?.split(" ").includes("create");
+			const { data, error } = await authClient.signUp.email({
 				name: value.name,
 				email: value.email,
 				password: value.password,
 				username: value.username,
 				displayUsername: value.username,
-				callbackURL: "/dashboard",
+				callbackURL: callbackURL ?? "/dashboard",
+				...(!createPrompt ? oauthOptions : {}),
 			});
 
 			if (error) {
@@ -66,6 +71,15 @@ export function RegisterPage({ disableEmailAuth }: Props) {
 				return;
 			}
 
+			if (isOAuthRedirect(data)) return;
+			if (createPrompt && oauthOptions.oauth_query) {
+				const continuation = await authClient.oauth2.continue({ created: true, oauth_query: oauthOptions.oauth_query });
+				if (continuation.error) {
+					toast.add({ type: "error", description: continuation.error.message, id: toastId });
+					return;
+				}
+				if (isOAuthRedirect(continuation.data)) return;
+			}
 			setSubmitted(true);
 			toast.close(toastId);
 		},
@@ -88,7 +102,7 @@ export function RegisterPage({ disableEmailAuth }: Props) {
 							nativeButton={false}
 							className="h-auto gap-1.5 px-1! py-0"
 							render={
-								<Link to="/auth/login">
+								<Link to="/auth/login" search={{ callbackURL, reauthenticate }}>
 									<Trans comment="Call-to-action link from registration page to login page">Sign in now</Trans>{" "}
 									<ArrowRightIcon />
 								</Link>
@@ -250,6 +264,7 @@ export function RegisterPage({ disableEmailAuth }: Props) {
 }
 
 function PostSignupScreen() {
+	const { callbackURL } = useSearch({ from: "/auth" });
 	return (
 		<>
 			<div className="space-y-1 text-center">
@@ -273,10 +288,10 @@ function PostSignupScreen() {
 			<Button
 				nativeButton={false}
 				render={
-					<Link to="/dashboard">
+					<a href={callbackURL ?? "/dashboard"}>
 						<Trans comment="Button label to continue to dashboard after successful registration">Continue</Trans>{" "}
 						<ArrowRightIcon />
-					</Link>
+					</a>
 				}
 			/>
 		</>

@@ -1,13 +1,14 @@
 import { pathToFileURL } from "node:url";
 import { serve } from "@hono/node-server";
 import { env } from "@reactive-resume/env/server";
-import { createApp } from "./http/app";
 import { runStartupChecks } from "./startup/checks";
 
-export { createApp } from "./http/app";
-
-async function main() {
+export async function main() {
 	await runStartupChecks();
+
+	// OAuth resource seeding starts when auth is imported, so load the app only
+	// after migrations have created the provider tables.
+	const { createApp } = await import("./http/app");
 
 	// Safety net: Node 24 crashes the whole process on an unhandled rejection. One request's
 	// stray promise must not take the server down for everyone, so log and keep serving.
