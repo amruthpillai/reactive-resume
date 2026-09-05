@@ -66,6 +66,9 @@ Git because it may connect account and resume identifiers. Record these fields b
 - Source and target content hashes
 - Proposed outcome: `no-op`, `export-copy`, or `blocked`
 
+Case IDs, source resume IDs, and non-null target resume IDs must contain a non-whitespace character after trimming and
+must not contain Unicode control characters. Valid identifiers are preserved verbatim.
+
 These hashes prove content equality only; they never prove ownership, source authenticity, or recipient identity.
 
 An authorized operator should follow this order:

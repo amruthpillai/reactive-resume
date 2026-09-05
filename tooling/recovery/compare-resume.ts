@@ -56,6 +56,145 @@ const INVALID_INPUT_MANIFEST = {
 	blockedReason: "invalid-input",
 } satisfies RecoveryManifest;
 
+const UNICODE_CONTROL_CHARACTER = /\p{Cc}/u;
+
+function hasDuplicateJsonMembers(input: string): boolean {
+	let position = 0;
+	const numberPattern = /-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y;
+
+	function fail(): never {
+		throw new SyntaxError("Invalid JSON");
+	}
+
+	function skipWhitespace(): void {
+		while (
+			input[position] === " " ||
+			input[position] === "\t" ||
+			input[position] === "\n" ||
+			input[position] === "\r"
+		) {
+			position += 1;
+		}
+	}
+
+	function scanString(): string {
+		const start = position;
+		if (input[position] !== '"') fail();
+		position += 1;
+
+		while (position < input.length) {
+			const character = input[position] ?? fail();
+			position += 1;
+			if (character === '"') return JSON.parse(input.slice(start, position));
+			if (character === "\\") {
+				if (position >= input.length) fail();
+				position += 1;
+			} else if (character.charCodeAt(0) <= 0x1f) {
+				fail();
+			}
+		}
+
+		return fail();
+	}
+
+	function scanObject(): boolean {
+		position += 1;
+		skipWhitespace();
+		if (input[position] === "}") {
+			position += 1;
+			return false;
+		}
+
+		const keys = new Set<string>();
+		while (position < input.length) {
+			const key = scanString();
+			if (keys.has(key)) return true;
+			keys.add(key);
+
+			skipWhitespace();
+			if (input[position] !== ":") fail();
+			position += 1;
+			if (scanValue()) return true;
+
+			skipWhitespace();
+			if (input[position] === "}") {
+				position += 1;
+				return false;
+			}
+			if (input[position] !== ",") fail();
+			position += 1;
+			skipWhitespace();
+		}
+
+		return fail();
+	}
+
+	function scanArray(): boolean {
+		position += 1;
+		skipWhitespace();
+		if (input[position] === "]") {
+			position += 1;
+			return false;
+		}
+
+		while (position < input.length) {
+			if (scanValue()) return true;
+			skipWhitespace();
+			if (input[position] === "]") {
+				position += 1;
+				return false;
+			}
+			if (input[position] !== ",") fail();
+			position += 1;
+			skipWhitespace();
+		}
+
+		return fail();
+	}
+
+	function scanValue(): boolean {
+		skipWhitespace();
+		const character = input[position];
+		if (character === "{") return scanObject();
+		if (character === "[") return scanArray();
+		if (character === '"') {
+			scanString();
+			return false;
+		}
+		for (const literal of ["true", "false", "null"]) {
+			if (input.startsWith(literal, position)) {
+				position += literal.length;
+				return false;
+			}
+		}
+
+		numberPattern.lastIndex = position;
+		const number = numberPattern.exec(input);
+		if (!number) fail();
+		position = numberPattern.lastIndex;
+		return false;
+	}
+
+	const hasDuplicate = scanValue();
+	if (hasDuplicate) return true;
+	skipWhitespace();
+	if (position !== input.length) fail();
+	return false;
+}
+
+function isManifestId(value: unknown): value is string {
+	return typeof value === "string" && value.trim().length > 0 && !UNICODE_CONTROL_CHARACTER.test(value);
+}
+
+function hasDuplicateSerializedResumeMembers(value: unknown): boolean {
+	if (typeof value !== "string") return false;
+	try {
+		return hasDuplicateJsonMembers(value);
+	} catch {
+		return false;
+	}
+}
+
 function isJsonValue(value: unknown): boolean {
 	if (value === null || typeof value === "string" || typeof value === "boolean") return true;
 	if (typeof value === "number") return Number.isFinite(value);
@@ -66,6 +205,7 @@ function isJsonValue(value: unknown): boolean {
 
 function parseRequest(input: string): RecoveryComparisonRequest | null {
 	try {
+		if (hasDuplicateJsonMembers(input)) return null;
 		const value: unknown = JSON.parse(input);
 		if (value === null || Array.isArray(value) || typeof value !== "object" || !isJsonValue(value)) return null;
 
@@ -73,14 +213,12 @@ function parseRequest(input: string): RecoveryComparisonRequest | null {
 		if (keys.length !== REQUEST_KEYS.length || !keys.every((key, index) => key === REQUEST_KEYS[index])) return null;
 
 		const request = value as Record<(typeof REQUEST_KEYS)[number], unknown>;
-		if (typeof request.caseId !== "string" || request.caseId.length === 0) return null;
-		if (typeof request.sourceResumeId !== "string" || request.sourceResumeId.length === 0) return null;
-		if (
-			request.targetResumeId !== null &&
-			(typeof request.targetResumeId !== "string" || request.targetResumeId.length === 0)
-		) {
+		if (hasDuplicateSerializedResumeMembers(request.source) || hasDuplicateSerializedResumeMembers(request.target)) {
 			return null;
 		}
+		if (!isManifestId(request.caseId)) return null;
+		if (!isManifestId(request.sourceResumeId)) return null;
+		if (request.targetResumeId !== null && !isManifestId(request.targetResumeId)) return null;
 		if (
 			typeof request.ownerVerified !== "boolean" ||
 			typeof request.ownerMappingPresent !== "boolean" ||

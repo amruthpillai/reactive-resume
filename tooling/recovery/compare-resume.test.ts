@@ -57,6 +57,11 @@ function validRequest(overrides: Partial<RecoveryRequest> = {}): string {
 	return JSON.stringify(validRequestObject(overrides));
 }
 
+function validRequestWithRawValue(field: "source" | "target", rawValue: string): string {
+	const marker = `raw-${field}-value`;
+	return validRequest({ [field]: marker }).replace(JSON.stringify(marker), rawValue);
+}
+
 describe("compareResumeRecovery", () => {
 	it("returns no-op with hand-checked hashes when serialized source and target are identical", () => {
 		expect(compareResumeRecovery(validRequest())).toEqual({
@@ -135,6 +140,64 @@ describe("compareResumeRecovery", () => {
 		["targetResumeId", ""],
 	] as const)("rejects invalid %s value %s", (field, value) => {
 		expect(compareResumeRecovery(validRequest({ [field]: value }))).toEqual(INVALID_INPUT_MANIFEST);
+	});
+
+	describe.each(["caseId", "sourceResumeId", "targetResumeId"] as const)("safe %s validation", (field) => {
+		it.each([
+			["spaces", "   "],
+			["tab", "\t"],
+			["newline", "\n"],
+			["NUL", "\u0000"],
+			["embedded control character", "valid\u001fid"],
+		] as const)("rejects %s", (_description, value) => {
+			expect(compareResumeRecovery(validRequest({ [field]: value }))).toEqual(INVALID_INPUT_MANIFEST);
+		});
+	});
+
+	it("preserves valid manifest identifiers", () => {
+		expect(
+			compareResumeRecovery(
+				validRequest({
+					caseId: " case-synthetic-001 ",
+					sourceResumeId: "résumé/source 001",
+					targetResumeId: "target 001",
+				}),
+			),
+		).toMatchObject({
+			caseId: " case-synthetic-001 ",
+			sourceResumeId: "résumé/source 001",
+			targetResumeId: "target 001",
+			outcome: "no-op",
+			blockedReason: null,
+		});
+	});
+
+	it.each([
+		['"ownerVerified":false,"ownerVerified":true', "false before true"],
+		['"ownerVerified":true,"ownerVerified":false', "true before false"],
+		['"ownerVerified":false,"\\u006fwnerVerified":true', "escaped duplicate name"],
+	] as const)("rejects duplicate top-level safety members with %s (%s)", (duplicateMembers, _order) => {
+		const request = validRequest().replace('"ownerVerified":true', duplicateMembers);
+		expect(compareResumeRecovery(request)).toEqual(INVALID_INPUT_MANIFEST);
+	});
+
+	it.each(["source", "target"] as const)("rejects duplicate members within nested %s data", (field) => {
+		const resume = JSON.stringify(resumeWithName("Synthetic source")).replace(
+			'"name":"Synthetic source"',
+			'"name":"first value","name":"second value"',
+		);
+		const request = validRequestWithRawValue(field, resume);
+
+		expect(compareResumeRecovery(request)).toEqual(INVALID_INPUT_MANIFEST);
+	});
+
+	it.each(["source", "target"] as const)("rejects duplicate members within serialized nested %s data", (field) => {
+		const resume = JSON.stringify(resumeWithName("Synthetic source")).replace(
+			'"name":"Synthetic source"',
+			'"name":"first value","name":"second value"',
+		);
+
+		expect(compareResumeRecovery(validRequest({ [field]: resume }))).toEqual(INVALID_INPUT_MANIFEST);
 	});
 
 	it("rejects unknown envelope keys", () => {
