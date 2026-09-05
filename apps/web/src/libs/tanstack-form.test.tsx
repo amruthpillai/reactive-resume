@@ -1,31 +1,11 @@
 // @vitest-environment happy-dom
 
-import type { Website } from "@reactive-resume/schema/resume/data";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { useAppForm } from "./tanstack-form";
-
-vi.mock("@/components/input/url-input", () => ({
-	URLInput: ({
-		value,
-		onChange,
-		hideLabelButton,
-	}: {
-		value: Website;
-		onChange: (value: Website) => void;
-		hideLabelButton?: boolean;
-	}) => (
-		<input
-			aria-label="Website value"
-			data-hide-label-button={hideLabelButton}
-			value={value.url}
-			onChange={(event) => onChange({ ...value, url: event.target.value })}
-		/>
-	),
-}));
 
 vi.mock("@/components/input/rich-input", () => ({
 	RichInput: ({ value, onChange }: { value: string; onChange: (value: string) => void }) => (
@@ -73,9 +53,14 @@ describe("registered resume fields", () => {
 		expect(screen.getByText("Description")).toBeInTheDocument();
 		expect(container.querySelector(".website-field")).toBeInTheDocument();
 		expect(container.querySelector(".description-field")).toBeInTheDocument();
-		expect(screen.getByLabelText("Website value")).toHaveAttribute("data-hide-label-button", "true");
+		const website = screen.getByRole("textbox", { name: "Website" });
+		expect(website).toHaveValue("example.com");
+		expect(screen.getByLabelText("Website")).toBe(website);
+		expect(container.querySelector(".website-field button")).not.toBeInTheDocument();
+		await user.click(screen.getByText("Website", { selector: "label" }));
+		expect(website).toHaveFocus();
 
-		await user.clear(screen.getByLabelText("Website value"));
+		await user.clear(website);
 		await user.clear(screen.getByLabelText("Description value"));
 
 		expect(screen.getByText("Website is required")).toBeInTheDocument();

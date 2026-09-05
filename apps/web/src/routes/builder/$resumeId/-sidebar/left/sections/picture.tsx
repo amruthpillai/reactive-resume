@@ -158,20 +158,24 @@ function PictureGeometryFields({ form, onAutoSave }: PictureGeometryFieldsProps)
 							<Trans>Size</Trans>
 						</FormLabel>
 						<InputGroup>
-							<InputGroupInput
-								name={field.name}
-								value={field.state.value}
-								type="number"
-								min={32}
-								max={512}
-								step={1}
-								onBlur={field.handleBlur}
-								onChange={(e) => {
-									const value = e.target.value;
-									if (value === "") field.handleChange("" as unknown as number);
-									else field.handleChange(Number(value));
-									onAutoSave();
-								}}
+							<FormControl
+								render={
+									<InputGroupInput
+										name={field.name}
+										value={field.state.value}
+										type="number"
+										min={32}
+										max={512}
+										step={1}
+										onBlur={field.handleBlur}
+										onChange={(e) => {
+											const value = e.target.value;
+											if (value === "") field.handleChange("" as unknown as number);
+											else field.handleChange(Number(value));
+											onAutoSave();
+										}}
+									/>
+								}
 							/>
 
 							<InputGroupAddon align="inline-end">

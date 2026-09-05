@@ -124,10 +124,14 @@ function WebsiteField({ label, formItemClassName, hideLabelButton }: WebsiteFiel
 	return (
 		<FormItem hasError={hasError} className={formItemClassName}>
 			<FormLabel>{label}</FormLabel>
-			<URLInput
-				value={field.state.value}
-				onChange={(value) => field.handleChange(value)}
-				hideLabelButton={hideLabelButton}
+			<FormControl
+				render={
+					<URLInput
+						value={field.state.value}
+						onChange={(value) => field.handleChange(value)}
+						hideLabelButton={hideLabelButton}
+					/>
+				}
 			/>
 			<FormMessage errors={field.state.meta.errors} />
 		</FormItem>
