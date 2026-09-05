@@ -84,6 +84,7 @@ const emptySection = <T extends SectionType>(type: T): ResumeData["sections"][T]
 		keepTogether: false,
 		startOnNewPage: false,
 		items: [],
+		...(type === "skills" ? { layout: "default" as const } : {}),
 	}) as ResumeData["sections"][T];
 
 describe("renderBuiltInSection", () => {
