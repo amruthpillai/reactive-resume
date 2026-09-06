@@ -208,6 +208,19 @@ describe("Semantic CSS editor extensions", () => {
 		expect(selected).toHaveBeenCalledWith(tokens[0], expect.any(DOMRect));
 	});
 
+	it("keeps unsupported-gradient diagnostics visible in the editor", () => {
+		const source = "@version 1;\nheader { background-image: linear-gradient(red, blue); }\n";
+		const compiled = compileStylesheet({ languageVersion: 1, text: source });
+
+		expect(mapCompilerDiagnostics(source.length, compiled.diagnostics)).toContainEqual(
+			expect.objectContaining({
+				severity: "error",
+				message: "Gradients are not supported by Semantic CSS. Use background-color or another supported property.",
+				source: "UNSUPPORTED_PROPERTY",
+			}),
+		);
+	});
+
 	it("preserves exact clipboard text and emits one change for an IME composition", async () => {
 		const writeText = vi.fn().mockResolvedValue(undefined);
 		Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText } });

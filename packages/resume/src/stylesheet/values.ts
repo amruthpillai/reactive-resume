@@ -149,6 +149,15 @@ function diagnostic(
 	diagnostics.push(createDiagnostic(code, severity, message, range(node?.loc)));
 }
 
+const gradientFunctionPattern = /\b(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i;
+
+function unsupportedPropertyMessage(property: string, value: string): string {
+	if (gradientFunctionPattern.test(value)) {
+		return "Gradients are not supported by Semantic CSS. Use background-color or another supported property.";
+	}
+	return `The ${property} property is not supported by Semantic CSS.`;
+}
+
 function splitValue(value: string): string[] {
 	const parts: string[] = [];
 	let start = 0;
@@ -560,6 +569,8 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 			const decodedProperty = identifier(declaration.property);
 			const property = decodedProperty.startsWith("--") ? decodedProperty : decodedProperty.toLowerCase();
 			const lowerProperty = property.toLowerCase();
+			const value =
+				typeof declaration.value === "string" ? declaration.value : csstree.generate(declaration.value as CssNode);
 			if (lowerProperty.startsWith("--resume-")) {
 				diagnostic(
 					diagnostics,
@@ -573,7 +584,7 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				diagnostic(
 					diagnostics,
 					property === "src" ? "FORBIDDEN_CSS_VALUE" : "UNSUPPORTED_PROPERTY",
-					`The ${property} property is not supported by Semantic CSS.`,
+					unsupportedPropertyMessage(property, value),
 					declaration,
 				);
 				continue;
@@ -583,8 +594,6 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				continue;
 			}
 
-			const value =
-				typeof declaration.value === "string" ? declaration.value : csstree.generate(declaration.value as CssNode);
 			const trimmedValue = value.trim();
 			const expanded = /var\s*\(/i.test(decodeCssEscapes(trimmedValue))
 				? ([[property, trimmedValue]] as const)

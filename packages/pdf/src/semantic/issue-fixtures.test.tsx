@@ -36,11 +36,24 @@ const findPrimitive = (node: HostNode, type: string, text: string): HostNode | u
 	}
 };
 
+const findPath = (node: HostNode, predicate: (candidate: HostNode) => boolean): HostNode[] | undefined => {
+	if (predicate(node)) return [node];
+	for (const child of node.children ?? []) {
+		const path = findPath(child, predicate);
+		if (path) return [node, ...path];
+	}
+};
+
 const mergedStyle = (node: HostNode | undefined): Record<string, unknown> =>
 	Object.assign({}, ...(Array.isArray(node?.style) ? node.style : node?.style ? [node.style] : []));
 
 const containsStyle = (node: HostNode, property: string, value: unknown): boolean =>
 	mergedStyle(node)[property] === value || (node.children ?? []).some((child) => containsStyle(child, property, value));
+
+const nodesWithStyle = (node: HostNode, property: string, value: unknown): HostNode[] => [
+	...(mergedStyle(node)[property] === value ? [node] : []),
+	...(node.children ?? []).flatMap((child) => nodesWithStyle(child, property, value)),
+];
 
 const textRuns = (node: HostNode): string[] => [
 	...(node.type === "TEXT" ? [nodeText(node)] : []),
@@ -53,7 +66,11 @@ const buildIssueFixture = (): ResumeData => {
 	data.basics = {
 		...data.basics,
 		name: "Ada Lovelace",
+		headline: "Computing pioneer",
 		email: "ada@example.com",
+		phone: "+44 123",
+		location: "London",
+		customFields: [{ id: "custom-1", icon: "globe", text: "Ada Labs", link: "" }],
 	};
 	data.sections.experience.items = [
 		{
@@ -200,8 +217,12 @@ describe("semantic issue fixtures", () => {
 		const data = buildIssueFixture();
 		const stylesheet = source(`
 			@version 1;
-			header { background-color: #1e293b; }
+			header { background-color: #1e293b; padding: 10pt; }
 			name { color: white; }
+			headline { font-size: 14pt; }
+			contact-list { gap: 8pt; }
+			contact-item { padding: 1pt; }
+			icon { font-size: 16pt; }
 			link { text-decoration: none; }
 			section[type="experience"] field[name="company"] { font-weight: 400; }
 			section[type="skills"] field[name="name"] { font-weight: 400; }
@@ -214,12 +235,26 @@ describe("semantic issue fixtures", () => {
 		const document = instance.container.document as HostNode;
 
 		expect(mergedStyle(findText(document, "Ada Lovelace"))).toMatchObject({ color: "white" });
+		expect(mergedStyle(findText(document, "Computing pioneer"))).toMatchObject({ fontSize: 14 });
 		expect(mergedStyle(findText(document, "Analytical Engines"))).toMatchObject({ fontWeight: "400" });
 		expect(mergedStyle(findText(document, "TypeScript"))).toMatchObject({ fontWeight: "400" });
+		expect(
+			findPath(document, (node) => node.type === "LINK" && nodeText(node) === "ada@example.com")?.some(
+				(node) => mergedStyle(node).paddingTop === 1,
+			),
+		).toBe(true);
+		expect(
+			findPath(document, (node) => node.type === "LINK" && nodeText(node) === "+44 123")?.some(
+				(node) => mergedStyle(node).paddingTop === 1,
+			),
+		).toBe(true);
+		expect(nodesWithStyle(document, "fontSize", 16).some(({ type }) => type === "SVG")).toBe(true);
 		expect(mergedStyle(findPrimitive(document, "LINK", "ada@example.com"))).toMatchObject({
 			textDecoration: "none",
 		});
 		expect(containsStyle(document, "backgroundColor", "#1e293b")).toBe(true);
+		expect(containsStyle(document, "paddingTop", 10)).toBe(true);
+		expect(containsStyle(document, "rowGap", 8)).toBe(true);
 		expect(containsStyle(document, "opacity", 0.2)).toBe(true);
 	});
 

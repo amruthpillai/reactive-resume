@@ -70,6 +70,25 @@ describe("Semantic CSS value compilation", () => {
 		);
 	});
 
+	it("explains that gradient backgrounds are unsupported and suggests a safe replacement", () => {
+		const result = compileStylesheet({
+			languageVersion: 1,
+			text: "@version 1; header { background-image: linear-gradient(red, blue); color: white; }",
+		});
+
+		expect(result.program).not.toBeNull();
+		expect(result.program?.rules[0]?.declarations).toContainEqual(
+			expect.objectContaining({ property: "color", value: "white" }),
+		);
+		expect(result.diagnostics).toContainEqual(
+			expect.objectContaining({
+				code: "UNSUPPORTED_PROPERTY",
+				severity: "error",
+				message: "Gradients are not supported by Semantic CSS. Use background-color or another supported property.",
+			}),
+		);
+	});
+
 	it("omits an invalid value without dropping valid declarations in the rule", () => {
 		const result = compileStylesheet({
 			languageVersion: 1,
