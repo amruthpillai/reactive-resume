@@ -149,6 +149,29 @@ function diagnostic(
 	diagnostics.push(createDiagnostic(code, severity, message, range(node?.loc)));
 }
 
+const gradientFunctionNames = new Set([
+	"linear-gradient",
+	"radial-gradient",
+	"conic-gradient",
+	"repeating-linear-gradient",
+	"repeating-radial-gradient",
+	"repeating-conic-gradient",
+]);
+
+function containsGradientFunction(node: AstNode | string | null | undefined): boolean {
+	if (!node || typeof node === "string") return false;
+	if (node.type === "Function" && node.name && gradientFunctionNames.has(identifier(node.name).toLowerCase()))
+		return true;
+	return children(node).some(containsGradientFunction);
+}
+
+function unsupportedPropertyMessage(property: string, value: AstNode | string | null | undefined): string {
+	if (containsGradientFunction(value)) {
+		return "Gradients are not supported by Semantic CSS. Use background-color or another supported property.";
+	}
+	return `The ${property} property is not supported by Semantic CSS.`;
+}
+
 function splitValue(value: string): string[] {
 	const parts: string[] = [];
 	let start = 0;
@@ -560,6 +583,8 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 			const decodedProperty = identifier(declaration.property);
 			const property = decodedProperty.startsWith("--") ? decodedProperty : decodedProperty.toLowerCase();
 			const lowerProperty = property.toLowerCase();
+			const value =
+				typeof declaration.value === "string" ? declaration.value : csstree.generate(declaration.value as CssNode);
 			if (lowerProperty.startsWith("--resume-")) {
 				diagnostic(
 					diagnostics,
@@ -573,7 +598,7 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				diagnostic(
 					diagnostics,
 					property === "src" ? "FORBIDDEN_CSS_VALUE" : "UNSUPPORTED_PROPERTY",
-					`The ${property} property is not supported by Semantic CSS.`,
+					unsupportedPropertyMessage(property, declaration.value),
 					declaration,
 				);
 				continue;
@@ -583,8 +608,6 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				continue;
 			}
 
-			const value =
-				typeof declaration.value === "string" ? declaration.value : csstree.generate(declaration.value as CssNode);
 			const trimmedValue = value.trim();
 			const expanded = /var\s*\(/i.test(decodeCssEscapes(trimmedValue))
 				? ([[property, trimmedValue]] as const)
