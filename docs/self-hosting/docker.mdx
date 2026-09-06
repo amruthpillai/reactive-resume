@@ -574,3 +574,21 @@ A healthy response returns HTTP 200. If you get a different status code, the JSO
     - **Fix**: Set `S3_FORCE_PATH_STYLE="true"` in your environment. This is required for most self-hosted S3-compatible services like MinIO, SeaweedFS, etc.
   </Accordion>
 </AccordionGroup>
+
+## Serve a public resume at the instance root
+
+To display one public resume at `/` instead of the marketing home, set the optional server environment variable `ROOT_RESUME_ID` on the application service:
+
+```yaml
+environment:
+  APP_URL: https://resume.example.com
+  ROOT_RESUME_ID: your-resume-id
+```
+
+Find the resume ID in its owner's builder URL: `/builder/<resume-id>`. The resume must already have **Allow Public Access** enabled in Sharing. This setting does not change its visibility. Password protection and the download-button preference still apply, and the ordinary `/<username>/<slug>` URL continues to work. Renaming the username or slug does not change the configured ID.
+
+Restart the application after setting or changing `ROOT_RESUME_ID`. With Docker Compose, run `docker compose up -d` to recreate the application with the new environment. Unset the variable or leave it blank, then restart, to restore the marketing home. A missing, deleted, or private target shows an unavailable page, including when its owner visits `/`.
+
+Keep `APP_URL` set to the public origin and proxy the whole application normally, including API, uploads, fonts, and assets. Root mode uses that configured origin for its canonical URL; it does not infer a domain from request headers. A successful password challenge returns visitors to `/`.
+
+This is a single-resume setting for one self-hosted instance. It does not register custom domains, manage DNS or TLS, or hide the rest of the application. Login and the dashboard remain available at their usual paths.

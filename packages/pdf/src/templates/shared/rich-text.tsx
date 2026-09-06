@@ -137,7 +137,11 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 		const visible = isNodeVisible(nodeKey);
 		if (!visible) return null;
 		const text = (
-			<PdfText {...resolvedPdfTextProps(resolved)} style={composeStyles(style, resolved.style, safeTextStyle)}>
+			<PdfText
+				{...resolvedPdfTextProps(resolved)}
+				data-resume-whitespace={element.getAttribute("data-resume-whitespace")}
+				style={composeStyles(style, resolved.style, safeTextStyle)}
+			>
 				{textChildren}
 			</PdfText>
 		);
@@ -230,7 +234,11 @@ export const RichText = ({ children, semanticField }: RichTextProps) => {
 						style: props.style,
 						indent: Number(props.element.getAttribute("data-indent")),
 						semanticStyle: resolved.style,
-						textProps: { ...resolvedPdfTextProps(resolved), hyphenationCallback },
+						textProps: {
+							...resolvedPdfTextProps(resolved),
+							hyphenationCallback,
+							"data-resume-whitespace": props.element.getAttribute("data-resume-whitespace"),
+						},
 						rtl,
 						...(rtlTextWrapStyle ? { rtlTextWrapStyle } : {}),
 						...(rtl ? { applyRtlDirection: applyRtlDirectionRecursively } : {}),

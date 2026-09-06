@@ -23,6 +23,16 @@ interface InlineStyle {
 
 type InlineChild = TextRun | ExternalHyperlink;
 
+const preservesWhitespace = (node: Node) => {
+	let ancestor = node.parentElement;
+	while (ancestor) {
+		if (/^(P|H[1-6])$/.test(ancestor.tagName) && ancestor.getAttribute("data-resume-whitespace") === "preserve")
+			return true;
+		ancestor = ancestor.parentElement;
+	}
+	return false;
+};
+
 /** Module-level link color, set per htmlToParagraphs invocation. */
 let currentLinkColor = "0563C1";
 
@@ -87,7 +97,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 
 	for (const child of node.childNodes) {
 		if (child.nodeType === Node.TEXT_NODE) {
-			const text = child.textContent ?? "";
+			const text = (child.textContent ?? "").replace(/\t/g, preservesWhitespace(child) ? "    " : "\t");
 			if (text) {
 				children.push(new TextRun({ text, ...style }));
 			}

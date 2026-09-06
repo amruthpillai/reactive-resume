@@ -221,17 +221,17 @@ describe("RichInput paragraph indentation (#3397)", () => {
 		}
 	});
 
-	it("characterizes typed leading whitespace as lost on HTML re-import", async () => {
+	it("preserves typed leading whitespace on HTML re-import", async () => {
 		const { editor, onChange } = await input("<p>First</p>");
 		act(() => {
 			editor.view.dispatch(editor.state.tr.insertText("   \t", 1));
 		});
 		const saved = editor.getHTML();
-		expect(saved).toBe("<p>   \tFirst</p>");
+		expect(saved).toBe('<p data-resume-whitespace="preserve">   \tFirst</p>');
 		expect(onChange).toHaveBeenLastCalledWith(saved);
 		act(() => {
 			editor.commands.setContent(saved, { emitUpdate: false });
 		});
-		expect(editor.getHTML()).toBe("<p>First</p>");
+		expect(editor.getHTML()).toBe(saved);
 	});
 });

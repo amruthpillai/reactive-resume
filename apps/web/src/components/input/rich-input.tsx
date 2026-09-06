@@ -60,6 +60,13 @@ import { isRTL } from "@/libs/locale";
 import { ColorPicker } from "./color-picker";
 import { ParagraphIndent } from "./paragraph-indent";
 import { defaultHighlightColor, resolveHighlightToolbarState } from "./rich-input.utils";
+import {
+	LiteralHeading,
+	LiteralParagraph,
+	LiteralWhitespaceInput,
+	whitespaceAttribute,
+	whitespacePreserveValue,
+} from "./rich-input-whitespace";
 
 const defaultTextColor = "rgba(0, 0, 0, 1)";
 
@@ -260,7 +267,10 @@ const cellAttributes = new Map<string, ValueValidator>([
 ]);
 const noValues: ElementRule = {};
 const textBlockRule: ElementRule = {
-	attributes: new Map([["data-indent", supportsCanonicalInteger(1, 8)]]),
+	attributes: new Map([
+		["data-indent", supportsCanonicalInteger(1, 8)],
+		[whitespaceAttribute, (value) => value === whitespacePreserveValue],
+	]),
 	styles: textBlockStyles,
 	validate: validateTextBlock,
 };
@@ -483,9 +493,8 @@ const StyledTableCell = TableCell.extend({
 
 const extensions = [
 	StarterKit.configure({
-		heading: {
-			levels: [1, 2, 3, 4, 5, 6],
-		},
+		heading: false,
+		paragraph: false,
 		codeBlock: false,
 		link: {
 			openOnClick: false,
@@ -494,6 +503,9 @@ const extensions = [
 			protocols: ["http", "https"],
 		},
 	}),
+	LiteralParagraph,
+	LiteralHeading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
+	LiteralWhitespaceInput.configure({ hasUnsupportedTableMarkup }),
 	TextStyle,
 	Color,
 	Highlight.configure({ multicolor: true }).extend({
@@ -552,7 +564,7 @@ export function RichInput({
 				"data-editor": "true",
 				"data-fullscreen": isFullscreen ? "true" : "false",
 				class: cn(
-					"wysiwyg group/editor overflow-y-auto p-3 pb-4",
+					"wysiwyg group/editor overflow-y-auto p-3 pb-4 [&_[data-resume-whitespace=preserve]]:whitespace-pre-wrap",
 					"rounded-md rounded-t-none border outline-none focus-visible:border-ring",
 					"[td:has(.selectedCell)]:bg-primary",
 					"data-[fullscreen=false]:max-h-[400px] data-[fullscreen=false]:min-h-[100px]",

@@ -7,10 +7,11 @@ export function detectJsonImportType(parsed: unknown): ImportType {
 	// JSON Resume standard: top-level `basics`, without Reactive Resume's `sections`/`metadata`.
 	if ("basics" in data && !("sections" in data) && !("metadata" in data)) return "json-resume-json";
 
-	// Reactive Resume exports carry `sections` + `metadata`; the current schema's metadata has a `page` key,
-	// the legacy v4 schema does not. Best-effort guess — the user can override the type below.
+	// Reactive Resume exports carry `sections` + `metadata`. V4 stores layout as nested arrays, while the current
+	// schema stores a layout object. Both versions can have `metadata.page`, so that key alone cannot distinguish them.
 	if ("sections" in data || "metadata" in data) {
 		const metadata = data.metadata as Record<string, unknown> | undefined;
+		if (metadata && Array.isArray(metadata.layout)) return "reactive-resume-v4-json";
 		if (metadata && !("page" in metadata)) return "reactive-resume-v4-json";
 		return "reactive-resume-json";
 	}

@@ -258,6 +258,14 @@ export const serveWebDistStatic = serveStatic({
 });
 
 function getFallbackResponseHeaders(pathname: string) {
+	if (pathname === "/" && env.ROOT_RESUME_ID?.trim()) {
+		return {
+			"Content-Type": "text/html; charset=UTF-8",
+			"X-Robots-Tag": "noindex, follow",
+			"Cache-Control": "private, no-store",
+			...BASE_SECURITY_HEADERS,
+		};
+	}
 	if (pathname === "/" || indexableAppPaths.has(pathname)) {
 		return { "Content-Type": "text/html; charset=UTF-8", ...BASE_SECURITY_HEADERS };
 	}
@@ -298,6 +306,16 @@ export async function handleWebApp(request: Request) {
 
 	const html = await fs.readFile(indexHtmlPath, "utf-8");
 	const canonicalUrl = new URL("/", env.APP_URL).toString();
+
+	if (pathname === "/" && env.ROOT_RESUME_ID?.trim()) {
+		// Root configuration never discloses a target in the HTML shell. The public API
+		// gates data and browser metadata; shell requests must not count extra views.
+		const shell = html
+			.replace(/<title>[^<]*<\/title>/, "<title>Reactive Resume</title>")
+			.replace(/<meta\s+name="description"[^>]*>/, '<meta name="description" content="">');
+		const markup = `<link rel="canonical" href="${escapeAttribute(canonicalUrl)}" data-root-resume-shell><meta name="robots" content="noindex, follow" data-root-resume-shell>`;
+		return new Response(shell.replace("</head>", `${markup}</head>`), { headers });
+	}
 
 	if (pathname === "/") {
 		return new Response(html.replace("</head>", `${createRootSeoMarkup(canonicalUrl)}</head>`), { headers });

@@ -104,6 +104,7 @@ const unwrapSingleParagraphListItems = (root: ReturnType<typeof parse>) => {
 
 		const child = meaningfulChildren[0];
 		if (!child || !isElement(child) || getTagName(child) !== "p") continue;
+		if (child.getAttribute("data-resume-whitespace") === "preserve") continue;
 
 		listItem.innerHTML = child.innerHTML;
 	}
@@ -124,6 +125,18 @@ const normalizeParagraphIndentation = (root: ReturnType<typeof parse>, direction
 		const nextStyle = [style, indent].filter(Boolean).join(";");
 		if (nextStyle) element.setAttribute("style", nextStyle);
 		else element.removeAttribute("style");
+	}
+};
+
+const expandPreservedTabs = (root: ReturnType<typeof parse>) => {
+	for (const element of root.querySelectorAll(
+		'p[data-resume-whitespace="preserve"],h1[data-resume-whitespace="preserve"],h2[data-resume-whitespace="preserve"],h3[data-resume-whitespace="preserve"],h4[data-resume-whitespace="preserve"],h5[data-resume-whitespace="preserve"],h6[data-resume-whitespace="preserve"]',
+	)) {
+		const visit = (node: Node): void => {
+			if (node.nodeType === NodeType.TEXT_NODE) node.rawText = node.rawText.replace(/\t/g, "    ");
+			for (const child of node.childNodes) visit(child);
+		};
+		visit(element);
 	}
 };
 
@@ -165,9 +178,11 @@ const tryConvertPseudoBulletParagraph = (paragraphInnerHtml: string): string | n
 
 export const convertPseudoBulletParagraphs = (html: string, direction: "ltr" | "rtl" = "ltr"): string =>
 	html.replace(/<p\b([^>]*)>([\s\S]*?)<\/p>/gi, (full, _attrs, inner) => {
+		const paragraph = parse(full).querySelector("p");
+		if (paragraph?.getAttribute("data-resume-whitespace") === "preserve") return full;
 		const converted = tryConvertPseudoBulletParagraph(inner);
 		if (!converted) return full;
-		const level = Number(parse(full).querySelector("p")?.getAttribute("data-indent"));
+		const level = Number(paragraph?.getAttribute("data-indent"));
 		if (!Number.isInteger(level) || level <= 0 || level > 8) return converted;
 		// Keep the original paragraph's offset around the entire generated list.
 		return converted.replace(
@@ -200,6 +215,7 @@ export const normalizeRichTextHtml = (
 	normalizeBoldBoundaryWhitespace(root);
 	normalizeMarkElements(root);
 	normalizeParagraphIndentation(root, direction);
+	expandPreservedTabs(root);
 	unwrapSingleParagraphListItems(root);
 
 	const flushInlineNodes = () => {

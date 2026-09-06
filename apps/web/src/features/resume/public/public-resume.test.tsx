@@ -130,3 +130,26 @@ describe("PublicResumeRoute", () => {
 		expect(viewerFrame).not.toHaveClass("min-h-0", "flex-1", "overflow-hidden");
 	});
 });
+
+describe("PublicResumePage at root", () => {
+	it("renders supplied identity and links to dashboard without slug route hooks", async () => {
+		const { PublicResumePage } = await import("./public-resume");
+		render(
+			<I18nProvider i18n={i18n}>
+				<PublicResumePage
+					resume={publicResumeMock.resume}
+					username="root-owner"
+					slug="renamed"
+					flags={publicResumeMock.flags}
+					isRoot
+				/>
+			</I18nProvider>,
+		);
+		expect(screen.getByRole("link", { name: /Build your own resume/ })).toHaveAttribute("href", "/dashboard");
+		expect(screen.getByRole("main")).toHaveAttribute("id", "main-content");
+		expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(sampleResumeData.basics.name);
+		expect(publicResumeMock.useResumeExport).toHaveBeenCalledWith(publicResumeMock.resume, {
+			publicResumePdf: { publicResume: { username: "root-owner", slug: "renamed" } },
+		});
+	});
+});
