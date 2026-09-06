@@ -55,14 +55,22 @@ const inspectTableBorders = async ({ bytes, operators }: Awaited<ReturnType<type
 	let stroke = "";
 	let horizontal = 0;
 	let vertical = 0;
+	let anyHorizontal = 0;
+	let anyVertical = 0;
 	for (const [index, fn] of operators.fnArray.entries()) {
 		if (fn === OPS.setStrokeRGBColor) stroke = operators.argsArray[index][0];
-		if (fn !== OPS.constructPath || stroke !== "#cc00cc") continue;
+		if (fn !== OPS.constructPath) continue;
 		const bounds = operators.argsArray[index][2] as ArrayLike<number>;
 		const width = Math.abs((bounds[2] ?? 0) - (bounds[0] ?? 0));
 		const height = Math.abs((bounds[3] ?? 0) - (bounds[1] ?? 0));
-		if (height > 0 && height <= 1.01 && width > height) horizontal++;
-		if (width > 0 && width <= 1.01 && height > width) vertical++;
+		if (height > 0 && height <= 1.01 && width > height) {
+			anyHorizontal++;
+			if (stroke === "#cc00cc") horizontal++;
+		}
+		if (width > 0 && width <= 1.01 && height > width) {
+			anyVertical++;
+			if (stroke === "#cc00cc") vertical++;
+		}
 	}
 
 	const [page] = await rasterizePdf(bytes);
@@ -72,7 +80,10 @@ const inspectTableBorders = async ({ bytes, operators }: Awaited<ReturnType<type
 		if ((page.data[index] ?? 0) > 180 && (page.data[index + 1] ?? 255) < 80 && (page.data[index + 2] ?? 0) > 180)
 			pixels++;
 	}
-	return { horizontal, vertical, pixels };
+	return {
+		colored: { horizontal, vertical, pixels },
+		geometry: { horizontal: anyHorizontal, vertical: anyVertical },
+	};
 };
 
 const tableCoordinates = (items: Awaited<ReturnType<typeof readPdf>>["items"]) =>
@@ -149,7 +160,11 @@ describe("imported rich-text tables", () => {
 					Epsilon: [327.348, 778.89],
 					Zeta: [427.348, 778.89],
 				});
-				expect(await inspectTableBorders(pdf), stage.name).toEqual({ horizontal: 17, vertical: 12, pixels: 1851 });
+				expect((await inspectTableBorders(pdf)).colored, stage.name).toEqual({
+					horizontal: 17,
+					vertical: 12,
+					pixels: 1851,
+				});
 			}
 		},
 		30_000,
@@ -158,6 +173,6 @@ describe("imported rich-text tables", () => {
 	it.each(["legacy", "semantic"] as const)("keeps borderless tables borderless in %s mode", async (mode) => {
 		const borderless = table().replaceAll("border: 1pt solid black; ", "");
 		const pdf = await readPdf(fixture(borderless, mode), "ditgar");
-		expect(await inspectTableBorders(pdf)).toEqual({ horizontal: 0, vertical: 0, pixels: 0 });
+		expect((await inspectTableBorders(pdf)).geometry).toEqual({ horizontal: 0, vertical: 0 });
 	});
 });

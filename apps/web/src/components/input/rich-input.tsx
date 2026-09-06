@@ -293,7 +293,9 @@ const elementRules = new Map<string, ElementRule>([
 				["target", () => true],
 				["rel", () => true],
 				["class", () => true],
+				["title", () => true],
 			]),
+			validate: (element) => element.hasAttribute("href"),
 		},
 	],
 	["span", { styles: textStyles, validate: (element) => styleValues(element, "color").length === 1 }],
@@ -337,13 +339,50 @@ const hasOnlyCellBlockContent = (element: Element): boolean =>
 		if (!cellBlockTags.has(tagName)) return false;
 		if (textBlockTags.has(tagName)) return hasOnlyInlineContent(child);
 		if (tagName === "hr") return child.childNodes.length === 0;
-		if (tagName === "blockquote") return hasOnlyCellBlockContent(child);
+		if (tagName === "blockquote") {
+			const hasContent = Array.from(child.childNodes).some(
+				(blockChild) => blockChild.nodeType === Node.ELEMENT_NODE || Boolean(blockChild.textContent?.trim()),
+			);
+			return hasContent && hasOnlyCellBlockContent(child);
+		}
+		const listItems = Array.from(child.children);
+		if (listItems.length === 0) return false;
 		return Array.from(child.childNodes).every((listChild) => {
 			if (listChild.nodeType === Node.TEXT_NODE) return !listChild.textContent?.trim();
 			if (!(listChild instanceof Element) || listChild.tagName.toLowerCase() !== "li") return false;
 			return hasOnlyCellBlockContent(listChild);
 		});
 	});
+
+const hasRectangularTableGrid = (rows: readonly Element[]) => {
+	let expectedWidth: number | undefined;
+	const occupiedUntil: number[] = [];
+
+	for (const [rowIndex, row] of rows.entries()) {
+		const coverage = occupiedUntil.map((endRow) => endRow > rowIndex);
+		let column = 0;
+
+		for (const cell of Array.from(row.children)) {
+			while (coverage[column]) column++;
+			const colspan = Number(cell.getAttribute("colspan") ?? 1);
+			const rowspan = Number(cell.getAttribute("rowspan") ?? 1);
+			if (rowIndex + rowspan > rows.length) return false;
+			for (let offset = 0; offset < colspan; offset++) {
+				if (coverage[column + offset]) return false;
+				coverage[column + offset] = true;
+				occupiedUntil[column + offset] = rowIndex + rowspan;
+			}
+			column += colspan;
+		}
+
+		const rowWidth = coverage.lastIndexOf(true) + 1;
+		if (rowWidth === 0 || coverage.slice(0, rowWidth).some((covered) => !covered)) return false;
+		expectedWidth ??= rowWidth;
+		if (rowWidth !== expectedWidth) return false;
+	}
+
+	return true;
+};
 
 const hasUnsupportedCellDescendant = (element: Element) => {
 	const tagName = element.tagName.toLowerCase();
@@ -388,19 +427,23 @@ const hasUnsupportedTableMarkup = (html: string) => {
 		if (bodies.length !== 1 || bodies[0]?.tagName.toLowerCase() !== "tbody") return true;
 		if (Array.from(table.childNodes).some(hasUnsupportedChildNode)) return true;
 
-		for (const body of bodies) {
-			if (!hasOnlySupportedValues(body)) return true;
-			if (Array.from(body.childNodes).some(hasUnsupportedChildNode)) return true;
-		}
-		for (const row of table.querySelectorAll("tr")) {
+		const body = bodies[0];
+		if (!body || !hasOnlySupportedValues(body)) return true;
+		if (Array.from(body.childNodes).some(hasUnsupportedChildNode)) return true;
+		const rows = Array.from(body.children);
+		if (rows.length === 0 || rows.some((row) => row.tagName.toLowerCase() !== "tr")) return true;
+
+		for (const row of rows) {
 			if (!hasOnlySupportedValues(row)) return true;
 			if (Array.from(row.childNodes).some(hasUnsupportedChildNode)) return true;
+			if (Array.from(row.children).some((cell) => !["td", "th"].includes(cell.tagName.toLowerCase()))) return true;
 		}
 		for (const cell of table.querySelectorAll("td, th")) {
 			if (!hasOnlySupportedValues(cell)) return true;
 			if (!hasOnlyCellBlockContent(cell)) return true;
 			if (Array.from(cell.querySelectorAll("*"), hasUnsupportedCellDescendant).some(Boolean)) return true;
 		}
+		if (!hasRectangularTableGrid(rows)) return true;
 	}
 	return false;
 };

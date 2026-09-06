@@ -35,6 +35,19 @@ const unsupportedTables = [
 		"multiple table bodies",
 		"<table><tbody><tr><td>First</td></tr></tbody><tbody><tr><td>Second</td></tr></tbody></table>",
 	],
+	["empty table body", "<table><tbody></tbody></table>"],
+	["non-row table body child", "<table><tbody><script></script><tr><td>Inside</td></tr></tbody></table>"],
+	["non-cell table row child", "<table><tbody><tr><script></script><td>Inside</td></tr></tbody></table>"],
+	["mismatched row widths", "<table><tbody><tr><td>One</td></tr><tr><td>Two</td><td>Three</td></tr></tbody></table>"],
+	[
+		"non-rectangular column span",
+		'<table><tbody><tr><td colspan="2">Wide</td></tr><tr><td colspan="3">Wider</td></tr></tbody></table>',
+	],
+	["row span beyond table bounds", '<table><tbody><tr><td rowspan="2">Inside</td></tr></tbody></table>'],
+	[
+		"row span collision",
+		'<table><tbody><tr><td rowspan="2">Tall</td><td>Side</td></tr><tr><td colspan="2">Overlap</td></tr></tbody></table>',
+	],
 	["browser-repaired malformed markup", "<table><tbody><tr><td>Broken</tr></tbody></table>"],
 	[
 		"unrepresented attributes on supported descendants",
@@ -67,6 +80,13 @@ const unsupportedTables = [
 	[
 		"invalid ordered-list start",
 		'<table><tbody><tr><td><ol start="first"><li>Inside</li></ol></td></tr></tbody></table>',
+	],
+	["empty blockquote", "<table><tbody><tr><td><blockquote></blockquote></td></tr></tbody></table>"],
+	["whitespace-only blockquote", "<table><tbody><tr><td><blockquote> </blockquote></td></tr></tbody></table>"],
+	["empty list", "<table><tbody><tr><td><ul></ul></td></tr></tbody></table>"],
+	[
+		"anchor without href",
+		'<table><tbody><tr><td><p><a target="_blank" rel="noopener" class="link">Inside</a></p></td></tr></tbody></table>',
 	],
 	[
 		"unsafe link URI",
@@ -282,6 +302,21 @@ describe("RichInput imported tables (#3196)", () => {
 		});
 		expect(editor.getHTML()).toContain("Inside!");
 		expect(onChange).toHaveBeenCalledOnce();
+	});
+
+	it("edits a configured anchor while preserving its title", async () => {
+		const titledLink =
+			'<table><tbody><tr><td><p><a href="https://example.com" title="Profile">Inside</a></p></td></tr></tbody></table>';
+		const { editor, onChange } = await input(titledLink);
+
+		expect(editor.isEditable).toBe(true);
+		act(() => {
+			editor.commands.setTextSelection(textPosition(editor, "Inside") + "Inside".length);
+			editor.commands.insertContent("!");
+		});
+		expect(editor.getHTML()).toContain('href="https://example.com"');
+		expect(editor.getHTML()).toContain('title="Profile"');
+		expect(onChange).toHaveBeenLastCalledWith(editor.getHTML());
 	});
 
 	it.each(unsupportedTables)("preserves exact bytes for %s behind an accessible read-only notice", async (_, value) => {
