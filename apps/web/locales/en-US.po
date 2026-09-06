@@ -2939,8 +2939,8 @@ msgid "Imported {0} application(s)."
 msgstr "Imported {0} application(s)."
 
 #: src/dialogs/resume/import.tsx
-msgid "Importing from PDF or Word requires a connected AI provider."
-msgstr "Importing from PDF or Word requires a connected AI provider."
+msgid "Importing from Word requires a connected AI provider."
+msgstr "Importing from Word requires a connected AI provider."
 
 #: src/dialogs/resume/import.tsx
 msgid "Importing your resume..."
@@ -3649,6 +3649,10 @@ msgstr "No Advertising, No Tracking"
 #: src/routes/builder/$resumeId/-components/ai-assistant.tsx
 msgid "No AI provider connected"
 msgstr "No AI provider connected"
+
+#: src/dialogs/resume/import.tsx
+msgid "No AI provider is connected, so we will read the text out of the PDF here in your browser and fill in what we can recognize. Expect to tidy up the result."
+msgstr "No AI provider is connected, so we will read the text out of the PDF here in your browser and fill in what we can recognize. Expect to tidy up the result."
 
 #: src/routes/dashboard/applications/index.tsx
 msgid "No applications match your filters."
@@ -5931,6 +5935,10 @@ msgstr "This link is missing its protocol."
 msgid "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 msgstr "This may take a few minutes, depending on the response of the AI provider. Please do not close the window or refresh the page."
 
+#: src/dialogs/resume/import.tsx
+msgid "This may take a moment. Please do not close the window or refresh the page."
+msgstr "This may take a moment. Please do not close the window or refresh the page."
+
 #: src/features/ats-checker/report/report-view.tsx
 msgid "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected, and no tool can. Your file was read in this browser and never uploaded."
 msgstr "This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected, and no tool can. Your file was read in this browser and never uploaded."
@@ -5942,6 +5950,11 @@ msgstr "This page is in columns, and the text extracts out of order."
 #: src/features/ats-checker/messages.ts
 msgid "This page is very densely packed."
 msgstr "This page is very densely packed."
+
+#. Error shown when a PDF has no extractable text layer during import
+#: src/dialogs/resume/import.tsx
+msgid "This PDF has no readable text. It is likely a scan, so there is nothing to import."
+msgstr "This PDF has no readable text. It is likely a scan, so there is nothing to import."
 
 #: src/features/ats-checker/tool.tsx
 msgid "This PDF is password protected. Save an unprotected copy and try again."
