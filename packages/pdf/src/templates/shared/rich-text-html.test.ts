@@ -28,7 +28,7 @@ describe("normalizeRichTextHtml", () => {
 	it("does not reinterpret marked RTL line breaks as pseudo-bullet lists", () => {
 		const html = '<p data-resume-whitespace="preserve">  - First<br>  - Second</p>';
 		expect(normalizeRichTextHtml(html, { direction: "rtl" })).toBe(
-			'<p data-resume-whitespace="preserve">‏  - First<br>  - Second</p>',
+			'<p data-resume-whitespace="preserve">\u200f  - First<br>  - Second</p>',
 		);
 	});
 
