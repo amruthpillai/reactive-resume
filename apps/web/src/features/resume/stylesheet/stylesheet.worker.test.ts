@@ -59,6 +59,23 @@ describe("stylesheet worker", () => {
 		);
 	});
 
+	it("explains that unsupported gradients need a supported background replacement", () => {
+		handleMessage?.(
+			new MessageEvent("message", {
+				data: request("@version 1;\nheader { background-image: linear-gradient(red, blue); }\n"),
+			}),
+		);
+
+		const response = postMessage.mock.calls[0]?.[0] as CompileWorkerResponse | undefined;
+		expect(response?.diagnostics).toContainEqual(
+			expect.objectContaining({
+				code: "UNSUPPORTED_PROPERTY",
+				severity: "error",
+				message: "Gradients are not supported by Semantic CSS. Use background-color or another supported property.",
+			}),
+		);
+	});
+
 	it("returns overlapping semantic diagnostics once", () => {
 		handleMessage?.(
 			new MessageEvent("message", {
