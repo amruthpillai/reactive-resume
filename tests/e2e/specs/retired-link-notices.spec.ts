@@ -3,6 +3,7 @@ import { createAuthenticatedContext } from "../fixtures/auth";
 import { createAccount } from "../fixtures/data";
 import {
 	createResumeInsertGate,
+	createRetiredLinkCaptureFailure,
 	deleteE2EUser,
 	expireRetiredResumeLink,
 	hasLiveRetiredPathConflict,
@@ -172,5 +173,40 @@ test("preserves retired-link invariants across concurrent reuse and a failed ren
 	expect(await readResumeLinkState(firstResumeId)).toEqual({
 		liveSlug: "e2e-rollback-original",
 		retiredLinks: [{ slug: "e2e-concurrent-third", attemptCount: 0 }],
+	});
+});
+
+test("rolls back a live slug update when retired-link capture fails", async ({ authPage: page }) => {
+	test.setTimeout(90_000);
+
+	const createResponse = await page.request.post("/api/openapi/resumes", {
+		data: { name: "Rollback proof", slug: "e2e-rollback-first", tags: [], withSampleData: false },
+	});
+	expect(createResponse.ok(), await createResponse.text()).toBe(true);
+	const resumeId = (await createResponse.json()) as string;
+
+	const initialRename = await page.request.put(`/api/openapi/resumes/${resumeId}`, {
+		data: { slug: "e2e-rollback-original" },
+	});
+	expect(initialRename.ok(), await initialRename.text()).toBe(true);
+	expect(await readResumeLinkState(resumeId)).toEqual({
+		liveSlug: "e2e-rollback-original",
+		retiredLinks: [{ slug: "e2e-rollback-first", attemptCount: 0 }],
+	});
+
+	const captureFailure = await createRetiredLinkCaptureFailure(resumeId);
+	try {
+		const failedRename = await page.request.put(`/api/openapi/resumes/${resumeId}`, {
+			data: { slug: "e2e-rollback-target" },
+		});
+		expect(failedRename.status()).toBe(500);
+		expect(await failedRename.json()).toMatchObject({ code: "INTERNAL_SERVER_ERROR" });
+	} finally {
+		await captureFailure.dispose();
+	}
+
+	expect(await readResumeLinkState(resumeId)).toEqual({
+		liveSlug: "e2e-rollback-original",
+		retiredLinks: [{ slug: "e2e-rollback-first", attemptCount: 0 }],
 	});
 });

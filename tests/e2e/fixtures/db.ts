@@ -1,4 +1,5 @@
 import type { E2EAccount } from "./data";
+import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { Pool } from "pg";
@@ -40,6 +41,54 @@ export async function expireRetiredResumeLink(username: string, slug: string) {
 	} finally {
 		await pool.end();
 	}
+}
+
+type RetiredLinkCaptureFailure = {
+	dispose: () => Promise<void>;
+};
+
+export async function createRetiredLinkCaptureFailure(resumeId: string): Promise<RetiredLinkCaptureFailure> {
+	if (!/^[A-Za-z0-9_-]+$/.test(resumeId)) throw new Error("Resume ID contains unsupported SQL fixture characters.");
+
+	const pool = new Pool({ connectionString: getDatabaseUrl() });
+	const suffix = randomUUID().replaceAll("-", "").slice(0, 16);
+	const functionName = `e2e_retired_capture_fail_${suffix}_function`;
+	const triggerName = `e2e_retired_capture_fail_${suffix}_trigger`;
+	const dispose = async () => {
+		try {
+			await pool.query(`drop trigger if exists "${triggerName}" on "resume_retired_link"`);
+		} finally {
+			try {
+				await pool.query(`drop function if exists "${functionName}"()`);
+			} finally {
+				await pool.end();
+			}
+		}
+	};
+
+	try {
+		await pool.query(`
+			create function "${functionName}"() returns trigger
+			language plpgsql
+			as $$
+			begin
+				raise exception 'e2e forced retired-link capture failure';
+			end;
+			$$
+		`);
+		await pool.query(`
+			create trigger "${triggerName}"
+			before insert or update on "resume_retired_link"
+			for each row
+			when (new.resume_id = '${resumeId}')
+			execute function "${functionName}"()
+		`);
+	} catch (error) {
+		await dispose();
+		throw error;
+	}
+
+	return { dispose };
 }
 
 const resumeInsertGateKey = 2_836_010;
