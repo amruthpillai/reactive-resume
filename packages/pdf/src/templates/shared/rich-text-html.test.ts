@@ -9,6 +9,29 @@ type PdfElement = ReactElement<{ children?: unknown; element?: { tag: string } }
 const getPdfElementProps = (element: unknown) => (element as PdfElement).props;
 
 describe("normalizeRichTextHtml", () => {
+	it("expands tabs only inside marked paragraphs and headings", () => {
+		expect(
+			normalizeRichTextHtml(
+				'<p data-resume-whitespace="preserve">A\tB</p><h2 data-resume-whitespace="preserve">\tC</h2><p>D\tE</p>',
+			),
+		).toBe(
+			'<p data-resume-whitespace="preserve">A    B</p><h2 data-resume-whitespace="preserve">    C</h2><p>D\tE</p>',
+		);
+	});
+
+	it("retains marked paragraphs inside lists so preservation stays node-local", () => {
+		expect(normalizeRichTextHtml('<ul><li><p data-resume-whitespace="preserve">  Listed\ttext  </p></li></ul>')).toBe(
+			'<ul><li><p data-resume-whitespace="preserve">  Listed    text  </p></li></ul>',
+		);
+	});
+
+	it("does not reinterpret marked RTL line breaks as pseudo-bullet lists", () => {
+		const html = '<p data-resume-whitespace="preserve">  - First<br>  - Second</p>';
+		expect(normalizeRichTextHtml(html, { direction: "rtl" })).toBe(
+			'<p data-resume-whitespace="preserve">‏  - First<br>  - Second</p>',
+		);
+	});
+
 	it("decodes opted-in soft hyphens in text without changing links or escaped literals", () => {
 		const html =
 			'<p title="&shy;">Soft&shy;ware &#173; &#xAD; &amp;shy; <a href="https://example.com/&shy;">link</a></p>';
