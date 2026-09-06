@@ -172,6 +172,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.skills.items[].level` | `number` | yes | minimum: 0; maximum: 5; default: 0 | The proficiency level of the skill, defined as a number between 0 and 5. If set to 0, the icons displaying the level will be hidden. |
 | `sections.skills.items[].keywords` | `array` | yes | default: [] | The keywords associated with the skill, if any. These are displayed as tags below the name. |
 | `sections.skills.items[].keywords[]` | `string` | — | — | — |
+| `sections.skills.keywordLayout` | `string` | no | enum: ["inline","list"]; default: "inline" | How skill keywords are displayed: inline separated by commas, or one bullet per keyword. |
 | `sections.skills.layout` | `string` | no | enum: ["default","inline"]; default: "default" | The layout style for skill items. 'inline' places item fields next to name |
 | `sections.languages` | `object` | yes | — | The section to display the languages of the author. |
 | `sections.languages.title` | `string` | yes | — | The title of the section. |
@@ -307,6 +308,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type summary, schema summaryItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type summary, schema summaryItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -321,6 +323,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type profiles, schema profileItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type profiles, schema profileItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -342,6 +345,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type experience, schema experienceItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type experience, schema experienceItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -370,6 +374,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type education, schema educationItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type education, schema educationItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type education, schema educationItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -394,6 +399,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type projects, schema projectItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type projects, schema projectItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -414,6 +420,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `string` | no (type skills, schema skillItemSchema at customSections[]) | enum: ["inline","list"]; default: "inline" | How skill keywords are displayed: inline separated by commas, or one bullet per keyword. |
 | `customSections[].id` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type skills, schema skillItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -434,6 +441,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type languages, schema languageItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type languages, schema languageItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -450,6 +458,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type interests, schema interestItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type interests, schema interestItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -468,6 +477,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type awards, schema awardItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type awards, schema awardItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -489,6 +499,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type certifications, schema certificationItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -510,6 +521,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type publications, schema publicationItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type publications, schema publicationItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -531,6 +543,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type volunteer, schema volunteerItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -552,6 +565,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type references, schema referenceItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type references, schema referenceItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |
@@ -573,6 +587,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].hidden` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
 | `customSections[].keepTogether` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
+| `customSections[].keywordLayout` | `any` | no (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | — |
 | `customSections[].id` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The unique identifier for the custom section. Usually generated as a UUID. |
 | `customSections[].type` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The type of items this custom section contains. Determines which item schema and form fields to use. |
 | `customSections[].items` | `array` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | The items to display in the custom section. Items follow the schema of the section type. |

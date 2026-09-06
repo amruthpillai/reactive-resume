@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
-	env: { APP_URL: "https://rxresu.me" },
+	env: { APP_URL: "https://rxresu.me", ROOT_RESUME_ID: undefined as string | undefined },
 	serveStatic: vi.fn((_options?: unknown) => vi.fn()),
 	getPublicResumeSocialMeta: vi.fn(),
 }));
@@ -45,6 +45,7 @@ const staticOptions = mocks.serveStatic.mock.calls[0]?.[0] as StaticOptions | un
 describe("web app fallback classification", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		mocks.env.ROOT_RESUME_ID = undefined;
 		vi.mocked(fs.readFile).mockResolvedValue("<html>app</html>");
 		mocks.getPublicResumeSocialMeta.mockResolvedValue(null);
 	});
@@ -287,5 +288,30 @@ describe("web app fallback classification", () => {
 		expect(unknownResponse.headers.get("Content-Type")).toBe("text/plain; charset=UTF-8");
 		expect(unknownResponse.headers.get("X-Robots-Tag")).toBe("noindex, nofollow");
 		expect(await unknownResponse.text()).toBe("");
+	});
+});
+
+describe("configured root shell", () => {
+	it.each(["GET", "HEAD"])("serves no-store noindex headers for %s", async (method) => {
+		mocks.env.ROOT_RESUME_ID = "private-or-missing-id";
+		const response = await handleWebApp(new Request("https://attacker.example/", { method }));
+		expect(response.headers.get("X-Robots-Tag")).toBe("noindex, follow");
+		expect(response.headers.get("Cache-Control")).toBe("private, no-store");
+	});
+	it("uses configured canonical root without leaking ID or marketing metadata", async () => {
+		mocks.env.ROOT_RESUME_ID = "private-or-missing-id";
+		vi.mocked(fs.readFile).mockResolvedValue(
+			'<html><head><title>Marketing title</title><meta name="description" content="Marketing copy."></head><body></body></html>',
+		);
+		const html = await (
+			await handleWebApp(
+				new Request("https://attacker.example/?id=other", {
+					headers: { host: "attacker.example", "x-forwarded-host": "evil.example" },
+				}),
+			)
+		).text();
+		expect(html).toContain('<link rel="canonical" href="https://rxresu.me/" data-root-resume-shell>');
+		expect(html).toContain('<meta name="robots" content="noindex, follow" data-root-resume-shell>');
+		expect(html).not.toMatch(/private-or-missing-id|attacker|evil|Marketing|application\/ld\+json|timelapse/);
 	});
 });

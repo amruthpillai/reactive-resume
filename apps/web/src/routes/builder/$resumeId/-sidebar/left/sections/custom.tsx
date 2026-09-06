@@ -37,6 +37,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { getSectionTitle } from "@/libs/resume/section";
 import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
+import { SkillKeywordLayoutMenu } from "../shared/skill-keyword-layout-menu";
 
 // ponytail: data maps replace ts-pattern exhaustive matchers — same coverage, no runtime dependency
 const TITLE_FIELD: Partial<Record<CustomSectionType, string>> = {
@@ -295,6 +296,8 @@ function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) 
 						<CopySimpleIcon />
 						<Trans>Duplicate</Trans>
 					</DropdownMenuItem>
+
+					{section.type === "skills" && <SkillKeywordLayoutMenu sectionId={section.id} />}
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>

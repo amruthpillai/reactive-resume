@@ -512,7 +512,14 @@ export const resumeService = {
 		return resume;
 	},
 
-	getBySlug: async (input: { username: string; slug: string; requestHeaders: Headers; currentUserId?: string }) => {
+	getBySlug: async (input: {
+		username: string;
+		slug: string;
+		requestHeaders: Headers;
+		currentUserId?: string;
+		requirePublic?: boolean;
+		expectedResumeId?: string;
+	}) => {
 		const [resume] = await db
 			.select({
 				id: schema.resume.id,
@@ -531,7 +538,12 @@ export const resumeService = {
 			.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
 			.where(and(eq(schema.resume.slug, input.slug), eq(schema.user.username, input.username)));
 
-		if (!resume) throw new ORPCError("NOT_FOUND");
+		if (
+			!resume ||
+			(input.requirePublic && !resume.isPublic) ||
+			(input.expectedResumeId && resume.id !== input.expectedResumeId)
+		)
+			throw new ORPCError("NOT_FOUND");
 
 		const viewer = input.currentUserId ? { id: input.currentUserId } : null;
 		assertCanView(resume, viewer);

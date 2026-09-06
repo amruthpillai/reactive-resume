@@ -322,8 +322,15 @@ const publicationsSectionSchema = itemSection(
 	"The items to display in the publications section.",
 );
 const referencesSectionSchema = itemSection(referenceItemSchema, "The items to display in the references section.");
+const skillKeywordLayoutSchema = z
+	.enum(["inline", "list"])
+	.default("inline")
+	.catch("inline")
+	.describe("How skill keywords are displayed: inline separated by commas, or one bullet per keyword.");
+
 export const skillsSectionSchema = itemSection(skillItemSchema, "The items to display in the skills section.")
 	.extend({
+		keywordLayout: skillKeywordLayoutSchema,
 		layout: z
 			.enum(["default", "inline"])
 			.default("default")
@@ -394,6 +401,7 @@ export type CustomSectionItem = z.infer<(typeof customSectionItemDefinitionByTyp
 
 const customSectionSchemaOptions = Object.entries(customSectionItemDefinitionByType).map(([type, { schema }]) =>
 	baseSectionSchema.extend({
+		keywordLayout: (type === "skills" ? skillKeywordLayoutSchema : z.undefined().catch(undefined)).optional(),
 		id: z.string().describe("The unique identifier for the custom section. Usually generated as a UUID."),
 		type: z
 			.literal(type as CustomSectionType)
