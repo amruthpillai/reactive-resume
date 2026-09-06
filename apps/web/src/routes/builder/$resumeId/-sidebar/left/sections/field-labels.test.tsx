@@ -119,18 +119,25 @@ describe("builder field labels", () => {
 		expect(state.uploadFile).not.toHaveBeenCalled();
 	});
 
-	it("keeps the existing upload error path for full contain files", async () => {
-		state.uploadFile.mockRejectedValue(new Error("Upload failed"));
+	it("retries the same full contain file after an upload error", async () => {
+		state.uploadFile.mockRejectedValueOnce(new Error("Upload failed"));
 		const user = userEvent.setup();
 		renderSection(<PictureSectionBuilder />);
 
 		await user.click(screen.getByRole("button", { name: "Contain" }));
 		const file = new File(["full-image"], "full.png", { type: "image/png" });
-		await user.upload(screen.getAllByLabelText("Upload picture")[0] as HTMLInputElement, file);
+		const input = screen.getAllByLabelText("Upload picture")[0] as HTMLInputElement;
+		await user.upload(input, file);
 
 		await waitFor(() => expect(state.uploadFile).toHaveBeenCalledOnce());
 		expect(state.data.picture.url).toBe("");
 		expect(screen.queryByRole("dialog", { name: "Crop picture" })).not.toBeInTheDocument();
+		await waitFor(() => expect(input.files).toHaveLength(0));
+
+		await user.upload(input, file);
+		await waitFor(() => expect(state.uploadFile).toHaveBeenCalledTimes(2));
+		expect(state.uploadFile.mock.calls[0]?.[0]).toBe(file);
+		expect(state.uploadFile.mock.calls[1]?.[0]).toBe(file);
 	});
 
 	it("disables fit and upload controls inside the builder lock fieldset", () => {

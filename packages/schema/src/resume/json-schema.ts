@@ -9,7 +9,13 @@ const toInputJsonSchema = (schema: z.ZodType) =>
 	});
 
 export function createResumeDataJsonSchema() {
-	return toInputJsonSchema(resumeDataSchema);
+	const schema = toInputJsonSchema(resumeDataSchema);
+	const picture = schema.properties?.picture;
+	// Zod's catch accepts an omitted fit at runtime but still marks the property required in JSON Schema.
+	if (picture && typeof picture !== "boolean" && Array.isArray(picture.required)) {
+		picture.required = picture.required.filter((property) => property !== "fit");
+	}
+	return schema;
 }
 
 export function createCustomSectionItemJsonSchemas() {

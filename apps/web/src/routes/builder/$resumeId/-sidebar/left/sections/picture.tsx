@@ -566,7 +566,6 @@ function PictureSectionForm() {
 				form.setFieldValue("url", url);
 				handleAutoSave();
 				toast.close(toastId);
-				if (fileInputRef.current) fileInputRef.current.value = "";
 			},
 			onError: (error) => {
 				toast.add({
@@ -580,6 +579,9 @@ function PictureSectionForm() {
 					),
 					id: toastId,
 				});
+			},
+			onSettled: () => {
+				if (fileInputRef.current) fileInputRef.current.value = "";
 			},
 		});
 	};
