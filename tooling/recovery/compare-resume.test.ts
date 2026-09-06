@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { compareResumeRecovery } from "./compare-resume";
 
-const SYNTHETIC_SOURCE_HASH = "a544b2abf225396f8c16cd2ea1c182d195a8d9179d3a95be4b1b1e7d43722e11";
-const RECOVERED_COPY_HASH = "704cd69adcd227d6975aca64afea9a63fe0eeb8e17c275b4c79627d85bdd5791";
-const CURRENT_COPY_HASH = "33d337241cd4ad8cf0faa2cdc0107fa4d607b3070f27dab7166c206b05afd882";
-const DEFAULT_RESUME_HASH = "a6930afc82a24637de715bdcac5300318261d3b69969527f43917904478e885b";
+const SYNTHETIC_SOURCE_HASH = "2fc24960657492304068db58c4f4f8b0861ef4937bf12aadeced12ed03856d41";
+const RECOVERED_COPY_HASH = "87b3c6293158e14591387969b804dda0233ae83df79e59043b340c9f0180bf6d";
+const CURRENT_COPY_HASH = "701ee9fde9161c974ee6325e169132249ccb77adb31d875541ab70dd20835017";
+const DEFAULT_RESUME_HASH = "bb0b5937876766c5a0d5014538257870396f30902d86a2d32d2c901f644ffb1f";
 
 const FORMAT_CHARACTERS = [
 	["zero-width space (U+200B)", "\u200B"],
