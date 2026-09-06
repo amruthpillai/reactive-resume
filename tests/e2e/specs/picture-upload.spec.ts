@@ -32,7 +32,7 @@ test("uploads a large JPEG after cropping without exceeding the upload limit", a
 	});
 	const cropDialog = page.getByRole("dialog", { name: "Crop picture" });
 	await expect(cropDialog.locator("img")).toBeVisible();
-	await cropDialog.getByRole("button", { name: "Save & Upload" }).click();
+	await cropDialog.getByRole("button", { name: "Crop and Upload" }).click();
 	await expect(page.locator("#sidebar-picture input[name=url]")).toHaveValue(/\/uploads\//);
 	await expect
 		.poll(() => page.locator("#sidebar-picture img").evaluate((image: HTMLImageElement) => image.naturalWidth))

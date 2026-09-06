@@ -183,12 +183,6 @@ function PictureFitField({ form, onAutoSave }: PictureFieldProps) {
 							<Trans>Contain</Trans>
 						</Button>
 					</ButtonGroup>
-					<p className="text-muted-foreground text-xs">
-						<Trans>
-							Cover crops the image to fill the frame. Contain shows the whole image. Reupload the original to restore
-							edges removed by an earlier crop.
-						</Trans>
-					</p>
 				</div>
 			)}
 		</form.Field>
@@ -685,17 +679,29 @@ function PictureSectionForm() {
 						</div>
 					</div>
 
-					<DialogFooter>
+					<DialogFooter className="flex-row flex-wrap justify-between">
 						<Button variant="outline" onClick={closeCropDialog}>
 							<Trans>Cancel</Trans>
 						</Button>
-						<Button
-							onClick={() => {
-								void onConfirmCrop();
-							}}
-						>
-							<Trans>Save & Upload</Trans>
-						</Button>
+						<div className="flex flex-wrap gap-2">
+							<Button
+								variant="outline"
+								onClick={() => {
+									if (!cropState) return;
+									uploadPictureFile(cropState.file);
+									closeCropDialog();
+								}}
+							>
+								<Trans>Skip and Upload</Trans>
+							</Button>
+							<Button
+								onClick={() => {
+									void onConfirmCrop();
+								}}
+							>
+								<Trans>Crop and Upload</Trans>
+							</Button>
+						</div>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

@@ -2,7 +2,7 @@
 
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ReactNode } from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
@@ -117,6 +117,21 @@ describe("builder field labels", () => {
 		await user.click(screen.getByRole("button", { name: "Cancel" }));
 		expect(dialog).not.toBeInTheDocument();
 		expect(state.uploadFile).not.toHaveBeenCalled();
+	});
+
+	it("uploads the original file when cropping is skipped", async () => {
+		const user = userEvent.setup();
+		renderSection(<PictureSectionBuilder />);
+
+		const file = new File(["original-image"], "original.png", { type: "image/png" });
+		await user.upload(screen.getAllByLabelText("Upload picture")[0] as HTMLInputElement, file);
+
+		const dialog = screen.getByRole("dialog", { name: "Crop picture" });
+		await user.click(within(dialog).getByRole("button", { name: "Skip and Upload" }));
+
+		await waitFor(() => expect(state.uploadFile).toHaveBeenCalledOnce());
+		expect(state.uploadFile.mock.calls[0]?.[0]).toBe(file);
+		expect(screen.queryByRole("dialog", { name: "Crop picture" })).not.toBeInTheDocument();
 	});
 
 	it("retries the same full contain file after an upload error", async () => {
