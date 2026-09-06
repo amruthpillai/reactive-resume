@@ -1096,3 +1096,47 @@ describe("statistics.recordDownload", () => {
 		expect(values).toHaveBeenCalledTimes(2);
 	});
 });
+
+describe("root public-only lookup", () => {
+	it("rejects a private target even for its owner after identity resolution", async () => {
+		const row = {
+			...createResumeRow(defaultResumeData),
+			userId: "u1",
+			isPublic: false,
+			hasPassword: false,
+			passwordHash: null,
+		};
+		dbMock.select.mockReturnValue({ from: () => ({ innerJoin: () => ({ where: async () => [row] }) }) });
+		await expect(
+			resumeService.getBySlug({
+				username: "owner",
+				slug: "resume",
+				requestHeaders: new Headers(),
+				currentUserId: "u1",
+				requirePublic: true,
+			}),
+		).rejects.toMatchObject({ code: "NOT_FOUND" });
+	});
+});
+
+it("rejects a different resume reusing the resolved root slug", async () => {
+	const row = {
+		...createResumeRow(defaultResumeData),
+		id: "replacement-id",
+		userId: "u1",
+		isPublic: true,
+		hasPassword: false,
+		passwordHash: null,
+	};
+	dbMock.select.mockReturnValue({ from: () => ({ innerJoin: () => ({ where: async () => [row] }) }) });
+	await expect(
+		resumeService.getBySlug({
+			username: "owner",
+			slug: "resume",
+			requestHeaders: new Headers(),
+			currentUserId: "u1",
+			requirePublic: true,
+			expectedResumeId: "configured-id",
+		}),
+	).rejects.toMatchObject({ code: "NOT_FOUND" });
+});
