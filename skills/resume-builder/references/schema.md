@@ -35,6 +35,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | --- | --- | --- | --- | --- |
 | `picture` | `object` | yes | — | Configuration for photograph displayed on the resume |
 | `picture.hidden` | `boolean` | yes | — | Whether to hide the picture from the resume. |
+| `picture.fit` | `string` | no | enum: ["cover","contain"]; default: "cover" | How the picture fits its frame: cover crops overflow, while contain preserves the whole image. |
 | `picture.url` | `string` | yes | — | The URL to the picture to display on the resume. Prefer local app-served paths (for example /uploads/...) populated via upload. |
 | `picture.size` | `number` | yes | minimum: 32; maximum: 512 | The size of the picture to display on the resume, defined in points (pt). |
 | `picture.rotation` | `number` | yes | minimum: 0; maximum: 360 | The rotation of the picture to display on the resume, defined in degrees (°). |

@@ -5,6 +5,25 @@ const NOW = new Date("2024-06-15T00:00:00Z");
 
 describe("parsePeriod", () => {
 	it.each([
+		["numeric range", "2020 - 2024", "en-US", { start: { year: 2020 }, end: { year: 2024 }, ongoing: false }],
+		[
+			"localized range",
+			"janvier 2020 - mars 2022",
+			"fr-FR",
+			{ start: { year: 2020, month: 1 }, end: { year: 2022, month: 3 }, ongoing: false },
+		],
+		["ongoing range", "January 2024 - Present", "en-US", { start: { year: 2024, month: 1 }, ongoing: true }],
+		["year-only value", "2024", "en-US", { start: { year: 2024 }, ongoing: false }],
+		["reversed range", "2024 - 2020", "en-US", { start: { year: 2024 }, end: { year: 2020 }, ongoing: false }],
+		["blank value", "", "en-US", null],
+		["bare ongoing value", "Present", "en-US", null],
+		["prose value", "Summer of love", "en-US", null],
+		["equal range", "2024 - 2024", "en-US", { start: { year: 2024 }, end: { year: 2024 }, ongoing: false }],
+	] as const)("characterizes %s", (_case, input, locale, expected) => {
+		expect(parsePeriod(input, locale)).toEqual(expected);
+	});
+
+	it.each([
 		["Jan 2020 - Present", { start: { year: 2020, month: 1 }, ongoing: true }],
 		["January 2020 – March 2022", { start: { year: 2020, month: 1 }, end: { year: 2022, month: 3 }, ongoing: false }],
 		["Sept 2019 - Dec 2019", { start: { year: 2019, month: 9 }, end: { year: 2019, month: 12 }, ongoing: false }],

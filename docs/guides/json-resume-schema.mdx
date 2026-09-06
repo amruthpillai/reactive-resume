@@ -160,6 +160,15 @@ The full JSON Schema for Reactive Resume follows. You can also fetch the latest 
 					"type": "boolean",
 					"description": "Whether to hide the picture from the resume."
 				},
+				"fit": {
+					"default": "cover",
+					"description": "How the picture fits its frame: cover crops overflow, while contain preserves the whole image.",
+					"type": "string",
+					"enum": [
+						"cover",
+						"contain"
+					]
+				},
 				"url": {
 					"type": "string",
 					"description": "The URL to the picture to display on the resume. Prefer local app-served paths (for example /uploads/...) populated via upload."

@@ -9,7 +9,9 @@ import {
 	ListIcon,
 	PencilSimpleLineIcon,
 	PlusIcon,
+	SortDescendingIcon,
 } from "@phosphor-icons/react";
+import { sortSectionItemsByPeriod } from "@reactive-resume/resume/section-sort";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
@@ -24,6 +26,7 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
@@ -47,6 +50,36 @@ export function SectionDropdownMenu({ type }: Props) {
 	const onAddItem = () => {
 		if (type === "summary") return;
 		openDialog(`resume.sections.${type}.create`, undefined);
+	};
+
+	const onSortByDate = () => {
+		if ((type !== "experience" && type !== "education") || resume.isLocked) return;
+
+		let unresolvedLabels: string[] = [];
+		if (type === "experience") {
+			const currentItems = resume.data.sections.experience.items;
+			const result = sortSectionItemsByPeriod(currentItems, resume.data.metadata.page.locale);
+			const labelById = new Map(currentItems.map((item) => [item.id, item.company.trim() || item.id]));
+			unresolvedLabels = result.unresolvedIds.map((id) => labelById.get(id) ?? id);
+			updateResumeData((draft) => {
+				draft.sections.experience.items = result.items;
+			});
+		} else {
+			const currentItems = resume.data.sections.education.items;
+			const result = sortSectionItemsByPeriod(currentItems, resume.data.metadata.page.locale);
+			const labelById = new Map(currentItems.map((item) => [item.id, item.school.trim() || item.id]));
+			unresolvedLabels = result.unresolvedIds.map((id) => labelById.get(id) ?? id);
+			updateResumeData((draft) => {
+				draft.sections.education.items = result.items;
+			});
+		}
+
+		if (unresolvedLabels.length > 0) {
+			toast.add({
+				type: "warning",
+				description: t`Could not sort these items; they stayed at the end: ${unresolvedLabels.join(", ")}.`,
+			});
+		}
 	};
 
 	const onToggleVisibility = () => {
@@ -137,6 +170,13 @@ export function SectionDropdownMenu({ type }: Props) {
 								<PlusIcon />
 								<Trans>Add a new item</Trans>
 							</DropdownMenuItem>
+
+							{(type === "experience" || type === "education") && (
+								<DropdownMenuItem disabled={resume.isLocked} onClick={onSortByDate}>
+									<SortDescendingIcon />
+									<Trans>Sort by date</Trans>
+								</DropdownMenuItem>
+							)}
 						</DropdownMenuGroup>
 
 						<DropdownMenuSeparator />

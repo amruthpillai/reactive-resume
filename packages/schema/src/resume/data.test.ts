@@ -241,6 +241,20 @@ describe("pictureSchema", () => {
 		expect(pictureSchema.safeParse(defaultResumeData.picture).success).toBe(true);
 	});
 
+	it("defaults missing and invalid legacy fit values to cover", () => {
+		const { fit: _fit, ...legacyPicture } = defaultResumeData.picture;
+
+		expect(pictureSchema.parse(legacyPicture).fit).toBe("cover");
+		expect(pictureSchema.parse({ ...legacyPicture, fit: "stretch" }).fit).toBe("cover");
+	});
+
+	it("preserves contain through parsing and JSON round-trip", () => {
+		const picture = pictureSchema.parse({ ...defaultResumeData.picture, fit: "contain" });
+		const roundTripped = pictureSchema.parse(JSON.parse(JSON.stringify(picture)));
+
+		expect(roundTripped.fit).toBe("contain");
+	});
+
 	it("rejects size below 32", () => {
 		const invalid = { ...defaultResumeData.picture, size: 16 };
 		expect(pictureSchema.safeParse(invalid).success).toBe(false);
