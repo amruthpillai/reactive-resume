@@ -27,19 +27,28 @@ export function getVisibleLeftSidebarSections(data: ResumeData): LeftSidebarSect
 
 export function focusLeftSidebarSection(section: LeftSidebarSection): void {
 	const editorTarget = document.getElementById(`sidebar-${section}`);
-	const recoveryTarget = document.getElementById(`sidebar-hidden-${section}`);
-	const target = editorTarget ?? recoveryTarget;
-	const isRecoveryEntry = !editorTarget && !!recoveryTarget;
-
-	if (!target) return;
-
-	if (isRecoveryEntry) {
-		const trigger = document.getElementById("sidebar-hidden-sections-trigger");
-		if (trigger?.getAttribute("aria-expanded") === "false") trigger.click();
-		target.focus({ preventScroll: true });
+	if (editorTarget) {
+		editorTarget.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+		return;
 	}
 
-	target.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+	const recoveryTargetId = `sidebar-hidden-${section}`;
+	const focusRecoveryTarget = () => {
+		const recoveryTarget = document.getElementById(recoveryTargetId);
+		if (!recoveryTarget) return;
+
+		recoveryTarget.focus({ preventScroll: true });
+		recoveryTarget.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+	};
+
+	const trigger = document.getElementById("sidebar-hidden-sections-trigger");
+	if (trigger?.getAttribute("aria-expanded") === "false") {
+		trigger.click();
+		requestAnimationFrame(focusRecoveryTarget);
+		return;
+	}
+
+	focusRecoveryTarget();
 }
 
 type SectionEditorListProps = {

@@ -2,7 +2,7 @@
 
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Resume } from "./draft";
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
@@ -197,27 +197,33 @@ describe("hidden section recovery", () => {
 		expect(useResumeStore.getState().undoStack).toHaveLength(0);
 	});
 
-	it("opens and focuses a hidden section recovery entry from sidebar navigation", () => {
-		const trigger = document.createElement("button");
-		trigger.id = "sidebar-hidden-sections-trigger";
-		trigger.setAttribute("aria-expanded", "false");
-		trigger.addEventListener("click", () => trigger.setAttribute("aria-expanded", "true"));
-		const recoveryEntry = document.createElement("div");
-		recoveryEntry.id = "sidebar-hidden-experience";
-		recoveryEntry.tabIndex = -1;
-		recoveryEntry.scrollIntoView = vi.fn();
-		document.body.append(trigger, recoveryEntry);
+	it("reopens a collapsed recovery group before focusing and scrolling the hidden section", async () => {
+		vi.useRealTimers();
+		const user = userEvent.setup();
+		const scrollIntoView = vi.fn();
+		Object.defineProperty(HTMLElement.prototype, "scrollIntoView", {
+			configurable: true,
+			value: scrollIntoView,
+		});
+		renderRecovery();
+		const trigger = screen.getByRole("button", { name: "Hidden sections" });
+
+		await user.click(trigger);
+		await waitFor(() => expect(document.getElementById("sidebar-hidden-experience")).toBeNull());
 
 		focusLeftSidebarSection("experience");
 
-		expect(trigger).toHaveAttribute("aria-expanded", "true");
-		expect(recoveryEntry).toHaveFocus();
-		expect(recoveryEntry.scrollIntoView).toHaveBeenCalledWith({
+		await waitFor(() => expect(trigger).toHaveAttribute("aria-expanded", "true"));
+		const recoveryEntry = await waitFor(() => {
+			const entry = document.getElementById("sidebar-hidden-experience");
+			expect(entry).not.toBeNull();
+			return entry;
+		});
+		await waitFor(() => expect(recoveryEntry).toHaveFocus());
+		expect(scrollIntoView).toHaveBeenCalledWith({
 			block: "start",
 			inline: "nearest",
 			behavior: "smooth",
 		});
-		trigger.remove();
-		recoveryEntry.remove();
 	});
 });
