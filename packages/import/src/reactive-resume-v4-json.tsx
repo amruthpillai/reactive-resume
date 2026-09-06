@@ -387,6 +387,7 @@ export function parseReactiveResumeV4JSON(json: string): ResumeData {
 					icon: "",
 					columns: v4Data.sections.skills?.columns ?? 1,
 					layout: "default",
+					keywordLayout: "inline",
 					hidden: !(v4Data.sections.skills?.visible ?? true),
 					keepTogether: false,
 					startOnNewPage: false,

@@ -18,18 +18,17 @@ const formSchema = z.object({
 	password: z.string().min(6).max(64),
 });
 
-type Props = {
+type ResumePasswordPageProps = {
+	username: string;
+	slug: string;
 	redirectPath: string;
 };
 
-export function ResumePasswordPage({ redirectPath }: Props) {
+export function ResumePasswordPage({ username, slug, redirectPath }: ResumePasswordPageProps) {
 	const navigate = useNavigate();
 	const [showPassword, toggleShowPassword] = useToggle(false);
 
 	const { mutate: verifyPassword } = useMutation(orpc.resume.verifyPassword.mutationOptions());
-
-	const [username, slug] = redirectPath.split("/").slice(1) as [string, string];
-	if (!username || !slug) throw navigate({ to: "/" });
 
 	const form = useAppForm({
 		defaultValues: { password: "" },

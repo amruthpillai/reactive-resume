@@ -31,6 +31,7 @@ import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";
+import { SkillKeywordLayoutMenu } from "./skill-keyword-layout-menu";
 
 type Props = {
 	type: "summary" | SectionType;
@@ -193,6 +194,8 @@ export function SectionDropdownMenu({ type }: Props) {
 						<PencilSimpleLineIcon />
 						<Trans>Rename</Trans>
 					</DropdownMenuItem>
+
+					{type === "skills" && <SkillKeywordLayoutMenu />}
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>

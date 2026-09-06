@@ -264,11 +264,18 @@ function renderSkills(section: Sections["skills"], colorHex: string): Paragraph[
 			children.push(new TextRun({ text: ` — ${item.proficiency}`, ...baseRun }));
 		}
 
-		if (item.keywords.length > 0) {
+		if (section.keywordLayout !== "list" && item.keywords.length > 0) {
 			children.push(new TextRun({ text: `: ${item.keywords.join(", ")}`, ...baseRun }));
 		}
 
 		paragraphs.push(new Paragraph({ spacing: { before: 60 }, children }));
+		if (section.keywordLayout === "list") {
+			for (const keyword of item.keywords) {
+				paragraphs.push(
+					new Paragraph({ bullet: { level: 0 }, children: [new TextRun({ text: keyword, ...baseRun })] }),
+				);
+			}
+		}
 	}
 
 	return paragraphs;
@@ -522,6 +529,7 @@ export function renderCustomSection(section: CustomSection, colorHex: string): P
 	const sectionKey = sectionType as SectionType;
 	if (sectionKey in sectionRenderers) {
 		const syntheticSection = {
+			...(section.type === "skills" ? { keywordLayout: section.keywordLayout } : {}),
 			title: section.title,
 			columns: section.columns,
 			hidden: false,
