@@ -78,10 +78,10 @@ export const account = pg.pgTable(
 			.$defaultFn(() => generateId()),
 		accountId: pg.text("account_id").notNull(),
 		providerId: pg.text("provider_id").notNull().default("credential"),
-		// Better Auth 1.7 scopes account identity to (issuer, accountId) rather than providerId.
-		// Real OIDC issuers are stored verbatim; providers without one get a synthetic
-		// `local:`/`local:oauth:` namespace. See migrations/*_account_issuer for the backfill.
-		issuer: pg.text("issuer").notNull(),
+		// Better Auth 1.7.0–1.7.2 wrote this identity namespace. Version 1.7.3
+		// returned to (providerId, accountId), so keep migrated values without
+		// requiring the field on new account inserts.
+		issuer: pg.text("issuer"),
 		userId: pg
 			.text("user_id")
 			.notNull()
@@ -104,7 +104,7 @@ export const account = pg.pgTable(
 			.defaultNow()
 			.$onUpdate(() => /* @__PURE__ */ new Date()),
 	},
-	(t) => [pg.index().on(t.userId), pg.uniqueIndex("account_issuer_account_id_unique_idx").on(t.issuer, t.accountId)],
+	(t) => [pg.index().on(t.userId)],
 );
 
 export const verification = pg.pgTable(
