@@ -42,6 +42,134 @@ export async function expireRetiredResumeLink(username: string, slug: string) {
 	}
 }
 
+const resumeInsertGateKey = 2_836_010;
+const resumeInsertGateSlug = "e2e-concurrent-first";
+
+type ResumeInsertGate = {
+	waitUntilInsertBlocked: () => Promise<void>;
+	release: () => Promise<void>;
+	dispose: () => Promise<void>;
+};
+
+async function waitForAdvisoryLock(pool: Pool, key: number) {
+	await expectDatabaseCondition(
+		pool,
+		`select exists (
+			select 1
+			from pg_locks
+			where locktype = 'advisory'
+			  and database = (select oid from pg_database where datname = current_database())
+			  and classid = 0
+			  and objid = $1
+			  and not granted
+		) as matched`,
+		[key],
+	);
+}
+
+async function expectDatabaseCondition(pool: Pool, query: string, values: unknown[] = []) {
+	const deadline = Date.now() + 10_000;
+
+	while (Date.now() < deadline) {
+		const result = await pool.query<{ matched: boolean }>(query, values);
+		if (result.rows[0]?.matched) return;
+		await new Promise((resolve) => setTimeout(resolve, 25));
+	}
+
+	throw new Error(`Database condition was not met within 10 seconds: ${query}`);
+}
+
+export async function createResumeInsertGate(): Promise<ResumeInsertGate> {
+	const pool = new Pool({ connectionString: getDatabaseUrl() });
+	const lockClient = await pool.connect();
+	let released = false;
+
+	try {
+		await pool.query('drop trigger if exists "e2e_resume_insert_gate" on "resume"');
+		await pool.query('drop function if exists "e2e_resume_insert_gate"()');
+		await pool.query(`
+			create function "e2e_resume_insert_gate"() returns trigger
+			language plpgsql
+			as $$
+			begin
+				if new.slug = '${resumeInsertGateSlug}' then
+					perform pg_advisory_xact_lock(${resumeInsertGateKey});
+				end if;
+				return new;
+			end;
+			$$
+		`);
+		await pool.query(`
+			create trigger "e2e_resume_insert_gate"
+			before insert on "resume"
+			for each row execute function "e2e_resume_insert_gate"()
+		`);
+		await lockClient.query("select pg_advisory_lock($1)", [resumeInsertGateKey]);
+	} catch (error) {
+		lockClient.release();
+		await pool.end();
+		throw error;
+	}
+
+	const release = async () => {
+		if (released) return;
+		released = true;
+		await lockClient.query("select pg_advisory_unlock($1)", [resumeInsertGateKey]);
+	};
+
+	return {
+		waitUntilInsertBlocked: () => waitForAdvisoryLock(pool, resumeInsertGateKey),
+		release,
+		dispose: async () => {
+			await release();
+			lockClient.release();
+			await pool.query('drop trigger if exists "e2e_resume_insert_gate" on "resume"');
+			await pool.query('drop function if exists "e2e_resume_insert_gate"()');
+			await pool.end();
+		},
+	};
+}
+
+export async function readResumeLinkState(resumeId: string) {
+	const pool = new Pool({ connectionString: getDatabaseUrl() });
+
+	try {
+		const live = await pool.query<{ slug: string }>('select slug from "resume" where id = $1', [resumeId]);
+		const retired = await pool.query<{ slug: string; attemptCount: number }>(
+			`select slug, attempt_count as "attemptCount"
+			 from "resume_retired_link"
+			 where resume_id = $1
+			 order by retired_at, id`,
+			[resumeId],
+		);
+
+		return { liveSlug: live.rows[0]?.slug ?? null, retiredLinks: retired.rows };
+	} finally {
+		await pool.end();
+	}
+}
+
+export async function hasLiveRetiredPathConflict(slug: string) {
+	const pool = new Pool({ connectionString: getDatabaseUrl() });
+
+	try {
+		const result = await pool.query<{ matched: boolean }>(
+			`select exists (
+				select 1
+				from "resume" live
+				inner join "resume_retired_link" retired
+					on retired.user_id = live.user_id and retired.slug = live.slug
+				where live.slug = $1
+			) as matched`,
+			[slug],
+		);
+
+		return result.rows[0]?.matched ?? false;
+	} finally {
+		await pool.end();
+	}
+}
+
 type SemanticStylesheetSeed = {
 	mode: "legacy" | "semantic";
 	source: { languageVersion: number; text: string };

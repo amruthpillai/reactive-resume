@@ -1,7 +1,13 @@
 import { request as requestFactory } from "@playwright/test";
 import { createAuthenticatedContext } from "../fixtures/auth";
 import { createAccount } from "../fixtures/data";
-import { deleteE2EUser, expireRetiredResumeLink } from "../fixtures/db";
+import {
+	createResumeInsertGate,
+	deleteE2EUser,
+	expireRetiredResumeLink,
+	hasLiveRetiredPathConflict,
+	readResumeLinkState,
+} from "../fixtures/db";
 import { createSampleResumeFromDashboard, openSidebarSection } from "../fixtures/resume";
 import { expect, test } from "../fixtures/test";
 
@@ -111,4 +117,60 @@ test("records prospective retired-link attempts without changing public 404 priv
 		await registrationRequest.dispose();
 		await deleteE2EUser(otherAccount);
 	}
+});
+
+test("preserves retired-link invariants across concurrent reuse and a failed rename", async ({ authPage: page }) => {
+	test.setTimeout(90_000);
+
+	const updateResume = (resumeId: string, slug: string) =>
+		page.request.put(`/api/openapi/resumes/${resumeId}`, { data: { slug } });
+
+	const createFirst = await page.request.post("/api/openapi/resumes", {
+		data: { name: "Concurrent source", slug: "e2e-concurrent-first", tags: [], withSampleData: false },
+	});
+	expect(createFirst.ok(), await createFirst.text()).toBe(true);
+	const firstResumeId = (await createFirst.json()) as string;
+	const gate = await createResumeInsertGate();
+	let releaseFirstPath: ReturnType<typeof updateResume> | undefined;
+	let reuseFirstPath: ReturnType<typeof page.request.post> | undefined;
+
+	try {
+		reuseFirstPath = page.request.post("/api/openapi/resumes", {
+			data: { name: "Concurrent reuse", slug: "e2e-concurrent-first", tags: [], withSampleData: false },
+		});
+		await gate.waitUntilInsertBlocked();
+
+		releaseFirstPath = updateResume(firstResumeId, "e2e-concurrent-third");
+		const releaseResponse = await releaseFirstPath;
+		expect(releaseResponse.ok(), await releaseResponse.text()).toBe(true);
+		await gate.release();
+
+		const reuseResponse = await reuseFirstPath;
+		expect(reuseResponse.ok(), await reuseResponse.text()).toBe(true);
+		expect(await hasLiveRetiredPathConflict("e2e-concurrent-first")).toBe(false);
+	} finally {
+		await gate.release();
+		await Promise.allSettled([releaseFirstPath, reuseFirstPath].filter((request) => request !== undefined));
+		await gate.dispose();
+	}
+
+	const updateOriginal = await page.request.put(`/api/openapi/resumes/${firstResumeId}`, {
+		data: { slug: "e2e-rollback-original" },
+	});
+	expect(updateOriginal.ok(), await updateOriginal.text()).toBe(true);
+
+	const createOccupied = await page.request.post("/api/openapi/resumes", {
+		data: { name: "Occupied target", slug: "e2e-rollback-occupied", tags: [], withSampleData: false },
+	});
+	expect(createOccupied.ok(), await createOccupied.text()).toBe(true);
+
+	const failedRename = await page.request.put(`/api/openapi/resumes/${firstResumeId}`, {
+		data: { slug: "e2e-rollback-occupied" },
+	});
+	expect(failedRename.status()).toBe(400);
+	expect(await failedRename.json()).toMatchObject({ code: "RESUME_SLUG_ALREADY_EXISTS" });
+	expect(await readResumeLinkState(firstResumeId)).toEqual({
+		liveSlug: "e2e-rollback-original",
+		retiredLinks: [{ slug: "e2e-concurrent-third", attemptCount: 0 }],
+	});
 });

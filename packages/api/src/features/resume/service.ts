@@ -600,7 +600,6 @@ export const resumeService = {
 
 		try {
 			await db.transaction(async (tx) => {
-				await retiredLinkService.removeLivePath(tx, { userId: input.userId, slug: input.slug });
 				await tx.insert(schema.resume).values({
 					id,
 					name: input.name,
@@ -609,6 +608,7 @@ export const resumeService = {
 					userId: input.userId,
 					data,
 				});
+				await retiredLinkService.removeLivePath(tx, { userId: input.userId, slug: input.slug });
 			});
 
 			await notifyResumeUpdated({
@@ -669,17 +669,6 @@ export const resumeService = {
 					...(input.showDownloadButtons !== undefined ? { showDownloadButtons: input.showDownloadButtons } : {}),
 				};
 
-				if (input.slug !== undefined && input.slug !== existing.slug) {
-					await retiredLinkService.capture(tx, {
-						resumeId: input.id,
-						userId: input.userId,
-						username: existing.username,
-						retiredSlug: existing.slug,
-						liveSlug: input.slug,
-						now: new Date(),
-					});
-				}
-
 				const [updated] = await tx
 					.update(schema.resume)
 					.set(updateData)
@@ -704,6 +693,18 @@ export const resumeService = {
 					});
 
 				if (!updated) throw new ORPCError("NOT_FOUND");
+
+				if (input.slug !== undefined && input.slug !== existing.slug) {
+					await retiredLinkService.capture(tx, {
+						resumeId: input.id,
+						userId: input.userId,
+						username: existing.username,
+						retiredSlug: existing.slug,
+						liveSlug: input.slug,
+						now: new Date(),
+					});
+				}
+
 				return updated;
 			})
 			.catch((error: unknown) => {

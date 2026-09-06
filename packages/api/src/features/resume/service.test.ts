@@ -360,6 +360,9 @@ describe("create", () => {
 			slug: "first",
 		});
 		expect(values).toHaveBeenCalledOnce();
+		expect(values.mock.invocationCallOrder[0]).toBeLessThan(
+			retiredLinkMocks.removeLivePath.mock.invocationCallOrder[0] ?? Number.POSITIVE_INFINITY,
+		);
 	});
 });
 
@@ -539,9 +542,12 @@ describe("update", () => {
 			liveSlug: "second",
 			now: expect.any(Date),
 		});
+		expect(update.set.mock.invocationCallOrder[0]).toBeLessThan(
+			retiredLinkMocks.capture.mock.invocationCallOrder[0] ?? Number.POSITIVE_INFINITY,
+		);
 	});
 
-	it("does not update the slug when retired-path capture fails", async () => {
+	it("does not publish the update when retired-path capture fails", async () => {
 		const select = createLockedSelectChain([
 			{ data: defaultResumeData, isLocked: false, slug: "first", username: "owner" },
 		]);
@@ -554,7 +560,7 @@ describe("update", () => {
 		await expect(resumeService.update({ id: "r1", userId: "u1", slug: "second" })).rejects.toMatchObject({
 			code: "INTERNAL_SERVER_ERROR",
 		});
-		expect(update.set).not.toHaveBeenCalled();
+		expect(update.set).toHaveBeenCalledOnce();
 		expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
 	});
 
