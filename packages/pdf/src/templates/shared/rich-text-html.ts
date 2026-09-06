@@ -148,7 +148,7 @@ const isInlineNode = (node: Node): boolean => {
 };
 
 // Allow optional leading whitespace + LRM/RLM marks before the bullet character.
-const PSEUDO_BULLET_LEAD = /^[\s‎‏]*[-•*]\s+/;
+const PSEUDO_BULLET_LEAD = /^[\s\u200e\u200f]*[-•*]\s+/;
 
 const stripEmptyInlineWrappers = (html: string): string =>
 	html.replace(/<(strong|b|em|i|u|span)\b[^>]*>\s*<\/\1>/gi, "");

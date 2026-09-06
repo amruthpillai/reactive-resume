@@ -3,6 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { Pool } from "pg";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { countTableBorderGeometry } from "../fixtures/pdf-borders";
 import { ACTIVE_PREVIEW_PAGE_SELECTOR } from "../fixtures/preview";
 import { openSidebarSection } from "../fixtures/resume";
 import { expect, test } from "../fixtures/test";
@@ -59,17 +60,17 @@ async function inspectPdf(bytes: Uint8Array) {
 		const text = (await page.getTextContent()).items.flatMap((item: { str?: string }) => item.str ?? []);
 		const operators = await page.getOperatorList();
 		let stroke = "";
-		let horizontal = 0;
-		let vertical = 0;
+		const borderPaths = [];
 		for (const [index, fn] of operators.fnArray.entries()) {
 			if (fn === OPS.setStrokeRGBColor) stroke = operators.argsArray[index][0];
-			if (fn !== OPS.constructPath || stroke !== "#cc00cc") continue;
+			if (fn !== OPS.constructPath) continue;
 			const bounds = operators.argsArray[index][2] as ArrayLike<number>;
-			const width = Math.abs((bounds[2] ?? 0) - (bounds[0] ?? 0));
-			const height = Math.abs((bounds[3] ?? 0) - (bounds[1] ?? 0));
-			if (height > 0 && height <= 1.01 && width > height) horizontal++;
-			if (width > 0 && width <= 1.01 && height > width) vertical++;
+			borderPaths.push({
+				color: stroke,
+				bounds: [bounds[0] ?? 0, bounds[1] ?? 0, bounds[2] ?? 0, bounds[3] ?? 0],
+			});
 		}
+		const { horizontal, vertical } = countTableBorderGeometry(borderPaths);
 		return { text, horizontal, vertical };
 	} finally {
 		await loading.destroy();

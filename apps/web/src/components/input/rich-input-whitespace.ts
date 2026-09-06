@@ -53,8 +53,7 @@ const isPreservableTextBlock = (node: ProseMirrorNode) =>
 // Mark real text blocks before ProseMirror collapses their whitespace. Containers
 // that its parser turns into paragraphs need the same explicit block boundary.
 const markPastedHtml = (html: string) => {
-	const root = document.createElement("div");
-	root.innerHTML = html;
+	const root = new DOMParser().parseFromString(html, "text/html").body;
 	const blockTags = /^(P|H[1-6]|DIV|BLOCKQUOTE|UL|OL|LI|PRE|HR|TABLE)$/;
 	const normalize = (container: HTMLElement) => {
 		let paragraph: HTMLParagraphElement | undefined;
