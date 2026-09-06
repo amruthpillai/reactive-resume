@@ -41,7 +41,9 @@ const formSchema = z.discriminatedUnion("type", [
 	}),
 	z.object({
 		type: z.literal("pdf"),
-		file: z.instanceof(File).refine((file) => file.type === "application/pdf", { message: "File must be a PDF" }),
+		file: z
+			.instanceof(File)
+			.refine((file) => file.type === "" || file.type === "application/pdf", { message: "File must be a PDF" }),
 	}),
 	z.object({
 		type: z.literal("docx"),
@@ -49,6 +51,7 @@ const formSchema = z.discriminatedUnion("type", [
 			.instanceof(File)
 			.refine(
 				(file) =>
+					file.type === "" ||
 					file.type === "application/msword" ||
 					file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 				{ message: "File must be a Microsoft Word document" },
@@ -58,19 +61,19 @@ const formSchema = z.discriminatedUnion("type", [
 		type: z.literal("reactive-resume-json"),
 		file: z
 			.instanceof(File)
-			.refine((file) => file.type === "application/json", { message: "File must be a JSON file" }),
+			.refine((file) => file.type === "" || file.type === "application/json", { message: "File must be a JSON file" }),
 	}),
 	z.object({
 		type: z.literal("reactive-resume-v4-json"),
 		file: z
 			.instanceof(File)
-			.refine((file) => file.type === "application/json", { message: "File must be a JSON file" }),
+			.refine((file) => file.type === "" || file.type === "application/json", { message: "File must be a JSON file" }),
 	}),
 	z.object({
 		type: z.literal("json-resume-json"),
 		file: z
 			.instanceof(File)
-			.refine((file) => file.type === "application/json", { message: "File must be a JSON file" }),
+			.refine((file) => file.type === "" || file.type === "application/json", { message: "File must be a JSON file" }),
 	}),
 ]);
 

@@ -6,11 +6,13 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { Dialog } from "@reactive-resume/ui/components/dialog";
 import { useDialogStore } from "@/dialogs/store";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 
 const navigate = vi.hoisted(() => vi.fn());
+const importResume = vi.hoisted(() => vi.fn());
 // Stands in for the navigation TanStack Router performs from inside <Link>. Keeping it separate
 // from `navigate` lets a test tell "the router took us away" apart from "the dialog took us away".
 const routerNavigate = vi.hoisted(() => vi.fn());
@@ -47,9 +49,17 @@ vi.mock("@/features/settings/integrations/hooks/use-has-usable-ai-provider", () 
 	useHasUsableAiProvider: () => ({ hasUsableProvider: false, isLoading: false }),
 }));
 
+vi.mock("@/features/resume/import/pdf-text", () => ({
+	extractPdfLines: () => ["Empty MIME PDF Probe"],
+}));
+
+vi.mock("@reactive-resume/import/plain-text", () => ({
+	parseResumeText: () => structuredClone(sampleResumeData),
+}));
+
 vi.mock("@/libs/orpc/client", () => ({
 	client: {},
-	orpc: { resume: { import: { mutationOptions: () => ({ mutationFn: vi.fn() }) } } },
+	orpc: { resume: { import: { mutationOptions: () => ({ mutationFn: importResume }) } } },
 }));
 
 const { ImportResumeDialog } = await import("./import");
@@ -60,6 +70,7 @@ beforeAll(() => {
 
 afterEach(() => {
 	navigate.mockReset();
+	importResume.mockReset();
 	routerNavigate.mockReset();
 });
 
@@ -128,6 +139,52 @@ describe("ImportResumeDialog — PDF without a provider", () => {
 		await screen.findByText(/read the text out of the PDF here in your browser/);
 
 		expect(screen.getByRole("button", { name: "Import" })).not.toBeDisabled();
+	});
+});
+
+describe("ImportResumeDialog — detected files without MIME metadata", () => {
+	it("imports a valid current JSON file detected from its extension and shape", async () => {
+		importResume.mockResolvedValue("imported-resume-id");
+		renderDialog();
+		const input = document.querySelector<HTMLInputElement>('input[type="file"]');
+		if (!input) throw new Error("File input not found");
+
+		const data = structuredClone(sampleResumeData);
+		data.basics.name = "Empty MIME JSON Probe";
+		fireEvent.change(input, {
+			target: { files: [new File([JSON.stringify(data)], "resume.json", { type: "" })] },
+		});
+
+		await screen.findByText("Reactive Resume (JSON)");
+		fireEvent.click(screen.getByRole("button", { name: "Import" }));
+
+		await waitFor(() => {
+			expect(importResume).toHaveBeenCalledOnce();
+		});
+		expect(navigate).toHaveBeenCalledWith({
+			to: "/builder/$resumeId",
+			params: { resumeId: "imported-resume-id" },
+		});
+	});
+
+	it("imports a valid PDF detected from its magic bytes", async () => {
+		importResume.mockResolvedValue("imported-resume-id");
+		renderDialog();
+		const input = document.querySelector<HTMLInputElement>('input[type="file"]');
+		if (!input) throw new Error("File input not found");
+
+		fireEvent.change(input, {
+			target: {
+				files: [new File([new Uint8Array([0x25, 0x50, 0x44, 0x46])], "resume.bin", { type: "" })],
+			},
+		});
+
+		await screen.findByText(/read the text out of the PDF here in your browser/);
+		fireEvent.click(screen.getByRole("button", { name: "Import" }));
+
+		await waitFor(() => {
+			expect(importResume).toHaveBeenCalledOnce();
+		});
 	});
 });
 
