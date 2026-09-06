@@ -5,6 +5,7 @@ import type { Resume } from "./draft";
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
+import { sortSectionItemsByPeriod } from "@reactive-resume/resume/section-sort";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import {
 	isEditableElementFocused,
@@ -105,6 +106,24 @@ function withBasicsName(resume: Resume, name: string): Resume {
 				name,
 			},
 		},
+	};
+}
+
+function experienceItem(
+	id: string,
+	company: string,
+	period: string,
+): ResumeData["sections"]["experience"]["items"][number] {
+	return {
+		id,
+		company,
+		position: "Engineer",
+		location: "",
+		period,
+		description: "",
+		hidden: false,
+		website: { url: "", label: "", inlineLink: false },
+		roles: [],
 	};
 }
 
@@ -344,6 +363,69 @@ describe("builder resume undo/redo", () => {
 		store().redo();
 		expect(store().resume?.data.basics.name).toBe("Second");
 		expect(store().canRedo).toBe(false);
+	});
+
+	it("restores the exact authored Experience order with one undo after a one-shot sort", () => {
+		const store = useResumeStore.getState;
+		const initial = makeResume("sort-undo");
+		initial.data.sections.experience.items = [
+			experienceItem("unknown", "Mystery Co", "Recently"),
+			experienceItem("older", "Older Co", "2018 - 2020"),
+			experienceItem("current", "Current Co", "2023 - Present"),
+		];
+		const authoredItems = cloneResumeData(initial.data).sections.experience.items;
+		store().initialize(initial);
+
+		store().updateResumeData((draft) => {
+			draft.sections.experience.items = sortSectionItemsByPeriod(
+				draft.sections.experience.items,
+				draft.metadata.page.locale,
+			).items;
+		});
+
+		expect(store().resume?.data.sections.experience.items.map(({ id }) => id)).toEqual(["current", "older", "unknown"]);
+		expect(store().undoStack).toHaveLength(1);
+
+		store().undo();
+		expect(store().resume?.data.sections.experience.items).toEqual(authoredItems);
+		expect(store().canUndo).toBe(false);
+	});
+
+	it("retains the chosen order through autosave/reload and never resorts later field edits", async () => {
+		const store = useResumeStore.getState;
+		const initial = makeResume("sort-persistence");
+		initial.data.sections.experience.items = [
+			experienceItem("older", "Older Co", "2018 - 2020"),
+			experienceItem("current", "Current Co", "2023 - Present"),
+		];
+		let savedResume: Resume | undefined;
+		orpcMocks.updateResume.mockImplementation((input: { id: string; data: ResumeData }) => {
+			savedResume = { ...makeResume(input.id), data: cloneResumeData(input.data) };
+			return Promise.resolve(savedResume);
+		});
+		store().initialize(initial);
+
+		store().updateResumeData((draft) => {
+			draft.sections.experience.items = sortSectionItemsByPeriod(
+				draft.sections.experience.items,
+				draft.metadata.page.locale,
+			).items;
+		});
+		vi.advanceTimersByTime(500);
+		await flushMicrotasks();
+
+		expect(orpcMocks.updateResume).toHaveBeenCalledTimes(1);
+		expect(savedResume?.data.sections.experience.items.map(({ id }) => id)).toEqual(["current", "older"]);
+		if (!savedResume) throw new Error("expected the sorted resume to be saved");
+
+		store().reset();
+		store().initialize(savedResume);
+		store().updateResumeData((draft) => {
+			const currentItem = draft.sections.experience.items.find(({ id }) => id === "current");
+			if (currentItem) currentItem.period = "2010 - 2011";
+		});
+
+		expect(store().resume?.data.sections.experience.items.map(({ id }) => id)).toEqual(["current", "older"]);
 	});
 
 	it("separates edits outside the coalesce window into distinct undo steps", async () => {
