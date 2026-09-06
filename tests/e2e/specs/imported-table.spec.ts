@@ -27,13 +27,24 @@ async function readImportedResume(id: string) {
 	if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required for imported table E2E.");
 	const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 	try {
-		const result = await pool.query<{ data: { summary: { content: string } }; slug: string }>(
-			'update "resume" set is_public = true where id = $1 returning data, slug',
-			[id],
-		);
+		const result = await pool.query<{
+			data: { basics: { name: string }; summary: { content: string } };
+			slug: string;
+			updatedAt: Date;
+		}>('select data, slug, updated_at as "updatedAt" from "resume" where id = $1', [id]);
 		const row = result.rows[0];
 		if (!row) throw new Error(`Resume ${id} was not found.`);
 		return row;
+	} finally {
+		await pool.end();
+	}
+}
+
+async function publishImportedResume(id: string) {
+	if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required for imported table E2E.");
+	const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+	try {
+		await pool.query('update "resume" set is_public = true where id = $1', [id]);
 	} finally {
 		await pool.end();
 	}
@@ -108,6 +119,7 @@ test("edits and exports a synthetic imported table without losing its grid", asy
 	await page.waitForURL(/\/builder\/.+/);
 	const id = new URL(page.url()).pathname.match(/^\/builder\/([^/]+)/)?.[1];
 	if (!id) throw new Error("Missing imported resume id.");
+	await publishImportedResume(id);
 	let stored = await readImportedResume(id);
 	const slug = stored.slug;
 
@@ -151,11 +163,18 @@ test("edits and exports a synthetic imported table without losing its grid", asy
 	await captureStage("initial", "Beta");
 
 	await openSidebarSection(page, "Basics");
-	await page.getByLabel("Name").fill("Imported Table Probe unrelated edit");
-	await expect(page.getByRole("status").filter({ hasText: "Saved" })).toBeVisible();
+	const unrelatedName = "Imported Table Probe unrelated edit";
+	const beforeUnrelatedEdit = stored.updatedAt;
+	await page.getByLabel("Name").fill(unrelatedName);
+	await expect.poll(async () => (await readImportedResume(id)).data.basics.name).toBe(unrelatedName);
+	stored = await readImportedResume(id);
+	expect(stored.updatedAt.getTime()).toBeGreaterThan(beforeUnrelatedEdit.getTime());
 	await page.reload();
 	stored = await readImportedResume(id);
+	expect(stored.data.basics.name).toBe(unrelatedName);
 	expect(stored.data.summary.content).toBe(tableHtml);
+	await openSidebarSection(page, "Basics");
+	await expect(page.getByLabel("Name")).toHaveValue(unrelatedName);
 	await openSidebarSection(page, "Summary");
 	await expect(summary.locator("table td")).toHaveCount(6);
 	await captureStage("unrelated-edit", "Beta");

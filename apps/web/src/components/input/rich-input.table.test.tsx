@@ -1,11 +1,12 @@
 // @vitest-environment happy-dom
 
 import type { Editor, JSONContent } from "@tiptap/react";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
+import { useState } from "react";
 import { PromptDialogProvider } from "@/hooks/use-prompt";
 import { RichInput } from "./rich-input";
 
@@ -16,6 +17,23 @@ const inlineTable = `<table style="width: 300pt; border-collapse: collapse"><tbo
 const complexTable = `<table style="width: 300pt; border-collapse: collapse"><tbody><tr><th colspan="2" rowspan="2" style="width: 200pt; border: 2pt dashed #123456; padding: 3pt"><p><strong>Lead</strong> cell</p><p><em>Second</em> paragraph</p></th><th style="width: 100pt">Side</th></tr><tr><td style="border-left: 1pt solid rgb(1, 2, 3)"><p>Tail</p></td></tr></tbody></table>`;
 
 const unsupportedTable = `<table border="1" style="width: 300pt"><tbody><tr><td>Original</td></tr></tbody></table>`;
+
+const unsupportedTables = [
+	["legacy table attributes", unsupportedTable],
+	[
+		"unrepresented descendant elements and attributes",
+		`<table><tbody><tr><td><section aria-label="keep">Inside</section></td></tr></tbody></table>`,
+	],
+	[
+		"multiple table bodies",
+		"<table><tbody><tr><td>First</td></tr></tbody><tbody><tr><td>Second</td></tr></tbody></table>",
+	],
+	["browser-repaired malformed markup", "<table><tbody><tr><td>Broken</tr></tbody></table>"],
+	[
+		"unrepresented attributes on supported descendants",
+		`<table><tbody><tr><td><p data-keep="yes">Inside</p></td></tr></tbody></table>`,
+	],
+] as const;
 
 type InputOptions = {
 	className?: string;
@@ -49,6 +67,49 @@ async function input(value: string, options: InputOptions = {}) {
 		onChange,
 		rerender: (nextValue: string, nextOptions?: InputOptions) => result.rerender(renderInput(nextValue, nextOptions)),
 	};
+}
+
+async function controlledInput(initialValue: string) {
+	let editor: Editor | undefined;
+	const onChange = vi.fn();
+
+	function Harness() {
+		const [value, setValue] = useState(initialValue);
+		const [editable, setEditable] = useState(true);
+		const [className, setClassName] = useState("initial");
+
+		return (
+			<I18nProvider i18n={i18n}>
+				<PromptDialogProvider>
+					<button type="button" onClick={() => setEditable((current) => !current)}>
+						Toggle lock
+					</button>
+					<button type="button" onClick={() => setClassName("updated")}>
+						Update prop
+					</button>
+					<output data-testid="stored-value">{value}</output>
+					<RichInput
+						aria-label="Table editor"
+						value={value}
+						onChange={(nextValue) => {
+							onChange(nextValue);
+							setValue(nextValue);
+						}}
+						className={className}
+						editable={editable}
+						onCreate={(event) => {
+							editor = event.editor;
+						}}
+					/>
+				</PromptDialogProvider>
+			</I18nProvider>
+		);
+	}
+
+	render(<Harness />);
+	await waitFor(() => expect(editor).toBeDefined());
+	if (!editor) throw new Error("Editor did not initialize");
+	return { editor, onChange };
 }
 
 const jsonText = (node: JSONContent): string => {
@@ -156,35 +217,28 @@ describe("RichInput imported tables (#3196)", () => {
 		]);
 	});
 
-	it("preserves unsupported table HTML behind an accessible read-only notice", async () => {
+	it.each(unsupportedTables)("preserves exact bytes for %s behind an accessible read-only notice", async (_, value) => {
 		const user = userEvent.setup();
-		const { editor, onChange } = await input(unsupportedTable);
-		const notice = screen.getByRole("status");
+		const { editor, onChange } = await controlledInput(value);
+		const notice = screen.getByText(/Original table formatting is preserved/).closest('[role="status"]');
+		if (!notice) throw new Error("Missing unsupported-table status notice");
 		expect(notice).toHaveTextContent("Original table formatting is preserved");
-		expect(screen.getByRole("button", { name: "Convert to editable text" })).toBeVisible();
+		expect(screen.queryByRole("button", { name: "Convert to editable text" })).not.toBeInTheDocument();
 		expect(editor.isEditable).toBe(false);
+		expect(screen.getByTestId("stored-value")).toHaveTextContent(value, { normalizeWhitespace: false });
 
 		await user.click(editor.view.dom);
 		await user.keyboard("Changed");
+		await user.click(screen.getByRole("button", { name: "Update prop" }));
+		await user.click(screen.getByRole("button", { name: "Toggle lock" }));
+		await user.click(screen.getByRole("button", { name: "Toggle lock" }));
 		expect(onChange).not.toHaveBeenCalled();
+		expect(screen.getByTestId("stored-value")).toHaveTextContent(value, { normalizeWhitespace: false });
 	});
 
-	it("cancels conversion without overwriting unsupported HTML and can reopen the decision", async () => {
-		const { onChange } = await input(unsupportedTable);
-		fireEvent.click(screen.getByRole("button", { name: "Convert to editable text" }));
-		expect(screen.getByRole("alertdialog", { name: "Convert table to editable text?" })).toBeInTheDocument();
-		fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
-		expect(onChange).not.toHaveBeenCalled();
-
-		fireEvent.click(screen.getByRole("button", { name: "Convert to editable text" }));
-		expect(screen.getByRole("alertdialog", { name: "Convert table to editable text?" })).toBeInTheDocument();
-		fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
-		expect(onChange).not.toHaveBeenCalled();
-	});
-
-	it("keeps conversion disabled when caller marks editor as locked", async () => {
+	it("keeps unsupported content read-only without a conversion path when caller marks editor as locked", async () => {
 		const { editor } = await input(unsupportedTable, { editable: false });
 		expect(editor.isEditable).toBe(false);
-		expect(screen.getByRole("button", { name: "Convert to editable text" })).toBeDisabled();
+		expect(screen.queryByRole("button", { name: "Convert to editable text" })).not.toBeInTheDocument();
 	});
 });

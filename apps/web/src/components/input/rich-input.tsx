@@ -110,6 +110,40 @@ const cellStyleProperties = new Set([
 	"background-color",
 	...borderStyleProperties,
 ]);
+const textBlockStyleProperties = new Set(["text-align", "margin-inline-start"]);
+const listItemStyleProperties = new Set(["text-align"]);
+const textStyleProperties = new Set(["color"]);
+const highlightStyleProperties = new Set(["background-color", "color"]);
+const noAttributes = new Set<string>();
+const supportedCellDescendantAttributes = new Map<string, ReadonlySet<string>>([
+	["p", new Set(["data-indent", "style"])],
+	["h1", new Set(["data-indent", "style"])],
+	["h2", new Set(["data-indent", "style"])],
+	["h3", new Set(["data-indent", "style"])],
+	["h4", new Set(["data-indent", "style"])],
+	["h5", new Set(["data-indent", "style"])],
+	["h6", new Set(["data-indent", "style"])],
+	["blockquote", noAttributes],
+	["ul", noAttributes],
+	["ol", new Set(["start"])],
+	["li", new Set(["style"])],
+	["hr", noAttributes],
+	["br", noAttributes],
+	["strong", noAttributes],
+	["b", noAttributes],
+	["em", noAttributes],
+	["i", noAttributes],
+	["u", noAttributes],
+	["s", noAttributes],
+	["strike", noAttributes],
+	["code", noAttributes],
+	["a", new Set(["href", "target", "rel", "class"])],
+	["span", new Set(["style"])],
+	["mark", new Set(["data-color", "style"])],
+]);
+const textBlockTags = new Set(["p", "h1", "h2", "h3", "h4", "h5", "h6"]);
+const inlineTags = new Set(["br", "strong", "b", "em", "i", "u", "s", "strike", "code", "a", "span", "mark"]);
+const cellBlockTags = new Set([...textBlockTags, "blockquote", "ul", "ol", "hr"]);
 
 const hasOnlySupportedStyles = (element: Element, supported: ReadonlySet<string>) => {
 	const style = element.getAttribute("style");
@@ -127,20 +161,71 @@ const hasOnlySupportedStyles = (element: Element, supported: ReadonlySet<string>
 const hasOnlyAttributes = (element: Element, supported: ReadonlySet<string>) =>
 	Array.from(element.attributes).every((attribute) => supported.has(attribute.name.toLowerCase()));
 
+const hasUnsupportedChildNode = (node: Node) =>
+	node.nodeType === Node.TEXT_NODE ? Boolean(node.textContent?.trim()) : node.nodeType !== Node.ELEMENT_NODE;
+
+const hasOnlyInlineContent = (element: Element): boolean =>
+	Array.from(element.childNodes).every((child) => {
+		if (child.nodeType === Node.TEXT_NODE) return true;
+		if (!(child instanceof Element) || !inlineTags.has(child.tagName.toLowerCase())) return false;
+		return hasOnlyInlineContent(child);
+	});
+
+const hasOnlyCellBlockContent = (element: Element): boolean =>
+	Array.from(element.childNodes).every((child) => {
+		if (child.nodeType === Node.TEXT_NODE) return true;
+		if (!(child instanceof Element)) return false;
+		const tagName = child.tagName.toLowerCase();
+		if (inlineTags.has(tagName)) return hasOnlyInlineContent(child);
+		if (!cellBlockTags.has(tagName)) return false;
+		if (textBlockTags.has(tagName)) return hasOnlyInlineContent(child);
+		if (tagName === "hr") return child.childNodes.length === 0;
+		if (tagName === "blockquote") return hasOnlyCellBlockContent(child);
+		return Array.from(child.childNodes).every((listChild) => {
+			if (listChild.nodeType === Node.TEXT_NODE) return !listChild.textContent?.trim();
+			if (!(listChild instanceof Element) || listChild.tagName.toLowerCase() !== "li") return false;
+			return hasOnlyCellBlockContent(listChild);
+		});
+	});
+
+const hasUnsupportedCellDescendant = (element: Element) => {
+	const tagName = element.tagName.toLowerCase();
+	const supportedAttributes = supportedCellDescendantAttributes.get(tagName);
+	if (!supportedAttributes || !hasOnlyAttributes(element, supportedAttributes)) return true;
+	if (textBlockTags.has(tagName) && !hasOnlySupportedStyles(element, textBlockStyleProperties)) return true;
+	if (tagName === "li" && !hasOnlySupportedStyles(element, listItemStyleProperties)) return true;
+	if (tagName === "span" && !hasOnlySupportedStyles(element, textStyleProperties)) return true;
+	if (tagName === "mark" && !hasOnlySupportedStyles(element, highlightStyleProperties)) return true;
+	return false;
+};
+
+const parsedTablesMatchSource = (html: string, tables: readonly HTMLTableElement[]) => {
+	const sourceTables = Array.from(html.matchAll(/<table\b[^>]*>[\s\S]*?<\/table\s*>/gi), (match) => match[0]);
+	return (
+		sourceTables.length === tables.length && sourceTables.every((source, index) => source === tables[index]?.outerHTML)
+	);
+};
+
 const hasUnsupportedTableMarkup = (html: string) => {
 	if (typeof DOMParser === "undefined" || !html.toLowerCase().includes("<table")) return false;
 	const document = new DOMParser().parseFromString(html, "text/html");
-	for (const table of document.querySelectorAll("table")) {
+	const tables = Array.from(document.querySelectorAll("table"));
+	if (!parsedTablesMatchSource(html, tables)) return true;
+
+	for (const table of tables) {
 		if (!hasOnlyAttributes(table, new Set(["style"])) || !hasOnlySupportedStyles(table, tableStyleProperties))
 			return true;
-		for (const element of table.querySelectorAll("caption, colgroup, col, thead, tfoot")) {
-			if (element) return true;
-		}
-		for (const body of table.querySelectorAll("tbody")) {
+		const bodies = Array.from(table.children);
+		if (bodies.length !== 1 || bodies[0]?.tagName.toLowerCase() !== "tbody") return true;
+		if (Array.from(table.childNodes).some(hasUnsupportedChildNode)) return true;
+
+		for (const body of bodies) {
 			if (!hasOnlyAttributes(body, new Set())) return true;
+			if (Array.from(body.childNodes).some(hasUnsupportedChildNode)) return true;
 		}
 		for (const row of table.querySelectorAll("tr")) {
 			if (!hasOnlyAttributes(row, new Set(["style"])) || !hasOnlySupportedStyles(row, rowStyleProperties)) return true;
+			if (Array.from(row.childNodes).some(hasUnsupportedChildNode)) return true;
 		}
 		for (const cell of table.querySelectorAll("td, th")) {
 			if (
@@ -148,6 +233,8 @@ const hasUnsupportedTableMarkup = (html: string) => {
 				!hasOnlySupportedStyles(cell, cellStyleProperties)
 			)
 				return true;
+			if (!hasOnlyCellBlockContent(cell)) return true;
+			if (Array.from(cell.querySelectorAll("*"), hasUnsupportedCellDescendant).some(Boolean)) return true;
 		}
 	}
 	return false;
@@ -237,7 +324,6 @@ export function RichInput({
 	...options
 }: Props) {
 	const { i18n } = useLingui();
-	const prompt = usePrompt();
 	const textDirection = isRTL(i18n.locale) ? "rtl" : undefined;
 	const [isFullscreen, setIsFullscreen] = useState(false);
 	const hasUnsupportedTable = useMemo(() => hasUnsupportedTableMarkup(value), [value]);
@@ -287,36 +373,15 @@ export function RichInput({
 
 	if (!editor) return null;
 
-	const convertUnsupportedTable = async () => {
-		const confirmed = await prompt(t`Convert table to editable text?`, {
-			description: t`Unsupported table formatting will be removed. The original remains unchanged unless you confirm.`,
-			confirmText: t`Convert`,
-		});
-		if (confirmed === null) return;
-		onChange(editor.getHTML());
-	};
-
 	const editorElement = (
 		<div className="relative">
 			{hasUnsupportedTable ? (
-				<div
-					role="status"
-					className="flex items-center justify-between gap-3 rounded-md rounded-b-none border border-b-0 bg-muted px-3 py-2 text-sm"
-				>
+				<div role="status" className="rounded-md rounded-b-none border border-b-0 bg-muted px-3 py-2 text-sm">
 					<span>
 						<Trans>
 							Original table formatting is preserved. This content is read-only because it cannot be edited safely.
 						</Trans>
 					</span>
-					<Button
-						type="button"
-						size="sm"
-						variant="outline"
-						disabled={!requestedEditable}
-						onClick={() => void convertUnsupportedTable()}
-					>
-						<Trans>Convert to editable text</Trans>
-					</Button>
 				</div>
 			) : (
 				<EditorToolbar editor={editor} isFullscreen={isFullscreen} />
