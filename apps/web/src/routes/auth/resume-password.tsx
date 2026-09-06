@@ -1,17 +1,10 @@
 import { createFileRoute, redirect, SearchParamError } from "@tanstack/react-router";
-import z from "zod";
 import { ResumePasswordPage } from "@/features/auth/pages/resume-password";
-
-const searchSchema = z.object({
-	redirect: z
-		.string()
-		.min(1)
-		.regex(/^\/[^/]+\/[^/]+$/),
-});
+import { resumePasswordSearchSchema } from "@/features/auth/resume-password-search";
 
 export const Route = createFileRoute("/auth/resume-password")({
 	component: RouteComponent,
-	validateSearch: searchSchema,
+	validateSearch: resumePasswordSearchSchema,
 	onError: (error) => {
 		if (error instanceof SearchParamError) {
 			throw redirect({ to: "/" });
@@ -20,7 +13,8 @@ export const Route = createFileRoute("/auth/resume-password")({
 });
 
 function RouteComponent() {
-	const { redirect } = Route.useSearch();
+	const { redirect, returnTo } = Route.useSearch();
+	const [username, slug] = redirect.slice(1).split("/") as [string, string];
 
-	return <ResumePasswordPage redirectPath={redirect} />;
+	return <ResumePasswordPage username={username} slug={slug} redirectPath={returnTo ?? redirect} />;
 }

@@ -66,7 +66,7 @@ function ItemBody({ primary, details, description, website }: ItemBodyProps) {
 	);
 }
 
-function renderItem(type: CustomSectionType, item: CustomSectionItem): ReactNode {
+function renderItem(type: CustomSectionType, item: CustomSectionItem, keywordLayout?: "inline" | "list"): ReactNode {
 	switch (type) {
 		case "experience": {
 			const it = item as ExperienceItem;
@@ -110,6 +110,20 @@ function renderItem(type: CustomSectionType, item: CustomSectionItem): ReactNode
 		case "skills": {
 			const it = item as SkillItem;
 
+			if (keywordLayout === "list") {
+				return (
+					<>
+						<ItemBody primary={it.name} details={it.proficiency} />
+						{it.keywords.length > 0 && (
+							<ul>
+								{it.keywords.map((keyword, index) => (
+									<li key={index}>{keyword}</li>
+								))}
+							</ul>
+						)}
+					</>
+				);
+			}
 			return <ItemBody primary={it.name} details={joinInline(it.proficiency, (it.keywords ?? []).join(", "))} />;
 		}
 		case "interests": {
@@ -214,9 +228,10 @@ type AccessibleSectionProps = {
 	title: string;
 	hidden: boolean;
 	items: CustomSectionItem[];
+	keywordLayout?: "inline" | "list";
 };
 
-function AccessibleSection({ type, title, hidden, items }: AccessibleSectionProps) {
+function AccessibleSection({ type, title, hidden, items, keywordLayout }: AccessibleSectionProps) {
 	if (hidden) return null;
 
 	const visibleItems = items.filter((item) => !item.hidden);
@@ -227,7 +242,7 @@ function AccessibleSection({ type, title, hidden, items }: AccessibleSectionProp
 			<h2>{title}</h2>
 			<ul>
 				{visibleItems.map((item) => (
-					<li key={item.id}>{renderItem(type, item)}</li>
+					<li key={item.id}>{renderItem(type, item, keywordLayout)}</li>
 				))}
 			</ul>
 		</section>
@@ -297,6 +312,7 @@ export function ResumeAccessibleText({ data }: ResumeAccessibleTextProps) {
 						title={section.title?.trim() || getSectionTitle(type)}
 						hidden={section.hidden}
 						items={section.items}
+						keywordLayout={"keywordLayout" in section ? section.keywordLayout : undefined}
 					/>
 				);
 			})}
@@ -308,6 +324,7 @@ export function ResumeAccessibleText({ data }: ResumeAccessibleTextProps) {
 					title={section.title?.trim() || getSectionTitle(section.type)}
 					hidden={section.hidden}
 					items={section.items}
+					keywordLayout={"keywordLayout" in section ? section.keywordLayout : undefined}
 				/>
 			))}
 		</section>

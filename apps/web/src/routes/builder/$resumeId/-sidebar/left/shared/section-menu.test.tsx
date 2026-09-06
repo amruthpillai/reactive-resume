@@ -85,6 +85,20 @@ function openSectionOptions() {
 }
 
 describe("SkillsSectionDropdownMenu", () => {
+	it("selects keyword bullets without changing item layout or columns", async () => {
+		render(
+			<I18nProvider i18n={i18n}>
+				<SectionDropdownMenu type="skills" />
+			</I18nProvider>,
+		);
+		screen.getByRole("button", { name: "Section options" }).click();
+		(await screen.findByRole("menuitem", { name: "Keyword layout" })).click();
+		(await screen.findByRole("menuitemradio", { name: "Bulleted list" })).click();
+		const draft = { sections: { skills: { layout: "default", columns: 2, keywordLayout: "inline", items: [] } } };
+		mocks.updateResumeData.mock.calls[0][0](draft);
+		expect(draft.sections.skills).toEqual({ layout: "default", columns: 2, keywordLayout: "list", items: [] });
+	});
+
 	it("updates resume data correctly when selecting 'inline' for skills section", async () => {
 		render(
 			<I18nProvider i18n={i18n}>

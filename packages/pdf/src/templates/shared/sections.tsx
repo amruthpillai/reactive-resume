@@ -1213,7 +1213,13 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 
 						<View style={{ flexGrow: skills.columns > 1 ? 1 : 0 }}>
 							{hasSplitRowText(item.proficiency) && <Text semanticField="proficiency">{item.proficiency}</Text>}
-							<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
+							{"keywordLayout" in skills && skills.keywordLayout === "list" ? (
+								item.keywords.map((keyword, index) => (
+									<Small key={index} semanticField="keywords">{`• ${keyword}`}</Small>
+								))
+							) : (
+								<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
+							)}
 							{isInlineSkillsItem && <LevelDisplay level={item.level} />}
 						</View>
 						{!isInlineSkillsItem && <LevelDisplay level={item.level} />}
