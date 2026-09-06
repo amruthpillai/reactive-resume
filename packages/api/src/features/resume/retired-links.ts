@@ -8,8 +8,8 @@ type RetiredLinkAttemptDedupOptions = {
 	maxEntries: number;
 };
 
-export const RETIRED_LINK_RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
-export const MAX_RETIRED_LINKS_PER_RESUME = 50;
+const RETIRED_LINK_RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
+const MAX_RETIRED_LINKS_PER_RESUME = 50;
 
 type RetiredLinkCandidate = {
 	id: string;
