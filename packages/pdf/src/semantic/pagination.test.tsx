@@ -184,6 +184,12 @@ describe("semantic pagination bindings", () => {
 		const document = await parsePdf(await renderPdf(data, "azurill"));
 		const pages = await readPhysicalPages(document);
 		const renderedText = pages.map(({ text }) => text).join(" ");
+		const overflowPageIndexes = overflowTokens.map((token) => pages.findIndex(({ text }) => text.includes(token)));
+		const manualPageIndex = pages.findIndex(({ text }) => text.includes("MANUAL FULL WIDTH TOKEN"));
+		const firstOverflowToken = overflowTokens[0];
+		if (!firstOverflowToken) throw new Error("Expected an overflow fixture token.");
+		const firstOverflowItem = pages.flatMap(({ items }) => items).find(({ str }) => str.includes(firstOverflowToken));
+		const manualContinuationItem = pages[manualPageIndex]?.items.find(({ str }) => str === "MANUAL FULL WIDTH TOKEN");
 
 		expect(document.numPages).toBeGreaterThan(authoredPagesBeforeRender.length);
 		for (const token of overflowTokens) {
@@ -191,6 +197,11 @@ describe("semantic pagination bindings", () => {
 		}
 		expect(renderedText).toContain("SIDEBAR TOKEN");
 		expect(renderedText).toContain("MANUAL FULL WIDTH TOKEN");
+		expect(overflowPageIndexes).not.toContain(-1);
+		expect(manualPageIndex).toBeGreaterThan(Math.max(...overflowPageIndexes));
+		expect(manualContinuationItem?.transform[4]).toBeLessThan(
+			firstOverflowItem?.transform[4] ?? Number.NEGATIVE_INFINITY,
+		);
 		expect(data.metadata.layout.pages).toEqual(authoredPagesBeforeRender);
 		expect(data.metadata.layout.pages[1]).toEqual({
 			fullWidth: true,
