@@ -75,18 +75,9 @@ export function CreateCustomSectionDialog({ data }: DialogProps<"resume.sections
 	const closeDialog = useDialogStore((state) => state.closeDialog);
 	const updateResumeData = useUpdateResumeData();
 
+	const initialValues: FormValues = { ...defaultValues, ...data, id: generateId() };
 	const form = useAppForm({
-		defaultValues: {
-			id: generateId(),
-			title: data?.title ?? "",
-			type: (data?.type ?? "experience") as CustomSectionType,
-			icon: data?.icon ?? "",
-			columns: data?.columns ?? 1,
-			hidden: data?.hidden ?? false,
-			keepTogether: data?.keepTogether ?? false,
-			startOnNewPage: data?.startOnNewPage ?? false,
-			items: data?.items ?? [],
-		},
+		defaultValues: initialValues,
 		validators: { onSubmit: formSchema },
 		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {

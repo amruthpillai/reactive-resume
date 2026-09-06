@@ -6,6 +6,7 @@ import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { sortSectionItemsByPeriod } from "@reactive-resume/resume/section-sort";
+import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import {
 	isEditableElementFocused,
@@ -472,6 +473,44 @@ describe("builder resume undo/redo", () => {
 		vi.useRealTimers();
 		useResumeStore.getState().reset();
 	});
+
+	it.each([false, true])(
+		"persists skill keyword layout through undo, redo, and reload with custom=%s",
+		async (custom) => {
+			const store = useResumeStore.getState;
+			const initial = makeResume("skill-keyword-history");
+			initial.data.customSections = [{ ...initial.data.sections.skills, id: "custom-skills", type: "skills" }];
+			store().initialize(initial);
+			const currentLayout = () =>
+				custom
+					? store().resume?.data.customSections[0]?.keywordLayout
+					: store().resume?.data.sections.skills.keywordLayout;
+			store().updateResumeData((draft) => {
+				if (custom && draft.customSections[0]) draft.customSections[0].keywordLayout = "list";
+				else draft.sections.skills.keywordLayout = "list";
+			});
+			expect(currentLayout()).toBe("list");
+			store().undo();
+			expect(currentLayout()).toBe("inline");
+			store().redo();
+			expect(currentLayout()).toBe("list");
+			await vi.advanceTimersByTimeAsync(550);
+			await flushMicrotasks();
+			const saved = orpcMocks.updateResume.mock.lastCall?.[0];
+			expect(saved).toBeDefined();
+			store().reset();
+			store().initialize({ ...initial, data: parseResumeData(JSON.parse(JSON.stringify(saved.data))) });
+			expect(currentLayout()).toBe("list");
+			store().patchResume((resume) => {
+				resume.isLocked = true;
+			});
+			store().updateResumeData((draft) => {
+				if (custom && draft.customSections[0]) draft.customSections[0].keywordLayout = "inline";
+				else draft.sections.skills.keywordLayout = "inline";
+			});
+			expect(currentLayout()).toBe("list");
+		},
+	);
 
 	it("coalesces rapid edits into a single undo step and restores the pre-burst state", () => {
 		const store = useResumeStore.getState;
