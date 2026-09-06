@@ -89,6 +89,45 @@ describe("Semantic CSS value compilation", () => {
 		);
 	});
 
+	it.each([
+		"linear-gradient(red, blue)",
+		"radial-gradient(red, blue)",
+		"conic-gradient(red, blue)",
+		"repeating-linear-gradient(red, blue)",
+		"repeating-radial-gradient(red, blue)",
+		"repeating-conic-gradient(red, blue)",
+	])("recognizes the standard gradient function %s", (value) => {
+		const result = compileStylesheet({
+			languageVersion: 1,
+			text: `@version 1; header { background-image: ${value}; }`,
+		});
+
+		expect(result.diagnostics).toContainEqual(
+			expect.objectContaining({
+				code: "UNSUPPORTED_PROPERTY",
+				message: "Gradients are not supported by Semantic CSS. Use background-color or another supported property.",
+			}),
+		);
+	});
+
+	it.each([
+		["custom function names", "background-image: not-linear-gradient(red, blue)", "background-image"],
+		["quoted function-like text", 'content: "linear-gradient(red, blue)"', "content"],
+	] as const)("does not treat %s as a standard gradient function", (_case, declaration, property) => {
+		const result = compileStylesheet({
+			languageVersion: 1,
+			text: `@version 1; header { ${declaration}; }`,
+		});
+
+		expect(result.diagnostics).toContainEqual(
+			expect.objectContaining({
+				code: "UNSUPPORTED_PROPERTY",
+				severity: "error",
+				message: `The ${property} property is not supported by Semantic CSS.`,
+			}),
+		);
+	});
+
 	it("omits an invalid value without dropping valid declarations in the rule", () => {
 		const result = compileStylesheet({
 			languageVersion: 1,

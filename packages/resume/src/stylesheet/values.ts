@@ -149,10 +149,24 @@ function diagnostic(
 	diagnostics.push(createDiagnostic(code, severity, message, range(node?.loc)));
 }
 
-const gradientFunctionPattern = /\b(?:repeating-)?(?:linear|radial|conic)-gradient\s*\(/i;
+const gradientFunctionNames = new Set([
+	"linear-gradient",
+	"radial-gradient",
+	"conic-gradient",
+	"repeating-linear-gradient",
+	"repeating-radial-gradient",
+	"repeating-conic-gradient",
+]);
 
-function unsupportedPropertyMessage(property: string, value: string): string {
-	if (gradientFunctionPattern.test(value)) {
+function containsGradientFunction(node: AstNode | string | null | undefined): boolean {
+	if (!node || typeof node === "string") return false;
+	if (node.type === "Function" && node.name && gradientFunctionNames.has(identifier(node.name).toLowerCase()))
+		return true;
+	return children(node).some(containsGradientFunction);
+}
+
+function unsupportedPropertyMessage(property: string, value: AstNode | string | null | undefined): string {
+	if (containsGradientFunction(value)) {
 		return "Gradients are not supported by Semantic CSS. Use background-color or another supported property.";
 	}
 	return `The ${property} property is not supported by Semantic CSS.`;
@@ -584,7 +598,7 @@ export function compileProgram(stylesheet: ParsedStylesheet, languageVersion: nu
 				diagnostic(
 					diagnostics,
 					property === "src" ? "FORBIDDEN_CSS_VALUE" : "UNSUPPORTED_PROPERTY",
-					unsupportedPropertyMessage(property, value),
+					unsupportedPropertyMessage(property, declaration.value),
 					declaration,
 				);
 				continue;

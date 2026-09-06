@@ -36,14 +36,6 @@ const findPrimitive = (node: HostNode, type: string, text: string): HostNode | u
 	}
 };
 
-const findPath = (node: HostNode, predicate: (candidate: HostNode) => boolean): HostNode[] | undefined => {
-	if (predicate(node)) return [node];
-	for (const child of node.children ?? []) {
-		const path = findPath(child, predicate);
-		if (path) return [node, ...path];
-	}
-};
-
 const mergedStyle = (node: HostNode | undefined): Record<string, unknown> =>
 	Object.assign({}, ...(Array.isArray(node?.style) ? node.style : node?.style ? [node.style] : []));
 
@@ -238,16 +230,8 @@ describe("semantic issue fixtures", () => {
 		expect(mergedStyle(findText(document, "Computing pioneer"))).toMatchObject({ fontSize: 14 });
 		expect(mergedStyle(findText(document, "Analytical Engines"))).toMatchObject({ fontWeight: "400" });
 		expect(mergedStyle(findText(document, "TypeScript"))).toMatchObject({ fontWeight: "400" });
-		expect(
-			findPath(document, (node) => node.type === "LINK" && nodeText(node) === "ada@example.com")?.some(
-				(node) => mergedStyle(node).paddingTop === 1,
-			),
-		).toBe(true);
-		expect(
-			findPath(document, (node) => node.type === "LINK" && nodeText(node) === "+44 123")?.some(
-				(node) => mergedStyle(node).paddingTop === 1,
-			),
-		).toBe(true);
+		expect(mergedStyle(findPrimitive(document, "LINK", "ada@example.com")).paddingTop).toBe(1);
+		expect(mergedStyle(findPrimitive(document, "LINK", "+44 123")).paddingTop).toBe(1);
 		expect(nodesWithStyle(document, "fontSize", 16).some(({ type }) => type === "SVG")).toBe(true);
 		expect(mergedStyle(findPrimitive(document, "LINK", "ada@example.com"))).toMatchObject({
 			textDecoration: "none",
