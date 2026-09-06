@@ -259,12 +259,14 @@ const buildItem = ({
 	type,
 	parentKey,
 	data,
+	skillLevelAfterName = false,
 	requireItemHeaderPrimitive = false,
 }: {
 	item: ItemRecord;
 	type: keyof typeof STANDARD_FIELD_REGISTRY;
 	parentKey: string;
 	data: ResumeData;
+	skillLevelAfterName?: boolean;
 	requireItemHeaderPrimitive?: boolean;
 }): SemanticNode => {
 	const key = semanticNodeKeys.item(parentKey, item.id);
@@ -342,6 +344,7 @@ const buildItem = ({
 				type: "experience-role",
 				parentKey: key,
 				data,
+				skillLevelAfterName,
 				requireItemHeaderPrimitive: false,
 			});
 			bodyChildren.push({
@@ -352,7 +355,8 @@ const buildItem = ({
 	}
 
 	const level = buildLevel(key, item.level, data);
-	if (level) bodyChildren.push(level);
+	if (level && skillLevelAfterName && type === "skills") bodyChildren.unshift(level);
+	else if (level) bodyChildren.push(level);
 
 	return semanticNode({
 		key,
@@ -460,6 +464,7 @@ const buildSection = ({
 			type: descriptor.type,
 			parentKey: itemsKey,
 			data,
+			skillLevelAfterName: manifest.skillLevelAfterName ?? false,
 			requireItemHeaderPrimitive,
 		}),
 	);

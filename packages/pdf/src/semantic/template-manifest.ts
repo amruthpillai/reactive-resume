@@ -121,6 +121,7 @@ type TemplateSemanticCanonicalBinding = {
 
 export type TemplateSemanticManifest = {
 	template: Template;
+	skillLevelAfterName?: boolean;
 	regions: readonly TemplateSemanticRegion[];
 	header: {
 		region: "header";
