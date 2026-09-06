@@ -16,10 +16,17 @@ const inlineTable = `<table style="width: 300pt; border-collapse: collapse"><tbo
 
 const complexTable = `<table style="width: 300pt; border-collapse: collapse"><tbody><tr><th colspan="2" rowspan="2" style="width: 200pt; border: 2pt dashed #123456; padding: 3pt"><p><strong>Lead</strong> cell</p><p><em>Second</em> paragraph</p></th><th style="width: 100pt">Side</th></tr><tr><td style="border-left: 1pt solid rgb(1, 2, 3)"><p>Tail</p></td></tr></tbody></table>`;
 
+const semanticTable = `<table style="width: 300pt; border-spacing: 0"><tbody><tr style="height: 24pt"><td colspan="2" rowspan="1" colwidth="100,200" align="right" style="padding: 4pt; text-align: right"><p data-indent="2" style="margin-inline-start: 48px; text-align: justify"><a href="https://example.com" target="_blank" rel="noopener noreferrer nofollow" class="link"><span style="color: #123456">Inside</span></a> <mark data-color="#ffff00" style="background-color: #ffff00; color: inherit">Mark</mark> <mark data-color="#000000" style="background-color: #000000; color: inherit; color: #ffffff">Dark</mark></p></td><td><ol start="2"><li style="text-align: center">Two</li></ol></td></tr></tbody></table>`;
+
 const unsupportedTable = `<table border="1" style="width: 300pt"><tbody><tr><td>Original</td></tr></tbody></table>`;
 
 const unsupportedTables = [
 	["legacy table attributes", unsupportedTable],
+	["truncated table marker", "<table"],
+	["truncated table opening tag", '<table style="width: 100pt"'],
+	["truncated table closing tag", "</table"],
+	["unclosed table", "<table><tbody><tr><td>Open"],
+	["truncated table after a complete table", "<table><tbody><tr><td>Complete</td></tr></tbody></table><table"],
 	[
 		"unrepresented descendant elements and attributes",
 		`<table><tbody><tr><td><section aria-label="keep">Inside</section></td></tr></tbody></table>`,
@@ -32,6 +39,54 @@ const unsupportedTables = [
 	[
 		"unrepresented attributes on supported descendants",
 		`<table><tbody><tr><td><p data-keep="yes">Inside</p></td></tr></tbody></table>`,
+	],
+	["invalid table styles", '<table style="width: banana"><tbody><tr><td>Inside</td></tr></tbody></table>'],
+	["invalid row styles", '<table><tbody><tr style="height: banana"><td>Inside</td></tr></tbody></table>'],
+	["invalid cell alignment", '<table><tbody><tr><td align="justify">Inside</td></tr></tbody></table>'],
+	[
+		"invalid cell style alignment",
+		'<table><tbody><tr><td style="text-align: justify">Inside</td></tr></tbody></table>',
+	],
+	["invalid column widths", '<table><tbody><tr><td colwidth="100,bogus">Inside</td></tr></tbody></table>'],
+	["mismatched column widths", '<table><tbody><tr><td colspan="2" colwidth="100">Inside</td></tr></tbody></table>'],
+	["invalid column span", '<table><tbody><tr><td colspan="0">Inside</td></tr></tbody></table>'],
+	["invalid row span", '<table><tbody><tr><td rowspan="-1">Inside</td></tr></tbody></table>'],
+	[
+		"invalid paragraph alignment",
+		'<table><tbody><tr><td><p style="text-align: sideways">Inside</p></td></tr></tbody></table>',
+	],
+	["invalid indent level", '<table><tbody><tr><td><p data-indent="9">Inside</p></td></tr></tbody></table>'],
+	[
+		"mismatched indent margin",
+		'<table><tbody><tr><td><p data-indent="2" style="margin-inline-start: 12px">Inside</p></td></tr></tbody></table>',
+	],
+	[
+		"physical indent margin",
+		'<table><tbody><tr><td><p data-indent="2" style="margin-left: 48px">Inside</p></td></tr></tbody></table>',
+	],
+	[
+		"invalid ordered-list start",
+		'<table><tbody><tr><td><ol start="first"><li>Inside</li></ol></td></tr></tbody></table>',
+	],
+	[
+		"unsafe link URI",
+		'<table><tbody><tr><td><p><a href="javascript:alert(1)">Inside</a></p></td></tr></tbody></table>',
+	],
+	[
+		"unsafe link URI with ignored whitespace",
+		'<table><tbody><tr><td><p><a href="java\u200Bscript:alert(1)">Inside</a></p></td></tr></tbody></table>',
+	],
+	[
+		"invalid text color",
+		'<table><tbody><tr><td><p><span style="color: nope">Inside</span></p></td></tr></tbody></table>',
+	],
+	[
+		"invalid highlight color",
+		'<table><tbody><tr><td><p><mark data-color="nope" style="background-color: nope; color: inherit">Inside</mark></p></td></tr></tbody></table>',
+	],
+	[
+		"mismatched highlight color",
+		'<table><tbody><tr><td><p><mark data-color="#ffff00" style="background-color: #000000; color: inherit">Inside</mark></p></td></tr></tbody></table>',
 	],
 ] as const;
 
@@ -215,6 +270,18 @@ describe("RichInput imported tables (#3196)", () => {
 			["Alpha", "Beta", "Gamma"],
 			["Delta", "Epsilon", "Zeta"],
 		]);
+	});
+
+	it("keeps every supported table semantic editable", async () => {
+		const { editor, onChange } = await input(semanticTable);
+		expect(editor.isEditable).toBe(true);
+		expect(screen.queryByText(/Original table formatting is preserved/)).not.toBeInTheDocument();
+		act(() => {
+			editor.commands.setTextSelection(textPosition(editor, "Inside") + "Inside".length);
+			editor.commands.insertContent("!");
+		});
+		expect(editor.getHTML()).toContain("Inside!");
+		expect(onChange).toHaveBeenCalledOnce();
 	});
 
 	it.each(unsupportedTables)("preserves exact bytes for %s behind an accessible read-only notice", async (_, value) => {
