@@ -33,6 +33,10 @@ const itemWebsiteSchema = websiteSchema
 
 export const pictureSchema = z.object({
 	hidden: z.boolean().describe("Whether to hide the picture from the resume."),
+	fit: z
+		.enum(["cover", "contain"])
+		.catch("cover")
+		.describe("How the picture fits its frame: cover crops overflow, while contain preserves the whole image."),
 	url: z
 		.string()
 		.describe(

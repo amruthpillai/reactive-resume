@@ -3,24 +3,24 @@ title: "Accessing the previous version"
 description: "Access the previous version (v4) of Reactive Resume to retrieve old resumes, and export them for import into the latest version."
 ---
 
-## The previous version is still available
+## Check whether the previous version is available
 
-If you've used Reactive Resume for a while, you may have resumes saved in the previous version. Version 4 (v4) is still fully accessible and will remain online for the foreseeable future.
+If you've used Reactive Resume for a while, you may have resumes saved in version 4 (v4). Access depends on whether
+your self-hosted instance or the hosted previous-version service is currently available.
 
-<Info>The previous version of Reactive Resume is available at [https://v4.rxresu.me](https://v4.rxresu.me).</Info>
+<Info>
+  When the hosted previous version is available, its address is
+  [https://v4.rxresu.me](https://v4.rxresu.me). Availability is not guaranteed.
+</Info>
 
-## Why keep the old version running?
+Self-hosted operators control their own v4 instance and backups. The [v4 to v5 migration
+guide](/self-hosting/migration) applies only to infrastructure they are authorized to operate. It does not authorize
+access to hosted databases or backups.
 
-Anyone who created resumes in v4 can still open, edit, and export them there. Some people also prefer the interface they already know, and moving to a new version takes time.
+## When v4 is accessible
 
-## How long will v4 be available?
-
-The previous version will keep running for as long as possible, until the maintainer runs out of breath or funds to keep the server active. There are no immediate plans to shut it down.
-
-<Warning>
-  v4 will stay accessible for the foreseeable future, but I recommend moving to the latest version when you can. That
-  is where new features and ongoing support land.
-</Warning>
+Open, export, and securely back up each resume you need. Import the export into v5 as a new resume; keep the v5 version
+until you have compared both copies.
 
 ## Accessing your v4 resumes
 
@@ -39,7 +39,7 @@ The previous version will keep running for as long as possible, until the mainta
   </Step>
 
   <Step title="Access your resumes">
-    Once signed in, you'll find all your previously created resumes in your dashboard, exactly as you left them.
+    If the dashboard contains your resumes, export each one as JSON before making more changes.
   </Step>
 </Steps>
 
@@ -53,9 +53,27 @@ If you'd like to move your resumes to the latest version of Reactive Resume, you
 4. Use the import feature to upload your JSON file (select the "Reactive Resume v4 (JSON)" option)
 
 <Info>
-  Your existing resumes should already be available in the new version. If you don't see them, you can manually import
-  them using the steps above.
+  Import creates a separate resume. It should not be used to replace a newer v5 copy until you have compared both
+  versions.
 </Info>
+
+## When hosted v4 or a resume is unavailable
+
+Only an authorized hosted service operator can determine whether a source snapshot exists. Open a GitHub issue without
+including resume contents, account credentials, reset links, or other private data. A useful request identifies the
+approximate time of the missing edits, the sign-in method, and whether the resume is missing or merely not visible.
+
+Recovery is handled per owner. Before accessing content, the operator must record a private case with source snapshot
+time, owner verification, source-to-target mapping, target resume ID, content hashes, and proposed outcome. A matching
+email address, username, or resume title alone is not proof of ownership.
+
+Default recovery result is a private JSON export delivered through an approved channel to a verified recipient. Old-only
+or divergent content must remain a separate copy; it must not overwrite a current v5 resume. If no source snapshot is
+available, the factual outcome is that the records cannot be recovered from the service. Local tooling cannot recreate
+missing source data.
+
+An empty workspace with successful create responses or name conflicts can instead be a listing or account-mapping
+problem. That requires a separate session, create, list, and reload diagnosis; a v4 recovery export does not resolve it.
 
 ## Questions or issues?
 

@@ -135,7 +135,7 @@ export function createBaseTemplateStyles({
 		picture: {
 			width: picture.size,
 			height: picture.size,
-			objectFit: "cover",
+			objectFit: picture.fit,
 			aspectRatio: picture.aspectRatio,
 			borderRadius: picture.borderRadius,
 			borderColor: rgbaStringToHex(picture.borderColor),

@@ -20,6 +20,10 @@ describe("defaultResumeData", () => {
 		expect(defaultResumeData.metadata.page.format).toBe("a4");
 	});
 
+	it("uses cover picture fitting by default", () => {
+		expect(defaultResumeData.picture.fit).toBe("cover");
+	});
+
 	it("shows link underlines by default", () => {
 		expect(defaultResumeData.metadata.page.hideLinkUnderline).toBe(false);
 	});
