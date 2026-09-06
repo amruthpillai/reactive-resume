@@ -1,6 +1,6 @@
 import type { Style } from "@react-pdf/types";
 import type { TemplatePageProps } from "../../document";
-import type { TemplateColorRoles, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
+import type { TemplateColorRoles, TemplateFeatures, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { Fragment, useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
 import { Page, StyleSheet, View } from "#react-pdf-renderer";
@@ -61,6 +61,8 @@ type GengarHeaderProps = {
 	colors: TemplateColorRoles;
 };
 
+const gengarFeatures = { skillLevelAfterName: true } satisfies TemplateFeatures;
+
 export const GengarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
 	const pageNodeKey = semanticNodeKeys.page(pageNumber);
@@ -85,7 +87,7 @@ export const GengarPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pag
 			size={semanticPageSize ?? pageSize}
 			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
 		>
-			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
+			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors} features={gengarFeatures}>
 				{showSidebar && (
 					<View
 						style={composeStyles(styles.sidebarColumn, {

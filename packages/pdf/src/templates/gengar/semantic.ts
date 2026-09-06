@@ -3,6 +3,7 @@ import { itemHeaderRowPart } from "../../semantic/shared-parts";
 
 export const gengarSemanticManifest = {
 	template: "gengar",
+	skillLevelAfterName: true,
 	regions: [
 		{ name: "header", placement: "sidebar", origins: [] },
 		{ name: "sidebar", placement: "sidebar", origins: ["sidebar"] },

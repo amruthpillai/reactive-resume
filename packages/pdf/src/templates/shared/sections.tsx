@@ -1192,6 +1192,7 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 	const items = getVisibleItems(skills, "skills");
 	const inlineStyle = useTemplateStyle("inline");
 	const metrics = getTemplateMetrics(data.metadata.page);
+	const skillLevelAfterName = useTemplateFeature("skillLevelAfterName");
 
 	if (items.length === 0) return null;
 
@@ -1211,6 +1212,7 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 							</View>
 						</SectionItemHeader>
 
+						{skillLevelAfterName && <LevelDisplay level={item.level} />}
 						<View style={{ flexGrow: skills.columns > 1 ? 1 : 0 }}>
 							{hasSplitRowText(item.proficiency) && <Text semanticField="proficiency">{item.proficiency}</Text>}
 							{"keywordLayout" in skills && skills.keywordLayout === "list" ? (
@@ -1220,9 +1222,9 @@ const SkillsSection = ({ sectionId = "skills", sectionData }: ItemSectionProps<S
 							) : (
 								<Small semanticField="keywords">{item.keywords.join(", ")}</Small>
 							)}
-							{isInlineSkillsItem && <LevelDisplay level={item.level} />}
+							{!skillLevelAfterName && isInlineSkillsItem && <LevelDisplay level={item.level} />}
 						</View>
-						{!isInlineSkillsItem && <LevelDisplay level={item.level} />}
+						{!skillLevelAfterName && !isInlineSkillsItem && <LevelDisplay level={item.level} />}
 					</SectionItem>
 				))}
 			</SectionItems>
