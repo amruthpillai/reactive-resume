@@ -1,4 +1,5 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { Template } from "@reactive-resume/schema/templates";
 import { describe, expect, it, vi } from "vitest";
 import { pdf } from "@react-pdf/renderer";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
@@ -31,9 +32,9 @@ const renderHostTree = async (data: ResumeData): Promise<HostNode> => {
 	return instance.container.document as HostNode;
 };
 
-const renderPdf = async (data: ResumeData): Promise<Uint8Array> => {
+const renderPdf = async (data: ResumeData, template: Template = "onyx"): Promise<Uint8Array> => {
 	const renderer = await vi.importActual<typeof import("@react-pdf/renderer")>("@react-pdf/renderer");
-	const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<
+	const element = createElement(ResumeDocument, { data, template }) as unknown as Parameters<
 		typeof renderer.renderToBuffer
 	>[0];
 	return new Uint8Array(await renderer.renderToBuffer(element));
@@ -77,6 +78,53 @@ const overflowingFixture = (pageSize: "A4" | "LETTER"): ResumeData => {
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary"], sidebar: [] }];
 	data.metadata.stylesheet = { mode: "semantic", source };
 	return data;
+};
+
+const azurillAuthoredOverflowFixture = () => {
+	const data = structuredClone(defaultResumeData);
+	const overflowTokens = Array.from(
+		{ length: 180 },
+		(_value, index) => `AZURILL_OVERFLOW_${String(index + 1).padStart(3, "0")}`,
+	);
+	data.picture.hidden = true;
+	data.basics.name = "AZURILL HEADER";
+	data.summary.title = "Long summary";
+	data.summary.content = overflowTokens.map((token) => `<p>${token} generated PDF page content.</p>`).join("");
+	data.sections.profiles.title = "Sidebar";
+	data.sections.profiles.items = [
+		{
+			id: "sidebar-profile",
+			hidden: false,
+			icon: "github-logo",
+			iconColor: "",
+			network: "SIDEBAR TOKEN",
+			username: "authored-page-one",
+			website: { url: "", label: "", inlineLink: false },
+		},
+	];
+	data.sections.experience.title = "Experience";
+	data.sections.experience.items = [
+		{
+			id: "manual-continuation",
+			hidden: false,
+			company: "MANUAL FULL WIDTH TOKEN",
+			position: "Independent authored page",
+			location: "",
+			period: "",
+			website: { url: "", label: "", inlineLink: false },
+			description: "<p>Second authored page content.</p>",
+			roles: [],
+		},
+	];
+	data.metadata.template = "azurill";
+	data.metadata.typography.body.fontFamily = "Helvetica";
+	data.metadata.typography.heading.fontFamily = "Helvetica";
+	data.metadata.layout.pages = [
+		{ fullWidth: false, main: ["summary"], sidebar: ["profiles"] },
+		{ fullWidth: true, main: ["experience"], sidebar: [] },
+	];
+
+	return { data, overflowTokens };
 };
 
 const readPhysicalPages = async (document: ParsedPdf) => {
@@ -128,5 +176,26 @@ describe("semantic pagination bindings", () => {
 
 		expect(pages.every(({ width }) => Math.abs(width - 612) < 0.1)).toBe(true);
 		expect(Math.abs((heading?.transform[3] ?? 0) - 9)).toBeGreaterThan(0.1);
+	});
+
+	it("keeps Azurill overflow lossless while preserving a manual full-width authored continuation", async () => {
+		const { data, overflowTokens } = azurillAuthoredOverflowFixture();
+		const authoredPagesBeforeRender = structuredClone(data.metadata.layout.pages);
+		const document = await parsePdf(await renderPdf(data, "azurill"));
+		const pages = await readPhysicalPages(document);
+		const renderedText = pages.map(({ text }) => text).join(" ");
+
+		expect(document.numPages).toBeGreaterThan(authoredPagesBeforeRender.length);
+		for (const token of overflowTokens) {
+			expect(renderedText.split(token)).toHaveLength(2);
+		}
+		expect(renderedText).toContain("SIDEBAR TOKEN");
+		expect(renderedText).toContain("MANUAL FULL WIDTH TOKEN");
+		expect(data.metadata.layout.pages).toEqual(authoredPagesBeforeRender);
+		expect(data.metadata.layout.pages[1]).toEqual({
+			fullWidth: true,
+			main: ["experience"],
+			sidebar: [],
+		});
 	});
 });

@@ -19,12 +19,14 @@ import {
 	DotsSixVerticalIcon,
 	DotsThreeVerticalIcon,
 	FileIcon,
+	InfoIcon,
 	PlusCircleIcon,
 	PlusIcon,
 	TrashIcon,
 } from "@phosphor-icons/react";
 import { useCallback, useId, useState } from "react";
 import { match } from "ts-pattern";
+import { Alert, AlertDescription, AlertTitle } from "@reactive-resume/ui/components/alert";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
@@ -248,6 +250,8 @@ export function LayoutPages() {
 			onDragCancel={() => setActiveId(null)}
 		>
 			<div className="flex flex-col gap-4">
+				<AuthoredPageGuidance />
+
 				{layout.pages.map((page, pageIndex) => (
 					<PageContainer
 						key={`page-${pageIndex}`}
@@ -272,6 +276,33 @@ export function LayoutPages() {
 
 			<DragOverlay>{activeId ? <LayoutItemContent id={activeId} isDragging isOverlay /> : null}</DragOverlay>
 		</DndContext>
+	);
+}
+
+function AuthoredPageGuidance() {
+	const titleId = useId();
+
+	return (
+		<Alert role="note" aria-labelledby={titleId}>
+			<InfoIcon />
+			<AlertTitle id={titleId}>
+				<Trans>Authored pages and PDF overflow</Trans>
+			</AlertTitle>
+			<AlertDescription>
+				<p>
+					<Trans>
+						Pages listed here are authored pages saved with your resume. A long authored page may continue onto extra
+						PDF pages automatically; those overflow pages are not saved or editable separately.
+					</Trans>
+				</p>
+				<p>
+					<Trans>
+						For a controlled continuation, open a section's menu and choose Move to → New Page, then turn on Full Width
+						for that authored page.
+					</Trans>
+				</p>
+			</AlertDescription>
+		</Alert>
 	);
 }
 
