@@ -70,6 +70,10 @@ const markPastedHtml = (html: string) => {
 				if (/^(DIV|BLOCKQUOTE|LI)$/.test(child.tagName)) normalize(child);
 				else if (/^(UL|OL)$/.test(child.tagName)) {
 					for (const item of Array.from(child.children)) if (item instanceof HTMLElement) normalize(item);
+				} else if (child.tagName === "TABLE") {
+					for (const cell of child.querySelectorAll("td, th")) {
+						if (cell instanceof HTMLElement) normalize(cell);
+					}
 				}
 				continue;
 			}

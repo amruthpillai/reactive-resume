@@ -220,6 +220,17 @@ describe("RichInput literal whitespace (#3397)", () => {
 		expect(editor.getHTML()).toContain(`<p ${preserve}>  Cell\ttext  </p>`);
 	});
 
+	it.each(["td", "th"])("preserves whitespace in pasted bare %s table cells", async (cellTag) => {
+		const { editor } = await input("<p>Start</p>");
+		act(() => {
+			editor.commands.selectAll();
+			editor.view.pasteHTML(`<table><tbody><tr><${cellTag}>  Cell\ttext  </${cellTag}></tr></tbody></table>`);
+		});
+
+		expect(editor.getHTML()).toContain(`<p ${preserve}>  Cell\ttext  </p>`);
+		expect(editor.getText()).toContain("  Cell\ttext  ");
+	});
+
 	it.each([
 		"<table><tr><td><p>  Cell\t </p></td></tr></table>",
 		'<table border="1"><tbody><tr><td><p>  Cell\t </p></td></tr></tbody></table>',
