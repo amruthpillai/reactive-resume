@@ -192,6 +192,20 @@ The most useful declarations usually fall into a few groups:
 Use `display: none` only to hide an existing semantic node. Semantic CSS cannot add, remove, duplicate, or re-parent resume
 data.
 
+Semantic CSS keeps background styling PDF-safe. Use a flat color for headers and regions:
+
+```css
+@version 1;
+
+header {
+	background-color: #1e293b;
+}
+```
+
+Gradient declarations such as `background-image: linear-gradient(...)` remain unsupported. The editor reports that limitation
+and suggests `background-color` or another supported property; the unsupported declaration is omitted while neighboring valid
+declarations remain available for preview and export.
+
 ### Style rich-text lists
 
 `list-item` is the outer row that holds a marker and its content. Use it for row layout and spacing. Use `list-marker`
