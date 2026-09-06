@@ -25,6 +25,9 @@ export function StatisticsSectionBuilder() {
 			enabled: Boolean(statistics?.isPublic),
 		}),
 	);
+	const { data: retiredLinks, error: retiredLinksError } = useQuery(
+		orpc.resume.statistics.getRetiredLinks.queryOptions({ input: { id: params.resumeId } }),
+	);
 
 	if (!statistics) return null;
 
@@ -71,6 +74,40 @@ export function StatisticsSectionBuilder() {
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
+
+			{!retiredLinksError && retiredLinks && retiredLinks.length > 0 && (
+				<section aria-labelledby="old-link-attempts" className="mt-4 space-y-3 border-t pt-4">
+					<div className="space-y-1">
+						<h3 id="old-link-attempts" className="font-semibold text-sm">
+							<Trans>Old link attempts</Trans>
+						</h3>
+						<p className="text-muted-foreground text-xs">
+							<Trans>
+								Only slug changes made after this feature, under your current username, are tracked. Up to 50 paths are
+								kept for 90 days.
+							</Trans>
+						</p>
+					</div>
+
+					<ul className="space-y-2">
+						{retiredLinks.map((link) => (
+							<li className="rounded-md border p-3" key={link.path}>
+								<div className="flex items-start justify-between gap-3">
+									<code className="min-w-0 break-all text-xs">{link.path}</code>
+									<span className="shrink-0 font-medium text-xs">
+										{link.attemptCount === 1 ? <Trans>1 attempt</Trans> : <Trans>{link.attemptCount} attempts</Trans>}
+									</span>
+								</div>
+								{link.lastAttemptAt && (
+									<p className="mt-1 text-muted-foreground text-xs">
+										<Trans>Last attempt on {link.lastAttemptAt.toDateString()}</Trans>
+									</p>
+								)}
+							</li>
+						))}
+					</ul>
+				</section>
+			)}
 		</SectionBase>
 	);
 }

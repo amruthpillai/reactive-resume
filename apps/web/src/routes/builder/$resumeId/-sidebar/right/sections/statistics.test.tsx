@@ -21,12 +21,21 @@ const dailyResult = vi.hoisted(() => ({
 	data: undefined as undefined | { date: string; views: number; downloads: number }[],
 }));
 
+const retiredLinksResult = vi.hoisted(() => ({
+	data: undefined as undefined | { path: string; attemptCount: number; lastAttemptAt: Date | null }[],
+	error: null as Error | null,
+}));
+
 type SectionBaseProps = {
 	children: React.ReactNode;
 };
 
 vi.mock("@tanstack/react-query", () => ({
-	useQuery: (options: { __key?: string }) => (options.__key === "daily" ? dailyResult : queryResult),
+	useQuery: (options: { __key?: string }) => {
+		if (options.__key === "daily") return dailyResult;
+		if (options.__key === "retiredLinks") return retiredLinksResult;
+		return queryResult;
+	},
 }));
 vi.mock("@tanstack/react-router", () => ({
 	useParams: () => ({ resumeId: "r1" }),
@@ -37,6 +46,7 @@ vi.mock("@/libs/orpc/client", () => ({
 			statistics: {
 				getById: { queryOptions: () => ({ __key: "getById" }) },
 				getDailyById: { queryOptions: () => ({ __key: "daily" }) },
+				getRetiredLinks: { queryOptions: () => ({ __key: "retiredLinks" }) },
 			},
 		},
 	},
@@ -54,6 +64,8 @@ beforeAll(() => {
 beforeEach(() => {
 	queryResult.data = undefined;
 	dailyResult.data = undefined;
+	retiredLinksResult.data = undefined;
+	retiredLinksResult.error = null;
 });
 
 const renderStats = () =>
@@ -125,5 +137,65 @@ describe("StatisticsSectionBuilder", () => {
 		renderStats();
 		// Just verify some 'Last viewed' copy appears — the date formatting depends on the runner's locale.
 		expect(screen.getByText(/Last viewed/i)).toBeInTheDocument();
+	});
+
+	it("omits old-link UI when no retained records exist", () => {
+		queryResult.data = {
+			isPublic: true,
+			views: 0,
+			downloads: 0,
+			lastViewedAt: null,
+			lastDownloadedAt: null,
+		};
+		retiredLinksResult.data = [];
+
+		renderStats();
+
+		expect(screen.queryByText("Old link attempts")).not.toBeInTheDocument();
+	});
+
+	it("shows aggregate old-link attempts and explicit prospective limits", () => {
+		queryResult.data = {
+			isPublic: true,
+			views: 0,
+			downloads: 0,
+			lastViewedAt: null,
+			lastDownloadedAt: null,
+		};
+		retiredLinksResult.data = [
+			{
+				path: "/owner/first",
+				attemptCount: 3,
+				lastAttemptAt: new Date("2026-09-06T12:00:00.000Z"),
+			},
+			{ path: "/owner/only", attemptCount: 1, lastAttemptAt: null },
+		];
+
+		renderStats();
+
+		expect(screen.getByText("Old link attempts")).toBeInTheDocument();
+		expect(screen.getByText("/owner/first")).toBeInTheDocument();
+		expect(screen.getByText("3 attempts")).toBeInTheDocument();
+		expect(screen.getByText("1 attempt")).toBeInTheDocument();
+		expect(screen.getByText(/Last attempt/i)).toBeInTheDocument();
+		expect(screen.getByText(/slug changes made after this feature/i)).toBeInTheDocument();
+		expect(screen.getByText(/current username/i)).toBeInTheDocument();
+		expect(screen.getByText(/50 paths/i)).toBeInTheDocument();
+		expect(screen.getByText(/90 days/i)).toBeInTheDocument();
+	});
+
+	it("omits old-link UI when the retained list query fails", () => {
+		queryResult.data = {
+			isPublic: false,
+			views: 0,
+			downloads: 0,
+			lastViewedAt: null,
+			lastDownloadedAt: null,
+		};
+		retiredLinksResult.error = new Error("unavailable");
+
+		renderStats();
+
+		expect(screen.queryByText("Old link attempts")).not.toBeInTheDocument();
 	});
 });

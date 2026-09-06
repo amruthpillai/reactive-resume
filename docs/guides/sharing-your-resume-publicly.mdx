@@ -117,6 +117,25 @@ Owner self-visits while you are signed in to your account are not included in th
   has.
 </Note>
 
+### Old link attempts after changing a slug
+
+When you change a public resume's slug, Reactive Resume remembers the old path and can show aggregate attempts to open it
+under **Statistics → Old link attempts**. The old URL still returns the same not-found response; it does not redirect or
+reveal the current URL.
+
+This tracking is intentionally limited:
+
+- It starts with slug changes made after this feature is available. Previously changed or historical links are not
+  recovered or backfilled.
+- It applies only while your username remains unchanged. Changing your username makes the earlier paths ineligible.
+- Up to 50 retired paths are retained per resume for 90 days.
+- Owner visits are excluded, and repeated attempts from the same visitor are counted at most once per hour.
+- Only aggregate attempt counts and the last-attempt time are stored. Visitor identities, IP addresses, user agents,
+  email addresses, and resume content are not stored with a retired path.
+- Private, deleted, expired, or otherwise unavailable resumes do not receive new old-link attempts.
+- A currently valid resume path always wins. Reusing an old slug creates a normal live URL and removes its retired-path
+  attribution for that owner.
+
 ## Password protecting your resume
 
 To share your resume with specific people while keeping it away from everyone else, add password protection.

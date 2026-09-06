@@ -50,6 +50,31 @@ export const resumeStatisticsRouter = {
 		)
 		.handler(({ context, input }) => resumeService.statistics.getById({ id: input.id, userId: context.user.id })),
 
+	getRetiredLinks: protectedProcedure
+		.route({
+			method: "GET",
+			path: "/resumes/{id}/statistics/retired-links",
+			tags: ["Resume Statistics"],
+			operationId: "getResumeRetiredLinkStatistics",
+			summary: "Get retired resume link attempts",
+			description:
+				"Returns aggregate attempts for recent retired slugs of the specified resume. Requires authentication and resume ownership.",
+			successDescription: "Sanitized retired-link attempt aggregates, newest retired path first.",
+		})
+		.input(z.object({ id: z.string().describe("The unique identifier of the resume.") }))
+		.output(
+			z.array(
+				z.object({
+					path: z.string().describe("The retired public path."),
+					attemptCount: z.number().int().min(0).describe("Aggregate attempts during the retention period."),
+					lastAttemptAt: z.date().nullable().describe("Timestamp of the last attempt, or null if never attempted."),
+				}),
+			),
+		)
+		.handler(({ context, input }) =>
+			resumeService.statistics.getRetiredLinks({ id: input.id, userId: context.user.id }),
+		),
+
 	getDailyById: protectedProcedure
 		.route({
 			method: "GET",

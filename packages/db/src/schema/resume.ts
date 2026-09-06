@@ -44,6 +44,31 @@ export const resume = pg.pgTable(
 	],
 );
 
+export const resumeRetiredLink = pg.pgTable(
+	"resume_retired_link",
+	{
+		id: pg
+			.text("id")
+			.notNull()
+			.primaryKey()
+			.$defaultFn(() => generateId()),
+		userId: pg
+			.text("user_id")
+			.notNull()
+			.references(() => user.id, { onDelete: "cascade" }),
+		resumeId: pg
+			.text("resume_id")
+			.notNull()
+			.references(() => resume.id, { onDelete: "cascade" }),
+		username: pg.text("username").notNull(),
+		slug: pg.text("slug").notNull(),
+		retiredAt: pg.timestamp("retired_at", { withTimezone: true }).notNull().defaultNow(),
+		attemptCount: pg.integer("attempt_count").notNull().default(0),
+		lastAttemptAt: pg.timestamp("last_attempt_at", { withTimezone: true }),
+	},
+	(t) => [pg.unique().on(t.username, t.slug), pg.index().on(t.resumeId, t.retiredAt.desc())],
+);
+
 export const resumeVersion = pg.pgTable(
 	"resume_version",
 	{

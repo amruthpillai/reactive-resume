@@ -17,6 +17,7 @@ import { grantResumeAccess, hasResumeAccess } from "./access";
 import { assertCanView, isOwner, redactResumeForViewer, shouldCountForStatistics } from "./access-policy";
 import { publishResumeUpdated } from "./events";
 import { parseStoredResumeData, parseWritableResumeData } from "./resume-data-validation";
+import { retiredLinkService, shouldCountRetiredLinkAttempt } from "./retired-links";
 import { clientKeyFromHeaders, shouldCountView } from "./view-dedup";
 
 type DbOrTx = typeof db | Parameters<Parameters<typeof db.transaction>[0]>[0];
@@ -210,7 +211,35 @@ const tags = {
 	},
 };
 
+async function maybeRecordRetiredLinkAttempt(input: {
+	username: string;
+	slug: string;
+	requestHeaders: Headers;
+	currentUserId?: string;
+}) {
+	try {
+		const now = Date.now();
+		const retiredLink = await retiredLinkService.recognize({
+			username: input.username,
+			slug: input.slug,
+			now: new Date(now),
+		});
+		if (
+			retiredLink &&
+			retiredLink.userId !== input.currentUserId &&
+			shouldCountRetiredLinkAttempt(retiredLink.id, clientKeyFromHeaders(input.requestHeaders), now)
+		) {
+			await retiredLinkService.increment(retiredLink.id, new Date(now));
+		}
+	} catch (error) {
+		console.warn("Failed to record retired resume link attempt:", error);
+	}
+}
+
 const statistics = {
+	getRetiredLinks: (input: { id: string; userId: string }) =>
+		retiredLinkService.list({ resumeId: input.id, userId: input.userId, now: new Date() }),
+
 	recordDownload: async (input: {
 		username: string;
 		slug: string;
@@ -531,7 +560,10 @@ export const resumeService = {
 			.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
 			.where(and(eq(schema.resume.slug, input.slug), eq(schema.user.username, input.username)));
 
-		if (!resume) throw new ORPCError("NOT_FOUND");
+		if (!resume) {
+			await maybeRecordRetiredLinkAttempt(input);
+			throw new ORPCError("NOT_FOUND");
+		}
 
 		const viewer = input.currentUserId ? { id: input.currentUserId } : null;
 		assertCanView(resume, viewer);
@@ -567,13 +599,16 @@ export const resumeService = {
 		data.metadata.page.locale = input.locale;
 
 		try {
-			await db.insert(schema.resume).values({
-				id,
-				name: input.name,
-				slug: input.slug,
-				tags: input.tags,
-				userId: input.userId,
-				data,
+			await db.transaction(async (tx) => {
+				await retiredLinkService.removeLivePath(tx, { userId: input.userId, slug: input.slug });
+				await tx.insert(schema.resume).values({
+					id,
+					name: input.name,
+					slug: input.slug,
+					tags: input.tags,
+					userId: input.userId,
+					data,
+				});
 			});
 
 			await notifyResumeUpdated({
@@ -614,8 +649,11 @@ export const resumeService = {
 					.select({
 						data: schema.resume.data,
 						isLocked: schema.resume.isLocked,
+						slug: schema.resume.slug,
+						username: schema.user.username,
 					})
 					.from(schema.resume)
+					.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
 					.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
 					.for("update");
 
@@ -630,6 +668,17 @@ export const resumeService = {
 					...(input.isPublic !== undefined ? { isPublic: input.isPublic } : {}),
 					...(input.showDownloadButtons !== undefined ? { showDownloadButtons: input.showDownloadButtons } : {}),
 				};
+
+				if (input.slug !== undefined && input.slug !== existing.slug) {
+					await retiredLinkService.capture(tx, {
+						resumeId: input.id,
+						userId: input.userId,
+						username: existing.username,
+						retiredSlug: existing.slug,
+						liveSlug: input.slug,
+						now: new Date(),
+					});
+				}
 
 				const [updated] = await tx
 					.update(schema.resume)

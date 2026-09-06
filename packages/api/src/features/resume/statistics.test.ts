@@ -1,7 +1,12 @@
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { ORPCError } from "@orpc/client";
 import { createRouterClient } from "@orpc/server";
 
-const mocks = vi.hoisted(() => ({ recordDownload: vi.fn(async () => true), user: null as { id: string } | null }));
+const mocks = vi.hoisted(() => ({
+	recordDownload: vi.fn(async () => true),
+	getRetiredLinks: vi.fn(),
+	user: null as { id: string } | null,
+}));
 
 vi.mock("../../context", async () => {
 	const { os } = await vi.importActual<typeof import("@orpc/server")>("@orpc/server");
@@ -10,13 +15,18 @@ vi.mock("../../context", async () => {
 		.use(({ context, next }) => next({ context: { ...context, user: mocks.user } }));
 	return { publicProcedure: procedure, protectedProcedure: procedure };
 });
-vi.mock("./service", () => ({ resumeService: { statistics: { recordDownload: mocks.recordDownload } } }));
+vi.mock("./service", () => ({
+	resumeService: {
+		statistics: { recordDownload: mocks.recordDownload, getRetiredLinks: mocks.getRetiredLinks },
+	},
+}));
 
 beforeAll(() => {
 	vi.stubEnv("NODE_ENV", "production");
 });
 beforeEach(() => {
 	mocks.recordDownload.mockClear();
+	mocks.getRetiredLinks.mockReset();
 });
 
 describe("public download statistics procedure", () => {
@@ -60,5 +70,33 @@ describe("public download statistics procedure", () => {
 		await expect(client.recordDownload({ ...input, slug: "different-resume" })).resolves.toBe(true);
 		const anotherVisitor = await makeClient(null, "127.0.0.2");
 		await expect(anotherVisitor.client.recordDownload(input)).resolves.toBe(true);
+	});
+});
+
+describe("retired link statistics procedure", () => {
+	it("returns sanitized retired-path aggregates for the authenticated owner", async () => {
+		const lastAttemptAt = new Date("2026-09-06T12:00:00.000Z");
+		mocks.user = { id: "owner-id" };
+		mocks.getRetiredLinks.mockResolvedValueOnce([{ path: "/owner/first", attemptCount: 3, lastAttemptAt }]);
+		const { resumeStatisticsRouter } = await import("./statistics");
+		const client = createRouterClient(resumeStatisticsRouter, {
+			context: { reqHeaders: new Headers(), locale: "en-US" },
+		});
+
+		await expect(client.getRetiredLinks({ id: "resume-1" })).resolves.toEqual([
+			{ path: "/owner/first", attemptCount: 3, lastAttemptAt },
+		]);
+		expect(mocks.getRetiredLinks).toHaveBeenCalledExactlyOnceWith({ id: "resume-1", userId: "owner-id" });
+	});
+
+	it.each(["another owner", "missing resume"])("returns NOT_FOUND for %s", async () => {
+		mocks.user = { id: "other-owner" };
+		mocks.getRetiredLinks.mockRejectedValueOnce(new ORPCError("NOT_FOUND"));
+		const { resumeStatisticsRouter } = await import("./statistics");
+		const client = createRouterClient(resumeStatisticsRouter, {
+			context: { reqHeaders: new Headers(), locale: "en-US" },
+		});
+
+		await expect(client.getRetiredLinks({ id: "resume-1" })).rejects.toMatchObject({ code: "NOT_FOUND" });
 	});
 });

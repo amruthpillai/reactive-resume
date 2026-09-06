@@ -19,6 +19,13 @@ const publishResumeUpdatedMock = vi.hoisted(() => vi.fn());
 const grantResumeAccessMock = vi.hoisted(() => vi.fn());
 const hasResumeAccessMock = vi.hoisted(() => vi.fn());
 const storageDeleteMock = vi.hoisted(() => vi.fn());
+const retiredLinkMocks = vi.hoisted(() => ({
+	capture: vi.fn(),
+	removeLivePath: vi.fn(),
+	recognize: vi.fn(),
+	increment: vi.fn(),
+	shouldCount: vi.fn(),
+}));
 
 vi.mock("@reactive-resume/db/client", () => ({ db: dbMock }));
 vi.mock("@reactive-resume/db/schema", () => ({
@@ -81,6 +88,15 @@ vi.mock("./access", () => ({
 vi.mock("../storage/service", () => ({
 	getStorageService: () => ({ delete: storageDeleteMock }),
 }));
+vi.mock("./retired-links", () => ({
+	retiredLinkService: {
+		capture: retiredLinkMocks.capture,
+		removeLivePath: retiredLinkMocks.removeLivePath,
+		recognize: retiredLinkMocks.recognize,
+		increment: retiredLinkMocks.increment,
+	},
+	shouldCountRetiredLinkAttempt: retiredLinkMocks.shouldCount,
+}));
 
 const { resumeService } = await import("./service");
 
@@ -99,10 +115,17 @@ const createSelectChain = (rows: unknown[]) => ({
 
 const createLockedSelectChain = (rows: unknown[]) => {
 	const forUpdate = vi.fn(() => Promise.resolve(rows));
+	const locked = { for: forUpdate };
 	return {
-		chain: { from: () => ({ where: () => ({ for: forUpdate }) }) },
+		chain: { from: () => ({ where: () => locked, innerJoin: () => ({ where: () => locked }) }) },
 		forUpdate,
 	};
+};
+
+const runCreateTransaction = (values: (input: unknown) => unknown) => {
+	const tx = { insert: () => ({ values }) };
+	dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) => callback(tx));
+	return tx;
 };
 
 const createSemanticResumeData = (): ResumeData => {
@@ -228,9 +251,19 @@ beforeEach(() => {
 	grantResumeAccessMock.mockReset();
 	hasResumeAccessMock.mockReset();
 	storageDeleteMock.mockReset();
+	retiredLinkMocks.capture.mockReset();
+	retiredLinkMocks.removeLivePath.mockReset();
+	retiredLinkMocks.recognize.mockReset();
+	retiredLinkMocks.increment.mockReset();
+	retiredLinkMocks.shouldCount.mockReset();
 	hashMock.mockResolvedValue("hashed-password");
 	publishResumeUpdatedMock.mockResolvedValue(undefined);
 	storageDeleteMock.mockResolvedValue(true);
+	retiredLinkMocks.capture.mockResolvedValue(undefined);
+	retiredLinkMocks.removeLivePath.mockResolvedValue(undefined);
+	retiredLinkMocks.recognize.mockResolvedValue(null);
+	retiredLinkMocks.increment.mockResolvedValue(undefined);
+	retiredLinkMocks.shouldCount.mockReturnValue(true);
 });
 
 it("imports", () => {
@@ -241,18 +274,17 @@ describe("create", () => {
 	it("rejects out-of-range values before creating any record", async () => {
 		const data = structuredClone(defaultResumeData);
 		data.metadata.page.marginX = 500;
-		dbMock.insert.mockReturnValue({ values: vi.fn(() => Promise.resolve()) });
 		await expect(
 			resumeService.create({ userId: "u1", name: "Resume", slug: "resume", tags: [], locale: "en-US", data }),
 		).rejects.toMatchObject({ code: "BAD_REQUEST", status: 400 });
-		expect(dbMock.insert).not.toHaveBeenCalled();
+		expect(dbMock.transaction).not.toHaveBeenCalled();
 		expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
 	});
 
 	it("copies stylesheet content", async () => {
 		const data = createSemanticResumeData();
 		const values = vi.fn((_input: unknown) => Promise.resolve());
-		dbMock.insert.mockReturnValueOnce({ values });
+		runCreateTransaction(values);
 
 		await resumeService.create({
 			userId: "u1",
@@ -274,7 +306,7 @@ describe("create", () => {
 
 	it("rejects renderer-unsafe data from direct and duplicate callers before insertion", async () => {
 		const values = vi.fn(() => Promise.resolve());
-		dbMock.insert.mockReturnValueOnce({ values });
+		runCreateTransaction(values);
 
 		const error = await resumeService
 			.create({
@@ -294,7 +326,7 @@ describe("create", () => {
 
 	it("persists normalized renderer-safe overlapping data", async () => {
 		const values = vi.fn((_input: unknown) => Promise.resolve());
-		dbMock.insert.mockReturnValueOnce({ values });
+		runCreateTransaction(values);
 
 		await resumeService.create({
 			userId: "u1",
@@ -315,6 +347,19 @@ describe("create", () => {
 			label: "",
 			inlineLink: false,
 		});
+	});
+
+	it("removes same-owner retired attribution for a newly live slug inside the create transaction", async () => {
+		const values = vi.fn((_input: unknown) => Promise.resolve());
+		const tx = runCreateTransaction(values);
+
+		await resumeService.create({ userId: "u1", name: "Reuse", slug: "first", tags: [], locale: "en-US" });
+
+		expect(retiredLinkMocks.removeLivePath).toHaveBeenCalledExactlyOnceWith(tx, {
+			userId: "u1",
+			slug: "first",
+		});
+		expect(values).toHaveBeenCalledOnce();
 	});
 });
 
@@ -462,6 +507,57 @@ describe("versions.restore", () => {
 });
 
 describe("update", () => {
+	it("does not retire a path when the slug is unchanged", async () => {
+		const select = createLockedSelectChain([
+			{ data: defaultResumeData, isLocked: false, slug: "same", username: "owner" },
+		]);
+		const update = createUpdateChain([createResumeRow(defaultResumeData)]);
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+			callback({ select: () => select.chain, update: () => update.chain }),
+		);
+
+		await resumeService.update({ id: "r1", userId: "u1", slug: "same" });
+
+		expect(retiredLinkMocks.capture).not.toHaveBeenCalled();
+	});
+
+	it("captures a changed slug inside the same locked transaction", async () => {
+		const select = createLockedSelectChain([
+			{ data: defaultResumeData, isLocked: false, slug: "first", username: "owner" },
+		]);
+		const update = createUpdateChain([{ ...createResumeRow(defaultResumeData), slug: "second" }]);
+		const tx = { select: () => select.chain, update: () => update.chain };
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) => callback(tx));
+
+		await resumeService.update({ id: "r1", userId: "u1", slug: "second" });
+
+		expect(retiredLinkMocks.capture).toHaveBeenCalledExactlyOnceWith(tx, {
+			resumeId: "r1",
+			userId: "u1",
+			username: "owner",
+			retiredSlug: "first",
+			liveSlug: "second",
+			now: expect.any(Date),
+		});
+	});
+
+	it("does not update the slug when retired-path capture fails", async () => {
+		const select = createLockedSelectChain([
+			{ data: defaultResumeData, isLocked: false, slug: "first", username: "owner" },
+		]);
+		const update = createUpdateChain([{ ...createResumeRow(defaultResumeData), slug: "second" }]);
+		retiredLinkMocks.capture.mockRejectedValueOnce(new Error("retirement failed"));
+		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) =>
+			callback({ select: () => select.chain, update: () => update.chain }),
+		);
+
+		await expect(resumeService.update({ id: "r1", userId: "u1", slug: "second" })).rejects.toMatchObject({
+			code: "INTERNAL_SERVER_ERROR",
+		});
+		expect(update.set).not.toHaveBeenCalled();
+		expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
+	});
+
 	it.each([false, true])(
 		"persists showDownloadButtons=%s without changing resume content",
 		async (showDownloadButtons) => {
@@ -1027,6 +1123,96 @@ describe("sharing preferences", () => {
 			expect(result.showDownloadButtons).toBe(showDownloadButtons);
 		} finally {
 			increment.mockRestore();
+		}
+	});
+});
+
+describe("retired public paths", () => {
+	const input = {
+		username: "owner",
+		slug: "first",
+		requestHeaders: new Headers({ "x-forwarded-for": "203.0.113.7" }),
+	};
+	const selectCurrentPath = (rows: unknown[]) =>
+		dbMock.select.mockReturnValueOnce({
+			from: () => ({ innerJoin: () => ({ where: () => Promise.resolve(rows) }) }),
+		});
+
+	it("keeps a current route ahead of retired-link recognition", async () => {
+		selectCurrentPath([
+			{
+				...createResumeRow(defaultResumeData),
+				userId: "u1",
+				isPublic: true,
+				passwordHash: null,
+			},
+		]);
+		const incrementViews = vi.spyOn(resumeService.statistics, "increment").mockResolvedValue();
+
+		try {
+			await expect(resumeService.getBySlug(input)).resolves.toMatchObject({ id: "r1" });
+			expect(retiredLinkMocks.recognize).not.toHaveBeenCalled();
+		} finally {
+			incrementViews.mockRestore();
+		}
+	});
+
+	it("counts a recognized old-path attempt outside the failing lookup and still returns NOT_FOUND", async () => {
+		selectCurrentPath([]);
+		retiredLinkMocks.recognize.mockResolvedValueOnce({ id: "retired-1", userId: "u1" });
+		const incrementViews = vi.spyOn(resumeService.statistics, "increment").mockResolvedValue();
+
+		try {
+			await expect(resumeService.getBySlug(input)).rejects.toMatchObject({ code: "NOT_FOUND" });
+			expect(retiredLinkMocks.shouldCount).toHaveBeenCalledWith("retired-1", "ip:203.0.113.7", expect.any(Number));
+			expect(retiredLinkMocks.increment).toHaveBeenCalledExactlyOnceWith("retired-1", expect.any(Date));
+			expect(incrementViews).not.toHaveBeenCalled();
+		} finally {
+			incrementViews.mockRestore();
+		}
+	});
+
+	it("suppresses duplicate attempts during the separate retired-link window", async () => {
+		selectCurrentPath([]);
+		retiredLinkMocks.recognize.mockResolvedValueOnce({ id: "retired-1", userId: "u1" });
+		retiredLinkMocks.shouldCount.mockReturnValueOnce(false);
+
+		await expect(resumeService.getBySlug(input)).rejects.toMatchObject({ code: "NOT_FOUND" });
+		expect(retiredLinkMocks.increment).not.toHaveBeenCalled();
+	});
+
+	it("excludes the owner from old-path attempts", async () => {
+		selectCurrentPath([]);
+		retiredLinkMocks.recognize.mockResolvedValueOnce({ id: "retired-1", userId: "u1" });
+
+		await expect(resumeService.getBySlug({ ...input, currentUserId: "u1" })).rejects.toMatchObject({
+			code: "NOT_FOUND",
+		});
+		expect(retiredLinkMocks.shouldCount).not.toHaveBeenCalled();
+		expect(retiredLinkMocks.increment).not.toHaveBeenCalled();
+	});
+
+	it("does not allocate dedup state for an unknown path", async () => {
+		selectCurrentPath([]);
+
+		await expect(resumeService.getBySlug(input)).rejects.toMatchObject({ code: "NOT_FOUND" });
+		expect(retiredLinkMocks.shouldCount).not.toHaveBeenCalled();
+		expect(retiredLinkMocks.increment).not.toHaveBeenCalled();
+	});
+
+	it.each(["lookup", "count"] as const)("preserves the same NOT_FOUND when retired-link %s fails", async (failure) => {
+		selectCurrentPath([]);
+		if (failure === "lookup") retiredLinkMocks.recognize.mockRejectedValueOnce(new Error("lookup failed"));
+		else {
+			retiredLinkMocks.recognize.mockResolvedValueOnce({ id: "retired-1", userId: "u1" });
+			retiredLinkMocks.increment.mockRejectedValueOnce(new Error("count failed"));
+		}
+		const warning = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+
+		try {
+			await expect(resumeService.getBySlug(input)).rejects.toMatchObject({ code: "NOT_FOUND" });
+		} finally {
+			warning.mockRestore();
 		}
 	});
 });

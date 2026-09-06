@@ -27,6 +27,21 @@ export async function deleteE2EUser(account: E2EAccount) {
 	}
 }
 
+export async function expireRetiredResumeLink(username: string, slug: string) {
+	const pool = new Pool({ connectionString: getDatabaseUrl() });
+
+	try {
+		await pool.query(
+			`update "resume_retired_link"
+			 set retired_at = now() - interval '91 days'
+			 where username = $1 and slug = $2`,
+			[username, slug],
+		);
+	} finally {
+		await pool.end();
+	}
+}
+
 type SemanticStylesheetSeed = {
 	mode: "legacy" | "semantic";
 	source: { languageVersion: number; text: string };
