@@ -505,7 +505,7 @@ const extensions = [
 	}),
 	LiteralParagraph,
 	LiteralHeading.configure({ levels: [1, 2, 3, 4, 5, 6] }),
-	LiteralWhitespaceInput,
+	LiteralWhitespaceInput.configure({ hasUnsupportedTableMarkup }),
 	TextStyle,
 	Color,
 	Highlight.configure({ multicolor: true }).extend({

@@ -133,6 +133,106 @@ describe("RichInput literal whitespace (#3397)", () => {
 		expect(editor.getHTML()).toBe(`${html}<p></p>`);
 	});
 
+	it.each(["bullet", "ordered"])("keeps heading whitespace through %s list conversion and reload", async (list) => {
+		const { editor } = await input(`<h2 ${preserve}>  Literal\t </h2>`);
+		const toggle = () => (list === "bullet" ? editor.commands.toggleBulletList() : editor.commands.toggleOrderedList());
+		act(toggle);
+		const saved = editor.getHTML();
+		expect(saved).toContain(`<p ${preserve}>  Literal\t </p>`);
+		act(() => editor.commands.setContent(saved, { emitUpdate: false }));
+		expect(editor.getHTML()).toBe(saved);
+		act(() => {
+			editor.commands.setTextSelection(5);
+			toggle();
+			editor.commands.toggleHeading({ level: 2 });
+		});
+		expect(editor.getHTML()).toContain(`<h2 ${preserve}>  Literal\t </h2>`);
+	});
+
+	it("keeps structural markers local to previously marked blocks, including undo and redo", async () => {
+		const html = `<p ${preserve}>  First\t </p><p>Legacy</p>`;
+		const { editor } = await input(html);
+		act(() => {
+			editor.commands.selectAll();
+			editor.commands.toggleHeading({ level: 2 });
+		});
+		const saved = `<h2 ${preserve}>  First\t </h2><h2>Legacy</h2><p></p>`;
+		expect(editor.getHTML()).toBe(saved);
+		act(() => editor.commands.undo());
+		expect(editor.getHTML()).toBe(html);
+		act(() => editor.commands.redo());
+		expect(editor.getHTML()).toBe(saved);
+		act(() => editor.commands.setContent(saved, { emitUpdate: false }));
+		expect(editor.getHTML()).toBe(saved);
+	});
+
+	it("preserves both blocks through multi-block paragraph and heading conversions", async () => {
+		const { editor } = await input(`<p ${preserve}>  First\t </p><p ${preserve}>  Second\t </p>`);
+		act(() => {
+			editor.commands.selectAll();
+			editor.commands.toggleHeading({ level: 2 });
+		});
+		const headings = `<h2 ${preserve}>  First\t </h2><h2 ${preserve}>  Second\t </h2><p></p>`;
+		expect(editor.getHTML()).toBe(headings);
+		act(() => editor.commands.setContent(headings, { emitUpdate: false }));
+		expect(editor.getHTML()).toBe(headings);
+		act(() => {
+			editor.commands.selectAll();
+			editor.commands.setParagraph();
+		});
+		const saved = editor.getHTML();
+		expect(saved).toContain(`<p ${preserve}>  First\t </p><p ${preserve}>  Second\t </p>`);
+		act(() => editor.commands.setContent(saved, { emitUpdate: false }));
+		expect(editor.getHTML()).toBe(saved);
+	});
+
+	it.each([
+		['<p title="a > b">  Text\tX  </p>', `<p ${preserve}>  Text\tX  </p>`],
+		["<p title='a < b > c'>  Text\tX  </p>", `<p ${preserve}>  Text\tX  </p>`],
+		["<div>  Text\tX  </div>", `<p ${preserve}>  Text\tX  </p>`],
+		['<meta charset="utf-8"><div>  Text\tX  </div>', `<p ${preserve}>  Text\tX  </p>`],
+		["<!--StartFragment--><div>  Text\tX  </div><!--EndFragment-->", `<p ${preserve}>  Text\tX  </p>`],
+		[
+			"<div><div>  First\t </div><div>  Second\t </div></div>",
+			`<p ${preserve}>  First\t </p><p ${preserve}>  Second\t </p>`,
+		],
+		["<ul><li>  Text\tX  </li></ul>", `<ul><li><p ${preserve}>  Text\tX  </p></li></ul><p></p>`],
+		["<ol><li>  Text\tX  </li></ol>", `<ol><li><p ${preserve}>  Text\tX  </p></li></ol><p></p>`],
+		["<blockquote>  Text\tX  </blockquote>", `<blockquote><p ${preserve}>  Text\tX  </p></blockquote><p></p>`],
+		["<div>  First<br>  Second\t </div>", `<p ${preserve}>  First<br>  Second\t </p>`],
+	])("preserves supported clipboard text and baseline blocks: %s", async (html, expected) => {
+		const { editor } = await input("<p>Start</p>");
+		act(() => {
+			editor.commands.selectAll();
+			editor.view.pasteHTML(html);
+		});
+		expect(editor.getHTML()).toBe(expected);
+		act(() => editor.commands.setContent(expected, { emitUpdate: false }));
+		expect(editor.getHTML()).toBe(expected);
+	});
+
+	it("preserves whitespace in pasted supported table paragraphs", async () => {
+		const { editor } = await input("<p>Start</p>");
+		act(() => {
+			editor.commands.selectAll();
+			editor.view.pasteHTML("<table><tbody><tr><td><p>  Cell\ttext  </p></td></tr></tbody></table>");
+		});
+		expect(editor.getHTML()).toContain(`<p ${preserve}>  Cell\ttext  </p>`);
+	});
+
+	it.each([
+		"<table><tr><td><p>  Cell\t </p></td></tr></table>",
+		'<table border="1"><tbody><tr><td><p>  Cell\t </p></td></tr></tbody></table>',
+	])("rejects unsafe table paste before DOM normalization: %s", async (html) => {
+		const { editor, onChange } = await input("<p>Start</p>");
+		act(() => {
+			editor.commands.selectAll();
+			editor.view.pasteHTML(html);
+		});
+		expect(editor.getHTML()).toBe("<p>Start</p>");
+		expect(onChange).not.toHaveBeenCalled();
+	});
+
 	it("keeps marked paragraphs editable inside supported table cells", async () => {
 		const html = `<table><tbody><tr><td colspan="1" rowspan="1"><p ${preserve}>  Cell\ttext  </p></td></tr></tbody></table><p></p>`;
 		const { editor, onChange } = await input(html);

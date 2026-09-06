@@ -68,6 +68,56 @@ async function line(content: string, locale = "en-US") {
 }
 
 describe("actual PDF literal whitespace (#3397)", () => {
+	it.each(["en-US", "he-IL", "ar-SA"])(
+		"advances first content for marked leading spaces and tabs in %s",
+		async (locale) => {
+			const rtl = locale !== "en-US";
+			const firstContent = async (prefix: string, marked = true) => {
+				const items = await renderItems(
+					`<p ${marked ? preserve : ""}>${prefix}<strong>LIT</strong> AB END</p>`,
+					locale,
+				);
+				const anchor = items.find((item) => item.text.includes("LIT"));
+				if (!anchor) throw new Error("Missing first-content anchor");
+				expect(
+					items
+						.filter((item) => Math.abs(item.y - anchor.y) < 0.01)
+						.map((item) => item.text)
+						.join("")
+						.replace(/\s/g, ""),
+				).toBe("LITABEND");
+				return rtl ? anchor.x + anchor.width : anchor.x;
+			};
+			const compact = await firstContent("");
+			const spaces = await firstContent("  ");
+			const tab = await firstContent("\t");
+			const sign = rtl ? -1 : 1;
+			// Helvetica body is 10pt, with an ordinary-space advance of 2.78pt.
+			expect(sign * (spaces - compact)).toBeCloseTo(5.56, 2);
+			expect(sign * (tab - compact)).toBeCloseTo(11.12, 2);
+			expect(await firstContent("  ", false)).toBeCloseTo(await firstContent("", false), 2);
+		},
+	);
+
+	it("keeps literal layout local to marked siblings in the same PDF", async () => {
+		const items = await renderItems(`<p ${preserve}>\tLIT AB END</p><p>  LIT AB END</p><p>LIT AB END</p>`);
+		const anchors = items.filter((item) => item.text.includes("LIT"));
+		expect(anchors).toHaveLength(3);
+		const [marked, legacy, compact] = anchors;
+		if (!marked || !legacy || !compact) throw new Error("Missing mixed-block anchors");
+		expect(marked.x - legacy.x).toBeCloseTo(11.12, 2);
+		expect(legacy.x).toBeCloseTo(compact.x, 2);
+		for (const anchor of anchors) {
+			expect(
+				items
+					.filter((item) => Math.abs(item.y - anchor.y) < 0.01)
+					.map((item) => item.text)
+					.join("")
+					.replace(/\s/g, ""),
+			).toBe("LITABEND");
+		}
+	});
+
 	it("renders one tab as exactly four ordinary-space advances", async () => {
 		const compact = await line(`<p ${preserve}>LIT AB END</p>`);
 		const oneSpace = await line(`<p ${preserve}>LIT A B END</p>`);
@@ -109,7 +159,7 @@ describe("actual PDF literal whitespace (#3397)", () => {
 			.map((item) => item.text)
 			.join("")
 			.replace(/\s/g, "");
-		expect(text).toContain(sample.replace(/\s/g, ""));
+		expect(text.slice(text.indexOf("LIT"))).toBe(sample.replace(/\s/g, ""));
 	});
 
 	it.each([

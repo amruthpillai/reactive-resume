@@ -1,8 +1,8 @@
 diff --git a/lib/textkit.js b/lib/textkit.js
-index 2c0ec95..3683493 100644
+index 7bfe0d9a119a8bd1ec98ff0f4827bd6cb3a967a4..92821b761893c6a5132a722f72bc86c1d1e9ec89 100644
 --- a/lib/textkit.js
 +++ b/lib/textkit.js
-@@ -709,6 +709,28 @@ const omit = (value, run) => {
+@@ -715,6 +715,28 @@ const omit = (value, run) => {
      return Object.assign({}, run, { attributes });
  };
  
@@ -31,7 +31,7 @@ index 2c0ec95..3683493 100644
  /**
   * Get run ascent
   *
-@@ -718,7 +743,7 @@ const omit = (value, run) => {
+@@ -724,7 +746,7 @@ const omit = (value, run) => {
  const ascent$1 = (run) => {
      const { font, attachment } = run.attributes;
      const attachmentHeight = attachment?.height || 0;
@@ -40,7 +40,7 @@ index 2c0ec95..3683493 100644
      return Math.max(attachmentHeight, fontAscent * scale(run));
  };
  
-@@ -730,7 +755,7 @@ const ascent$1 = (run) => {
+@@ -736,7 +758,7 @@ const ascent$1 = (run) => {
   */
  const descent = (run) => {
      const font = run.attributes?.font;
@@ -49,7 +49,7 @@ index 2c0ec95..3683493 100644
      return scale(run) * fontDescent;
  };
  
-@@ -742,8 +767,8 @@ const descent = (run) => {
+@@ -748,8 +770,8 @@ const descent = (run) => {
   */
  const lineGap = (run) => {
      const font = run.attributes?.font;
@@ -60,7 +60,7 @@ index 2c0ec95..3683493 100644
  };
  
  /**
-@@ -754,7 +779,8 @@ const lineGap = (run) => {
+@@ -760,7 +782,8 @@ const lineGap = (run) => {
   */
  const height$1 = (run) => {
      const lineHeight = run.attributes?.lineHeight;
@@ -70,3 +70,25 @@ index 2c0ec95..3683493 100644
  };
  
  /**
+@@ -1680,8 +1703,11 @@ const getOverflowRight = (line) => {
+  * @returns Line
+  */
+ const adjustOverflow = (line) => {
+-    const overflowLeft = getOverflowLeft(line);
+-    const overflowRight = getOverflowRight(line);
++    // Preserve literal edge advances after bidi reordering. Other Text nodes
++    // retain textkit's HTML-style hanging whitespace alignment.
++    const preserveWhitespace = line.runs.some((run) => run.attributes.preserveWhitespace);
++    const overflowLeft = preserveWhitespace ? 0 : getOverflowLeft(line);
++    const overflowRight = preserveWhitespace ? 0 : getOverflowRight(line);
+     const x = line.box.x - overflowLeft;
+     const width = line.box.width + overflowLeft + overflowRight;
+     const box = Object.assign({}, line.box, { x, width });
+@@ -1842,6 +1868,7 @@ const applyAttributes = (a) => {
+         opacity: a.opacity,
+         paddingTop: a.paddingTop || a.padding || 0,
+         paragraphSpacing: a.paragraphSpacing || 0,
++        preserveWhitespace: a.preserveWhitespace === true,
+         script: a.script || null,
+         shrinkFactor: a.shrinkFactor || 0,
+         strike: a.strike || false,

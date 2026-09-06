@@ -10,7 +10,7 @@ import { expect, test } from "../fixtures/test";
 const requireWeb = createRequire(`${process.cwd()}/apps/web/package.json`);
 const execFileAsync = promisify(execFile);
 const preservedHtml =
-	'<p data-resume-whitespace="preserve">  LIT A\tB END  </p><p data-resume-whitespace="preserve">  REF A    B END  </p>';
+	'<p data-resume-whitespace="preserve">  LIT A\tB END  </p><p data-resume-whitespace="preserve">  REF A    B END  </p><p data-resume-whitespace="preserve">CTL A    B END</p><p data-resume-whitespace="preserve">\tTAB A    B END</p>';
 
 async function readSummary(id: string) {
 	if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required for literal-whitespace E2E.");
@@ -50,7 +50,7 @@ async function pdfLineMetrics(path: string) {
 			const items = (await page.getTextContent()).items.flatMap((item) =>
 				"str" in item ? [{ text: item.str, x: item.transform[4], y: item.transform[5], width: item.width }] : [],
 			);
-			for (const marker of ["LIT", "REF"]) {
+			for (const marker of ["LIT", "REF", "CTL", "TAB"]) {
 				const anchor = items.find((item) => item.text.includes(marker));
 				if (!anchor) continue;
 				const tail = items.find(
@@ -84,7 +84,7 @@ test("persists typed and pasted literal whitespace through JSON, PDF, and DOCX",
 	await page.keyboard.press("Enter");
 	await editor.evaluate((element) => {
 		const clipboard = new DataTransfer();
-		clipboard.setData("text/plain", "  REF A    B END  ");
+		clipboard.setData("text/plain", "  REF A    B END  \nCTL A    B END\n\tTAB A    B END");
 		element.dispatchEvent(new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData: clipboard }));
 	});
 
@@ -93,7 +93,9 @@ test("persists typed and pasted literal whitespace through JSON, PDF, and DOCX",
 	await openSidebarSection(page, "Summary");
 	const reloadedEditor = page.locator("#sidebar-summary [data-editor=true]");
 	await expect(reloadedEditor).toBeVisible();
-	expect(await reloadedEditor.evaluate((element) => element.textContent)).toBe("  LIT A\tB END    REF A    B END  ");
+	expect(await reloadedEditor.evaluate((element) => element.textContent)).toBe(
+		"  LIT A\tB END    REF A    B END  CTL A    B END\tTAB A    B END",
+	);
 	expect(
 		await reloadedEditor
 			.locator("p")
@@ -116,6 +118,16 @@ test("persists typed and pasted literal whitespace through JSON, PDF, and DOCX",
 	expect(literal.start).toBeCloseTo(reference.start, 2);
 	expect(literal.gap).toBeCloseTo(reference.gap, 2);
 	expect(literal.tailWidth).toBeCloseTo(reference.tailWidth, 2);
+	const control = lines.find((line) => line.marker === "CTL");
+	const leadingTab = lines.find((line) => line.marker === "TAB");
+	if (!control || !leadingTab) throw new Error("Expected unpadded and leading-tab PDF controls.");
+	expect(literal.gap).toBeGreaterThan(0);
+	expect(literal.start - control.start).toBeCloseTo(literal.gap / 2, 2);
+	expect(leadingTab.start - control.start).toBeCloseTo(literal.gap, 2);
+	await testInfo.attach("pdf-whitespace-geometry", {
+		body: JSON.stringify(lines, null, 2),
+		contentType: "application/json",
+	});
 
 	const docxPath = await download(page, testInfo, "DOCX");
 	const { stdout: documentXml } = await execFileAsync("unzip", ["-p", docxPath, "word/document.xml"], {
@@ -123,4 +135,82 @@ test("persists typed and pasted literal whitespace through JSON, PDF, and DOCX",
 	});
 	expect(documentXml).toContain('xml:space="preserve">  LIT A    B END  </w:t>');
 	expect(documentXml).toContain('xml:space="preserve">  REF A    B END  </w:t>');
+	expect(documentXml).toContain('xml:space="preserve">CTL A    B END</w:t>');
+	expect(documentXml).toContain('xml:space="preserve">    TAB A    B END</w:t>');
+});
+
+test("displays each stored tab as four spaces with usable caret and selection", async ({
+	authPage: page,
+}, testInfo) => {
+	await createSampleResumeFromDashboard(page, testInfo);
+	await openSidebarSection(page, "Summary");
+	const editor = page.locator("#sidebar-summary [data-editor=true]");
+	await editor.click();
+	await page.keyboard.press("ControlOrMeta+a");
+	await page.keyboard.press("Backspace");
+	await editor.evaluate((element) => {
+		const clipboard = new DataTransfer();
+		clipboard.setData("text/plain", "A\tB\nAB\nABC\tD\nABCD\nA    B\n\tZ\nZ\nA\t\tB");
+		element.dispatchEvent(new ClipboardEvent("paste", { bubbles: true, cancelable: true, clipboardData: clipboard }));
+	});
+	for (const direction of ["ltr", "rtl"] as const) {
+		const geometry = await editor.evaluate((element, direction) => {
+			element.dir = direction;
+			element.style.fontFamily = "Arial";
+			// Measure ordinary-space advances without Arial's A/space pair kerning.
+			element.style.fontKerning = "none";
+			const blocks = Array.from(element.querySelectorAll("p"));
+			const glyph = (index: number, offset: number) => {
+				const walker = document.createTreeWalker(blocks[index], NodeFilter.SHOW_TEXT);
+				let remaining = offset;
+				for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+					if (remaining < (node.textContent?.length ?? 0)) {
+						const range = document.createRange();
+						range.setStart(node, remaining);
+						range.setEnd(node, remaining + 1);
+						return range.getBoundingClientRect();
+					}
+					remaining -= node.textContent?.length ?? 0;
+				}
+				throw new Error("Missing glyph");
+			};
+			return {
+				one: glyph(0, 2).x - glyph(0, 0).right,
+				three: glyph(2, 4).x - glyph(2, 2).right,
+				spaces: glyph(4, 5).x - glyph(4, 0).right,
+				leading: (direction === "rtl" ? -1 : 1) * (glyph(5, 1).x - glyph(6, 0).x),
+				two: glyph(7, 3).x - glyph(7, 0).right,
+				text: blocks.map((block) => block.textContent),
+			};
+		}, direction);
+		await testInfo.attach(`tab-geometry-${direction}`, {
+			body: JSON.stringify(geometry, null, 2),
+			contentType: "application/json",
+		});
+		expect(geometry.spaces).toBeGreaterThan(0);
+		for (const width of [geometry.one, geometry.three, geometry.leading]) expect(width).toBeCloseTo(geometry.spaces, 1);
+		expect(geometry.two).toBeCloseTo(geometry.spaces * 2, 1);
+		expect(geometry.text).toEqual(["A\tB", "AB", "ABC\tD", "ABCD", "A    B", "\tZ", "Z", "A\t\tB"]);
+	}
+	const id = new URL(page.url()).pathname.match(/^\/builder\/([^/]+)/)?.[1];
+	if (!id) throw new Error("Missing resume id.");
+	await expect.poll(() => readSummary(id)).toContain('data-resume-whitespace="preserve">A\tB</p>');
+	await page.reload();
+	await openSidebarSection(page, "Summary");
+	await editor.click();
+	await editor.evaluate((element) => {
+		const text = element.querySelector("p")?.firstChild;
+		if (!text) throw new Error("Missing caret target");
+		const range = document.createRange();
+		range.setStart(text, 1);
+		range.collapse(true);
+		getSelection()?.removeAllRanges();
+		getSelection()?.addRange(range);
+	});
+	await page.keyboard.press("Shift+ArrowRight");
+	expect(await page.evaluate(() => getSelection()?.toString())).toBe("\t");
+	await page.keyboard.insertText("Q");
+	await expect(editor.locator("p").first()).toHaveText("AQB");
+	await page.keyboard.press("ControlOrMeta+z");
+	expect(await editor.locator("p").first().textContent()).toBe("A\tB");
 });
