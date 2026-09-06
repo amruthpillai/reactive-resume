@@ -3,17 +3,17 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { LockSimpleIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
-import { Fragment, useCallback, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { match } from "ts-pattern";
 import { Avatar, AvatarFallback, AvatarImage } from "@reactive-resume/ui/components/avatar";
 import { Button } from "@reactive-resume/ui/components/button";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
-import { Separator } from "@reactive-resume/ui/components/separator";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { getInitials } from "@reactive-resume/utils/string";
 import { CoverLetterLibraryDialog } from "@/features/cover-letters/library";
 import { useCurrentResume, useIsResumeLocked, usePatchResume, useResumeStore } from "@/features/resume/builder/draft";
+import { focusLeftSidebarSection, SectionEditorList } from "@/features/resume/builder/section-recovery";
 import { UserDropdownMenu } from "@/features/user/dropdown-menu";
 import { getResumeErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -74,12 +74,7 @@ export function BuilderSidebarLeft() {
 					<CoverLetterLibraryDialog initialResumeId={resume.id} resumeReady={resumeReady} />
 
 					<fieldset disabled={isLocked} className="m-0 min-w-0 space-y-4 border-0 p-0">
-						{leftSidebarSections.map((section) => (
-							<Fragment key={section}>
-								{getSectionComponent(section)}
-								<Separator />
-							</Fragment>
-						))}
+						<SectionEditorList renderSection={getSectionComponent} />
 					</fieldset>
 				</div>
 			</ScrollArea>
@@ -132,11 +127,7 @@ function SidebarEdge() {
 	const scrollToSection = useCallback(
 		(section: LeftSidebarSection) => {
 			toggleSidebar("left", true);
-			// Section ids are globally unique; document.getElementById reliably resolves the scroll target
-			// (querying through the ScrollArea ref did not — its ref does not expose the scroll container).
-			document
-				.getElementById(`sidebar-${section}`)
-				?.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
+			focusLeftSidebarSection(section);
 		},
 		[toggleSidebar],
 	);

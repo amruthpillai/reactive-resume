@@ -121,6 +121,16 @@ describe("generateOpenApiSpec", () => {
 		});
 	});
 
+	it("accepts legacy input with omitted picture fit in the published request schema", async () => {
+		const spec = (await generateSpec()) as GeneratedSpecView;
+
+		expect(spec.components?.schemas?.ResumeData).toMatchObject({
+			properties: {
+				picture: { required: expect.not.arrayContaining(["fit"]) },
+			},
+		});
+	});
+
 	it("publishes the custom-section type and item correlation", async () => {
 		const spec = (await generateSpec()) as GeneratedSpecView;
 		const schema = z.fromJSONSchema(spec.components?.schemas?.ResumeData as Parameters<typeof z.fromJSONSchema>[0]);

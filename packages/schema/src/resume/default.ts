@@ -14,6 +14,7 @@ const section = (icon: string) => ({
 export const defaultResumeData: ResumeData = {
 	picture: {
 		hidden: false,
+		fit: "cover",
 		url: "",
 		size: 80,
 		rotation: 0,
