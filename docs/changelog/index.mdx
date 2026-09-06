@@ -4,6 +4,32 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v5.3.0" description="6th September 2026">
+## Highlights
+
+- **Create cover letters from the resume builder.** When a resume has a cover-letter section, the builder rail now links directly to it. [a3784558b](https://github.com/amruthpillai/reactive-resume/commit/a3784558b)
+- **Choose cover-letter templates separately from sender details.** New and existing letters can use any template, while sender details can still be copied from a resume. You can also import a saved letter when adding a cover-letter section. [df2e21ef9](https://github.com/amruthpillai/reactive-resume/commit/df2e21ef9)
+- **Resume previews now expose a proper outline to screen readers.** Section and entry headings, nested roles, rich-text lists, and emphasis are preserved in the accessible text view. Hidden content stays hidden, and unsafe links are left out. [9f0202eac](https://github.com/amruthpillai/reactive-resume/commit/9f0202eac), [acd2a9cfe](https://github.com/amruthpillai/reactive-resume/commit/acd2a9cfe)
+- **Keep original photo framing when uploading.** The crop dialog now lets you skip cropping and upload the original image, so the Cover and Contain choices remain useful after upload. [40c997a](https://github.com/amruthpillai/reactive-resume/commit/40c997a)
+
+## Cover Letters
+
+- The cover-letter library now uses a template picker for letter styling, while the resume picker is reserved for sender details and copying content from an existing resume. Refreshing sender details no longer changes the selected template. [df2e21ef9](https://github.com/amruthpillai/reactive-resume/commit/df2e21ef9)
+- Standardized the **Cover Letters** label across the dashboard, library, documentation, and dialogs. [52949fcb4](https://github.com/amruthpillai/reactive-resume/commit/52949fcb4)
+
+## Accessibility
+
+- The accessible resume view now keeps heading levels consistent for entries and nested roles, renders supported rich-text structure, and ignores markup that should not reach assistive technologies. [9f0202eac](https://github.com/amruthpillai/reactive-resume/commit/9f0202eac), [acd2a9cfe](https://github.com/amruthpillai/reactive-resume/commit/acd2a9cfe)
+
+## Self-Hosting & Maintenance
+
+- Added a database migration to match Better Auth 1.7.3. Existing issuer values remain available, while new accounts no longer require that field or its retired uniqueness index. [cea27a97b](https://github.com/amruthpillai/reactive-resume/commit/cea27a97b)
+- Synced the latest translation catalogs from Crowdin. [d277518d2](https://github.com/amruthpillai/reactive-resume/commit/d277518d2)
+- Updated workspace dependencies and development tooling. [e272037be](https://github.com/amruthpillai/reactive-resume/commit/e272037be)
+
+**Full Changelog**: [v5.2.9...v5.3.0](https://github.com/amruthpillai/reactive-resume/compare/v5.2.9...v5.3.0)
+</Update>
+
 <Update label="v5.2.9" description="27th August 2026">
 ## Highlights
 
