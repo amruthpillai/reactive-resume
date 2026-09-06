@@ -239,6 +239,7 @@ describe("semantic binding inventory", () => {
 				columns: 1,
 				hidden: false,
 				keepTogether: false,
+				showHeading: true,
 				startOnNewPage: false,
 				items: [
 					{

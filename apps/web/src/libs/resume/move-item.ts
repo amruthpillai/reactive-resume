@@ -204,6 +204,7 @@ function makeCustomSection(id: string, type: CustomSectionType, title: string, i
 		icon: "",
 		columns: 1,
 		hidden: false,
+		showHeading: true,
 		keepTogether: false,
 		startOnNewPage: false,
 		items: [item as never],

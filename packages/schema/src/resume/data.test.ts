@@ -103,6 +103,42 @@ const customSectionFixture = (type: CustomSectionType, item: Record<string, unkn
 });
 
 describe("resumeDataSchema", () => {
+	it("defaults heading visibility to true for legacy summary and section data", () => {
+		const legacySummary = {
+			title: "",
+			icon: "article",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			content: "<p>Summary</p>",
+		};
+		const legacySection = {
+			title: "",
+			icon: "briefcase",
+			columns: 1,
+			hidden: false,
+			keepTogether: false,
+			startOnNewPage: false,
+			items: [],
+		};
+
+		expect(
+			parseResumeData({
+				...defaultResumeData,
+				summary: legacySummary,
+				sections: { ...defaultResumeData.sections, experience: legacySection },
+			}).summary.showHeading,
+		).toBe(true);
+		expect(
+			parseResumeData({
+				...defaultResumeData,
+				summary: legacySummary,
+				sections: { ...defaultResumeData.sections, experience: legacySection },
+			}).sections.experience.showHeading,
+		).toBe(true);
+	});
+
 	it("validates the default resume", () => {
 		expect(resumeDataSchema.safeParse(defaultResumeData).success).toBe(true);
 	});

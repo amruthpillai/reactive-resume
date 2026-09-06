@@ -170,6 +170,27 @@ describe("SkillsSectionDropdownMenu", () => {
 	});
 });
 
+describe("heading visibility", () => {
+	it("toggles heading visibility without changing section visibility", async () => {
+		render(
+			<I18nProvider i18n={i18n}>
+				<SectionDropdownMenu type="experience" />
+			</I18nProvider>,
+		);
+
+		await openSectionOptions();
+		fireEvent.click(await screen.findByRole("menuitem", { name: "Hide heading" }));
+
+		expect(mocks.updateResumeData).toHaveBeenCalledTimes(1);
+		const mutation = mocks.updateResumeData.mock.calls[0]?.[0] as (draft: Resume["data"]) => void;
+		const draft = structuredClone(mocks.resume.value.data);
+		mutation(draft);
+
+		expect(draft.sections.experience.showHeading).toBe(false);
+		expect(draft.sections.experience.hidden).toBe(false);
+	});
+});
+
 describe("chronological section sorting", () => {
 	it("sorts Experience once through one draft mutation and names only unresolved items", async () => {
 		render(

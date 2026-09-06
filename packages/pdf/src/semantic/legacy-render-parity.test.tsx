@@ -126,6 +126,7 @@ const buildFixture = (rules: StyleRule[]): ResumeData => {
 			columns: 1,
 			hidden: false,
 			keepTogether: false,
+			showHeading: true,
 			startOnNewPage: false,
 			items: [
 				{

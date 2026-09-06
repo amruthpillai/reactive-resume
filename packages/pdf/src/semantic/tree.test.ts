@@ -316,6 +316,7 @@ const buildCompleteFixture = (): ResumeData => {
 		icon: "star",
 		columns: 1,
 		hidden: true,
+		showHeading: true,
 		keepTogether: false,
 		startOnNewPage: false,
 		items: [

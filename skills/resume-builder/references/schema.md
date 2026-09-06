@@ -65,6 +65,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `summary.icon` | `string` | yes | default: "" | Phosphor icon name to display before the summary section title in the PDF output. Empty string uses the default summary icon; 'none' hides the icon. |
 | `summary.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the summary should span across. |
 | `summary.hidden` | `boolean` | yes | — | Whether to hide the summary from the resume. |
+| `summary.showHeading` | `boolean` | no | default: true | Whether to show the summary heading, icon, and decoration while retaining summary content. |
 | `summary.keepTogether` | `boolean` | yes | default: false | If true, the summary is kept on a single page instead of splitting across a page break. |
 | `summary.startOnNewPage` | `boolean` | yes | default: false | If true, the summary always begins on a new page. |
 | `summary.content` | `string` | yes | — | The content of the summary of the resume. This should be a HTML-formatted string. |
@@ -74,6 +75,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.profiles.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.profiles.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.profiles.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.profiles.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.profiles.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.profiles.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.profiles.items` | `array` | yes | — | The items to display in the profiles section. |
@@ -93,6 +95,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.experience.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.experience.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.experience.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.experience.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.experience.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.experience.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.experience.items` | `array` | yes | — | The items to display in the experience section. |
@@ -119,6 +122,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.education.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.education.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.education.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.education.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.education.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.education.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.education.items` | `array` | yes | — | The items to display in the education section. |
@@ -141,6 +145,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.projects.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.projects.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.projects.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.projects.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.projects.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.projects.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.projects.items` | `array` | yes | — | The items to display in the projects section. |
@@ -159,6 +164,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.skills.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.skills.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.skills.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.skills.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.skills.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.skills.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.skills.items` | `array` | yes | — | The items to display in the skills section. |
@@ -179,6 +185,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.languages.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.languages.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.languages.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.languages.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.languages.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.languages.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.languages.items` | `array` | yes | — | The items to display in the languages section. |
@@ -193,6 +200,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.interests.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.interests.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.interests.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.interests.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.interests.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.interests.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.interests.items` | `array` | yes | — | The items to display in the interests section. |
@@ -209,6 +217,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.awards.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.awards.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.awards.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.awards.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.awards.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.awards.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.awards.items` | `array` | yes | — | The items to display in the awards section. |
@@ -228,6 +237,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.certifications.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.certifications.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.certifications.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.certifications.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.certifications.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.certifications.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.certifications.items` | `array` | yes | — | The items to display in the certifications section. |
@@ -247,6 +257,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.publications.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.publications.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.publications.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.publications.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.publications.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.publications.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.publications.items` | `array` | yes | — | The items to display in the publications section. |
@@ -266,6 +277,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.volunteer.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.volunteer.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.volunteer.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.volunteer.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.volunteer.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.volunteer.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.volunteer.items` | `array` | yes | — | The items to display in the volunteer section. |
@@ -285,6 +297,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `sections.references.icon` | `string` | yes | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `sections.references.columns` | `integer` | yes | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `sections.references.hidden` | `boolean` | yes | — | Whether to hide the section from the resume. |
+| `sections.references.showHeading` | `boolean` | no | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `sections.references.keepTogether` | `boolean` | yes | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `sections.references.startOnNewPage` | `boolean` | yes | default: false | If true, the section always begins on a new page. |
 | `sections.references.items` | `array` | yes | — | The items to display in the references section. |
@@ -306,6 +319,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type summary, schema summaryItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type summary, schema summaryItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type summary, schema summaryItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type summary, schema summaryItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type summary, schema summaryItemSchema at customSections[]) | — | — |
@@ -321,6 +335,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type profiles, schema profileItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type profiles, schema profileItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type profiles, schema profileItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type profiles, schema profileItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type profiles, schema profileItemSchema at customSections[]) | — | — |
@@ -343,6 +358,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type experience, schema experienceItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type experience, schema experienceItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type experience, schema experienceItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type experience, schema experienceItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type experience, schema experienceItemSchema at customSections[]) | — | — |
@@ -372,6 +388,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type education, schema educationItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type education, schema educationItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type education, schema educationItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type education, schema educationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type education, schema educationItemSchema at customSections[]) | — | — |
@@ -397,6 +414,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type projects, schema projectItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type projects, schema projectItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type projects, schema projectItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type projects, schema projectItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type projects, schema projectItemSchema at customSections[]) | — | — |
@@ -418,6 +436,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type skills, schema skillItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type skills, schema skillItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type skills, schema skillItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type skills, schema skillItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `string` | no (type skills, schema skillItemSchema at customSections[]) | enum: ["inline","list"]; default: "inline" | How skill keywords are displayed: inline separated by commas, or one bullet per keyword. |
@@ -439,6 +458,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type languages, schema languageItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type languages, schema languageItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type languages, schema languageItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type languages, schema languageItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type languages, schema languageItemSchema at customSections[]) | — | — |
@@ -456,6 +476,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type interests, schema interestItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type interests, schema interestItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type interests, schema interestItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type interests, schema interestItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type interests, schema interestItemSchema at customSections[]) | — | — |
@@ -475,6 +496,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type awards, schema awardItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type awards, schema awardItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type awards, schema awardItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type awards, schema awardItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type awards, schema awardItemSchema at customSections[]) | — | — |
@@ -497,6 +519,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type certifications, schema certificationItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type certifications, schema certificationItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type certifications, schema certificationItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type certifications, schema certificationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type certifications, schema certificationItemSchema at customSections[]) | — | — |
@@ -519,6 +542,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type publications, schema publicationItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type publications, schema publicationItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type publications, schema publicationItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type publications, schema publicationItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type publications, schema publicationItemSchema at customSections[]) | — | — |
@@ -541,6 +565,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type volunteer, schema volunteerItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type volunteer, schema volunteerItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type volunteer, schema volunteerItemSchema at customSections[]) | — | — |
@@ -563,6 +588,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type references, schema referenceItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type references, schema referenceItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type references, schema referenceItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type references, schema referenceItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type references, schema referenceItemSchema at customSections[]) | — | — |
@@ -585,6 +611,7 @@ Choose one coherent shape for each union value. Required fields are local to tha
 | `customSections[].icon` | `string` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: "" | Phosphor icon name to display before the section title in the PDF output. Empty string uses the default section icon; 'none' hides the icon. |
 | `customSections[].columns` | `integer` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | minimum: 1; maximum: 6; default: 1 | The number of columns the section should span across. |
 | `customSections[].hidden` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | Whether to hide the section from the resume. |
+| `customSections[].showHeading` | `boolean` | no (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: true | Whether to show the section heading, icon, and decoration while retaining section content. |
 | `customSections[].keepTogether` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: false | If true, the section is kept on a single page instead of splitting across a page break. |
 | `customSections[].startOnNewPage` | `boolean` | yes (type cover-letter, schema coverLetterItemSchema at customSections[]) | default: false | If true, the section always begins on a new page. |
 | `customSections[].keywordLayout` | `any` | no (type cover-letter, schema coverLetterItemSchema at customSections[]) | — | — |

@@ -38,3 +38,28 @@ it.each([false, true])("exposes keyword list semantics for custom=%s", (custom) 
 	if (!list) throw new Error("Missing keyword list");
 	expect(within(list).getAllByRole("listitem")).toHaveLength(3);
 });
+
+it("retains section labels when visual heading is disabled", () => {
+	const data = structuredClone(defaultResumeData);
+	data.sections.skills.showHeading = false;
+	data.sections.skills.items = [
+		{
+			id: "skill",
+			name: "TypeScript",
+			hidden: false,
+			icon: "",
+			iconColor: "",
+			proficiency: "Expert",
+			level: 3,
+			keywords: [],
+		},
+	];
+
+	render(
+		<I18nProvider i18n={i18n}>
+			<ResumeAccessibleText data={data} />
+		</I18nProvider>,
+	);
+
+	expect(screen.getByRole("heading", { level: 2, name: "Skills" })).toBeInTheDocument();
+});

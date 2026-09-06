@@ -242,6 +242,34 @@ describe("semantic issue fixtures", () => {
 		expect(containsStyle(document, "opacity", 0.2)).toBe(true);
 	});
 
+	it("hides section heading decoration without hiding section content", async () => {
+		const data = buildIssueFixture();
+		data.sections.experience.showHeading = false;
+		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
+		const instance = pdf(element);
+		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
+		const document = instance.container.document as HostNode;
+
+		expect(findText(document, "Experience")).toBeUndefined();
+		expect(findText(document, "Analytical Engines")).toBeDefined();
+	});
+
+	it("characterizes section-heading display:none as a CSS alternative", async () => {
+		const data = buildIssueFixture();
+		data.metadata.page.hideSectionIcons = false;
+		data.metadata.stylesheet = {
+			mode: "semantic",
+			source: source('@version 1; section[id="experience"] section-heading { display: none; }'),
+		};
+		const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<typeof pdf>[0];
+		const instance = pdf(element);
+		await vi.waitFor(() => expect(instance.container.document).not.toBeNull());
+		const document = instance.container.document as HostNode;
+
+		expect(findText(document, "Experience")).toBeUndefined();
+		expect(findText(document, "Analytical Engines")).toBeDefined();
+	});
+
 	it("unbolds only the final skill-name primitive and preserves the experience title weight (#2223)", async () => {
 		const data = buildIssueFixture();
 		const stylesheet = source(`

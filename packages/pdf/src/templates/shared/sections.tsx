@@ -320,6 +320,11 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	const sectionHeadingContainerStyle = useTemplateStyle("sectionHeadingContainer");
 	const sectionHeadingRuleStyle = useSectionStyleRule("heading");
 	const sectionTitle = getResumeSectionTitle(data, sectionId, title);
+	const sectionHeadingEnabled = (() => {
+		if (sectionId === "summary") return data.summary.showHeading !== false;
+		if (sectionId in data.sections) return data.sections[sectionId as SectionType].showHeading !== false;
+		return data.customSections.find((section) => section.id === sectionId)?.showHeading !== false;
+	})();
 	const sectionHeadingNodeKey = semanticNodeKeys.sectionHeading(sectionNodeKey);
 	const sectionHeadingResolved = useResolvedNode(sectionHeadingNodeKey);
 	const sectionHeadingVisible = useSemanticNodeVisible(sectionHeadingNodeKey);
@@ -343,7 +348,7 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 		return (
 			<SemanticNodeKeyProvider nodeKey={sectionNodeKey}>
 				<View style={resolvedSectionStyle} {...flowProps}>
-					{showHeading && (
+					{showHeading && sectionHeadingEnabled && (
 						<Heading style={composeStyles(sectionHeadingStyle, sectionHeadingRuleStyle)}>{sectionTitle}</Heading>
 					)}
 					{children}
@@ -356,7 +361,7 @@ const SectionShell = ({ sectionId, title, showHeading = true, children }: Sectio
 	return (
 		<SemanticNodeKeyProvider nodeKey={sectionNodeKey}>
 			<View style={resolvedSectionStyle} {...flowProps}>
-				{showHeading && sectionHeadingVisible && (
+				{showHeading && sectionHeadingEnabled && sectionHeadingVisible && (
 					<View
 						{...resolvedPdfFlowProps(sectionHeadingResolved)}
 						style={composeStyles(

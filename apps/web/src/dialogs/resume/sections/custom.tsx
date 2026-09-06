@@ -39,6 +39,7 @@ const defaultValues: FormValues = {
 	icon: "",
 	columns: 1,
 	hidden: false,
+	showHeading: true,
 	keepTogether: false,
 	startOnNewPage: false,
 	items: [],

@@ -78,6 +78,14 @@ function sectionHeading(title: string, colorHex: string): Paragraph {
 	});
 }
 
+function sectionHeadingParagraph<T extends { showHeading?: boolean | undefined }>(
+	section: T,
+	title: string,
+	colorHex: string,
+): Paragraph[] {
+	return section.showHeading !== false && title ? [sectionHeading(title, colorHex)] : [];
+}
+
 function titleAndSubtitle(primary: string, secondary: string, rightText?: string, bold = true): Paragraph {
 	const baseRun = getBaseRun();
 	const children: (TextRun | ExternalHyperlink)[] = [new TextRun({ text: primary, bold, ...baseRun })];
@@ -144,9 +152,7 @@ export function renderSummary(summary: ResumeData["summary"], colorHex: string):
 	if (summary.hidden || !summary.content) return [];
 
 	const paragraphs: Paragraph[] = [];
-	if (summary.title) {
-		paragraphs.push(sectionHeading(summary.title, colorHex));
-	}
+	paragraphs.push(...sectionHeadingParagraph(summary, summary.title, colorHex));
 	paragraphs.push(...htmlToParagraphs(summary.content, getHtmlStyle()));
 	return paragraphs;
 }
@@ -155,7 +161,7 @@ function renderExperience(section: Sections["experience"], colorHex: string): Pa
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 	const baseRun = getBaseRun();
 
 	for (const item of items) {
@@ -201,7 +207,7 @@ function renderEducation(section: Sections["education"], colorHex: string): Para
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 	const baseRun = getBaseRun();
 
 	for (const item of items) {
@@ -234,7 +240,7 @@ function renderProjects(section: Sections["projects"], colorHex: string): Paragr
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 
 	for (const item of items) {
 		paragraphs.push(titleAndSubtitle(item.name, "", item.period));
@@ -254,7 +260,7 @@ function renderSkills(section: Sections["skills"], colorHex: string): Paragraph[
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 	const baseRun = getBaseRun();
 
 	for (const item of items) {
@@ -285,7 +291,7 @@ function renderLanguages(section: Sections["languages"], colorHex: string): Para
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 	const baseRun = getBaseRun();
 
 	for (const item of items) {
@@ -305,7 +311,7 @@ function renderInterests(section: Sections["interests"], colorHex: string): Para
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 	const baseRun = getBaseRun();
 
 	for (const item of items) {
@@ -325,7 +331,7 @@ function renderAwards(section: Sections["awards"], colorHex: string): Paragraph[
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 
 	for (const item of items) {
 		paragraphs.push(titleAndSubtitle(item.title, item.awarder, item.date, false));
@@ -345,7 +351,7 @@ function renderCertifications(section: Sections["certifications"], colorHex: str
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 
 	for (const item of items) {
 		paragraphs.push(titleAndSubtitle(item.title, item.issuer, item.date));
@@ -365,7 +371,7 @@ function renderPublications(section: Sections["publications"], colorHex: string)
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 
 	for (const item of items) {
 		paragraphs.push(titleAndSubtitle(item.title, item.publisher, item.date));
@@ -385,7 +391,7 @@ function renderVolunteer(section: Sections["volunteer"], colorHex: string): Para
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 
 	for (const item of items) {
 		paragraphs.push(titleAndSubtitle(item.organization, "", item.period));
@@ -408,7 +414,7 @@ function renderReferences(section: Sections["references"], colorHex: string): Pa
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 	const baseRun = getBaseRun();
 
 	for (const item of items) {
@@ -443,7 +449,7 @@ function renderProfiles(section: Sections["profiles"], colorHex: string): Paragr
 	const items = section.items.filter((item) => !item.hidden);
 	if (section.hidden || items.length === 0) return [];
 
-	const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+	const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 	const baseRun = getBaseRun();
 
 	for (const item of items) {
@@ -502,7 +508,7 @@ export function renderCustomSection(section: CustomSection, colorHex: string): P
 
 	// Summary-type custom sections render HTML content
 	if (sectionType === "summary") {
-		const paragraphs: Paragraph[] = [sectionHeading(section.title, colorHex)];
+		const paragraphs: Paragraph[] = sectionHeadingParagraph(section, section.title, colorHex);
 		for (const item of visibleItems) {
 			if ("content" in item && item.content) {
 				paragraphs.push(...htmlToParagraphs(item.content, getHtmlStyle()));
@@ -533,6 +539,7 @@ export function renderCustomSection(section: CustomSection, colorHex: string): P
 			title: section.title,
 			columns: section.columns,
 			hidden: false,
+			showHeading: section.showHeading,
 			items: visibleItems,
 		} as Sections[SectionType];
 

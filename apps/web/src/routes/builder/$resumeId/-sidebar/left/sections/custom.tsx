@@ -225,12 +225,21 @@ function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) 
 	const confirm = useConfirm();
 	const { openDialog } = useDialogStore();
 	const updateResumeData = useUpdateResumeData();
+	const showHeading = section.showHeading !== false;
 
 	const onToggleSectionVisibility = () => {
 		updateResumeData((draft) => {
 			const sectionIndex = draft.customSections.findIndex((_section) => _section.id === section.id);
 			if (sectionIndex === -1) return;
 			draft.customSections[sectionIndex].hidden = !draft.customSections[sectionIndex].hidden;
+		});
+	};
+
+	const onToggleHeading = () => {
+		updateResumeData((draft) => {
+			const sectionIndex = draft.customSections.findIndex((_section) => _section.id === section.id);
+			if (sectionIndex === -1) return;
+			draft.customSections[sectionIndex].showHeading = !(draft.customSections[sectionIndex].showHeading !== false);
 		});
 	};
 
@@ -285,6 +294,11 @@ function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) 
 					<DropdownMenuItem onClick={onToggleSectionVisibility}>
 						{section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
 						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
+					</DropdownMenuItem>
+
+					<DropdownMenuItem onClick={onToggleHeading}>
+						{showHeading ? <EyeClosedIcon /> : <EyeIcon />}
+						{showHeading ? <Trans>Hide heading</Trans> : <Trans>Show heading</Trans>}
 					</DropdownMenuItem>
 
 					<DropdownMenuItem onClick={onUpdateSection}>

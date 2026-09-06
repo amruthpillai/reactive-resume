@@ -45,6 +45,7 @@ export function SectionDropdownMenu({ type }: Props) {
 	const updateResumeData = useUpdateResumeData();
 	const resume = useCurrentResume();
 	const section = type === "summary" ? resume.data.summary : resume.data.sections[type];
+	const showHeading = section.showHeading !== false;
 	const dropDownValue =
 		type === "skills" && resume.data.sections[type].layout === "inline" ? "inline" : section.columns.toString();
 
@@ -89,6 +90,16 @@ export function SectionDropdownMenu({ type }: Props) {
 				draft.summary.hidden = !draft.summary.hidden;
 			} else {
 				draft.sections[type].hidden = !draft.sections[type].hidden;
+			}
+		});
+	};
+
+	const onToggleHeading = () => {
+		updateResumeData((draft) => {
+			if (type === "summary") {
+				draft.summary.showHeading = !(draft.summary.showHeading !== false);
+			} else {
+				draft.sections[type].showHeading = !(draft.sections[type].showHeading !== false);
 			}
 		});
 	};
@@ -188,6 +199,11 @@ export function SectionDropdownMenu({ type }: Props) {
 					<DropdownMenuItem onClick={onToggleVisibility}>
 						{section.hidden ? <EyeIcon /> : <EyeClosedIcon />}
 						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
+					</DropdownMenuItem>
+
+					<DropdownMenuItem onClick={onToggleHeading}>
+						{showHeading ? <EyeClosedIcon /> : <EyeIcon />}
+						{showHeading ? <Trans>Hide heading</Trans> : <Trans>Show heading</Trans>}
 					</DropdownMenuItem>
 
 					<DropdownMenuItem onClick={onRenameSection}>

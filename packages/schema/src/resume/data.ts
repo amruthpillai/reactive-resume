@@ -107,6 +107,11 @@ export const summarySchema = z.object({
 		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the summary should span across."),
 	hidden: z.boolean().describe("Whether to hide the summary from the resume."),
+	showHeading: z
+		.boolean()
+		.optional()
+		.catch(true)
+		.describe("Whether to show the summary heading, icon, and decoration while retaining summary content."),
 	keepTogether: z
 		.boolean()
 		.catch(false)
@@ -295,6 +300,11 @@ export const baseSectionSchema = z.object({
 		),
 	columns: z.number().int().min(1).max(6).catch(1).describe("The number of columns the section should span across."),
 	hidden: z.boolean().describe("Whether to hide the section from the resume."),
+	showHeading: z
+		.boolean()
+		.optional()
+		.catch(true)
+		.describe("Whether to show the section heading, icon, and decoration while retaining section content."),
 	keepTogether: z
 		.boolean()
 		.catch(false)
@@ -694,7 +704,13 @@ export const resumeDataSchema = z.looseObject({
 
 export type ResumeData = z.infer<typeof resumeDataSchema>;
 
-export const parseResumeData = (data: unknown): ResumeData => resumeDataSchema.parse(data);
+export const parseResumeData = (data: unknown): ResumeData => {
+	const parsed = resumeDataSchema.parse(data);
+	parsed.summary.showHeading ??= true;
+	for (const section of Object.values(parsed.sections)) section.showHeading ??= true;
+	for (const section of parsed.customSections) section.showHeading ??= true;
+	return parsed;
+};
 
 export type LayoutPage = z.infer<typeof pageLayoutSchema>;
 export type Typography = z.infer<typeof typographySchema>;
