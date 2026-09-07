@@ -42,16 +42,23 @@ async function listPages(
 	try {
 		const doc = await task.promise;
 		const pages: string[][] = [];
+		const positions: { str: string; x: number; y: number }[][] = [];
 		for (let n = 1; n <= doc.numPages; n++) {
 			const page = await doc.getPage(n);
 			const text = await page.getTextContent();
 			pages.push(text.items.flatMap((item) => ("str" in item && item.str ? [item.str] : [])));
+			positions.push(
+				text.items.flatMap((item) =>
+					"str" in item && item.str ? [{ str: item.str, x: item.transform[4], y: item.transform[5] }] : [],
+				),
+			);
 		}
 		return {
 			marker: pages.findIndex((p) => p.some((s) => s.includes("•") || s.startsWith("1."))),
 			first: pages.findIndex((p) => p.some((s) => s.includes("TARGET"))),
 			last: pages.findIndex((p) => p.some((s) => s.includes("END"))),
 			pages,
+			positions,
 		};
 	} finally {
 		await task.destroy();
@@ -255,5 +262,41 @@ describe("list marker pagination (#3344)", () => {
 				.join(" ")
 				.match(/\bSome\b/g),
 		).toHaveLength(30);
+	});
+	it.each(["ul", "ol"])("keeps %s continuation lines at the content indentation", async (tag) => {
+		const result = await listPages(0, 60, "", {
+			html: `<${tag}><li><p>TARGET ${"Some words to fill several lines and force wrapping. ".repeat(60)} END</p></li></${tag}>`,
+		});
+		expect(result.marker).toBe(result.first);
+		expect(result.last).toBeGreaterThan(result.first);
+		// The widest x on the item's first page is its content column; the marker
+		// and the section heading sit further left. Continuation pages must keep it.
+		const contentX = Math.max(...(result.positions[result.first] ?? []).map((item) => item.x));
+		for (const page of result.positions.slice(result.first + 1)) {
+			for (const item of page) expect(item.x).toBeCloseTo(contentX, 0);
+		}
+	});
+	it("keeps a nested list's inner indentation on continuation pages", async () => {
+		const result = await listPages(0, 1, "", {
+			html: `<ul><li>Outer intro<ul><li><p>TARGET ${"Some words to fill several lines and force wrapping. ".repeat(40)} END</p></li></ul></li></ul>`,
+		});
+		expect(result.last).toBeGreaterThan(result.first);
+		const contentX = Math.max(...(result.positions[result.first] ?? []).map((item) => item.x));
+		for (const page of result.positions.slice(result.first + 1)) {
+			for (const item of page) expect(item.x).toBeCloseTo(contentX, 0);
+		}
+	});
+	it("preserves a widened ordered-marker column on continuation pages", async () => {
+		const result = await listPages(0, 40, "list-marker { font-size: 24pt; }", {
+			html: `<ol><li><p>TARGET ${"Some words to fill several lines and force wrapping. ".repeat(40)} END</p></li></ol>`,
+		});
+		expect(result.marker).toBe(result.first);
+		expect(result.last).toBeGreaterThan(result.first);
+		const contentX = Math.max(...(result.positions[result.first] ?? []).map((item) => item.x));
+		// The 24pt marker pushes the content column well past the default gutter.
+		expect(contentX).toBeGreaterThan(30);
+		for (const page of result.positions.slice(result.first + 1)) {
+			for (const item of page) expect(item.x).toBeCloseTo(contentX, 0);
+		}
 	});
 });
