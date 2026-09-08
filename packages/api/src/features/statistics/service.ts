@@ -8,9 +8,9 @@ const GITHUB_REQUEST_TIMEOUT_MS = 5_000;
 const GITHUB_REQUEST_MAX_ATTEMPTS = 2;
 
 const LAST_KNOWN = {
-	users: 978_528,
-	resumes: 1_336_307,
-	stars: 34_073,
+	users: 1_213_116,
+	resumes: 1_651_895,
+	stars: 42_315,
 } as const;
 
 // ponytail: file-based disk cache replaced with module-level memo; LAST_KNOWN fallbacks cover restarts

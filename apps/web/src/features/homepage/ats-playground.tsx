@@ -104,7 +104,7 @@ export default function AtsPlayground() {
 				>
 					{isReading ? (
 						<SpinnerGapIcon
-							className="animate-[ats-spin_900ms_linear_infinite] text-(--home-accent)"
+							className="animate-[home-ats-spin_900ms_linear_infinite] text-(--home-accent)"
 							size={22}
 							aria-hidden="true"
 						/>

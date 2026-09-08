@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" र यसको पूरा टाइमलाइन स्थायी रूपमा मेटिनेछ। यो पूर्ववत गर्न सकिँदैन।"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(नयाँ ट्याबमा खुल्छ)"
@@ -223,6 +224,10 @@ msgstr "वेबका लागि पहुँचयोग्य ढाँच
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "निःशुल्क, खुला-स्रोत बायोडाटा बनाउने उपकरण। ढाँचासँग जुध्न नपरी आफ्नो अनुभव पृष्ठमा राख्नुहोस्।"
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "भर्तीकर्ता को लागी एक अनुकूल नज"
@@ -258,6 +263,10 @@ msgstr "अंकात्मक मिति फरक देशहरूमा
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "एउटा पृष्ठ घुमाइएको छ।"
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "चाहिएको बेला AI"
 msgid "Albanian"
 msgstr "अल्बानियन"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "एपका सबै भाषाहरू"
@@ -838,6 +848,7 @@ msgstr "आकार अनुपात (Aspect Ratio)"
 msgid "ATS Check"
 msgstr "ATS चेक"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "बुलेट गरिएको सूची"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "समुदायबाट, समुदायकै लागि।"
 
@@ -1080,6 +1091,7 @@ msgstr "विषयवस्तुलाई… मा परिवर्तन 
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "सोच बदल्नुभयो? आफ्नो बायोडाटालाई झन् वर्णनात्मक नाम दिनुहोस्।"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "परिवर्तन विवरण"
@@ -1186,6 +1198,7 @@ msgstr "टेम्प्लेट छान्नुहोस्"
 msgid "Choose an application"
 msgstr "एउटा अनुप्रयोग छान्नुहोस्"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "एपको भाषा छान्नुहोस्"
@@ -1266,6 +1279,7 @@ msgstr "आदेश प्यालेट"
 msgid "Command Palette - {currentPage}"
 msgstr "आदेश प्यालेट - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "समुदाय"
@@ -2026,6 +2040,7 @@ msgstr "असुरक्षित परिवर्तनहरू फाल�
 msgid "Disconnect"
 msgstr "विच्छेद गर्नुहोस्"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "डिस्कोर्ड"
@@ -2038,6 +2053,7 @@ msgstr "खारेज गर्नुहोस्"
 msgid "Docs"
 msgstr "कागजातहरू"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "तपाईंको कोड प्रमाणित गर्न �
 msgid "Fatal error"
 msgstr "गम्भीर त्रुटि"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "सबै निःशुल्क, पन्ध्र टेम्प्लेट। मनपरेको रोज्नुहोस्। सम्पादकमा फन्ट, रङ र लेआउट बदल्न सक्नुहुन्छ।"
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "आफ्नो लेखनमा अर्को राय लिनुहोस्, बायोडाटा साझा गर्नुहोस्, र कहाँ-कहाँ आवेदन दिनुभयो त्यसको हिसाब राख्नुहोस्। सबै एकै ठाउँमा।"
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "सुरु गर्नुहोस्"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "एआई प्रदायक सेटअप गर्न छोड�
 msgid "Left Align"
 msgstr "बायाँतिर क्रमबद्ध (Left Align)"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "लम्बाइ खराबी होइन, र एक-पृष्ठको कुनै विश्वव्यापी नियम छैन। आफ्नो ठाउँ लायक भएका पृष्ठहरू राख्नुहोस्।"
@@ -3495,6 +3521,7 @@ msgstr "लिङ्क गरिएको Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "काम गर्ने बायोडाटा हराइरहे
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "मिस्ट्रल एआई"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "ओपनराउटर"
 msgid "Opens in a new tab"
 msgstr "नयाँ ट्याबमा खुल्छ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "मुख्य रङ"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "पठाउनुअघि फारामलाई फ्ल्याट PDF मा प्रिन्ट वा निर्यात गर्नुहोस्।"
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "गोपनीयता"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "निजी"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "द्वारा उल्लेख गरिएको ..., जोड 
 msgid "Register New Device"
 msgstr "नयाँ उपकरण दर्ता गर्नुहोस्"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "नवीनतम संस्करण पुन: लोड गर्नुहोस्"
@@ -4833,6 +4873,7 @@ msgstr "बग रिपोर्ट गर्नुहोस्"
 msgid "Report a Bug"
 msgstr "बग (Bug) रिपोर्ट गर्नुहोस्"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "समस्या रिपोर्ट गर्नुहोस्"
@@ -4869,6 +4910,7 @@ msgstr "तपाईंको पासवर्ड रिसेट गर्न
 msgid "Resetting your password..."
 msgstr "तपाईंको पासवर्ड रिसेट हुँदैछ..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "स्रोतहरू"
@@ -5394,6 +5436,7 @@ msgstr "{0} थप देखाउनुहोस्"
 msgid "Show {title} section"
 msgstr "{title} खण्ड देखाउनुहोस्"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "सबै भाषा देखाउनुहोस्"
@@ -5665,6 +5708,7 @@ msgstr "यसअनुसार क्रमबद्ध गर्नुहो�
 msgid "Source"
 msgstr "स्रोत"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "\"Mar 2022\" जस्तै महिनालाई अक्षरम
 msgid "Sponsors"
 msgstr "प्रायोजकहरू (Sponsors)"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "प्रायोजनहरू"
@@ -5830,6 +5875,7 @@ msgstr "स्टाइलिङ र प्रेषक विवरणहरू
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "चयन गरिएको पुन: सुरुवातबाट स्टाइलिङ र प्रेषक विवरणहरू ताजा गरियो।"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "सबरेडिट"
@@ -5847,10 +5893,6 @@ msgstr "सुझावहरू"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "सारांश"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "सहयोग"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "ढाँचा (Template)"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "ढाँचा ग्यालरी"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "कुनै सारांश अनुच्छेद छैन।"
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "यो चेक चलाउन पर्याप्त जानकारी थिएन।"
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "तपाईंका लागि पनि ठाउँ छ।"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "तपाईंको बायोडाटाका हेर्ने 
 msgid "Translate the app"
 msgstr "एप अनुवाद गर्नुहोस्"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "https:// सहित पूरा ठेगाना लेख्नु
 msgid "Writing"
 msgstr "लेखन"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "एक्स (ट्विटर)"

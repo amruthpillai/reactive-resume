@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" 및 전체 타임라인이 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(새 탭에서 열림)"
@@ -223,6 +224,10 @@ msgstr "웹을 위한 접근성 패턴을 무료로 모은 컬렉션입니다."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "무료 오픈 소스 이력서 빌더. 서식과 씨름하지 말고, 경력을 페이지에 담으세요."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "채용 담당자에게 보내는 정중한 리마인더"
@@ -258,6 +263,10 @@ msgstr "숫자로만 된 날짜는 국가마다 다르게 해석됩니다."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "페이지가 회전되어 있습니다."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "원할 때만 쓰는 AI"
 msgid "Albanian"
 msgstr "알바니아어"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "앱의 모든 언어"
@@ -838,6 +848,7 @@ msgstr "가로세로 비율"
 msgid "ATS Check"
 msgstr "ATS 검사"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "글머리 기호 목록"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "커뮤니티에 의해, 커뮤니티를 위해."
 
@@ -1080,6 +1091,7 @@ msgstr "테마를…로 변경하세요"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "생각이 바뀌셨나요? 이력서 이름을 더 잘 설명하는 이름으로 바꿔 보세요."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "변경 로그"
@@ -1186,6 +1198,7 @@ msgstr "템플릿 선택"
 msgid "Choose an application"
 msgstr "지원 내역 선택"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "앱 언어 선택"
@@ -1266,6 +1279,7 @@ msgstr "명령 팔레트"
 msgid "Command Palette - {currentPage}"
 msgstr "명령 팔레트 - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "커뮤니티"
@@ -2026,6 +2040,7 @@ msgstr "저장하지 않은 변경 사항을 버릴까요?"
 msgid "Disconnect"
 msgstr "연결 해제"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "디스코드"
@@ -2038,6 +2053,7 @@ msgstr "해고하다"
 msgid "Docs"
 msgstr "문서"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "코드를 인증하지 못했습니다. 다시 시도해 주세요."
 msgid "Fatal error"
 msgstr "치명적 오류"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "15가지 템플릿, 모두 무료입니다. 마음에 드는 것을 고르세요. 서체, 색상, 레이아웃은 편집기에서 바꿀 수 있습니다."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "쓴 글에 대한 의견을 받고, 이력서를 공유하고, 어디에 지원했는지 관리하세요. 모두 한곳에서 할 수 있습니다."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "시작하기"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "AI 제공업체 설정을 위해 나가시겠습니까?"
 msgid "Left Align"
 msgstr "왼쪽 정렬"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "길이 자체는 결함이 아니며, 보편적인 한 페이지 규칙도 없습니다. 그만한 가치가 있는 페이지만 남기세요."
@@ -3495,6 +3521,7 @@ msgstr "연결된 Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "이력서가 누락되었습니다."
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "미스트랄 AI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "새 탭에서 열립니다"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "기본 색상"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "보내기 전에 양식을 일반 PDF로 인쇄하거나 내보내세요."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "개인정보 보호"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "비공개"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "추천인…, 강조할 내용 등"
 msgid "Register New Device"
 msgstr "새 장치 등록"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "최신 버전 다시 불러오기"
@@ -4833,6 +4873,7 @@ msgstr "버그 신고하기"
 msgid "Report a Bug"
 msgstr "버그 신고"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "문제 신고"
@@ -4869,6 +4910,7 @@ msgstr "비밀번호 재설정"
 msgid "Resetting your password..."
 msgstr "비밀번호를 재설정하는 중입니다..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "리소스"
@@ -5394,6 +5436,7 @@ msgstr "{0}개 더 보기"
 msgid "Show {title} section"
 msgstr "{title} 섹션 표시"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "모든 언어 보기"
@@ -5665,6 +5708,7 @@ msgstr "정렬 기준…"
 msgid "Source"
 msgstr "출처"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "\"2022년 3월\"처럼 월을 정확히 표기하세요."
 msgid "Sponsors"
 msgstr "스폰서"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "후원"
@@ -5830,6 +5875,7 @@ msgstr "스타일과 보내는 사람 정보가 복사됩니다. 이후 이력�
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "선택한 이력서에서 스타일과 보내는 사람 정보를 새로 가져왔습니다."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "서브레딧"
@@ -5847,10 +5893,6 @@ msgstr "제안 사항"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "요약"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "지원"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "템플릿"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "템플릿 갤러리"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "요약 문단이 없습니다."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "이 점검을 실행할 충분한 정보가 없었습니다."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "당신의 자리도 있습니다."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "이력서 조회 수와 다운로드 수 추적"
 msgid "Translate the app"
 msgstr "앱 번역하기"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "https://를 포함한 전체 주소를 작성하세요."
 msgid "Writing"
 msgstr "글쓰기"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (트위터)"

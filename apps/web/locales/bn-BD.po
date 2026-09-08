@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" এবং এর সম্পূর্ণ টাইমলাইন স্থায়ীভাবে মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(নতুন ট্যাবে খুলবে)"
@@ -223,6 +224,10 @@ msgstr "ওয়েবের জন্য অ্যাক্সেসিবল 
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "বিনামূল্যের, ওপেন-সোর্স জীবনবৃত্তান্ত নির্মাতা। ফরম্যাটিং নিয়ে লড়াই না করে আপনার অভিজ্ঞতাকে পাতায় তুলে ধরুন।"
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "নিয়োগকর্তার জন্য একটি বন্ধুত্বপূর্ণ ইঙ্গিত"
@@ -258,6 +263,10 @@ msgstr "সংখ্যায় লেখা তারিখ বিভিন্
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "একটি পৃষ্ঠা ঘোরানো আছে।"
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "এআই, যখন আপনি চান"
 msgid "Albanian"
 msgstr "আলবেনিয়ান"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "অ্যাপের সব ভাষা"
@@ -838,6 +848,7 @@ msgstr "আকারের অনুপাত"
 msgid "ATS Check"
 msgstr "ATS চেক"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "বুলেটেড তালিকা"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "কমিউনিটির তৈরি, কমিউনিটির জন্য।"
 
@@ -1080,6 +1091,7 @@ msgstr "থিম পরিবর্তন করে… করুন"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "মত বদলেছেন? আপনার জীবনবৃত্তান্তকে আরও বর্ণনামূলক কোনো নামে পুনরায় নামকরণ করুন।"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "চেঞ্জলগ"
@@ -1186,6 +1198,7 @@ msgstr "টেমপ্লেট বেছে নিন"
 msgid "Choose an application"
 msgstr "একটি অ্যাপ্লিকেশন চয়ন করুন"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "অ্যাপের ভাষা বেছে নিন"
@@ -1266,6 +1279,7 @@ msgstr "কমান্ড প্যালেট"
 msgid "Command Palette - {currentPage}"
 msgstr "কমান্ড প্যালেট - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "কমিউনিটি"
@@ -2026,6 +2040,7 @@ msgstr "অসংরক্ষিত পরিবর্তনগুলি বা�
 msgid "Disconnect"
 msgstr "ডিসকনেক্ট করুন"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "ডিসকর্ড"
@@ -2038,6 +2053,7 @@ msgstr "খারিজ করুন"
 msgid "Docs"
 msgstr "ডকুমেন্টেশন"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "আপনার কোড যাচাই করতে ব্যর্�
 msgid "Fatal error"
 msgstr "মারাত্মক ত্রুটি"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "পনেরোটি টেমপ্লেট, সবই বিনামূল্যে। পছন্দেরটি বেছে নিন। এডিটরে ফন্ট, রং ও লেআউট বদলাতে পারবেন।"
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "লেখা নিয়ে দ্বিতীয় মতামত নিন, জীবনবৃত্তান্ত শেয়ার করুন এবং কোথায় আবেদন করেছেন তার হিসাব রাখুন। সবকিছু এক জায়গায়।"
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "চলুন শুরু করা যাক"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "একটি AI প্রদানকারী সেট আপ কর�
 msgid "Left Align"
 msgstr "বাম দিকে অ্যালাইন"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "দৈর্ঘ্য কোনো ত্রুটি নয়, এবং সর্বজনীন এক-পৃষ্ঠার নিয়ম বলে কিছু নেই। যে পৃষ্ঠাগুলো তাদের জায়গা অর্জন করে তা রাখুন।"
@@ -3495,6 +3521,7 @@ msgstr "লিঙ্কড রিঅ্যাক্টিভ রেজ্যু�
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "কাজের জীবনবৃত্তান্ত অনুপস�
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "মিস্ট্রাল এআই"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "ওপেনরাউটার"
 msgid "Opens in a new tab"
 msgstr "নতুন ট্যাবে খোলে"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "প্রাথমিক রঙ"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "পাঠানোর আগে ফর্মটি প্রিন্ট বা ফ্ল্যাট PDF হিসেবে এক্সপোর্ট করুন।"
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "গোপনীয়তা"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "ব্যক্তিগত"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "…দ্বারা নির্দেশিত, জোর দেও�
 msgid "Register New Device"
 msgstr "নতুন ডিভাইস নিবন্ধন করুন"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "সর্বশেষ সংস্করণ রিলোড করুন"
@@ -4833,6 +4873,7 @@ msgstr "বাগ রিপোর্ট করুন"
 msgid "Report a Bug"
 msgstr "বাগ রিপোর্ট করুন"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "সমস্যা রিপোর্ট করুন"
@@ -4869,6 +4910,7 @@ msgstr "আপনার পাসওয়ার্ড রিসেট করু
 msgid "Resetting your password..."
 msgstr "আপনার পাসওয়ার্ড রিসেট করা হচ্ছে..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "রিসোর্সসমূহ"
@@ -5394,6 +5436,7 @@ msgstr "আরও দেখুন {0}"
 msgid "Show {title} section"
 msgstr "{title} বিভাগ দেখান"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "সব ভাষা দেখান"
@@ -5665,6 +5708,7 @@ msgstr "সাজান…"
 msgid "Source"
 msgstr "উৎস"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "মাসের নাম বানান করে লিখুন, য
 msgid "Sponsors"
 msgstr "স্পনসররা"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "স্পনসরশিপ"
@@ -5830,6 +5875,7 @@ msgstr "স্টাইলিং এবং প্রেরকের বিবর
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "নির্বাচিত রিজ্যুম থেকে স্টাইলিং এবং প্রেরকের বিবরণ আপডেট করা হয়েছে।"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "সাবরেডিট"
@@ -5847,10 +5893,6 @@ msgstr "পরামর্শসমূহ"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "সারাংশ"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "সমর্থন করুন"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "টেমপ্লেট"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "টেমপ্লেট গ্যালারি"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "কোনো সারাংশ অনুচ্ছেদ নেই।"
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "এই চেক চালানোর জন্য পর্যাপ্ত তথ্য ছিল না।"
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "আপনার জন্যও জায়গা আছে।"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "আপনার জীবনবৃত্তান্তের ভিউ 
 msgid "Translate the app"
 msgstr "অ্যাপটি অনুবাদ করুন"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "https:// সহ সম্পূর্ণ ঠিকানা লিখু
 msgid "Writing"
 msgstr "লেখা"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "এক্স (টুইটার)"

@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" 及其完整時間軸將被永久刪除。此操作無法復原。"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "（在新分頁中開啟）"
@@ -223,6 +224,10 @@ msgstr "一套免費、無障礙的網頁設計模式。"
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "免費、開放原始碼的履歷編輯器。把你的經歷放上版面，不必再跟排版奮戰。"
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "給招募人員的友善提醒"
@@ -258,6 +263,10 @@ msgstr "數字格式的日期在不同國家的讀法不同。"
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "有一頁被旋轉了。"
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "需要時才用 AI"
 msgid "Albanian"
 msgstr "阿爾巴尼亞語"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "所有應用程式語言"
@@ -838,6 +848,7 @@ msgstr "顯示比例"
 msgid "ATS Check"
 msgstr "ATS檢查”"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "項目符號清單"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "來自社區，服務社區。"
 
@@ -1080,6 +1091,7 @@ msgstr "改主題為…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "改變主意了嗎？將履歷重新命名成更具描述性的名稱吧。"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "更新日誌"
@@ -1186,6 +1198,7 @@ msgstr "選擇範本"
 msgid "Choose an application"
 msgstr "選擇應徵紀錄"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "選擇應用程式語言"
@@ -1266,6 +1279,7 @@ msgstr "指令選項板"
 msgid "Command Palette - {currentPage}"
 msgstr "指令選項板 - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "社群"
@@ -2026,6 +2040,7 @@ msgstr "捨棄未儲存的變更？"
 msgid "Disconnect"
 msgstr "中斷連結"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "解僱"
 msgid "Docs"
 msgstr "說明文件"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "驗證您的驗證碼失敗。請再試一次。"
 msgid "Fatal error"
 msgstr "嚴重錯誤"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "十五種範本，全部免費。挑一個你喜歡的，字體、顏色與版面都能在編輯器裡調整。"
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "為你的文字取得第二意見、分享履歷，並追蹤你申請過的職缺。全都在同一個地方。"
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "開始使用"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "離開去建立人工智慧提供者嗎？"
 msgid "Left Align"
 msgstr "靠左對齊"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "長度本身不是缺陷，也沒有放諸四海皆準的一頁規則。保留那些真正有價值的內容頁。"
@@ -3495,6 +3521,7 @@ msgstr "已連結的 Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "缺少作業中的履歷"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "米斯特拉爾人工智慧"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "在新分頁開啟"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "主要顏色"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "在傳送之前，把表單列印或匯出為平面化的 PDF。"
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "隱私"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "私密"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "推薦人…、要強調的事項等"
 msgid "Register New Device"
 msgstr "註冊新裝置"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "重新載入最新版本"
@@ -4833,6 +4873,7 @@ msgstr "回報問題"
 msgid "Report a Bug"
 msgstr "回報錯誤"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "回報問題"
@@ -4869,6 +4910,7 @@ msgstr "重設您的密碼"
 msgid "Resetting your password..."
 msgstr "正在重設您的密碼…"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "資源"
@@ -5394,6 +5436,7 @@ msgstr "再顯示 {0} 個"
 msgid "Show {title} section"
 msgstr "顯示「{title}」部分"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "顯示所有語言"
@@ -5665,6 +5708,7 @@ msgstr "排序依據…"
 msgid "Source"
 msgstr "來源"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "把月份拼寫出來，例如「2022 年 3 月」。"
 msgid "Sponsors"
 msgstr "贊助者"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "贊助"
@@ -5830,6 +5875,7 @@ msgstr "樣式與寄件人資訊已複製。日後對履歷的修改，只有在
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "已從所選履歷重新整理樣式與寄件人資訊。"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "建議"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "摘要"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "支持"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "範本"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "範本圖庫"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "沒有個人簡介段落。"
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "資訊不足，無法執行此項檢查。"
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "這裡也有你的一席之地。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "追蹤履歷的檢視與下載次數"
 msgid "Translate the app"
 msgstr "翻譯這個應用程式"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "寫入完整位址，包括 https:// 。"
 msgid "Writing"
 msgstr "文案"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X（推特）"

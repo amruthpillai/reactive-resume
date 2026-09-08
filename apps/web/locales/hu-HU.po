@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" és a teljes idővonala véglegesen törlődik. Ez nem vonható vissza."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(új lapon nyílik meg)"
@@ -223,6 +224,10 @@ msgstr "Ingyenes gyűjtemény akadálymentes webes mintákból."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Ingyenes, nyílt forráskódú önéletrajzkészítő. Tegyed a tapasztalatodat az oldalra anélkül, hogy a formázással kellene küzdened."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Barátságos emlékeztető a toborzónak"
@@ -258,6 +263,10 @@ msgstr "Egy számjegyekkel írt dátum országonként másképp értelmezhető."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Egy oldal el van forgatva."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AI, amikor csak akarod"
 msgid "Albanian"
 msgstr "albán"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Az alkalmazás összes nyelve"
@@ -838,6 +848,7 @@ msgstr "Méretarány"
 msgid "ATS Check"
 msgstr "ATS ellenőrzés"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Felsorolásos lista"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "A közösség által, a közösségért."
 
@@ -1080,6 +1091,7 @@ msgstr "Téma módosítása erre:…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Meggondoltad magad? Nevezd át az önéletrajzodat valami beszédesebbre."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Változásnapló"
@@ -1186,6 +1198,7 @@ msgstr "Válassz sablont"
 msgid "Choose an application"
 msgstr "Válasszon egy alkalmazást"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Válaszd ki az alkalmazás nyelvét"
@@ -1266,6 +1279,7 @@ msgstr "Parancspaletta"
 msgid "Command Palette - {currentPage}"
 msgstr "Parancspaletta - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Közösség"
@@ -2026,6 +2040,7 @@ msgstr "Elveti a nem mentett módosításokat?"
 msgid "Disconnect"
 msgstr "Leválasztás"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Elvetés"
 msgid "Docs"
 msgstr "Dokumentáció"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Nem sikerült ellenőrizni a kódot. Kérjük, próbálja meg újra."
 msgid "Fatal error"
 msgstr "Végzetes hiba"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Tizenöt sablon, mind ingyenes. Válassz egyet, amelyik tetszik. A típust, a színt és az elrendezést később is módosíthatod a szerkesztőben."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Kérj másodvéleményt az írásodról, oszd meg az önéletrajzod, és kövesd nyomon, hová jelentkeztél. Minden egy helyen."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Kezdjük"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Hagyja, hogy AI-szolgáltatót hozzon létre?"
 msgid "Left Align"
 msgstr "Balra igazítás"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "A hossz önmagában nem hiba, és nincs egyetemes egyoldalas szabály. Tartsd meg azokat az oldalakat, amelyek megérdemlik a helyüket."
@@ -3495,6 +3521,7 @@ msgstr "Összekapcsolt Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Hiányzó munkapéldány önéletrajz"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral mesterséges intelligencia"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "Új lapon nyílik meg"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Elsődleges szín"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Nyomtasd ki vagy exportáld az űrlapot lapos PDF-ként, mielőtt elküldöd."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Adatvédelem"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Privát"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Ajánló…, kiemelendő dolgok stb."
 msgid "Register New Device"
 msgstr "Új eszköz regisztrálása"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Töltse újra a legújabb verziót"
@@ -4833,6 +4873,7 @@ msgstr "Hiba bejelentése"
 msgid "Report a Bug"
 msgstr "Hiba jelentése"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Hiba jelentése"
@@ -4869,6 +4910,7 @@ msgstr "Jelszó visszaállítása"
 msgid "Resetting your password..."
 msgstr "Jelszó visszaállítása..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Erőforrások"
@@ -5394,6 +5436,7 @@ msgstr "További {0} megjelenítése"
 msgid "Show {title} section"
 msgstr "{title} szakasz megjelenítése"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Az összes nyelv megjelenítése"
@@ -5665,6 +5708,7 @@ msgstr "Rendezés…"
 msgid "Source"
 msgstr "Forrás"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Írd ki a hónapot betűkkel, például \"2022. márc.\"."
 msgid "Sponsors"
 msgstr "Támogatók"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Szponzorációk"
@@ -5830,6 +5875,7 @@ msgstr "A stílus és a feladó adatai másolódnak. Az önéletrajz későbbi s
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "A stílus és a feladó adatai frissültek a kiválasztott önéletrajzból."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "Javaslatok"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Összegzés"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Támogatás"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Sablon"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Sablon galéria"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Nincs összefoglaló bekezdés."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Nem volt elég információ ennek az ellenőrzésnek a lefuttatásához."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Neked is van hely."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Kövesd nyomon az önéletrajzod megtekintéseinek és letöltéseinek s
 msgid "Translate the app"
 msgstr "Fordítsd le az alkalmazást"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Írja be a teljes címet, beleértve a https://-t is."
 msgid "Writing"
 msgstr "Szövegezés"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

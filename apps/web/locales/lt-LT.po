@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" ir visa jos laiko juosta bus visam laikui ištrinta. To negalima atšaukti."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(atsidaro naujame skirtuke)"
@@ -223,6 +224,10 @@ msgstr "Nemokama prieinamų žiniatinklio šablonų kolekcija."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Nemokama atvirojo kodo gyvenimo aprašymų kūrimo priemonė. Pateikite savo patirtį puslapyje, nekovodami su formatavimu."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Draugiškas priminimas atrankos specialistui"
@@ -258,6 +263,10 @@ msgstr "Skaitmeninė data skirtingose šalyse skaitoma skirtingai."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Puslapis yra pasuktas."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "DI, kai jo norite"
 msgid "Albanian"
 msgstr "Albanų"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Visos programėlės kalbos"
@@ -838,6 +848,7 @@ msgstr "Vaizdo santykis"
 msgid "ATS Check"
 msgstr "ATS patikrinimas"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Sąrašas su ženkleliais"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Bendruomenės ir bendruomenei."
 
@@ -1080,6 +1091,7 @@ msgstr "Pakeisti temą į…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Persigalvojote? Pervardinkite savo gyvenimo aprašymą į apibūdinantį pavadinimą."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Pakeitimų žurnalas"
@@ -1186,6 +1198,7 @@ msgstr "Pasirinkite šabloną"
 msgid "Choose an application"
 msgstr "Pasirinkite programą"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Pasirinkite programėlės kalbą"
@@ -1266,6 +1279,7 @@ msgstr "Komandų paletė"
 msgid "Command Palette - {currentPage}"
 msgstr "Komandų paletė - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Bendruomenė"
@@ -2026,6 +2040,7 @@ msgstr "Atmesti neišsaugotus pakeitimus?"
 msgid "Disconnect"
 msgstr "Atsijungti"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Atmesti"
 msgid "Docs"
 msgstr "Dokumentacija"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Nepavyko patikrinti jūsų kodo. Bandykite dar kartą."
 msgid "Fatal error"
 msgstr "Kritinė klaida"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Penkiolika nemokamų šablonų. Išsirinkite patinkantį. Redaktoriuje galite keisti šriftą, spalvą ir maketą."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Gaukite antrą nuomonę apie savo tekstą, bendrinkite gyvenimo aprašymą ir stebėkite, kur pateikėte paraiškas. Viskas vienoje vietoje."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Pradėkite"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Norite nustatyti AI teikėją?"
 msgid "Left Align"
 msgstr "Lygiuoti kairėje"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Ilgis nėra trūkumas, ir universalios vieno puslapio taisyklės nėra. Palikite tuos puslapius, kurie to verti."
@@ -3495,6 +3521,7 @@ msgstr "Susietas Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Trūksta darbo gyvenimo aprašymo"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral AI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "\"OpenRouter\""
 msgid "Opens in a new tab"
 msgstr "Atidaroma naujame skirtuke"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Pagrindinė spalva"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Prieš siųsdami formą, atspausdinkite arba eksportuokite ją kaip suploštintą PDF."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Privatumas"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Privatus"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Rekomendavo…, ką pabrėžti ir pan."
 msgid "Register New Device"
 msgstr "Naujo įrenginio registravimas"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Iš naujo įkelti naujausią versiją"
@@ -4833,6 +4873,7 @@ msgstr "Pranešti apie klaidą"
 msgid "Report a Bug"
 msgstr "Pranešti apie klaidą"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Pranešti apie problemą"
@@ -4869,6 +4910,7 @@ msgstr "Atkurkite slaptažodį"
 msgid "Resetting your password..."
 msgstr "Atstatomas slaptažodis..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Ištekliai"
@@ -5394,6 +5436,7 @@ msgstr "Rodyti dar {0}"
 msgid "Show {title} section"
 msgstr "Rodyti skiltį {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Rodyti visas kalbas"
@@ -5665,6 +5708,7 @@ msgstr "Rikiuoti pagal…"
 msgid "Source"
 msgstr "Šaltinis"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Mėnesį rašykite žodžiu, pvz., „Mar 2022“."
 msgid "Sponsors"
 msgstr "Rėmėjai"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Rėmimas"
@@ -5830,6 +5875,7 @@ msgstr "Stilius ir siuntėjo duomenys nukopijuojami. Būsimi atnaujinimo pakeiti
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Stiliaus ir siuntėjo informacija atnaujinta iš pasirinkto gyvenimo aprašymo."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreditas"
@@ -5847,10 +5893,6 @@ msgstr "Pasiūlymai"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Santrauka"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Palaikymas"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Šablonas"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Šablonų galerija"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Nėra apibendrinančios pastraipos."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Nepakako informacijos šiai patikrai atlikti."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Vietos yra ir jums."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Stebėkite savo gyvenimo aprašymo peržiūras ir atsisiuntimus"
 msgid "Translate the app"
 msgstr "Išverskite programėlę"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Parašykite visą adresą, įskaitant https://."
 msgid "Writing"
 msgstr "Tekstas"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

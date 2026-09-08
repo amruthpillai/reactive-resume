@@ -351,7 +351,7 @@ function ResumePaper({ name, accent, typeface, template, position }: ResumePaper
 	return (
 		<article
 			className={cn(
-				"sculpture-paper transform-3d absolute top-[2%] left-[24%] aspect-[210/297] w-[56%] origin-[50%_80%] animate-[sculpture-assemble_900ms_cubic-bezier(0.23,1,0.32,1)_both] transition-[transform] duration-[650ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-data-[instant=true]/rig:transition-none",
+				"sculpture-paper transform-3d absolute top-[2%] left-[24%] aspect-[210/297] w-[56%] origin-[50%_80%] animate-[home-sculpture-assemble_900ms_cubic-bezier(0.23,1,0.32,1)_both] transition-[transform] duration-[650ms] ease-[cubic-bezier(0.23,1,0.32,1)] group-data-[instant=true]/rig:transition-none",
 				paperTransform[position],
 			)}
 			data-template={template}

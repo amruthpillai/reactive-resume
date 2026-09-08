@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" a celá časová os budú natrvalo odstránené. Túto akciu nie je možné vrátiť späť."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(otvorí sa na novej karte)"
@@ -223,6 +224,10 @@ msgstr "Bezplatná kolekcia prístupných vzorov pre web."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Bezplatný open-source nástroj na tvorbu životopisov. Svoje skúsenosti prenesieš na papier bez boja s formátovaním."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Priateľské štuchnutie pre náborového pracovníka"
@@ -258,6 +263,10 @@ msgstr "Číselný dátum sa v rôznych krajinách číta inak."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Strana je otočená."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AI, keď ju chceš"
 msgid "Albanian"
 msgstr "Albánčina"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Všetky jazyky aplikácie"
@@ -838,6 +848,7 @@ msgstr "Pomer strán"
 msgid "ATS Check"
 msgstr "Kontrola ATS"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Zoznam s odrážkami"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Komunitou vytvorené pre komunitu."
 
@@ -1080,6 +1091,7 @@ msgstr "Zmeniť tému na…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Rozmyslel si si to? Premenuj životopis na niečo výstižnejšie."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Zoznam zmien"
@@ -1186,6 +1198,7 @@ msgstr "Vyber si šablónu"
 msgid "Choose an application"
 msgstr "Vyberte aplikáciu"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Vyber si jazyk aplikácie"
@@ -1266,6 +1279,7 @@ msgstr "Paleta príkazov"
 msgid "Command Palette - {currentPage}"
 msgstr "Paleta príkazov - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Komunita"
@@ -2026,6 +2040,7 @@ msgstr "Zahodiť neuložené zmeny?"
 msgid "Disconnect"
 msgstr "Odpojiť"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Zavrieť"
 msgid "Docs"
 msgstr "Dokumentácia"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Nepodarilo sa overiť váš kód. Skúste to prosím znova."
 msgid "Fatal error"
 msgstr "Závažná chyba"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Pätnásť šablón – všetky zadarmo. Vyber si tú, ktorá sa ti páči. Typ, farbu aj rozloženie môžeš v editore zmeniť."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Nechaj si poradiť o svojom texte, zdieľaj životopis a sleduj, kam si sa prihlásil. Všetko na jednom mieste."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Začať"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Chcete nechať nastaviť poskytovateľa AI?"
 msgid "Left Align"
 msgstr "Zarovnať vľavo"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Dĺžka nie je nedostatok a univerzálne pravidlo jednej strany neexistuje. Ponechajte strany, ktoré si svoje miesto zaslúžia."
@@ -3495,6 +3521,7 @@ msgstr "Prepojené reaktívne pokračovanie"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Chýbajúci pracovný životopis"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral AI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "Otvorí sa v novej karte"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Hlavná farba"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Pred odoslaním formulár vytlačte alebo exportujte do plochého PDF."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Súkromie"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Súkromný"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Odporúčané..., veci na zdôraznenie atď."
 msgid "Register New Device"
 msgstr "Registrácia nového zariadenia"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Znova načítajte najnovšiu verziu"
@@ -4833,6 +4873,7 @@ msgstr "Nahlásiť chybu"
 msgid "Report a Bug"
 msgstr "Nahlásiť chybu"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Nahlásiť problém"
@@ -4869,6 +4910,7 @@ msgstr "Obnov svoje heslo"
 msgid "Resetting your password..."
 msgstr "Obnovujem tvoje heslo..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Zdroje"
@@ -5394,6 +5436,7 @@ msgstr "Zobraziť ďalšie ({0})."
 msgid "Show {title} section"
 msgstr "Zobraziť sekciu {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Zobraziť všetky jazyky"
@@ -5665,6 +5708,7 @@ msgstr "Zoradiť podľa…"
 msgid "Source"
 msgstr "Zdroj"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Napíšte mesiac slovom, napríklad „Mar 2022“."
 msgid "Sponsors"
 msgstr "Sponzori"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Sponzorstvo"
@@ -5830,6 +5875,7 @@ msgstr "Štýl a podrobnosti o odosielateľovi sa skopírujú. Budúce úpravy �
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Štýl a podrobnosti o odosielateľovi boli obnovené z vybratého životopisu."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "Návrhy"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Zhrnutie"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Podpora"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Šablóna"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Galéria šablón"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Chýba súhrnný odsek."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Nebolo dostatok informácií na spustenie tejto kontroly."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Je tu miesto aj pre teba."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Sleduj zobrazenia a stiahnutia svojho životopisu"
 msgid "Translate the app"
 msgstr "Prelož aplikáciu"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Napíšte celú adresu vrátane https://."
 msgid "Writing"
 msgstr "Text"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

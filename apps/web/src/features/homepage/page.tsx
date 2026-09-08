@@ -15,6 +15,7 @@ import { FeatureExplorer } from "./feature-explorer";
 import LanguagesShowcase from "./languages-showcase";
 import { PageBackground } from "./page-background";
 import { ResumeSculpture } from "./resume-sculpture";
+import { SiteFooter } from "./site-footer";
 import { TemplateShelf } from "./template-shelf";
 import "./styles.css";
 
@@ -30,7 +31,6 @@ const paperArrowClass =
 	"ml-auto [transition:transform_180ms_cubic-bezier(0.23,1,0.32,1)] group-hover/link:transform-[translate(2px,-2px)]";
 const contributeLinkClass =
 	"inline-flex min-h-11 items-center gap-2 text-(--home-ink) underline-offset-4 hover:underline";
-const footerLinkClass = "flex min-h-11 items-center";
 type DeferredDemoProps = { children: ReactNode };
 
 function DeferredDemo({ children }: DeferredDemoProps) {
@@ -324,34 +324,7 @@ export function Homepage() {
 					</Link>
 				</div>
 			</main>
-			<footer
-				className={cn(
-					wrap,
-					"relative z-1 flex min-h-[125px] items-center justify-between gap-7 py-[30px] max-[900px]:flex-wrap max-[540px]:gap-5 max-[900px]:gap-x-[25px] max-[900px]:gap-y-2.5 max-[540px]:py-6",
-				)}
-			>
-				<Link to="/" className={`${brandClass} text-[14px]`}>
-					<img src="/icon/dark.svg" alt="" width="27" height="27" className="block max-[540px]:size-[29px]" />
-					<span>Reactive Resume</span>
-				</Link>
-				<p className="text-[#87878d] text-[12px] max-[900px]:order-3 max-[900px]:w-full max-[540px]:text-[11px]">
-					<Trans>By the community, for the community.</Trans>
-				</p>
-				<div className="flex gap-[22px] text-(--home-muted) text-[12px] max-[540px]:gap-[17px]">
-					<a href="https://docs.rxresu.me" className={footerLinkClass}>
-						<Trans>Docs</Trans>
-					</a>
-					<a href="https://docs.rxresu.me/legal/privacy-policy" className={footerLinkClass}>
-						<Trans>Privacy</Trans>
-					</a>
-					<a href={githubUrl} className={footerLinkClass}>
-						GitHub
-					</a>
-					<a href={`${githubUrl}/issues`} className={footerLinkClass}>
-						<Trans>Support</Trans>
-					</a>
-				</div>
-			</footer>
+			<SiteFooter />
 		</div>
 	);
 }

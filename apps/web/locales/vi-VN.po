@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" và toàn bộ dòng thời gian sẽ bị xóa vĩnh viễn. Không thể hoàn tác."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(mở ở tab mới)"
@@ -223,6 +224,10 @@ msgstr "Một bộ mẫu dễ tiếp cận dành cho web, hoàn toàn miễn ph�
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Trình tạo sơ yếu lý lịch mã nguồn mở, miễn phí. Đưa kinh nghiệm của bạn lên trang giấy mà không phải vật lộn với việc định dạng."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Một lời nhắc thân thiện cho nhà tuyển dụng"
@@ -258,6 +263,10 @@ msgstr "Một ngày dạng số được đọc khác nhau ở mỗi quốc gia.
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Một trang bị xoay."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AI khi bạn cần"
 msgid "Albanian"
 msgstr "Tiếng Albania"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Mọi ngôn ngữ của ứng dụng"
@@ -838,6 +848,7 @@ msgstr "Tỷ lệ khung hình"
 msgid "ATS Check"
 msgstr "Kiểm tra ATS"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Danh sách có dấu đầu dòng"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Bởi cộng đồng, vì cộng đồng."
 
@@ -1080,6 +1091,7 @@ msgstr "Thay đổi chủ đề thành…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Bạn đã đổi ý? Đổi tên sơ yếu lý lịch của bạn thành một cái tên mô tả hơn."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Nhật ký thay đổi"
@@ -1186,6 +1198,7 @@ msgstr "Chọn một mẫu"
 msgid "Choose an application"
 msgstr "Chọn một ứng dụng"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Chọn ngôn ngữ ứng dụng"
@@ -1266,6 +1279,7 @@ msgstr "Bảng lệnh"
 msgid "Command Palette - {currentPage}"
 msgstr "Bảng lệnh - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Cộng đồng"
@@ -2026,6 +2040,7 @@ msgstr "Hủy các thay đổi chưa được lưu?"
 msgid "Disconnect"
 msgstr "Ngắt kết nối"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Miễn nhiệm"
 msgid "Docs"
 msgstr "Tài liệu"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Không thể xác minh mã của bạn. Vui lòng thử lại."
 msgid "Fatal error"
 msgstr "Lỗi nghiêm trọng"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Mười lăm mẫu, tất cả đều miễn phí. Hãy chọn một mẫu bạn thích. Bạn có thể đổi kiểu, màu sắc và cách bố trí ngay trong trình biên tập."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Xin thêm một góp ý về cách viết của bạn, chia sẻ sơ yếu lý lịch và theo dõi những nơi bạn đã nộp hồ sơ. Tất cả nằm trong một nơi duy nhất."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Bắt đầu"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Rời đi để thành lập nhà cung cấp AI?"
 msgid "Left Align"
 msgstr "Căn trái"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Độ dài không phải là khuyết điểm, và không có quy tắc một trang chung nào cả. Giữ lại những trang thực sự xứng đáng."
@@ -3495,6 +3521,7 @@ msgstr "Reactive Resume đã liên kết"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Hồ sơ xin việc bị thiếu"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Trí tuệ nhân tạo Mistral"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "Mở trong tab mới"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Màu chủ đạo"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "In hoặc xuất biểu mẫu thành PDF phẳng trước khi gửi."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Quyền riêng tư"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Riêng tư"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Người giới thiệu…, những điểm cần nhấn mạnh, v.v."
 msgid "Register New Device"
 msgstr "Đăng ký thiết bị mới"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Tải lại phiên bản mới nhất"
@@ -4833,6 +4873,7 @@ msgstr "Báo lỗi"
 msgid "Report a Bug"
 msgstr "Báo lỗi"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Báo cáo sự cố"
@@ -4869,6 +4910,7 @@ msgstr "Đặt lại mật khẩu"
 msgid "Resetting your password..."
 msgstr "Đang đặt lại mật khẩu..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Tài nguyên"
@@ -5394,6 +5436,7 @@ msgstr "Hiển thị thêm {0}"
 msgid "Show {title} section"
 msgstr "Hiển thị phần {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Hiện tất cả ngôn ngữ"
@@ -5665,6 +5708,7 @@ msgstr "Sắp xếp theo…"
 msgid "Source"
 msgstr "Nguồn"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Viết đầy đủ tên tháng, chẳng hạn \"Tháng 3 năm 2022\"."
 msgid "Sponsors"
 msgstr "Nhà tài trợ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Tài trợ"
@@ -5830,6 +5875,7 @@ msgstr "Chi tiết kiểu dáng và người gửi được sao chép. Các ch�
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Chi tiết về kiểu dáng và người gửi được làm mới từ sơ yếu lý lịch đã chọn."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "Gợi ý"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Tóm tắt"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Ủng hộ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Mẫu"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Thư viện mẫu"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Không có đoạn tóm tắt nào."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Không đủ thông tin để chạy kiểm tra này."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Vẫn còn chỗ cho bạn."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Theo dõi lượt xem và lượt tải xuống hồ sơ của bạn"
 msgid "Translate the app"
 msgstr "Dịch ứng dụng"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Ghi đầy đủ địa chỉ, trong đó có https://."
 msgid "Writing"
 msgstr "Văn phong"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

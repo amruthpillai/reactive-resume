@@ -19,7 +19,7 @@ import { cn } from "@reactive-resume/utils/style";
 import { textLink } from "./classes";
 
 const demoClass =
-	"min-h-[492px] animate-[feature-enter_220ms_cubic-bezier(0.23,1,0.32,1)_both] px-[30px] py-6 group-data-[instant=true]/explorer:animate-none max-[1100px]:p-[23px] max-[900px]:p-[27px] max-[540px]:px-4 max-[540px]:py-5";
+	"min-h-[492px] animate-[home-feature-enter_220ms_cubic-bezier(0.23,1,0.32,1)_both] px-[30px] py-6 group-data-[instant=true]/explorer:animate-none max-[1100px]:p-[23px] max-[900px]:p-[27px] max-[540px]:px-4 max-[540px]:py-5";
 const demoTopClass = "flex items-center justify-between gap-5 text-[12px] text-(--home-muted)";
 const demoCaptionClass = "mt-[25px] text-[12px] leading-[1.7] text-(--home-muted) max-[540px]:text-[11px]";
 const pressTransition =
@@ -121,7 +121,7 @@ export function FeatureExplorer() {
 											{revisedText.split(" ").map((word, index) => (
 												<span
 													key={`${index}-${word}`}
-													className="animate-[word-arrive_180ms_ease-out_both] group-data-[instant=true]/explorer:animate-none"
+													className="animate-[home-word-arrive_180ms_ease-out_both] group-data-[instant=true]/explorer:animate-none"
 													style={{ animationDelay: `${index * 45}ms` }}
 												>
 													{word}{" "}
@@ -345,7 +345,7 @@ export function FeatureExplorer() {
 									MCP
 								</span>
 								<i
-									className="absolute inset-x-0 -top-[3px] h-[7px] animate-[data-flow_3.5s_cubic-bezier(0.45,0,0.55,1)_infinite_alternate_paused] after:-ml-[3px] after:block after:size-[7px] after:rounded-full after:bg-[#ddc8eb] after:shadow-[0_0_0_4px_#c5a4db14,0_0_11px_#c5a4db50] after:content-[''] group-data-[playing=true]/wire:[animation-play-state:running]"
+									className="absolute inset-x-0 -top-[3px] h-[7px] animate-[home-data-flow_3.5s_cubic-bezier(0.45,0,0.55,1)_infinite_alternate_paused] after:-ml-[3px] after:block after:size-[7px] after:rounded-full after:bg-[#ddc8eb] after:shadow-[0_0_0_4px_#c5a4db14,0_0_11px_#c5a4db50] after:content-[''] group-data-[playing=true]/wire:[animation-play-state:running]"
 									aria-hidden="true"
 								/>
 							</div>

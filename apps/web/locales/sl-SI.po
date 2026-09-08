@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" in celotna časovnica bosta trajno izbrisana. Tega ni mogoče razveljaviti."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(odpre se v novem zavihku)"
@@ -223,6 +224,10 @@ msgstr "Brezplačna zbirka dostopnih vzorcev za splet."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Brezplačen, odprtokoden ustvarjalec življenjepisov. Svoje izkušnje zapišite na stran, ne da bi se borili z oblikovanjem."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Prijazna spodbuda za zaposlovalca"
@@ -258,6 +263,10 @@ msgstr "Številčni datum se v različnih državah bere različno."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Stran je zasukana."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AI, kadar ga želite"
 msgid "Albanian"
 msgstr "Albanščina"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Vsi jeziki aplikacije"
@@ -838,6 +848,7 @@ msgstr "Razmerje stranic"
 msgid "ATS Check"
 msgstr "Preverjanje ATS"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Seznam z oznakami"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Od skupnosti, za skupnost."
 
@@ -1080,6 +1091,7 @@ msgstr "Spremeni temo v…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Ste si premislili? Preimenujte svoj življenjepis v nekaj bolj opisa."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Dnevnik sprememb"
@@ -1186,6 +1198,7 @@ msgstr "Izberite predlogo"
 msgid "Choose an application"
 msgstr "Izberite aplikacijo"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Izberite jezik aplikacije"
@@ -1266,6 +1279,7 @@ msgstr "Paleta ukazov"
 msgid "Command Palette - {currentPage}"
 msgstr "Paleta ukazov - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Skupnost"
@@ -2026,6 +2040,7 @@ msgstr "Želite zavreči neshranjene spremembe?"
 msgid "Disconnect"
 msgstr "Prekini povezavo"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Zavrzi"
 msgid "Docs"
 msgstr "Dokumentacija"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Ni uspelo preveriti vaše kode. Poskusite znova."
 msgid "Fatal error"
 msgstr "Usodna napaka"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Petnajst predlog, vse brezplačne. Izberite tisto, ki vam je všeč. V urejevalniku lahko spremenite vrsto, barvo in postavitev."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Pridobite drugo mnenje o svojem besedilu, delite svoj življenjepis in spremljajte, kamor koli ste se že prijavili. Vse na enem mestu."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Začni"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Želite zapustiti nastavitev ponudnika AI?"
 msgid "Left Align"
 msgstr "Poravnaj levo"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Dolžina ni pomanjkljivost, univerzalnega pravila ene strani pa ni. Obdržite strani, ki si svoje mesto zaslužijo."
@@ -3495,6 +3521,7 @@ msgstr "Povezan reaktivni življenjepis"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Manjka delovni življenjepis"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral AI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "Se odpre v novem zavihku"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Primarna barva"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Pred pošiljanjem obrazec natisnite ali izvozite v ploski PDF."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Zasebnost"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Zasebno"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Napotil ..., stvari, ki jih je treba poudariti itd."
 msgid "Register New Device"
 msgstr "Registracija nove naprave"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Ponovno naloži najnovejšo različico"
@@ -4833,6 +4873,7 @@ msgstr "Prijavite napako"
 msgid "Report a Bug"
 msgstr "Prijavite napako"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Prijavi težavo"
@@ -4869,6 +4910,7 @@ msgstr "Ponastavite svoje geslo"
 msgid "Resetting your password..."
 msgstr "Ponastavljanje gesla..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Viri"
@@ -5394,6 +5436,7 @@ msgstr "Pokaži še {0}"
 msgid "Show {title} section"
 msgstr "Prikaži razdelek {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Prikaži vse jezike"
@@ -5665,6 +5708,7 @@ msgstr "Razvrsti po…"
 msgid "Source"
 msgstr "Vir"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Mesec zapišite z besedo, na primer „Mar 2022“."
 msgid "Sponsors"
 msgstr "Sponzorji"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Sponzorstva"
@@ -5830,6 +5875,7 @@ msgstr "Slog in podrobnosti o pošiljatelju so kopirani. Prihodnje urejanje živ
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Podrobnosti o slogu in pošiljatelju so osvežene iz izbranega življenjepisa."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Podreddit"
@@ -5847,10 +5893,6 @@ msgstr "Predlogi"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Povzetek"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Podpora"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Predloga"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Galerija predlog"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Ni povzetka."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Za izvedbo tega preverjanja ni bilo dovolj podatkov."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Prostor je tudi za vas."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Spremljajte oglede in prenose vašega življenjepisa"
 msgid "Translate the app"
 msgstr "Prevedite aplikacijo"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Napišite polni naslov, vključno s https://."
 msgid "Writing"
 msgstr "Besedilo"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

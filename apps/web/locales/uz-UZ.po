@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" va uning to‘liq xronologiyasi butunlay o‘chiriladi. Buni ortga qaytarib bo‘lmaydi."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(yangi tabda ochiladi)"
@@ -223,6 +224,10 @@ msgstr "Veb uchun mavjud (accessible) naqshlar to‘plami — mutlaqo bepul."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Bepul, ochiq manbali rezyume tuzuvchisi. Tajribangizni sahifaga joylang — formatlash bilan kurashmasdan."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Rekruter uchun do'stona eslatma"
@@ -258,6 +263,10 @@ msgstr "Raqamli sana turli mamlakatlarda turlicha oʻqiladi."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Sahifa aylantirilgan."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AI — xohlaganingizda"
 msgid "Albanian"
 msgstr "Alban tili"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Barcha ilova tillari"
@@ -838,6 +848,7 @@ msgstr "Tomonlar nisbati"
 msgid "ATS Check"
 msgstr "ATS tekshiruvi"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Belgilangan roʻyxat"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Jamiyat tomonidan, jamiyat uchun."
 
@@ -1080,6 +1091,7 @@ msgstr "Mavzuni… ga o'zgartiring"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Fikringiz oʻzgardimi? Rezyumeningizga tushunarliroq nom bering."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "O'zgarishlar jurnali"
@@ -1186,6 +1198,7 @@ msgstr "Andoza tanlang"
 msgid "Choose an application"
 msgstr "Ilovani tanlang"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Ilova tili tanlang"
@@ -1266,6 +1279,7 @@ msgstr "Buyruqlar palitrasi"
 msgid "Command Palette - {currentPage}"
 msgstr "Buyruqlar palitrasi - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Hamjamiyat"
@@ -2026,6 +2040,7 @@ msgstr "Saqlanmagan o'zgarishlar bekor qilinsinmi?"
 msgid "Disconnect"
 msgstr "Uzib qo‘yish"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Bekor qilish"
 msgid "Docs"
 msgstr "Hujjatlar"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Kodingizni tekshirish muvaffaqiyatsiz bo'ldi. Iltimos, yana urinib ko'ri
 msgid "Fatal error"
 msgstr "Halokatli xato"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "O‘n beshta andoza — hammasi bepul. O‘zingizga yoqqanini tanlang. Muharrirda turini, rangini va tartibini o‘zgartirishingiz mumkin."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Yozganingiz bo‘yicha ikkinchi fikr oling, rezyumengizni ulashing va qayerga ariza berganingizni kuzatib boring. Barchasi bir joyda."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Boshlash"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "AI provayderini sozlashni tark etasizmi?"
 msgid "Left Align"
 msgstr "Chapga tekislash"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Uzunlik nuqson emas va universal bir sahifa qoidasi mavjud emas. Oʻz oʻrnini oqlaydigan sahifalarni saqlang."
@@ -3495,6 +3521,7 @@ msgstr "Bog'langan Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Ishchi rezyume yo'q"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral AI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "Ochiq marshrutizator"
 msgid "Opens in a new tab"
 msgstr "Yangi tabda ochiladi"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Asosiy rang"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Yuborishdan oldin shaklni tekis PDF sifatida chop eting yoki eksport qiling."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Maxfiylik"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Shaxsiy"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Tavsiya qilgan…, ta'kidlash kerak bo'lgan jihatlar va h.k."
 msgid "Register New Device"
 msgstr "Yangi qurilmani ro'yxatdan o'tkazish"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Eng so'nggi versiyani qayta yuklang"
@@ -4833,6 +4873,7 @@ msgstr "Xato haqida xabar berish"
 msgid "Report a Bug"
 msgstr "Xatolik haqida xabar berish"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Muammoni xabar qiling"
@@ -4869,6 +4910,7 @@ msgstr "Parolingizni tiklang"
 msgid "Resetting your password..."
 msgstr "Parolingiz tiklanmoqda..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Resurslar"
@@ -5394,6 +5436,7 @@ msgstr "Yana {0} tasini ko'rsatish"
 msgid "Show {title} section"
 msgstr "{title} bo'limini ko'rsatish"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Barcha tillarni ko‘rsatish"
@@ -5665,6 +5708,7 @@ msgstr "Saralash…"
 msgid "Source"
 msgstr "Manba"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Oyni \"Mar 2022\" kabi harflar bilan yozing."
 msgid "Sponsors"
 msgstr "Homiylar"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Homiyliklar"
@@ -5830,6 +5875,7 @@ msgstr "Uslub va jo'natuvchi tafsilotlari ko'chiriladi. Kelajakdagi rezyume tahr
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Uslub va jo'natuvchi tafsilotlari tanlangan rezyumedan yangilandi."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "Takliflar"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Qisqacha ma'lumot"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Yordam"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Andoza"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Andoza galereyasi"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Qisqacha ma'lumot abzatsi yoʻq."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Bu tekshiruvni ishga tushirish uchun ma'lumot yetarli emas edi."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Siz uchun ham joy bor."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Rezyumingizga koʻrilishlar va yuklab olishlarni kuzatib boring"
 msgid "Translate the app"
 msgstr "Ilovani tarjima qilish"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Toʻliq manzilni yozing, jumladan https://."
 msgid "Writing"
 msgstr "Matn"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" i pełna oś czasu zostaną trwale usunięte. Tej operacji nie można cofnąć."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(otwiera się w nowej karcie)"
@@ -223,6 +224,10 @@ msgstr "Darmowy zbiór dostępnych wzorców dla sieci."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Darmowy kreator CV o otwartym kodzie źródłowym. Umieść swoje doświadczenie na stronie bez walki z formatowaniem."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Przyjazny szturchnięcie dla rekrutera"
@@ -258,6 +263,10 @@ msgstr "Data zapisana cyframi jest odczytywana różnie w różnych krajach."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Strona jest obrócona."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AI, gdy go potrzebujesz"
 msgid "Albanian"
 msgstr "Albański"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Wszystkie języki aplikacji"
@@ -838,6 +848,7 @@ msgstr "Proporcje obrazu"
 msgid "ATS Check"
 msgstr "Kontrola ATS"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Lista punktowana"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Stworzone przez społeczność dla społeczności."
 
@@ -1080,6 +1091,7 @@ msgstr "Zmień motyw na…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Zmieniłeś zdanie? Zmień nazwę swojego CV na bardziej opisową."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Dziennik zmian"
@@ -1186,6 +1198,7 @@ msgstr "Wybierz szablon"
 msgid "Choose an application"
 msgstr "Wybierz aplikację"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Wybierz język aplikacji"
@@ -1266,6 +1279,7 @@ msgstr "Paleta poleceń"
 msgid "Command Palette - {currentPage}"
 msgstr "Paleta poleceń - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Społeczność"
@@ -2026,6 +2040,7 @@ msgstr "Odrzucić niezapisane zmiany?"
 msgid "Disconnect"
 msgstr "Odłącz"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Odrzucać"
 msgid "Docs"
 msgstr "Dokumentacja"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Nie udało się zweryfikować kodu. Proszę spróbować ponownie."
 msgid "Fatal error"
 msgstr "Błąd krytyczny"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Piętnaście szablonów, wszystkie za darmo. Wybierz ten, który Ci odpowiada. Typ, kolor i układ zmienisz w edytorze."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Zdobądź drugą opinię o swoim tekście, udostępnij CV i śledź, dokąd wysłałeś aplikacje. Wszystko w jednym miejscu."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Rozpocznij"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Opuścić stronę i skonfigurować dostawcę AI?"
 msgid "Left Align"
 msgstr "Wyrównaj do lewej"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Długość nie jest wadą i nie ma uniwersalnej zasady jednej strony. Zachowaj strony, które są tego warte."
@@ -3495,6 +3521,7 @@ msgstr "Połączono Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Brakuje CV"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral AI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "Otwiera się w nowej karcie"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Kolor główny"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Wydrukuj lub wyeksportuj formularz do płaskiego PDF-a przed wysłaniem."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Prywatność"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Prywatne"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Polecane przez…, rzeczy do podkreślenia itp."
 msgid "Register New Device"
 msgstr "Zarejestrować nowe urządzenie"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Załaduj ponownie najnowszą wersję"
@@ -4833,6 +4873,7 @@ msgstr "Zgłoś błąd"
 msgid "Report a Bug"
 msgstr "Zgłoś błąd"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Zgłoś problem"
@@ -4869,6 +4910,7 @@ msgstr "Zresetuj swoje hasło"
 msgid "Resetting your password..."
 msgstr "Resetowanie hasła..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Zasoby"
@@ -5394,6 +5436,7 @@ msgstr "Pokaż więcej {0}"
 msgid "Show {title} section"
 msgstr "Pokaż sekcję {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Pokaż wszystkie języki"
@@ -5665,6 +5708,7 @@ msgstr "Sortuj według…"
 msgid "Source"
 msgstr "Źródło"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Zapisz nazwę miesiąca słownie, np. \"Mar 2022\"."
 msgid "Sponsors"
 msgstr "Sponsorzy"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Sponsorzy"
@@ -5830,6 +5875,7 @@ msgstr "Dane dotyczące stylu i nadawcy zostały skopiowane. Przyszłe zmiany w 
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Dane dotyczące stylizacji i nadawcy odświeżone z wybranego CV."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "Sugestie"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Podsumowanie"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Wsparcie"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Szablon"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Galeria szablonów"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Brak akapitu podsumowania."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Za mało informacji, aby przeprowadzić tę kontrolę."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Jest miejsce także dla ciebie."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Śledź wyświetlenia i pobrania swojego CV"
 msgid "Translate the app"
 msgstr "Przetłumacz aplikację"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Wpisz pełny adres, w tym https://."
 msgid "Writing"
 msgstr "Pisanie"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

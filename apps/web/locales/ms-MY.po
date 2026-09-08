@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" dan garis masa penuhnya akan dipadamkan secara kekal. Tindakan ini tidak boleh dibuat asal."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(dibuka dalam tab baharu)"
@@ -223,6 +224,10 @@ msgstr "Koleksi percuma corak kebolehaksesan untuk web."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Pembina resume percuma dan sumber terbuka. Letakkan pengalaman anda pada halaman, tanpa perlu bergelut dengan pemformatan."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Satu dorongan mesra untuk perekrut"
@@ -258,6 +263,10 @@ msgstr "Tarikh berangka dibaca secara berbeza di negara yang berbeza."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Satu halaman diputar."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AI, apabila anda mahukannya"
 msgid "Albanian"
 msgstr "Albanian"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Semua bahasa aplikasi"
@@ -838,6 +848,7 @@ msgstr "Nisbah Aspek"
 msgid "ATS Check"
 msgstr "Semakan ATS"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Senarai bertitik tumpu mata"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Oleh komuniti, untuk komuniti."
 
@@ -1080,6 +1091,7 @@ msgstr "Tukar tema kepada…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Berubah fikiran? Tukar nama resume anda kepada sesuatu yang lebih deskriptif."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Log Perubahan"
@@ -1186,6 +1198,7 @@ msgstr "Pilih templat"
 msgid "Choose an application"
 msgstr "Pilih aplikasi"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Pilih bahasa aplikasi"
@@ -1266,6 +1279,7 @@ msgstr "Palet Perintah"
 msgid "Command Palette - {currentPage}"
 msgstr "Palet Perintah - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Komuniti"
@@ -2026,6 +2040,7 @@ msgstr "Buang perubahan yang belum disimpan?"
 msgid "Disconnect"
 msgstr "Putuskan sambungan"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Ketepikan"
 msgid "Docs"
 msgstr "Dokumen"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Gagal mengesahkan kod anda. Sila cuba lagi."
 msgid "Fatal error"
 msgstr "Ralat kritikal"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Lima belas templat, semuanya percuma. Pilih satu yang anda sukai. Anda boleh menukar jenis, warna dan susun atur dalam editor."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Dapatkan pendapat kedua tentang penulisan anda, kongsi resume anda, dan jejaki ke mana sahaja anda telah memohon. Semuanya dalam satu tempat."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Mula"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Tinggalkan untuk menyediakan pembekal AI?"
 msgid "Left Align"
 msgstr "Jajaran Kiri"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Panjang bukan kecacatan, dan tiada peraturan satu halaman yang universal. Kekalkan halaman yang layak berada di sana."
@@ -3495,6 +3521,7 @@ msgstr "Dipautkan Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Resume kerja yang hilang"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral AI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "Dibuka dalam tab baharu"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Warna Utama"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Cetak atau eksport borang kepada PDF rata sebelum menghantarnya."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Privasi"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Peribadi"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Dirujuk oleh…, perkara yang perlu ditekankan, dsb."
 msgid "Register New Device"
 msgstr "Daftar Peranti Baru"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Muat semula versi terkini"
@@ -4833,6 +4873,7 @@ msgstr "Laporkan pepijat"
 msgid "Report a Bug"
 msgstr "Laporkan Pepijat"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Laporkan Isu"
@@ -4869,6 +4910,7 @@ msgstr "Tetapkan semula kata laluan anda"
 msgid "Resetting your password..."
 msgstr "Menetapkan semula kata laluan anda..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Sumber"
@@ -5394,6 +5436,7 @@ msgstr "Tunjukkan {0} lagi"
 msgid "Show {title} section"
 msgstr "Tunjukkan bahagian {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Tunjukkan semua bahasa"
@@ -5665,6 +5708,7 @@ msgstr "Isih mengikut…"
 msgid "Source"
 msgstr "Sumber"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Eja bulan, seperti dalam \"Mar 2022\"."
 msgid "Sponsors"
 msgstr "Penaja"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Tajaan"
@@ -5830,6 +5875,7 @@ msgstr "Butiran penggayaan dan penghantar disalin. Pengeditan resume akan datang
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Butiran penggayaan dan penghantar dimuat semula daripada resume yang dipilih."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "Cadangan"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Ringkasan"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Sokongan"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Templat"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Galeri Templat"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Tiada perenggan ringkasan."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Tidak cukup maklumat untuk menjalankan semakan ini."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Ada ruang untuk anda juga."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Jejak pandangan dan muat turun resume anda"
 msgid "Translate the app"
 msgstr "Terjemahkan aplikasi ini"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Tulis alamat penuh, termasuk https://."
 msgid "Writing"
 msgstr "Penulisan"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

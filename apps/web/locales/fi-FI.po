@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" ja sen koko aikajana poistetaan pysyvästi. Tätä ei voi kumota."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(avautuu uuteen välilehteen)"
@@ -223,6 +224,10 @@ msgstr "Ilmainen kokoelma saavutettavia malleja verkkosivustoille."
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "Ilmainen ja avoimen lähdekoodin ansioluettelotyökalu. Aseta kokemuksesi sivulle taistelematta muotoilun kanssa."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Ystävällinen muistutus rekrytoijalle"
@@ -258,6 +263,10 @@ msgstr "Numeerinen päivämäärä tulkitaan eri tavoin eri maissa."
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "Sivu on käännetty."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "Tekoälyä, kun tarvitset sitä"
 msgid "Albanian"
 msgstr "albania"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "Kaikki sovelluksen kielet"
@@ -838,6 +848,7 @@ msgstr "Kuvasuhde"
 msgid "ATS Check"
 msgstr "ATS-tarkastus"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "Luettelona"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "Yhteisöltä yhteisölle."
 
@@ -1080,6 +1091,7 @@ msgstr "Vaihda teema muotoon…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Muutitko mieltäsi? Nimeä ansioluettelosi uudelleen kuvaavammaksi."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Muutosloki"
@@ -1186,6 +1198,7 @@ msgstr "Valitse mallipohja"
 msgid "Choose an application"
 msgstr "Valitse hakemus"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "Valitse sovelluksen kieli"
@@ -1266,6 +1279,7 @@ msgstr "Komentopaletti"
 msgid "Command Palette - {currentPage}"
 msgstr "Komentopaletti - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Yhteisö"
@@ -2026,6 +2040,7 @@ msgstr "Hylätäänkö tallentamattomat muutokset?"
 msgid "Disconnect"
 msgstr "Katkaise yhteys"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "Hylkää"
 msgid "Docs"
 msgstr "Dokumentaatio"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "Koodiasi ei onnistuttu tarkistamaan. Yritä uudelleen."
 msgid "Fatal error"
 msgstr "Vakava virhe"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "Viisitoista mallipohjaa, kaikki ilmaisia. Valitse mieleisesi. Voit vaihtaa tyypin, värin ja asettelun editorissa."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "Pyydä toinen mielipide kirjoituksestasi, jaa ansioluettelosi ja pidä kirjaa siitä, mihin olet hakenut. Kaikki samassa paikassa."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Aloita"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "Haluatko jättää AI-palveluntarjoajan perustamisen?"
 msgid "Left Align"
 msgstr "Tasaa vasemmalle"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "Pituus ei ole virhe, eikä yhden sivun sääntö ole yleispätevä. Pidä ne sivut, jotka ansaitsevat paikkansa."
@@ -3495,6 +3521,7 @@ msgstr "Linkitetty Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "Puuttuva työansioluettelo"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "Mistral-tekoäly"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "Avautuu uuteen välilehteen"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "Pääväri"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Tulosta tai vie lomake tasoitettuna PDF:nä ennen sen lähettämistä."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "Yksityisyys"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "Yksityinen"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "Suosittelija…, korostettavat asiat jne."
 msgid "Register New Device"
 msgstr "Rekisteröi uusi laite"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "Lataa uusin versio uudelleen"
@@ -4833,6 +4873,7 @@ msgstr "Ilmoita virheestä"
 msgid "Report a Bug"
 msgstr "Ilmoita virheestä"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Ilmoita ongelmasta"
@@ -4869,6 +4910,7 @@ msgstr "Palauta salasanasi"
 msgid "Resetting your password..."
 msgstr "Palautetaan salasanaasi..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Resurssit"
@@ -5394,6 +5436,7 @@ msgstr "Näytä {0} lisää"
 msgid "Show {title} section"
 msgstr "Näytä osio {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "Näytä kaikki kielet"
@@ -5665,6 +5708,7 @@ msgstr "Lajittele…"
 msgid "Source"
 msgstr "Lähde"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "Kirjoita kuukausi sanoin, kuten \"Mar 2022\"."
 msgid "Sponsors"
 msgstr "Sponsorit"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Sponsorisopimukset"
@@ -5830,6 +5875,7 @@ msgstr "Tyyli ja lähettäjän tiedot kopioidaan. Myöhemmät ansioluettelon muo
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Tyyli ja lähettäjän tiedot päivitettiin valitusta ansioluettelosta."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "Ehdotukset"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Yhteenveto"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "Tuki"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "Mallipohja"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "Mallipohjagalleria"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "Yhteenvetokappaletta ei ole."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "Tietoa ei ollut riittävästi tämän tarkistuksen suorittamiseen."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "Sinullekin on tilaa."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "Seuraa ansioluettelosi katseluita ja latauksia"
 msgid "Translate the app"
 msgstr "Käännä sovellus"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "Kirjoita koko osoite, mukaan lukien https://."
 msgid "Writing"
 msgstr "Kirjoitus"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"

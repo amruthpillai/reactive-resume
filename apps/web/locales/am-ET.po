@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" እና ሙሉ የጊዜ መስመሩ በቋሚነት ይሰረዛሉ። ይህ ሊቀለበስ አይችልም።"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(በአዲስ ታብ ይከፈታል)"
@@ -223,6 +224,10 @@ msgstr "ለድር ተደራሽ የንድፍ ዘይቤዎች ነፃ ስብስብ�
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "ነፃ፣ ክፍት ምንጭ ያለው የሥራ ማስረጃ መፍጠሪያ። ከቅርጸት ጋር ሳይታገሉ ልምድዎን በገጹ ላይ ያስቀምጡ።"
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "ለቀጣሪው ወዳጃዊ ማበረታቻ"
@@ -258,6 +263,10 @@ msgstr "የቁጥር ቀን በተለያዩ ሀገራት በተለያየ መል�
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "ገጽ ተሽከርክሯል።"
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "በፈለጉት ጊዜ AI"
 msgid "Albanian"
 msgstr "አልባኒኛ"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "ሁሉም የመተግበሪያ ቋንቋዎች"
@@ -838,6 +848,7 @@ msgstr "የመገናኛ መጠን"
 msgid "ATS Check"
 msgstr "ATS ቼክ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "ነጥበ ምልክት የተደረገበት ዝርዝር"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "በማህበረሰቡ፣ ለማህበረሰቡ።"
 
@@ -1080,6 +1091,7 @@ msgstr "ገጽታውን ወደ… ቀይር"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "ልብዎን ቀይራችሁ? የየታሪክዎን ስም ወደ በተገለጸ ነገር ይቀይሩት።"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "የለውጥ ታሪክዎች።"
@@ -1186,6 +1198,7 @@ msgstr "አብነት ይምረጡ"
 msgid "Choose an application"
 msgstr "መተግበሪያ ይምረጡ"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "የመተግበሪያ ቋንቋ ይምረጡ"
@@ -1266,6 +1279,7 @@ msgstr "የትእዛዝ ፓሌት"
 msgid "Command Palette - {currentPage}"
 msgstr "የትእዛዝ ፓሌት - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "ማህበረሰብ"
@@ -2026,6 +2040,7 @@ msgstr "ያልተቀመጡ ለውጦች ይጣሉ?"
 msgid "Disconnect"
 msgstr "ግንኙነትን ቁርጥ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "ዲስኮርድ"
@@ -2038,6 +2053,7 @@ msgstr "አሰናብት"
 msgid "Docs"
 msgstr "ሰነዶች"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "ኮድዎን ማረጋገጥ አልተሳካም። እባክዎ እን�
 msgid "Fatal error"
 msgstr "ከባድ ስህተት"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "አሥራ አምስት አብነቶች፣ ሁሉም ነፃ ናቸው። የሚወዱትን ይምረጡ። በአርታዒው ውስጥ የፊደል ቅርጽ፣ ቀለም እና አቀማመጥ መቀየር ይችላሉ።"
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "በጽሑፍዎ ላይ ሁለተኛ አስተያየት ያግኙ፣ የሥራ ማስረጃዎን ያጋሩ፣ የት እንዳመለከቱም ይከታተሉ። ሁሉም በአንድ ቦታ ነው።"
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "ጀምር"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "AI አቅራቢን ለማቋቋም ይውጡ?"
 msgid "Left Align"
 msgstr "በግራ ማሰለፊያ"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "ርዝመት ጉድለት አይደለም፣ እና ሁሉን አቀፍ የአንድ-ገጽ ህግ የለም። ቦታቸውን የሚገባቸውን ገጾች ያቆዩ።"
@@ -3495,6 +3521,7 @@ msgstr "የተገናኘ ምላሽ ሰጪ የሥራ ልምድ"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "የስራ ማጠቃለያ ይጎድላል"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "ሚስራል ኤአይ"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "ክፍት ራውተር"
 msgid "Opens in a new tab"
 msgstr "በአዲስ ትር ይከፈታል"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "ዋና ቀለም"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "ከመላክዎ በፊት ቅጹን ወደ ጠፍጣፋ PDF ያትሙ ወይም ወደ ውጭ ይላኩ።"
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "ግላዊነት"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "የግል"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "በ…የተጠቀሰ፣ አጽንዖት ሊሰጣቸው የሚገቡ �
 msgid "Register New Device"
 msgstr "አዲስ መሣሪያ መመዝገብ"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "የቅርብ ጊዜውን ስሪት እንደገና ጫን"
@@ -4833,6 +4873,7 @@ msgstr "ስህተት ያሳውቁ"
 msgid "Report a Bug"
 msgstr "ስህተት ሪፖርት አድርግ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "ችግኝት ሪፖርት አድርግ"
@@ -4869,6 +4910,7 @@ msgstr "የይለፍ ቃልዎን ዳግም ያስጀምሩ"
 msgid "Resetting your password..."
 msgstr "የይለፍ ቃልዎን በመዳግም ላይ…"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "ሀብቶች"
@@ -5394,6 +5436,7 @@ msgstr "ተጨማሪ {0} አሳይ"
 msgid "Show {title} section"
 msgstr "{title} ክፍል አሳይ"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "ሁሉንም ቋንቋዎች አሳይ"
@@ -5665,6 +5708,7 @@ msgstr "ደርድር በ…"
 msgid "Source"
 msgstr "ምንጭ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "ወሩን በፊደል ይጻፉ፣ እንደ \"Mar 2022\" ያለ።"
 msgid "Sponsors"
 msgstr "አስተናጋጆች"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "አከፋፈልዎች"
@@ -5830,6 +5875,7 @@ msgstr "የቅጥ እና የላኪ ዝርዝሮች ተቀድተዋል። ወደ�
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "የቅጥ እና የላኪ ዝርዝሮች ከተመረጠው ከቆመበት ቀጥል ታደሱ።"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "ሰብሬዲት"
@@ -5847,10 +5893,6 @@ msgstr "አስተያየቶች"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "ማጠቃለያ"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "ድጋፍ"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "ቴምፕሌት"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "ቴምፕሌት ማዕከል"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "ምንም የማጠቃለያ አንቀጽ የለም።"
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "ይህን ቼክ ለማካሄድ በቂ መረጃ አልነበረም።"
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "ለእርስዎም ቦታ አለ።"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "የየታሪክዎን ተመልካቶች እና ዝቅተኛ የወረ�
 msgid "Translate the app"
 msgstr "መተግበሪያውን ይተርጉሙ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "https:// ን ጨምሮ ሙሉውን አድራሻ ይፃፉ።"
 msgid "Writing"
 msgstr "አጻጻፍ"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "ኤክስ (ትዊተር)"

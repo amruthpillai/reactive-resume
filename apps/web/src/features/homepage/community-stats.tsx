@@ -36,16 +36,13 @@ export function CommunityStats() {
 			id="community"
 			aria-labelledby="community-title"
 		>
-			<div className="mb-8 flex items-baseline justify-between gap-4 max-[600px]:mb-6 max-[600px]:flex-col max-[600px]:items-start max-[600px]:gap-[7px]">
+			<div className="mb-8 max-[600px]:mb-6">
 				<h2
 					id="community-title"
 					className="font-[Manrope_Variable,sans-serif] font-semibold text-[26px] leading-[1.3] tracking-[-0.04em] max-[600px]:text-[24px]"
 				>
 					<Trans>You’re in good company.</Trans>
 				</h2>
-				<p className="text-(--home-muted) text-[14px]">
-					<Trans>There’s room for you too.</Trans>
-				</p>
 			</div>
 			<dl className="grid grid-cols-2 border-(--home-line) border-y pt-[30px] pb-[26px] max-[600px]:grid-cols-1 max-[600px]:gap-6 max-[600px]:py-6">
 				{ids.map((id, index) => (
@@ -116,7 +113,13 @@ function RollingTotal({ value, entered }: RollingTotalProps) {
 			<span className="sr-only">{formatted}</span>
 			<span className="inline-flex [direction:ltr] [unicode-bidi:isolate]" aria-hidden="true">
 				{characters.map((character, index) => (
-					<span className="relative inline-block h-[1.16em] shrink-0 overflow-clip" key={characters.length - index}>
+					<span
+						// The roll needs a vertical mask, but overflow-clip also cuts horizontally, and the negative
+						// tracking shrinks each glyph's box below its ink width. Padding widens the clip box; the
+						// matching negative margin keeps the tightened spacing.
+						className="relative -mx-[0.12em] inline-block h-[1.16em] shrink-0 overflow-clip px-[0.12em]"
+						key={characters.length - index}
+					>
 						<AnimatePresence mode="popLayout">
 							<m.span
 								className="block"

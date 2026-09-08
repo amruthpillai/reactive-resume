@@ -25,7 +25,7 @@ const availableLocales = Object.keys(import.meta.glob("../../../locales/*.po"))
 	.map((path) => path.split("/").at(-1)?.replace(/\.po$/, "") ?? "")
 	.filter(isLocale);
 
-const wordClass = "animate-[language-appear_190ms_ease-out_both] group-data-[instant=true]/languages:animate-none";
+const wordClass = "animate-[home-language-appear_190ms_ease-out_both] group-data-[instant=true]/languages:animate-none";
 const headingClass = `${wordClass} mb-[15px] font-semibold text-[13px] leading-[1.6] wrap-anywhere`;
 const paperClass =
 	"language-paper relative mx-auto w-full max-w-[440px] rotate-2 rounded border border-[#e0dcd5] bg-[#efede7] font-[Arial,Noto_Sans,sans-serif] text-[#29272b] text-start shadow-[4px_5px_0_#d5d0c8,5px_6px_0_#77716b,11px_16px_0_-4px_#b9b1a7,10px_28px_42px_#0005]";
@@ -169,7 +169,7 @@ export default function LanguagesShowcase() {
 						/>
 					</summary>
 					<fieldset
-						className="mt-[23px] grid min-w-0 grid-cols-3 gap-x-3 gap-y-1 group-data-[instant=false]/languages:group-open/all:animate-[language-unfold_220ms_ease-out_both] max-[420px]:grid-cols-2"
+						className="mt-[23px] grid min-w-0 grid-cols-3 gap-x-3 gap-y-1 group-data-[instant=false]/languages:group-open/all:animate-[home-language-unfold_220ms_ease-out_both] max-[420px]:grid-cols-2"
 						aria-label={t`All app languages`}
 					>
 						{availableLocales.map((locale) => (

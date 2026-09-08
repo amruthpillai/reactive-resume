@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" とその全タイムラインは完全に削除されます。この操作は元に戻せません。"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "（新しいタブで開きます）"
@@ -223,6 +224,10 @@ msgstr "ウェブ向けのアクセシブルなパターンを無料で集めた
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "無料でオープンソースの履歴書ビルダー。書式と格闘することなく、あなたの経歴を紙面に。"
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "採用担当者への丁寧なリマインダー"
@@ -258,6 +263,10 @@ msgstr "数字だけの日付は、国によって読み方が異なります。
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "ページが回転しています。"
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "AIは使いたいときだけ"
 msgid "Albanian"
 msgstr "アルバニア語"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "アプリのすべての言語"
@@ -838,6 +848,7 @@ msgstr "アスペクト比"
 msgid "ATS Check"
 msgstr "ATSチェック"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "箇条書きリスト"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "コミュニティによる、コミュニティのためのプロジェクト。"
 
@@ -1080,6 +1091,7 @@ msgstr "テーマを…に変更します"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "やっぱり変更しますか？レジュメに、よりわかりやすい名前を付け直しましょう。"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "更新履歴"
@@ -1186,6 +1198,7 @@ msgstr "テンプレートを選択"
 msgid "Choose an application"
 msgstr "応募を選択"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "アプリの言語を選択"
@@ -1266,6 +1279,7 @@ msgstr "コマンドパレット"
 msgid "Command Palette - {currentPage}"
 msgstr "コマンドパレット - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "コミュニティ"
@@ -2026,6 +2040,7 @@ msgstr "保存していない変更を破棄しますか？"
 msgid "Disconnect"
 msgstr "切断"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -2038,6 +2053,7 @@ msgstr "閉じる"
 msgid "Docs"
 msgstr "ドキュメント"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "コードの検証に失敗しました。もう一度やり直してく
 msgid "Fatal error"
 msgstr "致命的なエラー"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "15種類のテンプレートはすべて無料。気に入ったものを選んでください。書体、カラー、レイアウトはエディターで変更できます。"
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "文章にセカンドオピニオンをもらい、履歴書を共有し、応募先を管理する。すべてが一つの場所にそろっています。"
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "はじめる"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "AI プロバイダーのセットアップを辞めますか?"
 msgid "Left Align"
 msgstr "左揃え"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "長さそのものは欠点ではなく、1ページに収めるべきという普遍的なルールもありません。価値のあるページだけを残してください。"
@@ -3495,6 +3521,7 @@ msgstr "リンク済み Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "レジュメが選択されていません"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "ミストラルAI"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "OpenRouter"
 msgid "Opens in a new tab"
 msgstr "新しいタブで開きます"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "メインカラー"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "送信前に、フォームをフラットなPDFとして印刷またはエクスポートしてください。"
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "プライバシー"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "非公開"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "紹介者…、強調したい点など。"
 msgid "Register New Device"
 msgstr "新しいデバイスを登録する"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "最新バージョンを再読み込み"
@@ -4833,6 +4873,7 @@ msgstr "バグを報告する"
 msgid "Report a Bug"
 msgstr "バグを報告"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "問題を報告"
@@ -4869,6 +4910,7 @@ msgstr "パスワードをリセット"
 msgid "Resetting your password..."
 msgstr "パスワードをリセットしています..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "リソース"
@@ -5394,6 +5436,7 @@ msgstr "さらに {0} 件を表示"
 msgid "Show {title} section"
 msgstr "「{title}」セクションを表示"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "すべての言語を表示"
@@ -5665,6 +5708,7 @@ msgstr "並べ替え…"
 msgid "Source"
 msgstr "ソース"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "「Mar 2022」のように、月をアルファベットで表記して�
 msgid "Sponsors"
 msgstr "スポンサー"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "スポンサーシップ"
@@ -5830,6 +5875,7 @@ msgstr "スタイルと差出人情報がコピーされます。以降の履歴
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "選択した履歴書からスタイルと差出人情報を更新しました。"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddit"
@@ -5847,10 +5893,6 @@ msgstr "提案"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "サマリー"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "サポート"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "テンプレート"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "テンプレートギャラリー"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "概要の段落がありません。"
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "このチェックを実行するための情報が不足していました。"
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "あなたの席もあります。"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "閲覧数とダウンロード数を確認する"
 msgid "Translate the app"
 msgstr "アプリを翻訳する"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "https:// を含む完全なアドレスを書きます。"
 msgid "Writing"
 msgstr "文章"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X（ツイッター）"

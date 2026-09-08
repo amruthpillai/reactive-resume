@@ -27,6 +27,7 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "سيتم حذف \"{0} · {1}\" وسجله الزمني الكامل نهائيًا. لا يمكن التراجع عن ذلك."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "(opens in new tab)"
 msgstr "(يفتح في علامة تبويب جديدة)"
@@ -223,6 +224,10 @@ msgstr "مجموعة مجانية من أنماط الويب المراعية ل
 msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
 msgstr "منشئ سيرة ذاتية مجاني ومفتوح المصدر. دوّن خبراتك بلا عناء التنسيق."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr ""
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "لفتة ودية للموظف المسؤول عن التوظيف"
@@ -258,6 +263,10 @@ msgstr "التاريخ الرقمي يُقرأ بشكل مختلف في بلدا
 #: src/features/ats-checker/messages.ts
 msgid "A page is rotated."
 msgstr "صفحة مُدوَّرة."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr ""
 
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
@@ -592,6 +601,7 @@ msgstr "الذكاء الاصطناعي عند الحاجة"
 msgid "Albanian"
 msgstr "الألبانية"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "All app languages"
 msgstr "كل لغات التطبيق"
@@ -838,6 +848,7 @@ msgstr "نسبة الأبعاد"
 msgid "ATS Check"
 msgstr "فحص ATS"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -1009,7 +1020,7 @@ msgstr "قائمة نقطية"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "من المجتمع وللمجتمع."
 
@@ -1080,6 +1091,7 @@ msgstr "غيّر المظهر إلى…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "غيّرت رأيك؟ أعد تسمية سيرتك الذاتية إلى شيء أكثر وصفًا."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "سجل التغييرات"
@@ -1186,6 +1198,7 @@ msgstr "اختر قالبًا"
 msgid "Choose an application"
 msgstr "اختر تطبيقًا"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Choose app language"
 msgstr "اختر لغة التطبيق"
@@ -1266,6 +1279,7 @@ msgstr "لوحة الأوامر"
 msgid "Command Palette - {currentPage}"
 msgstr "لوحة الأوامر - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "المجتمع"
@@ -2026,6 +2040,7 @@ msgstr "هل تريد تجاهل التغييرات غير المحفوظة؟"
 msgid "Disconnect"
 msgstr "قطع الاتصال"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "ديسكورد"
@@ -2038,6 +2053,7 @@ msgstr "رفض"
 msgid "Docs"
 msgstr "الوثائق"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -2636,6 +2652,10 @@ msgstr "فشل التحقق من الرمز الخاص بك. يرجى المحا
 msgid "Fatal error"
 msgstr "خطأ فادح"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Features"
+msgstr ""
+
 #: src/features/homepage/page.tsx
 msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
 msgstr "خمسة عشر قالبًا، كلها مجانية. اختر ما يعجبك. يمكنك تغيير الخط واللون والتخطيط في المحرر."
@@ -2819,12 +2839,14 @@ msgid "Get a second opinion on your writing, share your resume, and keep track o
 msgstr "احصل على رأي ثانٍ في كتابتك، وشارك سيرتك الذاتية، وتابع الجهات التي تقدمت إليها. كل ذلك في مكان واحد."
 
 #: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "ابدأ الآن"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -3429,6 +3451,10 @@ msgstr "هل تريد ترك إعداد موفر الذكاء الاصطناعي
 msgid "Left Align"
 msgstr "محاذاة لليسار"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
 msgstr "الطول ليس عيبًا، ولا توجد قاعدة عالمية للصفحة الواحدة. احتفظ بالصفحات التي تستحق مكانها."
@@ -3495,6 +3521,7 @@ msgstr "السيرة الذاتية التفاعلية المرتبطة"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3673,6 +3700,10 @@ msgstr "سيرة ذاتية مفقودة"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Mistral AI"
 msgstr "ميسترال للذكاء الاصطناعي"
+
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
@@ -4129,6 +4160,7 @@ msgstr "الموجه المفتوح (OpenRouter)"
 msgid "Opens in a new tab"
 msgstr "يُفتح في علامة تبويب جديدة"
 
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
@@ -4487,13 +4519,17 @@ msgstr "اللون الأساسي"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "اطبع النموذج أو صدّره إلى PDF مسطّح قبل إرساله."
 
-#: src/features/homepage/page.tsx
-msgid "Privacy"
-msgstr "الخصوصية"
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr ""
 
 #: src/features/homepage/feature-explorer.tsx
 msgid "Private"
 msgstr "خاص"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr ""
 
 #: src/features/homepage/export-playground.tsx
 #: src/features/homepage/feature-explorer.tsx
@@ -4739,6 +4775,10 @@ msgstr "المشار إليه بواسطة…، أشياء يجب التأكيد
 msgid "Register New Device"
 msgstr "تسجيل جهاز جديد"
 
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr ""
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
 msgstr "إعادة تحميل أحدث إصدار"
@@ -4833,6 +4873,7 @@ msgstr "أبلغ عن خطأ"
 msgid "Report a Bug"
 msgstr "الإبلاغ عن خطأ برمجي"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "الإبلاغ عن مشكلة"
@@ -4869,6 +4910,7 @@ msgstr "إعادة تعيين كلمة المرور"
 msgid "Resetting your password..."
 msgstr "جاري إعادة تعيين كلمة المرور..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "الموارد"
@@ -5394,6 +5436,7 @@ msgstr "عرض {0} المزيد"
 msgid "Show {title} section"
 msgstr "إظهار قسم {title}"
 
+#: src/features/homepage/languages-showcase.test.tsx
 #: src/features/homepage/languages-showcase.tsx
 msgid "Show all languages"
 msgstr "عرض كل اللغات"
@@ -5665,6 +5708,7 @@ msgstr "فرز حسب…"
 msgid "Source"
 msgstr "مصدر"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5699,6 +5743,7 @@ msgstr "اكتب اسم الشهر، كما في \"Mar 2022\"."
 msgid "Sponsors"
 msgstr "الرعاة"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "الرعايات"
@@ -5830,6 +5875,7 @@ msgstr "يتم نسخ تفاصيل التصميم والمرسل. تنطبق ت�
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "يتم تحديث تفاصيل التصميم والمرسل من السيرة الذاتية المحددة."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "سبريديت"
@@ -5847,10 +5893,6 @@ msgstr "الاقتراحات"
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "الملخّص"
-
-#: src/features/homepage/page.tsx
-msgid "Support"
-msgstr "الدعم"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
@@ -5937,6 +5979,10 @@ msgstr "القالب"
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Template Gallery"
 msgstr "معرض القوالب"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Templates"
+msgstr ""
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
@@ -6136,10 +6182,6 @@ msgstr "لا توجد فقرة ملخّص."
 #: src/features/ats-checker/messages.ts
 msgid "There was not enough information to run this check."
 msgstr "لم تتوفر معلومات كافية لتشغيل هذا الفحص."
-
-#: src/features/homepage/community-stats.tsx
-msgid "There’s room for you too."
-msgstr "وهناك مكان لك أيضًا."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/ats-check.tsx
 msgid "These checks run as you type and never leave your browser. They test whether software can read your resume, not how well it is written."
@@ -6530,6 +6572,7 @@ msgstr "تتبّع مشاهدات سيرتك الذاتية وتنزيلاتها
 msgid "Translate the app"
 msgstr "ترجم التطبيق"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
@@ -7183,6 +7226,7 @@ msgstr "اكتب العنوان بالكامل، بما في ذلك https://."
 msgid "Writing"
 msgstr "الكتابة"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (تويتر)"
