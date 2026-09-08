@@ -3,6 +3,7 @@ import { ClientOnly, createFileRoute, lazyRouteComponent, redirect } from "@tans
 import { getResumeSocialMeta } from "@reactive-resume/resume/social-meta";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { NotFoundScreen } from "@/components/layout/not-found-screen";
+import { Homepage } from "@/features/homepage/page";
 import { orpc } from "@/libs/orpc/client";
 import {
 	createNoindexFollowMeta,
@@ -10,15 +11,6 @@ import {
 	createRootStructuredDataScript,
 	getCanonicalRootUrl,
 } from "@/libs/seo";
-import { DonationBanner } from "./-sections/donate";
-import { Faq } from "./-sections/faq";
-import { Features } from "./-sections/features";
-import { Footer } from "./-sections/footer";
-import { Hero } from "./-sections/hero";
-import { Prefooter } from "./-sections/prefooter";
-import { Statistics } from "./-sections/statistics";
-import { Templates } from "./-sections/templates";
-import { Testimonials } from "./-sections/testimonials";
 
 const PublicResumePage = lazyRouteComponent(() => import("@/features/resume/public/public-resume"), "PublicResumePage");
 
@@ -62,10 +54,7 @@ export const Route = createFileRoute("/_home/")({
 		const canonicalUrl = getCanonicalRootUrl(appUrl);
 
 		return {
-			links: [
-				{ rel: "canonical", href: canonicalUrl },
-				{ rel: "preload", href: "/videos/timelapse-v1.webp", as: "image", fetchPriority: "high" },
-			],
+			links: [{ rel: "canonical", href: canonicalUrl }],
 			scripts: [createRootStructuredDataScript(canonicalUrl)],
 		};
 	},
@@ -88,22 +77,5 @@ function RouteComponent() {
 		);
 	}
 
-	return (
-		<main id="main-content" className="relative">
-			<Hero />
-
-			<div className="container mx-auto px-4 sm:px-6 lg:px-12">
-				<div className="border-border border-x [&>section:first-child]:border-t-0 [&>section]:border-border [&>section]:border-t">
-					<Statistics />
-					<Features />
-					<Templates />
-					<Testimonials />
-					<DonationBanner />
-					<Faq />
-					<Prefooter />
-					<Footer />
-				</div>
-			</div>
-		</main>
-	);
+	return <Homepage />;
 }
