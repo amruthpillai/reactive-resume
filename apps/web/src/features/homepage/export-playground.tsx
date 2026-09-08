@@ -154,12 +154,19 @@ export default function ExportPlayground({ name, accent, typeface, template }: E
 		data,
 	});
 	const selected = formats.find((item) => item.id === format) ?? formats[0];
-	const actions = { pdf: onDownloadPDF, docx: onDownloadDOCX, md: onDownloadMarkdown, json: onDownloadJSON };
+	// A Map rather than an object literal: static analysis flags computed member access as object injection,
+	// even though `format` is a closed union set only from `formats`.
+	const actions = new Map<typeof format, () => void | Promise<void>>([
+		["pdf", onDownloadPDF],
+		["docx", onDownloadDOCX],
+		["md", onDownloadMarkdown],
+		["json", onDownloadJSON],
+	]);
 
 	const download = async () => {
 		setBusy(true);
 		try {
-			await actions[format]();
+			await actions.get(format)?.();
 		} catch {
 			toast.add({ type: "error", description: t`Could not prepare the sample. Please try again.` });
 		} finally {
