@@ -9,16 +9,8 @@ vi.mock("@tanstack/react-router", () => ({
 vi.mock("@/libs/orpc/client", () => ({
 	orpc: { resume: { getRoot: { queryOptions: () => ({ queryKey: ["root"] }) } } },
 }));
-// Marketing sections are unrelated to the loader/head boundary under test.
-vi.mock("./-sections/donate", () => ({ DonationBanner: () => null }));
-vi.mock("./-sections/faq", () => ({ Faq: () => null }));
-vi.mock("./-sections/features", () => ({ Features: () => null }));
-vi.mock("./-sections/footer", () => ({ Footer: () => null }));
-vi.mock("./-sections/hero", () => ({ Hero: () => null }));
-vi.mock("./-sections/prefooter", () => ({ Prefooter: () => null }));
-vi.mock("./-sections/statistics", () => ({ Statistics: () => null }));
-vi.mock("./-sections/templates", () => ({ Templates: () => null }));
-vi.mock("./-sections/testimonials", () => ({ Testimonials: () => null }));
+// The homepage component is unrelated to the loader/head boundary under test.
+vi.mock("@/features/homepage/page", () => ({ Homepage: () => null }));
 const { Route } = await import("./index");
 
 describe("home root mode", () => {

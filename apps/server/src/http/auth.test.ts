@@ -53,13 +53,28 @@ describe("handleAuth", () => {
 		},
 	);
 
-	it("rejects untrusted dynamic OAuth redirect URIs in safe mode", async () => {
+	it("registers third-party https callbacks so remote MCP clients can complete DCR", async () => {
 		const { handleAuth } = await import("./auth");
 
 		const response = await handleAuth(
 			new Request("http://localhost:3001/api/auth/oauth2/register", {
 				method: "POST",
-				body: JSON.stringify({ redirect_uris: ["https://evil.example.com/callback"] }),
+				body: JSON.stringify({ redirect_uris: ["https://claude.ai/api/mcp/auth_callback"] }),
+				headers: { "content-type": "application/json" },
+			}),
+		);
+
+		expect(response.status).toBe(200);
+		expect(mocks.handler).toHaveBeenCalledOnce();
+	});
+
+	it("rejects unsafe dynamic OAuth redirect URIs in safe mode", async () => {
+		const { handleAuth } = await import("./auth");
+
+		const response = await handleAuth(
+			new Request("http://localhost:3001/api/auth/oauth2/register", {
+				method: "POST",
+				body: JSON.stringify({ redirect_uris: ["https://192.168.1.10/callback"] }),
 				headers: { "content-type": "application/json" },
 			}),
 		);

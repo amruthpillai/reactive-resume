@@ -8,9 +8,9 @@ const GITHUB_REQUEST_TIMEOUT_MS = 5_000;
 const GITHUB_REQUEST_MAX_ATTEMPTS = 2;
 
 const LAST_KNOWN = {
-	users: 978_528,
-	resumes: 1_336_307,
-	stars: 34_073,
+	users: 1_213_116,
+	resumes: 1_651_895,
+	stars: 42_315,
 } as const;
 
 // ponytail: file-based disk cache replaced with module-level memo; LAST_KNOWN fallbacks cover restarts
@@ -19,10 +19,10 @@ const memCache = new Map<string, { value: number; cachedAt: number }>();
 /** Clear all cached statistics. Exposed for test isolation only. */
 export const clearStatisticsCache = () => memCache.clear();
 
-const getCached = (key: string): number | null => {
+const getCached = (key: string) => {
 	const entry = memCache.get(key);
 	if (!entry || Date.now() - entry.cachedAt >= CACHE_DURATION_MS) return null;
-	return entry.value;
+	return entry;
 };
 
 const setCached = (key: string, value: number) => {
@@ -35,7 +35,7 @@ const getCachedCount = async (
 	fetcher: () => Promise<number | null>,
 ): Promise<number> => {
 	const cached = getCached(key);
-	if (cached !== null) return cached;
+	if (cached !== null) return cached.value;
 
 	try {
 		const value = await fetcher();
@@ -87,6 +87,24 @@ const getGitHubStars = async (attempt = 1): Promise<number | null> => {
 };
 
 export const statisticsService = {
+	getTotals: async () => {
+		const [users, resumes] = await Promise.all([
+			statisticsService.user.getCount(),
+			statisticsService.resume.getCount(),
+		]);
+		const usersCache = getCached("users");
+		const resumesCache = getCached("resumes");
+
+		return {
+			users,
+			resumes,
+			// Use the older count's timestamp so the pair never looks fresher than either total.
+			cachedAt:
+				usersCache?.value === users && resumesCache?.value === resumes
+					? Math.min(usersCache.cachedAt, resumesCache.cachedAt)
+					: null,
+		};
+	},
 	user: {
 		getCount: () => {
 			return getCachedCount("users", LAST_KNOWN.users, () => getCountFromDatabase(schema.user));

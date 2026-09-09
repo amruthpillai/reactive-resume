@@ -27,8 +27,8 @@ msgstr ""
 msgid "\"{0} · {1}\" and its full timeline will be permanently deleted. This can't be undone."
 msgstr "\"{0} · {1}\" un visa tās laika skala tiks neatgriezeniski dzēsta. To nevar atsaukt."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
-#: src/routes/_home/-sections/hero.tsx
 msgid "(opens in new tab)"
 msgstr "(atveras jaunā cilnē)"
 
@@ -91,6 +91,11 @@ msgstr "{0} gatavi importēšanai"
 msgid "{0} rejected"
 msgstr "{0} noraidīti"
 
+#. placeholder {0}: data.basics.name
+#: src/features/homepage/export-playground.tsx
+msgid "{0} Sample Resume"
+msgstr "{0} CV paraugs"
+
 #. placeholder {0}: report.skippedChecks
 #: src/features/ats-checker/report/score-header.tsx
 msgid "{0} skipped"
@@ -135,18 +140,25 @@ msgstr "Izietas {passedRules} no {totalRules} pārbaudēm"
 msgid "{sectionTitle} · Item {itemNumber}"
 msgstr "{sectionTitle} · Vienums {itemNumber}"
 
-#: src/routes/_home/-sections/hero.tsx
-msgid "<0>Finally,</0><1>A free and open-source resume builder</1>"
-msgstr "<0>Beidzot,</0><1>bezmaksas un atvērtā pirmkoda CV veidotājs</1>"
-
-#: src/routes/_home/-sections/faq.tsx
-msgctxt "Home page FAQ section heading with each word visually separated into individual spans"
-msgid "<0>Frequently</0><1>Asked</1><2>Questions</2>"
-msgstr "<0>Biežāk</0><1>Uzdotie</1><2>Jautājumi</2>"
+#: src/features/homepage/page.tsx
+msgid "<0>Free forever and open source.</0><1/>No ads, paywalls, or tracking."
+msgstr "<0>Vienmēr bez maksas un atvērtā pirmkoda.</0><1/>Bez reklāmām, maksas sienām vai izsekošanas."
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "<0>Thank you for using Reactive Resume. I build this app mostly in my spare time, with help from open-source contributors around the world.</0><1>If it has been useful to you and you'd like to keep it free and open for everyone, please consider donating. Any amount helps.</1>"
 msgstr "<0>Paldies, ka izmantojat Reactive Resume. Šo lietotni veidoju galvenokārt brīvajā laikā, ar atvērtā pirmkoda līdzautoru palīdzību no visas pasaules.</0><1>Ja tā jums ir noderējusi un vēlaties, lai tā paliktu bezmaksas un atvērta ikvienam, apsveriet iespēju ziedot. Palīdz jebkura summa.</1>"
+
+#: src/features/homepage/export-playground.tsx
+msgid "<p>I design software for teams, from early research to the details people use every day.</p>"
+msgstr "<p>Veidoju programmatūru komandām — no sākotnējiem pētījumiem līdz detaļām, ko cilvēki izmanto katru dienu.</p>"
+
+#: src/features/homepage/export-playground.tsx
+msgid "<ul><li>Designed responsive websites and mobile experiences for small businesses.</li><li>Worked with developers from first sketches through release.</li></ul>"
+msgstr "<ul><li>Izstrādāju adaptīvas tīmekļa vietnes un mobilās pieredzes mazajiem uzņēmumiem.</li><li>Sadarbojos ar izstrādātājiem no pirmajām skicēm līdz laidienam.</li></ul>"
+
+#: src/features/homepage/export-playground.tsx
+msgid "<ul><li>Led research and interface design for a collaborative planning tool.</li><li>Built a shared component library with engineers and documented accessibility patterns.</li><li>Tested prototypes with customers and used their feedback to simplify onboarding.</li></ul>"
+msgstr "<ul><li>Vadīju izpēti un saskarnes dizainu sadarbības plānošanas rīkam.</li><li>Kopā ar inženieriem izveidoju kopīgu komponentu bibliotēku un dokumentēju piekļūstamības paraugus.</li><li>Testēju prototipus ar klientiem un izmantoju viņu atsauksmes, lai vienkāršotu ievadīšanu.</li></ul>"
 
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "1 Column / Inline"
@@ -160,9 +172,21 @@ msgstr "1 mēnesis"
 msgid "1 year"
 msgstr "1 gads"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "15 Templates"
-msgstr "15 veidnes"
+#: src/features/homepage/resume-sculpture.tsx
+msgid "2015 to 2019"
+msgstr "2015.–2019. g."
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "2019 to 2022"
+msgstr "2019.–2022. g."
+
+#: src/features/homepage/export-playground.tsx
+msgid "2022 - Present"
+msgstr "2022–tagad"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "2022 to now"
+msgstr "No 2022. gada līdz šodienai"
 
 #: src/dialogs/api-key/create.tsx
 msgid "3 months"
@@ -192,6 +216,18 @@ msgstr "Fonts ir norādīts, bet nav iegults."
 msgid "A free and open-source resume builder that makes it easy to create, update, and share your resume."
 msgstr "Bezmaksas un atvērtā pirmkoda CV veidotājs, ar kuru viegli izveidot, atjaunināt un kopīgot savu CV."
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "A free collection of accessible patterns for the web."
+msgstr "Bezmaksas pieejamu tīmekļa paraugu kolekcija."
+
+#: src/features/homepage/page.tsx
+msgid "A free, open-source resume builder. Put your experience on the page, without fighting the formatting."
+msgstr "Bezmaksas atvērtā pirmkoda CV veidotājs. Ievietojiet savu pieredzi lapā bez cīņas ar formatēšanu."
+
+#: src/features/homepage/site-footer.tsx
+msgid "A free, open-source resume builder. Yours to keep, yours to export, yours to host."
+msgstr "Bezmaksas atvērtā pirmkoda CV veidotājs. Tas ir tavs: paturi, eksportē un mitini pats."
+
 #: src/features/applications/components/application-ai-copilot.tsx
 msgid "A friendly nudge for the recruiter"
 msgstr "Draudzīgs atgādinājums personāla atlases speciālistam"
@@ -204,13 +240,21 @@ msgstr "Pilnas augstuma atstarpe sadala šo lapu divās kolonnās."
 msgid "A gap is not a problem. Add a one-line explanation if you want to; many strong resumes simply do not."
 msgstr "Pārtraukums nav problēma. Ja vēlaties, pievienojiet vienas rindas paskaidrojumu; daudzi spēcīgi CV to vienkārši nedara."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "A hand with the writing"
+msgstr "Palīdzība rakstīšanā"
+
 #: src/features/ats-checker/messages.ts
 msgid "A link points somewhere other than the address it shows."
 msgstr "Saite ved uz citu adresi, nevis to, kas redzama."
 
-#: src/routes/_home/-sections/testimonials.tsx
-msgid "A lot of people have written to me over the years about how Reactive Resume helped them, and I never get tired of reading those emails. If you have a story to share, write to me at <0>{email}</0>."
-msgstr "Gadu gaitā man ir rakstījuši daudzi cilvēki par to, kā Reactive Resume viņiem palīdzēja, un man nekad neapnīk lasīt šīs vēstules. Ja jums ir stāsts, ar ko padalīties, rakstiet man uz <0>{email}</0>."
+#: src/features/homepage/feature-explorer.tsx
+msgid "A link worth sharing"
+msgstr "Kopīgošanas vērta saite"
+
+#: src/features/homepage/languages-showcase.tsx
+msgid "A little more<0/>at home."
+msgstr "Vēl mazliet<0/>kā mājās."
 
 #: src/features/ats-checker/messages.ts
 msgid "A numeric date reads differently in different countries."
@@ -220,13 +264,29 @@ msgstr "Skaitlisks datums dažādās valstīs tiek lasīts atšķirīgi."
 msgid "A page is rotated."
 msgstr "Lapa ir pagriezta."
 
+#: src/features/homepage/site-footer.tsx
+msgid "A passion project by <0>Amruth Pillai</0>"
+msgstr "Aizrautības projekts, ko veidojis <0>Amruth Pillai</0>"
+
 #: src/components/ui/copyright.tsx
 msgid "A passion project by <0>Amruth Pillai</0>."
 msgstr "Aizrautības projekts, ko veidojis <0>Amruth Pillai</0>."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "A range of designs to choose from, with more on the way."
-msgstr "Plašs dizainu klāsts, no kā izvēlēties, un vēl citi ceļā."
+#: src/features/homepage/page.tsx
+msgid "A PDF for the application. A Word file for a few more edits. Download a sample using your choices."
+msgstr "PDF pieteikumam. Word fails dažiem papildu labojumiem. Lejupielādējiet paraugu, izmantojot savas izvēles."
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "A private resume does not appear at its public link."
+msgstr "Privāts CV nav redzams tā publiskajā saitē."
+
+#: src/features/homepage/page.tsx
+msgid "A project you can<0/>be part of."
+msgstr "Projekts, kura<0/>daļa varat būt."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "A real sample PDF"
+msgstr "Īsts parauga PDF"
 
 #: src/features/ats-checker/parse-preview.tsx
 msgid "A resume laid out for a human reader, with a photo, headings and columns"
@@ -248,13 +308,17 @@ msgstr "Interneta adrese ir rakstīta bez https://."
 msgid "A4"
 msgstr "A4"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "About me"
+msgstr "Par mani"
+
 #: src/features/auth/pages/consent.tsx
 msgid "Access your account through the API, including reading and changing your resumes and job applications."
 msgstr "Piekļūstiet savam kontam, izmantojot API, tostarp lasot un mainot savus CV un darba pieteikumus."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Access your resumes and data programmatically using the API."
-msgstr "Piekļūstiet saviem CV un datiem programmatiski, izmantojot API."
+#: src/features/homepage/export-playground.tsx
+msgid "Accessibility"
+msgstr "Piekļūstamība"
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
@@ -384,10 +448,6 @@ msgstr "Pievienojiet ierakstu vai izmantojiet projektus un brīvprātīgo darbu,
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Add and test a provider before starting an agent thread."
 msgstr "Pirms aģenta pavediena sākšanas pievienojiet un pārbaudiet pakalpojumu sniedzēju."
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Add another layer of protection to your account."
-msgstr "Pievienojiet savam kontam vēl vienu aizsardzības slāni."
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/command-palette/pages/navigation.tsx
@@ -533,9 +593,18 @@ msgstr "MI pakalpojumu sniedzēji nav pieejami, kamēr nav konfigurēts ENCRYPTI
 msgid "AI providers require REDIS_URL and ENCRYPTION_SECRET to be configured."
 msgstr "Mākslīgā intelekta pakalpojumu sniedzējiem ir jākonfigurē REDIS_URL un ENCRYPTION_SECRET."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "AI, when you want it"
+msgstr "MI, kad to vēlaties"
+
 #: src/libs/locale.ts
 msgid "Albanian"
 msgstr "Albāņu"
+
+#: src/features/homepage/languages-showcase.test.tsx
+#: src/features/homepage/languages-showcase.tsx
+msgid "All app languages"
+msgstr "Visas lietotnes valodas"
 
 #: src/features/applications/components/export-applications-sheet.tsx
 msgid "All applications (including archived)"
@@ -578,10 +647,6 @@ msgstr "Negaidīta kļūda apturēja šīs lapas ielādi. Varat mēģināt vēlr
 msgid "An unknown error occurred while importing your resume."
 msgstr "Importējot jūsu CV, radās nezināma kļūda."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "And many more..."
-msgstr "Un vēl daudzi citi..."
-
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Answer in your own words"
 msgstr "Atbildiet saviem vārdiem"
@@ -606,9 +671,9 @@ msgstr "Ikviens, kam ir saite, var skatīt CV."
 msgid "Anyone with the public URL will be able to view your resume without a password."
 msgstr "Ikviens, kam ir publiskais URL, varēs skatīt jūsu CV bez paroles."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "API Access"
-msgstr "API piekļuve"
+#: src/features/homepage/feature-explorer.tsx
+msgid "API and MCP access"
+msgstr "API un MCP piekļuve"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "API Key"
@@ -631,6 +696,10 @@ msgstr "API dokumentācija"
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "App"
 msgstr "Lietotne"
+
+#: src/features/homepage/languages-showcase.tsx
+msgid "App language"
+msgstr "Lietotnes valoda"
 
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Application"
@@ -661,10 +730,6 @@ msgstr "Pieteikšanās datums līdz"
 msgid "Application deleted."
 msgstr "Pieteikums izdzēsts."
 
-#: src/routes/_home/-sections/statistics.tsx
-msgid "Application Statistics"
-msgstr "Lietotnes statistika"
-
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Application updated."
 msgstr "Pieteikums atjaunināts."
@@ -689,6 +754,7 @@ msgid "Applications to export"
 msgstr "Lietojumprogrammas eksportēšanai"
 
 #: src/features/applications/components/table-view.tsx
+#: src/features/homepage/feature-explorer.tsx
 msgid "Applied"
 msgstr "Pieteikts"
 
@@ -766,6 +832,10 @@ msgstr "Studiju joma"
 msgid "Artificial Intelligence"
 msgstr "Mākslīgais intelekts"
 
+#: src/features/homepage/community-stats.tsx
+msgid "As of <0>{formattedDate}</0>."
+msgstr "No <0>{formattedDate}</0>."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Ask anything about this resume"
 msgstr "Jautājiet jebko par šo CV"
@@ -778,7 +848,7 @@ msgstr "Proporcijas"
 msgid "ATS Check"
 msgstr "ATS pārbaude"
 
-#: src/routes/_home/-sections/features.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/ats-checker.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "ATS Checker"
@@ -819,10 +889,6 @@ msgstr "Autentifikācija"
 msgid "Auto-fill failed."
 msgstr "Automātiskā aizpilde neizdevās."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Available in multiple languages. If you want to help translate, head over to Crowdin."
-msgstr "Pieejams vairākās valodās. Ja vēlaties palīdzēt tulkot, dodieties uz Crowdin."
-
 #: src/features/ats-checker/messages.ts
 msgid "Avoid heavy letter-spacing effects, then re-export."
 msgstr "Izvairieties no izteiktiem burtu atstarpju efektiem un pēc tam eksportējiet atkārtoti."
@@ -841,6 +907,10 @@ msgstr "Apbalvojumi"
 #: src/libs/locale.ts
 msgid "Azerbaijani"
 msgstr "Azerbaidžāņu"
+
+#: src/features/homepage/export-playground.tsx
+msgid "BA"
+msgstr "BA"
 
 #. Action returning a signed-in user to the page where they manage linked providers
 #: src/features/auth/pages/error.tsx
@@ -924,6 +994,10 @@ msgstr "Izveidojiet savu CV"
 msgid "Builder Command Palette"
 msgstr "Veidotāja komandu palete"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Built a design system used by six product teams."
+msgstr "Izveidoju dizaina sistēmu, ko izmanto sešas produktu komandas."
+
 #: src/libs/locale.ts
 msgid "Bulgarian"
 msgstr "Bulgāru"
@@ -946,14 +1020,9 @@ msgstr "Saraksts ar aizzīmēm"
 
 #. Tagline shown in app footer/about area
 #: src/components/ui/copyright.tsx
-#: src/routes/_home/-sections/features.tsx
-#: src/routes/_home/-sections/prefooter.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "By the community, for the community."
 msgstr "No kopienas kopienai."
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "Can I export my resume to PDF?"
-msgstr "Vai varu eksportēt savu CV uz PDF?"
 
 #. API key deletion confirmation dialog cancel action in settings
 #. Account deletion confirmation dialog cancel action in account settings
@@ -969,6 +1038,7 @@ msgstr "Vai varu eksportēt savu CV uz PDF?"
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/export-applications-sheet.tsx
 #: src/features/applications/components/import-applications-sheet.tsx
+#: src/features/homepage/ats-playground.tsx
 #: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/integrations/components/ai-section.tsx
 #: src/features/settings/pages/account.tsx
@@ -1013,10 +1083,6 @@ msgstr "Mainīt valodu"
 msgid "Change language to…"
 msgstr "Mainīt valodu uz…"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Change the colors, fonts, and design to suit you."
-msgstr "Mainiet krāsas, fontus un dizainu pēc savas gaumes."
-
 #: src/features/command-palette/pages/preferences/index.tsx
 msgid "Change theme to…"
 msgstr "Mainīt tēmu uz…"
@@ -1025,6 +1091,7 @@ msgstr "Mainīt tēmu uz…"
 msgid "Changed your mind? Rename your resume to something more descriptive."
 msgstr "Pārdomājāt? Pārsauciet savu CV par kaut ko aprakstošāku."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Changelog"
 msgstr "Izmaiņu žurnāls"
@@ -1082,6 +1149,11 @@ msgstr "Ķīniešu (vienkāršotā)"
 msgid "Chinese (Traditional)"
 msgstr "Ķīniešu (tradicionālā)"
 
+#. placeholder {0}: displayName(item)
+#: src/features/homepage/template-shelf.tsx
+msgid "Choose {0}"
+msgstr "Izvēlieties {0}"
+
 #: src/features/cover-letters/library.tsx
 msgid "Choose a cover letter"
 msgstr "Izvēlieties pavadvēstuli"
@@ -1093,6 +1165,10 @@ msgstr "Izvēlieties modeli un CV melnrakstu."
 #: src/features/ats-checker/uploader.tsx
 msgid "Choose a PDF"
 msgstr "Izvēlieties PDF"
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Choose a PDF file to read its text."
+msgstr "Izvēlieties PDF failu, lai nolasītu tā tekstu."
 
 #. Preset or custom shade refer to the color picker
 #. Preset or custom shade refer to the color picker
@@ -1106,21 +1182,42 @@ msgstr "Izvēlieties iepriekš iestatītu vai pielāgotu toni."
 msgid "Choose a resume"
 msgstr "Izvēlieties CV"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Choose a resume template"
+msgstr "Izvēlieties CV veidni"
+
 #: src/dialogs/resume/sections/cover-letter.tsx
 msgid "Choose a saved cover letter"
 msgstr "Izvēlieties saglabāto pavadvēstuli"
+
+#: src/features/homepage/template-shelf.tsx
+msgid "Choose a template"
+msgstr "Izvēlieties veidni"
 
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Choose an application"
 msgstr "Izvēlieties lietojumprogrammu"
 
+#: src/features/homepage/languages-showcase.test.tsx
+#: src/features/homepage/languages-showcase.tsx
+msgid "Choose app language"
+msgstr "Izvēlieties lietotnes valodu"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
 msgid "Choose PDF, DOCX, Markdown, or JSON. Export your resume and cover letter separately when available."
 msgstr "Izvēlieties PDF, DOCX, Markdown vai JSON formātu. Eksportējiet savu CV un motivācijas vēstuli atsevišķi, ja tas ir pieejams."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Choose who can see it"
+msgstr "Izvēlieties, kas to var redzēt"
+
 #: src/components/level/combobox.tsx
 msgid "Circle"
 msgstr "Aplis"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Clay"
+msgstr "Māls"
 
 #. Clear the highlight color
 #. Clear the text color
@@ -1158,6 +1255,10 @@ msgstr "Aizvērt mākslīgā intelekta palīgu"
 msgid "Cohere"
 msgstr "Kohere"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Color"
+msgstr "Krāsa"
+
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Columns"
@@ -1178,6 +1279,7 @@ msgstr "Komandu palete"
 msgid "Command Palette - {currentPage}"
 msgstr "Komandu palete - {currentPage}"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Community"
 msgstr "Kopiena"
@@ -1202,10 +1304,6 @@ msgstr "Uzņēmums A–Z"
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Compare this resume against this job posting URL and update the keywords without overselling anything."
 msgstr "Salīdziniet šo CV ar darba sludinājumu šajā URL un atjauniniet atslēgvārdus, neko nepārspīlējot."
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Completely free, forever, no hidden costs."
-msgstr "Pilnībā bez maksas, uz visiem laikiem, bez slēptām izmaksām."
 
 #: src/features/ats-checker/messages.ts
 msgid "Compress or remove large images to keep uploads quick."
@@ -1232,6 +1330,10 @@ msgstr "Savienot"
 #: src/features/auth/pages/consent.tsx
 msgid "Connect an application"
 msgstr "Pievienojiet lietojumprogrammu"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Connect through MCP to create and update resumes in a conversation. Or use the API to build your own workflow."
+msgstr "Pievienojieties, izmantojot MCP, lai sarunā veidotu un atjauninātu CV. Vai izmantojiet API, lai izveidotu savu darbplūsmu."
 
 #: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Connect your own AI provider to get a review of the writing. The checks above need no provider and no account."
@@ -1291,6 +1393,10 @@ msgstr "Turpiniet no vietas, kur pārtraucāt"
 #: src/dialogs/resume/import.tsx
 msgid "Continue where you left off by importing a resume you built in Reactive Resume or another resume builder. Supported formats are PDF, Microsoft Word, and JSON files from Reactive Resume or JSON Resume."
 msgstr "Turpiniet no vietas, kur beidzāt, importējot CV, ko izveidojāt Reactive Resume vai citā rīkā. Atbalstītie formāti ir PDF, Microsoft Word un JSON faili no Reactive Resume vai JSON Resume."
+
+#: src/features/homepage/page.tsx
+msgid "Contribute code"
+msgstr "Sniedziet ieguldījumu kodā"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Conversation copied."
@@ -1406,6 +1512,10 @@ msgstr "Nevarēja ielādēt atlasīto CV."
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Could not load this cover letter."
 msgstr "Nevarēja ielādēt šo pavadvēstuli."
+
+#: src/features/homepage/export-playground.tsx
+msgid "Could not prepare the sample. Please try again."
+msgstr "Neizdevās sagatavot paraugu. Lūdzu, mēģiniet vēlreiz."
 
 #: src/features/resume/export/use-resume-export.ts
 msgid "Could not prepare your resume for printing. Please try again."
@@ -1618,13 +1728,13 @@ msgstr "Izveidot jaunu kopsavilkuma vienumu"
 msgid "Create a new volunteer experience"
 msgstr "Izveidot jaunu brīvprātīgo pieredzi"
 
+#: src/features/homepage/page.tsx
+msgid "Create a resume"
+msgstr "Izveidojiet CV"
+
 #: src/dialogs/resume/index.tsx
 msgid "Create a Sample Resume"
 msgstr "Izveidot paraugu CV"
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Create as many resumes as you want."
-msgstr "Izveidojiet tik daudz CV, cik vēlaties."
 
 #: src/features/cover-letters/library.tsx
 msgid "Create cover letter"
@@ -1643,10 +1753,6 @@ msgstr "Izveidojiet to tagad"
 #: src/dialogs/resume/index.tsx
 msgid "Create resume with options"
 msgstr "Izveidot CV ar iespējām"
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Create, customize, and share your resume. Reactive Resume is open source, it doesn't track you, and it stays free."
-msgstr "Izveidojiet, pielāgojiet un kopīgojiet savu CV. Reactive Resume ir atvērtā pirmkoda, tas jūs neizseko un paliek bezmaksas."
 
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Created"
@@ -1731,10 +1837,6 @@ msgstr "Tumšā tēma"
 #: src/routes/dashboard/-components/sidebar.tsx
 msgid "Dashboard"
 msgstr "Informācijas panelis"
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Data Security"
-msgstr "Datu drošība"
 
 #: src/dialogs/resume/sections/award.tsx
 #: src/dialogs/resume/sections/certification.tsx
@@ -1867,10 +1969,6 @@ msgstr "Noraidīts, tiek gaidīts aģents…"
 msgid "Deny"
 msgstr "Noraidīt"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Deploy it on your own servers using the Docker image."
-msgstr "Izvietojiet to savos serveros, izmantojot Docker attēlu."
-
 #: src/features/ats-checker/messages.ts
 msgid "Describe each role with short bullets. Solid paragraphs are harder to skim and to segment."
 msgstr "Aprakstiet katru amatu ar īsām aizzīmēm. Nepārtrauktus rindkopu blokus ir grūtāk pārskatīt un segmentēt."
@@ -1890,10 +1988,25 @@ msgstr "Aprakstiet, ko darījāt, lai ierakstā tiktu izmantoti atbilstības ats
 msgid "Description"
 msgstr "Apraksts"
 
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/mobile-builder-shell.tsx
 msgid "Design"
 msgstr "Dizains"
+
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Design systems"
+msgstr "Dizaina sistēmas"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Designed a shared component library that six product teams use to build consistent interfaces."
+msgstr "Izveidoju kopīgu komponentu bibliotēku, ko sešas produktu komandas izmanto vienotu saskarņu veidošanai."
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Designed websites and tools for a growing creative community."
+msgstr "Izstrādāju tīmekļa vietnes un rīkus augošai radošai kopienai."
 
 #. Label above the raw error text forwarded by the identity provider
 #: src/features/auth/pages/error.tsx
@@ -1927,6 +2040,7 @@ msgstr "Vai atmest nesaglabātās izmaiņas?"
 msgid "Disconnect"
 msgstr "Atvienot"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -1935,6 +2049,11 @@ msgstr "Discord"
 msgid "Dismiss"
 msgstr "Noraidīt"
 
+#: src/features/homepage/page.tsx
+msgid "Docs"
+msgstr "Dokumentācija"
+
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Documentation"
@@ -1956,10 +2075,6 @@ msgstr "Ziedot"
 msgid "Donate to Reactive Resume"
 msgstr "Ziedot Reactive Resume"
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Donations pay for bug fixes, security updates, and the ordinary work of keeping the app running."
-msgstr "Ziedojumi apmaksā kļūdu labojumus, drošības atjauninājumus un ikdienas darbu, kas uztur lietotni darbībā."
-
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Done"
 msgstr "Pabeigts"
@@ -1967,6 +2082,7 @@ msgstr "Pabeigts"
 #. Action button to download two-factor backup codes as a text file
 #. Primary action in the builder header to open resume download options
 #: src/dialogs/auth/enable-two-factor.tsx
+#: src/features/homepage/languages-showcase.tsx
 #: src/features/resume/export/download-dialog.tsx
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/export.tsx
@@ -1996,6 +2112,22 @@ msgstr "Lejupielādes opcijas"
 msgid "Download PDF"
 msgstr "Lejupielādēt PDF"
 
+#: src/features/homepage/export-playground.tsx
+msgid "Download sample DOCX"
+msgstr "Lejupielādēt parauga DOCX"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Download sample JSON"
+msgstr "Lejupielādēt parauga JSON"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Download sample Markdown"
+msgstr "Lejupielādēt parauga Markdown"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Download sample PDF"
+msgstr "Lejupielādēt parauga PDF"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Downloads"
 msgstr "Lejupielādes"
@@ -2019,6 +2151,10 @@ msgstr "Velciet un nometiet sadaļas šeit, lai pārvietotu tās starp kolonnām
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Drag to reposition and use the slider to zoom before uploading."
 msgstr "Pirms augšupielādes velciet, lai mainītu pozīciju, un izmantojiet slīdni, lai tuvinātu."
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Drag to turn the pages"
+msgstr "Velciet, lai pāršķirtu lapas"
 
 #: src/features/ats-checker/messages.ts
 msgid "Drop the pronouns and start from the verb. That is the convention in most markets."
@@ -2136,6 +2272,9 @@ msgid "Editing keyword..."
 msgstr "Atslēgvārda rediģēšana..."
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/languages-showcase.tsx
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Education"
@@ -2187,6 +2326,7 @@ msgstr "Iespējots"
 msgid "Enabling two-factor authentication…"
 msgstr "Divfaktoru autentifikācijas iespējošana…"
 
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/locale.ts
 msgid "English"
 msgstr "Angļu"
@@ -2251,13 +2391,13 @@ msgstr "Kļūda"
 msgid "Every check passed. Nothing here should stop a parser from reading your resume."
 msgstr "Visas pārbaudes ir izturētas. Nekam šeit nevajadzētu traucēt parsētājam nolasīt jūsu CV."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Every contribution helps, however small.<0/>Thank you for your support!"
-msgstr "Palīdz katrs ieguldījums, lai cik mazs tas būtu.<0/>Paldies par jūsu atbalstu!"
+#: src/features/homepage/feature-explorer.tsx
+msgid "Example application"
+msgstr "Parauga pieteikums"
 
-#: src/routes/_home/-sections/templates.tsx
-msgid "Every template has a different look, so pick the one that fits how you want to come across. Reactive Resume has 15 of them right now, with more on the way."
-msgstr "Katra veidne izskatās citādi, tāpēc izvēlieties to, kas atbilst iespaidam, kādu vēlaties atstāt. Reactive Resume šobrīd to ir 15, un vēl citas ir ceļā."
+#: src/features/homepage/feature-explorer.tsx
+msgid "Example edit"
+msgstr "Parauga labojums"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Exit focus mode"
@@ -2268,6 +2408,10 @@ msgid "Exit Fullscreen"
 msgstr "Iziet no pilnekrāna"
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/feature-explorer.tsx
+#: src/features/homepage/languages-showcase.tsx
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Experience"
@@ -2281,6 +2425,14 @@ msgstr "Beidzas pēc"
 #: src/features/settings/pages/api-keys.tsx
 msgid "Expires on {0}"
 msgstr "Beidzas {0}"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Explore features"
+msgstr "Izpētiet funkcijas"
+
+#: src/features/homepage/page.tsx
+msgid "Explore templates"
+msgstr "Izpētiet veidnes"
 
 #: src/libs/resume/section.tsx
 msgid "Export"
@@ -2318,13 +2470,13 @@ msgstr "Eksportēt PNG"
 msgid "Export the resume as a text PDF rather than as an image or a scan."
 msgstr "Eksportējiet CV kā teksta PDF, nevis kā attēlu vai skenējumu."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Export your resume to PDF in one click, with no waiting."
-msgstr "Eksportējiet savu CV uz PDF ar vienu klikšķi, bez gaidīšanas."
-
 #: src/features/applications/components/insights-view.tsx
 msgid "Exported pipeline-flow.png"
 msgstr "pipeline-flow.png eksportēts"
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Extracted text"
+msgstr "Izgūts teksts"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Failed"
@@ -2500,9 +2652,13 @@ msgstr "Jūsu kodu neizdevās pārbaudīt. Lūdzu, mēģiniet vēlreiz."
 msgid "Fatal error"
 msgstr "Kritiska kļūda"
 
-#: src/routes/_home/-sections/features.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Features"
 msgstr "Funkcijas"
+
+#: src/features/homepage/page.tsx
+msgid "Fifteen templates, all free. Pick one you like. You can change the type, color, and layout in the editor."
+msgstr "Piecpadsmit veidnes — visas bez maksas. Izvēlieties sev tīkamu. Redaktorā varat mainīt burtveidolu, krāsu un izkārtojumu."
 
 #: src/dialogs/resume/import.tsx
 msgid "File"
@@ -2528,6 +2684,10 @@ msgstr "Filtrēt pēc birkām"
 msgid "Find the weak bullet points and rewrite them with stronger outcomes, numbers, scope, and sharper verbs."
 msgstr "Atrodiet vājos punktus un pārrakstiet tos ar spēcīgākiem rezultātiem, skaitļiem, apjomu un asākiem darbības vārdiem."
 
+#: src/features/homepage/page.tsx
+msgid "Find us on GitHub"
+msgstr "Atrodiet mūs GitHub"
+
 #: src/libs/locale.ts
 msgid "Finnish"
 msgstr "Somu"
@@ -2544,13 +2704,13 @@ msgstr "Fit"
 msgid "Fit to view"
 msgstr "Piemērots skatam"
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Fits into your workflow"
+msgstr "Iekļaujas jūsu darbplūsmā"
+
 #: src/features/ats-checker/messages.ts
 msgid "Flatten the form so the text is part of the page."
 msgstr "Saplaciniet veidlapu, lai teksts kļūtu par lapas daļu."
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Flexibility"
-msgstr "Elastība"
 
 #: src/dialogs/resume/sections/language.tsx
 msgid "Fluency"
@@ -2588,9 +2748,25 @@ msgstr "Fonta biezums"
 msgid "Font Weights"
 msgstr "Fonta biezumi"
 
+#: src/features/homepage/export-playground.tsx
+msgid "For a few more edits"
+msgstr "Dažiem papildu labojumiem"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/notes.tsx
 msgid "For example, note which companies you sent this resume to, or links to the job descriptions."
 msgstr "Piemēram, atzīmējiet, kurām kompānijām nosūtījāt šo CV, vai saites uz darba sludinājumiem."
+
+#: src/features/homepage/export-playground.tsx
+msgid "For keeping a copy"
+msgstr "Lai saglabātu kopiju"
+
+#: src/features/homepage/export-playground.tsx
+msgid "For your next application"
+msgstr "Nākamajam pieteikumam"
+
+#: src/features/homepage/export-playground.tsx
+msgid "For your words, anywhere"
+msgstr "Jūsu vārdiem — jebkur"
 
 #. Link label to password reset page from login form
 #: src/features/auth/pages/login.tsx
@@ -2610,14 +2786,11 @@ msgstr "Formāts"
 msgid "Format stylesheet"
 msgstr "Stilu lapas formatēšana"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Free"
-msgstr "Bezmaksas"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/page.tsx
 msgid "Free-form"
 msgstr "Brīvā forma"
 
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/locale.ts
 msgid "French"
 msgstr "Franču"
@@ -2661,13 +2834,19 @@ msgstr "Notiek jūsu PDF izveide..."
 msgid "German"
 msgstr "Vācu"
 
-#: src/routes/_home/-sections/hero.tsx
+#: src/features/homepage/page.tsx
+msgid "Get a second opinion on your writing, share your resume, and keep track of where you’ve applied. It’s all in one place."
+msgstr "Saņemiet otru viedokli par savu rakstīto, kopīgojiet CV un sekojiet līdzi, kur esat pieteicies. Viss vienā vietā."
+
+#: src/features/homepage/page.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Get Started"
 msgstr "Sākt"
 
 #. Authentication provider display name in account settings
 #. Brand name label for GitHub social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "GitHub"
@@ -2720,6 +2899,11 @@ msgstr "Google Dvīņi"
 msgid "Grade"
 msgstr "Atzīme"
 
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Graphic Design"
+msgstr "Grafiskais dizains"
+
 #: src/libs/locale.ts
 msgid "Greek"
 msgstr "Grieķu"
@@ -2731,10 +2915,6 @@ msgstr "Režģis"
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Groq"
 msgstr "Groq"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Grow the Team"
-msgstr "Paplašināt komandu"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
@@ -2774,9 +2954,9 @@ msgstr "Īss apraksts"
 msgid "Hebrew"
 msgstr "Ivrits"
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Help me bring more experienced contributors on board, so the work doesn't rest on one maintainer."
-msgstr "Palīdziet man piesaistīt vairāk pieredzējušu līdzautoru, lai darbs nebalstītos uz viena uzturētāja pleciem."
+#: src/features/homepage/languages-showcase.tsx
+msgid "Help translate the app"
+msgstr "Palīdziet tulkot lietotni"
 
 #: src/features/settings/pages/preferences.tsx
 msgid "Help translate the app to your language"
@@ -2865,17 +3045,9 @@ msgstr "Hindi"
 msgid "Home"
 msgstr "Mājas"
 
-#: src/routes/_home/-sections/faq.tsx
-msgid "How do I share my resume?"
-msgstr "Kā kopīgot savu CV?"
-
 #: src/features/settings/pages/api-keys.tsx
 msgid "How do I use the API?"
 msgstr "Kā izmantot API?"
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "How is my data protected?"
-msgstr "Kā tiek aizsargāti mani dati?"
 
 #: src/libs/locale.ts
 msgid "Hungarian"
@@ -2884,6 +3056,10 @@ msgstr "Ungāru"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/typography.tsx
 msgid "Hyphenation"
 msgstr "Vārdu sadalīšana"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "I design software for teams, from early research to the details people use every day."
+msgstr "Veidoju programmatūru komandām — no sākotnējiem pētījumiem līdz detaļām, ko cilvēki izmanto katru dienu."
 
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
@@ -3007,15 +3183,16 @@ msgstr "Ieskati"
 msgid "Inspecting page {0} of {1}…"
 msgstr "Pārbauda lapu {0} no {1}…"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Instant Generation"
-msgstr "Tūlītēja ģenerēšana"
-
 #: src/features/command-palette/pages/navigation.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/settings/integrations/route.tsx
 msgid "Integrations"
 msgstr "Integrācija"
+
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Interaction design"
+msgstr "Mijiedarbības dizains"
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -3023,17 +3200,13 @@ msgstr "Integrācija"
 msgid "Interests"
 msgstr "Intereses"
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Interview"
+msgstr "Intervija"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Invalid AI provider configuration."
 msgstr "Nederīga mākslīgā intelekta nodrošinātāja konfigurācija."
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "Is Reactive Resume available in multiple languages?"
-msgstr "Vai Reactive Resume ir pieejams vairākās valodās?"
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "Is Reactive Resume really free?"
-msgstr "Vai Reactive Resume patiešām ir bezmaksas?"
 
 #: src/dialogs/resume/sections/certification.tsx
 msgid "Issuer"
@@ -3107,6 +3280,10 @@ msgstr "Izlīdzināt līdz malām"
 msgid "Kannada"
 msgstr "Kannadu"
 
+#: src/features/homepage/export-playground.tsx
+msgid "Keep a backup of your content and settings. Import it into Reactive Resume later."
+msgstr "Saglabājiet sava satura un iestatījumu rezerves kopiju. Vēlāk importējiet to programmā Reactive Resume."
+
 #: src/features/ats-checker/messages.ts
 msgid "Keep a single address, so software does not have to guess which one to use."
 msgstr "Izmantojiet vienu vienīgu adresi, lai programmatūrai nebūtu jāmin, kuru lietot."
@@ -3118,6 +3295,10 @@ msgstr "Saglabājiet piekļuvi, kad neizmantojat lietojumprogrammu."
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Keep editing"
 msgstr "Turpiniet rediģēt"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Keep editing in Word, Google Docs, or Pages. Layout may differ from the PDF."
+msgstr "Turpiniet rediģēt programmā Word, Google Docs vai Pages. Izkārtojums var atšķirties no PDF."
 
 #: src/features/ats-checker/messages.ts
 msgid "Keep it under 2.5 MB, usually by removing or shrinking images."
@@ -3135,6 +3316,10 @@ msgstr "Saglabājiet CV saturu kā īstu tekstu, nevis kā teksta attēlus."
 msgid "Keep running heads short, or drop them. They repeat in the extracted text too."
 msgstr "Saglabājiet atkārtotās galvenes īsas vai izlaidiet tās. Tās atkārtojas arī iegūtajā tekstā."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Keep the company, role, resume, and follow-up date together. Switch between a board, table, and insights in the app."
+msgstr "Turiet uzņēmumu, lomu, CV un turpmākās saziņas datumu kopā. Lietotnē pārslēdzieties starp tāfeli, tabulu un ieskatiem."
+
 #: src/features/ats-checker/messages.ts
 msgid "Keep them to roughly two lines, so a skim-reader finishes them."
 msgstr "Saglabājiet tās aptuveni divu rindu garumā, lai ātrs lasītājs tās pabeigtu."
@@ -3147,6 +3332,10 @@ msgstr "Izmantojiet ne vairāk kā divas vai trīs fontu saimes. Katrs papildu f
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Keep together"
 msgstr "Turēties kopā"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Keep your layout intact. Ready to send, upload, or print."
+msgstr "Saglabājiet savu izkārtojumu neskartu. Gatavs sūtīšanai, augšupielādei vai drukāšanai."
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Key"
@@ -3164,6 +3353,10 @@ msgstr "Atslēgvārdi"
 #: src/libs/locale.ts
 msgid "Khmer"
 msgstr "Khmeru"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Know where things stand"
+msgstr "Ziniet, kā lietas virzās"
 
 #: src/libs/locale.ts
 msgid "Korean"
@@ -3191,6 +3384,7 @@ msgid "Language"
 msgstr "Valoda"
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Languages"
@@ -3232,9 +3426,9 @@ msgstr "Izkārtojiet tekstu horizontāli. Pagriezti teksta fragmenti bieži tiek
 msgid "Layout"
 msgstr "Izkārtojums"
 
-#: src/routes/_home/-sections/hero.tsx
-msgid "Learn More"
-msgstr "Uzzināt vairāk"
+#: src/features/homepage/feature-explorer.tsx
+msgid "Lead with the work. Add a concrete detail so someone can picture it."
+msgstr "Sāciet ar paveikto darbu. Pievienojiet konkrētu detaļu, lai cits cilvēks to varētu iztēloties."
 
 #: src/dialogs/resume/import.tsx
 #: src/hooks/use-form-blocker.tsx
@@ -3256,6 +3450,10 @@ msgstr "Vai atstāt AI nodrošinātāja iestatīšanu?"
 #: src/components/input/rich-input.tsx
 msgid "Left Align"
 msgstr "Izlīdzināt pa kreisi"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Legal"
+msgstr "Juridiskā informācija"
 
 #: src/features/ats-checker/messages.ts
 msgid "Length is not a defect, and there is no universal one-page rule. Keep the pages that earn their place."
@@ -3323,6 +3521,7 @@ msgstr "Piesaistīts Reactive Resume"
 #. Authentication provider display name in account settings
 #. Brand name label for LinkedIn social sign-in button
 #: src/features/auth/components/social-auth.tsx
+#: src/features/homepage/site-footer.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "LinkedIn"
@@ -3370,10 +3569,18 @@ msgstr "Notiek pakalpojumu sniedzēju ielāde…"
 msgid "Loading resumes…"
 msgstr "Notiek CV ielāde…"
 
+#: src/features/homepage/page.tsx
+msgid "Loading the playground…"
+msgstr "Ielādē smilškasti…"
+
 #: src/features/command-palette/pages/resumes.tsx
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "Loading threads…"
 msgstr "Notiek pavedienu ielāde…"
+
+#: src/features/homepage/community-stats.tsx
+msgid "Loading total"
+msgstr "Ielādē kopsummu"
 
 #: src/routes/builder/$resumeId/-components/version-history.tsx
 msgid "Loading…"
@@ -3401,10 +3608,6 @@ msgstr "Bloķēt"
 msgid "Long stretches are set in capitals."
 msgstr "Gari teksta fragmenti ir rakstīti ar lielajiem burtiem."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Long-term Sustainability"
-msgstr "Ilgtermiņa ilgtspēja"
-
 #. Link to backup-code verification flow when authenticator app is unavailable
 #: src/features/auth/pages/verify-2fa.tsx
 msgid "Lost access to your authenticator?"
@@ -3414,14 +3617,23 @@ msgstr "Zaudējāt piekļuvi autentifikatoram?"
 msgid "Low impact"
 msgstr "Zema ietekme"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Made with Reactive Resume"
+msgstr "Izveidots ar Reactive Resume"
+
 #. Layout editor column label for the primary content area
 #: src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx
 msgid "Main"
 msgstr "Galvenā"
 
+#: src/features/homepage/page.tsx
 #: src/routes/_home/-sections/header.tsx
 msgid "Main navigation"
 msgstr "Galvenā navigācija"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Make it your own"
+msgstr "Padariet to savu"
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Make the experience section about results and cut the vague responsibilities."
@@ -3434,6 +3646,10 @@ msgstr "Panāciet, lai redzamais teksts un mērķa adrese sakristu."
 #: src/features/ats-checker/messages.ts
 msgid "Make them visibly larger, bolder or capitalised."
 msgstr "Padariet tos manāmi lielākus, treknākus vai rakstītus ar lielajiem burtiem."
+
+#: src/features/homepage/page.tsx
+msgid "Make yourself <0/>look good<1/><2>on paper.</2>"
+msgstr "Atstājiet <0/>labu iespaidu<1/><2>uz papīra.</2>"
 
 #: src/libs/locale.ts
 msgid "Malay"
@@ -3485,6 +3701,10 @@ msgstr "Trūkst darba CV"
 msgid "Mistral AI"
 msgstr "Mistral AI"
 
+#: src/features/homepage/site-footer.tsx
+msgid "MIT License"
+msgstr "MIT licence"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Model"
 msgstr "Modelis"
@@ -3492,6 +3712,10 @@ msgstr "Modelis"
 #: src/features/ats-checker/messages.ts
 msgid "More than one email address appears."
 msgstr "Parādās vairāk nekā viena e-pasta adrese."
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Moss"
+msgstr "Sūna"
 
 #: src/features/ats-checker/messages.ts
 msgid "Most bullets open with filler rather than something you did."
@@ -3532,6 +3756,14 @@ msgstr "Pārvietot posmu"
 msgid "Move to"
 msgstr "Pārvietot uz"
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Move to interview"
+msgstr "Pārvietot uz interviju"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Move to offer"
+msgstr "Pārvietot uz piedāvājumu"
+
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "Pārvietojiet savu e-pastu un tālruņa numuru pirmās lapas augšpusē."
@@ -3539,10 +3771,6 @@ msgstr "Pārvietojiet savu e-pastu un tālruņa numuru pirmās lapas augšpusē.
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Moved to"
 msgstr "Pārvietots uz"
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Multilingual"
-msgstr "Daudzvalodu"
 
 #. Placeholder text for custom link URL field in resume builder
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom-fields.tsx
@@ -3600,10 +3828,6 @@ msgstr "Jaunu kontu reģistrācija šajā serverī pašlaik ir atspējota."
 msgid "New Application"
 msgstr "Jauns pieteikums"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "New features land regularly, so check back now and then."
-msgstr "Jaunas funkcijas parādās regulāri, tāpēc palūkojieties šurp laiku pa laikam."
-
 #: src/components/input/rich-input.tsx
 msgid "New Line"
 msgstr "Jauna rinda"
@@ -3641,13 +3865,9 @@ msgstr "Jauna tēma"
 msgid "Next"
 msgstr "Tālāk"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "No ads and no trackers, so nothing gets in your way."
-msgstr "Bez reklāmām un bez izsekotājiem, lai nekas netraucētu."
-
-#: src/routes/_home/-sections/features.tsx
-msgid "No Advertising, No Tracking"
-msgstr "Bez reklāmām, bez izsekošanas"
+#: src/features/homepage/template-shelf.tsx
+msgid "Next template"
+msgstr "Nākamā veidne"
 
 #: src/routes/builder/$resumeId/-components/ai-assistant.tsx
 msgid "No AI provider connected"
@@ -3723,6 +3943,10 @@ msgstr "Nekādu prognožu par to, vai jūs tiksiet noraidīts. To nespēj nevien
 msgid "No prior data"
 msgstr "Nav iepriekšēju datu"
 
+#: src/features/homepage/ats-playground.tsx
+msgid "No readable text found. This PDF may contain scanned images. Export a PDF with selectable text and try again."
+msgstr "Nav atrasts lasāms teksts. Šajā PDF var būt skenēti attēli. Eksportējiet PDF ar atlasāmu tekstu un mēģiniet vēlreiz."
+
 #: src/routes/_home/ats-checker.tsx
 msgid "No repeating the claim that most resumes are thrown out automatically."
 msgstr "Nekāda apgalvojuma atkārtošana, ka lielākā daļa CV tiek automātiski noraidīti."
@@ -3767,6 +3991,10 @@ msgstr "Nav pārbaudīta pakalpojumu sniedzēja"
 #: src/features/ats-checker/messages.ts
 msgid "No text could be read from this file."
 msgstr "No šī faila nevarēja nolasīt tekstu."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "No text found"
+msgstr "Teksts nav atrasts"
 
 #: src/routes/agent/-components/thread-sidebar.tsx
 msgid "No threads yet."
@@ -3830,6 +4058,10 @@ msgstr "Nav priekšlikumu."
 msgid "Odia"
 msgstr "Odiju"
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Offer"
+msgstr "Piedāvājums"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Ollama Cloud"
 msgstr "Ollama Cloud"
@@ -3837,14 +4069,6 @@ msgstr "Ollama Cloud"
 #: src/features/settings/pages/api-keys.tsx
 msgid "Once deleted, the key can no longer access your data. This cannot be undone."
 msgstr "Pēc dzēšanas atslēga vairs nevarēs piekļūt jūsu datiem. To nevar atsaukt."
-
-#: src/routes/_home/-sections/features.tsx
-msgid "One-Click Sign-In"
-msgstr "Vienas pogas pieslēgšanās"
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Ongoing Maintenance"
-msgstr "Nepārtraukta uzturēšana"
 
 #: src/features/auth/pages/consent.tsx
 msgid "Only allow applications you trust. This application will be able to:"
@@ -3887,6 +4111,10 @@ msgstr "Atvērt mākslīgā intelekta aģentu"
 msgid "Open AI assistant"
 msgstr "Atvērt AI palīgu"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Open design library"
+msgstr "Atvērt dizaina bibliotēku"
+
 #. Button label to open the user's default email app
 #: src/features/auth/pages/forgot-password.tsx
 msgid "Open Email Client"
@@ -3904,13 +4132,17 @@ msgstr "Atvērt veidotājā"
 msgid "Open Integrations Settings"
 msgstr "Atvērt integrāciju iestatījumus"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Open Source"
-msgstr "Atvērtā pirmkoda"
+#: src/features/homepage/template-shelf.tsx
+msgid "Open template PDF"
+msgstr "Atvērt veidnes PDF"
 
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "Atveriet eksportēto failu un pārliecinieties, ka varat iezīmēt un kopēt katru tā daļu."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Open the full ATS checker"
+msgstr "Atvērt pilno ATS pārbaudītāju"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "OpenAI-compatible"
@@ -3924,8 +4156,12 @@ msgstr "Atver failu…"
 msgid "OpenRouter"
 msgstr "OpenRouter"
 
+#: src/features/homepage/template-shelf.tsx
+msgid "Opens in a new tab"
+msgstr "Atveras jaunā cilnē"
+
+#: src/features/homepage/site-footer.tsx
 #: src/features/resume/stylesheet/editor.tsx
-#: src/routes/_home/-sections/donate.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "opens in new tab"
 msgstr "atveras jaunā cilnē"
@@ -4012,10 +4248,6 @@ msgstr "Piekļuves atslēga reģistrēta."
 msgid "Passkeys"
 msgstr "Piekļuves atslēgas"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Passkeys & 2FA"
-msgstr "Piekļuves atslēgas un 2FA"
-
 #. Authentication provider display name in account settings
 #. Label for password input on login form
 #. Label for password input on protected resume access form
@@ -4025,6 +4257,7 @@ msgstr "Piekļuves atslēgas un 2FA"
 #: src/features/auth/pages/login.tsx
 #: src/features/auth/pages/register.tsx
 #: src/features/auth/pages/resume-password.tsx
+#: src/features/homepage/feature-explorer.tsx
 #: src/features/resume/builder/password-dialog.tsx
 #: src/features/settings/authentication/components/hooks.tsx
 #: src/features/settings/authentication/components/password.tsx
@@ -4035,10 +4268,6 @@ msgstr "Parole"
 msgid "Password must be between 6 and 64 characters."
 msgstr "Parolei jābūt no 6 līdz 64 rakstzīmēm garai."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Password Protection"
-msgstr "Paroles aizsardzība"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been disabled."
 msgstr "Paroles aizsardzība ir deaktivēta."
@@ -4046,6 +4275,10 @@ msgstr "Paroles aizsardzība ir deaktivēta."
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Password protection has been enabled."
 msgstr "Paroles aizsardzība ir aktivēta."
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Password required"
+msgstr "Nepieciešama parole"
 
 #: src/features/resume/builder/password-dialog.tsx
 msgid "Passwords do not match."
@@ -4095,9 +4328,17 @@ msgstr "Ielāps ir atsaukts"
 msgid "Patch rolled back."
 msgstr "Ielāps atritināts."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Pause data flow animation"
+msgstr "Apturēt datu plūsmas animāciju"
+
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "PDF snapshot attached to the application."
 msgstr "Pieteikumam pievienots momentuzņēmums PDF formātā."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "PDF text layer"
+msgstr "PDF teksta slānis"
 
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "PDFs already attached to applications will remain available."
@@ -4136,6 +4377,10 @@ msgstr "Izvēlieties sarunu sānjoslā vai sāciet jaunu tēmu, lai strādātu p
 msgid "Pick a format for your resume or cover letter."
 msgstr "Izvēlieties formātu savam CV vai motivācijas vēstulei."
 
+#: src/features/homepage/languages-showcase.tsx
+msgid "Pick a language. See it on the page."
+msgstr "Izvēlieties valodu. Skatiet to lapā."
+
 #: src/components/input/icon-picker.tsx
 msgid "Pick an icon"
 msgstr "Izvēlieties ikonu"
@@ -4164,6 +4409,10 @@ msgstr "Novietojiet to lapā no paneļa Izkārtojums vai paslēpiet to, ja vēla
 msgid "Plain text, for AI tools and quick edits."
 msgstr "Vienkāršs teksts AI rīkiem un ātriem labojumiem."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Play data flow animation"
+msgstr "Atskaņot datu plūsmas animāciju"
+
 #: src/components/ui/donation-toast.tsx
 msgid "Please support the project"
 msgstr "Lūdzu, atbalstiet projektu"
@@ -4171,6 +4420,10 @@ msgstr "Lūdzu, atbalstiet projektu"
 #: src/features/applications/components/file-attachment-field.tsx
 msgid "Please upload a PDF file."
 msgstr "Lūdzu, augšupielādējiet PDF failu."
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Plum"
+msgstr "Plūme"
 
 #: src/libs/locale.ts
 msgid "Polish"
@@ -4213,6 +4466,10 @@ msgstr "Preferences"
 msgid "Prepare a conservative patch that improves clarity without changing the story of my career."
 msgstr "Sagatavojiet piesardzīgu labojumu, kas uzlabo skaidrību, nemainot manas karjeras stāstu."
 
+#: src/features/homepage/export-playground.tsx
+msgid "Preparing sample…"
+msgstr "Sagatavo paraugu…"
+
 #: src/features/resume/export/use-resume-export.ts
 msgid "Preparing your resume for printing..."
 msgstr "Gatavojam CV drukāšanai..."
@@ -4250,6 +4507,10 @@ msgstr "Priekšskatīt PDF"
 msgid "Previous"
 msgstr "Iepriekšējais"
 
+#: src/features/homepage/template-shelf.tsx
+msgid "Previous template"
+msgstr "Iepriekšējā veidne"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Primary Color"
 msgstr "Primārā krāsa"
@@ -4257,6 +4518,28 @@ msgstr "Primārā krāsa"
 #: src/features/ats-checker/messages.ts
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Pirms nosūtīšanas izdrukājiet vai eksportējiet veidlapu kā saplacinātu PDF."
+
+#: src/features/homepage/site-footer.tsx
+msgid "Privacy Policy"
+msgstr "Privātuma politika"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Private"
+msgstr "Privāts"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Product"
+msgstr "Produkts"
+
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/feature-explorer.tsx
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Product designer"
+msgstr "Produktu dizainers"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Product strategy"
+msgstr "Produktu stratēģija"
 
 #: src/dialogs/resume/sections/skill.tsx
 msgid "Proficiency"
@@ -4279,6 +4562,7 @@ msgid "Progress Bar"
 msgstr "Progresa josla"
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Projects"
@@ -4287,6 +4571,11 @@ msgstr "Projekti"
 #: src/features/resume/builder/password-dialog.tsx
 msgid "Protect your resume with a password"
 msgstr "Aizsargājiet savu CV ar paroli"
+
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Prototyping"
+msgstr "Prototipēšana"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Provider"
@@ -4300,6 +4589,10 @@ msgstr "Pakalpojumu sniedzēja savienojums ir pārbaudīts."
 msgid "Provider model"
 msgstr "Pakalpojumu sniedzēja modelis"
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Public"
+msgstr "Publisks"
+
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
@@ -4309,10 +4602,6 @@ msgstr "Publikācijas"
 #: src/dialogs/resume/sections/publication.tsx
 msgid "Publisher"
 msgstr "Izdevējs"
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Put a password on your resume so only the people you give it to can read it."
-msgstr "Uzlieciet savam CV paroli, lai to varētu izlasīt tikai tie cilvēki, kuriem to iedodat."
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -4359,25 +4648,13 @@ msgstr "Reactive Resume - doties uz sākumlapu"
 msgid "Reactive Resume (JSON)"
 msgstr "Reaktīvais CV (JSON)"
 
-#: src/routes/_home/-sections/prefooter.tsx
-msgid "Reactive Resume gets better because people give it their time. Contributors on GitHub build the features and fix the bugs, translators on Crowdin make it readable in other languages, and donors help keep development going. This project owes its progress to all of them."
-msgstr "Reactive Resume kļūst labāks, jo cilvēki tam velta savu laiku. Līdzautori GitHub vidē veido funkcijas un labo kļūdas, tulkotāji Crowdin vidē padara to lasāmu citās valodās, bet ziedotāji palīdz turpināt izstrādi. Šis projekts par savu izaugsmi ir pateicīgs viņiem visiem."
-
-#: src/routes/_home/-sections/donate.tsx
-msgid "Reactive Resume is a free and open-source project, maintained by me and a community of contributors. Your donations cover the running costs and keep development going."
-msgstr "Reactive Resume ir bezmaksas atvērtā pirmkoda projekts, ko uzturu es kopā ar līdzautoru kopienu. Jūsu ziedojumi sedz uzturēšanas izmaksas un ļauj turpināt izstrādi."
-
-#: src/routes/_home/-sections/hero.tsx
-msgid "Reactive Resume is a free and open-source resume builder that makes it easy to create, update, and share your resume."
-msgstr "Reactive Resume ir bezmaksas un atvērtā pirmkoda CV veidotājs, ar kuru viegli izveidot, atjaunināt un kopīgot savu CV."
+#: src/features/homepage/page.tsx
+msgid "Reactive Resume is free and open source. Amruth and a community of contributors keep it running. If you’d like to support the work, donations help cover hosting and development."
+msgstr "Reactive Resume ir bez maksas un atvērtā pirmkoda programma. Amruth un līdzautoru kopiena uztur to darbībā. Ja vēlaties atbalstīt šo darbu, ziedojumi palīdz segt mitināšanas un izstrādes izmaksas."
 
 #: src/components/ui/donation-toast.tsx
 msgid "Reactive Resume is free and open source. If it has helped you, please consider donating."
 msgstr "Reactive CV ir bezmaksas un atvērtā koda resurss. Ja tas jums ir palīdzējis, lūdzu, apsveriet iespēju ziedot."
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "Reactive Resume is open source, private, and free. It shows no ads, doesn't track what you do, and doesn't lock features behind a paywall."
-msgstr "Reactive Resume ir atvērtā pirmkoda, privāts un bezmaksas. Tas nerāda reklāmas, neizseko, ko jūs darāt, un neslēdz funkcijas aiz maksas sienas."
 
 #. App version label in footer; includes semantic version variable
 #: src/components/ui/copyright.tsx
@@ -4388,6 +4665,10 @@ msgstr "Reaktīvs CV v<0>{__APP_VERSION__}</0>"
 #: src/dialogs/resume/import.tsx
 msgid "Reactive Resume v4 (JSON)"
 msgstr "Reactive Resume v4 (JSON)"
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Read again"
+msgstr "Lasīt vēlreiz"
 
 #: src/routes/agent/-components/tool-part-card.tsx
 msgid "Read an attachment"
@@ -4401,6 +4682,14 @@ msgstr "Izlasiet rokasgrāmatu Pielāgotu stilu lietošana."
 msgid "Read the resume"
 msgstr "Izlasīja CV"
 
+#: src/features/homepage/ats-playground.tsx
+msgid "Read the sample to see its text without the layout. Or try a PDF of your own."
+msgstr "Izlasiet paraugu, lai redzētu tā tekstu bez izkārtojuma. Vai izmēģiniet savu PDF."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Read this resume"
+msgstr "Lasīt šo CV"
+
 #: src/features/auth/pages/consent.tsx
 msgid "Read your email address."
 msgstr "Izlasiet savu e-pasta adresi."
@@ -4413,15 +4702,27 @@ msgstr "Izlasiet sava profila informāciju."
 msgid "Readability"
 msgstr "Lasāmība"
 
+#: src/features/homepage/ats-playground.tsx
+msgid "Reading locally"
+msgstr "Lasīšana lokāli"
+
 #. placeholder {0}: progress.page
 #. placeholder {1}: progress.pageCount
 #: src/features/ats-checker/tool.tsx
 msgid "Reading page {0} of {1}…"
 msgstr "Nolasa lapu {0} no {1}…"
 
+#: src/features/homepage/ats-playground.tsx
+msgid "Reading PDF"
+msgstr "Lasa PDF"
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Reading the posting…"
 msgstr "Notiek sludinājuma lasīšana…"
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Reading this PDF in your browser. Your file is not uploaded."
+msgstr "Šis PDF tiek lasīts jūsu pārlūkprogrammā. Fails netiek augšupielādēts."
 
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate"
@@ -4434,6 +4735,10 @@ msgstr "Gatavs aktivizēšanai ar kļūdām"
 #: src/features/resume/stylesheet/status.tsx
 msgid "Ready to activate with warnings"
 msgstr "Gatavs aktivizēšanai ar brīdinājumiem"
+
+#: src/features/homepage/page.tsx
+msgid "Ready to put your name on it?"
+msgstr "Vai esat gatavs ierakstīt savu vārdu?"
 
 #: src/dialogs/resume/sections/cover-letter.tsx
 #: src/features/cover-letters/editor.tsx
@@ -4469,6 +4774,10 @@ msgstr "Ieteica…, lietas, ko uzsvērt, utt."
 #: src/features/settings/authentication/components/passkeys.tsx
 msgid "Register New Device"
 msgstr "Reģistrēt jaunu ierīci"
+
+#: src/features/homepage/site-footer.tsx
+msgid "Released under the <0>MIT License</0>."
+msgstr "Izlaists ar <0>MIT licenci</0>."
 
 #: src/features/cover-letters/editor-dialog.tsx
 msgid "Reload latest version"
@@ -4556,10 +4865,15 @@ msgstr "Aizstājiet tabulas ar parastām rindkopām un sarakstiem. Šūnas tiek 
 msgid "Replace the attached cover letter?"
 msgstr "Vai aizstāt pievienoto pavadvēstuli?"
 
+#: src/features/homepage/page.tsx
+msgid "Report a bug"
+msgstr "Ziņot par kļūdu"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Report a Bug"
 msgstr "Ziņot par kļūdu"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Report an issue"
 msgstr "Ziņot par problēmu"
@@ -4577,6 +4891,8 @@ msgid "Reserve capitals for short headings. They slow reading and can defeat cas
 msgstr "Lielos burtus izmantojiet tikai īsiem virsrakstiem. Tie palēnina lasīšanu un var traucēt reģistrjutīgu meklēšanu."
 
 #. Destructive confirmation button label when resetting a resume section
+#: src/features/homepage/ats-playground.tsx
+#: src/features/homepage/feature-explorer.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/shared/section-menu.tsx
 msgid "Reset"
 msgstr "Atiestatīt"
@@ -4594,9 +4910,14 @@ msgstr "Atiestatīt paroli"
 msgid "Resetting your password..."
 msgstr "Tiek atiestatīta jūsu parole..."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Resources"
 msgstr "Resursi"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Responsible for working on the design system and helping other teams with their designs."
+msgstr "Atbildīgs par darbu ar dizaina sistēmu un palīdzību citām komandām to dizainā."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Restore"
@@ -4616,6 +4937,10 @@ msgstr "Vai atjaunot šo versiju?"
 #: src/routes/agent/$threadId.tsx
 msgid "Resume"
 msgstr "CV"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Resume attached"
+msgstr "CV pievienots"
 
 #: src/features/resume/preview/resume-accessible-text.tsx
 msgid "Resume content"
@@ -4638,6 +4963,10 @@ msgstr "CV saite nokopēta starpliktuvē."
 msgid "Resume linked"
 msgstr "CV piesaistīts"
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Resume not found"
+msgstr "CV nav atrasts"
+
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Resume options"
 msgstr "CV opcijas"
@@ -4646,13 +4975,18 @@ msgstr "CV opcijas"
 msgid "Resume patch"
 msgstr "CV ielāps"
 
+#: src/features/homepage/template-shelf.tsx
+msgid "Resume templates"
+msgstr "CV veidnes"
+
 #: src/dialogs/resume/template/gallery.tsx
 msgid "Resume templates for different professions and tastes. Pick the one that suits you."
 msgstr "CV veidnes dažādām profesijām un gaumēm. Izvēlieties to, kas jums piestāv."
 
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/command-palette/pages/resumes.tsx
-#: src/routes/_home/-sections/statistics.tsx
+#: src/features/homepage/community-stats.tsx
+#: src/features/homepage/languages-showcase.tsx
 #: src/routes/dashboard/-components/sidebar.tsx
 #: src/routes/dashboard/resumes/index.tsx
 msgid "Resumes"
@@ -4691,6 +5025,10 @@ msgstr "Pārrakstiet kopsavilkumu vecākā inženierijas vadītāja amatam un sa
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Rewrite this resume for a startup founder moving into a product lead role, and show the business impact."
 msgstr "Pārrakstiet šo CV jaunuzņēmuma dibinātājam, kurš pāriet uz produkta vadītāja lomu, un parādiet ietekmi uz biznesu."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Rhyhorn sample resume"
+msgstr "Rhyhorn CV paraugs"
 
 #: src/components/input/rich-input.tsx
 msgid "Right Align"
@@ -4748,6 +5086,26 @@ msgstr "Alga"
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Salary range"
 msgstr "Algas diapazons"
+
+#: src/features/homepage/page.tsx
+msgid "Same story.<0/>A different look."
+msgstr "Tas pats stāsts.<0/>Cits skatījums."
+
+#: src/features/homepage/export-playground.tsx
+msgid "Sample download format"
+msgstr "Parauga lejupielādes formāts"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Sample resume"
+msgstr "CV paraugs"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Sample resume for {name}"
+msgstr "CV paraugs lietotājam {name}"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Sans"
+msgstr "Bezserifa"
 
 #. Passkey rename prompt confirm action in authentication settings
 #: src/features/applications/components/application-detail-sheet.tsx
@@ -4820,6 +5178,10 @@ msgstr "Saglabāšana aizņem ilgāku laiku, nekā paredzēts. Jūsu izmaiņas j
 #: src/routes/builder/$resumeId/-components/header.tsx
 msgid "Saving…"
 msgstr "Saglabā…"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Say what you actually did."
+msgstr "Pastāstiet, ko patiesībā darījāt."
 
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Scan the QR code below with your preferred authenticator app. You can also copy the secret below and paste it into your app."
@@ -4903,9 +5265,17 @@ msgstr "Sadaļas"
 msgid "See how this resume matches the posting"
 msgstr "Skatiet, kā šis CV atbilst sludinājumam"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "See what an applicant tracking system can read from your resume. Runs in your browser."
-msgstr "Uzziniet, ko no jūsu CV var nolasīt kandidātu izsekošanas sistēma. Darbojas jūsu pārlūkprogrammā."
+#: src/features/homepage/feature-explorer.tsx
+msgid "See how to connect"
+msgstr "Apskatiet, kā pieslēgties"
+
+#: src/features/homepage/page.tsx
+msgid "See what<0/>software reads."
+msgstr "Skatiet, ko<0/>nolasa programmatūra."
+
+#: src/features/homepage/page.tsx
+msgid "See whether your PDF has readable text. Read a sample or try your own PDF. Everything runs in your browser, so your file stays with you."
+msgstr "Pārbaudiet, vai jūsu PDF ir lasāms teksts. Izlasiet paraugu vai izmēģiniet savu PDF. Viss darbojas jūsu pārlūkprogrammā, tāpēc fails paliek pie jums."
 
 #. placeholder {0}: app.company
 #: src/features/applications/components/table-view.tsx
@@ -4939,10 +5309,6 @@ msgstr "Atlasīt..."
 #: src/features/applications/components/table-view.tsx
 msgid "selected"
 msgstr "atlasīts"
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Self-Host with Docker"
-msgstr "Pašhostēšana ar Docker"
 
 #: src/features/resume/stylesheet/editor.tsx
 msgid "Semantic CSS stylesheet"
@@ -4981,6 +5347,11 @@ msgstr "Nosūta jau no jūsu PDF iegūto tekstu MI pakalpojumu sniedzējam, ko i
 msgid "Sends the text already extracted from your PDF, plus the job description you pasted, to the AI provider you choose below. The PDF file itself is never uploaded."
 msgstr "Nosūta jau no jūsu PDF iegūto tekstu, kā arī jūsu ielīmēto amata aprakstu, MI pakalpojumu sniedzējam, ko izvēlaties zemāk. Pats PDF fails nekad netiek augšupielādēts."
 
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Senior product designer"
+msgstr "Vecākais produktu dizainers"
+
 #: src/components/input/rich-input.tsx
 msgid "Separator"
 msgstr "Atdalītājs"
@@ -4988,6 +5359,10 @@ msgstr "Atdalītājs"
 #: src/libs/locale.ts
 msgid "Serbian"
 msgstr "Serbu"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Serif"
+msgstr "Serifs"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Set a password if you want only people who know it to open the public URL."
@@ -5037,21 +5412,13 @@ msgstr "Iestatīt autentifikatora lietotni"
 msgid "Shadow Width"
 msgstr "Ēnas platums"
 
-#: src/routes/_home/-sections/faq.tsx
-msgid "Share it with a public URL, put a password on that URL, or download the PDF and send it yourself."
-msgstr "Kopīgojiet to ar publisku URL, uzlieciet šim URL paroli vai lejupielādējiet PDF un nosūtiet to pats."
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Share your resume with a public URL."
-msgstr "Kopīgojiet savu CV ar publisku URL."
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Shareable Links"
-msgstr "Kopīgojamās saites"
-
 #: src/libs/resume/section.tsx
 msgid "Sharing"
 msgstr "Kopīgošana"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Sharing preview"
+msgstr "Kopīgošanas priekšskatījums"
 
 #: src/features/resume/builder/section-recovery.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
@@ -5068,6 +5435,11 @@ msgstr "Rādīt vēl {0}"
 #: src/features/resume/builder/section-recovery.tsx
 msgid "Show {title} section"
 msgstr "Rādīt sadaļu {title}"
+
+#: src/features/homepage/languages-showcase.test.tsx
+#: src/features/homepage/languages-showcase.tsx
+msgid "Show all languages"
+msgstr "Rādīt visas valodas"
 
 #: src/routes/builder/$resumeId/-sidebar/right/sections/sharing.tsx
 msgid "Show Download Buttons"
@@ -5153,10 +5525,6 @@ msgstr "Pierakstīties tagad"
 msgid "Sign in to your account"
 msgstr "Piesakieties savā kontā"
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Sign in with GitHub, Google or a custom OAuth provider."
-msgstr "Piesakieties ar GitHub, Google vai pielāgotu OAuth pakalpojumu sniedzēju."
-
 #. User menu action to sign out of current account
 #: src/features/user/dropdown-menu.tsx
 msgid "Sign out"
@@ -5218,6 +5586,9 @@ msgid "Size"
 msgstr "Izmērs"
 
 #: src/dialogs/resume/sections/custom.tsx
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/languages-showcase.tsx
+#: src/features/homepage/resume-sculpture.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 msgid "Skills"
@@ -5227,6 +5598,7 @@ msgstr "Prasmes"
 msgid "Skip and Upload"
 msgstr "Izlaist un augšupielādēt"
 
+#: src/features/homepage/page.tsx
 #: src/routes/_home/route.tsx
 #: src/routes/builder/$resumeId/-components/desktop-builder-shell.tsx
 #: src/routes/builder/$resumeId/-components/mobile-builder-shell.tsx
@@ -5286,6 +5658,10 @@ msgstr "Daļa teksta atrodas ārpus lapas."
 msgid "Some text is rotated."
 msgstr "Daļa teksta ir pagriezta."
 
+#: src/features/homepage/community-stats.tsx
+msgid "Some totals are unavailable right now."
+msgstr "Dažas kopsummas pašlaik nav pieejamas."
+
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Something else…"
 msgstr "Kaut kas cits…"
@@ -5297,6 +5673,10 @@ msgstr "Kaut kas nogāja greizi"
 #: src/features/ats-checker/tool.tsx
 msgid "Something went wrong while reading that file. Please try again."
 msgstr "Nolasot šo failu, radās kļūda. Lūdzu, mēģiniet vēlreiz."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Something went wrong while reading this file. Please try again."
+msgstr "Lasot šo failu, radās kļūda. Lūdzu, mēģiniet vēlreiz."
 
 #: src/features/auth/pages/error.tsx
 msgid "Something went wrong while signing you in. Please try again."
@@ -5328,6 +5708,7 @@ msgstr "Kārtot pēc…"
 msgid "Source"
 msgstr "Avots"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Source Code"
@@ -5362,15 +5743,24 @@ msgstr "Rakstiet mēnesi burtiem, piemēram, \"Mar 2022\"."
 msgid "Sponsors"
 msgstr "Sponsori"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Sponsorships"
 msgstr "Sponsori"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Spread pages"
+msgstr "Izvērstas lapas"
 
 #. Preset button for setting picture aspect ratio to square
 #: src/components/level/combobox.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Square"
 msgstr "Kvadrāts"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Stack pages"
+msgstr "Sakrautas lapas"
 
 #: src/features/applications/components/application-form-sheet.tsx
 #: src/features/applications/components/table-view.tsx
@@ -5397,6 +5787,10 @@ msgstr "Sākt jaunu pavedienu"
 #: src/routes/agent/-components/new-thread-setup.tsx
 msgid "Start a thread"
 msgstr "Sākt pavedienu"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Start again"
+msgstr "Sākt no jauna"
 
 #: src/dialogs/resume/index.tsx
 msgid "Start building your resume by giving it a name."
@@ -5441,6 +5835,10 @@ msgstr "Statistika"
 msgid "Stay"
 msgstr "Palikt"
 
+#: src/features/homepage/ats-playground.tsx
+msgid "Stays in your browser"
+msgstr "Paliek jūsu pārlūkprogrammā"
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Still waiting for {provider}… {elapsedSeconds}s"
 msgstr "Joprojām gaidu {provider}… {elapsedSeconds}s"
@@ -5477,6 +5875,7 @@ msgstr "Stils un sūtītāja informācija tiek kopēta. Turpmākie atsākšanas 
 msgid "Styling and sender details refreshed from the selected resume."
 msgstr "Stils un informācija par sūtītāju ir atsvaidzināta no atlasītā CV."
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "Subreddit"
 msgstr "Subreddits"
@@ -5488,19 +5887,20 @@ msgstr "Ieteikumi"
 #. Fallback title for a custom summary item in resume builder when content is empty
 #. Fallback title for a custom summary item in resume builder when content is unavailable
 #: src/dialogs/resume/sections/custom.tsx
+#: src/features/homepage/export-playground.tsx
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-sidebar/left/sections/custom.tsx
 msgid "Summary"
 msgstr "Kopsavilkums"
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Support Reactive Resume"
-msgstr "Atbalstiet Reactive Resume"
-
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Support the app by doing what you can!"
 msgstr "Atbalstiet lietotni, darot, ko vien varat!"
+
+#: src/features/homepage/page.tsx
+msgid "Support the project"
+msgstr "Atbalstiet projektu"
 
 #: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
@@ -5558,6 +5958,10 @@ msgstr "Pielāgojiet šo CV produkta vadītāja darba aprakstam un uzsveriet atb
 msgid "Tailoring failed."
 msgstr "Pielāgošana neizdevās."
 
+#: src/features/homepage/page.tsx
+msgid "Take it<0/>with you."
+msgstr "Paņemiet to<0/>sev līdzi."
+
 #: src/libs/locale.ts
 msgid "Tamil"
 msgstr "Tamilu"
@@ -5576,17 +5980,13 @@ msgstr "Veidne"
 msgid "Template Gallery"
 msgstr "Veidņu galerija"
 
-#: src/routes/_home/-sections/templates.tsx
+#: src/features/homepage/site-footer.tsx
 msgid "Templates"
 msgstr "Veidnes"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Test"
 msgstr "Tests"
-
-#: src/routes/_home/-sections/testimonials.tsx
-msgid "Testimonials"
-msgstr "Atsauksmes"
 
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Testing…"
@@ -5605,6 +6005,10 @@ msgstr "Teksta izlīdzināšana"
 msgid "Text Color"
 msgstr "Teksta krāsa"
 
+#: src/features/homepage/ats-playground.tsx
+msgid "Text extracted"
+msgstr "Izgūts teksts"
+
 #: src/features/ats-checker/messages.ts
 msgid "Text is written one character at a time."
 msgstr "Teksts ir rakstīts pa vienai rakstzīmei."
@@ -5616,6 +6020,10 @@ msgstr "Teksts atrodas galvenes vai kājenes zonā."
 #: src/libs/locale.ts
 msgid "Thai"
 msgstr "Taju"
+
+#: src/features/homepage/page.tsx
+msgid "Thank you for helping keep it free."
+msgstr "Paldies, ka palīdzat to saglabāt bez maksas."
 
 #: src/features/ats-checker/tool.tsx
 msgid "That file could not be read as a PDF."
@@ -5711,6 +6119,10 @@ msgstr "Pakalpojumu sniedzējs atgrieza pārskatu, ko nevarēja nolasīt. Mēģi
 msgid "The provider's response could not be verified. Please start again."
 msgstr "Pakalpojumu sniedzēja atbildi neizdevās pārbaudīt. Lūdzu, sāciet no jauna."
 
+#: src/features/homepage/page.tsx
+msgid "The rest of your<0/>job search, too."
+msgstr "Arī pārējai jūsu<0/>darba meklēšanai."
+
 #: src/features/resume/preview/preview.browser.tsx
 msgid "The resume preview could not be updated. The last valid preview is still shown."
 msgstr "CV priekšskatījumu nevarēja atjaunināt. Joprojām tiek rādīts pēdējais derīgais priekšskatījums."
@@ -5750,6 +6162,10 @@ msgstr "Tēma"
 #: src/dialogs/auth/enable-two-factor.tsx
 msgid "Then, enter the 6 digit code that the app provides to continue."
 msgstr "Pēc tam ievadiet 6 ciparu kodu, ko nodrošina lietotne, lai turpinātu."
+
+#: src/features/homepage/page.tsx
+msgid "There are other ways to pitch in."
+msgstr "Ir arī citi veidi, kā palīdzēt."
 
 #: src/features/ats-checker/messages.ts
 msgid "There is a gap between two dated roles."
@@ -5860,6 +6276,10 @@ msgstr "Šis fails satur tekstu, kas attēlots neredzami."
 msgid "This file contains white-on-white text."
 msgstr "Šis fails satur baltu tekstu uz balta fona."
 
+#: src/features/homepage/ats-playground.tsx
+msgid "This file could not be read as a PDF. Export a new copy and try again."
+msgstr "Šo failu neizdevās nolasīt kā PDF. Eksportējiet jaunu kopiju un mēģiniet vēlreiz."
+
 #: src/features/ats-checker/messages.ts
 msgid "This file declares no language."
 msgstr "Šis fails nedeklarē valodu."
@@ -5899,6 +6319,10 @@ msgstr "Šis virsraksts nav tas, ko parsētāji meklē."
 #: src/features/ats-checker/messages.ts
 msgid "This is a PDF Portfolio: the visible page is only a cover."
 msgstr "Šis ir PDF portfelis: redzamā lapa ir tikai vāks."
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "This is a sample edit. In the app, connect your own AI provider. Turn on Review edits to approve changes before they’re applied."
+msgstr "Šis ir parauga labojums. Lietotnē pievienojiet savu MI pakalpojumu sniedzēju. Ieslēdziet labojumu pārskatīšanu, lai apstiprinātu izmaiņas pirms to piemērošanas."
 
 #: src/dialogs/resume/index.tsx
 msgid "This is a URL-friendly name for your resume."
@@ -5946,8 +6370,13 @@ msgid "This PDF has no readable text. It is likely a scan, so there is nothing t
 msgstr "Šajā PDF failā nav lasāma teksta. Iespējams, tā ir skenēšana, tāpēc nav ko importēt."
 
 #: src/features/ats-checker/tool.tsx
+#: src/features/homepage/ats-playground.tsx
 msgid "This PDF is password protected. Save an unprotected copy and try again."
 msgstr "Šis PDF ir aizsargāts ar paroli. Saglabājiet neaizsargātu kopiju un mēģiniet vēlreiz."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "This PDF is too large. Choose a file smaller than 25 MB."
+msgstr "Šis PDF ir pārāk liels. Izvēlieties failu, kas mazāks par 25 MB."
 
 #: src/libs/resume/ats.ts
 msgid "This period ends before it starts."
@@ -6057,10 +6486,6 @@ msgstr "Pavedieni"
 msgid "Tighten the skills section so it supports the target role instead of reading like a keyword dump."
 msgstr "Saskaņojiet prasmju sadaļu, lai tā atbilstu mērķa lomai, nevis lasītu kā atslēgvārdu izgāztuve."
 
-#: src/routes/_home/-sections/hero.tsx
-msgid "Timelapse of a resume being built in Reactive Resume"
-msgstr "Paātrināts ieraksts, kā Reactive Resume top CV"
-
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Timeline"
 msgstr "Laika skala"
@@ -6119,6 +6544,18 @@ msgstr "Tokeni: {total}"
 msgid "Tokens: {total} ({cached} cached)"
 msgstr "Tokeni: {total} ({cached} kešatmiņā)"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Tools"
+msgstr "Rīki"
+
+#: src/features/homepage/community-stats.tsx
+msgid "Total unavailable"
+msgstr "Kopsumma nav pieejama"
+
+#: src/features/homepage/community-stats.tsx
+msgid "Totals are refreshed periodically."
+msgstr "Kopsummas tiek periodiski atjauninātas."
+
 #: src/features/applications/components/application-form-sheet.tsx
 msgid "Track a job you're applying to and link the resume you sent."
 msgstr "Sekojiet darbam, uz kuru piesakāties, un piesaistiet nosūtīto CV."
@@ -6131,14 +6568,28 @@ msgstr "Sekojiet savam pirmajam pieteikumam"
 msgid "Track your resume's views and downloads"
 msgstr "Izsekojiet sava CV skatījumiem un lejupielādēm"
 
+#: src/features/homepage/page.tsx
+msgid "Translate the app"
+msgstr "Tulkojiet lietotni"
+
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 #: src/routes/builder/$resumeId/-sidebar/right/sections/information.tsx
 msgid "Translations"
 msgstr "Tulkojumi"
 
 #: src/components/layout/error-screen.tsx
+#: src/features/homepage/ats-playground.tsx
 msgid "Try again"
 msgstr "Mēģiniet vēlreiz"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Try the settings to see what visitors can access. When you create your resume, you decide how to share it."
+msgstr "Izmēģiniet iestatījumus, lai redzētu, kam apmeklētāji var piekļūt. Kad veidojat savu CV, jūs izlemjat, kā to kopīgot."
+
+#: src/features/homepage/ats-playground.tsx
+msgid "Try your PDF"
+msgstr "Izmēģiniet savu PDF"
 
 #: src/libs/locale.ts
 msgid "Turkish"
@@ -6221,6 +6672,10 @@ msgstr "Ierakstiet \"{CONFIRMATION_TEXT}\", lai apstiprinātu"
 msgid "Type a command or search…"
 msgstr "Ievadiet komandu vai meklējiet…"
 
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Typeface"
+msgstr "Burtveidols"
+
 #: src/libs/resume/section.tsx
 msgid "Typography"
 msgstr "Tipogrāfija"
@@ -6239,6 +6694,7 @@ msgid "Underline"
 msgstr "Pasvītrot"
 
 #: src/dialogs/resume/template/gallery.tsx
+#: src/features/homepage/feature-explorer.tsx
 #: src/routes/builder/$resumeId/-components/dock.tsx
 msgid "Undo"
 msgstr "Atsaukt"
@@ -6246,10 +6702,6 @@ msgstr "Atsaukt"
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Undo stylesheet edit"
 msgstr "Atsaukt stila lapas rediģēšanu"
-
-#: src/routes/_home/-sections/features.tsx
-msgid "Unlimited Resumes"
-msgstr "Neierobežoti CV"
 
 #: src/features/settings/authentication/components/hooks.tsx
 msgid "Unlinking your {providerName} account..."
@@ -6467,9 +6919,22 @@ msgstr "Izmantojiet vienkāršus virsrakstus, piemēram, \"Experience\", \"Educa
 msgid "Use sample"
 msgstr "Izmantot paraugu"
 
+#: src/features/homepage/languages-showcase.tsx
+msgid "Use the app in a language you’re comfortable with. Try a few of the translations made by the community."
+msgstr "Izmantojiet lietotni valodā, kurā jūtaties ērti. Izmēģiniet dažus kopienas veidotos tulkojumus."
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Use this wording"
+msgstr "Lietot šo formulējumu"
+
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
 msgstr "Izmantojiet redaktora parasto aizzīmju sarakstu, lai nejauši glifi nenokļūtu teikuma vidū."
+
+#: src/features/homepage/export-playground.tsx
+#: src/features/homepage/resume-sculpture.tsx
+msgid "User research"
+msgstr "Lietotāju izpēte"
 
 #. Label for username input on registration form
 #: src/dialogs/resume/sections/profile.tsx
@@ -6478,9 +6943,13 @@ msgstr "Izmantojiet redaktora parasto aizzīmju sarakstu, lai nejauši glifi nen
 msgid "Username"
 msgstr "Lietotājvārds"
 
-#: src/routes/_home/-sections/statistics.tsx
+#: src/features/homepage/community-stats.tsx
 msgid "Users"
 msgstr "Lietotāji"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Uses the name, template, color, and type you chose above."
+msgstr "Izmanto jūsu iepriekš izvēlēto vārdu, veidni, krāsu un burtveidolu."
 
 #: src/libs/locale.ts
 msgid "Uzbek"
@@ -6563,6 +7032,10 @@ msgstr "Vjetnamiešu"
 #: src/routes/builder/$resumeId/-sidebar/right/sections/statistics.tsx
 msgid "Views"
 msgstr "Skatījumi"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Visitors need your password to open the resume."
+msgstr "Apmeklētājiem ir vajadzīga jūsu parole, lai atvērtu CV."
 
 #: src/dialogs/resume/sections/custom.tsx
 #: src/libs/resume/section-title.ts
@@ -6648,10 +7121,6 @@ msgstr "Ko tu vēlies darīt?"
 msgid "What do you want to rename this section to?"
 msgstr "Uz kādu nosaukumu vēlaties pārdēvēt šo sadaļu?"
 
-#: src/routes/_home/-sections/faq.tsx
-msgid "What makes Reactive Resume different from other resume builders?"
-msgstr "Ar ko Reactive Resume atšķiras no citiem CV veidotājiem?"
-
 #: src/routes/_home/ats-checker.tsx
 msgid "What this checks"
 msgstr "Ko šis pārbauda"
@@ -6659,10 +7128,6 @@ msgstr "Ko šis pārbauda"
 #: src/routes/_home/ats-checker.tsx
 msgid "What this does not do"
 msgstr "Ko šis nedara"
-
-#: src/routes/_home/-sections/hero.tsx
-msgid "What's new in the latest version?"
-msgstr "Kas jauns jaunākajā versijā?"
 
 #: src/routes/builder/$resumeId/-components/header.tsx
 #: src/routes/dashboard/resumes/-components/menus/use-resume-menu-actions.ts
@@ -6717,9 +7182,17 @@ msgstr "Vai jūsu laika grafiku var atjaunot."
 msgid "Words run together when the text is extracted."
 msgstr "Iegūstot tekstu, vārdi saplūst kopā."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Work on your resume from your AI app."
+msgstr "Strādājiet ar savu CV no savas MI lietotnes."
+
 #: src/features/settings/integrations/components/ai-section.tsx
 msgid "Work OpenAI"
 msgstr "Darbs OpenAI"
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Worked with engineers from idea to launch."
+msgstr "Sadarbojos ar inženieriem no idejas līdz palaišanai."
 
 #: src/routes/agent/-components/agent-chat.tsx
 msgid "Working…"
@@ -6753,25 +7226,18 @@ msgstr "Uzrakstiet pilnu adresi, tostarp https://."
 msgid "Writing"
 msgstr "Teksts"
 
+#: src/features/homepage/site-footer.tsx
 #: src/routes/_home/-sections/footer.tsx
 msgid "X (Twitter)"
 msgstr "X (Twitter)"
 
-#: src/routes/_home/-sections/faq.tsx
-msgid "Yes. One click exports your resume to PDF, with your formatting and styling intact."
-msgstr "Jā. Viens klikšķis eksportē jūsu CV uz PDF, saglabājot formatējumu un noformējumu."
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "Yes. Pick your language on the settings page, or with the language switcher in the top right corner. If your language is missing, or the existing translation could be better, you can <0>contribute to the translations on Crowdin<1> (opens in new tab)</1></0>."
-msgstr "Jā. Izvēlieties valodu iestatījumu lapā vai ar valodu pārslēdzēju augšējā labajā stūrī. Ja jūsu valodas nav vai esošais tulkojums varētu būt labāks, jūs varat <0>dot ieguldījumu tulkojumos Crowdin vidē<1> (atveras jaunā cilnē)</1></0>."
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "Yes. Reactive Resume is free to use, with no hidden costs, premium tiers, or subscription fees. It's open source, and it will stay free."
-msgstr "Jā. Reactive Resume ir bezmaksas lietojams, bez slēptām izmaksām, premium līmeņiem vai abonēšanas maksas. Tas ir atvērtā pirmkoda un tāds arī paliks."
-
 #: src/features/auth/pages/login.tsx
 msgid "You can also sign in with your username."
 msgstr "Jūs varat pieteikties arī ar savu lietotājvārdu."
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "You can always go back to the original."
+msgstr "Vienmēr varat atgriezties pie oriģināla."
 
 #: src/features/auth/pages/error.tsx
 msgid "You cancelled the sign-in before it finished."
@@ -6785,6 +7251,10 @@ msgstr "Jums ir nesaglabātas izmaiņas, kas tiks zaudētas."
 msgid "You'll be taken to the Integrations page. The file you selected won't be imported."
 msgstr "Jūs tiksiet novirzīts uz integrāciju lapu. Atlasītais fails netiks importēts."
 
+#: src/features/homepage/community-stats.tsx
+msgid "You’re in good company."
+msgstr "Jūs esat labā kompānijā."
+
 #: src/features/auth/pages/forgot-password.tsx
 #: src/features/auth/pages/register.tsx
 msgid "You've got mail!"
@@ -6794,6 +7264,10 @@ msgstr "Jums ir jauna vēstule!"
 msgid "Your account has been deleted."
 msgstr "Jūsu konts ir izdzēsts."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Your AI app"
+msgstr "Jūsu MI lietotne"
+
 #: src/features/ats-checker/ai-review/ai-review-card.tsx
 msgid "Your AI provider could not be reached. Check its settings and try again."
 msgstr "Neizdevās sazināties ar jūsu MI pakalpojumu sniedzēju. Pārbaudiet tā iestatījumus un mēģiniet vēlreiz."
@@ -6801,6 +7275,10 @@ msgstr "Neizdevās sazināties ar jūsu MI pakalpojumu sniedzēju. Pārbaudiet t
 #: src/dialogs/api-key/create.tsx
 msgid "Your API key has been copied to the clipboard."
 msgstr "Jūsu API atslēga ir nokopēta starpliktuvē."
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Your applications, together"
+msgstr "Jūsu pieteikumi kopā"
 
 #: src/features/ats-checker/messages.ts
 #: src/libs/resume/ats.ts
@@ -6815,6 +7293,10 @@ msgstr "Jūsu aizzīmes ir veidotas ar neparastām rakstzīmēm."
 msgid "Your changes are saved automatically."
 msgstr "Jūsu izmaiņas tiek saglabātas automātiski."
 
+#: src/features/homepage/languages-showcase.tsx
+msgid "Your choice applies across the app."
+msgstr "Jūsu izvēle attiecas uz visu lietotni."
+
 #: src/features/ats-checker/messages.ts
 msgid "Your contact details are not on the first page."
 msgstr "Jūsu kontaktinformācija nav pirmajā lapā."
@@ -6823,17 +7305,13 @@ msgstr "Jūsu kontaktinformācija nav pirmajā lapā."
 msgid "Your data has been exported."
 msgstr "Jūsu dati ir eksportēti."
 
-#: src/routes/_home/-sections/features.tsx
-msgid "Your data is secure, and never shared or sold to anyone."
-msgstr "Jūsu dati ir droši un nekad netiek kopīgoti vai pārdoti nevienam."
-
-#: src/routes/_home/-sections/faq.tsx
-msgid "Your data is stored securely and never shared with third parties. If you want full control over it, you can self-host Reactive Resume on your own servers."
-msgstr "Jūsu dati tiek glabāti droši un nekad netiek koplietoti ar trešajām personām. Ja vēlaties pilnu kontroli pār tiem, varat Reactive Resume izvietot savos serveros."
-
 #: src/features/ats-checker/messages.ts
 msgid "Your dates are written several different ways."
 msgstr "Jūsu datumi ir rakstīti vairākos dažādos veidos."
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Your edit is in."
+msgstr "Jūsu labojums ir pievienots."
 
 #: src/features/ats-checker/messages.ts
 msgid "Your email address is broken across pieces of text."
@@ -6867,6 +7345,10 @@ msgstr "Jūsu rindas ir ļoti cieši iesaiņotas."
 #: src/features/ats-checker/messages.ts
 msgid "Your margins are very narrow."
 msgstr "Jūsu malas ir ļoti šauras."
+
+#: src/features/homepage/resume-sculpture.tsx
+msgid "Your name"
+msgstr "Jūsu vārds"
 
 #: src/libs/resume/ats.ts
 msgid "Your page margins are very narrow."
@@ -6933,6 +7415,10 @@ msgstr "Jūsu CV nav tālruņa numura."
 msgid "Your resume includes a photo."
 msgstr "Jūsu CV ir iekļauta fotogrāfija."
 
+#: src/features/homepage/feature-explorer.tsx
+msgid "Your resume link"
+msgstr "Jūsu CV saite"
+
 #: src/libs/resume/ats.ts
 msgid "Your resume shows no work experience."
 msgstr "Jūsu CV nav darba pieredzes."
@@ -6949,9 +7435,17 @@ msgstr "Jūsu CV publiskais URL ir aizsargāts ar paroli. Kopīgojiet paroli tik
 msgid "Your saved cover letter will remain unchanged."
 msgstr "Jūsu saglabātā pavadvēstule paliks nemainīga."
 
-#: src/routes/_home/-sections/donate.tsx
-msgid "Your support keeps the project free and open to everyone, now and later."
-msgstr "Jūsu atbalsts uztur projektu bezmaksas un atvērtu ikvienam — gan tagad, gan turpmāk."
+#: src/features/homepage/ats-playground.tsx
+msgid "Your selected file"
+msgstr "Jūsu izvēlētais fails"
+
+#: src/features/homepage/feature-explorer.tsx
+msgid "Your tools, connected"
+msgstr "Jūsu rīki, savienoti"
+
+#: src/features/homepage/export-playground.tsx
+msgid "Your words as a plain-text document, with headings, lists, and links."
+msgstr "Jūsu vārdi kā vienkārša teksta dokuments ar virsrakstiem, sarakstiem un saitēm."
 
 #: src/routes/builder/$resumeId/-sidebar/left/sections/picture.tsx
 msgid "Zoom"
@@ -6973,4 +7467,3 @@ msgstr "Tālināt"
 #: src/libs/locale.ts
 msgid "Zulu"
 msgstr "Zulu"
-

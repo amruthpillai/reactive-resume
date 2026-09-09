@@ -112,7 +112,7 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..716ca874d496d40e0709236d4d7fe828
 +                children: [],
 +                lines: [],
 +                box: { ...marker.box, top: 0, height: 0 },
-                props: { ...marker.props, break: false, minPresenceAhead: 0 },
++                props: { ...marker.props, break: false, minPresenceAhead: 0 },
 +                style: {
 +                    ...marker.style,
 +                    ...(typeof marker.box?.width === 'number' ? { width: marker.box.width } : {}),

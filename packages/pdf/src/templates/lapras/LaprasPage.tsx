@@ -152,6 +152,7 @@ const useLaprasTemplate = (): LaprasTemplate => {
 				borderRadius: pictureBorderRadius,
 				backgroundColor: background,
 				padding: metrics.gapX(1),
+				marginTop: Math.max(0, headingNegativeMargin - metrics.gapX(1)),
 			},
 			sectionHeading: {
 				alignSelf: "flex-start",

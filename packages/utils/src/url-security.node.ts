@@ -86,9 +86,16 @@ export function isAllowedOAuthRedirectUri(input: string, trustedOrigins: string[
 	const origin = parsed.origin.toLowerCase();
 	const hostname = stripIpv6Brackets(normalizeHostname(parsed.hostname));
 
+	// Our own origins stay allowed even when they resolve to a private network, so self-hosted
+	// deployments reachable only over a LAN address keep working.
+	if (trustedOrigins.includes(origin)) return true;
+
 	if (parsed.protocol === "http:") return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
 	if (parsed.protocol !== "https:") return false;
-	if (isPrivateOrLoopbackHost(hostname)) return false;
 
-	return trustedOrigins.includes(origin);
+	// Dynamic client registration must accept callbacks from clients we have never seen (Claude,
+	// other MCP hosts). Consent plus exact-match redirect comparison at authorization time is the
+	// real gate; an origin allowlist here only breaks DCR. Private/loopback https hosts stay out so
+	// a registration cannot point our redirects at an internal network.
+	return !isPrivateOrLoopbackHost(hostname);
 }
