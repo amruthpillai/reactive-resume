@@ -1,5 +1,5 @@
 diff --git a/lib/index.js b/lib/index.js
-index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..8e6117947e87e40dd39f1bf33a1435194cc3f334 100644
+index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..716ca874d496d40e0709236d4d7fe828a77088a7 100644
 --- a/lib/index.js
 +++ b/lib/index.js
 @@ -1887,7 +1887,7 @@ const isTextInstance$2 = (node) => node.type === P.TextInstance;
@@ -49,7 +49,7 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..8e6117947e87e40dd39f1bf33a143519
                  // But if the current page is empty then we can just include the parent on the current page
                  if (currentChildren.length === 0) {
                      currentChildren.push(child, ...futureFixedNodes);
-@@ -3196,7 +3202,52 @@ const splitChildren = (height, contentArea, node) => {
+@@ -3196,7 +3202,74 @@ const splitChildren = (height, contentArea, node) => {
  };
  const splitView = (node, height, contentArea) => {
      const [currentNode, nextNode] = splitNode(node, height);
@@ -98,6 +98,28 @@ index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..8e6117947e87e40dd39f1bf33a143519
 +            nextChildren = nextChildren.filter((child) => !child.props['data-resume-list-marker']);
 +            if (markerIndex < contentIndex) nextChildren.unshift(nextMarker);
 +            else nextChildren.push(nextMarker);
++        }
++        if (markerIndex !== -1 && !hasMarker(nextChildren) && hasText(content(nextChildren))) {
++            // The marker was fully consumed on an earlier fragment while the
++            // content continues. Page relayout runs Yoga on the remaining
++            // children only, so a missing marker collapses the flex gutter and
++            // continuation lines shift to the row's left edge. Re-seat an
++            // empty marker column pinned to the width Yoga already measured,
++            // preserving the authored indentation without drawing a marker.
++            const marker = node.children[markerIndex];
++            const ghostMarker = {
++                ...marker,
++                children: [],
++                lines: [],
++                box: { ...marker.box, top: 0, height: 0 },
++                props: { ...marker.props, break: false, minPresenceAhead: 0 },
++                style: {
++                    ...marker.style,
++                    ...(typeof marker.box?.width === 'number' ? { width: marker.box.width } : {}),
++                },
++            };
++            if (markerIndex < contentIndex) nextChildren.unshift(ghostMarker);
++            else nextChildren.push(ghostMarker);
 +        }
 +    }
      return [
