@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
+# Base image only; pnpm self-manages to the `packageManager` version in package.json.
 ARG PNPM_VERSION=11.21.0
 ARG NODE_VERSION=24
 
