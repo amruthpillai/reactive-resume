@@ -31,6 +31,7 @@ import { resumeViewSchema, useResumeView } from "./-components/view-mode";
 type SortOption = "lastUpdatedAt" | "createdAt" | "name";
 
 const searchSchema = z.object({
+	search: z.string().default(""),
 	tags: z.array(z.string()).default([]),
 	sort: z.enum(["lastUpdatedAt", "createdAt", "name"]).default("lastUpdatedAt"),
 	view: resumeViewSchema.optional().catch(undefined),
@@ -38,7 +39,7 @@ const searchSchema = z.object({
 
 type Search = z.output<typeof searchSchema>;
 
-const defaultSearch: Search = { tags: [], sort: "lastUpdatedAt" };
+const defaultSearch: Search = { search: "", tags: [], sort: "lastUpdatedAt" };
 
 export const Route = createFileRoute("/dashboard/resumes/")({
 	component: RouteComponent,
