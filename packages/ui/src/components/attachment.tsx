@@ -1,10 +1,7 @@
 import type { VariantProps } from "class-variance-authority";
 import type * as React from "react";
-import { mergeProps } from "@base-ui/react/merge-props";
-import { useRender } from "@base-ui/react/use-render";
 import { cva } from "class-variance-authority";
 import { cn } from "@reactive-resume/utils/style";
-import { Button } from "./button";
 
 const attachmentVariants = cva(
 	"group/attachment relative flex w-fit min-w-0 max-w-full shrink-0 flex-wrap rounded-xl border bg-card text-card-foreground transition-colors focus-within:ring-1 focus-within:ring-ring/50 has-[>a,>button]:hover:bg-muted/50 data-[state=error]:border-destructive/30 data-[state=idle]:border-dashed",
@@ -103,59 +100,6 @@ function AttachmentTitle({ className, ...props }: React.ComponentProps<"span">) 
 	);
 }
 
-function AttachmentDescription({ className, ...props }: React.ComponentProps<"span">) {
-	return (
-		<span
-			data-slot="attachment-description"
-			className={cn(
-				"mt-0.5 block min-w-0 max-w-full truncate text-muted-foreground text-xs group-data-[state=error]/attachment:text-destructive/80",
-				className,
-			)}
-			{...props}
-		/>
-	);
-}
-
-function AttachmentActions({ className, ...props }: React.ComponentProps<"div">) {
-	return (
-		<div
-			data-slot="attachment-actions"
-			className={cn(
-				"relative z-20 flex shrink-0 items-center group-data-[orientation=vertical]/attachment:absolute group-data-[orientation=vertical]/attachment:top-3 group-data-[orientation=vertical]/attachment:right-3 group-data-[orientation=vertical]/attachment:gap-1",
-				className,
-			)}
-			{...props}
-		/>
-	);
-}
-
-function AttachmentAction({ className, variant, size = "icon-xs", ...props }: React.ComponentProps<typeof Button>) {
-	return (
-		<Button
-			data-slot="attachment-action"
-			variant={variant ?? "ghost"}
-			size={size}
-			className={cn(className)}
-			{...props}
-		/>
-	);
-}
-
-function AttachmentTrigger({ className, type, render, ...props }: useRender.ComponentProps<"button">) {
-	return useRender({
-		defaultTagName: "button",
-		props: mergeProps<"button">(
-			{
-				type: type ?? "button",
-				className: cn("absolute inset-0 z-10 outline-none", className),
-			},
-			props,
-		),
-		render,
-		state: { slot: "attachment-trigger" },
-	});
-}
-
 function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
@@ -169,14 +113,4 @@ function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
 	);
 }
 
-export {
-	Attachment,
-	AttachmentAction,
-	AttachmentActions,
-	AttachmentContent,
-	AttachmentDescription,
-	AttachmentGroup,
-	AttachmentMedia,
-	AttachmentTitle,
-	AttachmentTrigger,
-};
+export { Attachment, AttachmentContent, AttachmentGroup, AttachmentMedia, AttachmentTitle };

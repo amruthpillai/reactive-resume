@@ -6,8 +6,8 @@ import { Trans } from "@lingui/react/macro";
 import { SparkleIcon, XIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { toast } from "sonner";
 import { STAGES } from "@reactive-resume/schema/applications/data";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@reactive-resume/ui/components/accordion";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Label } from "@reactive-resume/ui/components/label";
@@ -20,6 +20,7 @@ import {
 	SheetTitle,
 } from "@reactive-resume/ui/components/sheet";
 import { Textarea } from "@reactive-resume/ui/components/textarea";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { Combobox } from "@/components/ui/combobox";
 import { orpc } from "@/libs/orpc/client";
 import { applicationsListQueryKey } from "../queries";
@@ -27,10 +28,11 @@ import { FileAttachmentField } from "./file-attachment-field";
 
 // Preset source suggestions surfaced via a <datalist>; the field itself stays free-text.
 const SOURCE_OPTIONS = ["LinkedIn", "Indeed", "Company Website", "Referral", "Recruiter", "Other"];
-const todayInputValue = () => {
-	const now = new Date();
-	return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}-${String(now.getUTCDate()).padStart(2, "0")}`;
-};
+// Mirrors the server-side cap on `applications.ai.autofill`.
+const MAX_JOB_DESCRIPTION_CHARS = 20_000;
+// ponytail: a paste shorter than this is a snippet, not a posting — don't burn an AI call on it.
+const MIN_AUTOFILL_CHARS = 200;
+const todayInputValue = () => new Date().toISOString().slice(0, 10);
 
 const emptyForm = () => ({
 	company: "",
@@ -102,6 +104,10 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 
 	const { data: allTags } = useQuery(orpc.applications.tags.queryOptions());
 
+	// Same gate as the rest of the AI surfaces: at least one enabled provider that tested green.
+	const { data: providers } = useQuery(orpc.aiProviders.list.queryOptions());
+	const aiEnabled = providers?.some((provider) => provider.enabled && provider.testStatus === "success") ?? false;
+
 	const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
 		setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -120,11 +126,11 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 		orpc.applications.create.mutationOptions({
 			onSuccess: () => {
 				invalidate();
-				toast.success(t`Application added to your pipeline.`);
+				toast.add({ type: "success", description: t`Application added to your pipeline.` });
 				setForm(emptyForm());
 				onOpenChange(false);
 			},
-			onError: () => toast.error(t`Couldn't add the application. Please try again.`),
+			onError: () => toast.add({ type: "error", description: t`Couldn't add the application. Please try again.` }),
 		}),
 	);
 
@@ -132,10 +138,10 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 		orpc.applications.update.mutationOptions({
 			onSuccess: () => {
 				invalidate();
-				toast.success(t`Application updated.`);
+				toast.add({ type: "success", description: t`Application updated.` });
 				onOpenChange(false);
 			},
-			onError: () => toast.error(t`Couldn't save your changes. Please try again.`),
+			onError: () => toast.add({ type: "error", description: t`Couldn't save your changes. Please try again.` }),
 		}),
 	);
 
@@ -148,13 +154,18 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 					role: result.role || prev.role,
 					location: result.location || prev.location,
 					salary: result.salary || prev.salary,
-					jobDescription: result.jobDescription || prev.jobDescription,
 				}));
-				toast.success(t`Filled in what we could from the posting.`);
+				toast.add({ type: "success", description: t`Filled in what we could from the posting.` });
 			},
-			onError: (error) => toast.error(error.message || t`Auto-fill failed. Paste the description instead.`),
+			onError: (error) => toast.add({ type: "error", description: error.message || t`Auto-fill failed.` }),
 		}),
 	);
+
+	const runAutofill = (jobDescription: string) => {
+		const posting = jobDescription.trim();
+		if (posting.length < MIN_AUTOFILL_CHARS || autofill.isPending) return;
+		autofill.mutate({ jobDescription: posting.slice(0, MAX_JOB_DESCRIPTION_CHARS) });
+	};
 
 	const pending = create.isPending || update.isPending;
 
@@ -198,32 +209,57 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 				</SheetHeader>
 
 				<div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 pb-4 [&>*]:shrink-0">
-					{/* AI job-posting autofill: extracts the fields below from a posting URL. */}
-					{!isEditing && (
-						<div className="rounded-lg border border-border border-dashed p-3">
-							<Label className="text-muted-foreground text-xs">
-								<Trans>Paste a job posting URL</Trans>
-							</Label>
-							<div className="mt-1.5 flex gap-2">
-								<Input
-									value={form.sourceUrl}
-									placeholder="https://…"
-									onChange={(event) => set("sourceUrl", event.target.value)}
-								/>
-								<Button
-									type="button"
-									variant="outline"
-									disabled={!form.sourceUrl.trim() || autofill.isPending}
-									onClick={() => autofill.mutate({ sourceUrl: form.sourceUrl.trim() })}
-								>
-									<SparkleIcon />
-									{autofill.isPending ? <Trans>Reading…</Trans> : <Trans>Auto-fill</Trans>}
-								</Button>
-							</div>
-							<p className="mt-1.5 text-[11px] text-muted-foreground">
-								<Trans>Let AI read the posting and fill the fields below.</Trans>
-							</p>
-						</div>
+					{/* Pasted job description: stored with the application and used for every AI action.
+					    Collapsed by default so the form stays short; hidden entirely when AI is off. */}
+					{aiEnabled && (
+						<Accordion className="rounded-lg border border-border border-dashed px-3">
+							<AccordionItem value="job-description">
+								<AccordionTrigger>
+									<span className="flex items-center gap-1.5">
+										<SparkleIcon className="text-primary" />
+										<Trans>Job description</Trans>
+									</span>
+								</AccordionTrigger>
+								<AccordionContent className="flex flex-col gap-2">
+									<p className="text-muted-foreground text-xs">
+										<Trans>
+											Copy the entire job description from the posting and paste it below. We'll fill in the fields for
+											you and keep the text with this application for match scoring and tailoring.
+										</Trans>
+									</p>
+									<Textarea
+										// Fixed height: the accordion panel measures its content once, so a textarea that
+										// grew with the pasted text would overflow the clipped panel.
+										className="field-sizing-fixed h-40"
+										value={form.jobDescription}
+										rows={8}
+										maxLength={MAX_JOB_DESCRIPTION_CHARS}
+										placeholder={t`Paste the full job description here…`}
+										onChange={(event) => set("jobDescription", event.target.value)}
+										onPaste={(event) => runAutofill(event.clipboardData.getData("text"))}
+									/>
+									<div className="flex items-center justify-between gap-2">
+										<p className="text-[11px] text-muted-foreground">
+											{autofill.isPending ? (
+												<Trans>Reading the posting…</Trans>
+											) : (
+												<Trans>Pasting fills the fields automatically.</Trans>
+											)}
+										</p>
+										<Button
+											type="button"
+											size="sm"
+											variant="outline"
+											disabled={form.jobDescription.trim().length < MIN_AUTOFILL_CHARS || autofill.isPending}
+											onClick={() => runAutofill(form.jobDescription)}
+										>
+											<SparkleIcon />
+											<Trans>Fill fields</Trans>
+										</Button>
+									</div>
+								</AccordionContent>
+							</AccordionItem>
+						</Accordion>
 					)}
 
 					<Field label={t`Company`} required>
@@ -276,6 +312,15 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 						</Field>
 					</div>
 
+					<Field label={t`Job posting link`}>
+						<Input
+							type="url"
+							value={form.sourceUrl}
+							placeholder="https://…"
+							onChange={(event) => set("sourceUrl", event.target.value)}
+						/>
+					</Field>
+
 					{!isEditing && (
 						<Field label={t`Stage date`}>
 							<Input
@@ -304,7 +349,7 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 								onChange={(value) => set("resumeFile", value)}
 							/>
 							<p className="text-[11px] text-muted-foreground">
-								<Trans>Linking a Reactive Resume enables AI match scoring and tailoring.</Trans>
+								<Trans>Link a Reactive Resume to use AI match scoring and tailoring.</Trans>
 							</p>
 						</div>
 					</Field>
@@ -329,15 +374,6 @@ export function ApplicationFormSheet({ open, onOpenChange, application }: Props)
 							<Input value={form.followUpNote} onChange={(event) => set("followUpNote", event.target.value)} />
 						</Field>
 					</div>
-
-					<Field label={t`Job description`}>
-						<Textarea
-							value={form.jobDescription}
-							rows={3}
-							placeholder={t`Paste the posting — powers AI match scoring and tailoring.`}
-							onChange={(event) => set("jobDescription", event.target.value)}
-						/>
-					</Field>
 
 					<Field label={t`Notes`}>
 						<Textarea

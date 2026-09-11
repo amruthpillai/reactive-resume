@@ -18,13 +18,13 @@ export const sharingRouter = {
 		})
 		.input(resumeDto.getBySlug.input)
 		.output(resumeDto.getBySlug.output)
-		.handler(async ({ input, context }) => {
-			return resumeService.getBySlug({
+		.handler(({ input, context }) =>
+			resumeService.getBySlug({
 				...input,
 				requestHeaders: context.reqHeaders,
 				...(context.user?.id ? { currentUserId: context.user.id } : {}),
-			});
-		}),
+			}),
+		),
 
 	setPassword: protectedProcedure
 		.route({
@@ -40,13 +40,13 @@ export const sharingRouter = {
 		.input(resumeDto.setPassword.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.setPassword.output)
-		.handler(async ({ context, input }) => {
-			return resumeService.setPassword({
+		.handler(({ context, input }) =>
+			resumeService.setPassword({
 				id: input.id,
 				userId: context.user.id,
 				password: input.password,
-			});
-		}),
+			}),
+		),
 
 	verifyPassword: publicProcedure
 		.route({
@@ -68,14 +68,15 @@ export const sharingRouter = {
 		)
 		.use(resumePasswordRateLimit)
 		.output(z.boolean())
-		.handler(async ({ context, input }): Promise<boolean> => {
-			return resumeService.verifyPassword({
-				username: input.username,
-				slug: input.slug,
-				password: input.password,
-				...(context.resHeaders ? { responseHeaders: context.resHeaders } : {}),
-			});
-		}),
+		.handler(
+			({ context, input }): Promise<boolean> =>
+				resumeService.verifyPassword({
+					username: input.username,
+					slug: input.slug,
+					password: input.password,
+					...(context.resHeaders ? { responseHeaders: context.resHeaders } : {}),
+				}),
+		),
 
 	removePassword: protectedProcedure
 		.route({
@@ -91,10 +92,10 @@ export const sharingRouter = {
 		.input(resumeDto.removePassword.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.removePassword.output)
-		.handler(async ({ context, input }) => {
-			return resumeService.removePassword({
+		.handler(({ context, input }) =>
+			resumeService.removePassword({
 				id: input.id,
 				userId: context.user.id,
-			});
-		}),
+			}),
+		),
 };

@@ -1,6 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { useId } from "react";
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "./form";
+import { InputGroup, InputGroupInput } from "./input-group";
+import { Slider } from "./slider";
 
 describe("FormItem", () => {
 	it("renders with data-slot='form-item'", () => {
@@ -62,6 +65,135 @@ describe("FormLabel", () => {
 });
 
 describe("FormControl", () => {
+	it("forwards the generated id to the real control inside an InputGroup wrapper", () => {
+		render(
+			<FormItem>
+				<FormLabel>Slug</FormLabel>
+				<FormControl
+					render={
+						<InputGroup data-testid="group">
+							<InputGroupInput data-testid="input" />
+						</InputGroup>
+					}
+				/>
+			</FormItem>,
+		);
+
+		const label = screen.getByText("Slug");
+		const group = screen.getByTestId("group");
+		const input = screen.getByTestId("input") as HTMLInputElement;
+
+		expect(input).toHaveAttribute("id");
+		expect(input.getAttribute("id")).toMatch(/-form-item$/);
+		expect(label).toHaveAttribute("for", input.id);
+		expect(group).not.toHaveAttribute("id", input.id);
+	});
+
+	it("forwards the generated id to the Base UI Slider control", () => {
+		render(
+			<FormItem>
+				<FormLabel>Sidebar Width</FormLabel>
+				<FormControl render={<Slider defaultValue={[30]} />} />
+			</FormItem>,
+		);
+
+		const label = screen.getByText("Sidebar Width");
+		const labelId = label.id;
+		const htmlFor = label.getAttribute("for");
+		const sliderInput = document.querySelector('input[type="range"]') as HTMLInputElement;
+
+		expect(sliderInput).toBeInTheDocument();
+		expect(sliderInput.id).toBe(htmlFor);
+		expect(sliderInput.getAttribute("aria-labelledby")).toBe(labelId);
+	});
+
+	it("leaves the Slider control ids unique when the FormControl wraps a range slider", () => {
+		render(
+			<FormItem>
+				<FormLabel>Range</FormLabel>
+				<FormControl render={<Slider defaultValue={[20, 40]} />} />
+			</FormItem>,
+		);
+
+		const label = screen.getByText("Range");
+		const rangeInputs = Array.from(document.querySelectorAll('input[type="range"]'));
+
+		expect(rangeInputs).toHaveLength(2);
+		expect(new Set(rangeInputs.map((input) => input.id)).size).toBe(2);
+		for (const input of rangeInputs) {
+			expect(input).toHaveAttribute("aria-labelledby", label.id);
+		}
+	});
+
+	it("reflects the FormControl error state as aria-invalid on the Slider control", () => {
+		render(
+			<FormItem hasError>
+				<FormLabel>Sidebar Width</FormLabel>
+				<FormControl render={<Slider defaultValue={[30]} />} />
+			</FormItem>,
+		);
+
+		const sliderInput = document.querySelector('input[type="range"]') as HTMLInputElement;
+
+		expect(sliderInput).toBeInTheDocument();
+		expect(sliderInput.getAttribute("aria-invalid")).toBe("true");
+	});
+
+	it("keeps ids distinct when a FormItem contains a Slider and an InputGroup control", () => {
+		function TestField() {
+			const labelId = useId();
+
+			return (
+				<FormItem>
+					<FormLabel id={labelId}>Sidebar Width</FormLabel>
+					<div className="flex items-center gap-4">
+						<Slider defaultValue={[30]} aria-labelledby={labelId} />
+						<FormControl
+							render={
+								<InputGroup data-testid="group">
+									<InputGroupInput data-testid="input" />
+								</InputGroup>
+							}
+						/>
+					</div>
+				</FormItem>
+			);
+		}
+
+		render(<TestField />);
+
+		const label = screen.getByText("Sidebar Width");
+		const numericInput = screen.getByTestId("input") as HTMLInputElement;
+		const sliderInput = document.querySelector('input[type="range"]') as HTMLInputElement;
+
+		expect(label).toHaveAttribute("for", numericInput.id);
+		expect(sliderInput).toHaveAttribute("aria-labelledby", label.id);
+		expect(sliderInput.id).not.toBe(numericInput.id);
+
+		const allInputs = document.querySelectorAll("input");
+		const uniqueIds = new Set(Array.from(allInputs).map((input) => input.id));
+		expect(uniqueIds.size).toBe(allInputs.length);
+	});
+
+	it("warns when the generated id lands on a non-labelable wrapper", () => {
+		const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+		render(
+			<FormItem>
+				<FormLabel>Name</FormLabel>
+				<FormControl render={<div data-testid="wrapper" />} />
+			</FormItem>,
+		);
+
+		expect(warn).toHaveBeenCalled();
+		const call = warn.mock.calls.find(
+			([message]) => typeof message === "string" && message.includes("not a labelable element"),
+		);
+		expect(call).toBeTruthy();
+
+		warn.mockRestore();
+	});
+
 	it("sets aria-describedby pointing only to description when no error", () => {
 		render(
 			<FormItem>

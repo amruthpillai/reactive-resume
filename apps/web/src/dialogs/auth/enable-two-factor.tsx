@@ -6,7 +6,6 @@ import { useStore } from "@tanstack/react-form";
 import { useRouter } from "@tanstack/react-router";
 import { QRCodeSVG } from "qrcode.react";
 import { useState } from "react";
-import { toast } from "sonner";
 import { match } from "ts-pattern";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
@@ -20,6 +19,8 @@ import {
 } from "@reactive-resume/ui/components/dialog";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
+import { OTPField } from "@reactive-resume/ui/components/otp-field";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
@@ -58,7 +59,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 		defaultValues: { password: "" },
 		validators: { onSubmit: enableFormSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Enabling two-factor authentication…`);
+			const toastId = toast.add({ type: "loading", description: t`Enabling two-factor authentication…` });
 
 			const { data, error } = await authClient.twoFactor.enable({
 				password: value.password,
@@ -66,26 +67,27 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 			});
 
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when enabling two-factor authentication fails",
 							message: "Failed to enable two-factor authentication. Please try again.",
 						}),
 					),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
 				return;
 			}
 
-			if (data.totpURI && data.backupCodes) {
+			if (data.method === "totp") {
 				setTotpUri(data.totpURI);
 				setBackupCodes(data.backupCodes);
 				setStep("verify");
-				toast.dismiss(toastId);
+				toast.close(toastId);
 			} else {
-				toast.error(t`Failed to setup two-factor authentication.`, { id: toastId });
+				toast.add({ type: "error", description: t`Could not set up two-factor authentication.`, id: toastId });
 			}
 		},
 	});
@@ -94,25 +96,26 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 		defaultValues: { code: "" },
 		validators: { onSubmit: verifyFormSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Verifying code…`);
+			const toastId = toast.add({ type: "loading", description: t`Verifying code…` });
 
 			const { error } = await authClient.twoFactor.verifyTotp({ code: value.code });
 
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when verifying two-factor setup code fails",
 							message: "Failed to verify your code. Please try again.",
 						}),
 					),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
 				return;
 			}
 
-			toast.dismiss(toastId);
+			toast.close(toastId);
 			setStep("backup");
 		},
 	});
@@ -131,7 +134,7 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 	});
 
 	const onConfirmBackup = () => {
-		toast.success(t`Two-factor authentication has been setup successfully.`);
+		toast.add({ type: "success", description: t`Two-factor authentication is now enabled.` });
 		void router.invalidate();
 		closeDialog();
 		onReset();
@@ -150,13 +153,13 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 		const secret = extractSecretFromTotpUri(totpUri);
 		if (!secret) return;
 		await navigator.clipboard.writeText(secret);
-		toast.success(t`Secret copied to clipboard.`);
+		toast.add({ type: "success", description: t`Secret copied to clipboard.` });
 	};
 
 	const handleCopyBackupCodes = async () => {
 		if (!backupCodes) return;
 		await navigator.clipboard.writeText(backupCodes.join("\n"));
-		toast.success(t`Backup codes copied to clipboard.`);
+		toast.add({ type: "success", description: t`Backup codes copied to clipboard.` });
 	};
 
 	const handleDownloadBackupCodes = () => {
@@ -254,6 +257,12 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 									<div className="flex items-center gap-x-2">
 										<Input readOnly value={secret} className="font-mono text-sm" />
 										<Button size="icon" variant="ghost" type="button" onClick={handleCopySecret}>
+											<span className="sr-only">
+												{t({
+													comment: "Accessible label for the button that copies the two-factor secret key",
+													message: "Copy secret",
+												})}
+											</span>
 											<CopyIcon />
 										</Button>
 									</div>
@@ -279,14 +288,13 @@ export function EnableTwoFactorDialog(_: DialogProps<"auth.two-factor.enable">) 
 										<FormItem hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}>
 											<FormControl
 												render={
-													<Input
-														type="number"
-														maxLength={6}
-														className="max-w-xs"
+													<OTPField
+														length={6}
+														autoSubmit
 														name={field.name}
 														value={field.state.value}
 														onBlur={field.handleBlur}
-														onChange={(event) => field.handleChange(event.target.value)}
+														onValueChange={field.handleChange}
 													/>
 												}
 											/>
@@ -365,8 +373,8 @@ function TwoFactorDialogDescription({ step }: TwoFactorStepProps) {
 	return match(step)
 		.with("enable", () => (
 			<Trans>
-				Enter your password to confirm setting up two-factor authentication. When enabled, you'll need to enter a code
-				from your authenticator app every time you log in.
+				Enter your password to confirm setting up two-factor authentication. Once it is on, you need a code from your
+				authenticator app every time you sign in.
 			</Trans>
 		))
 		.with("verify", () => (

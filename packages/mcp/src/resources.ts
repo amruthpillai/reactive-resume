@@ -25,7 +25,7 @@ export function registerResources(server: McpServer, client: RouterClient<typeof
 		},
 		async (uri: URL) => {
 			const id = uri.href.replace(/^resume:\/\//, "");
-			if (!id) throw new Error("Invalid resume URI — expected format: resume://{id}");
+			if (!id) throw new Error("Invalid resume URI. Expected format: resume://{id}");
 
 			const resume = await client.resume.getById({ id });
 
@@ -58,7 +58,7 @@ export function registerResources(server: McpServer, client: RouterClient<typeof
 				"custom sections, and metadata (template, layout, typography, colors, CSS).",
 			].join(" "),
 		},
-		async (uri: URL) => ({
+		(uri: URL) => ({
 			contents: [
 				{
 					uri: uri.href,

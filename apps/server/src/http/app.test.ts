@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
 	handleUpload: vi.fn(),
 	handleMcp: vi.fn(),
 	handleResumePdfDownload: vi.fn(),
+	handlePublicResumePdf: vi.fn(),
 	handleMcpServerCard: vi.fn(),
 	handleOAuthAuthorizationServer: vi.fn(),
 	handleOAuthProtectedResource: vi.fn(),
@@ -69,6 +70,15 @@ vi.mock("./resume-pdf", () => ({
 	handleResumePdfDownload: mocks.handleResumePdfDownload,
 }));
 
+vi.mock("./public-resume-pdf", () => ({
+	handlePublicResumePdf: mocks.handlePublicResumePdf,
+}));
+
+const transportEnv = (remoteAddress: string) =>
+	({
+		incoming: { socket: { remoteAddress } },
+	}) as never;
+
 beforeEach(() => {
 	vi.clearAllMocks();
 	mocks.handleAuth.mockResolvedValue(new Response("auth"));
@@ -79,6 +89,7 @@ beforeEach(() => {
 	mocks.handleUpload.mockResolvedValue(new Response("upload"));
 	mocks.handleMcp.mockResolvedValue(new Response("mcp"));
 	mocks.handleResumePdfDownload.mockResolvedValue(new Response("pdf"));
+	mocks.handlePublicResumePdf.mockResolvedValue(new Response("public-pdf"));
 	mocks.handleMcpServerCard.mockReturnValue(new Response("server-card"));
 	mocks.handleOAuthAuthorizationServer.mockReturnValue(new Response("oauth-authorization-server"));
 	mocks.handleOAuthProtectedResource.mockReturnValue(new Response("oauth-protected-resource"));
@@ -117,6 +128,51 @@ describe("createApp", () => {
 		expect(mocks.handleWebApp).not.toHaveBeenCalled();
 	});
 
+	it("uses the transport address for public PDF fallback despite rotated forwarding headers", async () => {
+		const { createApp } = await import("./app");
+		const app = createApp();
+		const first = new Request("http://localhost:3001/api/resumes/jane/resume/pdf", {
+			headers: { "x-forwarded-for": "198.51.100.1" },
+		});
+		const rotated = new Request("http://localhost:3001/api/resumes/jane/resume/pdf", {
+			headers: { "x-forwarded-for": "198.51.100.2" },
+		});
+		const env = transportEnv("203.0.113.9");
+
+		const response = await app.fetch(first, env);
+		await app.fetch(rotated, env);
+
+		await expect(response.text()).resolves.toBe("public-pdf");
+		expect(mocks.handlePublicResumePdf).toHaveBeenNthCalledWith(1, first, "jane", "resume", "203.0.113.9");
+		expect(mocks.handlePublicResumePdf).toHaveBeenNthCalledWith(2, rotated, "jane", "resume", "203.0.113.9");
+		expect(mocks.handleResumePdfDownload).not.toHaveBeenCalled();
+		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
+		expect(mocks.handleWebApp).not.toHaveBeenCalled();
+	});
+
+	it("passes the transport address to RPC and OpenAPI and fails closed when it is unavailable", async () => {
+		const { createApp } = await import("./app");
+		const app = createApp();
+		const trustedRpcRequest = new Request("http://localhost:3001/api/rpc", {
+			headers: { "cf-connecting-ip": "198.51.100.1" },
+		});
+		const unknownRpcRequest = new Request("http://localhost:3001/api/rpc", {
+			headers: { "cf-connecting-ip": "198.51.100.2" },
+		});
+		const trustedOpenApiRequest = new Request("http://localhost:3001/api/openapi/resumes/jane/resume");
+		const unknownOpenApiRequest = new Request("http://localhost:3001/api/openapi/resumes/jane/resume");
+
+		await app.fetch(trustedRpcRequest, transportEnv("203.0.113.9"));
+		await app.fetch(unknownRpcRequest);
+		await app.fetch(trustedOpenApiRequest, transportEnv("203.0.113.9"));
+		await app.fetch(unknownOpenApiRequest);
+
+		expect(mocks.handleRpc).toHaveBeenNthCalledWith(1, trustedRpcRequest, "203.0.113.9");
+		expect(mocks.handleRpc).toHaveBeenNthCalledWith(2, unknownRpcRequest, "unknown");
+		expect(mocks.handleOpenApi).toHaveBeenNthCalledWith(1, trustedOpenApiRequest, "203.0.113.9");
+		expect(mocks.handleOpenApi).toHaveBeenNthCalledWith(2, unknownOpenApiRequest, "unknown");
+	});
+
 	it.each([
 		["GET", "/robots.txt", "robots", mocks.handleRobots],
 		["HEAD", "/robots.txt", "", mocks.handleRobots],
@@ -136,4 +192,30 @@ describe("createApp", () => {
 		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
 		expect(mocks.handleWebApp).not.toHaveBeenCalled();
 	});
+
+	it.each(["GET", "HEAD"])("routes %s / to the web app handler so SEO markup is injected", async (method) => {
+		const { createApp } = await import("./app");
+		const app = createApp();
+		const request = new Request("http://localhost:3001/", { method });
+
+		const response = await app.fetch(request);
+
+		expect(response.status).toBe(200);
+		expect(mocks.handleWebApp).toHaveBeenCalledWith(request);
+		expect(mocks.serveWebDistStatic).not.toHaveBeenCalled();
+	});
+});
+
+it.each(["/auth/consent", "/auth/consent/", "/auth/login"])("prevents framing or caching %s", async (path) => {
+	const { createApp } = await import("./app");
+	mocks.serveWebDistStatic.mockImplementationOnce(async (_context: unknown, next: () => Promise<void>) => {
+		await next();
+	});
+	const response = await createApp().request(`http://localhost:3000${path}?sig=signed`);
+	expect(response.status).toBe(200);
+	expect(await response.text()).toBe("web");
+	expect(response.headers.get("content-security-policy")).toBe("frame-ancestors 'none'");
+	expect(response.headers.get("x-frame-options")).toBe("DENY");
+	expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+	expect(response.headers.get("cache-control")).toBe("no-store");
 });

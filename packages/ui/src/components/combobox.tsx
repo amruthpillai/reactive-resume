@@ -1,7 +1,6 @@
+import type * as React from "react";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react";
 import { CaretDownIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
-import * as React from "react";
-import { Button } from "@reactive-resume/ui/components/button";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -202,37 +201,6 @@ function ComboboxChips({
 	);
 }
 
-function ComboboxChip({
-	className,
-	children,
-	showRemove = true,
-	...props
-}: ComboboxPrimitive.Chip.Props & {
-	showRemove?: boolean;
-}) {
-	return (
-		<ComboboxPrimitive.Chip
-			data-slot="combobox-chip"
-			className={cn(
-				"flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-1 whitespace-nowrap rounded-sm bg-muted px-1.5 font-medium text-foreground text-xs has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-data-[slot=combobox-chip-remove]:pe-0 has-disabled:opacity-50",
-				className,
-			)}
-			{...props}
-		>
-			{children}
-			{showRemove && (
-				<ComboboxPrimitive.ChipRemove
-					render={<Button variant="ghost" size="icon-xs" />}
-					className="-ms-1 opacity-50 hover:opacity-100"
-					data-slot="combobox-chip-remove"
-				>
-					<XIcon className="pointer-events-none" />
-				</ComboboxPrimitive.ChipRemove>
-			)}
-		</ComboboxPrimitive.Chip>
-	);
-}
-
 function ComboboxChipsInput({ className, ...props }: ComboboxPrimitive.Input.Props) {
 	return (
 		<ComboboxPrimitive.Input
@@ -243,12 +211,7 @@ function ComboboxChipsInput({ className, ...props }: ComboboxPrimitive.Input.Pro
 	);
 }
 
-function useComboboxAnchor() {
-	return React.useRef<HTMLDivElement | null>(null);
-}
-
 export {
-	ComboboxChip,
 	ComboboxChips,
 	ComboboxChipsInput,
 	ComboboxClear,
@@ -264,6 +227,5 @@ export {
 	ComboboxSeparator,
 	ComboboxTrigger,
 	ComboboxValue,
-	useComboboxAnchor,
 	useFilter,
 };

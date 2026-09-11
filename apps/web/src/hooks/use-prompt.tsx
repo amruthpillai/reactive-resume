@@ -67,7 +67,7 @@ export function PromptDialogProvider({ children }: PromptDialogProviderProps) {
 		return () => window.clearTimeout(timeoutId);
 	}, [state.open]);
 
-	const prompt = React.useCallback(async (title: string, options?: PromptOptions): Promise<string | null> => {
+	const prompt = React.useCallback((title: string, options?: PromptOptions): Promise<string | null> => {
 		return new Promise<string | null>((resolve) => {
 			setState({
 				open: true,

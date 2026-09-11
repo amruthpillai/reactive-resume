@@ -37,6 +37,7 @@ import { useConfirm } from "@/hooks/use-confirm";
 import { getSectionTitle } from "@/libs/resume/section";
 import { SectionBase } from "../shared/section-base";
 import { SectionAddItemButton, SectionItem } from "../shared/section-item";
+import { SkillKeywordLayoutMenu } from "../shared/skill-keyword-layout-menu";
 
 // ponytail: data maps replace ts-pattern exhaustive matchers — same coverage, no runtime dependency
 const TITLE_FIELD: Partial<Record<CustomSectionType, string>> = {
@@ -127,9 +128,11 @@ export function CustomSectionBuilder() {
 	return (
 		<SectionBase type="custom" className={cn("space-y-4", customSections.length === 0 && "border-dashed")}>
 			<AnimatePresence>
-				{customSections.map((section) => (
-					<CustomSectionContainer key={section.id} section={section} />
-				))}
+				{customSections
+					.filter((section) => !section.hidden)
+					.map((section) => (
+						<CustomSectionContainer key={section.id} section={section} />
+					))}
 			</AnimatePresence>
 
 			{/* Add Custom Section Button */}
@@ -161,7 +164,7 @@ function CustomSectionContainer({ section }: CustomSectionContainerProps) {
 	};
 
 	return (
-		<div className="rounded-md border">
+		<div id={`sidebar-${section.id}`} className="rounded-md border">
 			{/* Section Header */}
 			<div className="group flex select-none">
 				<button
@@ -222,12 +225,21 @@ function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) 
 	const confirm = useConfirm();
 	const { openDialog } = useDialogStore();
 	const updateResumeData = useUpdateResumeData();
+	const showHeading = section.showHeading !== false;
 
 	const onToggleSectionVisibility = () => {
 		updateResumeData((draft) => {
 			const sectionIndex = draft.customSections.findIndex((_section) => _section.id === section.id);
 			if (sectionIndex === -1) return;
 			draft.customSections[sectionIndex].hidden = !draft.customSections[sectionIndex].hidden;
+		});
+	};
+
+	const onToggleHeading = () => {
+		updateResumeData((draft) => {
+			const sectionIndex = draft.customSections.findIndex((_section) => _section.id === section.id);
+			if (sectionIndex === -1) return;
+			draft.customSections[sectionIndex].showHeading = !(draft.customSections[sectionIndex].showHeading !== false);
 		});
 	};
 
@@ -284,6 +296,11 @@ function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) 
 						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
 					</DropdownMenuItem>
 
+					<DropdownMenuItem onClick={onToggleHeading}>
+						{showHeading ? <EyeClosedIcon /> : <EyeIcon />}
+						{showHeading ? <Trans>Hide heading</Trans> : <Trans>Show heading</Trans>}
+					</DropdownMenuItem>
+
 					<DropdownMenuItem onClick={onUpdateSection}>
 						<PencilSimpleLineIcon />
 						<Trans>Update</Trans>
@@ -293,6 +310,8 @@ function CustomSectionDropdownMenu({ section }: CustomSectionDropdownMenuProps) 
 						<CopySimpleIcon />
 						<Trans>Duplicate</Trans>
 					</DropdownMenuItem>
+
+					{section.type === "skills" && <SkillKeywordLayoutMenu sectionId={section.id} />}
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>

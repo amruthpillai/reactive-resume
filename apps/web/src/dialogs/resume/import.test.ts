@@ -18,7 +18,21 @@ describe("detectJsonImportType", () => {
 		);
 	});
 
+	it("detects a real v4 layout even though v4 metadata also has a page key", () => {
+		expect(
+			detectJsonImportType({
+				basics: {},
+				sections: {},
+				metadata: {
+					layout: [[["experience"], ["skills"]]],
+					page: { margin: 14, format: "a4", options: { breakLine: false, pageNumbers: false } },
+				},
+			}),
+		).toBe("reactive-resume-v4-json");
+	});
+
 	it("returns an empty string for unrecognized shapes", () => {
+		expect(detectJsonImportType({})).toBe("");
 		expect(detectJsonImportType({ foo: "bar" })).toBe("");
 		expect(detectJsonImportType(null)).toBe("");
 		expect(detectJsonImportType("nope")).toBe("");

@@ -78,7 +78,7 @@ services:
         condition: service_healthy
 
   reactive_resume:
-    # image: ghcr.io/amruthpillai/reactive-resume:latest
+    # image: ghcr.io/reactive-resume/app:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -89,6 +89,8 @@ services:
       - "3000:3000"
     env_file:
       - path: .env.example
+        required: false
+      - path: .env
         required: false
     volumes:
       - ./data:/app/data

@@ -70,6 +70,8 @@ export const agentThread = pg.pgTable(
 		workingResumeId: pg.text("working_resume_id").references(() => resume.id, { onDelete: "set null" }),
 		title: pg.text("title").notNull(),
 		status: pg.text("status").notNull().default("active"),
+		// Per-thread "Review edits" toggle: when true, apply_resume_patch requires user approval.
+		reviewPatches: pg.boolean("review_patches").notNull().default(false),
 		activeRunId: pg.text("active_run_id"),
 		activeStreamId: pg.text("active_stream_id"),
 		activeRunStartedAt: pg.timestamp("active_run_started_at", { withTimezone: true }),

@@ -39,7 +39,7 @@ export function CreateInterestDialog({ data }: DialogProps<"resume.sections.inte
 	const form = useAppForm({
 		defaultValues: makeSectionItem(defaultValues, data?.item),
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				createSectionItem(draft, "interests", value, data?.customSectionId);
 			});
@@ -71,7 +71,7 @@ export function UpdateInterestDialog({ data }: DialogProps<"resume.sections.inte
 	const form = useAppForm({
 		defaultValues: data.item,
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				updateSectionItem(draft, "interests", value, data?.customSectionId);
 			});

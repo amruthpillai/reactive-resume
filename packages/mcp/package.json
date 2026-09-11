@@ -6,10 +6,7 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./server-card": "./src/mcp-server-card.ts",
-		"./tool-names": "./src/mcp-tool-names.ts",
-		"./tools": "./src/tools.ts",
-		"./prompts": "./src/prompts.ts",
-		"./resources": "./src/resources.ts"
+		"./tool-names": "./src/mcp-tool-names.ts"
 	},
 	"scripts": {
 		"typecheck": "tsgo --noEmit",
@@ -19,18 +16,19 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.29.0",
-		"@orpc/server": "^1.14.7",
+		"@modelcontextprotocol/sdk": "^1.30.0",
+		"@orpc/server": "^1.15.0",
 		"@reactive-resume/ai": "workspace:*",
 		"@reactive-resume/api": "workspace:*",
 		"@reactive-resume/env": "workspace:*",
+		"@reactive-resume/resume": "workspace:*",
 		"@reactive-resume/schema": "workspace:*",
-		"zod": "^4.4.3"
+		"zod": "^4.6.1"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
 		"@typescript/native-preview": "7.0.0-dev.20260707.2",
 		"typescript": "^7.0.2",
-		"vitest": "^4.1.10"
+		"vitest": "^5.0.0"
 	}
 }

@@ -34,7 +34,7 @@ export function CreateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 	const form = useAppForm({
 		defaultValues: makeSectionItem(defaultValues, data?.item),
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				createSectionItem(draft, "languages", value, data?.customSectionId);
 			});
@@ -66,7 +66,7 @@ export function UpdateLanguageDialog({ data }: DialogProps<"resume.sections.lang
 	const form = useAppForm({
 		defaultValues: data.item,
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				updateSectionItem(draft, "languages", value, data?.customSectionId);
 			});

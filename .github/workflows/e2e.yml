@@ -20,7 +20,7 @@ env:
 
 jobs:
   e2e:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-32vcpu-ubuntu-2404
     timeout-minutes: 30
 
     services:
@@ -50,14 +50,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version-file: ".nvmrc"
           cache: "pnpm"
 
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browser
-        run: pnpm exec playwright install --with-deps chromium
+        timeout-minutes: 10
+        run: |
+          # The runner's Ubuntu archive/security mirrors time out during dependency installation.
+          printf '%s\n' 'https://mirrors.edge.kernel.org/ubuntu/' | sudo tee /etc/apt/blacksmith-ubuntu-mirrors.txt > /dev/null
+          sudo find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) \
+            -exec sed -i -E 's#https?://(archive|us\.archive|security)\.ubuntu\.com/ubuntu#https://mirrors.edge.kernel.org/ubuntu#g' {} +
+          pnpm exec playwright install --with-deps chromium
 
       - name: Generate Test Secrets
         run: |
@@ -70,11 +76,18 @@ jobs:
       - name: Run Database Migrations
         run: pnpm db:migrate
 
+      # Runs every workspace package, not a hand-maintained filter list, so a package
+      # cannot silently lose coverage by being left out. Serial execution: the PDF
+      # rasterization and API rate-limit suites time out when several packages' Vitest
+      # thread pools oversubscribe the runner at once.
+      - name: Run Unit Tests
+        run: pnpm exec turbo run test:ci --concurrency=1
+
       - name: Build
         run: pnpm build
 
       - name: Run E2E Tests
-        run: pnpm test:e2e:ci
+        run: pnpm exec playwright test
 
       - name: Upload Playwright Report
         if: always()

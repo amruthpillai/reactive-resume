@@ -44,7 +44,7 @@ export function StatisticsSectionBuilder() {
 							<AlertDescription>
 								<Trans>
 									Turn on public sharing to track how many times your resume has been viewed or downloaded. Only you can
-									see your resume's statistics.
+									see these numbers.
 								</Trans>
 							</AlertDescription>
 						</Alert>

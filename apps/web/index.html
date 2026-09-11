@@ -9,14 +9,15 @@
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-title" content="Reactive Resume" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-		<meta name="description" content="Reactive Resume is a free and open-source resume builder that simplifies the process of creating, updating, and sharing your resume.">
+		<!-- Keep under ~120 characters so Google's mobile SERP snippet is not truncated at 3 lines. -->
+		<meta name="description" content="Free, open-source resume builder. Create, update, and share a professional resume in minutes — no ads, no paywall.">
 
 		<link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="128x128" />
 		<link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="256x256 any" />
 		<link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" type="image/png" sizes="180x180 any" />
 		<link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials" />
 
-		<title>Reactive Resume</title>
+		<title>Reactive Resume — A free and open-source resume builder</title>
 	</head>
 	<body>
 		<!-- Keep #app empty: main.tsx only mounts React when rootElement has no children. -->
@@ -56,6 +57,6 @@
 				clip: rect(0 0 0 0);
 			}
 		</style>
-		<script type="module" src="/src/main.tsx"></script>
+		<script type="module" data-cfasync="false" src="/src/main.tsx"></script>
 	</body>
 </html>

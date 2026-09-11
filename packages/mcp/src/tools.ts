@@ -5,14 +5,14 @@ import type { resumePatchOperationsSchema } from "@reactive-resume/ai/tools/resu
 import type router from "@reactive-resume/api/routers";
 import type z from "zod";
 import { Buffer } from "node:buffer";
+import { ORPCError } from "@orpc/server";
 import { resolveUserFromRequestHeaders } from "@reactive-resume/api/context";
 import { createResumePdfDownloadUrl } from "@reactive-resume/api/features/resume/export";
 import { env } from "@reactive-resume/env/server";
+import { resumeHasCoverLetter } from "@reactive-resume/resume/export-sections";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
 import { TOOL_META } from "./tool-meta";
-
-export { MCP_TOOL_NAME } from "./mcp-tool-names";
 
 type PatchOperation = z.infer<typeof resumePatchOperationsSchema>[number];
 
@@ -22,17 +22,30 @@ function errorMessage(error: unknown): string {
 	return error instanceof Error ? error.message : String(error);
 }
 
+/**
+ * Maps a failed router call to an actionable next step for the model.
+ *
+ * Matches on the error's `code` and `status` rather than its message: procedures
+ * throw `new ORPCError("RESUME_LOCKED")` and friends without a message, so the
+ * message is the code itself (`"RESUME_LOCKED"`) or oRPC's own default
+ * (`"Not Found"` for `NOT_FOUND`), and HTTP status never appears in it at all.
+ */
 function errorHint(error: unknown): string {
-	const msg = errorMessage(error);
-	const { unlockResume, listResumes, getResume } = MCP_TOOL_NAME;
-	if (msg.includes("slug already exists")) return "\n\nHint: The slug is already in use. Try a different one.";
-	if (msg.includes("locked")) return `\n\nHint: This resume is locked. Use \`${unlockResume}\` first.`;
-	if (msg.includes("404") || msg.includes("not found"))
-		return `\n\nHint: Resume not found. Use \`${listResumes}\` to find valid IDs.`;
-	if (msg.includes("400"))
-		return `\n\nHint: Invalid request. Check the input parameters or use \`${getResume}\` to inspect the resume structure.`;
-	if (msg.includes("403"))
-		return `\n\nHint: Permission denied. The resume may be locked — use \`${unlockResume}\` first.`;
+	if (!(error instanceof ORPCError)) return "";
+
+	const { unlockResume, listResumes, listApplications } = MCP_TOOL_NAME;
+	const { code, status } = error;
+
+	// Check codes before statuses: RESUME_SLUG_ALREADY_EXISTS is thrown with status 400.
+	if (code === "RESUME_SLUG_ALREADY_EXISTS") return "\n\nHint: The slug is already in use. Try a different one.";
+	if (code === "RESUME_LOCKED") return `\n\nHint: This resume is locked. Use \`${unlockResume}\` first.`;
+	// Every tool shares this handler, so the wording stays entity-agnostic: `NOT_FOUND` is
+	// thrown by the application procedures too, and resume-flavoured advice misdirects there.
+	if (code === "NOT_FOUND" || status === 404)
+		return `\n\nHint: Not found. Check the ID — \`${listResumes}\` and \`${listApplications}\` return valid ones.`;
+	if (code === "FORBIDDEN" || status === 403)
+		return "\n\nHint: Permission denied. This account cannot access that record.";
+	if (status === 400) return "\n\nHint: Invalid request. Check the input parameters against the tool's schema.";
 	return "";
 }
 
@@ -146,45 +159,40 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 		}),
 	);
 
-	// ── Get Resume Analysis ────────────────────���──────────────────
-	server.registerTool(
-		T.getResumeAnalysis,
-		TOOL_META[T.getResumeAnalysis],
-		withErrorHandling("getting resume analysis", async ({ id }: { id: string }) => {
-			const analysis = await client.resume.analysis.getById({ id });
-
-			if (!analysis) return text("No saved analysis for this resume yet.");
-
-			return text(JSON.stringify(analysis, null, 2));
-		}),
-	);
-
-	// ── Download Resume PDF ────────��──────────────────────────────
+	// ── Download Resume or Cover Letter PDF ───────────────────────
 	server.registerTool(
 		T.downloadResumePdf,
 		TOOL_META[T.downloadResumePdf],
-		withErrorHandling("creating PDF download URL", async ({ id }: { id: string }) => {
-			const resume = await client.resume.getById({ id });
-			const user = await resolveUserFromRequestHeaders(requestHeaders);
-			if (!user) throw new Error("Unauthorized");
+		withErrorHandling(
+			"creating PDF download URL",
+			async ({ id, target }: { id: string; target?: "resume" | "cover-letter" }) => {
+				const resume = await client.resume.getById({ id });
+				const user = await resolveUserFromRequestHeaders(requestHeaders);
+				if (!user) throw new Error("Unauthorized");
 
-			const signedUrl = createResumePdfDownloadUrl({ resumeId: id, userId: user.id });
+				const documentTarget = target ?? "resume";
+				if (documentTarget === "cover-letter" && !resumeHasCoverLetter(resume.data))
+					throw new Error("No visible cover letter found for this resume.");
 
-			return text(
-				JSON.stringify(
-					{
-						resumeId: id,
-						name: resume.name,
-						downloadUrl: signedUrl.url,
-						expiresAt: signedUrl.expiresAt,
-						expiresInSeconds: signedUrl.expiresInSeconds,
-						contentType: "application/pdf",
-					},
-					null,
-					2,
-				),
-			);
-		}),
+				const signedUrl = createResumePdfDownloadUrl({ resumeId: id, userId: user.id, target: documentTarget });
+
+				return text(
+					JSON.stringify(
+						{
+							resumeId: id,
+							target: documentTarget,
+							name: documentTarget === "cover-letter" ? `${resume.name} Cover Letter` : resume.name,
+							downloadUrl: signedUrl.url,
+							expiresAt: signedUrl.expiresAt,
+							expiresInSeconds: signedUrl.expiresInSeconds,
+							contentType: "application/pdf",
+						},
+						null,
+						2,
+					),
+				);
+			},
+		),
 	);
 
 	// ── Create Resume ─────────────────────────────────────────────
@@ -297,7 +305,7 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 			const shareUrl =
 				username !== ""
 					? buildResumeShareUrl(username, resume.slug)
-					: "(could not build share URL — missing username on account)";
+					: "(could not build share URL: missing username on account)";
 
 			const payload = {
 				id: resume.id,
@@ -326,7 +334,7 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 		withErrorHandling("deleting resume", async ({ id }: { id: string }) => {
 			await client.resume.delete({ id });
 
-			return text(`Successfully deleted resume (${id}) and all associated files.`);
+			return text(`Deleted resume (${id}) and all associated files.`);
 		}),
 	);
 

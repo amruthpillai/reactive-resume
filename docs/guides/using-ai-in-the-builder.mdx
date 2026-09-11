@@ -1,60 +1,35 @@
 ---
 title: "Using AI in the builder"
-description: "Run AI-powered resume analysis and chat with the built-in AI assistant in the builder to review proposed resume changes before applying them."
+description: "Chat with the built-in AI assistant in the builder to review proposed resume changes before applying them, and add an optional AI review to the ATS check."
 ---
 
 Reactive Resume includes two AI-assisted builder workflows:
 
-- **Resume Analysis** gives you a score, strengths, and prioritized suggestions.
 - The **AI assistant** opens as a side panel in the builder, scoped to the open resume, so you can chat and apply edits inline.
+- The **ATS Check** section can add an optional AI review of your writing on top of its deterministic report.
 
 <Info>
-  These features require a tested and enabled AI provider in **Dashboard -> Settings -> Integrations**. For setup, see
-  [Using Artificial Intelligence](/guides/using-ai).
+  These features require a tested and enabled AI provider in **Dashboard → Settings → Integrations**. For setup, see
+  [Using artificial intelligence](/guides/using-ai).
 </Info>
 
-## Run a resume analysis
+## Review the writing from the ATS check
 
-Use resume analysis when you want a broad review before making changes.
+The **ATS Check** section in the right sidebar runs without AI: its checks are deterministic and run in your browser. Once a deep check has produced a report, it offers an optional AI review of the writing: weak phrasing, bullets that describe duties rather than outcomes, and where a rewrite would land better.
 
-<Steps>
-  <Step title="Open your resume in the builder">
-    Go to the dashboard and open the resume you want to review.
-  </Step>
-
-  <Step title="Open the Resume Analysis section">
-    In the right sidebar, select **Resume Analysis**.
-
-    <Frame caption="Resume Analysis section in the builder">
-      <img
-        src="/images/guides/using-ai-in-the-builder/screenshot-1.webp"
-        alt="Resume Analysis section showing the AI setup prompt in the builder sidebar"
-      />
-    </Frame>
-  </Step>
-
-  <Step title="Click Analyze Resume">
-    Reactive Resume sends the current resume data to your configured AI provider.
-  </Step>
-
-  <Step title="Review the results">
-    Review the overall score, scorecard, strengths, and suggestions.
-  </Step>
-</Steps>
-
-Use the analysis as guidance, not as a final verdict. The best resume still depends on the job, industry, and audience.
+The review sends the text already extracted from your rendered PDF to the provider you pick, and returns no score. See [Using the ATS checker](/guides/using-the-ats-checker).
 
 ## Open the AI assistant
 
 Click the **Sparkle** button in the builder header, next to the resume name, to open the assistant.
 
-The assistant opens as a side panel next to your resume. It uses the same chat interface as the AI Agent workspace, but stays scoped to the resume you are editing — its edits land in the builder immediately, appear in the preview, and are captured in undo history and version history.
+The assistant opens as a side panel next to your resume. It uses the same chat interface as the AI Agent workspace, but stays scoped to the resume you are editing. Its edits land in the builder immediately, appear in the preview, and are captured in undo history and version history.
 
 If AI is unavailable, the panel shows a link to **Integrations** so you can configure a provider.
 
 <Tip>
   The Sparkle button is the in-builder assistant. The chat-bubble icon on the floating dock opens the full **AI Agent**
-  workspace in a new page — useful for longer, standalone conversations that create their own draft. See [Using the AI
+  workspace in a new page, which suits longer, standalone conversations that create their own draft. See [Using the AI
   Agent Workspace](/guides/using-ai-agent).
 </Tip>
 
@@ -87,7 +62,7 @@ You can:
 - move between proposals with **Prev** and **Next**;
 - **Accept all** or **Reject all** from the split-button menu.
 
-Accepted edits are saved through the normal update path, so they show up in the preview, in undo history, and in version history. If you change your mind, use `Cmd/Ctrl+Z` or restore an earlier snapshot from the clock menu — see [Undoing changes and version history](/guides/undoing-changes-and-version-history).
+Accepted edits are saved through the normal update path, so they show up in the preview, in undo history, and in version history. If you change your mind, use `Cmd/Ctrl+Z` or restore an earlier snapshot from the clock menu. See [Undoing changes and version history](/guides/undoing-changes-and-version-history).
 
 <Warning>
   Review AI proposals before accepting them. AI can introduce wording that is inaccurate, too generic, or not aligned

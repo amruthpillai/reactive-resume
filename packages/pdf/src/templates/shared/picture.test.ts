@@ -3,6 +3,7 @@ import { hasTemplatePicture } from "./picture";
 
 const basePicture = {
 	hidden: false,
+	fit: "cover",
 	url: "",
 	size: 80,
 	rotation: 0,

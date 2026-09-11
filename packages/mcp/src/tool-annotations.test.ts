@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { MCP_TOOL_NAME } from "./mcp-tool-names";
-import { TOOL_ANNOTATIONS } from "./tool-annotations";
+import { TOOL_META } from "./tool-meta";
 
 describe("MCP_TOOL_NAME", () => {
 	it("uses canonical unprefixed snake_case tool names", () => {
@@ -29,10 +29,13 @@ describe("MCP_TOOL_NAME", () => {
 	});
 });
 
-describe("TOOL_ANNOTATIONS", () => {
-	it("provides annotations for every registered tool", () => {
+describe("tool annotations", () => {
+	it("provides explicit submission hints for every registered tool", () => {
 		for (const name of Object.values(MCP_TOOL_NAME)) {
-			expect(TOOL_ANNOTATIONS[name]).toBeDefined();
+			const annotations = TOOL_META[name].annotations;
+			expect(typeof annotations.readOnlyHint, name).toBe("boolean");
+			expect(typeof annotations.destructiveHint, name).toBe("boolean");
+			expect(typeof annotations.openWorldHint, name).toBe("boolean");
 		}
 	});
 
@@ -41,7 +44,6 @@ describe("TOOL_ANNOTATIONS", () => {
 			MCP_TOOL_NAME.listResumes,
 			MCP_TOOL_NAME.listResumeTags,
 			MCP_TOOL_NAME.getResume,
-			MCP_TOOL_NAME.getResumeAnalysis,
 			MCP_TOOL_NAME.getResumeStatistics,
 			MCP_TOOL_NAME.listApplications,
 			MCP_TOOL_NAME.readApplication,
@@ -49,7 +51,7 @@ describe("TOOL_ANNOTATIONS", () => {
 			MCP_TOOL_NAME.getApplicationStats,
 		];
 		for (const name of readOnlyTools) {
-			const annotations = TOOL_ANNOTATIONS[name];
+			const annotations = TOOL_META[name].annotations;
 			expect(annotations.readOnlyHint, name).toBe(true);
 			expect(annotations.destructiveHint, name).toBe(false);
 			expect(annotations.idempotentHint, name).toBe(true);
@@ -57,14 +59,14 @@ describe("TOOL_ANNOTATIONS", () => {
 	});
 
 	it("marks PDF download URL generation as read-only but non-idempotent", () => {
-		const annotations = TOOL_ANNOTATIONS[MCP_TOOL_NAME.downloadResumePdf];
+		const annotations = TOOL_META[MCP_TOOL_NAME.downloadResumePdf].annotations;
 		expect(annotations.readOnlyHint).toBe(true);
 		expect(annotations.idempotentHint).toBe(false);
 		expect(annotations.destructiveHint).toBe(false);
 	});
 
 	it("marks deleteResume as destructive (but still idempotent)", () => {
-		const annotations = TOOL_ANNOTATIONS[MCP_TOOL_NAME.deleteResume];
+		const annotations = TOOL_META[MCP_TOOL_NAME.deleteResume].annotations;
 		expect(annotations.destructiveHint).toBe(true);
 		expect(annotations.idempotentHint).toBe(true);
 		expect(annotations.readOnlyHint).toBe(false);
@@ -72,7 +74,7 @@ describe("TOOL_ANNOTATIONS", () => {
 
 	it("marks application delete tools as destructive", () => {
 		for (const name of [MCP_TOOL_NAME.deleteApplication, MCP_TOOL_NAME.bulkDeleteApplications]) {
-			const annotations = TOOL_ANNOTATIONS[name];
+			const annotations = TOOL_META[name].annotations;
 			expect(annotations.readOnlyHint, name).toBe(false);
 			expect(annotations.destructiveHint, name).toBe(true);
 		}
@@ -83,10 +85,11 @@ describe("TOOL_ANNOTATIONS", () => {
 			MCP_TOOL_NAME.createResume,
 			MCP_TOOL_NAME.importResume,
 			MCP_TOOL_NAME.duplicateResume,
-			MCP_TOOL_NAME.patchResume,
-			MCP_TOOL_NAME.updateResume,
+			MCP_TOOL_NAME.createApplication,
+			MCP_TOOL_NAME.importApplications,
+			MCP_TOOL_NAME.draftApplicationMessage,
 		]) {
-			const annotations = TOOL_ANNOTATIONS[name];
+			const annotations = TOOL_META[name].annotations;
 			expect(annotations.readOnlyHint, name).toBe(false);
 			expect(annotations.idempotentHint, name).toBe(false);
 			expect(annotations.destructiveHint, name).toBe(false);
@@ -95,21 +98,46 @@ describe("TOOL_ANNOTATIONS", () => {
 
 	it("marks lockResume / unlockResume as idempotent and non-destructive", () => {
 		for (const name of [MCP_TOOL_NAME.lockResume, MCP_TOOL_NAME.unlockResume]) {
-			const annotations = TOOL_ANNOTATIONS[name];
+			const annotations = TOOL_META[name].annotations;
 			expect(annotations.idempotentHint, name).toBe(true);
 			expect(annotations.destructiveHint, name).toBe(false);
 			expect(annotations.readOnlyHint, name).toBe(false);
 		}
 	});
 
-	it("marks only job-posting autofill as open-world", () => {
-		expect(TOOL_ANNOTATIONS[MCP_TOOL_NAME.autofillApplicationFromJob].openWorldHint).toBe(true);
+	it("marks tools that replace or remove existing data as destructive", () => {
+		for (const name of [
+			MCP_TOOL_NAME.patchResume,
+			MCP_TOOL_NAME.updateResume,
+			MCP_TOOL_NAME.updateApplication,
+			MCP_TOOL_NAME.updateApplicationTimelineEntry,
+			MCP_TOOL_NAME.bulkUpdateApplications,
+			MCP_TOOL_NAME.attachApplicationDocument,
+			MCP_TOOL_NAME.removeApplicationDocument,
+			MCP_TOOL_NAME.scoreApplicationMatch,
+			MCP_TOOL_NAME.tailorResumeForApplication,
+		]) {
+			expect(TOOL_META[name].annotations.readOnlyHint, name).toBe(false);
+			expect(TOOL_META[name].annotations.destructiveHint, name).toBe(true);
+		}
 	});
 
-	it("declares no tools as open-world by default", () => {
-		for (const [name, annotations] of Object.entries(TOOL_ANNOTATIONS)) {
-			if (name === MCP_TOOL_NAME.autofillApplicationFromJob) continue;
-			expect(annotations.openWorldHint).toBe(false);
+	it("marks public content changes and external AI calls as open-world", () => {
+		const openWorldTools = new Set<string>([
+			MCP_TOOL_NAME.patchResume,
+			MCP_TOOL_NAME.updateResume,
+			MCP_TOOL_NAME.deleteResume,
+			MCP_TOOL_NAME.attachApplicationDocument,
+			MCP_TOOL_NAME.removeApplicationDocument,
+			MCP_TOOL_NAME.deleteApplication,
+			MCP_TOOL_NAME.bulkDeleteApplications,
+			MCP_TOOL_NAME.autofillApplicationFromJob,
+			MCP_TOOL_NAME.scoreApplicationMatch,
+			MCP_TOOL_NAME.tailorResumeForApplication,
+			MCP_TOOL_NAME.draftApplicationMessage,
+		]);
+		for (const [name, { annotations }] of Object.entries(TOOL_META)) {
+			expect(annotations.openWorldHint, name).toBe(openWorldTools.has(name));
 		}
 	});
 });

@@ -146,7 +146,7 @@ export function CommandPalette() {
 					<CommandList key={commandListPage} data-command-page={commandListPage}>
 						<CommandEmpty>
 							<Trans comment="Empty-state message when no command palette results match the search query">
-								The command you're looking for doesn't exist.
+								No commands match that search.
 							</Trans>
 						</CommandEmpty>
 

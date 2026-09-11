@@ -1,0 +1,120 @@
+diff --git a/dist/browser-module.mjs b/dist/browser-module.mjs
+index 4d0a389de8a3db767f1fef99ed186790431aa844..ac3c64de9179d28f0ae10995d7fdda0d13ad9875 100644
+--- a/dist/browser-module.mjs
++++ b/dist/browser-module.mjs
+@@ -12673,7 +12673,17 @@ class $4c1709dee528ea76$export$2e2bcd8739ae039 {
+             else if (this.directory.tables.COLR && this.directory.tables.CPAL) this._glyphs[glyph] = new (0, $0d411f0165859681$export$2e2bcd8739ae039)(glyph, characters, this);
+             else this._getBaseGlyph(glyph, characters);
+         }
+-        return this._glyphs[glyph] || null;
++        const cached = this._glyphs[glyph] || null;
++        // Glyph outlines are cached by id, but shaping needs this call's characters.
++        // Keep aliases local so they cannot mutate earlier runs or grow the font cache.
++        if (cached && characters.length && (cached.codePoints.length !== characters.length || characters.some((code, index) => code !== cached.codePoints[index]))) {
++          const alias = Object.create(Object.getPrototypeOf(cached), Object.getOwnPropertyDescriptors(cached));
++          alias.codePoints = characters;
++          alias.isMark = characters.every((0, $6uUbQ$isMark));
++          alias.isLigature = characters.length > 1;
++          return alias;
++        }
++        return cached;
+     }
+     /**
+    * Returns a Subset for this font.
+diff --git a/dist/browser.cjs b/dist/browser.cjs
+index a5fa901b5608575f84390e3ef0474a7789e8269a..e4811fe39687516950508ce76a488babc1dd145d 100644
+--- a/dist/browser.cjs
++++ b/dist/browser.cjs
+@@ -12690,7 +12690,17 @@ class $0a8ef2660a6ce4b6$export$2e2bcd8739ae039 {
+             else if (this.directory.tables.COLR && this.directory.tables.CPAL) this._glyphs[glyph] = new (0, $42d9dbd2de9ee2d8$export$2e2bcd8739ae039)(glyph, characters, this);
+             else this._getBaseGlyph(glyph, characters);
+         }
+-        return this._glyphs[glyph] || null;
++        const cached = this._glyphs[glyph] || null;
++        // Glyph outlines are cached by id, but shaping needs this call's characters.
++        // Keep aliases local so they cannot mutate earlier runs or grow the font cache.
++        if (cached && characters.length && (cached.codePoints.length !== characters.length || characters.some((code, index) => code !== cached.codePoints[index]))) {
++          const alias = Object.create(Object.getPrototypeOf(cached), Object.getOwnPropertyDescriptors(cached));
++          alias.codePoints = characters;
++          alias.isMark = characters.every((0, $gfJaN$unicodeproperties.isMark));
++          alias.isLigature = characters.length > 1;
++          return alias;
++        }
++        return cached;
+     }
+     /**
+    * Returns a Subset for this font.
+diff --git a/dist/main.cjs b/dist/main.cjs
+index 851b2d2bbcae17e91f9f2468f61112ee2dc8fbd8..5222c2a538f978c3b11511ffa378d58fdd39467d 100644
+--- a/dist/main.cjs
++++ b/dist/main.cjs
+@@ -12711,7 +12711,17 @@ class $0a8ef2660a6ce4b6$export$2e2bcd8739ae039 {
+             else if (this.directory.tables.COLR && this.directory.tables.CPAL) this._glyphs[glyph] = new (0, $42d9dbd2de9ee2d8$export$2e2bcd8739ae039)(glyph, characters, this);
+             else this._getBaseGlyph(glyph, characters);
+         }
+-        return this._glyphs[glyph] || null;
++        const cached = this._glyphs[glyph] || null;
++        // Glyph outlines are cached by id, but shaping needs this call's characters.
++        // Keep aliases local so they cannot mutate earlier runs or grow the font cache.
++        if (cached && characters.length && (cached.codePoints.length !== characters.length || characters.some((code, index) => code !== cached.codePoints[index]))) {
++          const alias = Object.create(Object.getPrototypeOf(cached), Object.getOwnPropertyDescriptors(cached));
++          alias.codePoints = characters;
++          alias.isMark = characters.every((0, $elh9A$unicodeproperties.isMark));
++          alias.isLigature = characters.length > 1;
++          return alias;
++        }
++        return cached;
+     }
+     /**
+    * Returns a Subset for this font.
+diff --git a/dist/module.mjs b/dist/module.mjs
+index fde88fc3f23e6fff533da842186fee8402cbcde1..372fd472dc1c09bb6f5f5ad73499a5be2517224b 100644
+--- a/dist/module.mjs
++++ b/dist/module.mjs
+@@ -12694,7 +12694,17 @@ class $4c1709dee528ea76$export$2e2bcd8739ae039 {
+             else if (this.directory.tables.COLR && this.directory.tables.CPAL) this._glyphs[glyph] = new (0, $0d411f0165859681$export$2e2bcd8739ae039)(glyph, characters, this);
+             else this._getBaseGlyph(glyph, characters);
+         }
+-        return this._glyphs[glyph] || null;
++        const cached = this._glyphs[glyph] || null;
++        // Glyph outlines are cached by id, but shaping needs this call's characters.
++        // Keep aliases local so they cannot mutate earlier runs or grow the font cache.
++        if (cached && characters.length && (cached.codePoints.length !== characters.length || characters.some((code, index) => code !== cached.codePoints[index]))) {
++          const alias = Object.create(Object.getPrototypeOf(cached), Object.getOwnPropertyDescriptors(cached));
++          alias.codePoints = characters;
++          alias.isMark = characters.every((0, $52ZIf$isMark));
++          alias.isLigature = characters.length > 1;
++          return alias;
++        }
++        return cached;
+     }
+     /**
+    * Returns a Subset for this font.
+diff --git a/src/TTFFont.js b/src/TTFFont.js
+index 6aa0937a3b4717d2a23453ebd6ced9494adf6d5e..c1a14b7a3924571fe8114dfe5c088de0669faa7b 100644
+--- a/src/TTFFont.js
++++ b/src/TTFFont.js
+@@ -1,3 +1,4 @@
++import { isMark } from 'unicode-properties';
+ import * as r from 'restructure';
+ import { cache } from './decorators';
+ import * as fontkit from './base';
+@@ -419,7 +420,17 @@ export default class TTFFont {
+       }
+     }
+ 
+-    return this._glyphs[glyph] || null;
++    const cached = this._glyphs[glyph] || null;
++    // Glyph outlines are cached by id, but shaping needs this call's characters.
++    // Keep aliases local so they cannot mutate earlier runs or grow the font cache.
++    if (cached && characters.length && (cached.codePoints.length !== characters.length || characters.some((code, index) => code !== cached.codePoints[index]))) {
++      const alias = Object.create(Object.getPrototypeOf(cached), Object.getOwnPropertyDescriptors(cached));
++      alias.codePoints = characters;
++      alias.isMark = characters.every(isMark);
++      alias.isLigature = characters.length > 1;
++      return alias;
++    }
++    return cached;
+   }
+ 
+   /**

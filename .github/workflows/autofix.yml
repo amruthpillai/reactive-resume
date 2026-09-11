@@ -13,7 +13,7 @@ env:
 
 jobs:
   autofix:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-32vcpu-ubuntu-2404
 
     steps:
       - name: Checkout Repository
@@ -32,7 +32,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: "lts/*"
+          node-version-file: ".nvmrc"
           cache: "pnpm"
 
       - name: Install Dependencies

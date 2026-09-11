@@ -4,12 +4,12 @@ import type { WritableDraft } from "immer";
 import { t } from "@lingui/core/macro";
 import { consumeEventIterator } from "@orpc/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { useParams } from "@tanstack/react-router";
+import { useBlocker, useParams } from "@tanstack/react-router";
 import { debounce, isEqual } from "es-toolkit";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { immer } from "zustand/middleware/immer";
 import { create } from "zustand/react";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { orpc, streamClient } from "@/libs/orpc/client";
 
 export type Resume = {
@@ -22,6 +22,7 @@ export type Resume = {
 	updatedAt: Date;
 	hasPassword?: boolean;
 	isPublic?: boolean;
+	showDownloadButtons?: boolean;
 };
 
 // Mirrors the server-side ResumeUpdatedEvent discriminator (packages/api resume/events.ts).
@@ -63,7 +64,8 @@ type Runtime = {
 	hasPendingLocalChanges: boolean;
 	isSaving: boolean;
 	pendingResume?: Resume;
-	syncErrorToastId?: string | number;
+	syncErrorToastId?: string;
+	slowSaveToastId?: string;
 	syncResume: ReturnType<typeof debounce<(resume: Resume) => void>>;
 	beforeUnloadHandler?: () => void;
 	deferredRemoteResume?: Resume;
@@ -77,6 +79,7 @@ type ResumeUpdateSubscriptionOptions = {
 };
 
 const SAVE_DEBOUNCE_MS = 500;
+const NAVIGATION_SAVE_WAIT_MS = 10_000;
 // Rapid edits within this window coalesce into a single undo step (e.g. typing a word / dragging).
 const HISTORY_COALESCE_MS = 500;
 // Bounded stacks: keep undo/redo memory (whole-resume snapshots) predictable during a long session.
@@ -92,7 +95,7 @@ function resetHistoryRuntime() {
 	historyCanCoalesce = false;
 }
 
-let lockedToastId: string | number | undefined;
+let lockedToastId: string | undefined;
 
 function getResumeQueryKey(id: string): QueryKey {
 	return orpc.resume.getById.queryOptions({ input: { id } }).queryKey as QueryKey;
@@ -106,10 +109,6 @@ function cloneResume(resume: Resume): Resume {
 	return { ...resume, data: cloneResumeData(resume.data) };
 }
 
-function createResumeUpdateEventIterator(resumeId: string) {
-	return streamClient.resume.updates.subscribe({ id: resumeId });
-}
-
 export function isEditableElementFocused(): boolean {
 	if (typeof document === "undefined") return false;
 	const element = document.activeElement as HTMLElement | null;
@@ -118,7 +117,8 @@ export function isEditableElementFocused(): boolean {
 		element.tagName === "INPUT" ||
 		element.tagName === "TEXTAREA" ||
 		element.tagName === "SELECT" ||
-		element.isContentEditable
+		element.isContentEditable ||
+		element.closest(".cm-editor") !== null
 	);
 }
 
@@ -129,7 +129,7 @@ function externalUpdateMessage(mutation: ResumeUpdateMutation): string {
 }
 
 function notifyExternalUpdate(mutation: ResumeUpdateMutation) {
-	toast.info(externalUpdateMessage(mutation), { id: "resume-external-update" });
+	toast.add({ type: "info", description: externalUpdateMessage(mutation), id: "resume-external-update" });
 }
 
 // #54: applies a remote update that was deferred because the user was typing.
@@ -217,7 +217,7 @@ async function flushResumeSave(id: string) {
 		}
 
 		if (runtime.syncErrorToastId !== undefined) {
-			toast.dismiss(runtime.syncErrorToastId);
+			toast.close(runtime.syncErrorToastId);
 			runtime.syncErrorToastId = undefined;
 		}
 	} catch (error: unknown) {
@@ -226,11 +226,17 @@ async function flushResumeSave(id: string) {
 		runtime.pendingResume ??= submitted;
 		runtime.hasPendingLocalChanges = true;
 		useResumeStore.getState().setSaveStatus("error");
-		runtime.syncErrorToastId = toast.error(t`Your latest changes could not be saved.`, {
+		runtime.syncErrorToastId = toast.add({
+			type: "error",
+			description: t`Your latest changes could not be saved.`,
 			id: runtime.syncErrorToastId,
-			duration: Number.POSITIVE_INFINITY,
+			timeout: 0,
 		});
 	} finally {
+		if (runtime.slowSaveToastId !== undefined) {
+			toast.close(runtime.slowSaveToastId);
+			runtime.slowSaveToastId = undefined;
+		}
 		runtime.isSaving = false;
 		if (runtime.pendingResume && runtime.syncErrorToastId === undefined) void flushResumeSave(id);
 	}
@@ -412,6 +418,7 @@ export const useResumeStore = create<ResumeStore>()(
 				state.resume.updatedAt = resume.updatedAt;
 				state.resume.hasPassword = resume.hasPassword;
 				state.resume.isPublic = resume.isPublic;
+				state.resume.showDownloadButtons = resume.showDownloadButtons;
 			});
 		},
 
@@ -420,7 +427,9 @@ export const useResumeStore = create<ResumeStore>()(
 			if (!currentResume) return;
 
 			if (currentResume.isLocked) {
-				lockedToastId = toast.error(t`This resume is locked and cannot be updated.`, {
+				lockedToastId = toast.add({
+					type: "error",
+					description: t`This resume is locked and cannot be updated.`,
 					id: lockedToastId,
 				});
 				return;
@@ -475,7 +484,11 @@ function applyHistoryStep(get: StoreGet, set: ImmerSet, direction: "undo" | "red
 	if (!currentResume) return;
 
 	if (currentResume.isLocked) {
-		lockedToastId = toast.error(t`This resume is locked and cannot be updated.`, { id: lockedToastId });
+		lockedToastId = toast.add({
+			type: "error",
+			description: t`This resume is locked and cannot be updated.`,
+			id: lockedToastId,
+		});
 		return;
 	}
 
@@ -520,10 +533,6 @@ export const usePreviewPausedStore = create<PreviewPausedStore>()((set) => ({
 	paused: false,
 	setPaused: (paused) => set({ paused }),
 }));
-
-function useResetResumeStore() {
-	return useResumeStore((state) => state.reset);
-}
 
 export function usePatchResume() {
 	return useResumeStore((state) => state.patchResume);
@@ -587,7 +596,7 @@ export function useResumeUpdateSubscription({ resumeId, onUpdate, onError }: Res
 
 		let didCancel = false;
 		let retryTimer: number | undefined;
-		const cancel = consumeEventIterator(createResumeUpdateEventIterator(resumeId), {
+		const cancel = consumeEventIterator(streamClient.resume.updates.subscribe({ id: resumeId }), {
 			onEvent: async (event) => {
 				try {
 					await onUpdate((event ?? { mutation: "sync" }) as ResumeUpdateEvent);
@@ -661,10 +670,55 @@ export function useBuilderResumeUpdateSubscription() {
 	useResumeUpdateSubscription({ resumeId, onUpdate, onError });
 }
 
+// Route transitions can await a save; unmount cleanup and browser unload cannot.
+function saveResumeBeforeLeaving(id: string): boolean | Promise<boolean> {
+	const runtime = runtimes.get(id);
+	const current = useResumeStore.getState().resume;
+	if (!runtime?.hasPendingLocalChanges || current?.id !== id) return true;
+
+	runtime.syncResume.cancel();
+	runtime.pendingResume = cloneResume(current);
+	useResumeStore.getState().setSaveStatus("saving");
+
+	return new Promise<boolean>((resolve) => {
+		const finish = (saved: boolean) => {
+			clearTimeout(timeout);
+			unsubscribe();
+			resolve(saved);
+		};
+		const unsubscribe = useResumeStore.subscribe((state) => {
+			if (state.resume?.id !== id || state.saveStatus === "error") {
+				finish(false);
+			} else if (state.saveStatus === "saved" && !runtime.hasPendingLocalChanges) {
+				finish(true);
+			}
+		});
+		const timeout = setTimeout(() => {
+			finish(false);
+			// Keep the write in flight: it may already have reached the server.
+			runtime.slowSaveToastId = toast.add({
+				type: "info",
+				description: t`Saving is taking longer than expected. Your changes are still open.`,
+				id: runtime.slowSaveToastId,
+				timeout: 0,
+			});
+		}, NAVIGATION_SAVE_WAIT_MS);
+		void flushResumeSave(id);
+	});
+}
+
 export function useResumeCleanup() {
 	const params = useParams({ strict: false }) as { resumeId?: string };
 	const resumeId = params.resumeId;
-	const reset = useResetResumeStore();
+	const reset = useResumeStore((state) => state.reset);
+
+	useBlocker({
+		shouldBlockFn: async ({ next }) => {
+			if (!resumeId || ("resumeId" in next.params && next.params.resumeId === resumeId)) return false;
+			return !(await saveResumeBeforeLeaving(resumeId));
+		},
+		enableBeforeUnload: () => !!resumeId && (runtimes.get(resumeId)?.hasPendingLocalChanges ?? false),
+	});
 
 	useEffect(() => {
 		if (!resumeId) return;

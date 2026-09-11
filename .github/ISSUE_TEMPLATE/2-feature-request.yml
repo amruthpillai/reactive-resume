@@ -1,23 +1,82 @@
 name: ✨ Feature Request
 
-description: Suggest an feature or idea that you would like to see in Reactive Resume
+description: Propose an actionable improvement to Reactive Resume
 
-title: "[Feature] <title>"
-labels: [enhancement, v5, needs triage]
-assignees: "AmruthPillai"
+labels: ["enhancement", "status: needs triage"]
+assignees: []
 
 body:
   - type: checkboxes
     attributes:
-      label: Is there an existing issue for this feature?
-      description: Please search to see if an issue already exists for the feature you requested.
+      label: Existing issue
+      description: Search open and closed issues before submitting a new proposal.
       options:
-        - label: Yes, I have searched the existing issues and it doesn't exist.
+        - label: I searched the existing issues and could not find a matching proposal.
           required: true
 
-  - type: textarea
+  - type: dropdown
+    id: variant
     attributes:
-      label: Feature Description
-      description: A detailed description of the feature you would like to see in Reactive Resume. Please provide as much detail as possible as it will help me implement the feature faster.
+      label: Product variant
+      description: Choose the primary environment for this proposal.
+      options:
+        - Cloud
+        - Self-hosted
     validations:
       required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Choose the part of Reactive Resume most closely related to the proposal.
+      options:
+        - Resume builder & data
+        - Templates, preview & export
+        - Accounts & sharing
+        - AI & Agent
+        - Language & localization
+        - Self-hosting
+        - API & integrations
+        - Applications & cover letters
+        - Other / unsure
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem or limitation should Reactive Resume solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe the behavior you want without prescribing an implementation.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe current workarounds or alternatives. Write "None" if there are none.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope
+      description: Explain what should be included and what can remain out of scope.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add examples, mockups, or related issues when useful. Remove personal resume data first.

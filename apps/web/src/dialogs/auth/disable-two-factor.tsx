@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, LockOpenIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
-import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -16,6 +15,7 @@ import {
 } from "@reactive-resume/ui/components/dialog";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
@@ -35,25 +35,33 @@ export function DisableTwoFactorDialog(_: DialogProps<"auth.two-factor.disable">
 		defaultValues: { password: "" },
 		validators: { onSubmit: formSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Disabling two-factor authentication...`);
+			const toastId = toast.add({
+				type: "loading",
+				description: t`Disabling two-factor authentication...`,
+			});
 
 			const { error } = await authClient.twoFactor.disable({ password: value.password });
 
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when disabling two-factor authentication fails",
 							message: "Failed to disable two-factor authentication. Please try again.",
 						}),
 					),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
 				return;
 			}
 
-			toast.success(t`Two-factor authentication has been disabled successfully.`, { id: toastId });
+			toast.add({
+				type: "success",
+				description: t`Two-factor authentication is now disabled.`,
+				id: toastId,
+			});
 			void router.invalidate();
 			closeDialog();
 			form.reset();

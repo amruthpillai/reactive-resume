@@ -5,8 +5,8 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowSquareOutIcon, CircleNotchIcon, FilePdfIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@reactive-resume/ui/components/button";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { downloadWithAnchor, generateFilename } from "@reactive-resume/utils/file";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
@@ -74,7 +74,10 @@ export function ResumePane({ resume }: ResumePaneProps) {
 		if (!resume) return;
 
 		const filename = generateFilename(resume.name || resume.data.basics.name || resume.id, "pdf");
-		const toastId = toast.loading(t`Please wait while your PDF is being generated…`);
+		const toastId = toast.add({
+			type: "loading",
+			description: t`Generating your PDF...`,
+		});
 
 		setIsPrinting(true);
 
@@ -82,10 +85,10 @@ export function ResumePane({ resume }: ResumePaneProps) {
 			const blob = await createResumePdfBlob(resume.data);
 			downloadWithAnchor(blob, filename);
 		} catch {
-			toast.error(t`There was a problem while generating the PDF, please try again.`);
+			toast.add({ type: "error", description: t`Could not generate the PDF. Please try again.` });
 		} finally {
 			setIsPrinting(false);
-			toast.dismiss(toastId);
+			toast.close(toastId);
 		}
 	}, [resume]);
 

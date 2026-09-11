@@ -1,26 +1,12 @@
 import { Trans } from "@lingui/react/macro";
 import { KeyIcon, LockOpenIcon, ToggleLeftIcon, ToggleRightIcon } from "@phosphor-icons/react";
 import { m } from "motion/react";
-import { useCallback } from "react";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Separator } from "@reactive-resume/ui/components/separator";
 import { useDialogStore } from "@/dialogs/store";
 import { authClient } from "@/libs/auth/client";
+import { ActionButton } from "./action-button";
 import { useAuthAccounts } from "./hooks";
-
-// ponytail: shared hover/tap wrapper — identical in both branches, match(boolean) removed
-function ActionButton({ children }: { children: React.ReactNode }) {
-	return (
-		<m.div
-			className="will-change-transform"
-			whileHover={{ y: -1, scale: 1.01 }}
-			whileTap={{ scale: 0.99 }}
-			transition={{ duration: 0.14, ease: "easeOut" }}
-		>
-			{children}
-		</m.div>
-	);
-}
 
 export function TwoFactorSection() {
 	const { openDialog } = useDialogStore();
@@ -29,14 +15,6 @@ export function TwoFactorSection() {
 
 	const hasPassword = hasAccount("credential");
 	const hasTwoFactor = session?.user.twoFactorEnabled ?? false;
-
-	const handleTwoFactorAction = useCallback(() => {
-		if (hasTwoFactor) {
-			openDialog("auth.two-factor.disable", undefined);
-		} else {
-			openDialog("auth.two-factor.enable", undefined);
-		}
-	}, [hasTwoFactor, openDialog]);
 
 	if (!hasPassword) return null;
 
@@ -56,7 +34,10 @@ export function TwoFactorSection() {
 				</h2>
 
 				<ActionButton>
-					<Button variant="outline" onClick={handleTwoFactorAction}>
+					<Button
+						variant="outline"
+						onClick={() => openDialog(hasTwoFactor ? "auth.two-factor.disable" : "auth.two-factor.enable", undefined)}
+					>
 						{hasTwoFactor ? (
 							<>
 								<ToggleLeftIcon />

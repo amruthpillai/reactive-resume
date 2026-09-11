@@ -22,6 +22,12 @@ export const contactSchema = z.object({
 	role: z.string().trim().default(""),
 	// Free-form label shown as a pill: "Recruiter", "Referral", "Hiring Manager"…
 	type: z.string().trim().default(""),
+	email: z
+		.string()
+		.trim()
+		.refine((value) => value === "" || z.email().safeParse(value).success, "Invalid email address.")
+		.default(""),
+	phone: z.string().trim().default(""),
 });
 
 export type Contact = z.infer<typeof contactSchema>;
@@ -43,7 +49,6 @@ export const applicationTimelineEntrySchema = z.discriminatedUnion("type", [
 ]);
 
 export type ApplicationTimelineEntry = z.infer<typeof applicationTimelineEntrySchema>;
-export type ActivityEvent = ApplicationTimelineEntry;
 
 // Reserved for AI enrichment output (autofill / match-score). Free-form so the shape can
 // evolve without a migration. See the AI roadmap in the applications feature.

@@ -6,7 +6,7 @@ import { createSectionTitleResolver } from "./section-title";
 
 const resolverCache = new Map<string, Promise<SectionTitleResolver>>();
 
-export const createSectionTitleResolverForLocale = async (localeParam: string) => {
+export const createSectionTitleResolverForLocale = (localeParam: string) => {
 	const requestedLocale = resolveLocale(localeParam);
 	const cachedResolver = resolverCache.get(requestedLocale);
 

@@ -213,6 +213,7 @@ describe("createCustomSectionWithItem", () => {
 
 		expect(result.customSections).toHaveLength(1);
 		expect(result.customSections[0]?.title).toBe("My Section");
+		expect(result.customSections[0]?.showHeading).toBe(true);
 		expect(result.customSections[0]?.items).toHaveLength(1);
 		expect(result.metadata.layout.pages[0]?.main).toContain(newSectionId);
 	});

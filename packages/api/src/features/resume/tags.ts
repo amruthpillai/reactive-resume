@@ -15,7 +15,5 @@ export const tagsRouter = {
 			successDescription: "A sorted array of unique tag strings.",
 		})
 		.output(z.array(z.string()))
-		.handler(async ({ context }) => {
-			return resumeService.tags.list({ userId: context.user.id });
-		}),
+		.handler(({ context }) => resumeService.tags.list({ userId: context.user.id })),
 };

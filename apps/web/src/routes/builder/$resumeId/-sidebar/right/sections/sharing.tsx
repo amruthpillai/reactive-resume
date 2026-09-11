@@ -3,40 +3,37 @@ import { Trans } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { ClipboardIcon, LockSimpleIcon, LockSimpleOpenIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useMemo } from "react";
-import { toast } from "sonner";
+import { useCallback, useState } from "react";
 import { useCopyToClipboard } from "usehooks-ts";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Label } from "@reactive-resume/ui/components/label";
 import { Switch } from "@reactive-resume/ui/components/switch";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useCurrentResume, usePatchResume } from "@/features/resume/builder/draft";
+import { ResumePasswordDialog } from "@/features/resume/builder/password-dialog";
 import { useConfirm } from "@/hooks/use-confirm";
-import { usePrompt } from "@/hooks/use-prompt";
 import { authClient } from "@/libs/auth/client";
 import { orpc } from "@/libs/orpc/client";
 import { SectionBase } from "../shared/section-base";
 
 export function SharingSectionBuilder() {
-	const prompt = usePrompt();
+	const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
 	const confirm = useConfirm();
 	const [_, copyToClipboard] = useCopyToClipboard();
 	const { data: session } = authClient.useSession();
 	const resume = useCurrentResume();
 	const patchResume = usePatchResume();
 
-	const { mutateAsync: updateResume } = useMutation(orpc.resume.update.mutationOptions());
+	const { mutateAsync: updateResume, isPending: isUpdating } = useMutation(orpc.resume.update.mutationOptions());
 	const { mutateAsync: setPassword } = useMutation(orpc.resume.setPassword.mutationOptions());
 	const { mutateAsync: removePassword } = useMutation(orpc.resume.removePassword.mutationOptions());
 
-	const publicUrl = useMemo(() => {
-		if (!session) return "";
-		return `${window.location.origin}/${session.user.username}/${resume.slug}`;
-	}, [session, resume]);
+	const publicUrl = session ? `${window.location.origin}/${session.user.username}/${resume.slug}` : "";
 
 	const onCopyUrl = useCallback(async () => {
 		await copyToClipboard(publicUrl);
-		toast.success(t`A link to your resume has been copied to clipboard.`);
+		toast.add({ type: "success", description: t`Resume link copied to clipboard.` });
 	}, [publicUrl, copyToClipboard]);
 
 	const onTogglePublic = useCallback(
@@ -48,62 +45,59 @@ export function SharingSectionBuilder() {
 				});
 			} catch (error) {
 				const message = error instanceof ORPCError ? error.message : t`Something went wrong. Please try again.`;
-				toast.error(message);
+				toast.add({ type: "error", description: message });
 			}
 		},
 		[patchResume, resume.id, updateResume],
 	);
 
-	const onSetPassword = useCallback(async () => {
-		const value = await prompt(t`Protect your resume from unauthorized access with a password`, {
-			description: t`Anyone visiting the resume's public URL must enter this password to access it.`,
-			confirmText: t`Set Password`,
-			inputProps: {
-				type: "password",
-				minLength: 6,
-				maxLength: 64,
-			},
-		});
-		if (!value) return;
+	const onToggleDownloadButtons = useCallback(
+		async (checked: boolean) => {
+			try {
+				const updated = await updateResume({ id: resume.id, showDownloadButtons: checked });
+				patchResume((draft) => {
+					draft.showDownloadButtons = updated.showDownloadButtons;
+				});
+			} catch (error) {
+				const message = error instanceof ORPCError ? error.message : t`Something went wrong. Please try again.`;
+				toast.add({ type: "error", description: message });
+			}
+		},
+		[patchResume, resume.id, updateResume],
+	);
 
-		const password = value.trim();
-		if (!password) return toast.error(t`Password cannot be empty.`);
-
-		const toastId = toast.loading(t`Enabling password protection...`);
-
-		try {
+	const onSetPassword = useCallback(
+		async (password: string) => {
 			await setPassword({ id: resume.id, password });
 			patchResume((draft) => {
 				draft.hasPassword = true;
 			});
-			toast.success(t`Password protection has been enabled.`, { id: toastId });
-		} catch (error) {
-			const message = error instanceof ORPCError ? error.message : t`Something went wrong. Please try again.`;
-			toast.error(message, { id: toastId });
-		}
-	}, [patchResume, prompt, resume.id, setPassword]);
+			toast.add({ type: "success", description: t`Password protection has been enabled.` });
+		},
+		[patchResume, resume.id, setPassword],
+	);
 
 	const onRemovePassword = useCallback(async () => {
 		if (!resume.hasPassword) return;
 
 		const confirmation = await confirm(t`Are you sure you want to remove password protection?`, {
-			description: t`Anyone who has the resume's public URL will be able to view and download your resume without entering a password.`,
+			description: t`Anyone with the public URL will be able to view your resume without a password.`,
 			confirmText: t`Confirm`,
 			cancelText: t`Cancel`,
 		});
 		if (!confirmation) return;
 
-		const toastId = toast.loading(t`Removing password protection...`);
+		const toastId = toast.add({ type: "loading", description: t`Removing password protection...` });
 
 		try {
 			await removePassword({ id: resume.id });
 			patchResume((draft) => {
 				draft.hasPassword = false;
 			});
-			toast.success(t`Password protection has been disabled.`, { id: toastId });
+			toast.add({ type: "success", description: t`Password protection has been disabled.`, id: toastId });
 		} catch (error) {
 			const message = error instanceof ORPCError ? error.message : t`Something went wrong. Please try again.`;
-			toast.error(message, { id: toastId });
+			toast.add({ type: "error", description: message, id: toastId });
 		}
 	}, [confirm, patchResume, removePassword, resume.hasPassword, resume.id]);
 
@@ -111,6 +105,9 @@ export function SharingSectionBuilder() {
 
 	return (
 		<SectionBase type="sharing" className="space-y-4">
+			{isPasswordDialogOpen && (
+				<ResumePasswordDialog onSubmit={onSetPassword} onClose={() => setIsPasswordDialogOpen(false)} />
+			)}
 			<div className="flex items-center gap-x-4">
 				<Switch
 					id="sharing-switch"
@@ -124,13 +121,25 @@ export function SharingSectionBuilder() {
 					</span>
 
 					<span className="text-muted-foreground text-xs">
-						<Trans>Anyone with the link can view and download the resume.</Trans>
+						<Trans>Anyone with the link can view the resume.</Trans>
 					</span>
 				</Label>
 			</div>
 
 			{resume.isPublic && (
 				<div className="space-y-4 rounded-md border p-4">
+					<div className="flex items-center gap-x-4">
+						<Switch
+							id="sharing-downloads-switch"
+							checked={resume.showDownloadButtons !== false}
+							disabled={isUpdating || resume.isLocked}
+							onCheckedChange={(checked) => void onToggleDownloadButtons(checked)}
+						/>
+						<Label htmlFor="sharing-downloads-switch">
+							<Trans>Show Download Buttons</Trans>
+						</Label>
+					</div>
+
 					<div className="grid gap-2">
 						<Label htmlFor="sharing-url">
 							<Trans comment="Form field label for the generated public resume link in sharing settings">URL</Trans>
@@ -148,13 +157,10 @@ export function SharingSectionBuilder() {
 					<p className="text-muted-foreground">
 						{isPasswordProtected ? (
 							<Trans>
-								Your resume's public link is currently protected by a password. Share the password only with people you
-								trust.
+								Your resume's public URL is protected by a password. Share the password only with people you trust.
 							</Trans>
 						) : (
-							<Trans>
-								Optionally, set a password so that only people with the password can view your resume through the link.
-							</Trans>
+							<Trans>Set a password if you want only people who know it to open the public URL.</Trans>
 						)}
 					</p>
 
@@ -164,7 +170,7 @@ export function SharingSectionBuilder() {
 							<Trans>Remove Password</Trans>
 						</Button>
 					) : (
-						<Button variant="outline" onClick={onSetPassword}>
+						<Button variant="outline" onClick={() => setIsPasswordDialogOpen(true)}>
 							<LockSimpleIcon />
 							<Trans>Set Password</Trans>
 						</Button>

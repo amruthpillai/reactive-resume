@@ -37,3 +37,10 @@ export const templatePages: Partial<Record<Template, TemplatePage>> = {
 const defaultTemplatePage = AzurillPage;
 
 export const getTemplatePage = (template: Template): TemplatePage => templatePages[template] ?? defaultTemplatePage;
+
+export type { TemplateSemanticManifest } from "../semantic/template-manifest";
+export {
+	getTemplateSemanticBindingRegistry,
+	getTemplateSemanticManifest,
+	validateTemplateSemanticManifest,
+} from "../semantic/template-manifest";

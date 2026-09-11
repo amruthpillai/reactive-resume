@@ -11,5 +11,5 @@ export function getTrustedOrigins(appUrl: string): string[] {
 		trustedOrigins.add(normalizeOrigin(configuredUrl.origin));
 	}
 
-	return Array.from(trustedOrigins);
+	return [...trustedOrigins];
 }

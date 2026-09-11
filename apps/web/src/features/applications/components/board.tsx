@@ -14,8 +14,8 @@ import {
 import { t } from "@lingui/core/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 import { STAGES } from "@reactive-resume/schema/applications/data";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { cn } from "@reactive-resume/utils/style";
 import { orpc } from "@/libs/orpc/client";
 import { applicationsListQueryKey } from "../queries";
@@ -48,7 +48,7 @@ export function ApplicationBoard({ applications, onOpen, onEdit }: Props) {
 			},
 			onError: (_error, _vars, context) => {
 				if (context?.previous) queryClient.setQueryData(listKey, context.previous);
-				toast.error(t`Couldn't move the application. Please try again.`);
+				toast.add({ type: "error", description: t`Couldn't move the application. Please try again.` });
 			},
 			onSettled: () => void queryClient.invalidateQueries({ queryKey: listKey }),
 		}),

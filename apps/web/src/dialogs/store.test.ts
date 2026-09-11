@@ -1,5 +1,4 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { dialogSchemaRegistries, dialogTypeSchema } from "./schemas";
 import { useDialogStore } from "./store";
 
 describe("useDialogStore", () => {
@@ -14,13 +13,6 @@ describe("useDialogStore", () => {
 	});
 
 	describe("openDialog", () => {
-		it("uses schema entries from domain registries", () => {
-			expect(dialogSchemaRegistries.map((registry) => registry.domain)).toEqual(["auth", "api-key", "resume"]);
-			expect(dialogTypeSchema.options).toHaveLength(
-				dialogSchemaRegistries.reduce((total, registry) => total + registry.schemas.length, 0),
-			);
-		});
-
 		it("opens a dialog and sets activeDialog", () => {
 			useDialogStore.getState().openDialog("api-key.create", undefined);
 

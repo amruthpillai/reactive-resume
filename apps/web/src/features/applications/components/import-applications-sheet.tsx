@@ -3,7 +3,6 @@ import { Trans } from "@lingui/react/macro";
 import { CheckCircleIcon, UploadSimpleIcon } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
-import { toast } from "sonner";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Label } from "@reactive-resume/ui/components/label";
@@ -16,13 +15,14 @@ import {
 	SheetTitle,
 } from "@reactive-resume/ui/components/sheet";
 import { Textarea } from "@reactive-resume/ui/components/textarea";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { orpc } from "@/libs/orpc/client";
 import { mapCsvToApplications, parseCsv } from "../csv";
 import { applicationsListQueryKey } from "../queries";
 
 const MAX_IMPORT = 500;
 const SAMPLE =
-	"Company,Role,Stage,Stage Date,Location,Salary,Source,Tags\nStripe,Frontend Engineer,applied,2026-07-01,Remote,$180k,LinkedIn,remote;react";
+	"Company,Role,Stage,Stage Date,Location,Salary,Source,Tags,Contact Name,Contact Email,Contact Phone\nStripe,Frontend Engineer,applied,2026-07-01,Remote,$180k,LinkedIn,remote;react,Jane Doe,jane@example.com,+1 555 0100";
 
 type Props = {
 	open: boolean;
@@ -51,12 +51,12 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 				void queryClient.invalidateQueries({ queryKey: applicationsListQueryKey() });
 				void queryClient.invalidateQueries({ queryKey: orpc.applications.stats.queryKey() });
 				void queryClient.invalidateQueries({ queryKey: orpc.applications.tags.queryKey() });
-				toast.success(t`Imported ${result.imported} application(s).`);
+				toast.add({ type: "success", description: t`Imported ${result.imported} application(s).` });
 				setText("");
 				resetFile();
 				onOpenChange(false);
 			},
-			onError: () => toast.error(t`Import failed. Check the CSV and try again.`),
+			onError: () => toast.add({ type: "error", description: t`Import failed. Check the CSV and try again.` }),
 		}),
 	);
 
@@ -74,8 +74,8 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 					</SheetTitle>
 					<SheetDescription>
 						<Trans>
-							Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source and
-							Tags.
+							Paste rows or upload a .csv. We map columns like Company, Role, Stage, Stage Date, Salary, Source, Tags,
+							Contact Name, Contact Email and Contact Phone.
 						</Trans>
 					</SheetDescription>
 				</SheetHeader>
@@ -118,15 +118,23 @@ export function ImportApplicationsSheet({ open, onOpenChange }: Props) {
 								<Trans>{importable.length} ready to import</Trans>
 								{parsed.skipped > 0 && (
 									<span className="text-muted-foreground text-xs">
-										· <Trans>{parsed.skipped} skipped (missing company/role)</Trans>
+										· <Trans>{parsed.skipped} skipped (invalid or missing data)</Trans>
 									</span>
 								)}
 							</div>
+							{parsed.contactsSkipped > 0 && (
+								<p className="mt-1.5 text-muted-foreground text-xs">
+									<Trans>
+										{parsed.contactsSkipped} contact(s) skipped (invalid email or missing Contact Name). Those
+										applications still import.
+									</Trans>
+								</p>
+							)}
 							{overflow > 0 && (
 								<p className="mt-1.5 text-amber-600 text-xs dark:text-amber-500">
 									<Trans>
-										Only the first {MAX_IMPORT} rows import at once — {overflow} left out. Split the file to import the
-										rest.
+										Only the first {MAX_IMPORT} rows import at once, leaving out {overflow}. Split the file to import
+										the rest.
 									</Trans>
 								</p>
 							)}

@@ -3,7 +3,7 @@ import { Trans } from "@lingui/react/macro";
 import { FilePdfIcon, UploadSimpleIcon, XIcon } from "@phosphor-icons/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRef } from "react";
-import { toast } from "sonner";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { orpc } from "@/libs/orpc/client";
 
 export type FileAttachment = { url: string; name: string };
@@ -28,17 +28,18 @@ export function FileAttachmentField({ value, onChange, attachLabel, disabled }: 
 		const file = event.target.files?.[0];
 		if (!file) return;
 		if (file.type !== "application/pdf") {
-			toast.error(t`Please upload a PDF file.`);
+			toast.add({ type: "error", description: t`Please upload a PDF file.` });
 			return;
 		}
-		const toastId = toast.loading(t`Uploading…`);
+		const toastId = toast.add({ type: "loading", description: t`Uploading…` });
 		upload.mutate(file, {
 			onSuccess: ({ url }) => {
-				toast.dismiss(toastId);
+				toast.close(toastId);
 				onChange({ url, name: file.name });
 				if (inputRef.current) inputRef.current.value = "";
 			},
-			onError: () => toast.error(t`Couldn't upload the file. Please try again.`, { id: toastId }),
+			onError: () =>
+				toast.add({ type: "error", description: t`Couldn't upload the file. Please try again.`, id: toastId }),
 		});
 	};
 

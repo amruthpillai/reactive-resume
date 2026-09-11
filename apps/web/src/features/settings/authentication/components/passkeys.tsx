@@ -3,9 +3,9 @@ import { Trans } from "@lingui/react/macro";
 import { KeyIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { m } from "motion/react";
-import { toast } from "sonner";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Separator } from "@reactive-resume/ui/components/separator";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { usePrompt } from "@/hooks/use-prompt";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
@@ -21,28 +21,27 @@ export function PasskeysSection() {
 	});
 
 	const registerPasskeyMutation = useMutation({
-		mutationFn: async () => {
-			return await authClient.passkey.addPasskey();
-		},
+		mutationFn: () => authClient.passkey.addPasskey(),
 		onSuccess: async ({ data, error }) => {
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when passkey registration fails",
 							message: "Failed to register passkey. Please try again.",
 						}),
 					),
-				);
+				});
 				return;
 			}
 
-			toast.success(t`Passkey registered successfully.`);
+			toast.add({ type: "success", description: t`Passkey registered.` });
 			await queryClient.invalidateQueries({ queryKey: ["auth", "passkeys"] });
 
 			const name = await prompt(t`Enter a name for your passkey.`, {
-				description: t`This will help you identify it later, if you plan to have multiple passkeys.`,
+				description: t`Names help you tell passkeys apart if you register more than one.`,
 				defaultValue: "",
 				confirmText: t({
 					comment: "Passkey rename prompt confirm action in authentication settings",
@@ -57,48 +56,48 @@ export function PasskeysSection() {
 
 			const { error: renameError } = await authClient.passkey.updatePasskey({ id: passkeyId, name: passkeyName });
 			if (renameError) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						renameError,
 						t({
 							comment: "Fallback toast when renaming a passkey fails",
 							message: "Failed to rename passkey. Please try again.",
 						}),
 					),
-				);
+				});
 				return;
 			}
 
 			await queryClient.invalidateQueries({ queryKey: ["auth", "passkeys"] });
 		},
 		onError: () => {
-			toast.error(t`Failed to register passkey. Please try again.`);
+			toast.add({ type: "error", description: t`Failed to register passkey. Please try again.` });
 		},
 	});
 
 	const deletePasskeyMutation = useMutation({
-		mutationFn: async (id: string) => {
-			return await authClient.passkey.deletePasskey({ id });
-		},
+		mutationFn: (id: string) => authClient.passkey.deletePasskey({ id }),
 		onSuccess: async ({ error }) => {
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when deleting a passkey fails",
 							message: "Failed to delete passkey. Please try again.",
 						}),
 					),
-				);
+				});
 				return;
 			}
 
-			toast.success(t`Passkey deleted successfully.`);
+			toast.add({ type: "success", description: t`Passkey deleted.` });
 			await queryClient.invalidateQueries({ queryKey: ["auth", "passkeys"] });
 		},
 		onError: () => {
-			toast.error(t`Failed to delete passkey. Please try again.`);
+			toast.add({ type: "error", description: t`Failed to delete passkey. Please try again.` });
 		},
 	});
 

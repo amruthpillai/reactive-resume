@@ -14,8 +14,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
-import { STAGES } from "@reactive-resume/schema/applications/data";
+import { contactSchema, STAGES } from "@reactive-resume/schema/applications/data";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	Dialog,
@@ -28,6 +27,7 @@ import {
 import { Input } from "@reactive-resume/ui/components/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@reactive-resume/ui/components/sheet";
 import { Textarea } from "@reactive-resume/ui/components/textarea";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { cn } from "@reactive-resume/utils/style";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc } from "@/libs/orpc/client";
@@ -40,7 +40,7 @@ const stageOf = (status: ApplicationStatus) => STAGES.find((s) => s.value === st
 
 const dateInputValue = (value: Date | string) => {
 	const date = new Date(value);
-	return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}-${String(date.getUTCDate()).padStart(2, "0")}`;
+	return Number.isNaN(date.getTime()) ? "" : date.toISOString().slice(0, 10);
 };
 
 const formatDate = (value: Date | string) =>
@@ -54,6 +54,8 @@ const currentStageAnchorId = (activity: ApplicationTimelineEntry[], status: Appl
 
 const latestStageDate = (activity: ApplicationTimelineEntry[], status: ApplicationStatus) =>
 	[...activity].sort(byNewest).find((entry) => entry.type === "stage" && entry.stage === status)?.at;
+
+const INITIAL_CONTACT_DRAFT = { name: "", role: "", type: "", email: "", phone: "" };
 
 type Props = {
 	application: Application | null;
@@ -83,28 +85,28 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 	const update = useMutation(
 		orpc.applications.update.mutationOptions({
 			onSuccess: invalidate,
-			onError: () => toast.error(t`Something went wrong. Please try again.`),
+			onError: () => toast.add({ type: "error", description: t`Something went wrong. Please try again.` }),
 		}),
 	);
 
 	const addNote = useMutation(
 		orpc.applications.addNote.mutationOptions({
 			onSuccess: invalidate,
-			onError: () => toast.error(t`Couldn't save the note.`),
+			onError: () => toast.add({ type: "error", description: t`Couldn't save the note.` }),
 		}),
 	);
 
 	const updateTimelineEntry = useMutation(
 		orpc.applications.updateTimelineEntry.mutationOptions({
 			onSuccess: invalidate,
-			onError: () => toast.error(t`Couldn't update the timeline entry.`),
+			onError: () => toast.add({ type: "error", description: t`Couldn't update the timeline entry.` }),
 		}),
 	);
 
 	const deleteTimelineEntry = useMutation(
 		orpc.applications.deleteTimelineEntry.mutationOptions({
 			onSuccess: invalidate,
-			onError: () => toast.error(t`Couldn't delete the timeline entry.`),
+			onError: () => toast.add({ type: "error", description: t`Couldn't delete the timeline entry.` }),
 		}),
 	);
 
@@ -112,10 +114,10 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 		orpc.applications.delete.mutationOptions({
 			onSuccess: () => {
 				invalidate();
-				toast.success(t`Application deleted.`);
+				toast.add({ type: "success", description: t`Application deleted.` });
 				onOpenChange(false);
 			},
-			onError: () => toast.error(t`Couldn't delete the application.`),
+			onError: () => toast.add({ type: "error", description: t`Couldn't delete the application.` }),
 		}),
 	);
 
@@ -190,6 +192,12 @@ export function ApplicationDetailSheet({ application, onOpenChange, onEdit }: Pr
 							<ArrowSquareOutIcon />
 							<Trans>Job posting</Trans>
 						</a>
+					)}
+
+					{current.notes?.trim() && (
+						<Section title={t`Notes`}>
+							<p className="wrap-break-word whitespace-pre-wrap text-sm">{current.notes}</p>
+						</Section>
 					)}
 
 					{/* documents: linked resume + cover letter */}
@@ -547,21 +555,34 @@ type ContactsEditorProps = {
 
 function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 	const [adding, setAdding] = useState(false);
-	const [draft, setDraft] = useState({ name: "", role: "", type: "" });
+	const [draft, setDraft] = useState(INITIAL_CONTACT_DRAFT);
+	const [error, setError] = useState("");
 
 	const reset = () => {
-		setDraft({ name: "", role: "", type: "" });
+		setDraft(INITIAL_CONTACT_DRAFT);
+		setError("");
 		setAdding(false);
 	};
 
+	// The inputs aren't in a <form>, so `type="email"` never runs native constraint validation.
+	// Parse with the schema the API enforces, otherwise a typo'd email is rejected server-side
+	// after reset() has already thrown the draft away, leaving only a generic error toast.
 	const add = () => {
-		const name = draft.name.trim();
-		if (!name) return;
-		onChange([...contacts, { name, role: draft.role.trim(), type: draft.type.trim() }]);
+		if (pending || !draft.name.trim()) return;
+		const parsed = contactSchema.safeParse(draft);
+		if (!parsed.success) {
+			setError(t`Enter a valid email address.`);
+			return;
+		}
+		onChange([...contacts, parsed.data]);
 		reset();
 	};
 
 	const removeAt = (index: number) => onChange(contacts.filter((_, i) => i !== index));
+
+	const submitOnEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === "Enter") add();
+	};
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -573,6 +594,22 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 					<div className="min-w-0 flex-1">
 						<div className="truncate font-medium">{contact.name}</div>
 						{contact.role && <div className="truncate text-muted-foreground text-xs">{contact.role}</div>}
+						{contact.email && (
+							<a
+								href={`mailto:${encodeURIComponent(contact.email)}`}
+								className="block truncate text-primary text-xs hover:underline"
+							>
+								{contact.email}
+							</a>
+						)}
+						{contact.phone && (
+							<a
+								href={`tel:${encodeURIComponent(contact.phone)}`}
+								className="block truncate text-primary text-xs hover:underline"
+							>
+								{contact.phone}
+							</a>
+						)}
 					</div>
 					{contact.type && (
 						<span className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">{contact.type}</span>
@@ -596,21 +633,40 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 						placeholder={t`Name`}
 						autoFocus
 						onChange={(event) => setDraft((d) => ({ ...d, name: event.target.value }))}
-						onKeyDown={(event) => {
-							if (event.key === "Enter") add();
-						}}
+						onKeyDown={submitOnEnter}
 					/>
 					<div className="grid grid-cols-2 gap-2">
 						<Input
 							value={draft.role}
 							placeholder={t`Role (optional)`}
 							onChange={(event) => setDraft((d) => ({ ...d, role: event.target.value }))}
+							onKeyDown={submitOnEnter}
 						/>
 						<Input
 							value={draft.type}
 							list="contact-types"
 							placeholder={t`Label`}
 							onChange={(event) => setDraft((d) => ({ ...d, type: event.target.value }))}
+							onKeyDown={submitOnEnter}
+						/>
+					</div>
+					<div className="grid grid-cols-2 gap-2">
+						<Input
+							type="email"
+							value={draft.email}
+							placeholder={t`Email (optional)`}
+							onChange={(event) => {
+								setError("");
+								setDraft((d) => ({ ...d, email: event.target.value }));
+							}}
+							onKeyDown={submitOnEnter}
+						/>
+						<Input
+							type="tel"
+							value={draft.phone}
+							placeholder={t`Phone (optional)`}
+							onChange={(event) => setDraft((d) => ({ ...d, phone: event.target.value }))}
+							onKeyDown={submitOnEnter}
 						/>
 					</div>
 					<datalist id="contact-types">
@@ -619,6 +675,7 @@ function ContactsEditor({ contacts, pending, onChange }: ContactsEditorProps) {
 						<option value="Referral" />
 						<option value="Interviewer" />
 					</datalist>
+					{error && <p className="text-destructive text-xs">{error}</p>}
 					<div className="flex justify-end gap-2">
 						<Button type="button" size="sm" variant="ghost" onClick={reset}>
 							<Trans>Cancel</Trans>

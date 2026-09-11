@@ -15,9 +15,7 @@ import {
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { useNavigate } from "@tanstack/react-router";
 import { m } from "motion/react";
-import { useCallback, useMemo } from "react";
 import { useControls, useTransformComponent } from "react-zoom-pan-pinch";
-import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
@@ -26,6 +24,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@reactive-resume/ui/components/tooltip";
 import { cn } from "@reactive-resume/utils/style";
 import {
@@ -72,15 +71,8 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 		redo();
 	});
 
-	const publicUrl = useMemo(() => {
-		if (!session?.user.username || !resumeSlug) return "";
-		return `${window.location.origin}/${session.user.username}/${resumeSlug}`;
-	}, [session?.user.username, resumeSlug]);
-
-	const onCopyUrl = useCallback(async () => {
-		await copyToClipboard(publicUrl);
-		toast.success(t`A link to your resume has been copied to clipboard.`);
-	}, [publicUrl, copyToClipboard]);
+	const publicUrl =
+		session?.user.username && resumeSlug ? `${window.location.origin}/${session.user.username}/${resumeSlug}` : "";
 
 	return (
 		<div className="fixed inset-x-0 bottom-20 flex items-center justify-center md:bottom-4">
@@ -111,7 +103,14 @@ export function BuilderDock({ pageLayout, onTogglePageLayout }: BuilderDockProps
 					}}
 				/>
 				<div className="mx-1 h-8 w-px bg-border" />
-				<DockIcon icon={LinkSimpleIcon} title={t`Copy URL`} onClick={() => onCopyUrl()} />
+				<DockIcon
+					icon={LinkSimpleIcon}
+					title={t`Copy URL`}
+					onClick={async () => {
+						await copyToClipboard(publicUrl);
+						toast.add({ type: "success", description: t`Resume link copied to clipboard.` });
+					}}
+				/>
 			</m.div>
 		</div>
 	);

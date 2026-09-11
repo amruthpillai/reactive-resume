@@ -2,9 +2,9 @@ import type { DialogProps } from "../store";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { CopyIcon, PlusIcon } from "@phosphor-icons/react";
+import { useStore } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { toast } from "sonner";
 import { useCopyToClipboard } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -23,6 +23,7 @@ import {
 	InputGroupButton,
 	InputGroupInput,
 } from "@reactive-resume/ui/components/input-group";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { Combobox } from "@/components/ui/combobox";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/libs/auth/client";
@@ -55,7 +56,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 		},
 		validators: { onSubmit: formSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Creating your API key...`);
+			const toastId = toast.add({ type: "loading", description: t`Creating your API key...` });
 
 			const { data, error } = await authClient.apiKey.create({
 				name: value.name,
@@ -63,25 +64,28 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 			});
 
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when creating an API key fails",
 							message: "Failed to create API key. Please try again.",
 						}),
 					),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
 				return;
 			}
 
 			setApiKey(data.key);
-			toast.dismiss(toastId);
+			toast.close(toastId);
 		},
 	});
 
 	useFormBlocker(form);
+
+	const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
 	return (
 		<DialogContent>
@@ -92,8 +96,8 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 				</DialogTitle>
 				<DialogDescription>
 					<Trans>
-						This will generate a new API key to access the Reactive Resume API to allow machines to interact with your
-						resume data.
+						This creates a new API key, which lets other programs read and change your resume data through the Reactive
+						Resume API.
 					</Trans>
 				</DialogDescription>
 			</DialogHeader>
@@ -126,9 +130,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 							/>
 							<FormMessage errors={field.state.meta.errors} />
 							<FormDescription>
-								<Trans>
-									Tip: Give your API key a name, corresponding to the purpose of the key, to help you identify it later.
-								</Trans>
+								<Trans>Names help you tell keys apart, so name it after what you will use it for.</Trans>
 							</FormDescription>
 						</FormItem>
 					)}
@@ -176,7 +178,7 @@ const CreateApiKeyForm = ({ setApiKey }: CreateApiKeyFormProps) => {
 				</form.Field>
 
 				<DialogFooter>
-					<Button type="submit">
+					<Button type="submit" disabled={isSubmitting}>
 						<Trans comment="Create API key dialog submit action">Create</Trans>
 					</Button>
 				</DialogFooter>
@@ -196,7 +198,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 
 	const onCopy = async () => {
 		await copyToClipboard(apiKey);
-		toast.success(t`Your API key has been copied to the clipboard.`);
+		toast.add({ type: "success", description: t`Your API key has been copied to the clipboard.` });
 	};
 
 	const onConfirm = () => {
@@ -227,7 +229,7 @@ const CopyApiKeyForm = ({ apiKey }: CopyApiKeyFormProps) => {
 				</InputGroup>
 
 				<span className="font-medium text-muted-foreground text-sm">
-					<Trans>For security reasons, this key will only be displayed once.</Trans>
+					<Trans>This key is shown only once. Copy it before you close this dialog.</Trans>
 				</span>
 			</div>
 

@@ -5,7 +5,6 @@ import { Trans } from "@lingui/react/macro";
 import { ClockCounterClockwiseIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
@@ -16,31 +15,12 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useResumeStore } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getResumeErrorMessage } from "@/libs/error-message";
+import { formatRelativeTime } from "@/libs/locale";
 import { orpc } from "@/libs/orpc/client";
-
-const RELATIVE_TIME_DIVISIONS: { amount: number; unit: Intl.RelativeTimeFormatUnit }[] = [
-	{ amount: 31_536_000_000, unit: "year" },
-	{ amount: 2_592_000_000, unit: "month" },
-	{ amount: 604_800_000, unit: "week" },
-	{ amount: 86_400_000, unit: "day" },
-	{ amount: 3_600_000, unit: "hour" },
-	{ amount: 60_000, unit: "minute" },
-];
-
-function formatRelativeTime(value: Date | string, formatter: Intl.RelativeTimeFormat) {
-	const date = value instanceof Date ? value : new Date(value);
-	const diffMs = date.getTime() - Date.now();
-	const absMs = Math.abs(diffMs);
-
-	// No division matches only when the gap is under a minute (the smallest division), so fall back to seconds.
-	const division = RELATIVE_TIME_DIVISIONS.find((candidate) => absMs >= candidate.amount);
-	if (!division) return formatter.format(0, "second");
-
-	return formatter.format(Math.round(diffMs / division.amount), division.unit);
-}
 
 type BuilderVersionHistoryProps = {
 	resumeId: string;
@@ -59,7 +39,7 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 		enabled: open,
 	});
 
-	const { mutate: restoreVersion, isPending } = useMutation(orpc.resume.restoreVersion.mutationOptions());
+	const { mutateAsync: restoreVersion, isPending } = useMutation(orpc.resume.restoreVersion.mutationOptions());
 
 	const handleRestore = async (versionId: string) => {
 		const confirmed = await confirm(t`Restore this version?`, {
@@ -68,18 +48,15 @@ export function BuilderVersionHistory({ resumeId }: BuilderVersionHistoryProps) 
 
 		if (!confirmed) return;
 
-		restoreVersion(
-			{ resumeId, versionId },
-			{
-				onSuccess: (restored) => {
-					replaceResumeFromServer(restored as Resume);
-					queryClient.setQueryData(orpc.resume.getById.queryOptions({ input: { id: resumeId } }).queryKey, restored);
-					void queryClient.invalidateQueries({ queryKey: orpc.resume.listVersions.queryKey({ input: { resumeId } }) });
-					toast.success(t`Your resume has been restored to the selected version.`);
-				},
-				onError: (error) => toast.error(getResumeErrorMessage(error)),
-			},
-		);
+		try {
+			const restored = await restoreVersion({ resumeId, versionId });
+			replaceResumeFromServer(restored as Resume);
+			queryClient.setQueryData(orpc.resume.getById.queryOptions({ input: { id: resumeId } }).queryKey, restored);
+			void queryClient.invalidateQueries({ queryKey: orpc.resume.listVersions.queryKey({ input: { resumeId } }) });
+			toast.add({ type: "success", description: t`Your resume has been restored to the selected version.` });
+		} catch (error) {
+			toast.add({ type: "error", description: getResumeErrorMessage(error) });
+		}
 	};
 
 	return (

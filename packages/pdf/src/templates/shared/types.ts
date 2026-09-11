@@ -28,7 +28,7 @@ export type TemplateFeatures = {
 	sectionTimeline?: boolean;
 	inlineItemHeader?: boolean;
 	stackSidebarItemHeader?: boolean;
-	mainItemHeaderBorder?: boolean;
+	skillLevelAfterName?: boolean;
 };
 
 export type SectionTimelineStyleSlots = {

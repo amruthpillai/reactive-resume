@@ -11,7 +11,7 @@ import {
 	ReadCvLogoIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
-	WarningIcon,
+	UserGearIcon,
 } from "@phosphor-icons/react";
 import { useNavigate, useRouteContext } from "@tanstack/react-router";
 import { CommandItem } from "@reactive-resume/ui/components/command";
@@ -148,12 +148,12 @@ export function NavigationCommandGroup() {
 				</CommandItem>
 
 				<CommandItem
-					keywords={[t`Danger Zone`]}
-					value="navigation.settings.danger-zone"
-					onSelect={() => onNavigate("/dashboard/settings/danger-zone")}
+					keywords={[t`Account`, t`Export Data`, t`Delete Account`]}
+					value="navigation.settings.account"
+					onSelect={() => onNavigate("/dashboard/settings/account")}
 				>
-					<WarningIcon />
-					<Trans>Danger Zone</Trans>
+					<UserGearIcon />
+					<Trans>Account</Trans>
 				</CommandItem>
 			</BaseCommandGroup>
 		</>

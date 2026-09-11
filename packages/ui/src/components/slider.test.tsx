@@ -35,6 +35,18 @@ describe("Slider", () => {
 		expect(screen.getByTestId("s")).toHaveClass("custom-slider");
 	});
 
+	it("lets a caller-supplied data-slot override the default", () => {
+		render(<Slider data-testid="s" defaultValue={[50]} data-slot="custom-slider" />);
+		expect(screen.getByTestId("s")).toHaveAttribute("data-slot", "custom-slider");
+	});
+
+	it("preserves a caller-supplied id in standalone usage", () => {
+		// Standalone (no FormControl ancestor) an explicit id must survive:
+		// LabelableProvider only applies an id when a FormControl supplies one.
+		const { container } = render(<Slider id="caller-slider" defaultValue={[30]} />);
+		expect(container.querySelector("#caller-slider")).toBeInTheDocument();
+	});
+
 	it("renders 2 thumbs with default min/max if no defaultValue or value passed", () => {
 		const { container } = render(<Slider />);
 		// Source code: defaults to [min, max] when neither value nor defaultValue is array

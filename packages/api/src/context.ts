@@ -10,6 +10,7 @@ interface ORPCContext {
 	locale: Locale;
 	reqHeaders: Headers;
 	resHeaders?: Headers;
+	trustedClient?: string;
 }
 
 async function getUserFromBearerToken(headers: Headers): Promise<User | null> {
@@ -88,7 +89,7 @@ export const publicProcedure = base.use(async ({ context, next }) => {
 	});
 });
 
-export const protectedProcedure = publicProcedure.use(async ({ context, next }) => {
+export const protectedProcedure = publicProcedure.use(({ context, next }) => {
 	if (!context.user) throw new ORPCError("UNAUTHORIZED");
 
 	return next({

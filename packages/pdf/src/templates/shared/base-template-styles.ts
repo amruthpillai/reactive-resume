@@ -2,11 +2,13 @@ import type { Style } from "@react-pdf/types";
 import type { Picture, ResumeData } from "@reactive-resume/schema/resume/data";
 import type { getTemplateMetrics } from "./metrics";
 import type { createRtlStyleHelpers } from "./rtl";
+import { resolveBoldFontWeight } from "@reactive-resume/fonts";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
 
 type BaseTemplateStylesInput = {
 	metadata: ResumeData["metadata"];
 	foreground: string;
+	background: string;
 	r: ReturnType<typeof createRtlStyleHelpers>;
 	metrics: ReturnType<typeof getTemplateMetrics>;
 	picture: Picture;
@@ -20,7 +22,14 @@ type BaseTemplateStylesInput = {
  * ponytail: factory returns plain objects, not StyleSheet.create'd; each template does one
  * StyleSheet.create pass so the final resolved styles are identical to before.
  */
-export function createBaseTemplateStyles({ metadata, foreground, r, metrics, picture }: BaseTemplateStylesInput) {
+export function createBaseTemplateStyles({
+	metadata,
+	foreground,
+	background,
+	r,
+	metrics,
+	picture,
+}: BaseTemplateStylesInput) {
 	const bodyText = {
 		fontFamily: metadata.typography.body.fontFamily,
 		fontSize: metadata.typography.body.fontSize,
@@ -31,6 +40,15 @@ export function createBaseTemplateStyles({ metadata, foreground, r, metrics, pic
 	} satisfies Style;
 
 	return {
+		page: {
+			color: foreground,
+			backgroundColor: background,
+			fontFamily: metadata.typography.body.fontFamily,
+			fontSize: metadata.typography.body.fontSize,
+			lineHeight: metadata.typography.body.lineHeight,
+			direction: r.pageDirection,
+		} satisfies Style,
+
 		/** The canonical body text style; alias for `text` in StyleSheet slots. */
 		text: bodyText,
 
@@ -65,9 +83,12 @@ export function createBaseTemplateStyles({ metadata, foreground, r, metrics, pic
 			fontSize: metadata.typography.body.fontSize * 0.875,
 		} satisfies Style,
 
-		/** Default fallback "600". scizor overrides to "700". */
+		/** True Bold face when the family has one (#3310); falls back to the last stored weight. scizor overrides color only. */
 		bold: {
-			fontWeight: metadata.typography.body.fontWeights.at(-1) ?? "600",
+			fontWeight:
+				resolveBoldFontWeight(metadata.typography.body.fontFamily, metadata.typography.body.fontWeights) ??
+				metadata.typography.body.fontWeights.at(-1) ??
+				"600",
 		} satisfies Style,
 
 		richParagraph: {
@@ -93,7 +114,8 @@ export function createBaseTemplateStyles({ metadata, foreground, r, metrics, pic
 
 		richListItemContent: {
 			...bodyText,
-			flex: "initial",
+			flex: 1,
+			minWidth: 0,
 		} satisfies Style,
 
 		splitRow: {
@@ -113,7 +135,7 @@ export function createBaseTemplateStyles({ metadata, foreground, r, metrics, pic
 		picture: {
 			width: picture.size,
 			height: picture.size,
-			objectFit: "cover",
+			objectFit: picture.fit,
 			aspectRatio: picture.aspectRatio,
 			borderRadius: picture.borderRadius,
 			borderColor: rgbaStringToHex(picture.borderColor),

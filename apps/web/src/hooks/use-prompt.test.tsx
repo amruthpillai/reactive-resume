@@ -34,11 +34,11 @@ describe("usePrompt", () => {
 		const { result } = renderHook(() => usePrompt(), { wrapper });
 
 		let promise!: Promise<string | null>;
-		await act(async () => {
+		await act(() => {
 			promise = result.current("Name?");
 		});
 
-		await act(async () => {
+		await act(() => {
 			clickButton(/cancel/i);
 		});
 
@@ -49,11 +49,11 @@ describe("usePrompt", () => {
 		const { result } = renderHook(() => usePrompt(), { wrapper });
 
 		let promise!: Promise<string | null>;
-		await act(async () => {
+		await act(() => {
 			promise = result.current("Name?", { defaultValue: "Initial" });
 		});
 
-		await act(async () => {
+		await act(() => {
 			clickButton(/confirm/i);
 		});
 
@@ -64,7 +64,7 @@ describe("usePrompt", () => {
 		const { result } = renderHook(() => usePrompt(), { wrapper });
 
 		let promise!: Promise<string | null>;
-		await act(async () => {
+		await act(() => {
 			promise = result.current("Heading", { defaultValue: "preset" });
 		});
 
@@ -72,7 +72,7 @@ describe("usePrompt", () => {
 		const input = document.body.querySelector("input") as HTMLInputElement | null;
 		expect(input?.value).toBe("preset");
 
-		await act(async () => {
+		await act(() => {
 			clickButton(/confirm/i);
 		});
 

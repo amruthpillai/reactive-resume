@@ -1,0 +1,207 @@
+import { createRequire } from "node:module";
+import { dirname, join } from "node:path";
+import { describe, expect, it } from "vitest";
+import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { act } from "react";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
+import { createResumePdfFile } from "./server";
+
+const require = createRequire(import.meta.url);
+const standardFontDataUrl = `${join(dirname(require.resolve("pdfjs-dist/package.json")), "standard_fonts")}/`;
+
+async function readParagraphs(content: string, locale = "en-US", sidebarWidth?: number) {
+	const data = structuredClone(defaultResumeData);
+	data.picture.hidden = true;
+	data.basics.name = "Jane Doe";
+	data.metadata.template = "onyx";
+	data.metadata.page.locale = locale;
+	data.metadata.typography.body.fontFamily = "Helvetica";
+	data.metadata.typography.heading.fontFamily = "Helvetica";
+	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary"], sidebar: [] }];
+	data.summary.content = content;
+	if (sidebarWidth) {
+		data.metadata.template = "chikorita";
+		data.metadata.layout.sidebarWidth = sidebarWidth;
+		data.metadata.layout.pages = [{ fullWidth: false, main: [], sidebar: ["summary"] }];
+	}
+	let file: File | undefined;
+	await act(async () => {
+		file = await createResumePdfFile({ data, filename: "indent.pdf" });
+	});
+	if (!file) throw new Error("PDF generation failed");
+	const task = getDocument({ data: new Uint8Array(await file.arrayBuffer()), standardFontDataUrl });
+	try {
+		const document = await task.promise;
+		const pageTexts = await Promise.all(
+			Array.from({ length: document.numPages }, async (_, index) => {
+				const page = await document.getPage(index + 1);
+				return { page: index + 1, text: await page.getTextContent() };
+			}),
+		);
+		return {
+			pages: document.numPages,
+			items: pageTexts.flatMap(({ page, text }) =>
+				text.items.flatMap((item) =>
+					"str" in item
+						? [{ page, text: item.str, x: item.transform[4], y: item.transform[5], width: item.width }]
+						: [],
+				),
+			),
+		};
+	} finally {
+		await task.destroy();
+	}
+}
+
+describe("actual PDF paragraph indentation (#3397)", () => {
+	it.each(["en-US", "he-IL"])("moves paragraphs and headings from logical start in %s", async (locale) => {
+		for (const tag of ["p", "h2"]) {
+			// Heading alignment is independently configurable; exercise each logical edge.
+			const align = locale === "he-IL" ? "right" : "left";
+			const plain = await readParagraphs(`<${tag} style="text-align: ${align};">First</${tag}>`, locale);
+			const indented = await readParagraphs(
+				`<${tag} data-indent="2" style="text-align: ${align}; margin-inline-start: 48px;">First</${tag}>`,
+				locale,
+			);
+			const baseline = plain.items.find((item) => item.text === "First");
+			const moved = indented.items.find((item) => item.text === "First");
+			expect(baseline).toBeDefined();
+			expect(moved).toBeDefined();
+			if (!baseline || !moved) throw new Error("Expected paragraph text in PDF");
+			expect(moved.x - baseline.x).toBeCloseTo(locale === "en-US" ? 36 : -36, 2);
+			expect(moved.y).toBeCloseTo(baseline.y, 2);
+			expect(indented.pages).toBe(plain.pages);
+		}
+	});
+
+	it.each(["en-US", "he-IL"])("preserves unindented and nested-list output in %s", async (locale) => {
+		const plain = "<p>First</p><ul><li><p>Second</p><ol><li>Third</li></ol></li></ul>";
+		const marked =
+			'<p data-indent="0">First</p><ul><li><p data-indent="2" style="margin-inline-start: 48px;">Second</p><ol><li>Third</li></ol></li></ul>';
+		expect(await readParagraphs(marked, locale)).toEqual(await readParagraphs(plain, locale));
+	});
+
+	it.each(["en-US", "he-IL"])("preserves the quote inset while indenting one paragraph in %s", async (locale) => {
+		const plain = await readParagraphs("<blockquote><p>First</p><p>Second</p></blockquote>", locale);
+		const indented = await readParagraphs('<blockquote><p data-indent="2">First</p><p>Second</p></blockquote>', locale);
+		for (const text of ["First", "Second"]) {
+			const baseline = plain.items.find((item) => item.text === text);
+			const moved = indented.items.find((item) => item.text === text);
+			if (!baseline || !moved) throw new Error(`Expected ${text} in PDF`);
+			expect(moved.x - baseline.x).toBeCloseTo(text === "Second" ? 0 : locale === "en-US" ? 36 : -36, 2);
+		}
+	});
+
+	it.each([
+		["p", "en-US", 25],
+		["p", "he-IL", 25],
+		["h2", "en-US", 25],
+		["h2", "he-IL", 25],
+		["p", "en-US", 35],
+		["p", "he-IL", 35],
+		["blockquote", "en-US", 25],
+		["blockquote", "he-IL", 25],
+	] as const)(
+		"preserves %s text at maximum indentation in a %s narrow sidebar (sidebar %s)",
+		async (tag, locale, width) => {
+			const sample =
+				tag === "h2"
+					? "START Some text fits each line END"
+					: "TARGET Some plain readable words continue through narrow columns without disappearing END";
+			const html =
+				tag === "blockquote"
+					? `<blockquote><p data-indent="8">${sample}</p></blockquote>`
+					: `<${tag} data-indent="8">${sample}</${tag}>`;
+			const rendered = await readParagraphs(html, locale, width);
+			const text = rendered.items
+				.map((item) => item.text)
+				.join("")
+				.replace(/[-\s]/g, "");
+			expect(text).toContain(sample.replace(/\s/g, ""));
+			for (const item of rendered.items) {
+				expect(item.x).toBeGreaterThanOrEqual(0);
+				expect(item.x + item.width).toBeLessThanOrEqual(595.38);
+			}
+		},
+	);
+
+	it("retains the existing PDF limitation for words wider than their available line", async () => {
+		const content = "TARGET Some plain readable words continue through narrow columns without disappearing END";
+		const indented = await readParagraphs(`<h2 data-indent="8">${content}</h2>`, "en-US", 25);
+		// This control takes the existing renderer path, with the same remaining
+		// width as the bounded indent. Neither path introduces forced word breaks.
+		const reducedWidth = await readParagraphs(`<h2 style="margin-left: 50%;">${content}</h2>`, "en-US", 25);
+		expect(indented).toEqual(reducedWidth);
+		expect(indented.items.map((item) => item.text).join(" ")).not.toContain("disappearing");
+	});
+
+	it("keeps indented RTL pseudo-bullets inside narrow sidebars", async () => {
+		const rendered = await readParagraphs('<p data-indent="8">- First<br>- Second</p>', "he-IL", 25);
+		expect(rendered.items.map((item) => item.text).join(" ")).toContain("First");
+		expect(rendered.items.map((item) => item.text).join(" ")).toContain("Second");
+		for (const item of rendered.items) {
+			expect(item.x).toBeGreaterThanOrEqual(0);
+			expect(item.x + item.width).toBeLessThanOrEqual(595.38);
+		}
+	});
+
+	it("moves every wrapped line, not only the first line", async () => {
+		const content = "Wrapped paragraph text stays within its own block. ".repeat(18);
+		const plain = await readParagraphs(`<p>${content}</p>`);
+		const indented = await readParagraphs(`<p data-indent="2">${content}</p>`);
+		const baseline = plain.items.find((item) => item.text.includes("Wrapped"));
+		const lines = indented.items.filter((item) => item.text.includes("Wrapped"));
+		if (!baseline) throw new Error("Expected paragraph text in PDF");
+		expect(lines.length).toBeGreaterThan(1);
+		for (const line of lines) expect(line.x - baseline.x).toBeCloseTo(36, 2);
+	});
+
+	it.each(["en-US", "he-IL"])("retains indentation and text across physical pages in %s", async (locale) => {
+		const content = "Wrapped text stays visible. ".repeat(600);
+		const plain = await readParagraphs(
+			`<p style="margin-${locale === "he-IL" ? "right" : "left"}: 36pt;">${content}</p>`,
+			locale,
+		);
+		const indented = await readParagraphs(`<p data-indent="2">${content}</p>`, locale);
+		expect(indented.pages).toBeGreaterThan(1);
+		const lines = indented.items.filter((item) => item.text.includes("Wrapped"));
+		expect(
+			lines
+				.map((item) => item.text)
+				.join(" ")
+				.match(/Wrapped/g),
+		).toHaveLength(600);
+		for (let page = 1; page <= indented.pages; page++) {
+			const moved = lines.find((item) => item.page === page);
+			const baseline = plain.items.find((item) => item.page === page && item.text.includes("Wrapped"));
+			if (!moved || !baseline) throw new Error(`Missing paragraph on page ${page}`);
+			const edge = (item: typeof moved) => item.x + (locale === "he-IL" ? item.width : 0);
+			// Compare with the original margin-based Text at the same line width.
+			expect(edge(moved)).toBeCloseTo(edge(baseline), 2);
+		}
+	});
+
+	it("ignores paragraph offsets in RTL list descendants with pseudo-bullets", async () => {
+		const plain = "<ul><li><p>- First<br>- Second</p><p>Third</p></li></ul>";
+		const marked = '<ul><li><p data-indent="2">- First<br>- Second</p><p>Third</p></li></ul>';
+		expect(await readParagraphs(marked, "he-IL")).toEqual(await readParagraphs(plain, "he-IL"));
+	});
+
+	it("characterizes leading spaces and tabs as collapsed by PDF HTML rendering", async () => {
+		expect(await readParagraphs("<p>   First</p><p>\tSecond</p>")).toEqual(
+			await readParagraphs("<p>First</p><p>Second</p>"),
+		);
+	});
+
+	it("indents every line of RTL pseudo-bullet paragraphs", async () => {
+		const plain = await readParagraphs("<p>- First<br>- Second</p>", "he-IL");
+		const indented = await readParagraphs('<p data-indent="2">- First<br>- Second</p>', "he-IL");
+		for (const text of ["First", "Second"]) {
+			const baseline = plain.items.find((item) => item.text.includes(text));
+			const moved = indented.items.find((item) => item.text.includes(text));
+			if (!baseline || !moved) throw new Error(`Expected ${text} in PDF`);
+			expect(moved.x - baseline.x).toBeCloseTo(-36, 2);
+			expect(moved.y).toBeCloseTo(baseline.y, 2);
+		}
+	});
+});

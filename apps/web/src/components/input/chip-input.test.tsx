@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
+import { FormControl, FormItem, FormLabel } from "@reactive-resume/ui/components/form";
 import { ChipInput } from "./chip-input";
 
 beforeAll(() => {
@@ -80,5 +81,40 @@ describe("ChipInput", () => {
 	it("shows the description copy by default", () => {
 		const { container } = renderInput({ defaultValue: ["a"] });
 		expect(container.querySelector("kbd")).not.toBeNull();
+	});
+
+	it("wires the inner input to a FormLabel and lets it outrank the generic aria-label", () => {
+		render(
+			<I18nProvider i18n={i18n}>
+				<FormItem>
+					<FormLabel>Tags</FormLabel>
+					<FormControl render={<ChipInput defaultValue={[]} onChange={vi.fn()} />} />
+				</FormItem>
+			</I18nProvider>,
+		);
+
+		const label = screen.getByText("Tags");
+		const input = document.querySelector("input") as HTMLInputElement;
+
+		expect(input).toHaveAttribute("id");
+		expect(input.id).toMatch(/-form-item$/);
+		expect(label).toHaveAttribute("for", input.id);
+		expect(input).toHaveAttribute("aria-labelledby", label.id);
+		expect(input).toHaveAccessibleName("Tags");
+	});
+
+	it("keeps a generic accessible name when the FormControl has no FormLabel", () => {
+		render(
+			<I18nProvider i18n={i18n}>
+				<FormItem>
+					<FormControl render={<ChipInput defaultValue={[]} onChange={vi.fn()} />} />
+				</FormItem>
+			</I18nProvider>,
+		);
+
+		const input = document.querySelector("input") as HTMLInputElement;
+
+		expect(document.getElementById(input.getAttribute("aria-labelledby") ?? "")).toBeNull();
+		expect(input).toHaveAccessibleName("Add keyword");
 	});
 });

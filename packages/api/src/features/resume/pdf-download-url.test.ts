@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@reactive-resume/env/server", () => ({
@@ -43,11 +44,12 @@ describe("resume PDF signed download URLs", () => {
 			ok: true,
 			resumeId: "resume-1",
 			userId: "user-1",
+			target: "resume",
 			expiresAt: "2026-06-01T10:10:00.000Z",
 		});
 	});
 
-	it("can include the cover letter target without changing token verification", () => {
+	it("binds the cover letter target to the signed token", () => {
 		const result = createResumePdfDownloadUrl({
 			resumeId: "resume-1",
 			userId: "user-1",
@@ -65,7 +67,30 @@ describe("resume PDF signed download URLs", () => {
 				token,
 				now: new Date("2026-06-01T10:01:00.000Z"),
 			}),
-		).toMatchObject({ ok: true });
+		).toMatchObject({ ok: true, target: "cover-letter" });
+	});
+
+	it("accepts still-valid legacy tokens without a target", () => {
+		const payload = Buffer.from(
+			JSON.stringify({
+				v: 1,
+				resumeId: "resume-1",
+				userId: "user-1",
+				expiresAt: new Date("2026-06-01T10:10:00.000Z").getTime(),
+				issuedAt: new Date("2026-06-01T10:00:00.000Z").getTime(),
+			}),
+			"utf8",
+		).toString("base64url");
+		const token = `${payload}.${createHmac("sha256", "test-secret").update(payload).digest("base64url")}`;
+
+		const verification = verifyResumePdfDownloadToken({
+			resumeId: "resume-1",
+			token,
+			now: new Date("2026-06-01T10:01:00.000Z"),
+		});
+
+		expect(verification).toMatchObject({ ok: true });
+		expect("target" in verification).toBe(false);
 	});
 
 	it("rejects expired, tampered, and mismatched tokens", () => {

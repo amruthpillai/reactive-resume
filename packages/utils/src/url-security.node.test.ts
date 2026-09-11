@@ -285,8 +285,18 @@ describe("isAllowedOAuthRedirectUri", () => {
 		expect(isAllowedOAuthRedirectUri("https://app.example.com/cb", trustedOrigins)).toBe(true);
 	});
 
-	it("rejects public https hosts outside trusted origins", () => {
-		expect(isAllowedOAuthRedirectUri("https://api.example.com/cb", trustedOrigins)).toBe(false);
+	it("allows a trusted origin on a private network, for LAN-only self-hosted deployments", () => {
+		expect(isAllowedOAuthRedirectUri("https://192.168.1.5/cb", ["https://192.168.1.5"])).toBe(true);
+	});
+
+	it("allows public https hosts outside trusted origins, so dynamic client registration works", () => {
+		expect(isAllowedOAuthRedirectUri("https://api.example.com/cb", trustedOrigins)).toBe(true);
+		expect(isAllowedOAuthRedirectUri("https://claude.ai/api/mcp/auth_callback", trustedOrigins)).toBe(true);
+	});
+
+	it("still rejects unsafe shapes on public https hosts", () => {
+		expect(isAllowedOAuthRedirectUri("https://u:p@api.example.com/cb", trustedOrigins)).toBe(false);
+		expect(isAllowedOAuthRedirectUri("https://api.example.com/cb#x", trustedOrigins)).toBe(false);
 	});
 
 	it("allows any parseable URI when unsafe mode is enabled", () => {

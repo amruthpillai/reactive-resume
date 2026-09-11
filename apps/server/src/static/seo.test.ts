@@ -33,6 +33,7 @@ describe("SEO static endpoints", () => {
 		expect(response.status).toBe(200);
 		expect(response.headers.get("Content-Type")).toBe("application/xml; charset=UTF-8");
 		expect(text).toContain("<loc>https://app.example.com/</loc>");
+		expect(text).toContain("<loc>https://app.example.com/ats-checker</loc>");
 		expect(text).not.toContain("docs.rxresu.me");
 		expect(text).not.toContain("/auth");
 		expect(text).not.toContain("/dashboard");

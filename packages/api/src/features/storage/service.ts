@@ -251,12 +251,13 @@ class S3StorageService implements StorageService {
 		return response.Contents.map((object) => object.Key ?? "");
 	}
 
-	async write({ key, data, contentType, private: isPrivate }: StorageWriteInput): Promise<void> {
+	async write({ key, data, contentType }: StorageWriteInput): Promise<void> {
+		// BucketOwnerEnforced rejects object ACLs. Public files use the application proxy
+		// with authenticated S3 reads; private attachments retain their access checks.
 		const command = new PutObjectCommand({
 			Bucket: this.bucket,
 			Key: key,
 			Body: data,
-			ACL: isPrivate ? "private" : "public-read",
 			ContentType: contentType,
 		});
 
@@ -321,20 +322,13 @@ class S3StorageService implements StorageService {
 	}
 }
 
-function createStorageService(): StorageService {
-	if (env.S3_ACCESS_KEY_ID && env.S3_SECRET_ACCESS_KEY && env.S3_BUCKET) {
-		return new S3StorageService();
-	}
-
-	return new LocalStorageService();
-}
-
 let cachedService: StorageService | null = null;
 
 export function getStorageService(): StorageService {
-	if (cachedService) return cachedService;
-
-	cachedService = createStorageService();
+	cachedService ??=
+		env.S3_ACCESS_KEY_ID && env.S3_SECRET_ACCESS_KEY && env.S3_BUCKET
+			? new S3StorageService()
+			: new LocalStorageService();
 	return cachedService;
 }
 

@@ -17,7 +17,6 @@ import { Switch } from "@reactive-resume/ui/components/switch";
 import { cn } from "@reactive-resume/utils/style";
 import { ColorPicker } from "@/components/input/color-picker";
 import { IconPicker } from "@/components/input/icon-picker";
-import { URLInput } from "@/components/input/url-input";
 import { useDialogStore } from "@/dialogs/store";
 import { useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
@@ -47,7 +46,7 @@ export function CreateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const form = useAppForm({
 		defaultValues: makeSectionItem(defaultValues, data?.item),
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				createSectionItem(draft, "profiles", value, data?.customSectionId);
 			});
@@ -79,7 +78,7 @@ export function UpdateProfileDialog({ data }: DialogProps<"resume.sections.profi
 	const form = useAppForm({
 		defaultValues: data.item,
 		validators: { onSubmit: formSchema },
-		onSubmit: async ({ value }) => {
+		onSubmit: ({ value }) => {
 			updateResumeData((draft) => {
 				updateSectionItem(draft, "profiles", value, data?.customSectionId);
 			});
@@ -211,24 +210,15 @@ const ProfileForm = withForm({
 					)}
 				</form.Field>
 
-				<form.Field name="website">
+				<form.AppField name="website">
 					{(field) => (
-						<FormItem
-							className="sm:col-span-full"
-							hasError={field.state.meta.isTouched && field.state.meta.errors.length > 0}
-						>
-							<FormLabel>
-								<Trans>Website</Trans>
-							</FormLabel>
-							<URLInput
-								value={field.state.value}
-								onChange={(v) => field.handleChange(v)}
-								hideLabelButton={inlineLink}
-							/>
-							<FormMessage errors={field.state.meta.errors} />
-						</FormItem>
+						<field.WebsiteField
+							label={<Trans>Website</Trans>}
+							formItemClassName="sm:col-span-full"
+							hideLabelButton={inlineLink}
+						/>
 					)}
-				</form.Field>
+				</form.AppField>
 
 				<form.Field name="website.inlineLink">
 					{(field) => (

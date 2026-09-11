@@ -6,7 +6,7 @@ export function getNextWeights(fontFamily: string): Weight[] | null {
 	const fontData = getFont(fontFamily);
 	if (!fontData || !Array.isArray(fontData.weights) || fontData.weights.length === 0) return null;
 
-	const uniqueWeights = Array.from(new Set(fontData.weights)) as Weight[];
+	const uniqueWeights = [...new Set(fontData.weights)] as Weight[];
 
 	// Try to pick 400 and 600 if available
 	const weights: Weight[] = [];

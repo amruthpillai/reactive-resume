@@ -1,0 +1,61 @@
+@import "@fontsource-variable/manrope";
+
+@media (prefers-reduced-motion: no-preference) {
+	html:has(.homepage) {
+		scroll-behavior: smooth;
+	}
+}
+
+/* Element defaults for every component on the page. In @layer base so element-level utilities still win. */
+@layer base {
+	.homepage :where(button, a, input):focus-visible {
+		outline: 2px solid var(--home-ink);
+		outline-offset: 5px;
+	}
+	.homepage :where(button) {
+		cursor: pointer;
+	}
+	.homepage :where(button:disabled) {
+		cursor: default;
+	}
+	.homepage :where(a, button) {
+		-webkit-tap-highlight-color: transparent;
+	}
+}
+
+@keyframes home-feature-enter {
+	from {
+		opacity: 0;
+		transform: translateY(5px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes home-word-arrive {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+@keyframes home-data-flow {
+	from {
+		transform: translateX(0);
+	}
+	to {
+		transform: translateX(100%);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.homepage *,
+	.homepage *::before,
+	.homepage *::after {
+		animation: none;
+		transition: none;
+		scroll-behavior: auto;
+	}
+}

@@ -3,10 +3,11 @@ import type { Template } from "@reactive-resume/schema/templates";
 import type { ResumeRenderOptions } from "./context";
 import type { SectionTitleResolver } from "./section-title";
 import { createElement } from "react";
+import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { pdf } from "#react-pdf-renderer";
 import { ResumeDocument } from "./document";
 
-type CreateResumePdfBlobOptions = {
+export type CreateResumePdfBlobOptions = {
 	data: ResumeData;
 	template?: Template | undefined;
 	renderOptions?: ResumeRenderOptions | undefined;
@@ -14,11 +15,12 @@ type CreateResumePdfBlobOptions = {
 };
 
 export const createResumePdfBlob = async ({
-	data,
+	data: input,
 	template,
 	renderOptions,
 	resolveSectionTitle,
-}: CreateResumePdfBlobOptions) => {
+}: CreateResumePdfBlobOptions): Promise<Blob> => {
+	const data = parseResumeData(input);
 	const document = createElement(ResumeDocument, {
 		data,
 		template: template ?? data.metadata.template,
@@ -26,5 +28,5 @@ export const createResumePdfBlob = async ({
 		resolveSectionTitle,
 	}) as Parameters<typeof pdf>[0];
 
-	return pdf(document).toBlob();
+	return await pdf(document).toBlob();
 };

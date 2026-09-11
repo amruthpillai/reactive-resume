@@ -15,7 +15,6 @@ import {
 	ComboboxSeparator,
 	ComboboxTrigger,
 	ComboboxValue,
-	useComboboxAnchor,
 	useFilter,
 } from "./combobox";
 
@@ -217,11 +216,5 @@ describe("ComboboxChips and friends", () => {
 describe("useFilter", () => {
 	it("is exported as a function", () => {
 		expect(typeof useFilter).toBe("function");
-	});
-});
-
-describe("useComboboxAnchor", () => {
-	it("is exported as a function", () => {
-		expect(typeof useComboboxAnchor).toBe("function");
 	});
 });

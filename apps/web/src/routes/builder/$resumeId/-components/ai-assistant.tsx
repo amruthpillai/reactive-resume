@@ -5,10 +5,18 @@ import { GearSixIcon, SparkleIcon } from "@phosphor-icons/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@reactive-resume/ui/components/button";
+import {
+	Empty,
+	EmptyContent,
+	EmptyDescription,
+	EmptyHeader,
+	EmptyMedia,
+	EmptyTitle,
+} from "@reactive-resume/ui/components/empty";
 import { Sheet, SheetContent, SheetTitle } from "@reactive-resume/ui/components/sheet";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useHasUsableAiProvider } from "@/features/settings/integrations/hooks/use-has-usable-ai-provider";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -24,23 +32,30 @@ type AiAssistantThreadProps = {
 };
 
 function CenteredState({ children }: { children: ReactNode }) {
-	return <div className="grid h-full place-items-center p-6 text-center text-muted-foreground text-sm">{children}</div>;
+	return <Empty className="h-full text-muted-foreground text-sm">{children}</Empty>;
 }
 
 function NoProviderHint() {
 	return (
-		<div className="grid h-full place-items-center p-6">
-			<div className="max-w-xs space-y-4 text-center">
-				<SparkleIcon className="mx-auto size-8 text-muted-foreground" />
-				<p className="text-muted-foreground text-sm">
+		<Empty className="h-full">
+			<EmptyHeader>
+				<EmptyMedia variant="icon">
+					<SparkleIcon />
+				</EmptyMedia>
+				<EmptyTitle>
+					<Trans>No AI provider connected</Trans>
+				</EmptyTitle>
+				<EmptyDescription>
 					<Trans>Set up an AI provider to chat about this resume and apply edits automatically.</Trans>
-				</p>
+				</EmptyDescription>
+			</EmptyHeader>
+			<EmptyContent>
 				<Button nativeButton={false} render={<Link to="/dashboard/settings/integrations" />}>
 					<GearSixIcon />
 					<Trans>Set up an AI provider</Trans>
 				</Button>
-			</div>
-		</div>
+			</EmptyContent>
+		</Empty>
 	);
 }
 
@@ -67,6 +82,7 @@ function AiAssistantThread({ threadId, onClose }: AiAssistantThreadProps) {
 			isReadOnly={data.isReadOnly}
 			readOnlyReason={readOnlyReason}
 			threadStatus={data.thread.status}
+			reviewPatches={data.thread.reviewPatches}
 			activeRunId={data.thread.activeRunId}
 			actions={data.actions}
 			onClose={onClose}
@@ -91,7 +107,10 @@ function AiAssistantPanel({ resumeId, onClose }: BuilderAiAssistantProps & { onC
 				onSuccess: (thread) => setThreadId(thread.id),
 				onError: (mutationError) => {
 					setSetupFailed(true);
-					toast.error(getOrpcErrorMessage(mutationError, { fallback: t`Failed to start the AI assistant.` }));
+					toast.add({
+						type: "error",
+						description: getOrpcErrorMessage(mutationError, { fallback: t`Failed to start the AI assistant.` }),
+					});
 				},
 			},
 		);

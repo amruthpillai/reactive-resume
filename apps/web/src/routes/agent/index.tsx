@@ -26,7 +26,7 @@ function RouteComponent() {
 								<Trans>Select a thread</Trans>
 							</h1>
 							<p className="text-muted-foreground text-sm">
-								<Trans>Choose an existing conversation from the sidebar, or start a new draft-focused thread.</Trans>
+								<Trans>Pick a conversation from the sidebar, or start a new thread to work on a draft.</Trans>
 							</p>
 						</div>
 					</div>

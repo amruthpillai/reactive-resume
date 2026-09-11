@@ -36,7 +36,7 @@ describe("Input", () => {
 		expect(screen.getByPlaceholderText("Enter name")).toBeInTheDocument();
 	});
 
-	it("respects disabled state", async () => {
+	it("respects disabled state", () => {
 		render(<Input data-testid="x" disabled />);
 		const input = screen.getByTestId("x");
 		expect(input).toBeDisabled();

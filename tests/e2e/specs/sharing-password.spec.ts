@@ -12,9 +12,13 @@ test("password-protects a public resume and unlocks it as a visitor", async ({ b
 
 	const password = "e2e-secret-42";
 	await page.getByRole("button", { name: "Set Password" }).click();
-	const prompt = page.getByRole("alertdialog");
-	await prompt.locator('input[type="password"]').fill(password);
-	await prompt.getByRole("button", { name: "Set Password" }).click();
+	const dialog = page.getByRole("dialog", { name: "Protect your resume with a password" });
+	await dialog.getByLabel("Password", { exact: true }).fill(password);
+	await dialog.getByLabel("Confirm Password", { exact: true }).fill("different-password");
+	await dialog.getByRole("button", { name: "Set Password" }).click();
+	await expect(dialog.getByRole("alert")).toHaveText("Passwords do not match.");
+	await dialog.getByLabel("Confirm Password", { exact: true }).fill(password);
+	await dialog.getByRole("button", { name: "Set Password" }).click();
 	await expect(page.getByRole("button", { name: "Remove Password" })).toBeVisible();
 
 	const anonymous = await browser.newPage();

@@ -1,4 +1,9 @@
 {
 	"extends": ["//"],
-	"tags": ["runtime:server", "role:tooling"]
+	"tags": ["runtime:server", "role:tooling"],
+	"tasks": {
+		"test:ci": {
+			"cache": false
+		}
+	}
 }

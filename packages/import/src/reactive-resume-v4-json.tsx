@@ -227,14 +227,28 @@ const transformLayoutColumn = (column: string[]): string[] => {
 		.map(transformLayoutSectionId);
 };
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+	typeof value === "object" && value !== null && !Array.isArray(value);
+
+// A genuine v4 export always carries object-typed basics, sections, and metadata.
+// Checking this up front turns "not a v4 file" into a clear error instead of the
+// raw TypeError the transform below would throw when it dereferences a missing branch.
+const hasV4Shape = (value: unknown): value is V4ResumeData =>
+	isRecord(value) && isRecord(value.basics) && isRecord(value.sections) && isRecord(value.metadata);
+
+const NOT_V4_MESSAGE = "This file doesn't look like a Reactive Resume v4 export.";
+
 // ponytail: stateless single-method class → plain function
 export function parseReactiveResumeV4JSON(json: string): ResumeData {
 	try {
-		const v4Data = JSON.parse(json) as V4ResumeData;
+		const parsed: unknown = JSON.parse(json);
+		if (!hasV4Shape(parsed)) throw new Error(NOT_V4_MESSAGE);
+		const v4Data = parsed;
 
 		const transformed: ResumeData = {
 			picture: {
 				hidden: v4Data.basics.picture?.effects?.hidden ?? false,
+				fit: "cover",
 				url: v4Data.basics.picture?.url ?? "",
 				size: clamp(v4Data.basics.picture?.size ?? 80, 32, 512),
 				rotation: 0,
@@ -372,6 +386,8 @@ export function parseReactiveResumeV4JSON(json: string): ResumeData {
 					title: v4Data.sections.skills?.name ?? "",
 					icon: "",
 					columns: v4Data.sections.skills?.columns ?? 1,
+					layout: "default",
+					keywordLayout: "inline",
 					hidden: !(v4Data.sections.skills?.visible ?? true),
 					keepTogether: false,
 					startOnNewPage: false,
@@ -644,6 +660,13 @@ export function parseReactiveResumeV4JSON(json: string): ResumeData {
 		return resumeDataSchema.parse(transformed);
 	} catch (error: unknown) {
 		if (error instanceof ZodError) rethrowAsImportError(error);
-		throw error;
+		// Surface malformed JSON as-is; treat any other transform failure (a shape
+		// mismatch that slipped past the guard) as "not a valid v4 export" rather
+		// than leaking a raw TypeError to the user.
+		if (error instanceof SyntaxError) throw error;
+		// The hasV4Shape guard above already throws NOT_V4_MESSAGE; reuse that
+		// instance instead of allocating a duplicate.
+		if (error instanceof Error && error.message === NOT_V4_MESSAGE) throw error;
+		throw new Error(NOT_V4_MESSAGE);
 	}
 }

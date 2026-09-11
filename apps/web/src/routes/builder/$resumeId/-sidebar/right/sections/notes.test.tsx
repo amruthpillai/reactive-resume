@@ -51,7 +51,7 @@ describe("NotesSectionBuilder", () => {
 			</I18nProvider>,
 		);
 
-		expect(screen.getByText(/personal notes specific to this resume/)).toBeInTheDocument();
+		expect(screen.getByText(/Keep private notes about this resume here/)).toBeInTheDocument();
 	});
 
 	it("seeds the rich input with the current notes value", () => {

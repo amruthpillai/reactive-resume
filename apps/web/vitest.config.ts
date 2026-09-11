@@ -3,7 +3,7 @@ import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 // @boundaries-ignore root shared Vitest config
-import { createVitestProjectConfig } from "../../vitest.shared";
+import { createVitestProjectConfig } from "../../vitest.shared.mts";
 
 export default createVitestProjectConfig({
 	name: "web",

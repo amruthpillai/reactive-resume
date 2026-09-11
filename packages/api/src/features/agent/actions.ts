@@ -14,7 +14,5 @@ export const actionsRouter = {
 		})
 		.input(z.object({ id: z.string() }))
 		.use(mapAgentEnvironmentError)
-		.handler(async ({ context, input }) => {
-			return await agentService.actions.revert({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => agentService.actions.revert({ id: input.id, userId: context.user.id })),
 };

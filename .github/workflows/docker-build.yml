@@ -2,6 +2,11 @@ name: Build Docker Image
 
 on:
   workflow_dispatch:
+    inputs:
+      release:
+        description: Publish release aliases and redeploy production (false runs a cache-only build, then publishes a canary)
+        type: boolean
+        default: false
   push:
     branches:
       - main
@@ -13,30 +18,39 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE: ${{ github.repository }}
+  GHCR_IMAGE: ghcr.io/${{ github.repository }}
+  DOCKER_IMAGE: docker.io/amruthpillai/reactive-resume
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   mode:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-32vcpu-ubuntu-2404
 
     outputs:
       nightly: ${{ steps.mode.outputs.nightly }}
       release: ${{ steps.mode.outputs.release }}
-      matrix: ${{ steps.mode.outputs.matrix }}
+      canary: ${{ steps.mode.outputs.canary }}
 
     steps:
       - name: Determine publishing mode
         id: mode
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          GIT_REF: ${{ github.ref }}
+          RELEASE: ${{ inputs.release }}
         run: |
-          if [[ "${{ github.event_name }}" == "push" && "${{ github.ref }}" == "refs/heads/main" ]]; then
+          if [[ "$EVENT_NAME" == "push" && "$GIT_REF" == "refs/heads/main" ]]; then
             echo "nightly=true" >> "$GITHUB_OUTPUT"
             echo "release=false" >> "$GITHUB_OUTPUT"
-            echo 'matrix={"include":[{"platform":"linux/amd64","runner":"ubuntu-latest","arch":"amd64"}]}' >> "$GITHUB_OUTPUT"
+            echo "canary=false" >> "$GITHUB_OUTPUT"
+          elif [[ "$EVENT_NAME" == "workflow_dispatch" && "$RELEASE" != "true" ]]; then
+            echo "nightly=false" >> "$GITHUB_OUTPUT"
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "canary=true" >> "$GITHUB_OUTPUT"
           else
             echo "nightly=false" >> "$GITHUB_OUTPUT"
             echo "release=true" >> "$GITHUB_OUTPUT"
-            echo 'matrix={"include":[{"platform":"linux/amd64","runner":"ubuntu-latest","arch":"amd64"},{"platform":"linux/arm64","runner":"ubuntu-24.04-arm","arch":"arm64"}]}' >> "$GITHUB_OUTPUT"
+            echo "canary=false" >> "$GITHUB_OUTPUT"
           fi
 
   build:
@@ -44,7 +58,14 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.mode.outputs.matrix) }}
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: blacksmith-32vcpu-ubuntu-2404
+            arch: amd64
+          - platform: linux/arm64
+            runner: blacksmith-32vcpu-ubuntu-2404-arm
+            arch: arm64
 
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
@@ -59,12 +80,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v6
 
-      - name: Get version from package.json
-        id: version
-        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
-
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v4
+      - name: Setup Blacksmith Docker Builder
+        uses: useblacksmith/setup-docker-builder@v2
+        with:
+          cache-key: Dockerfile-${{ matrix.arch }}
 
       - name: Login to Docker Hub
         uses: docker/login-action@v4
@@ -84,14 +103,22 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/${{ env.IMAGE }}
-            docker.io/${{ env.IMAGE }}
+            ${{ env.GHCR_IMAGE }}
+            ${{ env.DOCKER_IMAGE }}
           tags: |
             type=sha,prefix=sha-,suffix=-${{ matrix.arch }}
 
+      - name: Cache-only smoke build
+        if: ${{ needs.mode.outputs.canary == 'true' }}
+        uses: useblacksmith/build-push-action@v2
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          outputs: type=cacheonly
+
       - name: Build and Push by Digest
         id: build
-        uses: docker/build-push-action@v7
+        uses: useblacksmith/build-push-action@v2
         with:
           context: .
           sbom: true
@@ -101,8 +128,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          cache-from: type=gha,scope=${{ env.IMAGE }}-${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=${{ env.IMAGE }}-${{ matrix.arch }}
 
       - name: Export digest
         run: |
@@ -123,7 +148,7 @@ jobs:
       - mode
       - build
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-32vcpu-ubuntu-2404
 
     permissions:
       contents: read
@@ -180,10 +205,11 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/${{ env.IMAGE }}
-            docker.io/${{ env.IMAGE }}
+            ${{ env.GHCR_IMAGE }}
+            ${{ env.DOCKER_IMAGE }}
           tags: |
             type=sha,prefix=sha-
+            type=raw,value=canary-${{ github.run_id }}-${{ github.run_attempt }},enable=${{ needs.mode.outputs.canary == 'true' }}
             type=raw,value=nightly,enable=${{ needs.mode.outputs.nightly == 'true' }}
             type=raw,value=nightly-{{date 'YYYYMMDDHHmmss' tz='UTC'}},enable=${{ needs.mode.outputs.nightly == 'true' }}
             type=raw,value=latest,enable=${{ needs.mode.outputs.release == 'true' }}
@@ -199,6 +225,8 @@ jobs:
 
           if [[ "${{ needs.mode.outputs.nightly }}" == "true" ]]; then
             FINAL_TAG="nightly"
+          elif [[ "${{ needs.mode.outputs.canary }}" == "true" ]]; then
+            FINAL_TAG="canary-${{ github.run_id }}-${{ github.run_attempt }}"
           else
             FINAL_TAG="v${{ steps.version.outputs.version }}"
           fi
@@ -211,14 +239,13 @@ jobs:
             --annotation "index:org.opencontainers.image.vendor=Amruth Pillai" \
             --annotation "index:org.opencontainers.image.url=https://rxresu.me" \
             --annotation "index:org.opencontainers.image.documentation=https://docs.rxresu.me" \
-            --annotation "index:org.opencontainers.image.source=https://github.com/amruthpillai/reactive-resume" \
+            --annotation "index:org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
             --annotation "index:org.opencontainers.image.version=${{ steps.version.outputs.version }}" \
-            $(printf 'ghcr.io/${{ env.IMAGE }}@sha256:%s ' *) \
-            $(printf 'docker.io/${{ env.IMAGE }}@sha256:%s ' *)
+            $(printf '${{ env.GHCR_IMAGE }}@sha256:%s ' *)
 
           # Get the digest of the multi-arch manifest
-          GHCR_DIGEST=$(docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
-          DOCKER_DIGEST=$(docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          GHCR_DIGEST=$(docker buildx imagetools inspect ${{ env.GHCR_IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
+          DOCKER_DIGEST=$(docker buildx imagetools inspect ${{ env.DOCKER_IMAGE }}:${FINAL_TAG} --format '{{json .Manifest.Digest}}' | tr -d '"')
           echo "final_tag=$FINAL_TAG" >> "$GITHUB_OUTPUT"
           echo "ghcr_digest=$GHCR_DIGEST" >> "$GITHUB_OUTPUT"
           echo "docker_digest=$DOCKER_DIGEST" >> "$GITHUB_OUTPUT"
@@ -229,15 +256,29 @@ jobs:
       - name: Sign images with Cosign
         run: |
           # Sign GHCR image
-          cosign sign --yes ghcr.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.ghcr_digest }}
+          cosign sign --yes ${{ env.GHCR_IMAGE }}@${{ steps.manifest.outputs.ghcr_digest }}
 
           # Sign Docker Hub image
-          cosign sign --yes docker.io/${{ env.IMAGE }}@${{ steps.manifest.outputs.docker_digest }}
+          cosign sign --yes ${{ env.DOCKER_IMAGE }}@${{ steps.manifest.outputs.docker_digest }}
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ghcr.io/${{ env.IMAGE }}:${{ steps.manifest.outputs.final_tag }}
-          docker buildx imagetools inspect docker.io/${{ env.IMAGE }}:${{ steps.manifest.outputs.final_tag }}
+          docker buildx imagetools inspect ${{ env.GHCR_IMAGE }}:${{ steps.manifest.outputs.final_tag }}
+          docker buildx imagetools inspect ${{ env.DOCKER_IMAGE }}:${{ steps.manifest.outputs.final_tag }}
+
+      - name: Verify anonymous pulls on both architectures
+        run: |
+          set -euo pipefail
+          registry_config=$(mktemp -d)
+          trap 'rm -rf "$registry_config"' EXIT
+          # Prevent Docker from discovering a system credential helper.
+          printf '%s\n' '{"auths":{"ghcr.io":{},"https://index.docker.io/v1/":{}}}' > "$registry_config/config.json"
+          for image in "$GHCR_IMAGE" "$DOCKER_IMAGE"; do
+            for platform in linux/amd64 linux/arm64; do
+              docker --config "$registry_config" pull --quiet --platform "$platform" \
+                "$image:${{ steps.manifest.outputs.final_tag }}"
+            done
+          done
 
       - name: Redeploy Stack
         if: ${{ needs.mode.outputs.release == 'true' }}

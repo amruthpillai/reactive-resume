@@ -11,6 +11,13 @@ const dbMock = {
 
 const clearActiveAgentRunIfCurrentMock = vi.fn();
 const claimActiveAgentRunMock = vi.fn();
+const messagesPersistenceMock = {
+	applyStepToUiMessage: vi.fn((message: unknown) => message),
+	insertDraftAssistantMessage: vi.fn(),
+	upsertAssistantUiMessage: vi.fn(),
+	deleteDraftIfEmpty: vi.fn(),
+	withAccumulatedUsageMetadata: vi.fn((_previous: unknown, next: unknown) => next),
+};
 const storageServiceMock = {
 	delete: vi.fn(),
 	write: vi.fn(),
@@ -38,6 +45,7 @@ vi.mock("@reactive-resume/db/schema", () => ({
 		deletedAt: "agent_threads.deleted_at",
 		archivedAt: "agent_threads.archived_at",
 		status: "agent_threads.status",
+		reviewPatches: "agent_threads.review_patches",
 		activeRunId: "agent_threads.active_run_id",
 		activeStreamId: "agent_threads.active_stream_id",
 		activeRunStartedAt: "agent_threads.active_run_started_at",
@@ -96,14 +104,29 @@ vi.mock("drizzle-orm", () => ({
 	sql: () => ({ type: "sql" }),
 }));
 
-vi.mock("ai", () => ({
+// Spread-actual: pure helpers (isStepCount, safeValidateUIMessages, pruneMessages, ...) stay real;
+// only the scripted seams are mocked.
+vi.mock("ai", async (importOriginal) => ({
+	...(await importOriginal<typeof import("ai")>()),
 	convertToModelMessages: vi.fn(),
-	stepCountIs: vi.fn(),
 	ToolLoopAgent: vi.fn(),
 }));
 
-vi.mock("../ai/service", () => ({ getAgentModel: vi.fn() }));
-vi.mock("../ai/credentials", () => ({ assertAgentEnvironment: vi.fn() }));
+// Minimal V4 model stub: the real wrapLanguageModel/addToolInputExamplesMiddleware run against it.
+vi.mock("../ai/service", () => ({
+	getAgentModel: vi.fn(() => ({
+		specificationVersion: "v4",
+		provider: "mock",
+		modelId: "mock-model",
+		supportedUrls: {},
+		doGenerate: vi.fn(),
+		doStream: vi.fn(),
+	})),
+}));
+vi.mock("../ai/credentials", () => ({
+	assertAgentEnvironment: vi.fn(),
+	getAgentToolApprovalSecret: vi.fn(() => "test-approval-secret"),
+}));
 vi.mock("../ai-providers/service", () => ({ aiProvidersService: aiProvidersServiceMock }));
 vi.mock("../resume/service", () => ({ resumeService: resumeServiceMock }));
 vi.mock("../storage/service", () => ({
@@ -118,7 +141,10 @@ vi.mock("./resume", () => ({
 vi.mock("./runs", () => ({
 	claimActiveAgentRun: claimActiveAgentRunMock,
 	clearActiveAgentRunIfCurrent: clearActiveAgentRunIfCurrentMock,
+	isStaleAgentRun: vi.fn(() => false),
+	reapStaleAgentRun: vi.fn(),
 }));
+vi.mock("./messages-persistence", () => messagesPersistenceMock);
 vi.mock("./streams", () => ({
 	agentStreamLifecycle: { create: vi.fn(), resume: vi.fn() },
 }));
@@ -135,6 +161,12 @@ beforeEach(() => {
 	dbMock.transaction.mockImplementation(async <T>(callback: (tx: typeof dbMock) => Promise<T>) => callback(dbMock));
 	clearActiveAgentRunIfCurrentMock.mockReset();
 	claimActiveAgentRunMock.mockReset();
+	for (const mock of Object.values(messagesPersistenceMock)) mock.mockReset();
+	messagesPersistenceMock.applyStepToUiMessage.mockImplementation((message: unknown) => message);
+	messagesPersistenceMock.insertDraftAssistantMessage.mockResolvedValue({ rowId: "draft-row-1", sequence: 1 });
+	messagesPersistenceMock.upsertAssistantUiMessage.mockResolvedValue({ rowId: "draft-row-1" });
+	messagesPersistenceMock.deleteDraftIfEmpty.mockResolvedValue(undefined);
+	messagesPersistenceMock.withAccumulatedUsageMetadata.mockImplementation((_previous: unknown, next: unknown) => next);
 	for (const mock of Object.values(storageServiceMock)) mock.mockReset();
 	for (const mock of Object.values(resumeServiceMock)) mock.mockReset();
 	for (const mock of Object.values(aiProvidersServiceMock)) mock.mockReset();
@@ -149,6 +181,7 @@ function buildArchivedThread(overrides: Record<string, unknown> = {}) {
 		sourceResumeId: null,
 		title: "Archived thread",
 		status: "archived",
+		reviewPatches: false,
 		activeRunId: null,
 		activeStreamId: null,
 		activeRunStartedAt: null,
@@ -398,7 +431,7 @@ describe("agentService.messages.send", () => {
 		]);
 	});
 
-	it("stores snapshotData and applies a valid JSON Patch without a timestamp conflict guard", async () => {
+	it("stores snapshotData and applies a valid JSON Patch guarded by the pre-read timestamp", async () => {
 		const activeThread = buildActiveThread();
 		const persistedMessage = {
 			id: "message-1",
@@ -472,8 +505,13 @@ describe("agentService.messages.send", () => {
 		];
 		const insertValues: unknown[] = [];
 
+		const patchedData = { basics: { customFields: [{ id: "field-1" }] } };
 		resumeServiceMock.getById.mockResolvedValue({ data: beforeData, updatedAt: beforeUpdatedAt });
-		resumeServiceMock.patchInTransaction.mockResolvedValue({ id: "resume-1", updatedAt: patchedUpdatedAt });
+		resumeServiceMock.patchInTransaction.mockResolvedValue({
+			id: "resume-1",
+			updatedAt: patchedUpdatedAt,
+			data: patchedData,
+		});
 		dbMock.insert.mockReturnValue({
 			values: vi.fn((value) => {
 				insertValues.push(value);
@@ -501,6 +539,7 @@ describe("agentService.messages.send", () => {
 			id: "resume-1",
 			userId: "user-1",
 			operations,
+			expectedUpdatedAt: beforeUpdatedAt,
 		});
 		expect(insertValues).toContainEqual(
 			expect.objectContaining({
@@ -510,7 +549,83 @@ describe("agentService.messages.send", () => {
 				appliedUpdatedAt: patchedUpdatedAt,
 			}),
 		);
-		expect(result).toEqual(expect.objectContaining({ actionId: "action-1", resumeId: "resume-1" }));
+		expect(result).toEqual(
+			expect.objectContaining({
+				actionId: "action-1",
+				resumeId: "resume-1",
+				changedPaths: ["/basics/customFields/-"],
+				resume: patchedData,
+			}),
+		);
+	});
+
+	it("rethrows a resume version conflict as a recoverable plain tool error", async () => {
+		const activeThread = buildActiveThread();
+		const persistedMessage = {
+			id: "message-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "user",
+			status: "completed",
+			sequence: 0,
+			uiMessage: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "Edit" }] },
+		};
+
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([activeThread]))
+			.mockImplementationOnce(() => selectWhereResult([{ maxSequence: -1 }]))
+			.mockImplementationOnce(() => selectWhereResult([{ total: 1 }]))
+			.mockImplementationOnce(() => selectOrderByResult([persistedMessage]));
+		dbMock.insert.mockReturnValue({
+			values: vi.fn(() => ({ returning: vi.fn(async () => [persistedMessage]) })),
+		});
+		dbMock.update.mockReturnValue({ set: vi.fn(() => ({ where: vi.fn(async () => undefined) })) });
+
+		claimActiveAgentRunMock.mockResolvedValue(true);
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		aiProvidersServiceMock.markUsed.mockResolvedValue(undefined);
+
+		const [
+			{ convertToModelMessages, ToolLoopAgent },
+			{ agentStreamLifecycle },
+			{ buildAgentTools },
+			{ streamToEventIterator },
+		] = await Promise.all([import("ai"), import("./streams"), import("./tools"), import("@orpc/server")]);
+		vi.mocked(convertToModelMessages).mockResolvedValue([{ role: "user", content: [{ type: "text", text: "Edit" }] }]);
+		class MockToolLoopAgent {
+			stream = vi.fn(async () => ({ toUIMessageStream: vi.fn(() => new ReadableStream()) }));
+		}
+		vi.mocked(ToolLoopAgent).mockImplementation(MockToolLoopAgent as never);
+		vi.mocked(agentStreamLifecycle.create).mockResolvedValue(new ReadableStream());
+		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
+
+		const { agentService } = await import("./service");
+
+		await agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "Edit" }] } as any,
+		});
+
+		resumeServiceMock.getById.mockResolvedValue({ data: {}, updatedAt: new Date("2026-05-01T00:00:00.000Z") });
+		resumeServiceMock.patchInTransaction.mockRejectedValue(new ORPCError("RESUME_VERSION_CONFLICT"));
+
+		const toolConfig = vi.mocked(buildAgentTools).mock.calls.at(-1)?.[0];
+		// biome-ignore lint/suspicious/noExplicitAny: captured mocked tool config has intentionally loose handler types
+		const applying = (toolConfig as any).handlers.applyResumePatch({
+			title: "Edit",
+			operations: [{ op: "replace", path: "/basics/name", value: "Bob" }],
+		});
+
+		await expect(applying).rejects.toThrowError("The resume changed while this edit was being prepared");
+		await expect(applying).rejects.not.toBeInstanceOf(ORPCError);
 	});
 
 	it("persists canonical attachment UI parts, links selected attachments, and appends server-read model parts", async () => {
@@ -784,6 +899,10 @@ describe("agentService.messages.send", () => {
 						type: "tool-ask_user_question",
 						toolCallId: "call-1",
 						state: "output-available",
+						input: {
+							question: "How broadly should I rename?",
+							choices: ["Only change the main resume header name"],
+						},
 						output: "Only change the main resume header name",
 					},
 				],
@@ -807,6 +926,122 @@ describe("agentService.messages.send", () => {
 			}),
 		);
 		expect(convertToModelMessages).toHaveBeenCalledWith([userMessage.uiMessage, answeredAssistantModelInput]);
+	});
+
+	// Regression (defect 8): a question continuation streams into the SAME uiMessage id; onFinish
+	// must upsert the existing assistant row instead of inserting a duplicate row.
+	it("continues the existing assistant row on a question continuation instead of inserting a duplicate", async () => {
+		const activeThread = buildActiveThread();
+		const userMessage = {
+			id: "message-user-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "user",
+			status: "completed",
+			sequence: 0,
+			uiMessage: { id: "ui-user-1", role: "user", parts: [{ type: "text", text: "Change the name" }] },
+		};
+		const question = { question: "How broadly should I rename?", choices: ["Only the header"] };
+		const unansweredAssistantMessage = {
+			id: "message-assistant-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "assistant",
+			status: "completed",
+			sequence: 1,
+			uiMessage: {
+				id: "ui-assistant-1",
+				role: "assistant",
+				parts: [{ type: "tool-ask_user_question", toolCallId: "call-1", state: "input-available", input: question }],
+			},
+		};
+		const answeredAssistantMessage = {
+			...unansweredAssistantMessage,
+			uiMessage: {
+				...unansweredAssistantMessage.uiMessage,
+				parts: [
+					{
+						type: "tool-ask_user_question",
+						toolCallId: "call-1",
+						state: "output-available",
+						input: question,
+						output: "Only the header",
+					},
+				],
+			},
+		};
+
+		dbMock.select
+			.mockImplementationOnce(() => selectLimitResult([activeThread]))
+			.mockImplementationOnce(() => selectOrderByResult([userMessage, unansweredAssistantMessage]))
+			.mockImplementationOnce(() => selectOrderByResult([userMessage, answeredAssistantMessage]));
+		dbMock.update.mockImplementation(() => ({ set: vi.fn(() => ({ where: vi.fn(async () => undefined) })) }));
+
+		claimActiveAgentRunMock.mockResolvedValue(true);
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		aiProvidersServiceMock.markUsed.mockResolvedValue(undefined);
+
+		const [{ convertToModelMessages, ToolLoopAgent }, { agentStreamLifecycle }, { streamToEventIterator }] =
+			await Promise.all([import("ai"), import("./streams"), import("@orpc/server")]);
+		vi.mocked(convertToModelMessages).mockResolvedValue([
+			{ role: "user", content: [{ type: "text", text: "Change the name" }] },
+		]);
+
+		let uiStreamOptions: Record<string, unknown> | undefined;
+		class MockToolLoopAgent {
+			stream = vi.fn(async () => ({
+				toUIMessageStream: vi.fn((options: Record<string, unknown>) => {
+					uiStreamOptions = options;
+					return new ReadableStream();
+				}),
+			}));
+		}
+		vi.mocked(ToolLoopAgent).mockImplementation(MockToolLoopAgent as never);
+		vi.mocked(agentStreamLifecycle.create).mockImplementation((_streamId, makeStream) => {
+			(makeStream as () => unknown)();
+			return Promise.resolve(new ReadableStream());
+		});
+		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
+
+		const { agentService } = await import("./service");
+
+		await agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: answeredAssistantMessage.uiMessage as any,
+		});
+
+		const onFinish = uiStreamOptions?.onFinish as (event: Record<string, unknown>) => Promise<void>;
+		const continuedMessage = {
+			...answeredAssistantMessage.uiMessage,
+			parts: [...answeredAssistantMessage.uiMessage.parts, { type: "text", text: "Renamed the header." }],
+		};
+		await onFinish({ responseMessage: continuedMessage, isAborted: false, isContinuation: true, messages: [] });
+
+		expect(messagesPersistenceMock.insertDraftAssistantMessage).not.toHaveBeenCalled();
+		expect(dbMock.insert).not.toHaveBeenCalled();
+		expect(messagesPersistenceMock.upsertAssistantUiMessage).toHaveBeenCalledWith(
+			expect.objectContaining({
+				rowId: "message-assistant-1",
+				status: "completed",
+				message: expect.objectContaining({ id: "ui-assistant-1" }),
+			}),
+		);
+
+		// Usage metadata is attached on the finish part only and carries the provider's model id.
+		const messageMetadata = uiStreamOptions?.messageMetadata as (options: { part: Record<string, unknown> }) => unknown;
+		expect(messageMetadata({ part: { type: "finish", totalUsage: { totalTokens: 42 } } })).toEqual({
+			usage: { totalTokens: 42 },
+			model: "gpt-5",
+		});
+		expect(messageMetadata({ part: { type: "text-delta" } })).toBeUndefined();
 	});
 
 	it("repairs legacy user-answer messages that followed an unresolved ask-user-question tool call", async () => {
@@ -952,6 +1187,30 @@ describe("agentService.messages.send", () => {
 		]);
 	});
 
+	it("rejects malformed UI message parts before claiming a run", async () => {
+		dbMock.select.mockImplementationOnce(() => selectLimitResult([buildActiveThread()]));
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+
+		const { agentService } = await import("./service");
+
+		const sending = agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: malformed fixture on purpose
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text" }] } as any,
+		});
+
+		await expect(sending).rejects.toMatchObject({ code: "BAD_REQUEST", message: "Invalid UI message parts." });
+		expect(claimActiveAgentRunMock).not.toHaveBeenCalled();
+		expect(dbMock.insert).not.toHaveBeenCalled();
+	});
+
 	it("rejects malformed attachment IDs before persisting a message", async () => {
 		dbMock.select.mockImplementationOnce(() => selectLimitResult([buildActiveThread()]));
 		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
@@ -1035,6 +1294,90 @@ describe("agentService.messages.send", () => {
 
 		// Ensure we never tried to claim a run or persist anything for an archived thread.
 		expect(aiProvidersServiceMock.getRunnableById).not.toHaveBeenCalled();
+	});
+});
+
+describe("agentService.messages.stop", () => {
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
+	// Regression: stop() must abort the run with an AbortError. A bare-string abort reason is not
+	// recognized by the AI SDK as a cancellation, so its rejection escapes the background stream
+	// pump and crashes the whole process with ERR_UNHANDLED_REJECTION.
+	it("aborts the active run with an AbortError the AI SDK recognizes as a cancellation", async () => {
+		const activeThread = buildActiveThread();
+		const persistedMessage = {
+			id: "message-1",
+			userId: "user-1",
+			threadId: "thread-1",
+			role: "user",
+			status: "completed",
+			sequence: 0,
+			uiMessage: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "hi" }] },
+		};
+
+		dbMock.select
+			// send(): getThread, next sequence, message count, thread messages
+			.mockImplementationOnce(() => selectLimitResult([activeThread]))
+			.mockImplementationOnce(() => selectWhereResult([{ maxSequence: -1 }]))
+			.mockImplementationOnce(() => selectWhereResult([{ total: 1 }]))
+			.mockImplementationOnce(() => selectOrderByResult([persistedMessage]))
+			// stop(): getThread now reports the active run registered by send() (generateId() -> "test-id")
+			.mockImplementationOnce(() =>
+				selectLimitResult([buildActiveThread({ activeRunId: "test-id", activeStreamId: "test-id" })]),
+			);
+
+		dbMock.insert.mockReturnValue({
+			values: vi.fn(() => ({ returning: vi.fn(async () => [persistedMessage]) })),
+		});
+		dbMock.update.mockReturnValue({ set: vi.fn(() => ({ where: vi.fn(async () => undefined) })) });
+
+		claimActiveAgentRunMock.mockResolvedValue(true);
+		clearActiveAgentRunIfCurrentMock.mockResolvedValue(undefined);
+		aiProvidersServiceMock.getRunnableById.mockResolvedValue({
+			id: "provider-1",
+			provider: "openai",
+			model: "gpt-5",
+			apiKey: "secret",
+			baseURL: null,
+		});
+		aiProvidersServiceMock.markUsed.mockResolvedValue(undefined);
+
+		const [{ convertToModelMessages, ToolLoopAgent }, { agentStreamLifecycle }, { streamToEventIterator }] =
+			await Promise.all([import("ai"), import("./streams"), import("@orpc/server")]);
+		vi.mocked(convertToModelMessages).mockResolvedValue([{ role: "user", content: [{ type: "text", text: "hi" }] }]);
+
+		let capturedSignal: AbortSignal | undefined;
+		class MockToolLoopAgent {
+			stream = vi.fn(({ abortSignal }: { abortSignal: AbortSignal }) => {
+				capturedSignal = abortSignal;
+				return { toUIMessageStream: vi.fn(() => new ReadableStream()) };
+			});
+		}
+		vi.mocked(ToolLoopAgent).mockImplementation(MockToolLoopAgent as never);
+		vi.mocked(agentStreamLifecycle.create).mockResolvedValue(new ReadableStream());
+		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
+
+		const { agentService } = await import("./service");
+
+		await agentService.messages.send({
+			threadId: "thread-1",
+			userId: "user-1",
+			// biome-ignore lint/suspicious/noExplicitAny: minimal fixture for unit test
+			message: { id: "ui-message-1", role: "user", parts: [{ type: "text", text: "hi" }] } as any,
+		});
+
+		expect(capturedSignal).toBeDefined();
+		expect(capturedSignal?.aborted).toBe(false);
+
+		await agentService.messages.stop({ userId: "user-1", threadId: "thread-1" });
+
+		expect(capturedSignal?.aborted).toBe(true);
+		const reason = capturedSignal?.reason as Error;
+		expect(reason).toBeInstanceOf(Error);
+		expect(reason.name).toBe("AbortError");
+		expect(reason.message).toBe("USER_STOPPED");
 	});
 });
 

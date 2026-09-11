@@ -1,5 +1,5 @@
 ---
-title: "Docker Compose Examples"
+title: "Docker Compose examples"
 description: "Ready-to-use Docker Compose examples for self-hosting Reactive Resume with Postgres, Traefik, Caddy, Nginx Proxy Manager, and other common deployment stacks."
 ---
 
@@ -9,25 +9,42 @@ description: "Ready-to-use Docker Compose examples for self-hosting Reactive Res
 
 ## Overview
 
-Every self-hosted setup is unique. You might be running on a single VPS, a Kubernetes cluster, behind Cloudflare Tunnel, or using a specific reverse proxy like Traefik or nginx. This page provides real-world Docker Compose configurations for various deployment scenarios to help you get started faster.
+Self-hosted setups vary. You might run on a single VPS or a Kubernetes cluster, behind Cloudflare Tunnel, or behind a reverse proxy like Traefik or nginx. This page collects Docker Compose configurations for those cases.
 
-These examples go beyond the basic setup in the [Self-Hosting with Docker](/self-hosting/docker) guide, showing production-ready configurations with reverse proxies, SSL termination, and other common patterns.
+They go further than the basic setup in the [Self-hosting with Docker](/self-hosting/docker) guide, with reverse proxies, SSL termination, and other common patterns.
 
 <Info>
-  **Help others by sharing your setup!** If you have a working configuration that isn't covered here, I'd love to
-  include it. Simply [open a pull request](https://github.com/amruthpillai/reactive-resume) with your example added to
-  this page. Your contribution helps the community and makes self-hosting easier for everyone.
+  **Share your setup.** If you have a working configuration that isn't covered here, I'd love to include it. [Open a
+  pull request](https://github.com/reactive-resume/app) with your example added to this page.
 </Info>
+
+---
+
+## Reuse an existing PostgreSQL service
+
+Reactive Resume always uses a separate PostgreSQL service; do not embed another database server in the app container.
+If your homelab or hosting platform already manages PostgreSQL, reuse it by setting `DATABASE_URL` to that service and
+allowing the app container to reach it over the intended private network. Keep database credentials private and do not
+expose PostgreSQL to the public internet.
+
+When the database connection crosses a host or network boundary, require TLS with certificate and hostname verification.
+Use `sslmode=verify-full` in `DATABASE_URL` where the provider supports it, or the provider's equivalent verified-TLS
+configuration. Private routing limits exposure, but does not itself verify the database server's identity.
+
+For generic Unraid and homelab container fields, including the `localhost` networking warning, see
+[Unraid and other homelab platforms](/self-hosting/docker#unraid-and-other-homelab-platforms). The core resume workflow
+does not require Redis or S3. Redis is a separate optional dependency for the AI Agent workspace, while S3-compatible
+storage is optional unless you need features that require private object storage; see the
+[environment variable reference](/self-hosting/docker#environment-variables) for those boundaries.
 
 ---
 
 ## Docker with Traefik
 
-This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Only the Reactive Resume app is exposed through Traefik—Postgres remains on an internal network.
+This example uses [Traefik](https://traefik.io/) as a reverse proxy with automatic SSL certificate management via Let's Encrypt. Postgres stays on an internal network. The Traefik dashboard is also routed, at `traefik.${DOMAIN}` behind basic auth — drop those labels if you do not want it reachable.
 
 <Tip>
-  Traefik automatically discovers services via Docker labels and handles SSL certificates, making it ideal for setups
-  where you want minimal configuration.
+  Traefik discovers services through Docker labels and handles SSL certificates, so it needs very little configuration.
 </Tip>
 
 ```yaml compose-traefik.yml lines expandable
@@ -269,11 +286,11 @@ http {
 
 ## Docker Swarm
 
-This example demonstrates a production-grade Docker Swarm deployment with multiple replicas, health checks, rolling updates, and Traefik integration. It includes SeaweedFS for S3-compatible storage and a PostgreSQL database with custom configuration.
+This example is a Docker Swarm deployment with health checks, rolling updates, and Traefik integration. It includes SeaweedFS for S3-compatible storage and a PostgreSQL database with custom configuration.
 
 <Tip>
-  Docker Swarm is great for multi-node deployments where you need high availability and easy scaling. The app service is
-  configured with 2 replicas and rolling update strategy.
+  Docker Swarm suits multi-node deployments that need high availability and simple scaling. Every service here starts
+  at one replica; raise `deploy.replicas` on `reactive_resume` once you have more than one node.
 </Tip>
 
 ```yaml compose-swarm.yml lines expandable
@@ -335,7 +352,7 @@ services:
       replicas: 1
 
   reactive_resume:
-    image: ghcr.io/amruthpillai/reactive-resume:latest
+    image: ghcr.io/reactive-resume/app:latest
     networks:
       - traefik_network
       - reactive_resume_network
@@ -429,9 +446,9 @@ docker stack rm reactive_resume
 
 ---
 
-## Contributing Your Setup
+## Contributing your setup
 
-Have a different deployment setup that works well? Consider contributing it here. Some examples include:
+Have a different deployment setup that works well? Consider contributing it here. Some examples:
 
 - Kubernetes / Helm charts
 - Cloudflare Tunnel
@@ -440,7 +457,7 @@ Have a different deployment setup that works well? Consider contributing it here
 - Podman configurations
 - Cloud-specific deployments (AWS ECS, Google Cloud Run, Azure Container Apps)
 
-To contribute, [open a pull request](https://github.com/amruthpillai/reactive-resume) with your example added to this page. Include:
+To contribute, [open a pull request](https://github.com/reactive-resume/app) with your example added to this page. Include:
 
 1. A brief description of when/why someone would use this setup
 2. The complete Docker Compose (or equivalent) configuration

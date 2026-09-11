@@ -17,9 +17,9 @@ export const versionsRouter = {
 		})
 		.input(resumeDto.listVersions.input)
 		.output(resumeDto.listVersions.output)
-		.handler(async ({ context, input }) => {
-			return resumeService.versions.list({ resumeId: input.resumeId, userId: context.user.id });
-		}),
+		.handler(({ context, input }) =>
+			resumeService.versions.list({ resumeId: input.resumeId, userId: context.user.id }),
+		),
 
 	restoreVersion: protectedProcedure
 		.route({
@@ -35,11 +35,11 @@ export const versionsRouter = {
 		.input(resumeDto.restoreVersion.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.restoreVersion.output)
-		.handler(async ({ context, input }) => {
-			return resumeService.versions.restore({
+		.handler(({ context, input }) =>
+			resumeService.versions.restore({
 				resumeId: input.resumeId,
 				versionId: input.versionId,
 				userId: context.user.id,
-			});
-		}),
+			}),
+		),
 };

@@ -26,9 +26,15 @@ const handlers = {
 	}),
 };
 
-function buildTools(provider: AIProvider, options?: { model?: string; baseURL?: string }) {
+function buildTools(
+	provider: AIProvider,
+	options?: { model?: string; baseURL?: string; requirePatchApproval?: boolean },
+) {
 	return buildAgentTools({
 		provider: { provider, model: options?.model ?? "gpt-5-mini", apiKey: "test-key", baseURL: options?.baseURL ?? "" },
+		...(options?.requirePatchApproval !== undefined
+			? { options: { requirePatchApproval: options.requirePatchApproval } }
+			: {}),
 		handlers,
 	});
 }
@@ -52,14 +58,14 @@ describe("agent tools", () => {
 		expect(tools).not.toHaveProperty("web_search");
 	});
 
-	it.each([
-		"https://api.openai.com/v1?proxy=1",
-		"https://api.openai.com/v1#fragment",
-	])("does not add provider-native web search for OpenAI providers with non-exact base URL %s", (baseURL) => {
-		const tools = buildTools("openai", { baseURL });
+	it.each(["https://api.openai.com/v1?proxy=1", "https://api.openai.com/v1#fragment"])(
+		"does not add provider-native web search for OpenAI providers with non-exact base URL %s",
+		(baseURL) => {
+			const tools = buildTools("openai", { baseURL });
 
-		expect(tools).not.toHaveProperty("web_search");
-	});
+			expect(tools).not.toHaveProperty("web_search");
+		},
+	);
 
 	it("does not add provider-native web search for unsupported OpenAI models", () => {
 		const tools = buildTools("openai", { model: "custom-model" });
@@ -67,17 +73,21 @@ describe("agent tools", () => {
 		expect(tools).not.toHaveProperty("web_search");
 	});
 
-	it.each<AIProvider>([
-		"anthropic",
-		"gemini",
-		"vercel-ai-gateway",
-		"openrouter",
-		"ollama",
-		"openai-compatible",
-	])("does not add provider-native web search for %s", (provider) => {
-		const tools = buildTools(provider);
+	it.each<AIProvider>(["anthropic", "gemini", "vercel-ai-gateway", "openrouter", "ollama", "openai-compatible"])(
+		"does not add provider-native web search for %s",
+		(provider) => {
+			const tools = buildTools(provider);
 
-		expect(tools).not.toHaveProperty("web_search");
+			expect(tools).not.toHaveProperty("web_search");
+		},
+	);
+
+	it("marks apply_resume_patch as needing approval only when review is required", () => {
+		const gated = buildTools("openai-compatible", { requirePatchApproval: true });
+		const open = buildTools("openai-compatible");
+
+		expect(gated.apply_resume_patch).toMatchObject({ needsApproval: true });
+		expect(open.apply_resume_patch?.needsApproval).toBeUndefined();
 	});
 
 	it("keeps instructions explicit about native search availability", () => {
@@ -96,7 +106,7 @@ describe("agent tools", () => {
 		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain(
 			"/customSections/0/items/0/description",
 		);
-		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("never /data/basics/name or /name");
+		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("never prefixed with /data");
 		expect(buildAgentInstructions({ hasProviderNativeSearch: false })).toContain("clean Markdown");
 	});
 });

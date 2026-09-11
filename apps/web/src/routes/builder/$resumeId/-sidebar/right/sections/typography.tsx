@@ -3,7 +3,7 @@ import type z from "zod";
 import { Trans } from "@lingui/react/macro";
 import { useStore } from "@tanstack/react-form";
 import { typographySchema } from "@reactive-resume/schema/resume/data";
-import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
+import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -11,6 +11,7 @@ import {
 	InputGroupText,
 } from "@reactive-resume/ui/components/input-group";
 import { Separator } from "@reactive-resume/ui/components/separator";
+import { Switch } from "@reactive-resume/ui/components/switch";
 import { FontFamilyCombobox, FontWeightCombobox } from "@/components/typography/combobox";
 import { getNextWeights } from "@/components/typography/get-next-weights";
 import { useResume, useUpdateResumeData } from "@/features/resume/builder/draft";
@@ -55,6 +56,7 @@ function TypographySectionForm() {
 		updateResumeData((draft) => {
 			draft.metadata.typography.body = data.body;
 			draft.metadata.typography.heading = data.heading;
+			if (data.hyphenation !== undefined) draft.metadata.typography.hyphenation = data.hyphenation;
 		});
 	};
 
@@ -77,6 +79,31 @@ function TypographySectionForm() {
 			<TypographyGroupFields form={form} prefix="body" handleAutoSave={handleAutoSave} />
 			<TypographyFieldGroup label={<Trans context="Headings or Titles (H1, H2, H3, H4, H5, H6)">Heading</Trans>} />
 			<TypographyGroupFields form={form} prefix="heading" handleAutoSave={handleAutoSave} />
+			<form.Field name="hyphenation">
+				{(field) => (
+					<FormItem className="col-span-full mt-2">
+						<div className="flex items-center gap-x-3">
+							<FormControl
+								render={
+									<Switch
+										checked={field.state.value === true}
+										onCheckedChange={(checked) => {
+											field.handleChange(checked);
+											handleAutoSave();
+										}}
+									/>
+								}
+							/>
+							<FormLabel>
+								<Trans>Hyphenation</Trans>
+							</FormLabel>
+						</div>
+						<FormDescription>
+							<Trans>Currently available for German resumes. Uses the language set in Page.</Trans>
+						</FormDescription>
+					</FormItem>
+				)}
+			</form.Field>
 		</form>
 	);
 }

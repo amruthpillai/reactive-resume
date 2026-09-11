@@ -19,6 +19,11 @@ export const env = createEnv({
 	server: {
 		// Application
 		APP_URL: z.url({ protocol: /https?/ }),
+		ROOT_RESUME_ID: z
+			.string()
+			.trim()
+			.transform((value) => value || undefined)
+			.optional(),
 		SERVER_PORT: z.coerce.number().int().min(1).max(65535).default(3001),
 
 		// Database
@@ -80,7 +85,6 @@ export const env = createEnv({
 		FLAG_DISABLE_EMAIL_AUTH: z.stringbool().default(false),
 		FLAG_DISABLE_IMAGE_PROCESSING: z.stringbool().default(false),
 		FLAG_DISABLE_API_RATE_LIMIT: z.stringbool().default(false),
-		FLAG_SHOW_SPONSORS: z.stringbool().default(false),
 		FLAG_ALLOW_UNSAFE_AI_BASE_URL: z.stringbool().default(false),
 		FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI: z.stringbool().default(false),
 	},

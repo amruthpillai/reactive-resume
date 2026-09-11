@@ -9,7 +9,9 @@ import {
 	ListIcon,
 	PencilSimpleLineIcon,
 	PlusIcon,
+	SortDescendingIcon,
 } from "@phosphor-icons/react";
+import { sortSectionItemsByPeriod } from "@reactive-resume/resume/section-sort";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
@@ -24,10 +26,12 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { useConfirm } from "@/hooks/use-confirm";
 import { usePrompt } from "@/hooks/use-prompt";
+import { SkillKeywordLayoutMenu } from "./skill-keyword-layout-menu";
 
 type Props = {
 	type: "summary" | SectionType;
@@ -41,10 +45,43 @@ export function SectionDropdownMenu({ type }: Props) {
 	const updateResumeData = useUpdateResumeData();
 	const resume = useCurrentResume();
 	const section = type === "summary" ? resume.data.summary : resume.data.sections[type];
+	const showHeading = section.showHeading !== false;
+	const dropDownValue =
+		type === "skills" && resume.data.sections[type].layout === "inline" ? "inline" : section.columns.toString();
 
 	const onAddItem = () => {
 		if (type === "summary") return;
 		openDialog(`resume.sections.${type}.create`, undefined);
+	};
+
+	const onSortByDate = () => {
+		if ((type !== "experience" && type !== "education") || resume.isLocked) return;
+
+		let unresolvedLabels: string[] = [];
+		if (type === "experience") {
+			const currentItems = resume.data.sections.experience.items;
+			const result = sortSectionItemsByPeriod(currentItems, resume.data.metadata.page.locale);
+			const labelById = new Map(currentItems.map((item) => [item.id, item.company.trim() || item.id]));
+			unresolvedLabels = result.unresolvedIds.map((id) => labelById.get(id) ?? id);
+			updateResumeData((draft) => {
+				draft.sections.experience.items = result.items;
+			});
+		} else {
+			const currentItems = resume.data.sections.education.items;
+			const result = sortSectionItemsByPeriod(currentItems, resume.data.metadata.page.locale);
+			const labelById = new Map(currentItems.map((item) => [item.id, item.school.trim() || item.id]));
+			unresolvedLabels = result.unresolvedIds.map((id) => labelById.get(id) ?? id);
+			updateResumeData((draft) => {
+				draft.sections.education.items = result.items;
+			});
+		}
+
+		if (unresolvedLabels.length > 0) {
+			toast.add({
+				type: "warning",
+				description: t`Could not sort these items; they stayed at the end: ${unresolvedLabels.join(", ")}.`,
+			});
+		}
 	};
 
 	const onToggleVisibility = () => {
@@ -53,6 +90,16 @@ export function SectionDropdownMenu({ type }: Props) {
 				draft.summary.hidden = !draft.summary.hidden;
 			} else {
 				draft.sections[type].hidden = !draft.sections[type].hidden;
+			}
+		});
+	};
+
+	const onToggleHeading = () => {
+		updateResumeData((draft) => {
+			if (type === "summary") {
+				draft.summary.showHeading = !(draft.summary.showHeading !== false);
+			} else {
+				draft.sections[type].showHeading = !(draft.sections[type].showHeading !== false);
 			}
 		});
 	};
@@ -76,6 +123,15 @@ export function SectionDropdownMenu({ type }: Props) {
 
 	const onSetColumns = (value: string) => {
 		updateResumeData((draft) => {
+			if (type === "skills") {
+				if (value === "inline") {
+					draft.sections[type].layout = value;
+					draft.sections[type].columns = 1;
+					return;
+				}
+				draft.sections[type].layout = "default";
+			}
+
 			if (type === "summary") {
 				draft.summary.columns = Number.parseInt(value, 10);
 			} else {
@@ -126,6 +182,13 @@ export function SectionDropdownMenu({ type }: Props) {
 								<PlusIcon />
 								<Trans>Add a new item</Trans>
 							</DropdownMenuItem>
+
+							{(type === "experience" || type === "education") && (
+								<DropdownMenuItem disabled={resume.isLocked} onClick={onSortByDate}>
+									<SortDescendingIcon />
+									<Trans>Sort by date</Trans>
+								</DropdownMenuItem>
+							)}
 						</DropdownMenuGroup>
 
 						<DropdownMenuSeparator />
@@ -138,10 +201,17 @@ export function SectionDropdownMenu({ type }: Props) {
 						{section.hidden ? <Trans>Show</Trans> : <Trans>Hide</Trans>}
 					</DropdownMenuItem>
 
+					<DropdownMenuItem onClick={onToggleHeading}>
+						{showHeading ? <EyeClosedIcon /> : <EyeIcon />}
+						{showHeading ? <Trans>Hide heading</Trans> : <Trans>Show heading</Trans>}
+					</DropdownMenuItem>
+
 					<DropdownMenuItem onClick={onRenameSection}>
 						<PencilSimpleLineIcon />
 						<Trans>Rename</Trans>
 					</DropdownMenuItem>
+
+					{type === "skills" && <SkillKeywordLayoutMenu />}
 
 					<DropdownMenuSub>
 						<DropdownMenuSubTrigger>
@@ -150,12 +220,21 @@ export function SectionDropdownMenu({ type }: Props) {
 						</DropdownMenuSubTrigger>
 
 						<DropdownMenuSubContent>
-							<DropdownMenuRadioGroup value={section.columns.toString()} onValueChange={onSetColumns}>
+							<DropdownMenuRadioGroup value={dropDownValue} onValueChange={onSetColumns}>
 								{[1, 2, 3, 4, 5, 6].map((column) => (
 									<DropdownMenuRadioItem key={column} value={column.toString()}>
 										<Plural value={column} one="# Column" other="# Columns" />
 									</DropdownMenuRadioItem>
 								))}
+
+								{type === "skills" && (
+									<>
+										<DropdownMenuSeparator />
+										<DropdownMenuRadioItem value="inline">
+											<Trans>1 Column / Inline</Trans>
+										</DropdownMenuRadioItem>
+									</>
+								)}
 							</DropdownMenuRadioGroup>
 						</DropdownMenuSubContent>
 					</DropdownMenuSub>

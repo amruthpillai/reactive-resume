@@ -13,8 +13,8 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import Cropper from "react-easy-crop";
-import { toast } from "sonner";
 import { pictureSchema } from "@reactive-resume/schema/resume/data";
+import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { Button } from "@reactive-resume/ui/components/button";
 import { ButtonGroup } from "@reactive-resume/ui/components/button-group";
 import {
@@ -34,6 +34,7 @@ import {
 	InputGroupText,
 } from "@reactive-resume/ui/components/input-group";
 import { Slider } from "@reactive-resume/ui/components/slider";
+import { toast } from "@reactive-resume/ui/components/toast";
 import "react-easy-crop/react-easy-crop.css";
 import { ColorPicker } from "@/components/input/color-picker";
 import { useCurrentBuilderResumeSelector, useUpdateResumeData } from "@/features/resume/builder/draft";
@@ -93,7 +94,8 @@ function PicturePreviewControls({
 					<img
 						alt=""
 						src={normalizedPictureUrl}
-						className="fade-in relative z-10 size-full animate-in rounded-md object-cover transition-opacity group-hover/picture:opacity-20"
+						style={{ objectFit: picture.fit }}
+						className="fade-in relative z-10 size-full animate-in rounded-md transition-opacity group-hover/picture:opacity-20"
 					/>
 				)}
 
@@ -142,12 +144,52 @@ function PicturePreviewControls({
 	);
 }
 
-type PictureGeometryFieldsProps = {
+type PictureFieldProps = {
 	form: PictureSettingsForm;
 	onAutoSave: () => void;
 };
 
-function PictureGeometryFields({ form, onAutoSave }: PictureGeometryFieldsProps) {
+function PictureFitField({ form, onAutoSave }: PictureFieldProps) {
+	return (
+		<form.Field name="fit">
+			{(field) => (
+				<div className="space-y-1.5">
+					<div className="font-medium text-sm">
+						<Trans>Fit</Trans>
+					</div>
+					<ButtonGroup role="group" aria-label={t`Fit`} className="w-full">
+						<Button
+							type="button"
+							variant={field.state.value === "cover" ? "default" : "outline"}
+							aria-pressed={field.state.value === "cover"}
+							className="flex-1"
+							onClick={() => {
+								field.handleChange("cover");
+								onAutoSave();
+							}}
+						>
+							<Trans>Cover</Trans>
+						</Button>
+						<Button
+							type="button"
+							variant={field.state.value === "contain" ? "default" : "outline"}
+							aria-pressed={field.state.value === "contain"}
+							className="flex-1"
+							onClick={() => {
+								field.handleChange("contain");
+								onAutoSave();
+							}}
+						>
+							<Trans>Contain</Trans>
+						</Button>
+					</ButtonGroup>
+				</div>
+			)}
+		</form.Field>
+	);
+}
+
+function PictureGeometryFields({ form, onAutoSave }: PictureFieldProps) {
 	return (
 		<>
 			<form.Field name="size">
@@ -157,20 +199,24 @@ function PictureGeometryFields({ form, onAutoSave }: PictureGeometryFieldsProps)
 							<Trans>Size</Trans>
 						</FormLabel>
 						<InputGroup>
-							<InputGroupInput
-								name={field.name}
-								value={field.state.value}
-								type="number"
-								min={32}
-								max={512}
-								step={1}
-								onBlur={field.handleBlur}
-								onChange={(e) => {
-									const value = e.target.value;
-									if (value === "") field.handleChange("" as unknown as number);
-									else field.handleChange(Number(value));
-									onAutoSave();
-								}}
+							<FormControl
+								render={
+									<InputGroupInput
+										name={field.name}
+										value={field.state.value}
+										type="number"
+										min={32}
+										max={512}
+										step={1}
+										onBlur={field.handleBlur}
+										onChange={(e) => {
+											const value = e.target.value;
+											if (value === "") field.handleChange("" as unknown as number);
+											else field.handleChange(Number(value));
+											onAutoSave();
+										}}
+									/>
+								}
 							/>
 
 							<InputGroupAddon align="inline-end">
@@ -380,7 +426,7 @@ function normalizePictureUrl(url: string, origin: string): string {
 	}
 }
 
-async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area): Promise<Blob> {
+async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area, mimeType: string): Promise<Blob> {
 	const image = await new Promise<HTMLImageElement>((resolve, reject) => {
 		const element = new Image();
 		element.addEventListener("load", () => {
@@ -398,24 +444,42 @@ async function getCroppedImageBlob(imageSrc: string, pixelCrop: Area): Promise<B
 
 	canvas.width = Math.round(pixelCrop.width);
 	canvas.height = Math.round(pixelCrop.height);
-	context.drawImage(
-		image,
-		pixelCrop.x,
-		pixelCrop.y,
-		pixelCrop.width,
-		pixelCrop.height,
-		0,
-		0,
-		canvas.width,
-		canvas.height,
-	);
+	// Preserve transparency for lossless inputs and compressed formats for photos.
+	const outputType = mimeType === "image/jpeg" || mimeType === "image/webp" ? mimeType : "image/png";
+	const maxUploadBytes = 10 * 1024 * 1024;
 
-	return new Promise<Blob>((resolve, reject) => {
-		canvas.toBlob((blob) => {
-			if (blob) resolve(blob);
-			else reject(new Error("Canvas is empty"));
-		}, "image/png");
-	});
+	while (true) {
+		context.drawImage(
+			image,
+			pixelCrop.x,
+			pixelCrop.y,
+			pixelCrop.width,
+			pixelCrop.height,
+			0,
+			0,
+			canvas.width,
+			canvas.height,
+		);
+
+		const blob = await new Promise<Blob>((resolve, reject) => {
+			canvas.toBlob(
+				(result) => {
+					if (result) resolve(result);
+					else reject(new Error("Canvas is empty"));
+				},
+				outputType,
+				0.9,
+			);
+		});
+		if (blob.size <= maxUploadBytes) return blob;
+		if (canvas.width <= 1 && canvas.height <= 1) throw new Error("Cropped image exceeds the upload limit");
+
+		// Re-encoding even a JPEG can exceed the API limit. Reduce only oversized crops,
+		// drawing from the original each time to avoid accumulating resampling artifacts.
+		const scale = Math.min(0.9, Math.sqrt(maxUploadBytes / blob.size) * 0.95);
+		canvas.width = Math.max(1, Math.floor(canvas.width * scale));
+		canvas.height = Math.max(1, Math.floor(canvas.height * scale));
+	}
 }
 
 function usePictureSettingsForm(picture: PictureValues, persist: (data: PictureValues) => void) {
@@ -484,31 +548,34 @@ function PictureSectionForm() {
 		// If the picture is from the same origin, attempt to delete it
 		if (pictureOrigin === appOrigin) deleteFile({ filename });
 
-		form.setFieldValue("url", "");
-		handleAutoSave();
+		form.reset(defaultResumeData.picture);
+		persist(defaultResumeData.picture);
 	};
 
 	const uploadPictureFile = (file: File) => {
-		const toastId = toast.loading(t`Uploading picture…`);
+		const toastId = toast.add({ type: "loading", description: t`Uploading picture…` });
 
 		uploadFile(file, {
 			onSuccess: ({ url }) => {
 				form.setFieldValue("url", url);
 				handleAutoSave();
-				toast.dismiss(toastId);
-				if (fileInputRef.current) fileInputRef.current.value = "";
+				toast.close(toastId);
 			},
 			onError: (error) => {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when uploading profile picture for resume fails",
 							message: "Failed to upload picture. Please try again.",
 						}),
 					),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
+			},
+			onSettled: () => {
+				if (fileInputRef.current) fileInputRef.current.value = "";
 			},
 		});
 	};
@@ -516,6 +583,10 @@ function PictureSectionForm() {
 	const onUploadPicture = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
+		if (form.state.values.fit === "contain") {
+			uploadPictureFile(file);
+			return;
+		}
 
 		// Open the interactive crop step instead of uploading immediately.
 		setCropState({ file, imageSrc: URL.createObjectURL(file) });
@@ -536,7 +607,7 @@ function PictureSectionForm() {
 		let fileToUpload: File = cropState.file;
 		try {
 			if (croppedAreaPixels) {
-				const blob = await getCroppedImageBlob(cropState.imageSrc, croppedAreaPixels);
+				const blob = await getCroppedImageBlob(cropState.imageSrc, croppedAreaPixels, cropState.file.type);
 				fileToUpload = new File([blob], cropState.file.name, { type: blob.type });
 			}
 		} catch {
@@ -608,17 +679,29 @@ function PictureSectionForm() {
 						</div>
 					</div>
 
-					<DialogFooter>
+					<DialogFooter className="flex-row flex-wrap justify-between">
 						<Button variant="outline" onClick={closeCropDialog}>
 							<Trans>Cancel</Trans>
 						</Button>
-						<Button
-							onClick={() => {
-								void onConfirmCrop();
-							}}
-						>
-							<Trans>Save & Upload</Trans>
-						</Button>
+						<div className="flex flex-wrap gap-2">
+							<Button
+								variant="outline"
+								onClick={() => {
+									if (!cropState) return;
+									uploadPictureFile(cropState.file);
+									closeCropDialog();
+								}}
+							>
+								<Trans>Skip and Upload</Trans>
+							</Button>
+							<Button
+								onClick={() => {
+									void onConfirmCrop();
+								}}
+							>
+								<Trans>Crop and Upload</Trans>
+							</Button>
+						</div>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
@@ -641,6 +724,8 @@ function PictureSectionForm() {
 					onSelectPicture={onSelectPicture}
 					onUploadPicture={onUploadPicture}
 				/>
+
+				<PictureFitField form={form} onAutoSave={handleAutoSave} />
 
 				<div className="grid @md:grid-cols-2 grid-cols-1 gap-4">
 					<PictureGeometryFields form={form} onAutoSave={handleAutoSave} />

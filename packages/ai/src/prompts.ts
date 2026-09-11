@@ -41,13 +41,15 @@ const docxParserSystemPrompt = makeParserPrompt({
 	FALLBACK_CLAUSE: "document is malformed or partially unreadable",
 });
 
-const analyzeResumeSystemPrompt = readPrompt("analyze-resume-system.md");
+const atsReviewSystemPrompt = readPrompt("ats-review-system.md");
+const atsReviewUserPromptTemplate = readPrompt("ats-review-user.md");
 const chatSystemPromptTemplate = readPrompt("chat-system.md");
 const docxParserUserPrompt = readPrompt("docx-parser-user.md");
 const pdfParserUserPrompt = readPrompt("pdf-parser-user.md");
 
 export {
-	analyzeResumeSystemPrompt,
+	atsReviewSystemPrompt,
+	atsReviewUserPromptTemplate,
 	chatSystemPromptTemplate,
 	docxParserSystemPrompt,
 	docxParserUserPrompt,

@@ -13,7 +13,6 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { toast } from "sonner";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
 	DropdownMenu,
@@ -22,9 +21,11 @@ import {
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { cn } from "@reactive-resume/utils/style";
 import { useConfirm } from "@/hooks/use-confirm";
 import { getOrpcErrorMessage } from "@/libs/error-message";
+import { formatRelativeTime } from "@/libs/locale";
 import { orpc } from "@/libs/orpc/client";
 
 type AgentThreadSummary = RouterOutput["agent"]["threads"]["list"][number];
@@ -40,28 +41,6 @@ type AgentThreadSidebarProps = {
 	activeThreadId?: string | null;
 	className?: string;
 };
-
-const RELATIVE_TIME_DIVISIONS: Array<{ amount: number; unit: Intl.RelativeTimeFormatUnit }> = [
-	{ amount: 31_536_000_000, unit: "year" },
-	{ amount: 2_592_000_000, unit: "month" },
-	{ amount: 604_800_000, unit: "week" },
-	{ amount: 86_400_000, unit: "day" },
-	{ amount: 3_600_000, unit: "hour" },
-	{ amount: 60_000, unit: "minute" },
-];
-
-function formatRelativeTime(value: Date | string, formatter: Intl.RelativeTimeFormat) {
-	const date = value instanceof Date ? value : new Date(value);
-	const diffMs = date.getTime() - Date.now();
-	const absMs = Math.abs(diffMs);
-
-	if (absMs < 60_000) return formatter.format(0, "second");
-
-	const division = RELATIVE_TIME_DIVISIONS.find((candidate) => absMs >= candidate.amount);
-	if (!division) return "";
-
-	return formatter.format(Math.round(diffMs / division.amount), division.unit);
-}
 
 function ThreadActions({ thread, activeThreadId }: ThreadActionsProps) {
 	const navigate = useNavigate();
@@ -83,14 +62,18 @@ function ThreadActions({ thread, activeThreadId }: ThreadActionsProps) {
 						});
 					}
 				},
-				onError: (error) => toast.error(getOrpcErrorMessage(error, { fallback: t`Failed to archive thread.` })),
+				onError: (error) =>
+					toast.add({
+						type: "error",
+						description: getOrpcErrorMessage(error, { fallback: t`Failed to archive thread.` }),
+					}),
 			},
 		);
 	};
 
 	const handleDelete = async () => {
 		const confirmed = await confirm(t`Delete this agent thread?`, {
-			description: t`This action cannot be undone. Messages and thread attachments will be removed.`,
+			description: t`This action cannot be undone. It deletes the thread's messages and uploaded attachments.`,
 		});
 
 		if (!confirmed) return;
@@ -102,7 +85,11 @@ function ThreadActions({ thread, activeThreadId }: ThreadActionsProps) {
 					await queryClient.invalidateQueries({ queryKey: orpc.agent.threads.list.queryKey() });
 					if (activeThreadId === thread.id) void navigate({ to: "/agent" });
 				},
-				onError: (error) => toast.error(getOrpcErrorMessage(error, { fallback: t`Failed to delete thread.` })),
+				onError: (error) =>
+					toast.add({
+						type: "error",
+						description: getOrpcErrorMessage(error, { fallback: t`Failed to delete thread.` }),
+					}),
 			},
 		);
 	};
@@ -164,7 +151,7 @@ function ThreadRow({ thread, activeThreadId }: ThreadRowProps) {
 			>
 				<div className="truncate font-medium">{title}</div>
 				<div className="truncate text-muted-foreground text-xs">
-					{formatRelativeTime(thread.lastMessageAt, relativeTimeFormatter)}
+					{formatRelativeTime(thread.lastMessageAt, relativeTimeFormatter, "")}
 				</div>
 			</Link>
 			<ThreadActions thread={thread} activeThreadId={activeThreadId} />

@@ -1,28 +1,18 @@
-import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
 import type { DialogProps } from "@/dialogs/store";
 import type { TemplateMetadata } from "./data";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { SlideshowIcon } from "@phosphor-icons/react";
-import { lazy, Suspense } from "react";
-import { toast } from "sonner";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@reactive-resume/ui/components/dialog";
 import { ScrollArea } from "@reactive-resume/ui/components/scroll-area";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { cn } from "@reactive-resume/utils/style";
 import { CometCard } from "@/components/animation/comet-card";
 import { useDialogStore } from "@/dialogs/store";
 import { useCurrentResume, useUpdateResumeData } from "@/features/resume/builder/draft";
 import { templates } from "./data";
-
-// Lazy so the browser PDF pipeline (pdf.js) loads only when the gallery opens.
-// All visible tiles share the same lazy chunk; only one PDF renders at a time via the shared serial queue.
-const TemplateLivePreview = lazy(() =>
-	import("@/features/resume/preview/template-live-preview").then((module) => ({
-		default: module.TemplateLivePreview,
-	})),
-);
 
 export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">) {
 	const closeDialog = useDialogStore((state) => state.closeDialog);
@@ -43,9 +33,10 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 
 		closeDialog();
 
-		toast(t`Switched to the ${templates[template].name} template.`, {
-			action: {
-				label: t`Undo`,
+		toast.add({
+			description: t`Switched to the ${templates[template].name} template.`,
+			actionProps: {
+				children: t`Undo`,
 				onClick: () => {
 					updateResumeData((draft) => {
 						draft.metadata.template = previousTemplate;
@@ -63,11 +54,7 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 					<Trans>Template Gallery</Trans>
 				</DialogTitle>
 				<DialogDescription className="leading-relaxed">
-					<Trans>
-						Here's a range of resume templates for different professions and personalities. Whether you prefer modern or
-						classic, bold or simple, there is a design to match you. Look through the options below and choose a
-						template that fits your style.
-					</Trans>
+					<Trans>Resume templates for different professions and tastes. Pick the one that suits you.</Trans>
 				</DialogDescription>
 			</DialogHeader>
 
@@ -76,7 +63,6 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 					{Object.entries(templates).map(([template, metadata]) => (
 						<TemplateCard
 							key={template}
-							data={resume.data}
 							metadata={metadata}
 							id={template as Template}
 							isActive={template === selectedTemplate}
@@ -91,13 +77,12 @@ export function TemplateGalleryDialog(_: DialogProps<"resume.template.gallery">)
 
 type TemplateCardProps = {
 	id: Template;
-	data: ResumeData;
 	isActive?: boolean;
 	metadata: TemplateMetadata;
 	onSelect: (template: Template) => void;
 };
 
-function TemplateCard({ id, data, metadata, isActive, onSelect }: TemplateCardProps) {
+function TemplateCard({ id, metadata, isActive, onSelect }: TemplateCardProps) {
 	return (
 		<CometCard translateDepth={3} rotateDepth={6} glareOpacity={0}>
 			<button
@@ -105,12 +90,11 @@ function TemplateCard({ id, data, metadata, isActive, onSelect }: TemplateCardPr
 				onClick={() => onSelect(id)}
 				className={cn(
 					"relative block aspect-page size-full cursor-pointer overflow-hidden rounded-md bg-popover outline-none",
+					"focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
 					isActive && "ring-2 ring-ring ring-offset-4 ring-offset-background",
 				)}
 			>
-				<Suspense fallback={<img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />}>
-					<TemplateLivePreview data={data} template={id} fallbackSrc={metadata.imageUrl} alt={metadata.name} />
-				</Suspense>
+				<img src={metadata.imageUrl} alt={metadata.name} className="size-full object-cover" />
 			</button>
 
 			<div className="mt-1 flex items-center justify-center">

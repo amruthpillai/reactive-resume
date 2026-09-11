@@ -28,7 +28,7 @@ export async function loginViaUi(page: Page, account: E2EAccount) {
 
 export async function logoutViaUi(page: Page, account: E2EAccount) {
 	await page.getByText(account.email).click();
-	await page.getByRole("menuitem", { name: "Logout" }).click();
+	await page.getByRole("menuitem", { name: "Sign out" }).click();
 	await page.goto("/auth/login");
 }
 

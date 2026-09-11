@@ -24,7 +24,7 @@ describe("Copyright", () => {
 	it("renders the MIT license link", () => {
 		renderCopyright();
 		const link = screen.getByRole("link", { name: "MIT" });
-		expect(link.getAttribute("href")).toBe("https://github.com/AmruthPillai/Reactive-Resume/blob/main/LICENSE");
+		expect(link.getAttribute("href")).toBe("https://github.com/reactive-resume/app/blob/main/LICENSE");
 		expect(link.getAttribute("rel")).toBe("noopener noreferrer");
 	});
 

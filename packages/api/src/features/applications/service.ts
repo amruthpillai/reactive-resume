@@ -47,16 +47,12 @@ function noteEntry(text: string, date?: string): ApplicationTimelineEntry {
 	return { id: generateId(), type: "note", text, at: date ? atFromDateString(date) : new Date() };
 }
 
-function byNewest(a: ApplicationTimelineEntry, b: ApplicationTimelineEntry) {
-	return new Date(b.at).getTime() - new Date(a.at).getTime();
-}
-
 function timelineDay(value: Date | string) {
 	return timelineDate(value).toISOString().slice(0, 10);
 }
 
 function sortTimeline(activity: ApplicationTimelineEntry[]): ApplicationTimelineEntry[] {
-	return [...activity].sort(byNewest);
+	return [...activity].sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
 }
 
 function currentStageAnchor(activity: ApplicationTimelineEntry[], status: ApplicationStatus) {
@@ -423,7 +419,7 @@ export const applicationService = {
 		return stripUserId(updated);
 	},
 
-	updateTimelineEntry: async (input: {
+	updateTimelineEntry: (input: {
 		id: string;
 		userId: string;
 		entryId: string;
@@ -474,7 +470,7 @@ export const applicationService = {
 		});
 	},
 
-	deleteTimelineEntry: async (input: { id: string; userId: string; entryId: string }) => {
+	deleteTimelineEntry: (input: { id: string; userId: string; entryId: string }) => {
 		return db.transaction(async (tx) => {
 			await tx.execute(sql`
 				select 1 from ${schema.application}

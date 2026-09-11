@@ -5,8 +5,8 @@ import { Trans } from "@lingui/react/macro";
 import { DownloadSimpleIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useRef } from "react";
-import { toast } from "sonner";
 import { Button } from "@reactive-resume/ui/components/button";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { orpc } from "@/libs/orpc/client";
 import { computeInsights, computeTimeline } from "../insights";
 
@@ -36,7 +36,7 @@ export function ApplicationInsights({ applications }: { applications: Applicatio
 	if (insights.total === 0) {
 		return (
 			<p className="py-16 text-center text-muted-foreground text-sm">
-				<Trans>No applications yet — add a few to see your funnel and reply rates.</Trans>
+				<Trans>No applications yet. Add a few to see your funnel and reply rates.</Trans>
 			</p>
 		);
 	}
@@ -223,7 +223,7 @@ function PipelineFlow({ insights }: { insights: ReturnType<typeof computeInsight
 			link.download = "pipeline-flow.png";
 			link.href = canvas.toDataURL("image/png");
 			link.click();
-			toast.success(t`Exported pipeline-flow.png`);
+			toast.add({ type: "success", description: t`Exported pipeline-flow.png` });
 		};
 		image.src = svg64;
 	};

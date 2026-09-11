@@ -29,9 +29,11 @@ Run tests:
 ## Coverage
 
 - Email/password auth smoke.
-- Dashboard sample resume creation.
-- Builder basics edit and autosave persistence.
+- Dashboard resume lifecycle: create, rename, duplicate, delete.
+- Builder section editing, autosave/navigation, and locking.
 - JSON export/import.
 - Public sharing for anonymous visitors.
 
-PDF, DOCX, OAuth, passkeys, 2FA, password reset, and AI flows are intentionally outside the initial PR gate.
+Visual regression, PDF/DOCX rasterization parity, thumbnail resolution, and import-fixture reproduction are
+intentionally outside the PR gate to keep it fast; the opt-in geometry, offline-font, and root-resume suites stay
+behind their environment flags.

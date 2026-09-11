@@ -32,11 +32,21 @@ type ColorPickerProps = {
 	value?: string;
 	defaultValue?: string;
 	onChange?: (value: string) => void;
+	open?: boolean;
+	onOpenChange?: React.ComponentProps<typeof Popover>["onOpenChange"];
 	trigger?: React.ReactNode;
 	children?: React.ReactNode;
 };
 
-export function ColorPicker({ value, defaultValue, onChange, trigger, children }: ColorPickerProps) {
+export function ColorPicker({
+	value,
+	defaultValue,
+	onChange,
+	open,
+	onOpenChange,
+	trigger,
+	children,
+}: ColorPickerProps) {
 	const [currentValue, setCurrentValue] = useControlledState<string>({
 		value,
 		defaultValue,
@@ -51,7 +61,7 @@ export function ColorPicker({ value, defaultValue, onChange, trigger, children }
 	}
 
 	return (
-		<Popover>
+		<Popover open={open} onOpenChange={onOpenChange}>
 			{trigger ?? (
 				<PopoverTrigger>
 					<div

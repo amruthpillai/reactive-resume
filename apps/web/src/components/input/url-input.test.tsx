@@ -56,6 +56,43 @@ describe("URLInput", () => {
 		});
 	});
 
+	it.each(["http://other.example/path", "HTTP://other.example/path"])(
+		"preserves an explicitly pasted HTTP URL: %s",
+		(url) => {
+			const onChange = vi.fn();
+			renderInput({ url: "https://example.com", label: "Company" }, onChange);
+
+			fireEvent.change(screen.getByRole("textbox"), { target: { value: url } });
+
+			expect(onChange).toHaveBeenCalledWith({ url, label: "Company" });
+		},
+	);
+
+	it("shows an existing HTTP URL with its matching prefix", () => {
+		renderInput({ url: "http://example.com/path", label: "" });
+
+		expect((screen.getByRole("textbox") as HTMLInputElement).value).toBe("example.com/path");
+		expect(screen.getByText("http://")).toBeDefined();
+	});
+
+	it("preserves HTTP while editing the host or path", () => {
+		const onChange = vi.fn();
+		renderInput({ url: "http://example.com/path", label: "Company" }, onChange);
+
+		fireEvent.change(screen.getByRole("textbox"), { target: { value: "example.com/new-path" } });
+
+		expect(onChange).toHaveBeenCalledWith({ url: "http://example.com/new-path", label: "Company" });
+	});
+
+	it("allows switching an existing HTTP URL to HTTPS by pasting", () => {
+		const onChange = vi.fn();
+		renderInput({ url: "http://example.com", label: "" }, onChange);
+
+		fireEvent.change(screen.getByRole("textbox"), { target: { value: "https://example.com" } });
+
+		expect(onChange).toHaveBeenCalledWith({ url: "https://example.com", label: "" });
+	});
+
 	it("emits an empty url string when cleared", () => {
 		const onChange = vi.fn();
 		renderInput({ url: "https://example.com", label: "" }, onChange);

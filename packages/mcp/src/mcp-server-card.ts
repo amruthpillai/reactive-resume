@@ -36,7 +36,7 @@ export function buildMcpServerCard(appVersion: string) {
 			name: "review_resume",
 			title: "Review Resume",
 			description:
-				"Get a structured, professional critique with a scorecard and prioritized recommendations. Read-only — no changes are made.",
+				"Get a structured, professional critique with a scorecard and prioritized recommendations. Read-only: no changes are made.",
 			arguments: [{ name: "id", description: "Resume ID.", required: true }],
 		},
 	];

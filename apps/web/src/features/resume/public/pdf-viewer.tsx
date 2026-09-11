@@ -6,6 +6,7 @@ import { useEffect, useReducer, useRef } from "react";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
+import { resolvePublicResumePdfBlob } from "./public-pdf";
 import "pdfjs-dist/legacy/web/pdf_viewer.css";
 import "./pdf-viewer.css";
 
@@ -14,6 +15,11 @@ GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/legacy/build/pdf.worker.min.
 type PdfViewerProps = {
 	className?: string;
 	data: ResumeData;
+	includeCoverLetterHeader?: boolean;
+	publicResume?: {
+		username: string;
+		slug: string;
+	};
 };
 
 type PdfViewerOptions = ConstructorParameters<typeof PDFViewer>[0] & {
@@ -67,7 +73,7 @@ function pdfViewerReducer(state: PdfViewerState, action: PdfViewerAction): PdfVi
 	}
 }
 
-export function PdfViewer({ className, data }: PdfViewerProps) {
+export function PdfViewer({ className, data, publicResume, includeCoverLetterHeader }: PdfViewerProps) {
 	const rootRef = useRef<HTMLDivElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const viewerRef = useRef<HTMLDivElement>(null);
@@ -83,7 +89,14 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 		fileRef.current = null;
 		dispatch({ type: "resetForData" });
 
-		void createResumePdfBlob(data)
+		const createPdf = () => {
+			if (publicResume) return resolvePublicResumePdfBlob({ data, publicResume });
+			return includeCoverLetterHeader
+				? createResumePdfBlob(data, undefined, { includeCoverLetterHeader: true })
+				: createResumePdfBlob(data);
+		};
+
+		void createPdf()
 			.then((blob) => {
 				if (isCancelled) return;
 
@@ -100,7 +113,7 @@ export function PdfViewer({ className, data }: PdfViewerProps) {
 		return () => {
 			isCancelled = true;
 		};
-	}, [data]);
+	}, [data, publicResume, includeCoverLetterHeader]);
 
 	useEffect(() => {
 		void fileVersion;

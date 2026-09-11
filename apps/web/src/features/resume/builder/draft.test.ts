@@ -5,8 +5,16 @@ import type { Resume } from "./draft";
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
+import { sortSectionItemsByPeriod } from "@reactive-resume/resume/section-sort";
+import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { useBuilderResumeUpdateSubscription, useResumeStore, useResumeUpdateSubscription } from "./draft";
+import {
+	isEditableElementFocused,
+	useBuilderResumeUpdateSubscription,
+	useResumeCleanup,
+	useResumeStore,
+	useResumeUpdateSubscription,
+} from "./draft";
 
 const orpcMocks = vi.hoisted(() => ({
 	getResumeById: vi.fn(),
@@ -14,6 +22,8 @@ const orpcMocks = vi.hoisted(() => ({
 	streamSubscribe: vi.fn(),
 	updateResume: vi.fn(),
 }));
+
+const useBlockerMock = vi.hoisted(() => vi.fn());
 
 const consumeEventIteratorMock = vi.hoisted(() => vi.fn());
 
@@ -26,8 +36,8 @@ const routerParamsMock = vi.hoisted(() => ({
 }));
 
 const toastMocks = vi.hoisted(() => ({
-	dismiss: vi.fn(),
-	error: vi.fn(() => "sync-error-toast"),
+	add: vi.fn(() => "sync-error-toast"),
+	close: vi.fn(),
 }));
 
 vi.mock("@orpc/client", () => ({
@@ -40,6 +50,7 @@ vi.mock("@tanstack/react-query", () => ({
 
 vi.mock("@tanstack/react-router", () => ({
 	useParams: () => routerParamsMock.value,
+	useBlocker: useBlockerMock,
 }));
 
 vi.mock("@/libs/orpc/client", () => ({
@@ -68,7 +79,7 @@ vi.mock("@/libs/orpc/client", () => ({
 	},
 }));
 
-vi.mock("sonner", () => ({
+vi.mock("@reactive-resume/ui/components/toast", () => ({
 	toast: toastMocks,
 }));
 
@@ -103,6 +114,24 @@ function withBasicsName(resume: Resume, name: string): Resume {
 	};
 }
 
+function experienceItem(
+	id: string,
+	company: string,
+	period: string,
+): ResumeData["sections"]["experience"]["items"][number] {
+	return {
+		id,
+		company,
+		position: "Engineer",
+		location: "",
+		period,
+		description: "",
+		hidden: false,
+		website: { url: "", label: "", inlineLink: false },
+		roles: [],
+	};
+}
+
 async function flushMicrotasks() {
 	await Promise.resolve();
 	await Promise.resolve();
@@ -110,9 +139,139 @@ async function flushMicrotasks() {
 }
 
 describe("builder resume autosave", () => {
+	it("waits for the latest draft to save before allowing navigation", async () => {
+		const initial = makeResume("navigation-debounce");
+		useResumeStore.getState().initialize(initial);
+		routerParamsMock.value = { resumeId: initial.id };
+		const hook = renderHook(() => useResumeCleanup());
+		let complete!: (resume: Resume) => void;
+		orpcMocks.updateResume.mockImplementationOnce(
+			() =>
+				new Promise<Resume>((resolve) => {
+					complete = resolve;
+				}),
+		);
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Navigate safely";
+		});
+		const blocker = useBlockerMock.mock.lastCall?.[0];
+		expect(blocker).toBeDefined();
+		let settled = false;
+		const result = blocker.shouldBlockFn({ next: { params: {} } }).then((blocked: boolean) => {
+			settled = true;
+			return blocked;
+		});
+		await flushMicrotasks();
+		expect(settled).toBe(false);
+		expect(orpcMocks.updateResume.mock.lastCall?.[1].signal.aborted).toBe(false);
+		complete(withBasicsName(initial, "Navigate safely"));
+		expect(await result).toBe(false);
+		expect(useResumeStore.getState().saveStatus).toBe("saved");
+		hook.unmount();
+	});
+
+	it("waits for a queued edit after an in-flight save before navigating", async () => {
+		const initial = makeResume("navigation-queued");
+		useResumeStore.getState().initialize(initial);
+		routerParamsMock.value = { resumeId: initial.id };
+		const hook = renderHook(() => useResumeCleanup());
+		const completions: Array<(resume: Resume) => void> = [];
+		orpcMocks.updateResume.mockImplementation(
+			() =>
+				new Promise<Resume>((resolve) => {
+					completions.push(resolve);
+				}),
+		);
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "First";
+		});
+		await vi.advanceTimersByTimeAsync(500);
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Latest";
+		});
+		const blocker = useBlockerMock.mock.lastCall?.[0];
+		let settled = false;
+		const result = blocker.shouldBlockFn({ next: { params: {} } }).then((blocked: boolean) => {
+			settled = true;
+			return blocked;
+		});
+		completions[0](withBasicsName(initial, "First"));
+		await flushMicrotasks();
+		expect(settled).toBe(false);
+		expect(orpcMocks.updateResume.mock.lastCall?.[0].data.basics.name).toBe("Latest");
+		completions[1](withBasicsName(initial, "Latest"));
+		expect(await result).toBe(false);
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Latest");
+		hook.unmount();
+	});
+
+	it("ends a stalled navigation wait without aborting or discarding the pending save", async () => {
+		const initial = makeResume("navigation-timeout");
+		useResumeStore.getState().initialize(initial);
+		routerParamsMock.value = { resumeId: initial.id };
+		const hook = renderHook(() => useResumeCleanup());
+		let complete!: (resume: Resume) => void;
+		orpcMocks.updateResume.mockImplementationOnce(
+			() =>
+				new Promise<Resume>((resolve) => {
+					complete = resolve;
+				}),
+		);
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Pending name";
+		});
+		const blocker = useBlockerMock.mock.lastCall?.[0];
+		let settled = false;
+		const result = blocker.shouldBlockFn({ next: { params: {} } }).then((blocked: boolean) => {
+			settled = true;
+			return blocked;
+		});
+		await vi.advanceTimersByTimeAsync(10000);
+		expect(settled).toBe(true);
+		expect(await result).toBe(true);
+		expect(useResumeStore.getState().saveStatus).toBe("saving");
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Pending name");
+		expect(orpcMocks.updateResume.mock.lastCall?.[1].signal.aborted).toBe(false);
+
+		orpcMocks.updateResume.mockResolvedValueOnce(withBasicsName(initial, "Latest name"));
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Latest name";
+		});
+		await vi.advanceTimersByTimeAsync(500);
+		expect(orpcMocks.updateResume).toHaveBeenCalledTimes(1);
+		complete(withBasicsName(initial, "Pending name"));
+		await flushMicrotasks();
+		expect(useResumeStore.getState().saveStatus).toBe("saved");
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Latest name");
+		expect(await blocker.shouldBlockFn({ next: { params: {} } })).toBe(false);
+		expect(orpcMocks.updateResume).toHaveBeenCalledTimes(2);
+		hook.unmount();
+	});
+
+	it("keeps a failed draft in the builder and retries on the next navigation", async () => {
+		const initial = makeResume("navigation-error");
+		useResumeStore.getState().initialize(initial);
+		routerParamsMock.value = { resumeId: initial.id };
+		const hook = renderHook(() => useResumeCleanup());
+		orpcMocks.updateResume.mockRejectedValueOnce(new Error("Offline"));
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Keep this draft";
+		});
+		const blocker = useBlockerMock.mock.lastCall?.[0];
+		expect(blocker).toBeDefined();
+		expect(await blocker.shouldBlockFn({ next: { params: {} } })).toBe(true);
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Keep this draft");
+		expect(blocker.enableBeforeUnload()).toBe(true);
+		orpcMocks.updateResume.mockResolvedValueOnce(withBasicsName(initial, "Keep this draft"));
+		expect(await blocker.shouldBlockFn({ next: { params: {} } })).toBe(false);
+		expect(blocker.enableBeforeUnload()).toBe(false);
+		hook.unmount();
+	});
+
 	beforeEach(() => {
 		vi.useFakeTimers();
 		orpcMocks.getResumeById.mockReset();
+		useBlockerMock.mockReset();
 		orpcMocks.patchResume.mockReset();
 		orpcMocks.streamSubscribe.mockReset();
 		orpcMocks.updateResume.mockReset();
@@ -120,8 +279,8 @@ describe("builder resume autosave", () => {
 		queryClientMock.setQueryData.mockClear();
 		routerParamsMock.value = {};
 		i18n.loadAndActivate({ locale: "en-US", messages: {} });
-		toastMocks.dismiss.mockClear();
-		toastMocks.error.mockClear();
+		toastMocks.add.mockClear();
+		toastMocks.close.mockClear();
 		useResumeStore.getState().reset();
 	});
 
@@ -129,6 +288,17 @@ describe("builder resume autosave", () => {
 		vi.clearAllTimers();
 		vi.useRealTimers();
 		useResumeStore.getState().reset();
+	});
+
+	it("refreshes sharing preferences without replacing local resume content", () => {
+		const initial = { ...makeResume("sharing"), showDownloadButtons: true };
+		useResumeStore.getState().initialize(initial);
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.basics.name = "Unsaved edit";
+		});
+		useResumeStore.getState().mergeResumeMetadata({ ...initial, showDownloadButtons: false });
+		expect(useResumeStore.getState().resume?.showDownloadButtons).toBe(false);
+		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Unsaved edit");
 	});
 
 	it("coalesces rapid local edits into one full-data update", async () => {
@@ -153,6 +323,26 @@ describe("builder resume autosave", () => {
 			expect.objectContaining({ signal: expect.any(AbortSignal) }),
 		);
 		expect(orpcMocks.patchResume).not.toHaveBeenCalled();
+	});
+
+	it("autosaves stylesheet source through the ordinary full-data update", async () => {
+		const initial = makeResume("resume-stylesheet-autosave");
+		const source = { languageVersion: 1, text: "@version 1;\nname { color: blue; }\n" };
+		const updated = makeResume(initial.id);
+		updated.data.metadata.stylesheet = { mode: "semantic", source };
+		orpcMocks.updateResume.mockResolvedValue(updated);
+		useResumeStore.getState().initialize(initial);
+
+		useResumeStore.getState().updateResumeData((draft) => {
+			draft.metadata.stylesheet = { mode: "semantic", source };
+		});
+		vi.advanceTimersByTime(500);
+		await flushMicrotasks();
+
+		expect(orpcMocks.updateResume).toHaveBeenCalledWith(
+			{ id: initial.id, data: updated.data },
+			expect.objectContaining({ signal: expect.any(AbortSignal) }),
+		);
 	});
 
 	it("saves the latest pending snapshot after an in-flight save resolves", async () => {
@@ -243,11 +433,25 @@ describe("builder resume autosave", () => {
 		await flushMicrotasks();
 
 		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Unsaved Name");
-		expect(toastMocks.error).toHaveBeenCalledWith(
-			"Your latest changes could not be saved.",
-			expect.objectContaining({ duration: Number.POSITIVE_INFINITY }),
+		expect(toastMocks.add).toHaveBeenCalledWith(
+			expect.objectContaining({ type: "error", description: "Your latest changes could not be saved.", timeout: 0 }),
 		);
 		expect(orpcMocks.patchResume).not.toHaveBeenCalled();
+	});
+});
+
+describe("editable focus detection", () => {
+	it("treats CodeMirror descendants as editable", () => {
+		const editor = document.createElement("div");
+		editor.className = "cm-editor";
+		const content = document.createElement("div");
+		content.tabIndex = 0;
+		editor.append(content);
+		document.body.append(editor);
+		content.focus();
+
+		expect(isEditableElementFocused()).toBe(true);
+		editor.remove();
 	});
 });
 
@@ -269,6 +473,44 @@ describe("builder resume undo/redo", () => {
 		vi.useRealTimers();
 		useResumeStore.getState().reset();
 	});
+
+	it.each([false, true])(
+		"persists skill keyword layout through undo, redo, and reload with custom=%s",
+		async (custom) => {
+			const store = useResumeStore.getState;
+			const initial = makeResume("skill-keyword-history");
+			initial.data.customSections = [{ ...initial.data.sections.skills, id: "custom-skills", type: "skills" }];
+			store().initialize(initial);
+			const currentLayout = () =>
+				custom
+					? store().resume?.data.customSections[0]?.keywordLayout
+					: store().resume?.data.sections.skills.keywordLayout;
+			store().updateResumeData((draft) => {
+				if (custom && draft.customSections[0]) draft.customSections[0].keywordLayout = "list";
+				else draft.sections.skills.keywordLayout = "list";
+			});
+			expect(currentLayout()).toBe("list");
+			store().undo();
+			expect(currentLayout()).toBe("inline");
+			store().redo();
+			expect(currentLayout()).toBe("list");
+			await vi.advanceTimersByTimeAsync(550);
+			await flushMicrotasks();
+			const saved = orpcMocks.updateResume.mock.lastCall?.[0];
+			expect(saved).toBeDefined();
+			store().reset();
+			store().initialize({ ...initial, data: parseResumeData(JSON.parse(JSON.stringify(saved.data))) });
+			expect(currentLayout()).toBe("list");
+			store().patchResume((resume) => {
+				resume.isLocked = true;
+			});
+			store().updateResumeData((draft) => {
+				if (custom && draft.customSections[0]) draft.customSections[0].keywordLayout = "inline";
+				else draft.sections.skills.keywordLayout = "inline";
+			});
+			expect(currentLayout()).toBe("list");
+		},
+	);
 
 	it("coalesces rapid edits into a single undo step and restores the pre-burst state", () => {
 		const store = useResumeStore.getState;
@@ -294,6 +536,69 @@ describe("builder resume undo/redo", () => {
 		store().redo();
 		expect(store().resume?.data.basics.name).toBe("Second");
 		expect(store().canRedo).toBe(false);
+	});
+
+	it("restores the exact authored Experience order with one undo after a one-shot sort", () => {
+		const store = useResumeStore.getState;
+		const initial = makeResume("sort-undo");
+		initial.data.sections.experience.items = [
+			experienceItem("unknown", "Mystery Co", "Recently"),
+			experienceItem("older", "Older Co", "2018 - 2020"),
+			experienceItem("current", "Current Co", "2023 - Present"),
+		];
+		const authoredItems = cloneResumeData(initial.data).sections.experience.items;
+		store().initialize(initial);
+
+		store().updateResumeData((draft) => {
+			draft.sections.experience.items = sortSectionItemsByPeriod(
+				draft.sections.experience.items,
+				draft.metadata.page.locale,
+			).items;
+		});
+
+		expect(store().resume?.data.sections.experience.items.map(({ id }) => id)).toEqual(["current", "older", "unknown"]);
+		expect(store().undoStack).toHaveLength(1);
+
+		store().undo();
+		expect(store().resume?.data.sections.experience.items).toEqual(authoredItems);
+		expect(store().canUndo).toBe(false);
+	});
+
+	it("retains the chosen order through autosave/reload and never resorts later field edits", async () => {
+		const store = useResumeStore.getState;
+		const initial = makeResume("sort-persistence");
+		initial.data.sections.experience.items = [
+			experienceItem("older", "Older Co", "2018 - 2020"),
+			experienceItem("current", "Current Co", "2023 - Present"),
+		];
+		let savedResume: Resume | undefined;
+		orpcMocks.updateResume.mockImplementation((input: { id: string; data: ResumeData }) => {
+			savedResume = { ...makeResume(input.id), data: cloneResumeData(input.data) };
+			return Promise.resolve(savedResume);
+		});
+		store().initialize(initial);
+
+		store().updateResumeData((draft) => {
+			draft.sections.experience.items = sortSectionItemsByPeriod(
+				draft.sections.experience.items,
+				draft.metadata.page.locale,
+			).items;
+		});
+		vi.advanceTimersByTime(500);
+		await flushMicrotasks();
+
+		expect(orpcMocks.updateResume).toHaveBeenCalledTimes(1);
+		expect(savedResume?.data.sections.experience.items.map(({ id }) => id)).toEqual(["current", "older"]);
+		if (!savedResume) throw new Error("expected the sorted resume to be saved");
+
+		store().reset();
+		store().initialize(savedResume);
+		store().updateResumeData((draft) => {
+			const currentItem = draft.sections.experience.items.find(({ id }) => id === "current");
+			if (currentItem) currentItem.period = "2010 - 2011";
+		});
+
+		expect(store().resume?.data.sections.experience.items.map(({ id }) => id)).toEqual(["current", "older"]);
 	});
 
 	it("separates edits outside the coalesce window into distinct undo steps", async () => {
@@ -476,5 +781,27 @@ describe("resume update stream subscription", () => {
 
 		expect(queryClientMock.setQueryData).toHaveBeenCalledWith(["resume", "getById", initial.id], remote);
 		expect(useResumeStore.getState().resume?.data.basics.name).toBe("Local Name");
+	});
+
+	it("applies stylesheet source from the ordinary resume SSE flow", async () => {
+		const initial = makeResume("resume-stylesheet");
+		const remote = makeResume("resume-stylesheet");
+		remote.data.metadata.stylesheet = {
+			mode: "semantic",
+			source: { languageVersion: 1, text: "@version 1;\nname { color: blue; }\n" },
+		};
+		consumeEventIteratorMock.mockReturnValue(vi.fn().mockResolvedValue(undefined));
+		orpcMocks.getResumeById.mockResolvedValue(remote);
+		routerParamsMock.value = { resumeId: initial.id };
+		useResumeStore.getState().initialize(initial);
+
+		renderHook(() => useBuilderResumeUpdateSubscription());
+		const handlers = consumeEventIteratorMock.mock.calls[0]?.[1] as {
+			onEvent: (event: { mutation: string }) => Promise<void>;
+		};
+		await act(async () => handlers.onEvent({ mutation: "update" }));
+
+		expect(orpcMocks.getResumeById).toHaveBeenCalledWith({ id: initial.id });
+		expect(useResumeStore.getState().resume?.data.metadata.stylesheet).toEqual(remote.data.metadata.stylesheet);
 	});
 });

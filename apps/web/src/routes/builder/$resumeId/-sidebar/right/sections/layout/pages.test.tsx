@@ -1,7 +1,6 @@
-import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const source = readFileSync("src/routes/builder/$resumeId/-sidebar/right/sections/layout/pages.tsx", "utf8");
+const source = await import("./pages?raw").then((module) => module.default);
 
 describe("layout page header", () => {
 	it("uses container queries to prevent narrow sidebar control collisions", () => {

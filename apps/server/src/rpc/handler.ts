@@ -14,11 +14,16 @@ const rpcHandler = new RPCHandler(router, {
 	],
 });
 
-export async function handleRpc(request: Request) {
+export async function handleRpc(request: Request, trustedClient = "unknown") {
 	const resHeaders = new Headers();
 	const { response } = await rpcHandler.handle(request, {
 		prefix: "/api/rpc",
-		context: { locale: getRequestLocale(request), reqHeaders: request.headers, resHeaders },
+		context: {
+			locale: getRequestLocale(request),
+			reqHeaders: request.headers,
+			resHeaders,
+			trustedClient,
+		},
 	});
 
 	if (!response) return new Response("NOT_FOUND", { status: 404 });

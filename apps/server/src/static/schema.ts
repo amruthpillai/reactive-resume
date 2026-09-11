@@ -1,11 +1,8 @@
-import z from "zod";
-import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
 import { appVersion } from "../app-version";
 
 export function handleSchemaJson() {
-	const resumeDataJSONSchema = z.toJSONSchema(resumeDataSchema);
-
-	return Response.json(resumeDataJSONSchema, {
+	return Response.json(createResumeDataJsonSchema(), {
 		status: 200,
 		headers: {
 			"Content-Type": "application/schema+json; charset=utf-8",

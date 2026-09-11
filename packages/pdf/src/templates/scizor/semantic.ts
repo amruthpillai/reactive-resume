@@ -1,0 +1,22 @@
+import type { TemplateSemanticManifest } from "../../semantic/template-manifest";
+import { itemHeaderRowPart } from "../../semantic/shared-parts";
+
+export const scizorSemanticManifest = {
+	template: "scizor",
+	regions: [
+		{ name: "header", placement: "main", origins: [] },
+		{ name: "main", placement: "main", origins: ["main", "sidebar"] },
+	],
+	header: { region: "header", placement: "main" },
+	specialSummary: null,
+	parts: [
+		itemHeaderRowPart,
+		{
+			name: "header-name-rule",
+			key: "header-name-rule",
+			owner: { kind: "header", key: "header" },
+			binding: { type: "primitive", primitive: "View", source: "existing" },
+			route: { parent: "owner", at: { before: { kind: "headline" } } },
+		},
+	],
+} as const satisfies TemplateSemanticManifest;

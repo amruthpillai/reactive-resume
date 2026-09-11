@@ -222,6 +222,7 @@ describe("parseReactiveResumeV4JSON — broad section mapping", () => {
 	it("maps picture with border on", () => {
 		expect(result.picture.url).toBe("https://example.com/pic.jpg");
 		expect(result.picture.hidden).toBe(false);
+		expect(result.picture.fit).toBe("cover");
 		expect(result.picture.borderWidth).toBeGreaterThan(0);
 	});
 

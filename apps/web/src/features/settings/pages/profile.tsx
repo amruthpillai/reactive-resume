@@ -5,11 +5,11 @@ import { CheckIcon, WarningIcon } from "@phosphor-icons/react";
 import { useStore } from "@tanstack/react-form";
 import { useRouteContext, useRouter } from "@tanstack/react-router";
 import { AnimatePresence, m } from "motion/react";
-import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
 import { useAppForm } from "@/libs/tanstack-form";
@@ -51,19 +51,20 @@ export function ProfileSettingsPage({ session }: Props) {
 			});
 
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when updating profile details fails",
 							message: "Failed to update your profile. Please try again.",
 						}),
 					),
-				);
+				});
 				return;
 			}
 
-			toast.success(t`Your profile has been updated successfully.`);
+			toast.add({ type: "success", description: t`Your profile has been updated.` });
 			form.reset({ name: value.name, username: value.username, email: session.user.email });
 			void router.invalidate();
 
@@ -74,21 +75,23 @@ export function ProfileSettingsPage({ session }: Props) {
 				});
 
 				if (error) {
-					toast.error(
-						getReadableErrorMessage(
+					toast.add({
+						type: "error",
+						description: getReadableErrorMessage(
 							error,
 							t({
 								comment: "Fallback toast when requesting email change confirmation fails",
 								message: "Failed to request email change. Please try again.",
 							}),
 						),
-					);
+					});
 					return;
 				}
 
-				toast.success(
-					t`A confirmation link has been sent to your current email address. Please check your inbox to confirm the change.`,
-				);
+				toast.add({
+					type: "success",
+					description: t`We sent a confirmation link to your new email address. Open it to confirm the change.`,
+				});
 				form.reset({ name: value.name, username: value.username, email: session.user.email });
 				void router.invalidate();
 			}
@@ -102,7 +105,7 @@ export function ProfileSettingsPage({ session }: Props) {
 	const isDirty = useStore(form.store, (s) => s.isDirty);
 
 	const handleResendVerificationEmail = async () => {
-		const toastId = toast.loading(t`Resending verification email...`);
+		const toastId = toast.add({ type: "loading", description: t`Resending verification email...` });
 
 		const { error } = await authClient.sendVerificationEmail({
 			email: session.user.email,
@@ -110,23 +113,25 @@ export function ProfileSettingsPage({ session }: Props) {
 		});
 
 		if (error) {
-			toast.error(
-				getReadableErrorMessage(
+			toast.add({
+				type: "error",
+				description: getReadableErrorMessage(
 					error,
 					t({
 						comment: "Fallback toast when resending account verification email fails",
 						message: "Failed to resend verification email. Please try again.",
 					}),
 				),
-				{ id: toastId },
-			);
+				id: toastId,
+			});
 			return;
 		}
 
-		toast.success(
-			t`A new verification link has been sent to your email address. Please check your inbox to verify your account.`,
-			{ id: toastId },
-		);
+		toast.add({
+			type: "success",
+			description: t`We sent a new verification link to your email address. Open it to verify your account.`,
+			id: toastId,
+		});
 		void router.invalidate();
 	};
 
@@ -210,10 +215,7 @@ export function ProfileSettingsPage({ session }: Props) {
 								<Input
 									type="email"
 									autoComplete="email"
-									placeholder={t({
-										comment: "Example email placeholder on profile settings form",
-										message: "john.doe@example.com",
-									})}
+									placeholder="john.doe@example.com"
 									className="lowercase"
 									name={field.name}
 									value={field.state.value}

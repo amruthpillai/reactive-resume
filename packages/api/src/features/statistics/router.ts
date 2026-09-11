@@ -15,9 +15,7 @@ const userRouter = {
 			successDescription: "The total number of registered users.",
 		})
 		.output(z.number().describe("The total number of registered users."))
-		.handler(async (): Promise<number> => {
-			return await statisticsService.user.getCount();
-		}),
+		.handler(() => statisticsService.user.getCount()),
 };
 
 const resumeRouter = {
@@ -33,9 +31,7 @@ const resumeRouter = {
 			successDescription: "The total number of resumes created.",
 		})
 		.output(z.number().describe("The total number of resumes created."))
-		.handler(async (): Promise<number> => {
-			return await statisticsService.resume.getCount();
-		}),
+		.handler(() => statisticsService.resume.getCount()),
 };
 
 const githubRouter = {
@@ -51,12 +47,29 @@ const githubRouter = {
 			successDescription: "The number of GitHub stars for the Reactive Resume repository.",
 		})
 		.output(z.number().describe("The number of GitHub stars."))
-		.handler(async (): Promise<number> => {
-			return await statisticsService.github.getStarCount();
-		}),
+		.handler(() => statisticsService.github.getStarCount()),
 };
 
 export const statisticsRouter = {
+	getTotals: publicProcedure
+		.route({
+			method: "GET",
+			path: "/statistics",
+			tags: ["Platform Statistics"],
+			operationId: "getStatisticsTotals",
+			summary: "Get user and resume totals with their cache timestamp",
+		})
+		.output(
+			z.object({
+				users: z.number(),
+				resumes: z.number(),
+				cachedAt: z
+					.number()
+					.nullable()
+					.describe("Oldest count's cache timestamp in Unix milliseconds, or null for fallback totals."),
+			}),
+		)
+		.handler(() => statisticsService.getTotals()),
 	user: userRouter,
 	resume: resumeRouter,
 	github: githubRouter,

@@ -2,18 +2,19 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon, EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useRouter } from "@tanstack/react-router";
+import { Link, useNavigate, useRouter, useSearch } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
 import { FormControl, FormDescription, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { authClient } from "@/libs/auth/client";
 import { orpc } from "@/libs/orpc/client";
 import { useAppForm } from "@/libs/tanstack-form";
 import { SocialAuth } from "../components/social-auth";
+import { getAuthRedirectOptions, getOAuthPasskeyOptions, getOAuthSignInOptions, isOAuthRedirect } from "../redirect";
 
 const formSchema = z.object({
 	identifier: z.string().trim().toLowerCase(),
@@ -27,6 +28,7 @@ type Props = {
 
 export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 	const router = useRouter();
+	const { callbackURL, reauthenticate } = useSearch({ from: "/auth" });
 	const navigate = useNavigate();
 
 	const hasStartedConditionalPasskeyRef = useRef(false);
@@ -38,24 +40,34 @@ export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 		defaultValues: { identifier: "", password: "" },
 		validators: { onSubmit: formSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Signing in...`);
+			const toastId = toast.add({ type: "loading", description: t`Signing in...` });
 
 			try {
 				const isEmail = value.identifier.includes("@");
 
 				const result = isEmail
-					? await authClient.signIn.email({ email: value.identifier, password: value.password })
-					: await authClient.signIn.username({ username: value.identifier, password: value.password });
+					? await authClient.signIn.email({
+							email: value.identifier,
+							password: value.password,
+							...getOAuthSignInOptions(callbackURL),
+						})
+					: await authClient.signIn.username({
+							username: value.identifier,
+							password: value.password,
+							...getOAuthSignInOptions(callbackURL),
+						});
 
 				if (result.error) {
-					toast.error(
-						result.error.message ||
+					toast.add({
+						type: "error",
+						description:
+							result.error.message ||
 							t({
 								comment: "Fallback toast when sign-in fails and no server error message is available",
 								message: "Failed to sign in. Please try again.",
 							}),
-						{ id: toastId },
-					);
+						id: toastId,
+					});
 					return;
 				}
 
@@ -66,16 +78,17 @@ export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 					result.data.twoFactorRedirect;
 
 				if (requiresTwoFactor) {
-					toast.dismiss(toastId);
-					void navigate({ to: "/auth/verify-2fa", replace: true });
+					toast.close(toastId);
+					void navigate({ to: "/auth/verify-2fa", search: { callbackURL, reauthenticate }, replace: true });
 					return;
 				}
 
-				toast.dismiss(toastId);
+				toast.close(toastId);
+				if (isOAuthRedirect(result.data)) return;
 				await router.invalidate();
-				void navigate({ to: "/dashboard", replace: true });
+				void navigate(getAuthRedirectOptions(callbackURL));
 			} catch {
-				toast.error(t`Failed to sign in. Please try again.`, { id: toastId });
+				toast.add({ type: "error", description: t`Failed to sign in. Please try again.`, id: toastId });
 			}
 		},
 	});
@@ -92,12 +105,16 @@ export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 		void PublicKeyCredential.isConditionalMediationAvailable().then(async (isAvailable) => {
 			if (!isAvailable) return;
 
-			const { error } = await authClient.signIn.passkey({ autoFill: true });
-			if (error) return;
+			const { data, error } = await authClient.signIn.passkey({
+				autoFill: true,
+				...getOAuthPasskeyOptions(callbackURL),
+			});
+			if (error || isOAuthRedirect(data)) return;
 
 			await router.invalidate();
+			void navigate(getAuthRedirectOptions(callbackURL));
 		});
-	}, [providers, router]);
+	}, [providers, router, navigate, callbackURL]);
 
 	return (
 		<>
@@ -115,7 +132,7 @@ export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 								nativeButton={false}
 								className="h-auto gap-1.5 px-1! py-0"
 								render={
-									<Link to="/auth/register">
+									<Link to="/auth/register" search={{ callbackURL, reauthenticate }}>
 										<Trans comment="Call-to-action link from login page to account registration page">
 											Create one now
 										</Trans>{" "}
@@ -147,10 +164,7 @@ export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 									render={
 										<Input
 											autoComplete="section-login username webauthn"
-											placeholder={t({
-												comment: "Example email placeholder for login identifier field",
-												message: "john.doe@example.com",
-											})}
+											placeholder="john.doe@example.com"
 											className="lowercase"
 											name={field.name}
 											value={field.state.value}
@@ -161,7 +175,7 @@ export function LoginPage({ disableEmailAuth, disableSignups }: Props) {
 								/>
 								<FormMessage errors={field.state.meta.errors} />
 								<FormDescription>
-									<Trans>You can also use your username to login.</Trans>
+									<Trans>You can also sign in with your username.</Trans>
 								</FormDescription>
 							</FormItem>
 						)}

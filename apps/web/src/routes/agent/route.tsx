@@ -3,7 +3,7 @@ import { createNoindexFollowMeta } from "@/libs/seo";
 
 export const Route = createFileRoute("/agent")({
 	component: RouteComponent,
-	beforeLoad: async ({ context }) => {
+	beforeLoad: ({ context }) => {
 		if (!context.session) throw redirect({ to: "/auth/login", replace: true });
 		return { session: context.session };
 	},

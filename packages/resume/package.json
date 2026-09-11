@@ -4,10 +4,19 @@
 	"type": "module",
 	"private": true,
 	"exports": {
+		"./cover-letter": "./src/cover-letter.ts",
+		"./ats": "./src/ats/index.ts",
+		"./ats-pdf": "./src/ats-pdf/index.ts",
 		"./export-sections": "./src/export-sections.ts",
 		"./icons": "./src/icons.ts",
 		"./markdown": "./src/markdown.ts",
-		"./patch": "./src/patch.ts"
+		"./patch": "./src/patch.ts",
+		"./section-availability": "./src/section-availability.ts",
+		"./section-sort": "./src/section-sort.ts",
+		"./social-meta": "./src/social-meta.ts",
+		"./stylesheet": "./src/stylesheet/index.ts",
+		"./stylesheet/registry": "./src/stylesheet/registry/index.ts",
+		"./stylesheet/types": "./src/stylesheet/semantic-types.ts"
 	},
 	"scripts": {
 		"typecheck": "tsgo --noEmit",
@@ -17,13 +26,18 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
+		"@bramus/specificity": "^2.4.2",
 		"@reactive-resume/schema": "workspace:*",
+		"css-tree": "^3.2.1",
 		"fast-json-patch": "^3.1.1",
-		"zod": "^4.4.3"
+		"wink-porter2-stemmer": "2.0.1",
+		"zod": "^4.6.1"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
 		"@typescript/native-preview": "7.0.0-dev.20260707.2",
+		"fast-check": "^4.9.0",
+		"tsx": "^4.23.13",
 		"typescript": "^7.0.2"
 	}
 }

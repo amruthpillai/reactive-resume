@@ -12,7 +12,7 @@ import { getBuilderLayout } from "./-store/sidebar";
 
 export const Route = createFileRoute("/builder/$resumeId")({
 	component: RouteComponent,
-	beforeLoad: async ({ context }) => {
+	beforeLoad: ({ context }) => {
 		if (!context.session) throw redirect({ to: "/auth/login", replace: true });
 		return { session: context.session };
 	},
@@ -60,6 +60,7 @@ function RouteComponent() {
 		resume.tags,
 		resume.isLocked,
 		resume.isPublic,
+		resume.showDownloadButtons,
 		resume.hasPassword,
 		resume.updatedAt,
 		resume,

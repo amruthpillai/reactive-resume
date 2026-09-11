@@ -1,5 +1,5 @@
 {
-	"$schema": "https://turbo.build/schema.json",
+	"$schema": "https://v2-10-7.turborepo.dev/schema.json",
 	"ui": "stream",
 	"boundaries": {
 		"dependencies": {
@@ -48,9 +48,11 @@
 		"PORT",
 		"SERVER_PORT",
 		"APP_URL",
+		"ROOT_RESUME_ID",
 		"DATABASE_URL",
 		"AUTH_SECRET",
 		"BETTER_AUTH_API_KEY",
+		"BETTER_AUTH_INTERNAL_URL",
 		"GOOGLE_CLIENT_ID",
 		"GOOGLE_CLIENT_SECRET",
 		"GITHUB_CLIENT_ID",
@@ -84,24 +86,42 @@
 		"FLAG_DISABLE_EMAIL_AUTH",
 		"FLAG_DISABLE_IMAGE_PROCESSING",
 		"FLAG_DISABLE_API_RATE_LIMIT",
-		"FLAG_SHOW_SPONSORS",
 		"FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI",
-		"FLAG_ALLOW_UNSAFE_AI_BASE_URL"
+		"FLAG_ALLOW_UNSAFE_AI_BASE_URL",
+		"AI_TEST_TIMEOUT_MS",
+		"OFFLINE_FONT_DIAGNOSTIC",
+		"OFFLINE_FONT_DIAGNOSTIC_SERVER_RESTARTED"
 	],
 	"tasks": {
+		"transit": {
+			"dependsOn": ["^transit"]
+		},
 		"build": {
 			"inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env*"],
-			"outputs": ["dist/**", ".vercel/**"]
+			"outputs": ["dist/**", ".vercel/**"],
+			"dependsOn": ["transit"]
 		},
-		"check": {},
-		"typecheck": {},
-		"test": {},
-		"test:coverage": {},
-		"test:ci": {},
+		"check": {
+			"dependsOn": ["transit"]
+		},
+		"typecheck": {
+			"dependsOn": ["transit"]
+		},
+		"test": {
+			"dependsOn": ["transit"]
+		},
+		"test:coverage": {
+			"dependsOn": ["transit"]
+		},
+		"test:ci": {
+			"dependsOn": ["transit"]
+		},
 		"test:e2e": {
 			"cache": false
 		},
-		"test:agent": {},
+		"test:agent": {
+			"dependsOn": ["transit"]
+		},
 		"dev": {
 			"cache": false,
 			"persistent": true

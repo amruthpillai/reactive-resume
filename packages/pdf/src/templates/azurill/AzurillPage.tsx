@@ -9,8 +9,10 @@ import type {
 } from "../shared/types";
 import { Fragment, useMemo } from "react";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
-import { Image, Page, StyleSheet, View } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
+import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import {
 	CustomFieldContactItem,
@@ -20,12 +22,17 @@ import {
 	WebsiteContactItem,
 } from "../shared/contact-item";
 import { TemplateProvider } from "../shared/context";
-import { shouldShowResumeHeader } from "../shared/cover-letter";
 import { filterSections } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
-import { getTemplatePageMinHeightStyle, getTemplatePageSize } from "../shared/page-size";
 import { hasTemplatePicture } from "../shared/picture";
-import { Heading, Text } from "../shared/primitives";
+import {
+	Heading,
+	SemanticContactListView,
+	SemanticHeaderPicture,
+	SemanticHeaderView,
+	SemanticRegionView,
+	Text,
+} from "../shared/primitives";
 import { createRtlStyleHelpers } from "../shared/rtl";
 import { Section } from "../shared/sections";
 import { composeStyles, headerNameLineHeight, resolvePlacementColor } from "../shared/styles";
@@ -58,24 +65,34 @@ const azurillFeatures = {
 	sectionTimeline: true,
 } satisfies TemplateFeatures;
 
-export const AzurillPage = ({ page, pageIndex }: TemplatePageProps) => {
+export const AzurillPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
+	const pageNodeKey = semanticNodeKeys.page(pageNumber);
+	const { style: semanticPageStyle, size: semanticPageSize, ...semanticPageProps } = useResolvedNode(pageNodeKey);
 	const { metadata } = data;
 	const { colors, styles, featureStyles } = useAzurillTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
-	const pageSize = getTemplatePageSize(metadata.page.format);
-	const pageMinHeightStyle = getTemplatePageMinHeightStyle(metadata.page.format);
-	const showHeader = shouldShowResumeHeader(data, pageIndex);
-	const sidebarSections = filterSections(page.sidebar, data);
-	const mainSections = filterSections(page.main, data);
+	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
 
 	return (
-		<Page size={pageSize} style={composeStyles(styles.page, pageMinHeightStyle)}>
-			<TemplateProvider styles={styles} featureStyles={featureStyles} colors={colors} features={azurillFeatures}>
+		<Page
+			{...semanticPageProps}
+			size={semanticPageSize ?? pageSize}
+			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
+		>
+			<TemplateProvider
+				pageNodeKey={pageNodeKey}
+				styles={styles}
+				featureStyles={featureStyles}
+				colors={colors}
+				features={azurillFeatures}
+			>
 				{showHeader && <Header styles={styles} />}
 
 				<View style={composeStyles(styles.contentRow, { columnGap: metrics.columnGap })}>
-					<View
+					<SemanticRegionView
+						region="sidebar"
 						style={composeStyles(styles.sidebarColumn, {
 							flexBasis: `${metadata.layout.sidebarWidth}%`,
 							display: page.fullWidth ? "none" : "flex",
@@ -87,13 +104,13 @@ export const AzurillPage = ({ page, pageIndex }: TemplatePageProps) => {
 								<Section section={section} placement="sidebar" />
 							</Fragment>
 						))}
-					</View>
+					</SemanticRegionView>
 
-					<View style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
+					<SemanticRegionView region="main" style={composeStyles(styles.mainColumn, { rowGap: metrics.sectionGap })}>
 						{mainSections.map((section) => (
 							<Section key={section} section={section} placement="main" />
 						))}
-					</View>
+					</SemanticRegionView>
 				</View>
 			</TemplateProvider>
 		</Page>
@@ -105,8 +122,8 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 	const hasPicture = hasTemplatePicture(picture);
 
 	return (
-		<View style={styles.header}>
-			{hasPicture && <Image src={picture.url} style={styles.picture} />}
+		<SemanticHeaderView style={styles.header}>
+			{hasPicture && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
 
 			<View style={styles.headerTitle}>
 				<View style={styles.headerIdentity}>
@@ -115,7 +132,7 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 				</View>
 			</View>
 
-			<View style={styles.headerContactRow}>
+			<SemanticContactListView style={styles.headerContactRow}>
 				<EmailContactItem email={basics.email} style={styles.headerContactItem} />
 				<PhoneContactItem phone={basics.phone} style={styles.headerContactItem} />
 				<LocationContactItem location={basics.location} style={styles.headerContactItem} />
@@ -123,8 +140,8 @@ const Header = ({ styles }: AzurillHeaderProps) => {
 				{basics.customFields.map((field) => (
 					<CustomFieldContactItem key={field.id} field={field} style={styles.headerContactItem} />
 				))}
-			</View>
-		</View>
+			</SemanticContactListView>
+		</SemanticHeaderView>
 	);
 };
 
@@ -139,22 +156,17 @@ const useAzurillTemplate = (): AzurillTemplate => {
 		const colors: TemplateColorRoles = { foreground, background, primary };
 		const metrics = getTemplateMetrics(metadata.page);
 
-		const base = createBaseTemplateStyles({ metadata, foreground, r, metrics, picture });
+		const base = createBaseTemplateStyles({ metadata, foreground, background, r, metrics, picture });
 
 		const baseStyles = StyleSheet.create({
 			...base,
 			page: {
+				...base.page,
 				flexDirection: "column",
 				rowGap: metrics.headerGap,
 				columnGap: metrics.columnGap,
-				color: foreground,
-				backgroundColor: background,
 				paddingHorizontal: metrics.page.paddingHorizontal,
 				paddingVertical: metrics.page.paddingVertical,
-				fontFamily: metadata.typography.body.fontFamily,
-				fontSize: metadata.typography.body.fontSize,
-				lineHeight: metadata.typography.body.lineHeight,
-				direction: r.pageDirection,
 			},
 			sectionHeading: {
 				color: primary,

@@ -1,24 +1,19 @@
-import type { IncomingHttpHeaders, IncomingMessage } from "node:http";
-import { lookup } from "node:dns/promises";
-import * as http from "node:http";
-import * as https from "node:https";
-import { isIP } from "node:net";
 import { ORPCError } from "@orpc/client";
-import { generateText } from "ai";
+import { APICallError, generateText, RetryError } from "ai";
 import z from "zod";
+import { coverLetterTextToHtml } from "@reactive-resume/resume/cover-letter";
 import { generateId, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
 import { aiRequestRateLimit } from "../../middleware/rate-limit";
+import { generateJson as sharedGenerateJson } from "../ai/generate-json";
 import { getModel } from "../ai/service";
 import { aiProvidersService } from "../ai-providers/service";
+import { coverLetterService } from "../cover-letters/service";
 import { resumeService } from "../resume/service";
 import { applicationService } from "./service";
 
 const reserved = { tags: ["Applications", "AI"] } as const;
-const MAX_JOB_POSTING_BYTES = 200_000;
 const MAX_PASTED_JOB_DESCRIPTION_CHARS = 20_000;
-const JOB_POSTING_CONTENT_TYPES = ["text/html", "text/plain", "application/xhtml+xml", "application/xml", "text/xml"];
-type ValidatedAddress = { address: string; family: 4 | 6 };
 
 // Resolve the user's default (tested + enabled) AI provider into a ready model instance.
 async function resolveModel(userId: string) {
@@ -36,184 +31,64 @@ async function resolveModel(userId: string) {
 	});
 }
 
-// generateText + tolerant JSON extraction + Zod validation. Mirrors the resume-analysis pattern
-// (the SDK's generateObject isn't wired for every provider here, so we parse defensively).
-async function generateJson<T>(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string, schema: z.ZodType<T>) {
-	const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
-	const fenced = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-	const candidate = fenced?.[1] ?? text;
-	const start = candidate.indexOf("{");
-	const end = candidate.lastIndexOf("}");
-	if (start === -1 || end === -1 || end < start) {
-		throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "The AI response could not be parsed." });
-	}
-	return schema.parse(JSON.parse(candidate.slice(start, end + 1)));
+// --- AI provider failure translation ------------------------------------------
+// The AI SDK surfaces provider-side failures as `APICallError` (HTTP 4xx/5xx from
+// the provider) or `RetryError` with `reason: "maxRetriesExceeded"`.  Translating
+// only those to BAD_GATEWAY gives the client an actionable status code instead of
+// an opaque 500.  Validation, credential, model-resolution, and response-parsing
+// errors rethrow unchanged.
+
+function isAiProviderGatewayError(error: unknown): boolean {
+	if (APICallError.isInstance(error)) return true;
+	if (RetryError.isInstance(error) && error.reason === "maxRetriesExceeded") return true;
+	return false;
 }
 
-async function generatePlainText(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string) {
-	const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
-	return text.trim();
+/** Throws a BAD_GATEWAY ORPCError, preserving the original cause for upstream error reporters. */
+function throwAiProviderGatewayError(cause?: unknown): never {
+	throw new ORPCError("BAD_GATEWAY", { message: "Could not reach the AI provider.", cause });
 }
 
-function isPrivateIPv4(address: string) {
-	const parts = address.split(".").map((part) => Number(part));
-	if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)) return true;
-	const [a = 0, b = 0] = parts;
-	return (
-		a === 0 ||
-		a === 10 ||
-		a === 127 ||
-		(a === 100 && b >= 64 && b <= 127) ||
-		(a === 169 && b === 254) ||
-		(a === 172 && b >= 16 && b <= 31) ||
-		(a === 192 && b === 168) ||
-		a >= 224
-	);
-}
-
-function isPrivateAddress(address: string) {
-	if (address.startsWith("::ffff:")) return isPrivateIPv4(address.slice(7));
-	if (isIP(address) === 4) return isPrivateIPv4(address);
-
-	const normalized = address.toLowerCase();
-	return (
-		normalized === "::1" ||
-		normalized === "::" ||
-		normalized.startsWith("fc") ||
-		normalized.startsWith("fd") ||
-		normalized.startsWith("fe8") ||
-		normalized.startsWith("fe9") ||
-		normalized.startsWith("fea") ||
-		normalized.startsWith("feb")
-	);
-}
-
-async function assertPublicHttpUrl(url: string): Promise<{ parsed: URL; address: ValidatedAddress }> {
-	let parsed: URL;
+/**
+ * Wrapper around the shared `generateJson` that translates AI provider failures
+ * to BAD_GATEWAY.  Accepts the same prompt shape as the shared module.
+ * Exported for tests.
+ */
+export async function generateJson<T>(
+	model: Awaited<ReturnType<typeof resolveModel>>,
+	prompt: { system?: string; prompt: string },
+	schema: z.ZodType<T>,
+) {
 	try {
-		parsed = new URL(url);
-	} catch {
-		throw new ORPCError("BAD_REQUEST", { message: "The job posting URL is invalid." });
-	}
-	if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
-		throw new ORPCError("BAD_REQUEST", { message: "Only http(s) job posting URLs are supported." });
-	}
-	if (parsed.hostname.toLowerCase() === "localhost") {
-		throw new ORPCError("BAD_REQUEST", { message: "Local job posting URLs are not supported." });
-	}
-
-	const addresses = isIP(parsed.hostname)
-		? [{ address: parsed.hostname, family: isIP(parsed.hostname) as 4 | 6 }]
-		: ((await lookup(parsed.hostname, { all: true, verbatim: true })) as ValidatedAddress[]);
-	if (addresses.length === 0 || addresses.some(({ address }) => isPrivateAddress(address))) {
-		throw new ORPCError("BAD_REQUEST", { message: "Private or local job posting URLs are not supported." });
-	}
-
-	const [address] = addresses;
-	if (!address) throw new ORPCError("BAD_REQUEST", { message: "The job posting URL could not be resolved." });
-	return { parsed, address };
-}
-
-function headerValue(headers: IncomingHttpHeaders, name: string) {
-	const value = headers[name];
-	return Array.isArray(value) ? value[0] : value;
-}
-
-async function readTextResponse(response: IncomingMessage) {
-	const contentType = headerValue(response.headers, "content-type")?.split(";")[0]?.trim().toLowerCase();
-	if (contentType && !JOB_POSTING_CONTENT_TYPES.includes(contentType)) {
-		throw new ORPCError("BAD_REQUEST", { message: "The job posting URL did not return a text page." });
-	}
-
-	const contentLength = Number(headerValue(response.headers, "content-length"));
-	if (Number.isFinite(contentLength) && contentLength > MAX_JOB_POSTING_BYTES) {
-		throw new ORPCError("BAD_REQUEST", {
-			message: "The job posting page is too large. Paste the description instead.",
-		});
-	}
-
-	const chunks: Uint8Array[] = [];
-	let total = 0;
-
-	for await (const value of response) {
-		const chunk = typeof value === "string" ? Buffer.from(value) : value;
-		total += chunk.byteLength;
-		if (total > MAX_JOB_POSTING_BYTES) {
-			response.destroy();
-			throw new ORPCError("BAD_REQUEST", {
-				message: "The job posting page is too large. Paste the description instead.",
-			});
-		}
-		chunks.push(chunk);
-	}
-
-	return new TextDecoder().decode(Buffer.concat(chunks));
-}
-
-function requestJobPosting(parsed: URL, address: ValidatedAddress, signal: AbortSignal) {
-	return new Promise<IncomingMessage>((resolve, reject) => {
-		const client = parsed.protocol === "https:" ? https : http;
-		const request = client.request(
-			parsed,
-			{
-				signal,
-				headers: {
-					"user-agent":
-						"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-					accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-					"accept-language": "en-US,en;q=0.9",
-				},
-				lookup: (_hostname, _options, callback) => callback(null, address.address, address.family),
-			},
-			resolve,
-		);
-		request.on("error", reject);
-		request.end();
-	});
-}
-
-// Best-effort fetch + strip of a job posting page. http(s) only, size/time capped.
-export async function fetchJobPostingText(url: string): Promise<string> {
-	const controller = new AbortController();
-	const timeout = setTimeout(() => controller.abort(), 10_000);
-	try {
-		const { parsed, address } = await assertPublicHttpUrl(url);
-		const response = await requestJobPosting(parsed, address, controller.signal);
-		if (response.statusCode && response.statusCode >= 300 && response.statusCode < 400) {
-			throw new ORPCError("BAD_REQUEST", { message: "Redirecting job posting URLs are not supported." });
-		}
-		if (!response.statusCode || response.statusCode < 200 || response.statusCode >= 300) {
-			throw new ORPCError("BAD_REQUEST", {
-				message: `Couldn't fetch the posting (HTTP ${response.statusCode ?? "unknown"}).`,
-			});
-		}
-		const html = await readTextResponse(response);
-		return html
-			.replace(/<script[\s\S]*?<\/script>/gi, " ")
-			.replace(/<style[\s\S]*?<\/style>/gi, " ")
-			.replace(/<[^>]+>/g, " ")
-			.replace(/\s+/g, " ")
-			.trim()
-			.slice(0, 8_000);
+		return await sharedGenerateJson(model, prompt, schema);
 	} catch (error) {
-		if (error instanceof ORPCError) throw error;
-		throw new ORPCError("BAD_REQUEST", { message: "Couldn't read the job posting. Paste the description instead." });
-	} finally {
-		clearTimeout(timeout);
+		if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
+		throw error;
 	}
 }
+
+/** Exported for tests: provider-failure translation shared by every copilot procedure. */
+export async function generatePlainText(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string) {
+	try {
+		const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
+		return text.trim();
+	} catch (error) {
+		if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);
+		throw error;
+	}
+}
+
+// --- Schema & router -----------------------------------------------------------
 
 const autofillOutput = z.object({
 	company: z.string(),
 	role: z.string(),
 	location: z.string(),
 	salary: z.string(),
-	jobDescription: z.string(),
 });
 
 export const autofillInputSchema = z.object({
-	sourceUrl: z.string().optional(),
-	jobDescription: z.string().max(MAX_PASTED_JOB_DESCRIPTION_CHARS).optional(),
+	jobDescription: z.string().trim().min(1).max(MAX_PASTED_JOB_DESCRIPTION_CHARS),
 });
 
 // Tolerant of LLM variance: clamp the score, cap the lists by slicing rather than rejecting.
@@ -232,24 +107,28 @@ const matchScoreOutput = z.object({
 		.transform((a) => a.slice(0, 8)),
 });
 
+const aiErrors = {
+	BAD_GATEWAY: { message: "The AI provider returned an error or is unreachable.", status: 502 },
+	BAD_REQUEST: { message: "Invalid application or AI request.", status: 400 },
+};
+
 export const aiRouter = {
-	// Extract structured fields from a pasted job description or a posting URL.
+	// Extract structured fields from a pasted job description. The posting text itself is stored
+	// verbatim on the application, so nothing here fetches or scrapes a URL.
 	autofill: protectedProcedure
 		.route({ method: "POST", path: "/applications/ai/autofill", operationId: "aiAutofillApplication", ...reserved })
 		.input(autofillInputSchema)
 		.use(aiRequestRateLimit)
 		.output(autofillOutput)
+		.errors(aiErrors)
 		.handler(async ({ context, input }) => {
 			const model = await resolveModel(context.user.id);
-			const posting =
-				input.jobDescription?.trim() || (input.sourceUrl ? await fetchJobPostingText(input.sourceUrl) : "");
-			if (!posting) {
-				throw new ORPCError("BAD_REQUEST", { message: "Provide a job posting URL or paste the description." });
-			}
 
 			return generateJson(
 				model,
-				`Extract the following fields from this job posting. Return ONLY JSON with keys company, role, location, salary, jobDescription. Use an empty string for anything not stated. "jobDescription" should be a concise 1–2 paragraph plain-text summary of the responsibilities and requirements.\n\nJOB POSTING:\n${posting}`,
+				{
+					prompt: `Extract the following fields from this job posting. Return ONLY JSON with keys company, role, location, salary. Use an empty string for anything not stated.\n\nJOB POSTING:\n${input.jobDescription}`,
+				},
 				autofillOutput,
 			);
 		}),
@@ -265,12 +144,13 @@ export const aiRouter = {
 		.input(z.object({ id: z.string() }))
 		.use(aiRequestRateLimit)
 		.output(matchScoreOutput)
+		.errors(aiErrors)
 		.handler(async ({ context, input }) => {
 			const application = await applicationService.getById({ id: input.id, userId: context.user.id });
 			if (!application.resumeId)
 				throw new ORPCError("BAD_REQUEST", { message: "Link a resume to this application first." });
 			if (!application.jobDescription) {
-				throw new ORPCError("BAD_REQUEST", { message: "Add a job description (via Auto-fill or Edit) first." });
+				throw new ORPCError("BAD_REQUEST", { message: "Paste the job description into this application first." });
 			}
 
 			const [model, resume] = await Promise.all([
@@ -280,7 +160,9 @@ export const aiRouter = {
 
 			const result = await generateJson(
 				model,
-				`Compare this resume against the job description. Return ONLY JSON with keys score (integer 0-100 fit), gaps (array of short missing-qualification strings), strengths (array of short matching-strength strings).\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB DESCRIPTION:\n${application.jobDescription}`,
+				{
+					prompt: `Compare this resume against the job description. Return ONLY JSON with keys score (integer 0-100 fit), gaps (array of short missing-qualification strings), strengths (array of short matching-strength strings).\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB DESCRIPTION:\n${application.jobDescription}`,
+				},
 				matchScoreOutput,
 			);
 
@@ -304,7 +186,8 @@ export const aiRouter = {
 		})
 		.input(z.object({ id: z.string(), kind: z.enum(["cover-letter", "follow-up"]) }))
 		.use(aiRequestRateLimit)
-		.output(z.object({ text: z.string() }))
+		.output(z.object({ text: z.string(), coverLetterId: z.string().optional() }))
+		.errors(aiErrors)
 		.handler(async ({ context, input }) => {
 			const application = await applicationService.getById({ id: input.id, userId: context.user.id });
 			const model = await resolveModel(context.user.id);
@@ -319,7 +202,16 @@ export const aiRouter = {
 					? `Write a concise, specific cover letter (250-350 words, no placeholders like [Name]) for this application, drawing on the resume. Return only the letter text.\n\n${context_}`
 					: `Write a short, polite follow-up message (80-120 words) to a recruiter checking in on this application. Warm but not pushy. Return only the message text.\n\n${context_}`;
 
-			return { text: await generatePlainText(model, prompt) };
+			const text = await generatePlainText(model, prompt);
+			if (input.kind === "follow-up") return { text };
+			const letter = await coverLetterService.create({
+				userId: context.user.id,
+				name: `${application.company} — ${application.role}`.slice(0, 100),
+				content: coverLetterTextToHtml(text),
+				applicationId: input.id,
+				...(resume ? { resumeId: resume.id } : {}),
+			});
+			return { text, coverLetterId: letter.id };
 		}),
 
 	// Create a tailored copy of the linked resume (job-specific summary) and link it to the application.
@@ -333,12 +225,13 @@ export const aiRouter = {
 		.input(z.object({ id: z.string() }))
 		.use(aiRequestRateLimit)
 		.output(z.object({ resumeId: z.string(), name: z.string() }))
+		.errors(aiErrors)
 		.handler(async ({ context, input }) => {
 			const application = await applicationService.getById({ id: input.id, userId: context.user.id });
 			if (!application.resumeId)
 				throw new ORPCError("BAD_REQUEST", { message: "Link a resume to this application first." });
 			if (!application.jobDescription) {
-				throw new ORPCError("BAD_REQUEST", { message: "Add a job description (via Auto-fill or Edit) first." });
+				throw new ORPCError("BAD_REQUEST", { message: "Paste the job description into this application first." });
 			}
 
 			const [model, resume] = await Promise.all([
@@ -348,7 +241,9 @@ export const aiRouter = {
 
 			const { summary } = await generateJson(
 				model,
-				`Rewrite this candidate's professional summary to target the job below. Return ONLY JSON { "summary": "<one to two sentence HTML paragraph, e.g. <p>…</p>>" }. Keep it truthful to the resume.\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB:\n${application.role} at ${application.company}\n${application.jobDescription}`,
+				{
+					prompt: `Rewrite this candidate's professional summary to target the job below. Return ONLY JSON { "summary": "<one to two sentence HTML paragraph, e.g. <p>…</p>>" }. Keep it truthful to the resume.\n\nRESUME:\n${JSON.stringify(resume.data)}\n\nJOB:\n${application.role} at ${application.company}\n${application.jobDescription}`,
+				},
 				z.object({ summary: z.string() }),
 			);
 

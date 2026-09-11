@@ -16,6 +16,7 @@ beforeEach(() => {
 	vi.stubGlobal("fetch", fetchMock);
 });
 afterEach(() => {
+	vi.useRealTimers();
 	vi.unstubAllGlobals();
 	fetchMock.mockReset();
 	dbMock.select.mockReset();
@@ -24,6 +25,33 @@ afterEach(() => {
 });
 
 const { statisticsService, clearStatisticsCache } = await import("./service");
+
+it("reports the older cache time, retains it on reads, and omits it for fallback totals", async () => {
+	vi.useFakeTimers();
+	const start = Date.UTC(2026, 8, 8);
+	const hour = 60 * 60 * 1000;
+	vi.setSystemTime(start);
+	dbResult.count = 42;
+	dbMock.select.mockReturnValue({ from: () => Promise.resolve([dbResult]) });
+	await statisticsService.user.getCount();
+
+	vi.setSystemTime(start + hour);
+	dbResult.count = 7;
+	await expect(statisticsService.getTotals()).resolves.toEqual({ users: 42, resumes: 7, cachedAt: start });
+	vi.setSystemTime(start + 2 * hour);
+	await expect(statisticsService.getTotals()).resolves.toEqual({ users: 42, resumes: 7, cachedAt: start });
+	expect(dbMock.select).toHaveBeenCalledTimes(2);
+
+	vi.setSystemTime(start + 6 * hour);
+	dbResult.count = 8;
+	await expect(statisticsService.getTotals()).resolves.toEqual({ users: 8, resumes: 7, cachedAt: start + hour });
+
+	vi.setSystemTime(start + 7 * hour);
+	dbMock.select.mockImplementationOnce(() => {
+		throw new Error("db down");
+	});
+	expect(await statisticsService.getTotals()).toMatchObject({ users: 8, cachedAt: null });
+});
 
 describe("statisticsService.user.getCount", () => {
 	it("returns the DB count when the fetcher succeeds", async () => {

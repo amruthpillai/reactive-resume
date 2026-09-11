@@ -5,7 +5,6 @@ import { Trans } from "@lingui/react/macro";
 import { ArchiveIcon, ArrowRightIcon, TagIcon, TrashIcon } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
 import { STAGES } from "@reactive-resume/schema/applications/data";
 import { Badge } from "@reactive-resume/ui/components/badge";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -18,6 +17,7 @@ import {
 } from "@reactive-resume/ui/components/dropdown-menu";
 import { Input } from "@reactive-resume/ui/components/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@reactive-resume/ui/components/popover";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { getInitials } from "@reactive-resume/utils/string";
 import { cn } from "@reactive-resume/utils/style";
 import { orpc } from "@/libs/orpc/client";
@@ -70,7 +70,7 @@ export function ApplicationTable({ applications, onOpen, onEdit }: Props) {
 				invalidate();
 				clearSelection();
 			},
-			onError: () => toast.error(t`Bulk update failed. Please try again.`),
+			onError: () => toast.add({ type: "error", description: t`Bulk update failed. Please try again.` }),
 		}),
 	);
 
@@ -79,9 +79,9 @@ export function ApplicationTable({ applications, onOpen, onEdit }: Props) {
 			onSuccess: (result) => {
 				invalidate();
 				clearSelection();
-				toast.success(t`Deleted ${result.deleted} application(s).`);
+				toast.add({ type: "success", description: t`Deleted ${result.deleted} application(s).` });
 			},
-			onError: () => toast.error(t`Bulk delete failed. Please try again.`),
+			onError: () => toast.add({ type: "error", description: t`Bulk delete failed. Please try again.` }),
 		}),
 	);
 

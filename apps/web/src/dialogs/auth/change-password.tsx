@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon, PasswordIcon } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -16,6 +15,7 @@ import {
 } from "@reactive-resume/ui/components/dialog";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useFormBlocker } from "@/hooks/use-form-blocker";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
@@ -48,7 +48,7 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 			onSubmit: formSchema,
 		},
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Updating your password...`);
+			const toastId = toast.add({ type: "loading", description: t`Updating your password...` });
 
 			const { error } = await authClient.changePassword({
 				currentPassword: value.currentPassword,
@@ -56,20 +56,21 @@ export function ChangePasswordDialog(_: DialogProps<"auth.change-password">) {
 			});
 
 			if (error) {
-				toast.error(
-					getReadableErrorMessage(
+				toast.add({
+					type: "error",
+					description: getReadableErrorMessage(
 						error,
 						t({
 							comment: "Fallback toast when changing account password fails",
 							message: "Failed to update your password. Please try again.",
 						}),
 					),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
 				return;
 			}
 
-			toast.success(t`Your password has been updated successfully.`, { id: toastId });
+			toast.add({ type: "success", description: t`Your password has been updated.`, id: toastId });
 			void queryClient.invalidateQueries({ queryKey: ["auth", "accounts"] });
 			closeDialog();
 		},

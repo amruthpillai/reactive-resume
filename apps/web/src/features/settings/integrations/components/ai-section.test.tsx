@@ -4,6 +4,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
+import { toast } from "@reactive-resume/ui/components/toast";
 
 type MutationName = "create" | "test" | "update" | "delete";
 
@@ -41,6 +42,8 @@ const queryClient = vi.hoisted(() => ({
 	setQueryData: vi.fn(),
 }));
 
+const providers = vi.hoisted(() => ({ data: [] as MockProvider[] }));
+
 const mutations = vi.hoisted(() => ({
 	create: vi.fn(),
 	test: vi.fn(),
@@ -56,7 +59,7 @@ const mutationOptions = vi.hoisted(() => ({
 }));
 
 vi.mock("@tanstack/react-query", () => ({
-	useQuery: () => ({ data: [], isLoading: false, error: null }),
+	useQuery: () => ({ data: providers.data, isLoading: false, error: null }),
 	useQueryClient: () => queryClient,
 	useMutation: (options: MutationOptions) => ({
 		isPending: false,
@@ -97,7 +100,7 @@ vi.mock("@/components/ui/combobox", () => ({
 	),
 }));
 
-vi.mock("sonner", () => ({ toast: { error: vi.fn(), success: vi.fn() } }));
+vi.mock("@reactive-resume/ui/components/toast", () => ({ toast: { add: vi.fn() } }));
 
 i18n.loadAndActivate({ locale: "en", messages: {} });
 
@@ -140,6 +143,7 @@ describe("AISettingsSection", () => {
 		mutations.test.mockReset();
 		mutations.update.mockReset();
 		mutations.delete.mockReset();
+		providers.data = [];
 	});
 
 	it("offers popular AI SDK providers and labels Ollama as cloud-hosted", () => {
@@ -186,5 +190,50 @@ describe("AISettingsSection", () => {
 			(providers: MockProvider[]) => MockProvider[],
 		];
 		expect(updater([created])).toEqual([tested]);
+	});
+
+	// The server returns a provider-side failure as data (see the API package's e2e coverage), so the
+	// reason has to reach the card rather than being flattened into a generic transport error.
+	it("shows the server's reason on the card and keeps the toast to the outcome", async () => {
+		const failed = provider({
+			enabled: false,
+			testStatus: "failure",
+			testError: "OpenAI rejected the API key.",
+			lastTestedAt: new Date("2026-08-15T00:00:00Z"),
+		});
+
+		providers.data = [provider({})];
+		mutations.test.mockResolvedValue(failed);
+
+		renderSection();
+		fireEvent.click(screen.getByRole("button", { name: "Test" }));
+
+		await waitFor(() => expect(toast.add).toHaveBeenCalledWith(expect.objectContaining({ type: "error" })));
+
+		// Toast reports only the outcome; the card carries the detail.
+		expect(toast.add).toHaveBeenCalledWith({ type: "error", description: "Connection failed." });
+		expect(toast.add).not.toHaveBeenCalledWith(
+			expect.objectContaining({ description: expect.stringContaining("rejected the API key") }),
+		);
+
+		providers.data = [failed];
+		renderSection();
+
+		expect(screen.getAllByText("OpenAI rejected the API key.").length).toBeGreaterThan(0);
+		expect(screen.getAllByText("Connection failed").length).toBeGreaterThan(0);
+	});
+
+	it("updates a configured provider's model", async () => {
+		providers.data = [provider({})];
+		mutations.update.mockResolvedValue(provider({ model: "gpt-5-mini", testStatus: "untested", enabled: false }));
+
+		renderSection();
+
+		fireEvent.click(screen.getByRole("button", { name: "Edit model" }));
+		fireEvent.change(screen.getByLabelText("Provider model"), { target: { value: "gpt-5-mini" } });
+		fireEvent.click(screen.getByRole("button", { name: "Save model" }));
+
+		await waitFor(() => expect(mutations.update).toHaveBeenCalledWith({ id: "provider-1", model: "gpt-5-mini" }));
+		expect(queryClient.invalidateQueries).toHaveBeenCalledWith({ queryKey: ["aiProviders", "list"] });
 	});
 });

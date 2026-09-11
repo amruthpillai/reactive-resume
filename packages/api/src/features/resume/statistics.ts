@@ -1,8 +1,32 @@
 import z from "zod";
-import { protectedProcedure } from "../../context";
+import { protectedProcedure, publicProcedure } from "../../context";
+import { resumeDto } from "../../dto/resume";
+import { resumeDownloadRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
 
 export const resumeStatisticsRouter = {
+	recordDownload: publicProcedure
+		.route({
+			method: "POST",
+			path: "/resumes/{username}/{slug}/statistics/download",
+			tags: ["Resume Statistics"],
+			operationId: "recordResumeDownload",
+			summary: "Record a public resume PDF download",
+			description:
+				"Records a visitor's explicit PDF download after the browser starts saving the file. Requires access to the public resume. For password-protected resumes, first call verifyResumePassword (POST /resumes/{username}/{slug}/password/verify) with the password, then send the returned HttpOnly resume_access_<resumeId> cookie with this request. A missing or invalid access cookie returns NEED_PASSWORD (HTTP 401); the cookie expires after 10 minutes. Owner downloads are excluded. Rate limited per resume and visitor.",
+			successDescription: "The download event was accepted.",
+		})
+		.input(resumeDto.getBySlug.input)
+		.use(resumeDownloadRateLimit)
+		.output(z.boolean())
+		.handler(({ context, input }) =>
+			resumeService.statistics.recordDownload({
+				...input,
+				requestHeaders: context.reqHeaders,
+				...(context.user?.id ? { currentUserId: context.user.id } : {}),
+			}),
+		),
+
 	getById: protectedProcedure
 		.route({
 			method: "GET",
@@ -24,9 +48,7 @@ export const resumeStatisticsRouter = {
 				lastDownloadedAt: z.date().nullable().describe("Timestamp of the last download, or null if never downloaded."),
 			}),
 		)
-		.handler(async ({ context, input }) => {
-			return resumeService.statistics.getById({ id: input.id, userId: context.user.id });
-		}),
+		.handler(({ context, input }) => resumeService.statistics.getById({ id: input.id, userId: context.user.id })),
 
 	getDailyById: protectedProcedure
 		.route({
@@ -54,7 +76,11 @@ export const resumeStatisticsRouter = {
 				}),
 			),
 		)
-		.handler(async ({ context, input }) => {
-			return resumeService.statistics.getDailySeries({ id: input.id, userId: context.user.id, days: input.days });
-		}),
+		.handler(({ context, input }) =>
+			resumeService.statistics.getDailySeries({
+				id: input.id,
+				userId: context.user.id,
+				days: input.days,
+			}),
+		),
 };

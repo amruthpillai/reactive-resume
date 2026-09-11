@@ -75,7 +75,6 @@ describe("createProfileMapper", () => {
 		expect(dbMock.update).toHaveBeenCalledTimes(1);
 		expect(dbMock.updateSet).toHaveBeenCalledWith({ email: "legacy.user@example.com" });
 		expect(result).toEqual({
-			id: "legacy-user-id",
 			name: "Legacy User",
 			email: "legacy.user@example.com",
 			image: "https://example.com/new.png",

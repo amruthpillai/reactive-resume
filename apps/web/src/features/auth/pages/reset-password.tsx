@@ -2,12 +2,12 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { EyeIcon, EyeSlashIcon } from "@phosphor-icons/react";
 import { useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
 import { useToggle } from "usehooks-ts";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { authClient } from "@/libs/auth/client";
 import { useAppForm } from "@/libs/tanstack-form";
 
@@ -27,23 +27,27 @@ export function ResetPasswordPage({ token }: Props) {
 		defaultValues: { password: "" },
 		validators: { onSubmit: formSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Resetting your password...`);
+			const toastId = toast.add({ type: "loading", description: t`Resetting your password...` });
 
 			const { error } = await authClient.resetPassword({ token, newPassword: value.password });
 
 			if (error) {
-				toast.error(
-					error.message ||
+				toast.add({
+					type: "error",
+					description:
+						error.message ||
 						t({
 							comment: "Fallback toast when resetting password fails and no backend message is available",
 							message: "Failed to reset your password. Please try again.",
 						}),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
 				return;
 			}
 
-			toast.success(t`Your password has been reset successfully. You can now sign in with your new password.`, {
+			toast.add({
+				type: "success",
+				description: t`Your password has been reset. You can now sign in with your new password.`,
 				id: toastId,
 			});
 
@@ -59,7 +63,7 @@ export function ResetPasswordPage({ token }: Props) {
 				</h1>
 
 				<div className="text-muted-foreground">
-					<Trans>Please enter a new password for your account</Trans>
+					<Trans>Enter a new password for your account</Trans>
 				</div>
 			</div>
 

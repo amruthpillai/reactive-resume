@@ -180,12 +180,16 @@ function BasicsSectionForm() {
 						<FormLabel>
 							<Trans>Website</Trans>
 						</FormLabel>
-						<URLInput
-							name={field.name}
-							value={field.state.value}
-							onChange={(value) => {
-								field.handleChange(value);
-							}}
+						<FormControl
+							render={
+								<URLInput
+									name={field.name}
+									value={field.state.value}
+									onChange={(value) => {
+										field.handleChange(value);
+									}}
+								/>
+							}
 						/>
 						<FormMessage errors={field.state.meta.errors} />
 					</FormItem>

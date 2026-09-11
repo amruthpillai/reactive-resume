@@ -86,10 +86,6 @@ function normalizeBaseUrl(input: { provider: AIProvider; baseURL?: string | null
 	return resolveAiBaseUrl({ provider: input.provider, baseURL: trimmed });
 }
 
-function orderByLastUsedAtDescNullsLast() {
-	return desc(sql<Date>`coalesce(${schema.aiProvider.lastUsedAt}, '1970-01-01T00:00:00.000Z'::timestamptz)`);
-}
-
 async function getOwnedProvider(input: { id: string; userId: string }) {
 	const [provider] = await db
 		.select()
@@ -110,7 +106,10 @@ export const aiProvidersService = {
 			.select()
 			.from(schema.aiProvider)
 			.where(eq(schema.aiProvider.userId, input.userId))
-			.orderBy(orderByLastUsedAtDescNullsLast(), asc(schema.aiProvider.createdAt));
+			.orderBy(
+				desc(sql<Date>`coalesce(${schema.aiProvider.lastUsedAt}, '1970-01-01T00:00:00.000Z'::timestamptz)`),
+				asc(schema.aiProvider.createdAt),
+			);
 
 		return providers.map(toResponse);
 	},
@@ -229,19 +228,21 @@ export const aiProvidersService = {
 		const apiKey = decryptCredential(provider.encryptedApiKey);
 
 		try {
-			const ok = await testConnection({
+			const result = await testConnection({
 				provider: parsedProvider,
 				model: provider.model,
 				apiKey,
 				baseURL: provider.baseUrl ?? "",
 			});
 
+			// A provider that answers "no" is a completed test, not a failed request: it comes back as
+			// data so the client can show why, instead of a generic transport error.
 			const [updated] = await db
 				.update(schema.aiProvider)
 				.set({
-					enabled: ok,
-					testStatus: ok ? "success" : "failure",
-					testError: ok ? null : "The provider test returned an unexpected response.",
+					enabled: result.ok,
+					testStatus: result.ok ? "success" : "failure",
+					testError: result.ok ? null : result.message,
 					lastTestedAt: new Date(),
 				})
 				.where(and(eq(schema.aiProvider.id, input.id), eq(schema.aiProvider.userId, input.userId)))
@@ -250,7 +251,8 @@ export const aiProvidersService = {
 			if (!updated) throw new ORPCError("NOT_FOUND");
 			return toResponse(updated);
 		} catch (error) {
-			const [updated] = await db
+			// Only unexpected failures reach here now: provider-side outcomes come back as data above.
+			await db
 				.update(schema.aiProvider)
 				.set({
 					enabled: false,
@@ -258,10 +260,8 @@ export const aiProvidersService = {
 					testError: error instanceof Error ? error.message : "Failed to test provider.",
 					lastTestedAt: new Date(),
 				})
-				.where(and(eq(schema.aiProvider.id, input.id), eq(schema.aiProvider.userId, input.userId)))
-				.returning();
+				.where(and(eq(schema.aiProvider.id, input.id), eq(schema.aiProvider.userId, input.userId)));
 
-			if (!updated) throw error;
 			throw error;
 		}
 	},

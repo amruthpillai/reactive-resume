@@ -7,7 +7,7 @@ const searchSchema = z.object({ token: z.string().min(1) });
 export const Route = createFileRoute("/auth/reset-password")({
 	component: RouteComponent,
 	validateSearch: searchSchema,
-	beforeLoad: async ({ context }) => {
+	beforeLoad: ({ context }) => {
 		if (context.flags.disableEmailAuth) throw redirect({ to: "/auth/login", replace: true });
 	},
 	onError: (error) => {

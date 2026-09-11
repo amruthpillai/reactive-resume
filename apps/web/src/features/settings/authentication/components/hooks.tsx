@@ -11,8 +11,8 @@ import {
 } from "@phosphor-icons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback } from "react";
-import { toast } from "sonner";
 import { match } from "ts-pattern";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
 import { orpc } from "@/libs/orpc/client";
@@ -108,48 +108,53 @@ export function useAuthAccounts() {
 export function useAuthProviderActions() {
 	const link = useCallback(async (provider: AuthProvider) => {
 		const providerName = getProviderName(provider);
-		const toastId = toast.loading(t`Linking your ${providerName} account...`);
+		const toastId = toast.add({ type: "loading", description: t`Linking your ${providerName} account...` });
 
 		const { error } = await authClient.linkSocial({ provider, callbackURL: "/dashboard/settings/authentication" });
 
 		if (error) {
-			toast.error(
-				getReadableErrorMessage(
+			toast.add({
+				type: "error",
+				description: getReadableErrorMessage(
 					error,
 					t({
 						comment: "Fallback toast when linking a social authentication provider fails",
 						message: "Failed to link provider. Please try again.",
 					}),
 				),
-				{ id: toastId },
-			);
+				id: toastId,
+			});
 			return;
 		}
 
-		toast.dismiss(toastId);
+		toast.close(toastId);
 	}, []);
 
 	const unlink = useCallback(async (provider: AuthProvider, accountId: string) => {
 		const providerName = getProviderName(provider);
-		const toastId = toast.loading(t`Unlinking your ${providerName} account...`);
+		const toastId = toast.add({
+			type: "loading",
+			description: t`Unlinking your ${providerName} account...`,
+		});
 
-		const { error } = await authClient.unlinkAccount({ providerId: provider, accountId });
+		const { error } = await authClient.unlinkAccount({ accountId });
 
 		if (error) {
-			toast.error(
-				getReadableErrorMessage(
+			toast.add({
+				type: "error",
+				description: getReadableErrorMessage(
 					error,
 					t({
 						comment: "Fallback toast when unlinking a social authentication provider fails",
 						message: "Failed to unlink provider. Please try again.",
 					}),
 				),
-				{ id: toastId },
-			);
+				id: toastId,
+			});
 			return;
 		}
 
-		toast.dismiss(toastId);
+		toast.close(toastId);
 	}, []);
 
 	return { link, unlink };

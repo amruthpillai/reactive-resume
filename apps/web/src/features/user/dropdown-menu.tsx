@@ -4,7 +4,6 @@ import { useLingui } from "@lingui/react";
 import { Trans } from "@lingui/react/macro";
 import { PaletteIcon, SignOutIcon, TranslateIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
-import { toast } from "sonner";
 import { useIsClient } from "usehooks-ts";
 import {
 	DropdownMenu,
@@ -19,21 +18,15 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { useTheme } from "@/features/theme/provider";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
-import { isLocale, loadLocale, localeMap, setLocaleCookie } from "@/libs/locale";
+import { changeLocale, localeMap } from "@/libs/locale";
 import { isTheme } from "@/libs/theme";
 
 type Props = {
 	children: ({ session }: { session: AuthSession }) => React.ComponentProps<typeof DropdownMenuTrigger>["render"];
-};
-
-const handleLocaleChange = async (value: string) => {
-	if (!isLocale(value)) return;
-	setLocaleCookie(value);
-	await loadLocale(value);
-	window.location.reload();
 };
 
 export function UserDropdownMenu({ children }: Props) {
@@ -49,25 +42,26 @@ export function UserDropdownMenu({ children }: Props) {
 	};
 
 	const handleLogout = async () => {
-		const toastId = toast.loading(t`Signing out...`);
+		const toastId = toast.add({ type: "loading", description: t`Signing out...` });
 
 		await authClient.signOut({
 			fetchOptions: {
 				onSuccess: () => {
-					toast.dismiss(toastId);
+					toast.close(toastId);
 					void router.invalidate();
 				},
 				onError: ({ error }) => {
-					toast.error(
-						getReadableErrorMessage(
+					toast.add({
+						type: "error",
+						description: getReadableErrorMessage(
 							error,
 							t({
 								comment: "Fallback toast when signing out fails",
 								message: "Failed to sign out. Please try again.",
 							}),
 						),
-						{ id: toastId },
-					);
+						id: toastId,
+					});
 				},
 			},
 		});
@@ -88,7 +82,7 @@ export function UserDropdownMenu({ children }: Props) {
 							<Trans comment="Menu item that opens language selection submenu">Language</Trans>
 						</DropdownMenuSubTrigger>
 						<DropdownMenuSubContent className="max-h-[400px] overflow-y-auto">
-							<DropdownMenuRadioGroup value={i18n.locale} onValueChange={handleLocaleChange}>
+							<DropdownMenuRadioGroup value={i18n.locale} onValueChange={changeLocale}>
 								{Object.entries(localeMap).map(([value, label]) => (
 									<DropdownMenuRadioItem key={value} value={value}>
 										{i18n.t(label)}
@@ -120,7 +114,7 @@ export function UserDropdownMenu({ children }: Props) {
 
 				<DropdownMenuItem onClick={handleLogout}>
 					<SignOutIcon />
-					<Trans comment="User menu action to sign out of current account">Logout</Trans>
+					<Trans comment="User menu action to sign out of current account">Sign out</Trans>
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>

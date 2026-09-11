@@ -1,8 +1,11 @@
+import type { Template } from "@reactive-resume/schema/templates";
 import type { CSSProperties } from "react";
 import type { ResolvedResumePreviewProps } from "./preview.shared";
 import type { PreviewPageSize } from "./preview.shared.utils";
+import { t } from "@lingui/core/macro";
 import { AnimatePresence, m } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { isRTL } from "@reactive-resume/utils/locale";
 import { cn } from "@reactive-resume/utils/style";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
@@ -19,18 +22,20 @@ type PreviewPdf = {
 	pageSizes: Record<number, PreviewPageSize>;
 	phase: "active" | "exiting" | "staged";
 	renderedPages: number[];
+	template: Template;
 };
 
 const UPDATE_DEBOUNCE_MS = 100;
 const CROSSFADE_DURATION_MS = 180;
 
-const createPreviewPdf = (file: Blob, id: number, hasExistingPreview: boolean): PreviewPdf => ({
+const createPreviewPdf = (file: Blob, id: number, hasExistingPreview: boolean, template: Template): PreviewPdf => ({
 	file,
 	id,
 	numPages: 0,
 	pageSizes: {},
 	phase: hasExistingPreview ? "staged" : "active",
 	renderedPages: [],
+	template,
 });
 
 const addPreviewLayer = (layers: PreviewPdf[], nextPdf: PreviewPdf) => {
@@ -119,12 +124,24 @@ export function ResumePreviewClient({
 				const blob = await createResumePdfBlob(resumeData);
 
 				if (!cancelled && requestId === requestIdRef.current) {
-					const nextPdf = createPreviewPdf(blob, pdfIdRef.current++, hasPreviewRef.current);
+					const nextPdf = createPreviewPdf(
+						blob,
+						pdfIdRef.current++,
+						hasPreviewRef.current,
+						resumeData.metadata.template,
+					);
 
 					hasPreviewRef.current = true;
 					setPreviewLayers((current) => addPreviewLayer(current, nextPdf));
 				}
-			} catch {}
+			} catch {
+				if (cancelled || requestId !== requestIdRef.current) return;
+				toast.add({
+					type: "error",
+					description: t`The resume preview could not be updated. The last valid preview is still shown.`,
+					id: "resume-preview-render-error",
+				});
+			}
 		};
 
 		const timeoutId = window.setTimeout(() => {
@@ -135,7 +152,7 @@ export function ResumePreviewClient({
 			cancelled = true;
 			window.clearTimeout(timeoutId);
 		};
-	}, [resumeData, paused]);
+	}, [paused, resumeData]);
 
 	if (!resumeData) return null;
 
@@ -166,6 +183,7 @@ export function ResumePreviewClient({
 					<m.div
 						key={visiblePdf.id}
 						aria-hidden={visiblePdf.phase !== "active"}
+						data-resume-preview-template={visiblePdf.template}
 						style={{ "--resume-preview-page-gap": resolvedPageGap } as CSSProperties}
 						className={cn("col-start-1 row-start-1", visiblePdf.phase !== "active" && "pointer-events-none")}
 						initial={{ opacity: visiblePdf.phase === "active" ? 1 : 0 }}

@@ -1,3 +1,7 @@
+import type { Http2Bindings, HttpBindings } from "@hono/node-server";
+import type { Context } from "hono";
+import { isIP } from "node:net";
+import { getConnInfo } from "@hono/node-server/conninfo";
 import { Hono } from "hono";
 import { handleMcp } from "../mcp/handler";
 import { handleOpenApi } from "../openapi/handler";
@@ -15,18 +19,41 @@ import { handleUpload } from "../static/uploads";
 import { handleWebApp, serveWebDistStatic } from "../static/web";
 import { handleAuth, handleOAuth } from "./auth";
 import { handleHealth } from "./health";
+import { handlePublicResumePdf } from "./public-resume-pdf";
 import { handleResumePdfDownload } from "./resume-pdf";
 
-export function createApp() {
-	const app = new Hono();
+type ServerEnvironment = { Bindings: HttpBindings | Http2Bindings };
 
-	app.all("/api/rpc", (c) => handleRpc(c.req.raw));
-	app.all("/api/rpc/*", (c) => handleRpc(c.req.raw));
-	app.all("/api/openapi", (c) => handleOpenApi(c.req.raw));
-	app.all("/api/openapi/*", (c) => handleOpenApi(c.req.raw));
+const getTrustedClient = (context: Context<ServerEnvironment>): string => {
+	try {
+		const address = getConnInfo(context).remote.address?.trim();
+		return address && isIP(address) ? address : "unknown";
+	} catch {
+		return "unknown";
+	}
+};
+
+export function createApp() {
+	const app = new Hono<ServerEnvironment>();
+
+	app.use("/auth/*", async (c, next) => {
+		await next();
+		c.header("Content-Security-Policy", "frame-ancestors 'none'");
+		c.header("X-Frame-Options", "DENY");
+		c.header("Referrer-Policy", "no-referrer");
+		c.header("Cache-Control", "no-store");
+	});
+
+	app.all("/api/rpc", (c) => handleRpc(c.req.raw, getTrustedClient(c)));
+	app.all("/api/rpc/*", (c) => handleRpc(c.req.raw, getTrustedClient(c)));
+	app.all("/api/openapi", (c) => handleOpenApi(c.req.raw, getTrustedClient(c)));
+	app.all("/api/openapi/*", (c) => handleOpenApi(c.req.raw, getTrustedClient(c)));
 	app.get("/api/auth/oauth", (c) => handleOAuth(c.req.raw));
 	app.all("/api/auth/*", (c) => handleAuth(c.req.raw));
 	app.get("/api/health", () => handleHealth());
+	app.get("/api/resumes/:username/:slug/pdf", (c) =>
+		handlePublicResumePdf(c.req.raw, c.req.param("username"), c.req.param("slug"), getTrustedClient(c)),
+	);
 	app.get("/api/resumes/:id/pdf", (c) => handleResumePdfDownload(c.req.raw, c.req.param("id")));
 	app.get("/api/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/uploads/*", (c) => handleUpload(c.req.raw));
@@ -46,6 +73,9 @@ export function createApp() {
 	app.on(["GET", "HEAD"], "/sitemap.xml", (c) => handleSitemap({ head: c.req.method === "HEAD" }));
 	app.on(["GET", "HEAD"], "/llms.txt", (c) => handleLlms({ head: c.req.method === "HEAD" }));
 
+	// Must precede the static middleware: serveStatic resolves "/" to dist/index.html and would
+	// return it verbatim, skipping the OpenGraph/Twitter/canonical/JSON-LD injection in handleWebApp.
+	app.on(["GET", "HEAD"], "/", (c) => handleWebApp(c.req.raw));
 	app.use("/*", serveWebDistStatic);
 	app.on(["GET", "HEAD"], "/*", (c) => handleWebApp(c.req.raw));
 

@@ -1,19 +1,23 @@
 import { t } from "@lingui/core/macro";
-import { FloppyDiskIcon } from "@phosphor-icons/react";
 import { useHotkey } from "@tanstack/react-hotkeys";
 import { Suspense, useState } from "react";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
-import { toast } from "sonner";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { LoadingScreen } from "@/components/layout/loading-screen";
 import { ResumePreview } from "@/features/resume/preview/preview";
 import { BuilderDock } from "./dock";
 import { DEFAULT_BUILDER_PREVIEW_PAGE_LAYOUT, getNextBuilderPreviewPageLayout } from "./page-layout";
+import { blurFocusedElementOnPan } from "./pan-focus";
 
 export function PreviewPage() {
 	const [pageLayout, setPageLayout] = useState(DEFAULT_BUILDER_PREVIEW_PAGE_LAYOUT);
 
 	useHotkey("Mod+S", () => {
-		toast.info(t`Your changes are saved automatically.`, { id: "auto-save", icon: <FloppyDiskIcon /> });
+		toast.add({
+			type: "info",
+			description: t`Your changes are saved automatically.`,
+			id: "auto-save",
+		});
 	});
 
 	return (
@@ -26,8 +30,10 @@ export function PreviewPage() {
 					initialScale={0.75}
 					limitToBounds={false}
 					wheel={{ step: 0.001 }}
+					onPanningStart={blurFocusedElementOnPan}
 				>
-					<TransformComponent wrapperClass="h-full! w-full!">
+					{/* Zoom transforms use left-origin coordinates, regardless of the interface language. */}
+					<TransformComponent wrapperClass="h-full! w-full!" wrapperProps={{ dir: "ltr" }}>
 						<ResumePreview showPageNumbers pageLayout={pageLayout} />
 					</TransformComponent>
 

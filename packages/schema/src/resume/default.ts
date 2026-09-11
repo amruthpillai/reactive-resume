@@ -6,6 +6,7 @@ const section = (icon: string) => ({
 	icon,
 	columns: 1,
 	hidden: false,
+	showHeading: true,
 	keepTogether: false,
 	startOnNewPage: false,
 	items: [] as never[],
@@ -14,6 +15,7 @@ const section = (icon: string) => ({
 export const defaultResumeData: ResumeData = {
 	picture: {
 		hidden: false,
+		fit: "cover",
 		url: "",
 		size: 80,
 		rotation: 0,
@@ -38,6 +40,7 @@ export const defaultResumeData: ResumeData = {
 		icon: "article",
 		columns: 1,
 		hidden: false,
+		showHeading: true,
 		keepTogether: false,
 		startOnNewPage: false,
 		content: "",
@@ -47,7 +50,7 @@ export const defaultResumeData: ResumeData = {
 		experience: section("briefcase"),
 		education: section("graduation-cap"),
 		projects: section("code-simple"),
-		skills: section("compass-tool"),
+		skills: { ...section("compass-tool"), layout: "default", keywordLayout: "inline" },
 		languages: section("translate"),
 		interests: section("football"),
 		awards: section("trophy"),

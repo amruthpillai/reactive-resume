@@ -1,0 +1,127 @@
+diff --git a/lib/index.js b/lib/index.js
+index 18c2618f4630b3c1296c8c3cac317b8d7666bbe8..716ca874d496d40e0709236d4d7fe828a77088a7 100644
+--- a/lib/index.js
++++ b/lib/index.js
+@@ -1887,7 +1887,7 @@ const isTextInstance$2 = (node) => node.type === P.TextInstance;
+  * @param level - Fragment level
+  * @returns Text fragments
+  */
+-const getFragments = (fontStore, instance, parentLink = null, level = 0) => {
++const getFragments = (fontStore, instance, parentLink = null, level = 0, parentPreserveWhitespace = false) => {
+     if (!instance)
+         return [{ string: '' }];
+     let fragments = [];
+@@ -1902,6 +1902,8 @@ const getFragments = (fontStore, instance, parentLink = null, level = 0) => {
+     });
+     // Don't pass main background color to textkit. Will be rendered by the render package instead
+     const backgroundColor = level === 0 ? null : instance.style.backgroundColor;
++    // The editor's literal-whitespace contract is local to this Text subtree.
++    const preserveWhitespace = parentPreserveWhitespace || instance.props?.['data-resume-whitespace'] === 'preserve';
+     const attributes = {
+         font,
+         color,
+@@ -1911,6 +1913,7 @@ const getFragments = (fontStore, instance, parentLink = null, level = 0) => {
+         direction,
+         verticalAlign,
+         backgroundColor,
++        preserveWhitespace,
+         indent: textIndent,
+         characterSpacing: letterSpacing,
+         strikeStyle: textDecorationStyle,
+@@ -1950,7 +1953,7 @@ const getFragments = (fontStore, instance, parentLink = null, level = 0) => {
+             });
+         }
+         else if (child && !isImage$1(child)) {
+-            fragments.push(...getFragments(fontStore, child, attributes.link, level + 1));
++            fragments.push(...getFragments(fontStore, child, attributes.link, level + 1, preserveWhitespace));
+         }
+     }
+     for (let i = 0; i < PREPROCESSORS.length; i += 1) {
+@@ -3163,7 +3166,10 @@ const splitNodes = (height, contentArea, nodes) => {
+         if (shouldSplit) {
+             const [currentChild, nextChild] = split(child, height, contentArea);
+             // All children are moved to the next page, it doesn't make sense to show the parent on the current page
+-            if (child.children.length > 0 && currentChild.children.length === 0) {
++            // Tagged list companions can intentionally rewind all their children.
++            // Keep their empty fragment and already-consumed break state instead
++            // of restoring the unsplit row (which can exceed a whole page).
++            if (child.children.length > 0 && currentChild.children.length === 0 && !child.props['data-resume-list-item']) {
+                 // But if the current page is empty then we can just include the parent on the current page
+                 if (currentChildren.length === 0) {
+                     currentChildren.push(child, ...futureFixedNodes);
+@@ -3196,7 +3202,74 @@ const splitChildren = (height, contentArea, node) => {
+ };
+ const splitView = (node, height, contentArea) => {
+     const [currentNode, nextNode] = splitNode(node, height);
+-    const [currentChilds, nextChildren] = splitChildren(height, contentArea, node);
++    let [currentChilds, nextChildren] = splitChildren(height, contentArea, node);
++    // Reactive Resume opts list rows into companion pagination. Use the text
++    // fragments after orphan/widow splitting, not estimated font line heights.
++    // Untagged rows and ordinary absolutely positioned nodes are unaffected.
++    if (node.props['data-resume-list-item']) {
++        const hasText = (child) => child && (child.type === P.Text
++            ? child.lines?.length > 0
++            : child.children?.some(hasText));
++        const content = (children) => children.find((child) => child.props['data-resume-list-content']);
++        const markerIndex = node.children.findIndex((child) => child.props['data-resume-list-marker']);
++        const contentIndex = node.children.findIndex((child) => child.props['data-resume-list-content']);
++        const hasMarker = (children) => children.some((child) => child.props['data-resume-list-marker']);
++        const deferredMarker = nextChildren.find((child) => child.props['data-resume-list-marker']);
++        // Presence is advisory once the whole row moves to a fresh page. Consume
++        // the hint on continuation so an impossible window cannot rewind the
++        // same unsplit content indefinitely (including content-first rows).
++        const continuedMarkerProps = (marker) => ({
++            ...(deferredMarker?.props || marker.props),
++            minPresenceAhead: 0,
++        });
++        if (markerIndex !== -1 && !hasMarker(currentChilds) && hasMarker(nextChildren) && hasText(content(currentChilds))) {
++            // A presence hint or page break can defer a marker after content.
++            // Defer unsplit content while retaining the marker's consumed flags.
++            currentChilds = currentChilds.filter((child) => !child.props['data-resume-list-content']);
++            nextChildren = node.children
++                .filter((child) => child.props['data-resume-list-content'] || child.props['data-resume-list-marker'])
++                .map((child) => child.props['data-resume-list-marker']
++                    ? { ...child, props: continuedMarkerProps(child) }
++                    : child);
++        } else if (markerIndex !== -1 && !hasText(content(currentChilds)) && hasText(content(nextChildren))) {
++            // The first text did not fit. Preserve the authored marker/content
++            // order when moving the marker to the next fragment of this row.
++            const marker = node.children[markerIndex];
++            // Preserve break: false after splitNodes has consumed an explicit
++            // page break; restoring the original props would replay it.
++            const nextMarker = {
++                ...marker,
++                props: continuedMarkerProps(marker),
++                box: { ...marker.box, top: 0 },
++            };
++            currentChilds = currentChilds.filter((child) => !child.props['data-resume-list-marker']);
++            nextChildren = nextChildren.filter((child) => !child.props['data-resume-list-marker']);
++            if (markerIndex < contentIndex) nextChildren.unshift(nextMarker);
++            else nextChildren.push(nextMarker);
++        }
++        if (markerIndex !== -1 && !hasMarker(nextChildren) && hasText(content(nextChildren))) {
++            // The marker was fully consumed on an earlier fragment while the
++            // content continues. Page relayout runs Yoga on the remaining
++            // children only, so a missing marker collapses the flex gutter and
++            // continuation lines shift to the row's left edge. Re-seat an
++            // empty marker column pinned to the width Yoga already measured,
++            // preserving the authored indentation without drawing a marker.
++            const marker = node.children[markerIndex];
++            const ghostMarker = {
++                ...marker,
++                children: [],
++                lines: [],
++                box: { ...marker.box, top: 0, height: 0 },
++                props: { ...marker.props, break: false, minPresenceAhead: 0 },
++                style: {
++                    ...marker.style,
++                    ...(typeof marker.box?.width === 'number' ? { width: marker.box.width } : {}),
++                },
++            };
++            if (markerIndex < contentIndex) nextChildren.unshift(ghostMarker);
++            else nextChildren.push(ghostMarker);
++        }
++    }
+     return [
+         assingChildren(currentChilds, currentNode),
+         assingChildren(nextChildren, nextNode),

@@ -1,15 +1,7 @@
 import { VerifyEmail } from "./auth";
 
-interface VerifyEmailTemplateProps {
-	url: string;
-}
-
-const VerifyEmailTemplate = ({ url }: VerifyEmailTemplateProps) => {
-	return <VerifyEmail url={url} />;
-};
-
-export default Object.assign(VerifyEmailTemplate, {
+export default Object.assign(VerifyEmail, {
 	PreviewProps: {
 		url: "https://localhost:3000/auth/verify-email?token=example-token",
-	} satisfies VerifyEmailTemplateProps,
+	} satisfies Parameters<typeof VerifyEmail>[0],
 });

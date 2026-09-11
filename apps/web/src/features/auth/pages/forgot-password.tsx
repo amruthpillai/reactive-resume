@@ -3,11 +3,11 @@ import { Trans } from "@lingui/react/macro";
 import { ArrowRightIcon } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@reactive-resume/ui/components/button";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@reactive-resume/ui/components/form";
 import { Input } from "@reactive-resume/ui/components/input";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { authClient } from "@/libs/auth/client";
 import { useAppForm } from "@/libs/tanstack-form";
 
@@ -22,7 +22,7 @@ export function ForgotPasswordPage() {
 		defaultValues: { email: "" },
 		validators: { onSubmit: formSchema },
 		onSubmit: async ({ value }) => {
-			const toastId = toast.loading(t`Sending password reset email...`);
+			const toastId = toast.add({ type: "loading", description: t`Sending password reset email...` });
 
 			const { error } = await authClient.requestPasswordReset({
 				email: value.email,
@@ -30,19 +30,21 @@ export function ForgotPasswordPage() {
 			});
 
 			if (error) {
-				toast.error(
-					error.message ||
+				toast.add({
+					type: "error",
+					description:
+						error.message ||
 						t({
 							comment: "Fallback toast when requesting password reset email fails without backend message",
 							message: "Failed to send password reset email. Please try again.",
 						}),
-					{ id: toastId },
-				);
+					id: toastId,
+				});
 				return;
 			}
 
 			setSubmitted(true);
-			toast.dismiss(toastId);
+			toast.close(toastId);
 		},
 	});
 
@@ -92,10 +94,7 @@ export function ForgotPasswordPage() {
 									<Input
 										type="email"
 										autoComplete="email"
-										placeholder={t({
-											comment: "Example email placeholder on forgot-password form",
-											message: "john.doe@example.com",
-										})}
+										placeholder="john.doe@example.com"
 										name={field.name}
 										value={field.state.value}
 										onBlur={field.handleBlur}

@@ -82,7 +82,19 @@ const scriptFonts: Record<Script, { serif: string; sansSerif: string }> = {
 	arabic: { serif: "Noto Naskh Arabic", sansSerif: "Noto Sans Arabic" },
 	hebrew: { serif: "Noto Sans Hebrew", sansSerif: "Noto Sans Hebrew" },
 	thai: { serif: "Noto Sans Thai", sansSerif: "Noto Sans Thai" },
+	// Monochrome outlines (TrueType glyf, not CBDT bitmaps) so react-pdf can
+	// embed them; the serif/sans distinction is meaningless for emoji (#3321).
+	emoji: { serif: "Noto Emoji", sansSerif: "Noto Emoji" },
 };
+
+// Covers General Punctuation (U+2000–U+206F) and other symbols missing from
+// many Latin body fonts (e.g. U+2022 BULLET in IBM Plex Serif). react-pdf has
+// no browser-style system fallback, so we register Noto as a last-resort
+// glyph source in the PDF font stack (#3190).
+const punctuationFallbackFonts = {
+	serif: "Noto Serif",
+	sansSerif: "Noto Sans",
+} as const;
 
 export const webFontList = webFontListJSON as WebFont[];
 export const webFontMap = new Map<string, WebFont>(webFontList.map((font) => [font.family, font]));
@@ -91,13 +103,9 @@ export const standardFontList = standardPdfFontList.filter((font) => !webFontMap
 const fontMap = new Map<string, FontRecord>();
 const chinesePrioritySet = new Set<string>(preferredChineseFontFamilies);
 
-function orderFonts(fonts: FontRecord[]) {
-	return [...fonts].sort((a, b) => {
-		return a.family.localeCompare(b.family, undefined, { sensitivity: "base" });
-	});
-}
-
-export const fontList = orderFonts([...standardFontList, ...webFontList]);
+export const fontList = [...standardFontList, ...webFontList].sort((a, b) =>
+	a.family.localeCompare(b.family, undefined, { sensitivity: "base" }),
+);
 
 for (const font of fontList) {
 	fontMap.set(font.family, font);
@@ -127,10 +135,6 @@ export function getFont(family: string) {
 	return alias ? fontMap.get(alias) : undefined;
 }
 
-function getFontCategory(family: string): FontCategory | null {
-	return getFont(family)?.category ?? null;
-}
-
 export function getFontDisplayName(family: string) {
 	return fontDisplayNames[family] ?? family;
 }
@@ -146,6 +150,11 @@ export function getFontSearchKeywords(family: string) {
 function getScriptFont(script: Script, category: FontCategory | null) {
 	const variants = scriptFonts[script];
 	return category === "serif" ? variants.serif : variants.sansSerif;
+}
+
+function getPunctuationFallbackFont(category: FontCategory | null) {
+	const family = category === "serif" ? punctuationFallbackFonts.serif : punctuationFallbackFonts.sansSerif;
+	return getWebFont(family) ? family : null;
 }
 
 export function isStandardPdfFontFamily(family: string) {
@@ -169,6 +178,50 @@ export function sortFontWeights<T extends string>(fontWeights: T[]): T[] {
 }
 
 /**
+ * Resolves the font weight used for bold text (`<strong>`, rich-text bold
+ * and the template `bold` styles).
+ *
+ * The last stored body weight is ambiguous: families are commonly stored as
+ * `["400", "600"]` (the default pairing from the typography picker), which
+ * renders `<strong>` at SemiBold — nearly indistinguishable from Regular for
+ * faces like Open Sans (#3310). Bold text should use the family's true Bold
+ * face when one exists.
+ *
+ * Resolution order:
+ * 1. A stored weight at or above Bold (700) that the family actually has —
+ *    that is a deliberate bold-class choice by the user, so keep it.
+ * 2. The family's true Bold face ("700").
+ * 3. The heaviest available face at or above SemiBold (600).
+ * 4. `null` — the family has no bold-class face; callers keep their existing
+ *    `fontWeights.at(-1)` fallback.
+ *
+ * `family` may be a PDF fallback stack (`string[]`, see #2986); the primary
+ * (first) family decides because `fontWeight` applies across the stack.
+ */
+export function resolveBoldFontWeight(family: string | string[], storedWeights: readonly string[]): FontWeight | null {
+	const familyName = Array.isArray(family) ? family[0] : family;
+	if (!familyName) return null;
+
+	const weights = getFont(familyName)?.weights;
+	if (!weights || weights.length === 0) return null;
+
+	const available = new Set<FontWeight>(weights);
+
+	const deliberateBoldClass = sortFontWeights(
+		storedWeights.filter(
+			(weight): weight is FontWeight => available.has(weight as FontWeight) && Number(weight) >= 700,
+		),
+	);
+	const heaviestDeliberate = deliberateBoldClass[deliberateBoldClass.length - 1];
+	if (heaviestDeliberate) return heaviestDeliberate;
+
+	if (available.has("700")) return "700";
+
+	const boldClass = sortFontWeights(weights.filter((weight) => Number(weight) >= 600));
+	return boldClass[boldClass.length - 1] ?? null;
+}
+
+/**
  * Returns an ordered stack of Noto web fonts to register as glyph-level
  * fallbacks for PDF rendering. react-pdf resolves the font per-codepoint
  * left-to-right across the stack, so listing one font per writing system lets
@@ -185,7 +238,7 @@ export function getPdfFallbackFontFamilies(
 	family: string,
 	options: { locale?: Locale; scripts?: Iterable<Script> } = {},
 ): string[] {
-	const category = getFontCategory(family);
+	const category = getFont(family)?.category ?? null;
 
 	const ordered: Script[] = [];
 	const localeScript = getLocaleScript(options.locale);
@@ -193,7 +246,14 @@ export function getPdfFallbackFontFamilies(
 	if (options.scripts) ordered.push(...options.scripts);
 	if (ordered.some(isCjkScript)) ordered.push("han-simplified");
 
-	return unique(ordered.map((script) => getScriptFont(script, category)))
+	const fallbacks = unique(ordered.map((script) => getScriptFont(script, category)))
 		.filter((candidate) => candidate !== family)
 		.filter((candidate) => Boolean(getWebFont(candidate)));
+
+	const punctuationFallback = getPunctuationFallbackFont(category);
+	if (punctuationFallback && punctuationFallback !== family && !fallbacks.includes(punctuationFallback)) {
+		fallbacks.push(punctuationFallback);
+	}
+
+	return fallbacks;
 }

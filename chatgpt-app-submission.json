@@ -1,0 +1,464 @@
+{
+	"$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
+	"schema_version": 1,
+	"app_info": {
+		"display_name": "Reactive Resume",
+		"subtitle": "Build resumes, track jobs",
+		"description": "Reactive Resume helps users create, import, edit, duplicate, organize, share, and export resumes, and track job applications with contacts, notes, timelines, follow-ups, and PDF attachments. Users can request AI-assisted job extraction, match assessments, tailored resume summaries, and message drafts through their configured AI provider. AI features send job context and, where applicable, full resume data to that provider. Cover-letter drafts are saved; recruiter follow-up drafts are not sent. Uploaded application PDFs are accessible to anyone with their file URL.",
+		"category": "PRODUCTIVITY"
+	},
+	"tools": {
+		"list_resumes": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Retrieves the authenticated user’s resume IDs and metadata, with optional tag filters and sorting, without modifying resumes.",
+				"open_world_justification": "Reads account records without publishing content or changing external systems.",
+				"destructive_justification": "Does not remove or replace resume data."
+			}
+		},
+		"list_resume_tags": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Computes a sorted list of distinct tags from the user’s resumes without modifying them.",
+				"open_world_justification": "Reads only the user’s stored resume tags.",
+				"destructive_justification": "Does not delete or replace tags or resumes."
+			}
+		},
+		"read_resume": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Retrieves the full data of a resume owned by the authenticated user without modifying it.",
+				"open_world_justification": "Returns stored resume data without publishing it or sending it to another service.",
+				"destructive_justification": "Does not delete or overwrite resume content."
+			}
+		},
+		"download_resume_pdf": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Computes a signed, ten-minute PDF download URL for an owned resume or visible cover letter without saving a file or changing the resume.",
+				"open_world_justification": "Returns a temporary download URL without changing public resume visibility or invoking a third-party service.",
+				"destructive_justification": "Does not delete or overwrite the resume or cover letter."
+			}
+		},
+		"create_resume": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Creates a new private resume in the user’s account, optionally populated with sample content.",
+				"open_world_justification": "Creates an account-owned private resume without publishing it.",
+				"destructive_justification": "Creates a new record and rejects a conflicting slug rather than overwriting another resume."
+			}
+		},
+		"import_resume": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Validates supplied resume JSON and saves a new private resume with an automatically assigned name and slug.",
+				"open_world_justification": "Imports data into the user’s account without publishing it or sending it to another service.",
+				"destructive_justification": "Creates a separate resume rather than replacing an existing one."
+			}
+		},
+		"duplicate_resume": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Creates a new private resume containing a copy of an owned resume’s data.",
+				"open_world_justification": "Saves the copy privately even when the original resume is public.",
+				"destructive_justification": "Leaves the source resume intact and rejects conflicting slugs."
+			}
+		},
+		"apply_resume_patch": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Applies JSON Patch operations and saves the resulting resume data and a version snapshot.",
+				"open_world_justification": "Editing a public resume changes the content visible through its existing public link.",
+				"destructive_justification": "Can remove or overwrite existing resume content, with ownership, lock, patch validation, and bounded version-history safeguards."
+			}
+		},
+		"update_resume": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Updates an owned resume’s name, slug, tags, or public visibility and returns its share URL.",
+				"open_world_justification": "Can publish or unpublish a resume and change its public URL.",
+				"destructive_justification": "Can overwrite metadata, replace tags, or revoke anonymous access, while refusing changes to locked resumes."
+			}
+		},
+		"delete_resume": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Deletes the selected resume and attempts to remove its associated stored files.",
+				"open_world_justification": "Deleting a published resume removes its public page and can remove publicly accessible associated files.",
+				"destructive_justification": "Permanently deletes the resume after checking ownership and refusing deletion of locked resumes."
+			}
+		},
+		"lock_resume": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Sets an owned resume’s lock flag to prevent edits and deletion.",
+				"open_world_justification": "Changes an account editing control without publishing content or calling external services.",
+				"destructive_justification": "Preserves resume content and can be reversed with the unlock tool."
+			}
+		},
+		"unlock_resume": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Clears an owned resume’s lock flag to allow subsequent edits and deletion.",
+				"open_world_justification": "Changes an account editing control without publishing content or calling external services.",
+				"destructive_justification": "Does not itself delete or overwrite resume content and can be reversed by locking again."
+			}
+		},
+		"get_resume_statistics": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Retrieves view and download counts and timestamps for an owned resume without incrementing them.",
+				"open_world_justification": "Reads stored statistics without changing public content or external systems.",
+				"destructive_justification": "Does not remove or replace statistics or resume data."
+			}
+		},
+		"list_applications": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Retrieves owned application records, including contacts, notes, document URLs, and timeline, with optional filters.",
+				"open_world_justification": "Reads account records without contacting employers or publishing applications.",
+				"destructive_justification": "Does not delete or overwrite application records."
+			}
+		},
+		"read_application": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Retrieves one owned application with contacts, document URLs, follow-up details, and timeline.",
+				"open_world_justification": "Reads the user’s application record without contacting external systems.",
+				"destructive_justification": "Does not delete or replace application data."
+			}
+		},
+		"list_application_tags": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Retrieves distinct tags used by the user’s job applications without changing them.",
+				"open_world_justification": "Reads stored account tags without external interactions.",
+				"destructive_justification": "Does not remove or overwrite tags."
+			}
+		},
+		"get_application_stats": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Computes counts by stage and source for the user’s non-archived applications without modifying records.",
+				"open_world_justification": "Reads private tracker data without publishing it or contacting employers.",
+				"destructive_justification": "Does not delete or replace application data."
+			}
+		},
+		"create_application": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Creates a tracked job application and an initial stage timeline entry in the user’s account.",
+				"open_world_justification": "Creates a private tracking record without submitting an application to an employer.",
+				"destructive_justification": "Creates a new application rather than replacing an existing record."
+			}
+		},
+		"update_application": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Updates application fields and appends a stage timeline event when the stage changes.",
+				"open_world_justification": "Updates the private tracker without submitting forms or contacting employers.",
+				"destructive_justification": "Can overwrite existing fields, contact lists, tags, and linked document or resume references after ownership checks."
+			}
+		},
+		"add_application_note": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Appends a dated free-text note to an owned application’s timeline.",
+				"open_world_justification": "Stores the note in the private tracker without sending it to anyone.",
+				"destructive_justification": "Appends a new note without overwriting existing timeline entries."
+			}
+		},
+		"update_application_timeline_entry": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Updates an owned application’s timeline date or note text and recalculates its applied date.",
+				"open_world_justification": "Changes private timeline data without contacting employers or publishing it.",
+				"destructive_justification": "Overwrites an existing entry’s date or note text while validating stage ordering and disallowing edits to derived stage text."
+			}
+		},
+		"delete_application_timeline_entry": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Removes a timeline entry from an owned application and recalculates its applied date.",
+				"open_world_justification": "Changes only the private application timeline.",
+				"destructive_justification": "Deletes a note or older stage entry while preventing deletion of the current stage entry."
+			}
+		},
+		"delete_application": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Deletes an owned job application and attempts to delete its owned uploaded documents when no remaining application references them.",
+				"open_world_justification": "Can remove uploaded documents accessible through public file URLs.",
+				"destructive_justification": "Permanently deletes the application and unreferenced owned documents after checking ownership."
+			}
+		},
+		"bulk_update_applications": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Updates stages, archive state, or tags across owned applications and records stage changes.",
+				"open_world_justification": "Changes private tracker records without contacting employers or publishing them.",
+				"destructive_justification": "Can overwrite existing stage and archive values for multiple applications, with updates restricted to owned records."
+			}
+		},
+		"bulk_delete_applications": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Deletes multiple owned applications and attempts to clean up their unreferenced owned uploaded documents.",
+				"open_world_justification": "Can remove attached documents that were accessible through public file URLs.",
+				"destructive_justification": "Permanently deletes matching owned applications and their unreferenced owned documents."
+			}
+		},
+		"import_applications": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": false,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Creates up to 500 private application records and their initial stage timeline entries from supplied rows.",
+				"open_world_justification": "Imports tracking records without submitting applications or contacting employers.",
+				"destructive_justification": "Creates new records rather than overwriting existing applications."
+			}
+		},
+		"attach_application_document": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Uploads a PDF and replaces the selected document attachment on an owned application.",
+				"open_world_justification": "Creates a file URL that anyone with the link can download without signing in.",
+				"destructive_justification": "Replaces the existing attachment and deletes its previous owned file when no other application references it."
+			}
+		},
+		"remove_application_document": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Clears the selected attachment fields and attempts to delete the unreferenced owned uploaded file.",
+				"open_world_justification": "Can remove a PDF accessible through a public file URL.",
+				"destructive_justification": "Removes the attachment and deletes its owned file when no remaining application references it."
+			}
+		},
+		"autofill_application_from_job": {
+			"annotations": {
+				"readOnlyHint": true,
+				"openWorldHint": true,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Computes suggested company, role, location, and salary fields from pasted job text without saving an application.",
+				"open_world_justification": "Sends the pasted job text to the user’s configured AI provider for generation.",
+				"destructive_justification": "Returns suggestions without deleting or overwriting stored records."
+			}
+		},
+		"score_application_match": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Generates a resume-to-job match assessment and saves its score and AI metadata on the application.",
+				"open_world_justification": "Sends the full linked resume and job description to the user’s configured AI provider.",
+				"destructive_justification": "Overwrites the application’s existing match score and AI metadata after checking ownership and required context."
+			}
+		},
+		"tailor_resume_for_application": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": true
+			},
+			"justifications": {
+				"read_only_justification": "Creates a private resume copy with a rewritten summary, replaces the application’s resume link, and appends a timeline note.",
+				"open_world_justification": "Sends the full linked resume and job context to the user’s configured AI provider.",
+				"destructive_justification": "Overwrites the application’s linked resume reference while preserving the original resume."
+			}
+		},
+		"draft_application_message": {
+			"annotations": {
+				"readOnlyHint": false,
+				"openWorldHint": true,
+				"destructiveHint": false
+			},
+			"justifications": {
+				"read_only_justification": "Generates message text and, in cover-letter mode, saves a new cover letter linked to the application.",
+				"open_world_justification": "Sends application context and the full linked resume when available to the user’s configured AI provider without sending the resulting message to a recruiter.",
+				"destructive_justification": "Creates a new cover letter or returns a follow-up draft without deleting or overwriting existing documents."
+			}
+		}
+	},
+	"test_cases": [
+		{
+			"description": "Create and edit a resume, duplicate it, and verify that locking prevents a further edit; use an authenticated review account with unused slugs.",
+			"user_prompt": "Create a private resume named Submission Review with slug submission-review and tag review, using sample data. Read it and change its headline to Software Engineer. Duplicate it as Submission Review Copy with slug submission-review-copy. Lock the original, then try changing its headline to Product Engineer and report whether the edit was rejected.",
+			"file_attachment_urls": null,
+			"tools_triggered": "create_resume, read_resume, apply_resume_patch, duplicate_resume, lock_resume",
+			"expected_output": "Creates two private resumes, changes the original headline before duplication, and rejects the attempted edit after locking without changing the locked resume.",
+			"expected_output_url": null
+		},
+		{
+			"description": "Import synthetic resume data, publish the imported resume, and export PDFs; the source resume has no visible cover letter.",
+			"user_prompt": "Find my Submission Review Copy resume, read its data, and import that data as a new resume. Rename the imported resume Submission Review Public, set its slug to submission-review-public, and make it public. Give me its share link and a resume PDF download link, then try exporting its cover letter.",
+			"file_attachment_urls": null,
+			"tools_triggered": "list_resumes, read_resume, import_resume, update_resume, download_resume_pdf",
+			"expected_output": "Creates a separate resume, explicitly reports that it is public, returns its share link and a PDF link expiring in ten minutes, and reports that no visible cover letter is available without inventing a document.",
+			"expected_output_url": null
+		},
+		{
+			"description": "Track a synthetic application, update its stage, append a note, and inspect aggregate results; start with no other applications.",
+			"user_prompt": "Create a saved application for Example Company, Software Engineer, tagged review. Find and read it, move it to interview, and add a timeline note saying Technical interview scheduled. Show my application tags and counts by stage.",
+			"file_attachment_urls": null,
+			"tools_triggered": "create_application, list_applications, read_application, update_application, add_application_note, list_application_tags, get_application_stats",
+			"expected_output": "Creates a private tracker record, records the stage change and note, returns the review tag and interview count, and does not submit an application or contact an employer.",
+			"expected_output_url": null
+		},
+		{
+			"description": "Replace and remove a synthetic PDF attachment; reviewer supplies two valid PDFs under 10MB and one over 10MB, and no other application references the originals.",
+			"user_prompt": "For my Example Company application, attach the first synthetic resume PDF I provide. I understand anyone with its file link can download it. Replace it with the second PDF, try replacing that with my PDF larger than 10MB, then remove the accepted attachment.",
+			"file_attachment_urls": null,
+			"tools_triggered": "list_applications, attach_application_document, remove_application_document",
+			"expected_output": "Discloses public-link access, attaches and replaces valid PDFs, removes the unreferenced old file, rejects the oversized replacement without changing the accepted attachment, then clears and deletes the final unreferenced file.",
+			"expected_output_url": null
+		},
+		{
+			"description": "Exercise AI assistance with an enabled, tested default provider and a synthetic resume; use an application with job text and linked resume.",
+			"user_prompt": "Extract fields from this posting: Example Company seeks a Software Engineer in Berlin to build TypeScript web applications. Create a saved application from those fields and keep that posting as its job description. Link my Submission Review Copy resume, score the match, and make a tailored resume copy for this job. Draft a cover letter and a recruiter follow-up. I authorize sending the job and full resume data to my configured AI provider, replacing this application’s resume link with the tailored copy, and saving the cover letter; do not send either message.",
+			"file_attachment_urls": null,
+			"tools_triggered": "autofill_application_from_job, create_application, list_resumes, update_application, score_application_match, tailor_resume_for_application, draft_application_message",
+			"expected_output": "Extracts stated fields without inventing salary, saves the application and match assessment, creates a private copy with a rewritten summary and replaces the resume link, saves a new cover letter, and returns an unsent follow-up draft.",
+			"expected_output_url": null
+		}
+	],
+	"negative_test_cases": [
+		{
+			"description": "Do not invoke the app to search job boards.",
+			"user_prompt": "Find software engineering vacancies posted today across job boards.",
+			"file_attachment_urls": null,
+			"tools_triggered": null,
+			"expected_output": "The app should not be invoked because it does not search job boards or fetch vacancies.",
+			"expected_output_url": null
+		},
+		{
+			"description": "Do not invoke the app to send a message or submit an application.",
+			"user_prompt": "Email this finished cover letter to the recruiter and submit my application on the employer’s website; no drafting or tracking changes are needed.",
+			"file_attachment_urls": null,
+			"tools_triggered": null,
+			"expected_output": "The app should not be invoked because it cannot send recruiter messages or submit external application forms.",
+			"expected_output_url": null
+		},
+		{
+			"description": "Do not invoke the app for general interview practice without account data.",
+			"user_prompt": "Give me five common behavioral interview questions; do not use my saved resumes or applications.",
+			"file_attachment_urls": null,
+			"tools_triggered": null,
+			"expected_output": "The app should not be invoked because general interview practice does not require its account tools.",
+			"expected_output_url": null
+		}
+	]
+}

@@ -1,9 +1,9 @@
 ---
-title: "Using the AI Agent Workspace"
+title: "Using the AI Agent workspace"
 description: "Start an isolated AI draft in the Reactive Resume Agent workspace, chat with the agent, review proposed resume patches, and resume prior threads."
 ---
 
-The AI Agent workspace is a dedicated place to work with an AI assistant on a resume draft. It keeps the conversation, tool activity, and read-only resume preview in one full-screen view.
+The AI Agent workspace is where you work with an AI assistant on a resume draft. It keeps the conversation, the tool activity, and a read-only resume preview in one full-screen view.
 
 <Info>
   Agent threads edit an AI draft copy of your resume. Your original resume is not changed when you start from an existing resume.
@@ -11,7 +11,7 @@ The AI Agent workspace is a dedicated place to work with an AI assistant on a re
 
 ## Before you start
 
-You need at least one AI provider that is tested and enabled in **Dashboard -> Settings -> Integrations**. For setup, see [Using Artificial Intelligence](/guides/using-ai).
+You need at least one AI provider that is tested and enabled in **Dashboard → Settings → Integrations**. For setup, see [Using artificial intelligence](/guides/using-ai).
 
 If you self-host Reactive Resume, the agent workspace also requires the server-side agent configuration described in [Self-hosting with Docker](/self-hosting/docker).
 
@@ -76,15 +76,47 @@ The agent works best with concrete instructions:
 - "Compare this draft against a product manager role and update the keywords."
 - "Ask me before changing anything that looks uncertain."
 
-You can attach files or images from the composer. The agent can read uploaded attachments when they are relevant to your request.
+You can attach files or images from the composer. The agent reads uploaded attachments when they are relevant to your request.
+
+For supplied text, paste the content directly into the chat. Plain text, Markdown, and JSON attachments are available to the agent as extracted text. Images and supported files such as PDFs are passed directly to the selected provider when it can use them. If an attachment format is unsupported by the selected provider, paste the relevant text instead.
 
 <Note>
   Text input is supported. Voice input is not supported in the agent workspace yet.
 </Note>
 
-## Review patches
+## Tailor a resume to a supplied job description
 
-When the agent edits the resume, the patch is applied immediately to the AI draft. The chat shows a small **Patch applied** line.
+Use this controlled workflow to test tailoring without relying on live web research:
+
+<Steps>
+  <Step title="Set up an AI provider">
+    In **Dashboard → Settings → Integrations**, configure a supported AI provider, test it, and make sure it is enabled. Then return to **Agents**.
+  </Step>
+
+  <Step title="Open a sample resume draft">
+    Start a new thread and select a resume containing sample experience data. The agent creates an isolated AI draft, so the source resume remains unchanged.
+  </Step>
+
+  <Step title="Supply the target role">
+    Paste this sample job description into the chat:
+
+    ```text
+    Target role: backend engineer. Required: TypeScript and PostgreSQL.
+    ```
+
+    Then ask: "Tailor the existing experience for this role. Do not invent qualifications or experience."
+  </Step>
+
+  <Step title="Review the draft">
+    Review the updated draft. To approve patches before they are applied, inspect their JSON, or restore an earlier state, follow [Review edits and patches](#review-edits-and-patches).
+  </Step>
+</Steps>
+
+This workflow also works when the selected provider/model has no live web search. Supplying the job description gives the agent the context it needs for ordinary resume editing.
+
+## Review edits and patches
+
+By default, the agent applies resume patches immediately to the AI draft. Turn on **Review edits** in the thread menu if you want to approve or deny patches before they are applied. Applied patches appear in chat as a small **Patch applied** line.
 
 Open the line to inspect the raw JSON Patch and use **Restore** if you want to roll the draft back to the state before that patch. Restoring an older patch also rolls back patches applied after it.
 
@@ -96,7 +128,7 @@ Open the line to inspect the raw JSON Patch and use **Restore** if you want to r
 
 If the agent needs a decision, it may show a question card with recommended answers. Click the answer you want to send it back to the agent.
 
-This is useful when the agent finds ambiguous instructions, missing job context, or a change that depends on your preference.
+That happens when your instructions are ambiguous, job context is missing, or a change depends on your preference.
 
 ## Use the resume preview
 

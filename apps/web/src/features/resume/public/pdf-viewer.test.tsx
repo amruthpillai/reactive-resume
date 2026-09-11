@@ -18,6 +18,9 @@ const pdfViewerMock = vi.hoisted(() => {
 		constructorOptions: [] as Array<{ abortSignal?: AbortSignal; container: HTMLDivElement }>,
 		createResumePdfBlob: vi.fn(async () => new Blob(["%PDF"], { type: "application/pdf" })),
 		getDocument: vi.fn(() => loadingTask),
+		fetch: vi.fn(
+			async (_input: string | URL) => new Response(new Blob(["%PDF-fallback"], { type: "application/pdf" })),
+		),
 		instances: [] as Array<{
 			abortSignal?: AbortSignal;
 			setDocument: ReturnType<typeof vi.fn>;
@@ -92,6 +95,8 @@ beforeEach(() => {
 	pdfViewerMock.createResumePdfBlob.mockClear();
 	pdfViewerMock.getDocument.mockClear();
 	pdfViewerMock.loadingTask.destroy.mockClear();
+	pdfViewerMock.fetch.mockClear();
+	vi.stubGlobal("fetch", pdfViewerMock.fetch);
 });
 
 describe("PdfViewer", () => {
@@ -112,5 +117,27 @@ describe("PdfViewer", () => {
 		expect(abortSignal?.aborted).toBe(true);
 		expect(viewer.setDocument).toHaveBeenCalledWith(null);
 		expect(pdfViewerMock.loadingTask.destroy).toHaveBeenCalledTimes(1);
+	});
+
+	it("renders exposed semantic source through the shared PDF entrypoint", async () => {
+		const semanticData = structuredClone(sampleResumeData);
+		semanticData.metadata.stylesheet = {
+			mode: "semantic",
+			source: { languageVersion: 1, text: "@version 1;\nname { color: #123456; }\n" },
+		};
+
+		render(<PdfViewer data={semanticData} publicResume={{ username: "amruth", slug: "sample" }} />);
+
+		await waitFor(() => expect(pdfViewerMock.createResumePdfBlob).toHaveBeenCalledWith(semanticData));
+		expect(pdfViewerMock.fetch).not.toHaveBeenCalled();
+	});
+
+	it("uses the authorized PDF fallback after browser generation rejects", async () => {
+		pdfViewerMock.createResumePdfBlob.mockRejectedValueOnce(new Error("browser renderer failed"));
+
+		render(<PdfViewer data={sampleResumeData} publicResume={{ username: "amruth", slug: "sample" }} />);
+
+		await waitFor(() => expect(pdfViewerMock.fetch).toHaveBeenCalledTimes(1));
+		expect(pdfViewerMock.fetch).toHaveBeenCalledWith("/api/resumes/amruth/sample/pdf", { credentials: "include" });
 	});
 });

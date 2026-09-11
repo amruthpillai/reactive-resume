@@ -23,6 +23,7 @@ describe("handleResumePdfDownload", () => {
 			ok: true,
 			resumeId: "resume-1",
 			userId: "user-1",
+			target: "resume",
 			expiresAt: "2026-06-01T10:10:00.000Z",
 		});
 		mocks.createResumePdfDownload.mockResolvedValueOnce({
@@ -49,6 +50,7 @@ describe("handleResumePdfDownload", () => {
 			ok: true,
 			resumeId: "resume-1",
 			userId: "user-1",
+			target: "cover-letter",
 			expiresAt: "2026-06-01T10:10:00.000Z",
 		});
 		mocks.createResumePdfDownload.mockResolvedValueOnce({
@@ -66,6 +68,62 @@ describe("handleResumePdfDownload", () => {
 			userId: "user-1",
 			target: "cover-letter",
 		});
+	});
+
+	it("defaults a legacy token without a target to resume", async () => {
+		mocks.verifyResumePdfDownloadToken.mockReturnValueOnce({
+			ok: true,
+			resumeId: "resume-1",
+			userId: "user-1",
+			expiresAt: "2026-06-01T10:10:00.000Z",
+		});
+		mocks.createResumePdfDownload.mockResolvedValueOnce({
+			headers: { "content-disposition": 'attachment; filename="Cover Letter.pdf"' },
+			body: new File([], "Cover Letter.pdf", { type: "application/pdf" }),
+		});
+
+		await handleResumePdfDownload(new Request("https://example.com/api/resumes/resume-1/pdf?token=legacy"), "resume-1");
+
+		expect(mocks.createResumePdfDownload).toHaveBeenCalledWith({
+			id: "resume-1",
+			userId: "user-1",
+			target: "resume",
+		});
+	});
+
+	it("rejects a cover-letter target for a legacy token without one", async () => {
+		mocks.verifyResumePdfDownloadToken.mockReturnValueOnce({
+			ok: true,
+			resumeId: "resume-1",
+			userId: "user-1",
+			expiresAt: "2026-06-01T10:10:00.000Z",
+		});
+
+		const response = await handleResumePdfDownload(
+			new Request("https://example.com/api/resumes/resume-1/pdf?token=legacy&target=cover-letter"),
+			"resume-1",
+		);
+
+		expect(response.status).toBe(401);
+		expect(mocks.createResumePdfDownload).not.toHaveBeenCalled();
+	});
+
+	it("rejects a target that differs from the signed token", async () => {
+		mocks.verifyResumePdfDownloadToken.mockReturnValueOnce({
+			ok: true,
+			resumeId: "resume-1",
+			userId: "user-1",
+			target: "resume",
+			expiresAt: "2026-06-01T10:10:00.000Z",
+		});
+
+		const response = await handleResumePdfDownload(
+			new Request("https://example.com/api/resumes/resume-1/pdf?token=signed&target=cover-letter"),
+			"resume-1",
+		);
+
+		expect(response.status).toBe(401);
+		expect(mocks.createResumePdfDownload).not.toHaveBeenCalled();
 	});
 
 	it("rejects missing, invalid, and expired tokens before rendering", async () => {

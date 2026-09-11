@@ -3,6 +3,7 @@ import z from "zod";
 import * as schema from "@reactive-resume/db/schema";
 import { jsonPatchOperationSchema } from "@reactive-resume/resume/patch";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
+import { writableResumeDataSchema } from "@reactive-resume/schema/resume/write";
 
 const resumeSchema = createSelectSchema(schema.resume, {
 	id: z.string().describe("The ID of the resume."),
@@ -10,6 +11,7 @@ const resumeSchema = createSelectSchema(schema.resume, {
 	slug: z.string().trim().min(1).describe("The slug of the resume."),
 	tags: z.array(z.string()).describe("The tags of the resume."),
 	isPublic: z.boolean().describe("Whether the resume is public."),
+	showDownloadButtons: z.boolean().describe("Whether download buttons are shown on the public resume page."),
 	isLocked: z.boolean().describe("Whether the resume is locked."),
 	password: z.string().trim().min(6).max(64).nullable().describe("The password of the resume, if any."),
 	data: resumeDataSchema,
@@ -54,15 +56,15 @@ export const resumeDto = {
 	},
 
 	import: {
-		input: resumeSchema.pick({ data: true }),
+		input: z.object({ data: writableResumeDataSchema }),
 		output: z.string().describe("The ID of the imported resume."),
 	},
 
 	update: {
 		input: resumeSchema
-			.pick({ name: true, slug: true, tags: true, data: true, isPublic: true })
+			.pick({ name: true, slug: true, tags: true, data: true, isPublic: true, showDownloadButtons: true })
 			.partial()
-			.extend({ id: z.string() }),
+			.extend({ id: z.string(), data: writableResumeDataSchema.optional() }),
 		output: resumeSchema.omit({ password: true, userId: true, createdAt: true }).extend({ hasPassword: z.boolean() }),
 	},
 

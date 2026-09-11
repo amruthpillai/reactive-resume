@@ -1,15 +1,7 @@
 import { ResetPasswordEmail } from "./auth";
 
-interface ResetPasswordTemplateProps {
-	url: string;
-}
-
-const ResetPasswordTemplate = ({ url }: ResetPasswordTemplateProps) => {
-	return <ResetPasswordEmail url={url} />;
-};
-
-export default Object.assign(ResetPasswordTemplate, {
+export default Object.assign(ResetPasswordEmail, {
 	PreviewProps: {
 		url: "https://localhost:3000/auth/reset-password?token=example-token",
-	} satisfies ResetPasswordTemplateProps,
+	} satisfies Parameters<typeof ResetPasswordEmail>[0],
 });

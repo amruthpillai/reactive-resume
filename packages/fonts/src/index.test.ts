@@ -8,6 +8,7 @@ import {
 	getWebFont,
 	getWebFontSource,
 	isStandardPdfFontFamily,
+	resolveBoldFontWeight,
 	resolveLegacyFontAlias,
 	standardFontList,
 	webFontList,
@@ -147,40 +148,68 @@ describe("getWebFontSource", () => {
 });
 
 describe("getPdfFallbackFontFamilies", () => {
+	it("appends a Noto punctuation fallback for Latin-only PDF fonts (#3190)", () => {
+		expect(getPdfFallbackFontFamilies("Times-Roman")).toEqual(["Noto Serif"]);
+		expect(getPdfFallbackFontFamilies("Helvetica")).toEqual(["Noto Sans"]);
+		expect(getPdfFallbackFontFamilies("IBM Plex Serif")).toEqual(["Noto Serif"]);
+	});
+
 	it("puts the Korean Noto font first for the ko-KR locale (Hangul needs KR, not SC)", () => {
-		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ko-KR" })).toEqual(["Noto Serif KR", "Noto Serif SC"]);
-		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR" })).toEqual(["Noto Sans KR", "Noto Sans SC"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ko-KR" })).toEqual([
+			"Noto Serif KR",
+			"Noto Serif SC",
+			"Noto Serif",
+		]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR" })).toEqual([
+			"Noto Sans KR",
+			"Noto Sans SC",
+			"Noto Sans",
+		]);
 	});
 
 	it("uses the Japanese Noto font for the ja-JP locale", () => {
-		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ja-JP" })).toEqual(["Noto Serif JP", "Noto Serif SC"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ja-JP" })).toEqual([
+			"Noto Serif JP",
+			"Noto Serif SC",
+			"Noto Serif",
+		]);
 	});
 
 	it("uses the Traditional Chinese Noto font for the zh-TW locale", () => {
-		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "zh-TW" })).toEqual(["Noto Serif TC", "Noto Serif SC"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "zh-TW" })).toEqual([
+			"Noto Serif TC",
+			"Noto Serif SC",
+			"Noto Serif",
+		]);
 	});
 
-	it("returns only the Simplified Chinese font for zh-CN (unchanged behavior)", () => {
-		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "zh-CN" })).toEqual(["Noto Serif SC"]);
+	it("uses the Simplified Chinese font and punctuation fallback for zh-CN", () => {
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "zh-CN" })).toEqual(["Noto Serif SC", "Noto Serif"]);
 	});
 
 	it("uses the Arabic Noto font for the fa-IR (Persian) and ar-SA locales", () => {
-		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "fa-IR" })).toEqual(["Noto Sans Arabic"]);
-		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ar-SA" })).toEqual(["Noto Naskh Arabic"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "fa-IR" })).toEqual(["Noto Sans Arabic", "Noto Sans"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "ar-SA" })).toEqual(["Noto Naskh Arabic", "Noto Serif"]);
 	});
 
 	it("uses the Hebrew Noto font for he-IL, reusing the sans font for serif (no Noto Serif Hebrew)", () => {
-		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "he-IL" })).toEqual(["Noto Sans Hebrew"]);
-		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "he-IL" })).toEqual(["Noto Sans Hebrew"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "he-IL" })).toEqual(["Noto Sans Hebrew", "Noto Sans"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { locale: "he-IL" })).toEqual(["Noto Sans Hebrew", "Noto Serif"]);
 	});
 
 	it("uses the Thai Noto font for th-TH", () => {
-		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "th-TH" })).toEqual(["Noto Sans Thai"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "th-TH" })).toEqual(["Noto Sans Thai", "Noto Sans"]);
+	});
+
+	it("uses Noto Emoji for detected emoji content, for serif and sans stacks alike (#3321)", () => {
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["emoji"] })).toEqual(["Noto Emoji", "Noto Sans"]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { scripts: ["emoji"] })).toEqual(["Noto Emoji", "Noto Serif"]);
 	});
 
 	it("does not append the Simplified Chinese safety net for non-CJK scripts", () => {
-		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["arabic"] })).toEqual(["Noto Sans Arabic"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["arabic"] })).toEqual(["Noto Sans Arabic", "Noto Sans"]);
 		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["thai"] })).not.toContain("Noto Sans SC");
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["emoji"] })).not.toContain("Noto Sans SC");
 	});
 
 	it("orders the locale script first, then content scripts (mixed RTL + CJK resume)", () => {
@@ -188,21 +217,31 @@ describe("getPdfFallbackFontFamilies", () => {
 			"Noto Sans KR",
 			"Noto Sans Arabic",
 			"Noto Sans SC",
+			"Noto Sans",
 		]);
 	});
 
 	it("includes a Korean font before SC when Hangul is detected in Latin-locale content", () => {
-		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["hangul"] })).toEqual(["Noto Sans KR", "Noto Sans SC"]);
+		expect(getPdfFallbackFontFamilies("Helvetica", { scripts: ["hangul"] })).toEqual([
+			"Noto Sans KR",
+			"Noto Sans SC",
+			"Noto Sans",
+		]);
 	});
 
 	it("dedupes the locale script and content scripts", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR", scripts: ["hangul", "han-simplified"] })).toEqual(
-			["Noto Sans KR", "Noto Sans SC"],
+			["Noto Sans KR", "Noto Sans SC", "Noto Sans"],
 		);
 	});
 
 	it("excludes the family itself when it already is a fallback", () => {
-		expect(getPdfFallbackFontFamilies("Noto Sans KR", { locale: "ko-KR" })).toEqual(["Noto Sans SC"]);
+		expect(getPdfFallbackFontFamilies("Noto Sans KR", { locale: "ko-KR" })).toEqual(["Noto Sans SC", "Noto Sans"]);
+	});
+
+	it("omits the punctuation fallback when the primary family is already the punctuation font", () => {
+		expect(getPdfFallbackFontFamilies("Noto Serif")).toEqual([]);
+		expect(getPdfFallbackFontFamilies("Noto Sans")).toEqual([]);
 	});
 
 	it("only returns fonts that exist in the webfontlist", () => {
@@ -255,5 +294,61 @@ describe("legacy font compatibility (#2989)", () => {
 		// Users who picked "Times New Roman" should keep seeing that label
 		// in the typography sidebar — the alias is a render-time concern only.
 		expect(getFontDisplayName("Times New Roman")).toBe("Times New Roman");
+	});
+});
+
+describe("locale coverage fonts (#3098)", () => {
+	it("resolves Vazirmatn from the webfont catalog", () => {
+		expect(getFont("Vazirmatn")?.family).toBe("Vazirmatn");
+		expect(getWebFont("Vazirmatn")?.category).toBe("sans-serif");
+	});
+
+	it("returns a gstatic source for Vazirmatn regular so PDF registration can load it", () => {
+		const regularSource = getWebFont("Vazirmatn")?.files["400"];
+		expect(regularSource).toBeDefined();
+
+		const source = getWebFontSource("Vazirmatn", "400");
+		expect(source).toBe(regularSource);
+		expect(source).toEqual(expect.stringContaining("fonts.gstatic.com"));
+		expect(source).toEqual(expect.stringMatching(/\.ttf(\?|$)/));
+	});
+});
+
+describe("resolveBoldFontWeight (#3310)", () => {
+	it("prefers the family's true Bold face over the default Regular+SemiBold pairing", () => {
+		// Open Sans ships 300–800; the typography picker stores ["400", "600"],
+		// which rendered <strong> at SemiBold — nearly invisible next to Regular.
+		expect(resolveBoldFontWeight("Open Sans", ["400", "600"])).toBe("700");
+	});
+
+	it("keeps a deliberate bold-class stored weight (>= 700)", () => {
+		expect(resolveBoldFontWeight("Open Sans", ["400", "800"])).toBe("800");
+	});
+
+	it("is stable for families already stored with their Bold face", () => {
+		// PT Sans ships exactly ["400", "700"]; bold already renders correctly.
+		expect(resolveBoldFontWeight("PT Sans", ["400", "700"])).toBe("700");
+	});
+
+	it("uses the heaviest face at or above SemiBold when the family has no Bold face", () => {
+		// Londrina Solid ships 100/300/400/900 — no 700, so its 900 is the
+		// only bold-class face available.
+		expect(resolveBoldFontWeight("Londrina Solid", ["300", "400"])).toBe("900");
+	});
+
+	it("returns null when the family has no bold-class face at all", () => {
+		// Archivo Black ships a single 400 face; callers keep their fallback.
+		expect(resolveBoldFontWeight("Archivo Black", ["400"])).toBeNull();
+	});
+
+	it("returns null for unknown families so callers keep their fallback", () => {
+		expect(resolveBoldFontWeight("Not A Real Font", ["400", "600"])).toBeNull();
+		expect(resolveBoldFontWeight("", ["400"])).toBeNull();
+	});
+
+	it("resolves a PDF fallback stack by its primary family", () => {
+		// CJK fallback stacks widen fontFamily to string[] (#2986); the
+		// user-chosen primary family decides the bold weight.
+		expect(resolveBoldFontWeight(["Open Sans", "Noto Sans"], ["400", "600"])).toBe("700");
 	});
 });

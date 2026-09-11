@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
@@ -17,7 +18,7 @@ const resumeMock = vi.hoisted(() => ({
 				id: string;
 				name: string;
 				slug: string;
-				data: typeof defaultResumeData;
+				data: ResumeData;
 		  },
 }));
 
@@ -50,7 +51,12 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
-	resumeMock.resume = { id: "r1", name: "My Resume", slug: "my-resume", data: defaultResumeData };
+	const data = structuredClone(defaultResumeData);
+	data.metadata.stylesheet = {
+		mode: "semantic",
+		source: { languageVersion: 1, text: "@version 1;\nname {" },
+	};
+	resumeMock.resume = { id: "r1", name: "My Resume", slug: "my-resume", data };
 });
 
 afterEach(() => {
@@ -96,7 +102,7 @@ describe("ExportSectionBuilder", () => {
 		expect(filename).toBe("My Resume.md");
 	});
 
-	it("downloads a JSON blob when the JSON button is clicked", () => {
+	it("downloads the current stylesheet source in JSON", async () => {
 		renderExport();
 		openDialog();
 		fireEvent.click(screen.getByRole("button", { name: "Download JSON" }));
@@ -107,6 +113,8 @@ describe("ExportSectionBuilder", () => {
 		expect(blob).toBeInstanceOf(Blob);
 		expect((blob as Blob).type).toBe("application/json");
 		expect(filename).toBe("My Resume.json");
+		const exported = JSON.parse(await (blob as Blob).text());
+		expect(exported.metadata.stylesheet).toEqual(resumeMock.resume?.data.metadata.stylesheet);
 	});
 
 	it("calls buildDocx and downloads the resulting blob when DOCX is clicked", async () => {
@@ -128,6 +136,7 @@ describe("ExportSectionBuilder", () => {
 		await Promise.resolve();
 
 		expect(createResumePdfBlob).toHaveBeenCalledTimes(1);
+		expect(createResumePdfBlob).toHaveBeenCalledWith(resumeMock.resume?.data, undefined, undefined);
 		expect(downloadWithAnchor).toHaveBeenCalledTimes(1);
 		expect(downloadWithAnchor.mock.calls[0]?.[1]).toBe("My Resume.pdf");
 	});

@@ -12,9 +12,10 @@ import {
 	SpinnerGapIcon,
 } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useCallback, useState } from "react";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { cn } from "@reactive-resume/utils/style";
+import { CoverLetterEditorDialog } from "@/features/cover-letters/editor-dialog";
 import { orpc } from "@/libs/orpc/client";
 import { applicationsListQueryKey } from "../queries";
 
@@ -102,6 +103,7 @@ type Props = { application: Application };
 export function ApplicationAiCopilot({ application }: Props) {
 	const queryClient = useQueryClient();
 	const [draft, setDraft] = useState<{ kind: string; text: string } | null>(null);
+	const [coverLetterId, setCoverLetterId] = useState<string | null>(null);
 
 	const invalidate = () => {
 		void queryClient.invalidateQueries({ queryKey: applicationsListQueryKey() });
@@ -113,29 +115,48 @@ export function ApplicationAiCopilot({ application }: Props) {
 	const matchScore = useMutation(
 		orpc.applications.ai.matchScore.mutationOptions({
 			onSuccess: invalidate,
-			onError: (error) => toast.error(error.message || t`Match scoring failed.`),
+			onError: (error) => toast.add({ type: "error", description: error.message || t`Match scoring failed.` }),
 		}),
 	);
 	const tailorResume = useMutation(
 		orpc.applications.ai.tailorResume.mutationOptions({
 			onSuccess: (result) => {
 				invalidate();
-				toast.success(t`Created "${result.name}" and linked it to this application.`);
+				toast.add({ type: "success", description: t`Created "${result.name}" and linked it to this application.` });
 			},
-			onError: (error) => toast.error(error.message || t`Tailoring failed.`),
+			onError: (error) => toast.add({ type: "error", description: error.message || t`Tailoring failed.` }),
 		}),
 	);
 	const draftMessage = useMutation(
 		orpc.applications.ai.draftMessage.mutationOptions({
-			onSuccess: (result, variables) => setDraft({ kind: variables.kind, text: result.text }),
-			onError: (error) => toast.error(error.message || t`Drafting failed.`),
+			onSuccess: (result, variables) => {
+				if (result.coverLetterId) {
+					setDraft(null);
+					setCoverLetterId(result.coverLetterId);
+					void queryClient.invalidateQueries({ queryKey: orpc.coverLetters.list.key() });
+				} else {
+					setDraft({ kind: variables.kind, text: result.text });
+				}
+			},
+			onError: (error) => toast.add({ type: "error", description: error.message || t`Drafting failed.` }),
 		}),
 	);
-
 	const pending = matchScore.isPending || tailorResume.isPending || draftMessage.isPending;
 	const canScore = !!application.resumeId && !!application.jobDescription;
 	const score = application.matchScore;
 	const gaps = aiGaps(application);
+	const copyDraft = useCallback(async () => {
+		try {
+			if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+			await navigator.clipboard.writeText(draft?.text ?? "");
+			toast.add({ type: "success", description: t`Copied to clipboard.` });
+		} catch {
+			toast.add({
+				type: "error",
+				description: t`Could not copy to clipboard. Please copy the text manually.`,
+			});
+		}
+	}, [draft?.text]);
 
 	return (
 		<section className="overflow-hidden rounded-xl border border-primary/15 bg-primary/[0.04]">
@@ -152,7 +173,7 @@ export function ApplicationAiCopilot({ application }: Props) {
 			<div className="px-3.5 py-3">
 				{!canScore ? (
 					<p className="rounded-lg bg-muted/50 p-2.5 text-muted-foreground text-xs">
-						<Trans>Link a resume and add a job description (Edit) to score your fit and tailor a copy.</Trans>
+						<Trans>Link a resume and paste the job description (Edit) to score your fit and tailor a copy.</Trans>
 					</p>
 				) : score == null ? (
 					<button
@@ -221,14 +242,16 @@ export function ApplicationAiCopilot({ application }: Props) {
 					icon={<EnvelopeSimpleIcon />}
 					title={<Trans>Draft a cover letter</Trans>}
 					description={t`From your resume and the posting`}
-					pending={draftMessage.isPending && draft?.kind !== "follow-up"}
+					disabled={draftMessage.isPending}
+					pending={draftMessage.isPending && draftMessage.variables?.kind === "cover-letter"}
 					onClick={() => draftMessage.mutate({ id: application.id, kind: "cover-letter" })}
 				/>
 				<ActionRow
 					icon={<PaperPlaneTiltIcon />}
 					title={<Trans>Draft a follow-up</Trans>}
 					description={t`A friendly nudge for the recruiter`}
-					pending={draftMessage.isPending && draft?.kind === "follow-up"}
+					disabled={draftMessage.isPending}
+					pending={draftMessage.isPending && draftMessage.variables?.kind === "follow-up"}
 					onClick={() => draftMessage.mutate({ id: application.id, kind: "follow-up" })}
 				/>
 			</div>
@@ -243,10 +266,7 @@ export function ApplicationAiCopilot({ application }: Props) {
 							<button
 								type="button"
 								className="inline-flex items-center gap-1 text-muted-foreground text-xs hover:text-foreground"
-								onClick={() => {
-									void navigator.clipboard.writeText(draft.text);
-									toast.success(t`Copied to clipboard.`);
-								}}
+								onClick={() => void copyDraft()}
 							>
 								<CopyIcon className="size-3.5" /> <Trans>Copy</Trans>
 							</button>
@@ -264,6 +284,7 @@ export function ApplicationAiCopilot({ application }: Props) {
 					</p>
 				</div>
 			)}
+			{coverLetterId && <CoverLetterEditorDialog letterId={coverLetterId} onClose={() => setCoverLetterId(null)} />}
 		</section>
 	);
 }

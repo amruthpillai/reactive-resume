@@ -27,19 +27,19 @@ type SocialLink = {
 const getResourceLinks = (): FooterLinkItem[] => [
 	{ url: "https://docs.rxresu.me", label: t`Documentation` },
 	{ url: "https://opencollective.com/reactive-resume/donate", label: t`Sponsorships` },
-	{ url: "https://github.com/amruthpillai/reactive-resume", label: t`Source Code` },
+	{ url: "https://github.com/reactive-resume/app", label: t`Source Code` },
 	{ url: "https://docs.rxresu.me/changelog", label: t`Changelog` },
 ];
 
 const getCommunityLinks = (): FooterLinkItem[] => [
-	{ url: "https://github.com/amruthpillai/reactive-resume/issues", label: t`Report an issue` },
+	{ url: "https://github.com/reactive-resume/app/issues", label: t`Report an issue` },
 	{ url: "https://crowdin.com/project/reactive-resume", label: t`Translations` },
 	{ url: "https://reddit.com/r/reactiveresume", label: t`Subreddit` },
 	{ url: "https://discord.gg/aSyA5ZSxpb", label: t`Discord` },
 ];
 
 const socialLinks: SocialLink[] = [
-	{ url: "https://github.com/amruthpillai/reactive-resume", label: t`GitHub`, icon: GithubLogoIcon },
+	{ url: "https://github.com/reactive-resume/app", label: t`GitHub`, icon: GithubLogoIcon },
 	{ url: "https://linkedin.com/in/amruthpillai", label: t`LinkedIn`, icon: LinkedinLogoIcon },
 	{ url: "https://x.com/KingOKings", label: t`X (Twitter)`, icon: XLogoIcon },
 ];
@@ -63,8 +63,7 @@ export function Footer() {
 						<h2 className="font-semibold text-lg tracking-tight">Reactive Resume</h2>
 						<p className="max-w-xs text-muted-foreground text-sm leading-relaxed">
 							<Trans>
-								A free and open-source resume builder that simplifies the process of creating, updating, and sharing
-								your resume.
+								A free and open-source resume builder that makes it easy to create, update, and share your resume.
 							</Trans>
 						</p>
 					</div>

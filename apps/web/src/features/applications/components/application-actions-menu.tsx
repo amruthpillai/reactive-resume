@@ -10,7 +10,6 @@ import {
 	TrayArrowUpIcon,
 } from "@phosphor-icons/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { STAGES } from "@reactive-resume/schema/applications/data";
 import { Button } from "@reactive-resume/ui/components/button";
 import {
@@ -23,6 +22,7 @@ import {
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "@reactive-resume/ui/components/dropdown-menu";
+import { toast } from "@reactive-resume/ui/components/toast";
 import { cn } from "@reactive-resume/utils/style";
 import { useConfirm } from "@/hooks/use-confirm";
 import { orpc } from "@/libs/orpc/client";
@@ -55,7 +55,7 @@ export function ApplicationActionsMenu({ application, onEdit, showOnHover, class
 	const update = useMutation(
 		orpc.applications.update.mutationOptions({
 			onSuccess: invalidate,
-			onError: () => toast.error(t`Something went wrong. Please try again.`),
+			onError: () => toast.add({ type: "error", description: t`Something went wrong. Please try again.` }),
 		}),
 	);
 
@@ -63,9 +63,9 @@ export function ApplicationActionsMenu({ application, onEdit, showOnHover, class
 		orpc.applications.delete.mutationOptions({
 			onSuccess: () => {
 				invalidate();
-				toast.success(t`Application deleted.`);
+				toast.add({ type: "success", description: t`Application deleted.` });
 			},
-			onError: () => toast.error(t`Couldn't delete the application.`),
+			onError: () => toast.add({ type: "error", description: t`Couldn't delete the application.` }),
 		}),
 	);
 

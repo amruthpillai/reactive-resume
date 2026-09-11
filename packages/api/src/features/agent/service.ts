@@ -1,26 +1,49 @@
+import type { ApplyResumePatchInput } from "@reactive-resume/ai/tools/agent-tool-contracts";
 import type { JsonPatchOperation } from "@reactive-resume/resume/patch";
 import type { Locale } from "@reactive-resume/utils/locale";
 import type { FilePart, ImagePart, ModelMessage, TextPart, UIMessage } from "ai";
 import type { getModel } from "../ai/service";
 import { ORPCError } from "@orpc/client";
 import { streamToEventIterator } from "@orpc/server";
-import { convertToModelMessages, stepCountIs, ToolLoopAgent } from "ai";
+import {
+	addToolInputExamplesMiddleware,
+	convertToModelMessages,
+	isStepCount,
+	safeValidateUIMessages,
+	smoothStream,
+	ToolLoopAgent,
+	wrapLanguageModel,
+} from "ai";
 import { and, asc, count, desc, eq, gte, inArray, isNull, max, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { generateId } from "@reactive-resume/utils/string";
-import { assertAgentEnvironment } from "../ai/credentials";
+import { assertAgentEnvironment, getAgentToolApprovalSecret } from "../ai/credentials";
 import { getAgentModel } from "../ai/service";
 import { aiProvidersService } from "../ai-providers/service";
 import { resumeService } from "../resume/service";
 import { getStorageService, inferContentType } from "../storage/service";
+import { pruneAgentModelContext } from "./context";
+import { mergeClientToolResponses } from "./messages-merge";
+import {
+	applyStepToUiMessage,
+	deleteDraftIfEmpty,
+	insertDraftAssistantMessage,
+	upsertAssistantUiMessage,
+	withAccumulatedUsageMetadata,
+} from "./messages-persistence";
+import { repairAgentToolCall } from "./repair";
 import { buildAgentDraftResumeName, buildUniqueAgentDraftSlug, normalizeAgentResumePatchOperations } from "./resume";
-import { claimActiveAgentRun, clearActiveAgentRunIfCurrent } from "./runs";
+import { claimActiveAgentRun, clearActiveAgentRunIfCurrent, isStaleAgentRun, reapStaleAgentRun } from "./runs";
 import { agentStreamLifecycle } from "./streams";
 import { buildAgentInstructions, buildAgentTools } from "./tools";
 
 const MAX_AGENT_STEPS = 30;
+const MAX_AGENT_OUTPUT_TOKENS = 8_192;
+const MAX_AGENT_MODEL_RETRIES = 2;
+const AGENT_STEP_TIMEOUT_MS = 120_000;
+const AGENT_RUN_TIMEOUT_MS = 600_000;
 const MAX_ATTACHMENTS_PER_MESSAGE = 10;
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 const MAX_THREAD_ATTACHMENT_BYTES = 100 * 1024 * 1024;
@@ -39,7 +62,13 @@ const ROLLBACK_CONFLICT_MESSAGE = "The resume changed after this action was appl
 const ROLLED_BACK_MESSAGE = "This patch was rolled back when the resume was restored to an earlier state.";
 
 const activeRunControllers = new Map<string, AbortController>();
-const canceledRunsWithPersistedPartial = new Set<string>();
+const activeRunTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
+
+// Abort reasons MUST be an AbortError: the AI SDK only treats `err.name === "AbortError"`
+// (via isAbortError) as a cancellation. A bare-string reason is treated as a genuine stream
+// error whose rejection escapes the background (resumable-stream) pump and takes down the whole
+// process with ERR_UNHANDLED_REJECTION. The label is preserved as the DOMException message.
+const abortReason = (label: string) => new DOMException(label, "AbortError");
 
 type AgentThreadRecord = typeof schema.agentThread.$inferSelect;
 type AgentMessageRecord = typeof schema.agentMessage.$inferSelect;
@@ -82,6 +111,7 @@ function toThreadSummary(row: AgentThreadRecord & { resumeName?: string | null; 
 		id: row.id,
 		title: row.title,
 		status: row.status,
+		reviewPatches: row.reviewPatches,
 		sourceResumeId: row.sourceResumeId,
 		workingResumeId: row.workingResumeId,
 		aiProviderId: row.aiProviderId,
@@ -187,63 +217,6 @@ type AgentToolPart = UIMessage["parts"][number] & {
 	toolCallId?: string;
 };
 
-type AnsweredAskUserQuestionPart = AgentToolPart & {
-	toolCallId: string;
-};
-
-function isAnsweredAskUserQuestionPart(part: UIMessage["parts"][number]): part is AnsweredAskUserQuestionPart {
-	const toolPart = part as AgentToolPart;
-	return (
-		toolPart.type === "tool-ask_user_question" &&
-		typeof toolPart.toolCallId === "string" &&
-		(toolPart.state === "output-available" || toolPart.state === "output-error")
-	);
-}
-
-function mergeAskUserQuestionOutputs(existingMessage: UIMessage, incomingMessage: UIMessage): UIMessage {
-	const answeredParts = new Map<string, AgentToolPart>();
-
-	for (const part of incomingMessage.parts) {
-		if (isAnsweredAskUserQuestionPart(part)) answeredParts.set(part.toolCallId, part);
-	}
-
-	let didMerge = false;
-	const parts = existingMessage.parts.map((part) => {
-		const existingPart = part as AgentToolPart;
-		if (
-			existingPart.type !== "tool-ask_user_question" ||
-			typeof existingPart.toolCallId !== "string" ||
-			existingPart.state !== "input-available"
-		) {
-			return part;
-		}
-
-		const answeredPart = answeredParts.get(existingPart.toolCallId);
-		if (!answeredPart) return part;
-
-		didMerge = true;
-		if (answeredPart.state === "output-error") {
-			return {
-				...part,
-				state: "output-error",
-				errorText: answeredPart.errorText ?? "User answer failed.",
-			} as UIMessage["parts"][number];
-		}
-
-		return {
-			...part,
-			state: "output-available",
-			output: answeredPart.output,
-		} as UIMessage["parts"][number];
-	});
-
-	if (!didMerge) {
-		throw new ORPCError("BAD_REQUEST", { message: "No matching unanswered user question was found." });
-	}
-
-	return { ...existingMessage, parts };
-}
-
 function getFirstUnansweredAskUserQuestionToolCallId(message: UIMessage) {
 	const part = message.parts.find((part) => {
 		const toolPart = part as AgentToolPart;
@@ -258,7 +231,7 @@ function getFirstUnansweredAskUserQuestionToolCallId(message: UIMessage) {
 }
 
 function answerAskUserQuestionToolCall(message: UIMessage, toolCallId: string, answer: string) {
-	return mergeAskUserQuestionOutputs(message, {
+	const { message: merged } = mergeClientToolResponses(message, {
 		...message,
 		parts: [
 			{
@@ -270,6 +243,8 @@ function answerAskUserQuestionToolCall(message: UIMessage, toolCallId: string, a
 			} as UIMessage["parts"][number],
 		],
 	});
+
+	return merged;
 }
 
 function attachmentLabel(attachment: AgentAttachmentRecord) {
@@ -332,20 +307,11 @@ function uniqueAttachmentIds(ids: unknown) {
 		throw new ORPCError("BAD_REQUEST", { message: "Attachment IDs must be unique." });
 	}
 
-	if (unique.size > MAX_ATTACHMENTS_PER_MESSAGE) {
-		throw new ORPCError("BAD_REQUEST", { message: "Too many attachments for one message." });
-	}
-
-	return Array.from(unique);
-}
-
-function normalizeAttachmentIds(ids: unknown) {
-	const unique = uniqueAttachmentIds(ids);
-	return unique;
+	return [...unique];
 }
 
 async function getUnlinkedMessageAttachments(input: { ids: unknown; threadId: string; userId: string }) {
-	const ids = normalizeAttachmentIds(input.ids);
+	const ids = uniqueAttachmentIds(input.ids);
 	if (ids.length === 0) return [];
 
 	const attachments = await db
@@ -406,9 +372,9 @@ async function linkAttachmentsToMessage(input: {
 	}
 }
 
-async function readAttachmentModelInputs(attachments: AgentAttachmentRecord[]): Promise<AttachmentModelInput[]> {
+function readAttachmentModelInputs(attachments: AgentAttachmentRecord[]): Promise<AttachmentModelInput[]> {
 	const storage = getStorageService();
-	const inputs = await Promise.all(
+	return Promise.all(
 		attachments.map(async (attachment) => {
 			const stored = await storage.read(attachment.storageKey);
 			if (!stored) {
@@ -418,8 +384,6 @@ async function readAttachmentModelInputs(attachments: AgentAttachmentRecord[]): 
 			return { attachment, data: stored.data };
 		}),
 	);
-
-	return inputs;
 }
 
 function attachModelPartsToLatestUserMessage(
@@ -539,7 +503,25 @@ async function updateAssistantToolResultMessage(input: { userId: string; threadI
 		throw new ORPCError("BAD_REQUEST", { message: "The answered assistant message was not found." });
 	}
 
-	const mergedMessage = mergeAskUserQuestionOutputs(toMessage(existingRow), input.message);
+	const {
+		message: mergedMessage,
+		mergedCount,
+		alreadyResolvedCount,
+		pendingContinuationCount,
+		conflictingCount,
+	} = mergeClientToolResponses(toMessage(existingRow), input.message);
+
+	if (conflictingCount > 0) {
+		throw new ORPCError("BAD_REQUEST", { message: "This approval was already answered with a different decision." });
+	}
+	// A recorded-but-unexecuted approval (pendingContinuationCount) proceeds: a prior continuation
+	// attempt failed after persisting the decision, and this retry is the recovery path.
+	if (mergedCount === 0 && pendingContinuationCount === 0) {
+		if (alreadyResolvedCount > 0) {
+			throw new ORPCError("CONFLICT", { message: "This response was already handled." });
+		}
+		throw new ORPCError("BAD_REQUEST", { message: "No matching unanswered user question was found." });
+	}
 
 	await db
 		.update(schema.agentMessage)
@@ -560,7 +542,7 @@ async function updateAssistantToolResultMessage(input: { userId: string; threadI
 		.set({ lastMessageAt: new Date() })
 		.where(and(eq(schema.agentThread.id, input.threadId), eq(schema.agentThread.userId, input.userId)));
 
-	return mergedMessage;
+	return { message: mergedMessage, rowId: existingRow.id };
 }
 
 async function repairLegacyAskUserQuestionAnswers(
@@ -615,9 +597,16 @@ async function cleanupActiveRun(input: {
 	runId: string;
 	streamId: string;
 	primaryError?: unknown;
+	// When final persistence failed, keep the run claim: the reaper only examines threads with an
+	// active claim, so releasing it here would orphan the "streaming" draft forever. The TTL reap
+	// heals the claim and the draft together.
+	preserveClaimForReaper?: boolean;
 }) {
 	activeRunControllers.delete(input.runId);
-	canceledRunsWithPersistedPartial.delete(input.runId);
+	clearTimeout(activeRunTimeouts.get(input.runId));
+	activeRunTimeouts.delete(input.runId);
+
+	if (input.preserveClaimForReaper) return;
 
 	try {
 		await clearActiveAgentRunIfCurrent(input);
@@ -643,7 +632,7 @@ function buildThreadTitle(message: UIMessage, fallback: string) {
 	return text.length > 60 ? `${text.slice(0, 57)}...` : text;
 }
 
-async function listThreadMessages(input: { threadId: string; userId: string }) {
+function listThreadMessages(input: { threadId: string; userId: string }) {
 	return db
 		.select()
 		.from(schema.agentMessage)
@@ -685,7 +674,7 @@ async function readAttachment(input: { id: string; threadId: string; userId: str
 		filename: attachment.filename,
 		mediaType: attachment.mediaType,
 		size: attachment.size,
-		content: new TextDecoder().decode(stored.data).slice(0, 40_000),
+		content: new TextDecoder().decode(stored.data).slice(0, MAX_ATTACHMENT_TEXT_CHARS),
 	};
 }
 
@@ -693,42 +682,74 @@ async function applyResumePatch(input: {
 	userId: string;
 	threadId: string;
 	resumeId: string;
+	messageId?: string;
 	title: string;
 	summary?: string;
+	baseUpdatedAt?: string;
 	operations: JsonPatchOperation[];
 }) {
 	const before = await resumeService.getById({ id: input.resumeId, userId: input.userId });
+
+	// Bind the patch to the revision the model actually read (and, under review, the revision the
+	// user approved): index-based operations built against an older document could otherwise
+	// silently target different items after a concurrent edit. baseUpdatedAt travels inside the
+	// signed tool input, so an approval cannot be replayed against a changed resume either.
+	if (input.baseUpdatedAt) {
+		const baseTime = new Date(input.baseUpdatedAt).getTime();
+		// An unparseable value must fail loudly rather than silently skip the revision check.
+		if (Number.isNaN(baseTime)) {
+			throw new Error(
+				`baseUpdatedAt is not a valid timestamp. Pass the updatedAt from the read_resume or apply_resume_patch result verbatim (currently ${before.updatedAt.toISOString()}).`,
+			);
+		}
+		if (baseTime !== before.updatedAt.getTime()) {
+			throw new Error(
+				`The resume changed after it was read (its updatedAt is now ${before.updatedAt.toISOString()}). Re-read the resume and rebuild the patch against the current document.`,
+			);
+		}
+	}
+
 	const snapshotData = cloneResumeData(before.data);
 	const operations = normalizeAgentResumePatchOperations(before.data, input.operations);
 
-	const { action, patched } = await db.transaction(async (tx) => {
-		const patched = await resumeService.patchInTransaction(tx, {
-			id: input.resumeId,
-			userId: input.userId,
-			operations,
-		});
-
-		const [action] = await tx
-			.insert(schema.agentAction)
-			.values({
+	const { action, patched } = await db
+		.transaction(async (tx) => {
+			const patched = await resumeService.patchInTransaction(tx, {
+				id: input.resumeId,
 				userId: input.userId,
-				threadId: input.threadId,
-				resumeId: input.resumeId,
-				kind: "resume_patch",
-				status: "applied",
-				title: input.title,
-				...(input.summary !== undefined ? { summary: input.summary } : {}),
 				operations,
-				snapshotData,
-				baseUpdatedAt: before.updatedAt,
-				appliedUpdatedAt: patched.updatedAt,
-			})
-			.returning();
+				expectedUpdatedAt: before.updatedAt,
+			});
 
-		if (!action) throw new Error("AGENT_ACTION_CREATE_FAILED");
+			const [action] = await tx
+				.insert(schema.agentAction)
+				.values({
+					userId: input.userId,
+					threadId: input.threadId,
+					resumeId: input.resumeId,
+					...(input.messageId ? { messageId: input.messageId } : {}),
+					kind: "resume_patch",
+					status: "applied",
+					title: input.title,
+					...(input.summary !== undefined ? { summary: input.summary } : {}),
+					operations,
+					snapshotData,
+					baseUpdatedAt: before.updatedAt,
+					appliedUpdatedAt: patched.updatedAt,
+				})
+				.returning();
 
-		return { action, patched };
-	});
+			if (!action) throw new Error("AGENT_ACTION_CREATE_FAILED");
+
+			return { action, patched };
+		})
+		.catch((error: unknown) => {
+			// Surface the version conflict as a recoverable tool error, not a run-fatal ORPCError.
+			if (error instanceof ORPCError && error.code === "RESUME_VERSION_CONFLICT") {
+				throw new Error("The resume changed while this edit was being prepared. Re-read the resume and retry.");
+			}
+			throw error;
+		});
 
 	await resumeService.notifyResumePatched({
 		resumeId: patched.id,
@@ -743,6 +764,10 @@ async function applyResumePatch(input: {
 		summary: action.summary,
 		operations: action.operations,
 		appliedUpdatedAt: action.appliedUpdatedAt.toISOString(),
+		changedPaths: [...new Set(operations.flatMap((op) => ("from" in op ? [op.path, op.from] : [op.path])))],
+		// Full post-patch document: array indexes may have shifted, so the model must base
+		// further patches on this instead of an earlier read_resume snapshot.
+		resume: patched.data,
 	};
 }
 
@@ -750,6 +775,8 @@ function createAgent(input: {
 	userId: string;
 	threadId: string;
 	resumeId: string;
+	draftRowId?: string;
+	requirePatchApproval?: boolean;
 	provider: {
 		provider: Parameters<typeof getModel>[0]["provider"];
 		model: string;
@@ -758,10 +785,35 @@ function createAgent(input: {
 	};
 	model: ReturnType<typeof getModel>;
 }) {
+	// One greppable JSON line per tool execution.
+	const timedToolHandler =
+		<A extends unknown[], R>(toolName: string, run: (...args: A) => Promise<R>) =>
+		async (...args: A): Promise<R> => {
+			const startedAt = Date.now();
+			let ok = true;
+			try {
+				return await run(...args);
+			} catch (error) {
+				ok = false;
+				throw error;
+			} finally {
+				console.info(
+					JSON.stringify({
+						evt: "agent.tool",
+						threadId: input.threadId,
+						tool: toolName,
+						ok,
+						durationMs: Date.now() - startedAt,
+					}),
+				);
+			}
+		};
+
 	const tools = buildAgentTools({
 		provider: input.provider,
+		options: { requirePatchApproval: !!input.requirePatchApproval },
 		handlers: {
-			readResume: async () => {
+			readResume: timedToolHandler("read_resume", async () => {
 				const resume = await resumeService.getById({ id: input.resumeId, userId: input.userId });
 				return {
 					id: resume.id,
@@ -782,25 +834,56 @@ function createAgent(input: {
 					],
 					data: resume.data,
 				};
-			},
-			readAttachment: (attachmentId) =>
+			}),
+			readAttachment: timedToolHandler("read_attachment", (attachmentId: string) =>
 				readAttachment({ id: attachmentId, threadId: input.threadId, userId: input.userId }),
-			applyResumePatch: ({ title, summary, operations }) =>
-				applyResumePatch({
-					userId: input.userId,
-					threadId: input.threadId,
-					resumeId: input.resumeId,
-					title,
-					...(summary !== undefined ? { summary } : {}),
-					operations,
-				}),
+			),
+			applyResumePatch: timedToolHandler(
+				"apply_resume_patch",
+				({ title, summary, baseUpdatedAt, operations }: ApplyResumePatchInput) =>
+					applyResumePatch({
+						userId: input.userId,
+						threadId: input.threadId,
+						resumeId: input.resumeId,
+						...(input.draftRowId ? { messageId: input.draftRowId } : {}),
+						title,
+						...(summary !== undefined ? { summary } : {}),
+						...(baseUpdatedAt !== undefined ? { baseUpdatedAt } : {}),
+						operations,
+					}),
+			),
 		},
 	});
 
+	const instructionsText = buildAgentInstructions({ hasProviderNativeSearch: "web_search" in tools });
+
 	return new ToolLoopAgent({
-		model: input.model,
-		instructions: buildAgentInstructions({ hasProviderNativeSearch: "web_search" in tools }),
-		stopWhen: stepCountIs(MAX_AGENT_STEPS),
+		// Providers without native inputExamples support get them appended to the tool description.
+		model: wrapLanguageModel({ model: input.model, middleware: addToolInputExamplesMiddleware() }),
+		// The loop re-sends stable instructions every step; on anthropic, prompt caching pays from step 2.
+		instructions:
+			input.provider.provider === "anthropic"
+				? {
+						role: "system",
+						content: instructionsText,
+						providerOptions: { anthropic: { cacheControl: { type: "ephemeral" } } },
+					}
+				: instructionsText,
+		repairToolCall: repairAgentToolCall,
+		stopWhen: isStepCount(MAX_AGENT_STEPS),
+		maxOutputTokens: MAX_AGENT_OUTPUT_TOKENS,
+		maxRetries: MAX_AGENT_MODEL_RETRIES,
+		timeout: { stepMs: AGENT_STEP_TIMEOUT_MS },
+		// HMAC-signs approval requests at issuance and verifies them when replayed on the
+		// continuation run, so a client cannot forge or alter an approval payload. The agent
+		// runtime forwards constructor settings to streamText verbatim; ToolLoopAgentSettings
+		// does not type this key yet, hence the spread-cast.
+		...({ experimental_toolApprovalSecret: getAgentToolApprovalSecret() } as object),
+		// Runs before every loop step, so intra-run growth (N patches → N snapshots) is pruned too.
+		prepareStep: ({ messages }) => {
+			const pruned = pruneAgentModelContext(messages);
+			return pruned === messages ? {} : { messages: pruned };
+		},
 		tools,
 	});
 }
@@ -813,6 +896,7 @@ const threadSummarySelection = {
 	workingResumeId: schema.agentThread.workingResumeId,
 	title: schema.agentThread.title,
 	status: schema.agentThread.status,
+	reviewPatches: schema.agentThread.reviewPatches,
 	activeRunId: schema.agentThread.activeRunId,
 	activeStreamId: schema.agentThread.activeStreamId,
 	activeRunStartedAt: schema.agentThread.activeRunStartedAt,
@@ -936,6 +1020,21 @@ export const agentService = {
 			assertAgentEnvironment();
 
 			const thread = await getThread(input);
+
+			// Heal on open: clear a dead run's claim before reading messages so the client neither
+			// resumes a dead stream nor renders a perpetually "streaming" draft.
+			if (thread.activeRunId && isStaleAgentRun(thread)) {
+				await reapStaleAgentRun({
+					threadId: input.id,
+					userId: input.userId,
+					runId: thread.activeRunId,
+					streamId: thread.activeStreamId,
+				});
+				thread.activeRunId = null;
+				thread.activeStreamId = null;
+				thread.activeRunStartedAt = null;
+			}
+
 			const [messages, actions, attachments, resume] = await Promise.all([
 				listThreadMessages({ threadId: input.id, userId: input.userId }),
 				db
@@ -968,6 +1067,27 @@ export const agentService = {
 			};
 		},
 
+		update: async (input: { id: string; userId: string; reviewPatches: boolean }) => {
+			assertAgentEnvironment();
+
+			const thread = await getThread({ id: input.id, userId: input.userId });
+			// Approval behavior is captured when a run's agent is created; toggling mid-run would
+			// show "review on" while later patches from the same run still auto-apply.
+			if (thread.activeRunId && !isStaleAgentRun(thread)) {
+				throw new ORPCError("CONFLICT", { message: "Review settings cannot change while a run is active." });
+			}
+
+			const [updated] = await db
+				.update(schema.agentThread)
+				.set({ reviewPatches: input.reviewPatches })
+				.where(and(eq(schema.agentThread.id, input.id), eq(schema.agentThread.userId, input.userId)))
+				.returning();
+
+			if (!updated) throw new ORPCError("NOT_FOUND");
+
+			return toThreadSummary(updated);
+		},
+
 		archive: async (input: { id: string; userId: string }) => {
 			assertAgentEnvironment();
 
@@ -976,7 +1096,7 @@ export const agentService = {
 			const activeStreamId = thread.activeStreamId;
 
 			if (activeRunId) {
-				activeRunControllers.get(activeRunId)?.abort("USER_ARCHIVED");
+				activeRunControllers.get(activeRunId)?.abort(abortReason("USER_ARCHIVED"));
 				activeRunControllers.delete(activeRunId);
 				try {
 					await clearActiveAgentRunIfCurrent({
@@ -1030,13 +1150,28 @@ export const agentService = {
 				throw new ORPCError("CONFLICT", { message: "This thread is archived." });
 			}
 			if (thread.activeRunId) {
-				throw new ORPCError("CONFLICT", { message: "This thread already has an active run." });
+				if (!isStaleAgentRun(thread)) {
+					throw new ORPCError("CONFLICT", { message: "This thread already has an active run." });
+				}
+				// Lazy reap: a dead run's claim heals on the next send instead of CONFLICTing forever.
+				await reapStaleAgentRun({
+					threadId: input.threadId,
+					userId: input.userId,
+					runId: thread.activeRunId,
+					streamId: thread.activeStreamId,
+				});
 			}
 			if (!thread.workingResumeId || !thread.aiProviderId) {
 				throw new ORPCError("BAD_REQUEST", { message: "This thread is read-only." });
 			}
 			if (input.message.role !== "user" && input.message.role !== "assistant") {
 				throw new ORPCError("BAD_REQUEST", { message: "Agent messages must be user messages or tool results." });
+			}
+
+			// Deliberately schema-less: provider-echoed tool parts must pass, and replayed history is never re-validated.
+			const validated = await safeValidateUIMessages({ messages: [input.message] });
+			if (!validated.success) {
+				throw new ORPCError("BAD_REQUEST", { message: "Invalid UI message parts." });
 			}
 
 			const [runnableProvider, attachments] = await Promise.all([
@@ -1061,6 +1196,19 @@ export const agentService = {
 				throw new ORPCError("CONFLICT", { message: "This thread already has an active run." });
 			}
 
+			// Whole-run wall clock. Must abort with an AbortError (see abortReason) — never AbortSignal.timeout().
+			activeRunTimeouts.set(
+				runId,
+				setTimeout(() => controller.abort(abortReason("RUN_TIMEOUT")), AGENT_RUN_TIMEOUT_MS),
+			);
+
+			// Row + message the run streams into. A continuation reuses the existing assistant
+			// row (same uiMessage id); a fresh turn inserts a "streaming" draft row below.
+			let draftRowId: string | undefined;
+			let insertedDraft = false;
+			const responseMessageId = generateId();
+			let draftUiMessage: UIMessage = { id: responseMessageId, role: "assistant", parts: [] };
+
 			try {
 				let attachmentsForModel: AgentAttachmentRecord[] = [];
 
@@ -1069,11 +1217,17 @@ export const agentService = {
 						throw new ORPCError("BAD_REQUEST", { message: "Tool result messages cannot include attachments." });
 					}
 
-					await updateAssistantToolResultMessage({
+					// Merge AFTER the exclusive claim: concurrent approve/deny requests serialize on
+					// the claim instead of both persisting, and a merge that is rejected (or any later
+					// setup failure) releases the claim via the catch below. A response persisted by a
+					// failed earlier attempt re-enters as pendingContinuation and still gets its run.
+					const continuation = await updateAssistantToolResultMessage({
 						userId: input.userId,
 						threadId: input.threadId,
 						message: input.message,
 					});
+					draftRowId = continuation.rowId;
+					draftUiMessage = continuation.message;
 				} else {
 					attachmentsForModel = attachments;
 					const sequence = await getNextMessageSequence(input.threadId);
@@ -1114,10 +1268,25 @@ export const agentService = {
 				const messages = messageRows.map(toMessage);
 				const modelMessages = await convertToModelMessages(messages.map(toModelInputMessage));
 				const attachmentModelParts = buildAttachmentModelParts(await readAttachmentModelInputs(attachmentsForModel));
+
+				// Draft row inserted after the replay snapshot (so it is not replayed) and before the
+				// stream starts, so a crash mid-run leaves a resumable record instead of nothing.
+				if (input.message.role === "user") {
+					const draft = await insertDraftAssistantMessage({
+						userId: input.userId,
+						threadId: input.threadId,
+						uiMessageId: responseMessageId,
+					});
+					draftRowId = draft.rowId;
+					insertedDraft = true;
+				}
+
 				const agent = createAgent({
 					userId: input.userId,
 					threadId: input.threadId,
 					resumeId: thread.workingResumeId,
+					...(draftRowId ? { draftRowId } : {}),
+					requirePatchApproval: thread.reviewPatches,
 					provider: {
 						provider: runnableProvider.provider,
 						model: runnableProvider.model,
@@ -1135,25 +1304,58 @@ export const agentService = {
 				const result = await agent.stream({
 					messages: attachModelPartsToLatestUserMessage(modelMessages, attachmentModelParts),
 					abortSignal: controller.signal,
+					experimental_transform: smoothStream({ chunking: "word" }),
+					// Crash-safety: fold each finished step into the draft row so a process death
+					// mid-run loses at most the current step, never the whole transcript.
+					onStepEnd: async (step) => {
+						console.info(
+							JSON.stringify({
+								evt: "agent.step",
+								threadId: input.threadId,
+								runId,
+								step: step.stepNumber,
+								toolNames: step.toolCalls.map((call) => call.toolName),
+								usage: step.usage,
+								finishReason: step.finishReason,
+							}),
+						);
+						try {
+							draftUiMessage = applyStepToUiMessage(draftUiMessage, step);
+							const upserted = await upsertAssistantUiMessage({
+								userId: input.userId,
+								threadId: input.threadId,
+								...(draftRowId ? { rowId: draftRowId } : {}),
+								message: draftUiMessage,
+								status: "streaming",
+							});
+							draftRowId = upserted.rowId;
+						} catch (error) {
+							console.error("[agent] Failed to persist step draft", error);
+						}
+					},
 				});
 
 				return streamToEventIterator(
 					await agentStreamLifecycle.create(streamId, () =>
 						result.toUIMessageStream({
 							originalMessages: messages,
-							generateMessageId: generateId,
+							generateMessageId: () => responseMessageId,
 							sendSources: true,
+							// Round-trips inside the persisted uiMessage jsonb — no migration needed.
+							messageMetadata: ({ part }) =>
+								part.type === "finish" ? { usage: part.totalUsage, model: runnableProvider.model } : undefined,
 							onFinish: async ({ responseMessage, isAborted }) => {
 								let persistError: unknown;
 								try {
-									if (!(isAborted && canceledRunsWithPersistedPartial.has(runId))) {
-										await persistMessage({
-											userId: input.userId,
-											threadId: input.threadId,
-											message: responseMessage,
-											status: isAborted ? "canceled" : "completed",
-										});
-									}
+									await upsertAssistantUiMessage({
+										userId: input.userId,
+										threadId: input.threadId,
+										...(draftRowId ? { rowId: draftRowId } : {}),
+										// A continuation reuses the message; the SDK replaces primitive
+										// metadata, so prior-run usage must be summed back in.
+										message: withAccumulatedUsageMetadata(draftUiMessage, responseMessage),
+										status: isAborted ? "canceled" : "completed",
+									});
 								} catch (error) {
 									persistError = error;
 									throw error;
@@ -1164,6 +1366,7 @@ export const agentService = {
 										runId,
 										streamId,
 										primaryError: persistError,
+										preserveClaimForReaper: !!persistError,
 									});
 								}
 							},
@@ -1172,6 +1375,11 @@ export const agentService = {
 					),
 				);
 			} catch (error) {
+				if (insertedDraft && draftRowId) {
+					await deleteDraftIfEmpty({ rowId: draftRowId, threadId: input.threadId, userId: input.userId }).catch(
+						(cleanupError: unknown) => console.error("[agent] Failed to delete empty draft", cleanupError),
+					);
+				}
 				await cleanupActiveRun({
 					threadId: input.threadId,
 					userId: input.userId,
@@ -1183,47 +1391,34 @@ export const agentService = {
 			}
 		},
 
-		stop: async (input: { userId: string; threadId: string; partialMessage?: UIMessage }) => {
+		// Server-authored cancellation: the abort makes onFinish({isAborted: true}) persist exactly
+		// what the server generated. The deprecated client `partialMessage` is ignored.
+		stop: async (input: { userId: string; threadId: string }) => {
 			assertAgentEnvironment();
 
 			const thread = await getThread({ id: input.threadId, userId: input.userId });
 			const activeRunId = thread.activeRunId;
 			const activeStreamId = thread.activeStreamId;
+			if (!activeRunId) return;
 
-			let persistError: unknown;
-			let cleanupError: unknown;
-			try {
-				if (input.partialMessage) {
-					await persistMessage({
-						userId: input.userId,
-						threadId: input.threadId,
-						message: input.partialMessage,
-						status: "canceled",
-					});
-					if (activeRunId) canceledRunsWithPersistedPartial.add(activeRunId);
-				}
-			} catch (error) {
-				persistError = error;
-			} finally {
-				if (activeRunId) {
-					activeRunControllers.get(activeRunId)?.abort("USER_STOPPED");
-					activeRunControllers.delete(activeRunId);
-					try {
-						await clearActiveAgentRunIfCurrent({
-							threadId: input.threadId,
-							userId: input.userId,
-							runId: activeRunId,
-							streamId: activeStreamId,
-						});
-					} catch (error) {
-						cleanupError = error;
-						if (persistError) console.error("[agent] Failed to clear active run after stop persistence error", error);
-					}
-				}
+			const controller = activeRunControllers.get(activeRunId);
+			if (controller) {
+				// This replica owns the run: abort only. The claim stays until onFinish has
+				// persisted the terminal (canceled) state, so no new run can interleave with a
+				// still-committing tool or write. onFinish's cleanup releases the claim.
+				controller.abort(abortReason("USER_STOPPED"));
+				return;
 			}
 
-			if (persistError) throw persistError;
-			if (cleanupError) throw cleanupError;
+			// No local controller (another replica owns the run, or the process restarted):
+			// best-effort claim release so the user is not stuck. Cross-replica abort signaling
+			// is a documented follow-up; the stale-run reaper covers the leftovers.
+			await clearActiveAgentRunIfCurrent({
+				threadId: input.threadId,
+				userId: input.userId,
+				runId: activeRunId,
+				streamId: activeStreamId,
+			});
 		},
 		resume: async (input: { userId: string; threadId: string }) => {
 			assertAgentEnvironment();

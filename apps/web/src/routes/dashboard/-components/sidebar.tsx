@@ -6,13 +6,15 @@ import {
 	BrainIcon,
 	BriefcaseIcon,
 	ChatCircleDotsIcon,
+	EnvelopeSimpleIcon,
 	GearSixIcon,
 	KeyIcon,
 	MagnifyingGlassIcon,
 	ReadCvLogoIcon,
+	SealCheckIcon,
 	ShieldCheckIcon,
 	UserCircleIcon,
-	WarningIcon,
+	UserGearIcon,
 } from "@phosphor-icons/react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, m } from "motion/react";
@@ -57,9 +59,19 @@ const appSidebarItems = [
 		href: "/dashboard/applications",
 	},
 	{
+		icon: <EnvelopeSimpleIcon />,
+		label: msg`Cover Letters`,
+		href: "/dashboard/cover-letters",
+	},
+	{
 		icon: <ChatCircleDotsIcon />,
 		label: msg`Agents`,
 		href: "/agent",
+	},
+	{
+		icon: <SealCheckIcon />,
+		label: msg`ATS Checker`,
+		href: "/ats-checker",
 	},
 ] as const satisfies SidebarItem[];
 
@@ -90,9 +102,9 @@ const settingsSidebarItems = [
 		href: "/dashboard/settings/integrations",
 	},
 	{
-		icon: <WarningIcon />,
-		label: msg`Danger Zone`,
-		href: "/dashboard/settings/danger-zone",
+		icon: <UserGearIcon />,
+		label: msg`Account`,
+		href: "/dashboard/settings/account",
 	},
 ] as const satisfies SidebarItem[];
 

@@ -42,6 +42,9 @@ export function handleSitemap(options?: StaticSeoOptions) {
 		"  <url>",
 		`    <loc>${baseUrl}/</loc>`,
 		"  </url>",
+		"  <url>",
+		`    <loc>${baseUrl}/ats-checker</loc>`,
+		"  </url>",
 		"</urlset>",
 		"",
 	].join("\n");
