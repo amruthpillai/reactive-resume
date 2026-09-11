@@ -3,7 +3,7 @@ import type { RefObject } from "react";
 import type { ResumeThumbnailSize } from "@/features/resume/preview/resume-thumbnail.shared";
 import type { RouterOutput } from "@/libs/orpc/client";
 import { FileTextIcon } from "@phosphor-icons/react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useInView } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
@@ -25,6 +25,21 @@ type ResumeThumbnailProps = {
 const throwIfAborted = (signal: AbortSignal) => {
 	if (signal.aborted) throw new DOMException("Thumbnail generation aborted.", "AbortError");
 };
+
+const THUMBNAIL_CACHE_TIME = 5 * 60 * 1000;
+const thumbnailQueryCaches = new WeakSet<object>();
+
+function ensureThumbnailCacheLifecycle(queryClient: ReturnType<typeof useQueryClient>) {
+	const queryCache = queryClient.getQueryCache();
+	if (thumbnailQueryCaches.has(queryCache)) return;
+
+	thumbnailQueryCaches.add(queryCache);
+	queryCache.subscribe((event) => {
+		if (event.type !== "removed") return;
+		const url = event.query.state.data;
+		if (typeof url === "string") URL.revokeObjectURL(url);
+	});
+}
 
 const createResumeThumbnailUrl = async (data: ResumeData, size: ResumeThumbnailSize, signal: AbortSignal) => {
 	const pdf = await createResumePdfBlob(data);
@@ -90,6 +105,24 @@ function useResumeThumbnail(
 	size: ResumeThumbnailSize,
 	enabled: boolean,
 ): ThumbnailState {
+	const queryClient = useQueryClient();
+
+	useEffect(() => {
+		ensureThumbnailCacheLifecycle(queryClient);
+	}, [queryClient]);
+
+	useEffect(() => {
+		const queryCache = queryClient.getQueryCache();
+		const resumePrefix = `${cacheKey.slice(0, cacheKey.lastIndexOf(":"))}:`;
+
+		for (const query of queryCache.findAll({ queryKey: ["resume-thumbnail"] })) {
+			const queryCacheKey = query.queryKey[1];
+			if (typeof queryCacheKey === "string" && queryCacheKey.startsWith(resumePrefix) && queryCacheKey !== cacheKey) {
+				queryCache.remove(query);
+			}
+		}
+	}, [cacheKey, queryClient]);
+
 	const {
 		data: thumbnailData,
 		error: thumbnailError,
@@ -103,20 +136,25 @@ function useResumeThumbnail(
 		enabled: Boolean(enabled && data && size.width && size.height),
 		placeholderData: (previous, query) => (query?.queryKey[1] === cacheKey ? previous : undefined),
 		staleTime: Number.POSITIVE_INFINITY,
-		gcTime: 0,
+		gcTime: THUMBNAIL_CACHE_TIME,
 	});
+	const previousThumbnailData = useRef<string | undefined>(undefined);
 
 	useEffect(() => {
 		if (thumbnailError) console.error("Failed to generate resume thumbnail", thumbnailError);
 	}, [thumbnailError]);
 
 	useEffect(() => {
-		const url = thumbnailData;
-
-		return () => {
-			if (url) URL.revokeObjectURL(url);
-		};
-	}, [thumbnailData]);
+		const previousUrl = previousThumbnailData.current;
+		if (previousUrl && previousUrl !== thumbnailData) {
+			const previousQuery = queryClient
+				.getQueryCache()
+				.findAll({ queryKey: ["resume-thumbnail"] })
+				.find((query) => query.state.data === previousUrl);
+			if (previousQuery) queryClient.getQueryCache().remove(previousQuery);
+		}
+		previousThumbnailData.current = thumbnailData;
+	}, [queryClient, thumbnailData]);
 
 	if (!data || !cacheKey) return { status: "idle" };
 	if (thumbnailIsError) return { status: "error" };
