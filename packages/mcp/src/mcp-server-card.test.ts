@@ -53,6 +53,24 @@ describe("buildMcpServerCard", () => {
 		expect(names).toContain("tailor_resume_for_application");
 	});
 
+	it("advertises independent cover-letter library tools", () => {
+		const names = card.tools.map((tool) => tool.name);
+		expect(names).toEqual(
+			expect.arrayContaining([
+				"list_cover_letters",
+				"read_cover_letter",
+				"create_cover_letter",
+				"update_cover_letter",
+				"refresh_cover_letter_style",
+				"duplicate_cover_letter",
+				"delete_cover_letter",
+				"copy_embedded_cover_letter",
+				"export_cover_letter",
+				"import_cover_letter",
+			]),
+		);
+	});
+
 	it("declares a JSON Schema input for every tool", () => {
 		for (const tool of card.tools) {
 			expect(tool.inputSchema, tool.name).toBeDefined();

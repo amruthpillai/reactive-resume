@@ -49,6 +49,9 @@ describe("tool annotations", () => {
 			MCP_TOOL_NAME.readApplication,
 			MCP_TOOL_NAME.listApplicationTags,
 			MCP_TOOL_NAME.getApplicationStats,
+			MCP_TOOL_NAME.listCoverLetters,
+			MCP_TOOL_NAME.readCoverLetter,
+			MCP_TOOL_NAME.exportCoverLetter,
 		];
 		for (const name of readOnlyTools) {
 			const annotations = TOOL_META[name].annotations;
@@ -88,6 +91,10 @@ describe("tool annotations", () => {
 			MCP_TOOL_NAME.createApplication,
 			MCP_TOOL_NAME.importApplications,
 			MCP_TOOL_NAME.draftApplicationMessage,
+			MCP_TOOL_NAME.createCoverLetter,
+			MCP_TOOL_NAME.duplicateCoverLetter,
+			MCP_TOOL_NAME.copyEmbeddedCoverLetter,
+			MCP_TOOL_NAME.importCoverLetter,
 		]) {
 			const annotations = TOOL_META[name].annotations;
 			expect(annotations.readOnlyHint, name).toBe(false);
@@ -116,6 +123,9 @@ describe("tool annotations", () => {
 			MCP_TOOL_NAME.removeApplicationDocument,
 			MCP_TOOL_NAME.scoreApplicationMatch,
 			MCP_TOOL_NAME.tailorResumeForApplication,
+			MCP_TOOL_NAME.updateCoverLetter,
+			MCP_TOOL_NAME.refreshCoverLetterStyle,
+			MCP_TOOL_NAME.deleteCoverLetter,
 		]) {
 			expect(TOOL_META[name].annotations.readOnlyHint, name).toBe(false);
 			expect(TOOL_META[name].annotations.destructiveHint, name).toBe(true);
@@ -131,6 +141,7 @@ describe("tool annotations", () => {
 			MCP_TOOL_NAME.removeApplicationDocument,
 			MCP_TOOL_NAME.deleteApplication,
 			MCP_TOOL_NAME.bulkDeleteApplications,
+			MCP_TOOL_NAME.deleteCoverLetter,
 			MCP_TOOL_NAME.autofillApplicationFromJob,
 			MCP_TOOL_NAME.scoreApplicationMatch,
 			MCP_TOOL_NAME.tailorResumeForApplication,
