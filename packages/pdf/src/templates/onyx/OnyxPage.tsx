@@ -67,7 +67,7 @@ export const OnyxPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageN
 	const metrics = getTemplateMetrics(metadata.page);
 	const isProfilesInLayout = page.main.includes("profiles") || page.sidebar.includes("profiles");
 	const showProfiles = hasVisibleItems(data.sections.profiles, "profiles") && isProfilesInLayout;
-	const excludeFromBody = (section: string) => !showProfiles || section !== "profiles";
+	const excludeFromBody = (section: string) => !showHeader || !showProfiles || section !== "profiles";
 	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data).filter(excludeFromBody));
 	const sidebarSections = useRenderedSectionIds(
 		pageNodeKey,

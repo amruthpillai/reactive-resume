@@ -95,6 +95,59 @@ const renderOnyxWithProfiles = async () => {
 	}
 };
 
+const renderOnyxWithProfilesOnSecondPage = async () => {
+	const data = structuredClone(defaultResumeData);
+	data.basics.name = "Name";
+	data.basics.headline = "Headline";
+	data.basics.email = "email@example.com";
+	data.picture.hidden = true;
+	data.summary = {
+		...data.summary,
+		hidden: false,
+		showHeading: false,
+		content: "<p>Summary body text</p>",
+	};
+	data.sections.profiles = {
+		...data.sections.profiles,
+		hidden: false,
+		showHeading: false,
+		items: [
+			{
+				id: "profile-1",
+				hidden: false,
+				icon: "github-logo",
+				iconColor: "",
+				network: "GitHub",
+				username: "dkowalski-dev",
+				website: { url: "https://github.com/dkowalski-dev", label: "", inlineLink: false },
+			},
+		],
+	};
+	data.metadata.page.locale = "en-US";
+	data.metadata.page.marginX = 14;
+	data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 1, text: "@version 1;" } };
+	data.metadata.layout.pages = [
+		{ fullWidth: false, main: ["summary"], sidebar: [] },
+		{ fullWidth: false, main: ["profiles"], sidebar: [] },
+	];
+	const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<
+		typeof renderToBuffer
+	>[0];
+	let bytes: Uint8Array = new Uint8Array();
+	await act(async () => {
+		bytes = new Uint8Array(await renderToBuffer(element));
+	});
+	const loadingTask = getDocument({ data: bytes, useSystemFonts: true });
+	try {
+		const document = await loadingTask.promise;
+		const page = await document.getPage(2);
+		const content = await page.getTextContent();
+		return content.items.filter((item): item is TextItem => "str" in item && Boolean(item.str.trim()));
+	} finally {
+		await loadingTask.destroy();
+	}
+};
+
 describe("Onyx headline width (#3339)", () => {
 	it.each([
 		{ locale: "en-US", hasPicture: true },
@@ -136,5 +189,10 @@ describe("Onyx profiles header (#2812)", () => {
 	it("does not render the network name as text in the header", async () => {
 		const lines = await renderOnyxWithProfiles();
 		expect(lines.some((line) => line.str === "GitHub")).toBe(false);
+	});
+
+	it("keeps visible profiles in the body when the header is hidden", async () => {
+		const lines = await renderOnyxWithProfilesOnSecondPage();
+		expect(lines.some((line) => line.str.includes("dkowalski-dev"))).toBe(true);
 	});
 });
