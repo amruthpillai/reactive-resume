@@ -67,6 +67,7 @@ function RouteComponent() {
 	const { search, view, tags, sort, archived, create, applicationId } = Route.useSearch();
 	const navigate = useNavigate({ from: Route.fullPath });
 
+	const [textSearch, setTextSearch] = useState(search);
 	const [addOpen, setAddOpen] = useState(false);
 	const [importOpen, setImportOpen] = useState(false);
 	const [exportOpen, setExportOpen] = useState(false);
@@ -98,7 +99,7 @@ function RouteComponent() {
 
 	// Board & table hide archived; tag/search filters + sort are applied client-side.
 	const filtered = useMemo(() => {
-		const query = search.trim().toLowerCase();
+		const query = textSearch.trim().toLowerCase();
 		const rows = (applications ?? [])
 			.filter((app) => archived || !app.archived)
 			.filter((app) => tags.length === 0 || tags.every((tag: string) => app.tags.includes(tag)))
@@ -111,13 +112,13 @@ function RouteComponent() {
 			role: (a, b) => a.role.localeCompare(b.role),
 		};
 		return rows.sort(compare[sort as SortKey]);
-	}, [applications, search, tags, sort, archived]);
+	}, [applications, textSearch, tags, sort, archived]);
 
 	const archivedCount = (applications ?? []).filter((app) => app.archived).length;
 
 	const isEmpty = (applications?.length ?? 0) === 0;
 
-	const setSearch = (patch: Partial<Search>) => void navigate({ search: (prev: Search) => ({ ...prev, ...patch }) });
+	const setUrlSearch = (patch: Partial<Search>) => void navigate({ search: (prev: Search) => ({ ...prev, ...patch }) });
 
 	return (
 		<div className="flex h-[calc(100dvh-2rem)] flex-col gap-4">
@@ -158,9 +159,9 @@ function RouteComponent() {
 								<MagnifyingGlassIcon />
 							</InputGroupAddon>
 							<InputGroupInput
-								value={search}
+								value={textSearch}
 								placeholder={t`Search applications…`}
-								onChange={(event) => setSearch({ search: event.target.value })}
+								onChange={(event) => setTextSearch(event.target.value)}
 							/>
 						</InputGroup>
 
@@ -172,7 +173,7 @@ function RouteComponent() {
 								value={tags}
 								placeholder={t`Filter by tags`}
 								options={(allTags ?? []).map((tag) => ({ value: tag, label: tag }))}
-								onValueChange={(value) => setSearch({ tags: value ?? [] })}
+								onValueChange={(value) => setUrlSearch({ tags: value ?? [] })}
 							/>
 						)}
 
@@ -182,7 +183,7 @@ function RouteComponent() {
 								value={sort}
 								placeholder={t`Sort by…`}
 								options={SORT_OPTIONS.map((option) => ({ value: option.value, label: i18n.t(option.label) }))}
-								onValueChange={(value) => value && setSearch({ sort: value as SortKey })}
+								onValueChange={(value) => value && setUrlSearch({ sort: value as SortKey })}
 							/>
 						)}
 
@@ -191,7 +192,7 @@ function RouteComponent() {
 								size="sm"
 								variant={archived ? "secondary" : "outline"}
 								className="shrink-0 max-sm:hidden"
-								onClick={() => setSearch({ archived: !archived })}
+								onClick={() => setUrlSearch({ archived: !archived })}
 							>
 								<ArchiveIcon />
 								<Trans>Archived</Trans> ({archivedCount})
@@ -223,7 +224,7 @@ function RouteComponent() {
 												value={tags}
 												placeholder={t`Any tag`}
 												options={(allTags ?? []).map((tag) => ({ value: tag, label: tag }))}
-												onValueChange={(value) => setSearch({ tags: value ?? [] })}
+												onValueChange={(value) => setUrlSearch({ tags: value ?? [] })}
 											/>
 										</div>
 									)}
@@ -235,7 +236,7 @@ function RouteComponent() {
 											className="w-full"
 											value={sort}
 											options={SORT_OPTIONS.map((option) => ({ value: option.value, label: i18n.t(option.label) }))}
-											onValueChange={(value) => value && setSearch({ sort: value as SortKey })}
+											onValueChange={(value) => value && setUrlSearch({ sort: value as SortKey })}
 										/>
 									</div>
 									{archivedCount > 0 && (
@@ -243,7 +244,7 @@ function RouteComponent() {
 											size="sm"
 											variant={archived ? "secondary" : "outline"}
 											className="w-full"
-											onClick={() => setSearch({ archived: !archived })}
+											onClick={() => setUrlSearch({ archived: !archived })}
 										>
 											<ArchiveIcon />
 											<Trans>Archived</Trans> ({archivedCount})
@@ -295,7 +296,10 @@ function RouteComponent() {
 								<Button
 									size="sm"
 									variant="outline"
-									onClick={() => setSearch({ search: "", tags: [], archived: false })}
+									onClick={() => {
+										setTextSearch("");
+										setUrlSearch({ tags: [], archived: false });
+									}}
 								>
 									<Trans>Clear filters</Trans>
 								</Button>
