@@ -230,6 +230,16 @@ Tool names use canonical unprefixed `snake_case` names.
 | `lock_resume`           | Lock a resume to prevent edits, patches, and deletion                                                                              |
 | `unlock_resume`         | Unlock a previously locked resume to re-enable editing                                                                             |
 | `get_resume_statistics` | Get view and download statistics for a resume                                                                                      |
+| `list_cover_letters` | List independent cover letters in the cover-letter library; embedded resume cover letters are not listed here                         |
+| `read_cover_letter` | Read one independent library cover letter by ID                                                                                       |
+| `create_cover_letter` | Create an independent library cover letter, optionally linked to a resume or application                                           |
+| `update_cover_letter` | Update an independent cover letter with revision-checked concurrency                                                                   |
+| `refresh_cover_letter_style` | Refresh independent-letter styling from a resume without changing its content or template                                         |
+| `duplicate_cover_letter` | Create an independent copy of a library cover letter                                                                                  |
+| `delete_cover_letter` | Permanently delete an independent library cover letter; requires its current revision                                               |
+| `copy_embedded_cover_letter` | Copy a cover-letter item from a resume into the independent cover-letter library; leaves embedded item unchanged                    |
+| `export_cover_letter` | Export one independent library cover letter as versioned cover-letter JSON                                                             |
+| `import_cover_letter` | Import versioned cover-letter JSON as a new independent library letter                                                                 |
 | `list_applications`     | List tracked job applications. Supports stage, tag, and archived filters                                                           |
 | `read_application`      | Read one full application record with contacts, follow-up details, documents, and timeline                                         |
 | `list_application_tags` | List every distinct tag used across applications                                                                                    |
@@ -251,6 +261,15 @@ Tool names use canonical unprefixed `snake_case` names.
 ### Breaking change (tool names)
 
 Older clients may refer to prefixed or dot-separated names. Those names are no longer registered; update automations and saved prompts to the canonical names above.
+
+### Independent and embedded cover letters
+
+Reactive Resume has two cover-letter scopes:
+
+- **Independent library letters** live in the **Cover Letters** dashboard and have their own IDs, revisions, templates, exports, and lifecycle. Use `list_cover_letters`, `read_cover_letter`, `create_cover_letter`, `update_cover_letter`, `refresh_cover_letter_style`, `duplicate_cover_letter`, `delete_cover_letter`, `export_cover_letter`, and `import_cover_letter` for this scope.
+- **Embedded letters** live as cover-letter items inside a resume's custom sections. They are part of that resume's `ResumeData`; use `read_resume` and `apply_resume_patch` to inspect or edit them. Use `copy_embedded_cover_letter` when you want to create a separate independent library copy. Copying does not remove or change the embedded item.
+
+Updating or deleting an independent letter requires its latest `revision` as `expectedRevision`. This prevents concurrent MCP clients from overwriting newer edits.
 
 ## Available resources
 

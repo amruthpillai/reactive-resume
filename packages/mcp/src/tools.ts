@@ -42,7 +42,7 @@ function errorHint(error: unknown): string {
 	// Every tool shares this handler, so the wording stays entity-agnostic: `NOT_FOUND` is
 	// thrown by the application procedures too, and resume-flavoured advice misdirects there.
 	if (code === "NOT_FOUND" || status === 404)
-		return `\n\nHint: Not found. Check the ID — \`${listResumes}\` and \`${listApplications}\` return valid ones.`;
+		return `\n\nHint: Not found. Check the ID — \`${listResumes}\`, \`${MCP_TOOL_NAME.listCoverLetters}\`, and \`${listApplications}\` return valid ones.`;
 	if (code === "FORBIDDEN" || status === 403)
 		return "\n\nHint: Permission denied. This account cannot access that record.";
 	if (status === 400) return "\n\nHint: Invalid request. Check the input parameters against the tool's schema.";
@@ -369,6 +369,86 @@ export function registerTools(server: McpServer, client: RouterClient<typeof rou
 
 			return text(JSON.stringify(stats, null, 2));
 		}),
+	);
+
+	// ── Independent Cover Letters ───────────────────────────────────
+	server.registerTool(
+		T.listCoverLetters,
+		TOOL_META[T.listCoverLetters],
+		withErrorHandling("listing cover letters", async (params) => json(await client.coverLetters.list(params as never))),
+	);
+
+	server.registerTool(
+		T.readCoverLetter,
+		TOOL_META[T.readCoverLetter],
+		withErrorHandling("reading cover letter", async ({ id }: { id: string }) =>
+			json(await client.coverLetters.getById({ id })),
+		),
+	);
+
+	server.registerTool(
+		T.createCoverLetter,
+		TOOL_META[T.createCoverLetter],
+		withErrorHandling("creating cover letter", async (params) =>
+			json(await client.coverLetters.create(params as never)),
+		),
+	);
+
+	server.registerTool(
+		T.updateCoverLetter,
+		TOOL_META[T.updateCoverLetter],
+		withErrorHandling("updating cover letter", async (params) =>
+			json(await client.coverLetters.update(params as never)),
+		),
+	);
+
+	server.registerTool(
+		T.refreshCoverLetterStyle,
+		TOOL_META[T.refreshCoverLetterStyle],
+		withErrorHandling("refreshing cover letter style", async (params) =>
+			json(await client.coverLetters.refreshStyle(params as never)),
+		),
+	);
+
+	server.registerTool(
+		T.duplicateCoverLetter,
+		TOOL_META[T.duplicateCoverLetter],
+		withErrorHandling("duplicating cover letter", async (params) =>
+			json(await client.coverLetters.duplicate(params as never)),
+		),
+	);
+
+	server.registerTool(
+		T.deleteCoverLetter,
+		TOOL_META[T.deleteCoverLetter],
+		withErrorHandling("deleting cover letter", async (params) => {
+			await client.coverLetters.delete(params as never);
+			return text(`Deleted cover letter (${(params as { id: string }).id}).`);
+		}),
+	);
+
+	server.registerTool(
+		T.copyEmbeddedCoverLetter,
+		TOOL_META[T.copyEmbeddedCoverLetter],
+		withErrorHandling("copying embedded cover letter", async (params) =>
+			json(await client.coverLetters.copyEmbedded(params as never)),
+		),
+	);
+
+	server.registerTool(
+		T.exportCoverLetter,
+		TOOL_META[T.exportCoverLetter],
+		withErrorHandling("exporting cover letter", async ({ id }: { id: string }) =>
+			json(await client.coverLetters.export({ id })),
+		),
+	);
+
+	server.registerTool(
+		T.importCoverLetter,
+		TOOL_META[T.importCoverLetter],
+		withErrorHandling("importing cover letter", async ({ document }: { document: unknown }) =>
+			json(await client.coverLetters.import({ document } as never)),
+		),
 	);
 
 	// ── Applications ──────────────────────────────────────────────

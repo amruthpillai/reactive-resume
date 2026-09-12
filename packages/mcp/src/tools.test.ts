@@ -65,6 +65,18 @@ const clientMock = {
 		setLocked: vi.fn(),
 		statistics: { getById: vi.fn() },
 	},
+	coverLetters: {
+		list: vi.fn(),
+		getById: vi.fn(),
+		create: vi.fn(),
+		update: vi.fn(),
+		refreshStyle: vi.fn(),
+		duplicate: vi.fn(),
+		delete: vi.fn(),
+		copyEmbedded: vi.fn(),
+		export: vi.fn(),
+		import: vi.fn(),
+	},
 	applications: {
 		list: vi.fn(),
 		getById: vi.fn(),
@@ -199,6 +211,47 @@ describe("registerTools", () => {
 		expect(names).toContain("create_application");
 		expect(names).toContain("attach_application_document");
 		expect(names).toContain("draft_application_message");
+	});
+
+	it("registers and routes independent cover-letter tools", async () => {
+		clientMock.coverLetters.list.mockResolvedValueOnce({ items: [{ id: "letter-1" }], total: 1 });
+		clientMock.coverLetters.update.mockResolvedValueOnce({ id: "letter-1", revision: 2 });
+		clientMock.coverLetters.delete.mockResolvedValueOnce(undefined);
+		const { server, registered } = makeFakeServer();
+		registerTools(server as never, clientMock as never, new Headers());
+
+		expect(registered.map((item) => item.name)).toEqual(
+			expect.arrayContaining([
+				MCP_TOOL_NAME.listCoverLetters,
+				MCP_TOOL_NAME.readCoverLetter,
+				MCP_TOOL_NAME.createCoverLetter,
+				MCP_TOOL_NAME.updateCoverLetter,
+				MCP_TOOL_NAME.refreshCoverLetterStyle,
+				MCP_TOOL_NAME.duplicateCoverLetter,
+				MCP_TOOL_NAME.deleteCoverLetter,
+				MCP_TOOL_NAME.copyEmbeddedCoverLetter,
+				MCP_TOOL_NAME.exportCoverLetter,
+				MCP_TOOL_NAME.importCoverLetter,
+			]),
+		);
+
+		const list = registered.find((item) => item.name === MCP_TOOL_NAME.listCoverLetters)!;
+		const listResult = await list.handler({ search: "Acme", limit: 10, offset: 0 });
+		expect(clientMock.coverLetters.list).toHaveBeenCalledWith({ search: "Acme", limit: 10, offset: 0 });
+		expect(JSON.parse(listResult.content[0]!.text)).toEqual({ items: [{ id: "letter-1" }], total: 1 });
+
+		const update = registered.find((item) => item.name === MCP_TOOL_NAME.updateCoverLetter)!;
+		await update.handler({ id: "letter-1", expectedRevision: 1, content: "Updated" });
+		expect(clientMock.coverLetters.update).toHaveBeenCalledWith({
+			id: "letter-1",
+			expectedRevision: 1,
+			content: "Updated",
+		});
+
+		const remove = registered.find((item) => item.name === MCP_TOOL_NAME.deleteCoverLetter)!;
+		const deleteResult = await remove.handler({ id: "letter-1", expectedRevision: 2 });
+		expect(clientMock.coverLetters.delete).toHaveBeenCalledWith({ id: "letter-1", expectedRevision: 2 });
+		expect(deleteResult.content[0]!.text).toContain("Deleted cover letter (letter-1).");
 	});
 
 	it("lists applications as JSON", async () => {
@@ -372,7 +425,7 @@ describe("registerTools", () => {
 			[
 				"NOT_FOUND",
 				undefined,
-				`\`${MCP_TOOL_NAME.listResumes}\` and \`${MCP_TOOL_NAME.listApplications}\` return valid ones.`,
+				`\`${MCP_TOOL_NAME.listResumes}\`, \`${MCP_TOOL_NAME.listCoverLetters}\`, and \`${MCP_TOOL_NAME.listApplications}\` return valid ones.`,
 			],
 			["RESUME_SLUG_ALREADY_EXISTS", 400, "The slug is already in use."],
 			["FORBIDDEN", undefined, "Permission denied."],
