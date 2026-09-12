@@ -1,11 +1,13 @@
 import type { Style } from "@react-pdf/types";
+import type { IconName } from "phosphor-icons-react-pdf/dynamic";
 import type { TemplatePageProps } from "../../document";
 import type { TemplateColorRoles, TemplateStyleContext, TemplateStyleSlots } from "../shared/types";
 import { useMemo } from "react";
+import { getNetworkIcon } from "@reactive-resume/resume/icons";
 import { rgbaStringToHex } from "@reactive-resume/utils/color";
 import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
-import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
+import { SemanticNodeKeyProvider, useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
 import { semanticNodeKeys } from "../../semantic/node-keys";
 import { createBaseTemplateStyles } from "../shared/base-template-styles";
 import {
@@ -15,12 +17,14 @@ import {
 	PhoneContactItem,
 	WebsiteContactItem,
 } from "../shared/contact-item";
-import { TemplateProvider } from "../shared/context";
-import { filterSections } from "../shared/filtering";
+import { TemplateProvider, useTemplateStyle } from "../shared/context";
+import { filterItems, filterSections, hasVisibleItems } from "../shared/filtering";
 import { getTemplateMetrics } from "../shared/metrics";
 import { hasTemplatePicture } from "../shared/picture";
 import {
 	Heading,
+	Icon,
+	Link,
 	SemanticContactListView,
 	SemanticHeaderPicture,
 	SemanticHeaderView,
@@ -38,6 +42,7 @@ type OnyxStyles = Omit<TemplateStyleSlots, "page"> & {
 	headerTitle: Style;
 	headerIdentity: Style;
 	headerName: Style;
+	headerProfiles: Style;
 	contactList: Style;
 	contactItem: Style;
 	sectionGroup: Style;
@@ -50,6 +55,7 @@ type OnyxTemplate = {
 
 type OnyxHeaderProps = {
 	styles: OnyxStyles;
+	showProfiles: boolean;
 };
 
 export const OnyxPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
@@ -59,8 +65,14 @@ export const OnyxPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageN
 	const { metadata } = data;
 	const { colors, styles } = useOnyxTemplate();
 	const metrics = getTemplateMetrics(metadata.page);
-	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data));
-	const sidebarSections = useRenderedSectionIds(pageNodeKey, filterSections(page.sidebar, data));
+	const isProfilesInLayout = page.main.includes("profiles") || page.sidebar.includes("profiles");
+	const showProfiles = hasVisibleItems(data.sections.profiles, "profiles") && isProfilesInLayout;
+	const excludeFromBody = (section: string) => !showHeader || !showProfiles || section !== "profiles";
+	const mainSections = useRenderedSectionIds(pageNodeKey, filterSections(page.main, data).filter(excludeFromBody));
+	const sidebarSections = useRenderedSectionIds(
+		pageNodeKey,
+		filterSections(page.sidebar, data).filter(excludeFromBody),
+	);
 
 	return (
 		<Page
@@ -69,7 +81,7 @@ export const OnyxPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageN
 			style={composeStyles(styles.page, pageMinHeightStyle, semanticPageStyle)}
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
-				{showHeader && <Header styles={styles} />}
+				{showHeader && <Header styles={styles} showProfiles={showProfiles} />}
 
 				<SemanticRegionView region="main" style={composeStyles(styles.sectionGroup, { rowGap: metrics.sectionGap })}>
 					{mainSections.map((section) => (
@@ -92,9 +104,11 @@ export const OnyxPage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageN
 	);
 };
 
-const Header = ({ styles }: OnyxHeaderProps) => {
-	const { basics, picture } = useRender();
+const Header = ({ styles, showProfiles }: OnyxHeaderProps) => {
+	const { basics, picture, sections } = useRender();
 	const hasPicture = hasTemplatePicture(picture);
+	const visibleProfiles = showProfiles ? filterItems(sections.profiles.items, "profiles") : [];
+	const inlineStyle = useTemplateStyle("inline");
 
 	return (
 		<SemanticHeaderView style={styles.header}>
@@ -116,6 +130,33 @@ const Header = ({ styles }: OnyxHeaderProps) => {
 					))}
 				</SemanticContactListView>
 			</View>
+
+			{showProfiles && (
+				<SemanticNodeKeyProvider nodeKey={undefined}>
+					<View style={styles.headerProfiles}>
+						{visibleProfiles.map((item) => {
+							const iconName = (item.icon as IconName) || (getNetworkIcon(item.network) as IconName);
+							const label = item.website.label || item.username;
+							const content = (
+								<>
+									<Icon name={iconName} {...(item.iconColor ? { color: item.iconColor } : {})} />
+									<Text>{label}</Text>
+								</>
+							);
+
+							return item.website.url ? (
+								<Link key={item.id} src={item.website.url} style={composeStyles(inlineStyle)}>
+									{content}
+								</Link>
+							) : (
+								<View key={item.id} style={composeStyles(inlineStyle)}>
+									{content}
+								</View>
+							);
+						})}
+					</View>
+				</SemanticNodeKeyProvider>
+			)}
 		</SemanticHeaderView>
 	);
 };
@@ -175,6 +216,11 @@ const useOnyxTemplate = (): OnyxTemplate => {
 			headerName: {
 				fontSize: metadata.typography.heading.fontSize * 1.5,
 				lineHeight: headerNameLineHeight,
+			},
+			headerProfiles: {
+				flexDirection: "column",
+				alignItems: r.rtl ? "flex-start" : "flex-end",
+				rowGap: metrics.gapY(0.125),
 			},
 			contactList: {
 				flexDirection: r.row,
