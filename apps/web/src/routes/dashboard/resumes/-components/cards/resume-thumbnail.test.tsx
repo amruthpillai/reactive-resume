@@ -44,6 +44,7 @@ let resize: () => void;
 let media: EventTarget;
 let width = 270;
 let height = 382;
+let currentResume = resume;
 
 beforeEach(() => {
 	mocks.inView = true;
@@ -51,6 +52,7 @@ beforeEach(() => {
 	mocks.toImage.mockClear();
 	width = 270;
 	height = 382;
+	currentResume = resume;
 	vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockImplementation(() => width);
 	vi.spyOn(HTMLElement.prototype, "clientHeight", "get").mockImplementation(() => height);
 	vi.stubGlobal("devicePixelRatio", 2);
@@ -82,12 +84,12 @@ function setup() {
 	});
 	const ui = () => (
 		<QueryClientProvider client={client}>
-			<ResumeThumbnail resume={resume} isLocked={false} />
+			<ResumeThumbnail resume={currentResume} isLocked={false} />
 		</QueryClientProvider>
 	);
 	const result = render(ui());
 	const image = () => result.container.querySelector<HTMLElement>("[style*='background-image']")?.style.backgroundImage;
-	return { ...result, image, refresh: () => result.rerender(ui()) };
+	return { ...result, client, image, refresh: () => result.rerender(ui()) };
 }
 
 it("upgrades a cached image after growth and keeps it visible until replacement is ready", async () => {
@@ -121,7 +123,36 @@ it("upgrades a cached image after growth and keeps it visible until replacement 
 	expect(view.image()).toContain("blob:1216x1728");
 	expect(mocks.toImage).toHaveBeenCalledTimes(2);
 	view.unmount();
-	expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:1216x1728");
+	expect(URL.revokeObjectURL).not.toHaveBeenCalledWith("blob:1216x1728");
+});
+
+it("reuses rendered image after card hide and remount", async () => {
+	const view = setup();
+	await waitFor(() => expect(view.image()).toContain("blob:576x768"));
+	view.unmount();
+
+	const remounted = render(
+		<QueryClientProvider client={view.client}>
+			<ResumeThumbnail resume={resume} isLocked={false} />
+		</QueryClientProvider>,
+	);
+	await waitFor(() => expect(remounted.container.querySelector<HTMLElement>("[style*='background-image']")?.style.backgroundImage).toContain("blob:576x768"));
+	expect(mocks.toPdf).toHaveBeenCalledTimes(1);
+	expect(mocks.toImage).toHaveBeenCalledTimes(1);
+	remounted.unmount();
+});
+
+it("revokes rendered images when query is evicted or replaced", async () => {
+	const view = setup();
+	await waitFor(() => expect(view.image()).toContain("blob:576x768"));
+	currentResume = { ...resume, updatedAt: new Date(1000) };
+	view.refresh();
+	await waitFor(() => expect(view.image()).toContain("blob:576x768"));
+	expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:576x768");
+
+	view.client.removeQueries({ queryKey: ["resume-thumbnail"] });
+	expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:576x768");
+	view.unmount();
 });
 
 it("upgrades after a DPR change even when CSS dimensions do not change", async () => {
