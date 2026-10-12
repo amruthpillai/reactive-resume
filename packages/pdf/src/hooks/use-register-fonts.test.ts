@@ -102,6 +102,23 @@ describe("resolvePdfFonts", () => {
 		expect(registered).not.toContainEqual(expect.objectContaining({ family: "Noto Serif SC" }));
 	});
 
+	it("registers the Noto Sans Symbols 2 fallback for text symbols like arrows (#3608)", () => {
+		const symbolsSource = getWebFontSource("Noto Sans Symbols 2", "400", false);
+		const { registered, registerFonts } = withRegistry();
+
+		const pdfTypography = registerFonts(typography, "en-US", false, new Set(["symbols"]));
+
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Sans Symbols 2", "Noto Serif"]);
+		expect(registered).toContainEqual(
+			expect.objectContaining({
+				family: "Noto Sans Symbols 2",
+				weight: 400,
+				italic: false,
+				src: symbolsSource,
+			}),
+		);
+	});
+
 	it("registers the fallback family's true Bold face when primary bold exceeds stored weights (#3310)", () => {
 		const { registered, registerFonts } = withRegistry();
 
@@ -178,6 +195,15 @@ describe("resumeContentScripts", () => {
 
 		const scripts = resumeContentScripts(data);
 		expect(scripts.has("emoji")).toBe(true);
+		expect(scripts.size).toBe(1);
+	});
+
+	it("detects text-symbol arrows for the symbols fallback (#3608)", () => {
+		// U+2192 (→) lives in the Arrows block U+2190–U+21FF, which the symbols
+		// detector must include so Noto Sans Symbols 2 covers it.
+		const scripts = resumeContentScripts(withSummary("Hours → Minutes"));
+		expect(scripts.has("symbols")).toBe(true);
+		// The arrow is a text symbol, not emoji or any other script.
 		expect(scripts.size).toBe(1);
 	});
 
