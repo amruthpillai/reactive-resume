@@ -188,7 +188,7 @@ are lowercase and case-sensitive.
 | Element           | Targets                                              | Typical use                                             |
 | ----------------- | ---------------------------------------------------- | ------------------------------------------------------- |
 | `resume`          | The whole resume                                     | Scope a rule to one template.                           |
-| `page`            | One PDF page                                         | Set a page size.                                        |
+| `page`            | One authored layout page and its overflow pages      | Set a page size or background color.                    |
 | `region`          | The header, main, sidebar or featured area of a page | Style a layout area.                                    |
 | `header`          | The resume header                                    | Style the name and contact area.                        |
 | `section`         | A section                                            | Target a section type or placement.                     |
@@ -258,6 +258,17 @@ section[type="experience"] item:nth-of-type(1) {
   margin-bottom: 12pt;
 }
 ```
+
+To change the background of the second page in **Layout**, use:
+
+```css
+page[page-number="2"] {
+  background-color: var(--resume-primary-color);
+}
+```
+
+The background covers the entire page, including its margins. `page-number` counts pages in **Layout**, not
+physical PDF pages: if an authored page overflows, its generated continuation pages use the same background.
 
 ### Reuse your Design settings
 

@@ -898,10 +898,32 @@ function convertPage(page: HostElement, context: Context, key: number, freeFormH
 	converted.style = unreversed.style;
 	const { children } = unreversed;
 	const fixed = children.filter((child) => isValidElement(child) && child.type === FormeFixed);
-	if (fixed.length === 0)
+	// Forme doesn't paint Page backgroundColor. Repeat a full-page box behind the content, outside the margins.
+	const backgroundColor = converted.style.backgroundColor;
+	const wrapContent = fixed.length > 0 || (backgroundColor !== undefined && converted.style.flexDirection === "row");
+	if (backgroundColor !== undefined) {
+		const backgroundStyle: FormeStyle = {
+			position: "absolute",
+			left: 0,
+			top: 0,
+			width: dimensions.width,
+			height: dimensions.height,
+			backgroundColor,
+		};
+		fixed.unshift(
+			createElement(
+				FormeFixed,
+				{ key: "background", position: "header" },
+				fixedOnPage(createElement(FormeView, { style: backgroundStyle }), backgroundStyle, pageContext, margin),
+			),
+		);
+		delete converted.style.backgroundColor;
+	}
+	if (!wrapContent)
 		return createElement(
 			FormePage,
 			{ key, size: pageSizeProp(size, dimensions), margin, style: converted.style },
+			...fixed,
 			...children,
 		);
 
