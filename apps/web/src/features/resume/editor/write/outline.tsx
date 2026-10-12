@@ -35,13 +35,13 @@ const ADD_LABELS: Record<CustomSectionType, MessageDescriptor> = {
 	"cover-letter": msg`Add cover letter`,
 };
 
-const rowKey = (row: OutlineRow) => `${row.id}\u0000${row.page}\u0000${row.column}`;
+const rowKey = (row: OutlineRow) => `${row.id}\u0000${row.page}\u0000${row.column}\u0000${row.hidden ? 1 : 0}`;
 
 function parseRows(key: string): OutlineRow[] {
 	if (!key) return [];
 	return key.split("\u0001").map((part) => {
-		const [id = "", page = "0", column = "main"] = part.split("\u0000");
-		return { id, page: Number(page), column: column as OutlineRow["column"] };
+		const [id = "", page = "0", column = "main", hidden = "0"] = part.split("\u0000");
+		return { id, page: Number(page), column: column as OutlineRow["column"], hidden: hidden === "1" };
 	});
 }
 
@@ -56,8 +56,9 @@ function useSortSensors() {
 type OutlineProps = { locked: boolean; page: PageSettings };
 
 /**
- * The outline: sections in use, in print order. Dragging a row (or ⌥↑ / ⌥↓ on its title) reorders the
- * layout; a divider marks each new page and, on two-column pages, where the sidebar starts.
+ * The outline: sections in use, in print order. Hidden sections are kept out of that flow, in a group at the
+ * end, so they can be found and restored without reordering them. Dragging a row (or ⌥↑ / ⌥↓ on its title)
+ * reorders the layout; a divider marks each new page and, on two-column pages, where the sidebar starts.
  */
 export function Outline({ locked, page }: OutlineProps) {
 	const added = useEditorStore((state) => state.addedSections);
@@ -65,7 +66,9 @@ export function Outline({ locked, page }: OutlineProps) {
 		getOutlineRows(resume.data, new Set(added)).map(rowKey).join("\u0001"),
 	);
 	const rows = useMemo(() => parseRows(key), [key]);
-	const multiPage = rows.some((row) => row.page > 0);
+	const activeRows = useMemo(() => rows.filter((row) => !row.hidden), [rows]);
+	const hiddenRows = useMemo(() => rows.filter((row) => row.hidden), [rows]);
+	const multiPage = activeRows.some((row) => row.page > 0);
 	const updateResumeData = useUpdateResumeData();
 	const sensors = useSortSensors();
 
@@ -76,17 +79,17 @@ export function Outline({ locked, page }: OutlineProps) {
 
 	const onDragEnd = ({ active, over }: DragEndEvent) => {
 		if (!over || active.id === over.id) return;
-		const from = rows.findIndex((row) => row.id === active.id);
-		const to = rows.findIndex((row) => row.id === over.id);
-		move(String(active.id), rows[to], from < to ? "down" : "up");
+		const from = activeRows.findIndex((row) => row.id === active.id);
+		const to = activeRows.findIndex((row) => row.id === over.id);
+		move(String(active.id), activeRows[to], from < to ? "down" : "up");
 	};
 
 	return (
 		<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-			<SortableContext items={rows.map((row) => row.id)} strategy={verticalListSortingStrategy}>
+			<SortableContext items={activeRows.map((row) => row.id)} strategy={verticalListSortingStrategy}>
 				<div className="grid gap-0.5">
-					{rows.map((row, index) => {
-						const previous = rows[index - 1];
+					{activeRows.map((row, index) => {
+						const previous = activeRows[index - 1];
 						const newPage = multiPage && row.page !== previous?.page;
 						const sidebarStarts = row.column === "sidebar" && (previous?.column !== "sidebar" || newPage);
 
@@ -98,13 +101,35 @@ export function Outline({ locked, page }: OutlineProps) {
 									sectionId={row.id}
 									locked={locked}
 									page={page}
-									onMove={(direction) => move(row.id, rows[direction === "up" ? index - 1 : index + 1], direction)}
+									onMove={(direction) =>
+										move(row.id, activeRows[direction === "up" ? index - 1 : index + 1], direction)
+									}
 								/>
 							</Fragment>
 						);
 					})}
 				</div>
 			</SortableContext>
+
+			{hiddenRows.length > 0 && (
+				<div className="grid gap-0.5">
+					<Divider label={<Trans>Hidden sections</Trans>} />
+					{hiddenRows.map((row) => {
+						// Hidden rows sit outside the drag flow, so their menu moves them in the full print order.
+						const index = rows.findIndex((candidate) => candidate.id === row.id);
+						return (
+							<OutlineSection
+								key={row.id}
+								sectionId={row.id}
+								locked={locked}
+								page={page}
+								draggable={false}
+								onMove={(direction) => move(row.id, rows[direction === "up" ? index - 1 : index + 1], direction)}
+							/>
+						);
+					})}
+				</div>
+			)}
 		</DndContext>
 	);
 }
@@ -128,10 +153,12 @@ type OutlineSectionProps = {
 	sectionId: string;
 	locked: boolean;
 	page: PageSettings;
+	/** Hidden sections render in a group outside the drag flow, so they aren't draggable. */
+	draggable?: boolean;
 	onMove: (direction: "up" | "down") => void;
 };
 
-function OutlineSection({ sectionId, locked, page, onMove }: OutlineSectionProps) {
+function OutlineSection({ sectionId, locked, page, draggable = true, onMove }: OutlineSectionProps) {
 	const { i18n } = useLingui();
 	// Select the type (a string) rather than a new section object, so the row renders only when it changes.
 	const type = useCurrentBuilderResumeSelector((resume) => getSectionType(resume.data, sectionId) ?? null);
@@ -142,7 +169,7 @@ function OutlineSection({ sectionId, locked, page, onMove }: OutlineSectionProps
 	if (!stableSection) return null;
 
 	return (
-		<SectionRow section={stableSection} locked={locked} onMove={onMove}>
+		<SectionRow section={stableSection} locked={locked} draggable={draggable} onMove={onMove}>
 			{stableSection.kind === "summary" ? (
 				<SummaryEditor locked={locked} />
 			) : (

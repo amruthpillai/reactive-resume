@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { produce } from "immer";
 import { customSectionItemDefinitionByType } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { CUSTOM_SECTION_TYPES, createEntry, moveSection } from "./model";
+import { CUSTOM_SECTION_TYPES, createEntry, getOutlineRows, isSectionHidden, moveSection } from "./model";
 
 const resume = (edit?: (data: ResumeData) => void) => {
 	const data = structuredClone(defaultResumeData);
@@ -54,5 +54,28 @@ describe("outline", () => {
 			main: ["summary", "skills", "experience", "education"],
 			sidebar: [],
 		});
+	});
+});
+
+describe("hidden sections", () => {
+	it("marks hidden sections in the outline instead of dropping them", () => {
+		const data = resume((draft) => withEntries(draft, "experience", "education"));
+		data.sections.experience.hidden = true;
+
+		const rows = getOutlineRows(data);
+		expect(rows.find((row) => row.id === "experience")).toMatchObject({ hidden: true });
+		expect(rows.find((row) => row.id === "education")).toMatchObject({ hidden: false });
+	});
+
+	it("reads the hidden flag of every kind of section", () => {
+		const data = resume((draft) => withEntries(draft, "experience"));
+		expect(isSectionHidden(data, "summary")).toBe(false);
+		expect(isSectionHidden(data, "experience")).toBe(false);
+		expect(isSectionHidden(data, "missing")).toBe(false);
+
+		data.summary.hidden = true;
+		data.sections.experience.hidden = true;
+		expect(isSectionHidden(data, "summary")).toBe(true);
+		expect(isSectionHidden(data, "experience")).toBe(true);
 	});
 });

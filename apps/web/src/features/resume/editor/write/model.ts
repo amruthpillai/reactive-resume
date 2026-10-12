@@ -73,6 +73,12 @@ export function getSectionObject(data: Data, section: WriteSection): SectionObje
 	return data.customSections.find((custom) => custom.id === section.id);
 }
 
+/** Whether a section is hidden from the page: its content is kept, but it isn't printed. */
+export function isSectionHidden(data: Data, id: string): boolean {
+	const section = resolveSection(data, id);
+	return section ? (getSectionObject(data, section)?.hidden ?? false) : false;
+}
+
 export function findEntry(data: Data, sectionId: string, entryId: string): Entry | undefined {
 	const section = resolveSection(data, sectionId);
 	return section ? getEntries(data, section).find((entry) => entry.id === entryId) : undefined;
@@ -234,12 +240,13 @@ export function isSectionInUse(data: Data, id: string, recentlyAdded: ReadonlySe
 
 type LayoutColumn = "main" | "sidebar";
 
-/** A row of the outline, in print order, with where it sits in the layout. */
-export type OutlineRow = { id: string; page: number; column: LayoutColumn };
+/** A row of the outline, in print order, with where it sits in the layout and whether it prints. */
+export type OutlineRow = { id: string; page: number; column: LayoutColumn; hidden: boolean };
 
 /**
  * The outline lists the sections in use in print order: page by page, the main column and then the sidebar.
- * Sections in use that no page places (rare) are listed last, as the last page's main column.
+ * Sections in use that no page places (rare) are listed last, as the last page's main column. Hidden sections are
+ * listed too (marked as hidden) so the outline can offer to restore them.
  */
 export function getOutlineRows(data: Data, recentlyAdded?: ReadonlySet<string>): OutlineRow[] {
 	const rows: OutlineRow[] = [];
@@ -249,7 +256,9 @@ export function getOutlineRows(data: Data, recentlyAdded?: ReadonlySet<string>):
 		for (const column of ["main", "sidebar"] as const) {
 			for (const id of page[column]) {
 				placed.add(id);
-				if (isSectionInUse(data, id, recentlyAdded)) rows.push({ id, page: pageIndex, column });
+				if (isSectionInUse(data, id, recentlyAdded)) {
+					rows.push({ id, page: pageIndex, column, hidden: isSectionHidden(data, id) });
+				}
 			}
 		}
 	});
@@ -257,7 +266,9 @@ export function getOutlineRows(data: Data, recentlyAdded?: ReadonlySet<string>):
 	const lastPage = Math.max(0, data.metadata.layout.pages.length - 1);
 	const candidates = ["summary", ...BUILTIN_SECTION_TYPES, ...data.customSections.map((section) => section.id)];
 	for (const id of candidates) {
-		if (!placed.has(id) && isSectionInUse(data, id, recentlyAdded)) rows.push({ id, page: lastPage, column: "main" });
+		if (!placed.has(id) && isSectionInUse(data, id, recentlyAdded)) {
+			rows.push({ id, page: lastPage, column: "main", hidden: isSectionHidden(data, id) });
+		}
 	}
 
 	return rows;
@@ -277,7 +288,7 @@ function removeFromLayout(draft: WritableDraft<ResumeData>, id: string) {
 export function moveSection(
 	draft: WritableDraft<ResumeData>,
 	id: string,
-	target: OutlineRow,
+	target: Pick<OutlineRow, "id" | "page" | "column">,
 	direction: "up" | "down",
 ) {
 	if (id === target.id) return;
