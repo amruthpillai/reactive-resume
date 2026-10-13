@@ -17,7 +17,7 @@ catalog:
   "@types/react-dom": "^19.3.0"
   "@typescript/native-preview": "7.0.0-dev.20260707.2"
   "@uiw/color-convert": "^2.10.3"
-  "ai": ^7.0.138
+  "ai": ^7.0.139
   "bcryptjs": "^3.0.3"
   "better-auth": "1.7.7"
   "drizzle-orm": "1.0.0-rc.4"
@@ -42,7 +42,9 @@ allowBuilds:
 minimumReleaseAge: 0
 overrides:
   "@better-auth/infra>@better-fetch/fetch": 1.3.2
-  next@<16.3.6: 16.3.6
+  next@<16.3.8: 16.3.8
+  "@modelcontextprotocol/client@>=2.0.0 <2.2.0": ^2.2.0
+  postcss-selector-parser@<7.1.6: ^7.1.6
   esbuild@>=0.17.0 <0.28.1: ^0.28.1
   postcss@<8.5.10: ^8.5.14
   samlify@<2.13.0: ^2.13.0
