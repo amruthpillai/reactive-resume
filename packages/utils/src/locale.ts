@@ -99,7 +99,6 @@ export function getLocaleAlternates(pageUrl: string) {
 // pictographs and regional indicators render instead of mojibake (#3321).
 // "symbols" is content-detected too and resolves to Noto Sans Symbols 2 for
 // text symbols such as ★ that neither Latin fonts nor Noto Emoji cover (#3581).
-// "arrows" uses Noto Sans Symbols: Symbols 2 lacks basic arrows such as → (#3608).
 export type Script =
 	| "hangul"
 	| "kana"

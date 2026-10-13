@@ -166,11 +166,11 @@ const thaiRegex = /[฀-๿]/;
 // same reason: without it, keycap-only content falls back to a font without
 // the enclosure mark and renders garbled.
 const emojiRegex = /[\u{1F1E6}-\u{1F1FF}]|\u{20E3}|\p{Extended_Pictographic}/u;
-// Basic arrows need Noto Sans Symbols; Symbols 2 has ★ but no → (#3608).
-const arrowsRegex = /(?!\p{Extended_Pictographic})[←-⇿]/u;
-// Geometric Shapes, Miscellaneous Symbols, Dingbats and Miscellaneous Symbols
+// Basic arrows U+2190–U+2199 need Noto Sans Symbols; Symbols 2 has ★ but no → (#3608).
+const arrowsRegex = /(?!\p{Extended_Pictographic})[←-↙]/u;
+// The rest of the Arrows block, Geometric Shapes, Miscellaneous Symbols, Dingbats and Miscellaneous Symbols
 // and Arrows need Symbols 2 (#3581). Pictographs (☀, ✔, ⭐) use Noto Emoji instead.
-const symbolsRegex = /(?!\p{Extended_Pictographic})[■-➿⬀-⯿]/u;
+const symbolsRegex = /(?!\p{Extended_Pictographic})[↚-⇿■-➿⬀-⯿]/u;
 
 const scriptDetectors: { script: Script; regex: RegExp }[] = [
 	{ script: "hangul", regex: hangulRegex },

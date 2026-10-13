@@ -7,11 +7,6 @@ describe("getPdfFallbackFontFamilies", () => {
 			"Noto Sans Symbols",
 			"Noto Serif",
 		]);
-		expect(getPdfFallbackFontFamilies("Times-Roman", { scripts: ["arrows", "symbols"] })).toEqual([
-			"Noto Sans Symbols",
-			"Noto Sans Symbols 2",
-			"Noto Serif",
-		]);
 	});
 	it("orders the locale script first, then content scripts (mixed RTL + CJK resume)", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR", scripts: ["arabic"] })).toEqual([

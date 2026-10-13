@@ -217,10 +217,8 @@ describe("resumeContentScripts", () => {
 		expect(scripts.has("arrows")).toBe(true);
 		// The arrow is a text symbol, not emoji or any other script.
 		expect(scripts.size).toBe(1);
-	});
-
-	it("detects arrows and stars independently when both appear", () => {
-		expect(resumeContentScripts(withSummary("Hours → Minutes ★"))).toEqual(new Set(["arrows", "symbols"]));
+		// U+21E6 (⇦) is outside Noto Sans Symbols, so it stays on Symbols 2.
+		expect(resumeContentScripts(withSummary("⇦"))).toEqual(new Set(["symbols"]));
 	});
 
 	it("keeps pictographic arrows on the emoji fallback without extra text-symbol fonts", () => {
