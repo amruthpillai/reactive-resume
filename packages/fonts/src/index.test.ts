@@ -2,6 +2,17 @@ import { describe, expect, it } from "vitest";
 import { getFont, getPdfFallbackFontFamilies, resolveBoldFontWeight, resolveLegacyFontAlias } from "./index";
 
 describe("getPdfFallbackFontFamilies", () => {
+	it("uses separate fonts for arrows and other text symbols", () => {
+		expect(getPdfFallbackFontFamilies("Times-Roman", { scripts: ["arrows"] })).toEqual([
+			"Noto Sans Symbols",
+			"Noto Serif",
+		]);
+		expect(getPdfFallbackFontFamilies("Times-Roman", { scripts: ["arrows", "symbols"] })).toEqual([
+			"Noto Sans Symbols",
+			"Noto Sans Symbols 2",
+			"Noto Serif",
+		]);
+	});
 	it("orders the locale script first, then content scripts (mixed RTL + CJK resume)", () => {
 		expect(getPdfFallbackFontFamilies("Helvetica", { locale: "ko-KR", scripts: ["arabic"] })).toEqual([
 			"Noto Sans KR",

@@ -102,7 +102,20 @@ describe("resolvePdfFonts", () => {
 		expect(registered).not.toContainEqual(expect.objectContaining({ family: "Noto Serif SC" }));
 	});
 
-	it("registers the Noto Sans Symbols 2 fallback for text symbols like arrows (#3608)", () => {
+	it("registers the Noto Sans Symbols fallback for arrows without downloading Symbols 2", () => {
+		const { registered, registerFonts } = withRegistry();
+		const pdfTypography = registerFonts(typography, "en-US", false, new Set(["arrows"]));
+		expect(pdfTypography.body.fontFamily).toEqual(["IBM Plex Serif", "Noto Sans Symbols", "Noto Serif"]);
+		expect(registered).toContainEqual({
+			family: "Noto Sans Symbols",
+			weight: 400,
+			italic: false,
+			src: getWebFontSource("Noto Sans Symbols", "400", false),
+		});
+		expect(registered).not.toContainEqual(expect.objectContaining({ family: "Noto Sans Symbols 2" }));
+	});
+
+	it("registers the Noto Sans Symbols 2 fallback for text symbols like stars", () => {
 		const symbolsSource = getWebFontSource("Noto Sans Symbols 2", "400", false);
 		const { registered, registerFonts } = withRegistry();
 
@@ -198,13 +211,20 @@ describe("resumeContentScripts", () => {
 		expect(scripts.size).toBe(1);
 	});
 
-	it("detects text-symbol arrows for the symbols fallback (#3608)", () => {
-		// U+2192 (→) lives in the Arrows block U+2190–U+21FF, which the symbols
-		// detector must include so Noto Sans Symbols 2 covers it.
+	it("detects text-symbol arrows for the dedicated arrows fallback (#3608)", () => {
+		// U+2192 (→) needs Noto Sans Symbols; Symbols 2 does not contain it.
 		const scripts = resumeContentScripts(withSummary("Hours → Minutes"));
-		expect(scripts.has("symbols")).toBe(true);
+		expect(scripts.has("arrows")).toBe(true);
 		// The arrow is a text symbol, not emoji or any other script.
 		expect(scripts.size).toBe(1);
+	});
+
+	it("detects arrows and stars independently when both appear", () => {
+		expect(resumeContentScripts(withSummary("Hours → Minutes ★"))).toEqual(new Set(["arrows", "symbols"]));
+	});
+
+	it("keeps pictographic arrows on the emoji fallback without extra text-symbol fonts", () => {
+		expect(resumeContentScripts(withSummary("↔️ ↩️"))).toEqual(new Set(["emoji"]));
 	});
 
 	it("detects multiple scripts in mixed content", () => {
