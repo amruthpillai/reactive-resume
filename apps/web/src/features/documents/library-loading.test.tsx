@@ -18,7 +18,11 @@ vi.mock("@tanstack/react-router", () => ({
 	Link: ({ children }: { children: ReactNode }) => <a href="/dashboard">{children}</a>,
 }));
 vi.mock("@/features/resume/builder/draft", () => ({ isEditableElementFocused: () => false }));
-vi.mock("./document-actions", () => ({ TagsDialog: () => null, LinkApplicationDialog: () => null }));
+vi.mock("./document-actions", () => ({
+	TagsDialog: () => null,
+	LinkApplicationDialog: () => null,
+	useBatchActions: () => ({}),
+}));
 vi.mock("./document-card", () => ({ DocumentCard: () => null, DocumentRow: () => null }));
 vi.mock("./new-document-dialog", () => ({
 	useStartDocument: () => ({ startBlank: vi.fn(), trySample: vi.fn(), creating: false }),

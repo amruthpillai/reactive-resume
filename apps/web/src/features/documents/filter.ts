@@ -4,17 +4,25 @@ export type DocumentSummary = RouterOutput["documents"]["list"][number];
 export type DocumentTypeFilter = "all" | "resume" | "letter";
 export type DocumentSort = "edited" | "name" | "created";
 
-type DocumentFilters = { type: DocumentTypeFilter; q: string; tags: readonly string[]; sort: DocumentSort };
+type DocumentFilters = {
+	type: DocumentTypeFilter;
+	q: string;
+	tags: readonly string[];
+	sort: DocumentSort;
+	/** Only resumes whose public link is on. */
+	public?: boolean | undefined;
+};
 
 const byName = new Intl.Collator(undefined, { sensitivity: "base", numeric: true });
 
-/** Search covers titles, tags and linked applications; every chosen tag must be on the document. */
+/** Search covers titles, tags and linked applications; every chosen tag must be on the document, and Public keeps shared resumes. */
 export function filterDocuments(documents: readonly DocumentSummary[], filters: DocumentFilters) {
 	const query = filters.q.trim().toLocaleLowerCase();
 
 	return documents
 		.filter((document) => filters.type === "all" || document.type === filters.type)
 		.filter((document) => filters.tags.every((tag) => document.tags.includes(tag)))
+		.filter((document) => !filters.public || document.isPublic)
 		.filter((document) => {
 			if (!query) return true;
 			const haystack = [document.name, ...document.tags, document.application?.company, document.application?.role];
@@ -36,3 +44,9 @@ export function daysLeftInTrash(trashedAt: Date, now = Date.now()) {
 	const left = trashedAt.getTime() + 30 * 24 * 60 * 60 * 1000 - now;
 	return Math.max(0, Math.ceil(left / (24 * 60 * 60 * 1000)));
 }
+
+/** A resume's public address, or null while its link is off. */
+export const publicResumeUrl = (document: DocumentSummary, username: string | undefined) =>
+	document.type === "resume" && document.isPublic && document.slug && username
+		? `${window.location.origin}/${username}/${document.slug}`
+		: null;

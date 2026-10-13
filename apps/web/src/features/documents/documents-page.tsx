@@ -5,7 +5,16 @@ import { useHotkey } from "@tanstack/react-hotkeys";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@reactive-resume/ui/components/button";
+import { Checkbox } from "@reactive-resume/ui/components/checkbox";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@reactive-resume/ui/components/dropdown-menu";
 import { Icon } from "@reactive-resume/ui/components/icon";
+import { IconButton } from "@reactive-resume/ui/components/icon-button";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@reactive-resume/ui/components/input-group";
 import { Kbd } from "@reactive-resume/ui/components/kbd";
 import { NativeSelect } from "@reactive-resume/ui/components/native-select";
@@ -13,7 +22,7 @@ import { SegmentedControl, SegmentedControlItem } from "@reactive-resume/ui/comp
 import { Skeleton } from "@reactive-resume/ui/components/skeleton";
 import { Tabs, TabsCount, TabsList, TabsTrigger } from "@reactive-resume/ui/components/tabs";
 import { cn } from "@reactive-resume/utils/style";
-import { LinkApplicationDialog, TagsDialog } from "./document-actions";
+import { LinkApplicationDialog, TagsDialog, useBatchActions } from "./document-actions";
 import { DocumentCard, DocumentRow } from "./document-card";
 import { collectTags, filterDocuments } from "./filter";
 import { LibraryError } from "./library-error";
@@ -26,6 +35,8 @@ export type DocumentsSearch = {
 	type: DocumentTypeFilter;
 	q: string;
 	tags: string[];
+	/** Only resumes whose public link is on. */
+	public?: boolean | undefined;
 	sort: DocumentSort;
 	view?: "grid" | "list" | undefined;
 };
@@ -42,7 +53,8 @@ type DocumentsPageProps = {
 export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 	const openDialog = useDialogStore((state) => state.openDialog);
 	const searchRef = useRef<HTMLInputElement>(null);
-	const [tagsFor, setTagsFor] = useState<DocumentSummary | null>(null);
+	const [tagsFor, setTagsFor] = useState<DocumentSummary[] | null>(null);
+	const [selected, setSelected] = useState<ReadonlySet<string>>(() => new Set());
 	const [linkFor, setLinkFor] = useState<DocumentSummary | null>(null);
 	// Grid and list animate in only after a switch, never on the page's first render.
 	const [viewSwitched, setViewSwitched] = useState(false);
@@ -84,11 +96,32 @@ export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 		resume: all.filter((document) => document.type === "resume").length,
 		letter: all.filter((document) => document.type === "letter").length,
 	};
-	const filtered = search.type !== "all" || search.q.trim() !== "" || search.tags.length > 0;
-	const itemProps = {
-		onTags: setTagsFor,
+	const hasPublic = all.some((document) => document.isPublic);
+	const filtered = search.type !== "all" || search.q.trim() !== "" || search.tags.length > 0 || search.public === true;
+	// Actions apply to the selected documents the filters show.
+	const selection = shown.filter((document) => selected.has(documentKey(document)));
+	const selecting = selection.length > 0;
+	const allSelected = selecting && selection.length === shown.length;
+	const setSelectedFor = (document: DocumentSummary, on: boolean) =>
+		setSelected((current) => {
+			const next = new Set(current);
+			if (on) next.add(documentKey(document));
+			else next.delete(documentKey(document));
+			return next;
+		});
+	const selectAll = (on: boolean) => setSelected(new Set(on ? shown.map(documentKey) : []));
+	const itemProps = (document: DocumentSummary) => ({
+		onTags: (document: DocumentSummary) => setTagsFor([document]),
 		onLink: setLinkFor,
-	};
+		selected: selected.has(documentKey(document)),
+		onSelectedChange: (on: boolean) => setSelectedFor(document, on),
+		selecting,
+	});
+
+	useHotkey("Escape", () => {
+		if (!selecting || tagsFor || linkFor || isEditableElementFocused()) return;
+		selectAll(false);
+	});
 
 	return (
 		<div className="mx-auto grid w-full max-w-[1180px] content-start gap-5 px-8 py-8 max-sm:px-4 max-sm:py-5">
@@ -163,8 +196,15 @@ export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 						</div>
 					</div>
 
-					{tags.length > 0 && (
-						<TagFilter tags={tags} active={search.tags} onChange={(next) => onSearchChange({ tags: next })} />
+					{(tags.length > 0 || hasPublic) && (
+						<TagFilter
+							tags={tags}
+							active={search.tags}
+							onChange={(next) => onSearchChange({ tags: next })}
+							showPublic={hasPublic}
+							publicOnly={search.public ?? false}
+							onPublicChange={(next) => onSearchChange({ public: next })}
+						/>
 					)}
 
 					{isPending ? (
@@ -186,7 +226,7 @@ export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 								<Button
 									variant="secondary"
 									className="mt-2"
-									onClick={() => onSearchChange({ q: "", tags: [], type: "all" })}
+									onClick={() => onSearchChange({ q: "", tags: [], type: "all", public: false })}
 								>
 									<Trans>Clear search and filters</Trans>
 								</Button>
@@ -199,6 +239,14 @@ export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 							</caption>
 							<thead>
 								<tr className="border-b border-line text-start text-xs font-medium text-ink-3">
+									<th className="w-10 ps-3">
+										<Checkbox
+											checked={allSelected}
+											indeterminate={selecting && !allSelected}
+											onCheckedChange={(on) => selectAll(on)}
+											aria-label={t`Select all`}
+										/>
+									</th>
 									<th className="h-10 ps-3 text-start font-medium">
 										<Trans>Name</Trans>
 									</th>
@@ -221,10 +269,10 @@ export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 							<tbody>
 								{shown.map((document, index) => (
 									<DocumentRow
-										key={`${document.type}:${document.id}`}
+										key={documentKey(document)}
 										document={document}
 										introIndex={intro ? index : undefined}
-										{...itemProps}
+										{...itemProps(document)}
 									/>
 								))}
 							</tbody>
@@ -238,10 +286,10 @@ export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 						>
 							{shown.map((document, index) => (
 								<DocumentCard
-									key={`${document.type}:${document.id}`}
+									key={documentKey(document)}
 									document={document}
 									introIndex={intro ? index : undefined}
-									{...itemProps}
+									{...itemProps(document)}
 								/>
 							))}
 						</div>
@@ -249,12 +297,21 @@ export function DocumentsPage({ search, onSearchChange }: DocumentsPageProps) {
 				</>
 			)}
 
+			<SelectionBar
+				selection={selection}
+				allSelected={allSelected}
+				onSelectAll={() => selectAll(true)}
+				onClear={() => selectAll(false)}
+				onTags={() => setTagsFor(selection)}
+			/>
 			<DropToImport />
-			<TagsDialog document={tagsFor} onClose={() => setTagsFor(null)} />
+			<TagsDialog documents={tagsFor} onClose={() => setTagsFor(null)} />
 			<LinkApplicationDialog document={linkFor} onClose={() => setLinkFor(null)} />
 		</div>
 	);
 }
+
+const documentKey = (document: DocumentSummary) => `${document.type}:${document.id}`;
 
 const VIEW_KEY = "documents-view";
 // Longest stagger (150ms) plus the D2 entrance (200ms), with room to spare: then the intro classes come off.
@@ -323,14 +380,39 @@ function FirstRun({ onChooseFile }: { onChooseFile: () => void }) {
 	);
 }
 
-type TagFilterProps = { tags: string[]; active: string[]; onChange: (tags: string[]) => void };
+type TagFilterProps = {
+	tags: string[];
+	active: string[];
+	onChange: (tags: string[]) => void;
+	/** Public appears first once any resume's link is on. */
+	showPublic: boolean;
+	publicOnly: boolean;
+	onPublicChange: (publicOnly: boolean) => void;
+};
 
-function TagFilter({ tags, active, onChange }: TagFilterProps) {
+const chipClassName = (isActive: boolean) =>
+	cn(
+		"min-h-7 rounded-full border px-3 text-[13px] transition-[background-color,border-color,color,scale] duration-quick ease-enter active:scale-[0.97] pointer-coarse:min-h-11",
+		isActive ? "border-accent bg-accent-soft text-accent-text" : "border-line-2 text-ink-2 hover:bg-hover",
+	);
+
+function TagFilter({ tags, active, onChange, showPublic, publicOnly, onPublicChange }: TagFilterProps) {
 	return (
 		<fieldset className="m-0 flex flex-wrap gap-1.5 border-0 p-0">
 			<legend className="sr-only">
 				<Trans>Filter by tag</Trans>
 			</legend>
+			{showPublic && (
+				<button
+					type="button"
+					aria-pressed={publicOnly}
+					onClick={() => onPublicChange(!publicOnly)}
+					className={cn(chipClassName(publicOnly), "inline-flex items-center gap-1")}
+				>
+					<Icon name="globe" size={14} />
+					<Trans>Public</Trans>
+				</button>
+			)}
 			{tags.map((tag) => {
 				const isActive = active.includes(tag);
 				return (
@@ -339,16 +421,110 @@ function TagFilter({ tags, active, onChange }: TagFilterProps) {
 						type="button"
 						aria-pressed={isActive}
 						onClick={() => onChange(isActive ? active.filter((known) => known !== tag) : [...active, tag])}
-						className={cn(
-							"min-h-7 rounded-full border px-3 text-[13px] transition-[background-color,border-color,color,scale] duration-quick ease-enter active:scale-[0.97] pointer-coarse:min-h-11",
-							isActive ? "border-accent bg-accent-soft text-accent-text" : "border-line-2 text-ink-2 hover:bg-hover",
-						)}
+						className={chipClassName(isActive)}
 					>
 						#{tag}
 					</button>
 				);
 			})}
 		</fieldset>
+	);
+}
+
+type SelectionBarProps = {
+	selection: DocumentSummary[];
+	allSelected: boolean;
+	onSelectAll: () => void;
+	onClear: () => void;
+	onTags: () => void;
+};
+
+/** Floats over the library while documents are selected: tags, visibility, locking and Trash for all of them. */
+function SelectionBar({ selection, allSelected, onSelectAll, onClear, onTags }: SelectionBarProps) {
+	const batch = useBatchActions();
+	const [busy, setBusy] = useState(false);
+	const count = selection.length;
+	const run = async (action: () => Promise<unknown>, { clear = false } = {}) => {
+		setBusy(true);
+		try {
+			await action();
+			if (clear) onClear();
+		} finally {
+			setBusy(false);
+		}
+	};
+
+	return (
+		<div
+			role="toolbar"
+			aria-label={t`Selected documents`}
+			aria-hidden={count === 0}
+			inert={count === 0}
+			className={cn(
+				"fixed inset-x-0 bottom-6 z-30 mx-auto flex w-fit max-w-[calc(100vw-32px)] items-center gap-1 rounded-xl border border-line bg-raised p-1.5 shadow-e3 transition-[opacity,translate] duration-standard ease-enter max-sm:bottom-4",
+				count === 0 && "pointer-events-none translate-y-2 opacity-0",
+			)}
+		>
+			<span className="px-2 text-sm font-semibold whitespace-nowrap" aria-live="polite">
+				<Trans>{count} selected</Trans>
+			</span>
+			{!allSelected && (
+				<Button variant="ghost" size="sm" onClick={onSelectAll} className="max-sm:hidden">
+					<Trans>Select all</Trans>
+				</Button>
+			)}
+			<Button variant="ghost" size="sm" disabled={busy} onClick={onTags}>
+				<Icon name="tag" />
+				<span className="max-sm:sr-only">
+					<Trans>Tags</Trans>
+				</span>
+			</Button>
+			<DropdownMenu>
+				<DropdownMenuTrigger
+					render={
+						<Button variant="ghost" size="sm" disabled={busy}>
+							<Icon name="globe" />
+							<span className="max-sm:sr-only">
+								<Trans>Sharing</Trans>
+							</span>
+							<Icon name="caret-down" size={14} />
+						</Button>
+					}
+				/>
+				<DropdownMenuContent side="top" align="center" className="w-48">
+					<DropdownMenuItem onClick={() => void run(() => batch.setPublic(selection, true))}>
+						<Icon name="globe" />
+						<Trans>Make public</Trans>
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => void run(() => batch.setPublic(selection, false))}>
+						<Icon name="eye-slash" />
+						<Trans>Make private</Trans>
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem onClick={() => void run(() => batch.setLocked(selection, true))}>
+						<Icon name="lock" />
+						<Trans>Lock editing</Trans>
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => void run(() => batch.setLocked(selection, false))}>
+						<Icon name="lock-open" />
+						<Trans>Unlock</Trans>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+			<Button
+				variant="ghost"
+				size="sm"
+				disabled={busy}
+				className="text-danger-text hover:bg-danger-soft"
+				onClick={() => void run(() => batch.trash(selection), { clear: true })}
+			>
+				<Icon name="trash" />
+				<span className="max-sm:sr-only">
+					<Trans>Move to Trash</Trans>
+				</span>
+			</Button>
+			<IconButton icon="x" size="icon-sm" label={t`Clear selection`} className="text-ink-2" onClick={onClear} />
+		</div>
 	);
 }
 

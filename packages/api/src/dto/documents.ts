@@ -13,6 +13,8 @@ const documentSchema = z.object({
 	name: z.string(),
 	tags: z.array(z.string()),
 	isLocked: z.boolean(),
+	isPublic: z.boolean().describe("Whether a resume's public link is on; always false for letters."),
+	slug: z.string().nullable().describe("A resume's public address, /{username}/{slug}; null for letters."),
 	trashedAt: z.date().nullable().describe("When the document moved to Trash; null while it's live."),
 	createdAt: z.date(),
 	updatedAt: z.date(),

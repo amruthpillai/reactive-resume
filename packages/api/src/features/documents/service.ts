@@ -132,6 +132,8 @@ export const documentsService = {
 					name: schema.resume.name,
 					tags: schema.resume.tags,
 					isLocked: schema.resume.isLocked,
+					isPublic: schema.resume.isPublic,
+					slug: schema.resume.slug,
 					trashedAt: schema.resume.trashedAt,
 					createdAt: schema.resume.createdAt,
 					updatedAt: schema.resume.updatedAt,
@@ -153,6 +155,8 @@ export const documentsService = {
 					name: schema.coverLetter.name,
 					tags: schema.coverLetter.tags,
 					isLocked: schema.coverLetter.isLocked,
+					isPublic: sql<boolean>`false`,
+					slug: sql<string | null>`null`,
 					trashedAt: schema.coverLetter.trashedAt,
 					createdAt: schema.coverLetter.createdAt,
 					updatedAt: schema.coverLetter.updatedAt,
@@ -172,7 +176,7 @@ export const documentsService = {
 
 		const toSummary =
 			(type: DocumentType) =>
-			({ applicationId, company, role, ...row }: (typeof resumes)[number]): DocumentSummary => ({
+			({ applicationId, company, role, ...row }: (typeof resumes | typeof letters)[number]): DocumentSummary => ({
 				type,
 				...row,
 				application: applicationId ? { id: applicationId, company: company ?? "", role: role ?? "" } : null,
