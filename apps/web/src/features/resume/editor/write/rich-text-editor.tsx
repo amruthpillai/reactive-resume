@@ -1,4 +1,5 @@
 import type { ImproveLine } from "./improve";
+import type { Menu } from "@base-ui/react/menu";
 import type { IconName } from "@reactive-resume/ui/components/icon";
 import type { Editor } from "@tiptap/react";
 import type { ReactNode } from "react";
@@ -7,6 +8,19 @@ import { Plural, Trans } from "@lingui/react/macro";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import {
+	DropdownMenu,
+	DropdownMenuCheckboxItem,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuRadioGroup,
+	DropdownMenuRadioItem,
+	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
+	DropdownMenuTrigger,
+} from "@reactive-resume/ui/components/dropdown-menu";
 import { Icon } from "@reactive-resume/ui/components/icon";
 import { useKeyboardInset } from "@reactive-resume/ui/hooks/use-keyboard-inset";
 import { useIsMobile } from "@reactive-resume/ui/hooks/use-mobile";
@@ -26,8 +40,8 @@ type ToolbarAction = {
 };
 
 /**
- * Bold, Italic, Link, then lists and Clear formatting. Formatting the toolbar doesn't offer (headings,
- * colours, alignment…) still loads and prints; Clear formatting removes it.
+ * Bold, Italic, Underline, Link, then lists; alignment and the rarer formatting (strikethrough, code, highlight,
+ * headings, colour, indent, a rule and Clear formatting) sit in two menus so the toolbar fits a narrow column.
  */
 function useToolbarActions(): ToolbarAction[] {
 	const prompt = usePrompt();
@@ -44,6 +58,12 @@ function useToolbarActions(): ToolbarAction[] {
 			label: t`Italic`,
 			isActive: (editor) => editor.isActive("italic"),
 			run: (editor) => editor.chain().focus().toggleItalic().run(),
+		},
+		{
+			icon: "text-underline",
+			label: t`Underline`,
+			isActive: (editor) => editor.isActive("underline"),
+			run: (editor) => editor.chain().focus().toggleUnderline().run(),
 		},
 		{
 			icon: "link-simple-horizontal",
@@ -73,12 +93,73 @@ function useToolbarActions(): ToolbarAction[] {
 			isActive: (editor) => editor.isActive("orderedList"),
 			run: (editor) => editor.chain().focus().toggleOrderedList().run(),
 		},
-		{
-			icon: "text-t-slash",
-			label: t`Clear formatting`,
-			run: (editor) => editor.chain().focus().clearNodes().unsetAllMarks().unsetTextAlign().run(),
-		},
 	];
+}
+
+// The first list button starts a new group in the toolbar.
+const LIST_GROUP_START = 4;
+
+const ALIGNMENTS = ["left", "center", "right", "justify"] as const;
+type Alignment = (typeof ALIGNMENTS)[number];
+const ALIGNMENT_ICONS: Record<Alignment, IconName> = {
+	left: "text-align-left",
+	center: "text-align-center",
+	right: "text-align-right",
+	justify: "text-align-justify",
+};
+
+// Dark enough to read on white paper; "" is the template's own text colour.
+const TEXT_COLORS = ["", "#dc2626", "#ea580c", "#16a34a", "#2563eb", "#7c3aed", "#6b7280"] as const;
+
+type FormattingState = {
+	align: Alignment;
+	strike: boolean;
+	code: boolean;
+	highlight: boolean;
+	/** 0 for a paragraph, else the heading level. */
+	block: number;
+	color: string;
+};
+
+const readFormatting = (editor: Editor): FormattingState => ({
+	align: ALIGNMENTS.find((align) => align !== "left" && editor.isActive({ textAlign: align })) ?? "left",
+	strike: editor.isActive("strike"),
+	code: editor.isActive("code"),
+	highlight: editor.isActive("highlight"),
+	block: [1, 2, 3].find((level) => editor.isActive("heading", { level })) ?? 0,
+	color: (editor.getAttributes("textStyle").color as string | undefined) ?? "",
+});
+
+const DEFAULT_FORMATTING: FormattingState = {
+	align: "left",
+	strike: false,
+	code: false,
+	highlight: false,
+	block: 0,
+	color: "",
+};
+
+/**
+ * Keeps the toolbar up while one of its menus is open and returns the caret to the text when it closes; a click
+ * outside the open menu leaves the field, like a click outside the toolbar.
+ */
+function useToolbarMenus(editor: Editor | null, onLeave: () => void) {
+	const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+	const leaving = useRef(false);
+
+	const rootProps = (menu: string) => ({
+		modal: false,
+		onOpenChange: (next: boolean, details: Menu.Root.ChangeEventDetails) => {
+			setOpenMenus((current) => ({ ...current, [menu]: next }));
+			leaving.current = !next && (details.reason === "outside-press" || details.reason === "focus-out");
+			if (leaving.current) onLeave();
+		},
+	});
+	const contentProps = {
+		"data-toolbar-menu": "",
+		finalFocus: () => (leaving.current ? false : (editor?.view.dom ?? true)),
+	};
+	return { open: Object.values(openMenus).some(Boolean), rootProps, contentProps };
 }
 
 type RichTextEditorProps = {
@@ -150,9 +231,11 @@ export function RichTextEditor({
 						characters: editor.getText().length,
 						active: actions.map((action) => action.isActive?.(editor) ?? false),
 						canImprove: lineAtCaret(editor) !== null,
+						formatting: readFormatting(editor),
 					}
-				: { characters: 0, active: [] as boolean[], canImprove: false },
+				: { characters: 0, active: [] as boolean[], canImprove: false, formatting: DEFAULT_FORMATTING },
 	});
+	const menus = useToolbarMenus(editor, () => setFocused(false));
 
 	// Undo, the page and the assistant change the text from outside; keep the editor in step.
 	useEffect(() => {
@@ -164,7 +247,7 @@ export function RichTextEditor({
 		editor?.setEditable(!disabled && !readOnlyTable, false);
 	}, [editor, disabled, readOnlyTable]);
 
-	const editing = focused || improving !== null;
+	const editing = focused || improving !== null || menus.open;
 
 	const startImprove = () => {
 		if (!editor || ai.isUnavailable) return;
@@ -187,15 +270,24 @@ export function RichTextEditor({
 					onMouseDown={(event) => event.preventDefault()}
 					onClick={() => editor && void action.run(editor)}
 					className={cn(
-						"flex shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-quick hover:bg-hover",
+						toolbarButtonClassName,
 						buttonSize,
 						state?.active[index] && "bg-accent-soft text-accent-text",
-						index === 3 && "ms-1.5",
+						index === LIST_GROUP_START && "ms-1.5",
 					)}
 				>
 					<Icon name={action.icon} />
 				</button>
 			))}
+			{editor && (
+				<FormattingMenus
+					editor={editor}
+					formatting={state?.formatting ?? DEFAULT_FORMATTING}
+					buttonClassName={cn(toolbarButtonClassName, buttonSize)}
+					side={mobile ? "top" : "bottom"}
+					menus={menus}
+				/>
+			)}
 			<button
 				type="button"
 				aria-expanded={improving !== null}
@@ -209,7 +301,10 @@ export function RichTextEditor({
 				)}
 			>
 				<Icon name="sparkle" size={16} />
-				<Trans>Improve</Trans>
+				{/* Icon only where the toolbar is narrow, so the formatting buttons keep one row. */}
+				<span className="@max-[24rem]:sr-only">
+					<Trans>Improve</Trans>
+				</span>
 			</button>
 		</>
 	);
@@ -219,7 +314,9 @@ export function RichTextEditor({
 			onFocus={() => setFocused(true)}
 			onBlur={(event) => {
 				const next = event.relatedTarget;
-				if (!event.currentTarget.contains(next) && !toolbar.current?.contains(next)) setFocused(false);
+				// Opening a toolbar menu moves focus into it; the menu reports leaving the field itself.
+				const inMenu = next instanceof Element && next.closest("[data-toolbar-menu]") !== null;
+				if (!event.currentTarget.contains(next) && !toolbar.current?.contains(next) && !inMenu) setFocused(false);
 			}}
 			className={cn(
 				"rounded-lg border border-line-2 bg-raised transition-[border-color,box-shadow] duration-quick",
@@ -274,7 +371,7 @@ export function RichTextEditor({
 					ref={toolbar}
 					role="toolbar"
 					aria-label={t`Formatting`}
-					className="flex gap-0.5 border-t border-line px-1.5 py-1"
+					className="@container flex flex-wrap gap-0.5 border-t border-line px-1.5 py-1"
 				>
 					{toolbarButtons}
 				</div>
@@ -299,5 +396,161 @@ export function RichTextEditor({
 				</div>
 			)}
 		</div>
+	);
+}
+
+const toolbarButtonClassName =
+	"flex shrink-0 items-center justify-center rounded-md text-ink-2 transition-colors duration-quick hover:bg-hover data-popup-open:bg-hover";
+
+type FormattingMenusProps = {
+	editor: Editor;
+	formatting: FormattingState;
+	buttonClassName: string;
+	side: "top" | "bottom";
+	menus: ReturnType<typeof useToolbarMenus>;
+};
+
+/** Alignment, then everything else the toolbar has no room for. */
+function FormattingMenus({ editor, formatting, buttonClassName, side, menus }: FormattingMenusProps) {
+	const chain = () => editor.chain().focus();
+	const alignLabels: Record<Alignment, string> = {
+		left: t`Align left`,
+		center: t`Align centre`,
+		right: t`Align right`,
+		justify: t`Justify`,
+	};
+	const colorLabels: Record<(typeof TEXT_COLORS)[number], string> = {
+		"": t`Default`,
+		"#dc2626": t`Red`,
+		"#ea580c": t`Orange`,
+		"#16a34a": t`Green`,
+		"#2563eb": t`Blue`,
+		"#7c3aed": t`Purple`,
+		"#6b7280": t`Grey`,
+	};
+	const blocks = [
+		{ level: 0, icon: "paragraph", label: t`Paragraph` },
+		{ level: 1, icon: "text-h-one", label: t`Heading 1` },
+		{ level: 2, icon: "text-h-two", label: t`Heading 2` },
+		{ level: 3, icon: "text-h-three", label: t`Heading 3` },
+	] as const;
+	const setBlock = (level: number) =>
+		level === 0
+			? chain().setParagraph().run()
+			: chain()
+					.setHeading({ level: level as 1 | 2 | 3 })
+					.run();
+
+	return (
+		<>
+			<DropdownMenu {...menus.rootProps("align")}>
+				<DropdownMenuTrigger
+					aria-label={t`Text alignment`}
+					title={t`Text alignment`}
+					className={cn(buttonClassName, "ms-1.5", formatting.align !== "left" && "bg-accent-soft text-accent-text")}
+				>
+					<Icon name={ALIGNMENT_ICONS[formatting.align]} />
+				</DropdownMenuTrigger>
+				<DropdownMenuContent side={side} className="w-44" {...menus.contentProps}>
+					<DropdownMenuRadioGroup
+						value={formatting.align}
+						onValueChange={(align: Alignment) =>
+							align === "left" ? chain().unsetTextAlign().run() : chain().setTextAlign(align).run()
+						}
+					>
+						{ALIGNMENTS.map((align) => (
+							<DropdownMenuRadioItem key={align} value={align}>
+								<Icon name={ALIGNMENT_ICONS[align]} />
+								{alignLabels[align]}
+							</DropdownMenuRadioItem>
+						))}
+					</DropdownMenuRadioGroup>
+				</DropdownMenuContent>
+			</DropdownMenu>
+
+			<DropdownMenu {...menus.rootProps("more")}>
+				<DropdownMenuTrigger aria-label={t`More formatting`} title={t`More formatting`} className={buttonClassName}>
+					<Icon name="dots-three" />
+				</DropdownMenuTrigger>
+				<DropdownMenuContent side={side} className="w-56" {...menus.contentProps}>
+					<DropdownMenuCheckboxItem checked={formatting.strike} onCheckedChange={() => chain().toggleStrike().run()}>
+						<Icon name="text-strikethrough" />
+						<Trans>Strikethrough</Trans>
+					</DropdownMenuCheckboxItem>
+					<DropdownMenuCheckboxItem checked={formatting.code} onCheckedChange={() => chain().toggleCode().run()}>
+						<Icon name="code" />
+						<Trans>Code</Trans>
+					</DropdownMenuCheckboxItem>
+					<DropdownMenuCheckboxItem
+						checked={formatting.highlight}
+						onCheckedChange={() => chain().toggleHighlight().run()}
+					>
+						<Icon name="highlighter" />
+						<Trans>Highlight</Trans>
+					</DropdownMenuCheckboxItem>
+
+					<DropdownMenuSub>
+						<DropdownMenuSubTrigger>
+							<Icon name="palette" />
+							<Trans>Text colour</Trans>
+						</DropdownMenuSubTrigger>
+						<DropdownMenuSubContent {...menus.contentProps}>
+							<DropdownMenuRadioGroup
+								value={formatting.color}
+								onValueChange={(color: string) => (color ? chain().setColor(color).run() : chain().unsetColor().run())}
+							>
+								{TEXT_COLORS.map((color) => (
+									<DropdownMenuRadioItem key={color || "default"} value={color}>
+										<span
+											aria-hidden="true"
+											className="size-3.5 rounded-full border border-line-2"
+											style={{ background: color || "var(--ink)" }}
+										/>
+										{colorLabels[color]}
+									</DropdownMenuRadioItem>
+								))}
+							</DropdownMenuRadioGroup>
+						</DropdownMenuSubContent>
+					</DropdownMenuSub>
+
+					<DropdownMenuSub>
+						<DropdownMenuSubTrigger>
+							<Icon name="text-aa" />
+							<Trans>Text style</Trans>
+						</DropdownMenuSubTrigger>
+						<DropdownMenuSubContent {...menus.contentProps}>
+							<DropdownMenuRadioGroup value={formatting.block} onValueChange={(level: number) => setBlock(level)}>
+								{blocks.map((block) => (
+									<DropdownMenuRadioItem key={block.level} value={block.level}>
+										<Icon name={block.icon} />
+										{block.label}
+									</DropdownMenuRadioItem>
+								))}
+							</DropdownMenuRadioGroup>
+						</DropdownMenuSubContent>
+					</DropdownMenuSub>
+
+					<DropdownMenuSeparator />
+					<DropdownMenuItem onClick={() => chain().increaseIndent().run()}>
+						<Icon name="text-indent" />
+						<Trans>Indent</Trans>
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => chain().decreaseIndent().run()}>
+						<Icon name="text-outdent" />
+						<Trans>Outdent</Trans>
+					</DropdownMenuItem>
+					<DropdownMenuItem onClick={() => chain().setHorizontalRule().run()}>
+						<Icon name="minus" />
+						<Trans>Horizontal line</Trans>
+					</DropdownMenuItem>
+
+					<DropdownMenuSeparator />
+					<DropdownMenuItem onClick={() => chain().clearNodes().unsetAllMarks().unsetTextAlign().run()}>
+						<Icon name="text-t-slash" />
+						<Trans>Clear formatting</Trans>
+					</DropdownMenuItem>
+				</DropdownMenuContent>
+			</DropdownMenu>
+		</>
 	);
 }
