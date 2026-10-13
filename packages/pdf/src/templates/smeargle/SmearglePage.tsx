@@ -48,7 +48,7 @@ type SmeargleStyles = Omit<TemplateStyleSlots, "page"> & {
 type SmeargleTemplate = {
 	colors: TemplateColorRoles;
 	styles: SmeargleStyles;
-	/** The summary set as a standfirst: the larger, italic introduction under a magazine headline. */
+	/** The summary set as a standfirst: the larger introduction under a magazine headline. */
 	standfirstStyles: TemplateStyleSlots;
 };
 
@@ -58,8 +58,8 @@ type SmeargleHeaderProps = {
 
 /**
  * Smeargle sets the resume like the opening page of a magazine feature: the headline as a small
- * uppercase kicker over a large display name, the summary as an italic standfirst, and italic
- * section headings. Contrast between the heading and body type carries the hierarchy, not boxes.
+ * uppercase kicker over a large display name and the summary as a larger standfirst. Contrast between the
+ * heading and body type carries the hierarchy, not boxes.
  */
 export const SmearglePage = ({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) => {
 	const data = useRender();
@@ -160,7 +160,6 @@ const useSmeargleTemplate = (): SmeargleTemplate => {
 			},
 			sectionHeading: {
 				fontWeight: displayWeight,
-				fontStyle: "italic",
 				color: foreground,
 			},
 			item: {
@@ -220,10 +219,9 @@ const useSmeargleTemplate = (): SmeargleTemplate => {
 			},
 		});
 
-		// The standfirst keeps the body face, set larger and in italic.
+		// The standfirst keeps the body face, set larger.
 		const standfirstText = {
 			fontSize: body.fontSize * 1.15,
-			fontStyle: "italic",
 			lineHeight: 1.45,
 		} satisfies Style;
 

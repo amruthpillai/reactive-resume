@@ -117,7 +117,7 @@ export const templates = {
 	},
 	smeargle: {
 		name: "Smeargle",
-		description: msg`Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles.`,
+		description: msg`Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles.`,
 		imageUrl: "/templates/jpg/smeargle.jpg",
 		tags: ["Single-column", "ATS friendly", "Editorial", "Magazine", "Serif", "Writer", "Designer", "Communications"],
 	},

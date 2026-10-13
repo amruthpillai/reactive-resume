@@ -8,6 +8,7 @@ import { Trans } from "@lingui/react/macro";
 import { AnimatePresence, m, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@reactive-resume/ui/components/button";
+import { Icon } from "@reactive-resume/ui/components/icon";
 import { toast } from "@reactive-resume/ui/components/toast";
 import { isRTL } from "@reactive-resume/utils/locale";
 import { cn } from "@reactive-resume/utils/style";
@@ -17,7 +18,7 @@ import { ResumePreviewLoader } from "./preview.shared";
 import { getResumePreviewGapValue, getResumePreviewPageCount } from "./preview.shared.utils";
 import { ResumeAccessibleText } from "./resume-accessible-text";
 import { createResumePdfBlob } from "@/features/resume/export/pdf-document";
-import { getReadableErrorMessage } from "@/libs/error-message";
+import { getLostCharactersMessage, getReadableErrorMessage } from "@/libs/error-message";
 import { EASE } from "@/libs/motion";
 
 type PreviewPdf = {
@@ -129,6 +130,8 @@ export function ResumePreviewClient({
 	// Why the first render failed: with nothing to keep on screen, the page says so in place of its loader.
 	const [failure, setFailure] = useState<string | null>(null);
 	const [attempt, setAttempt] = useState(0);
+	// Characters the shown preview draws as "?" because no font in the resume has them.
+	const [lostCharacters, setLostCharacters] = useState<string[] | null>(null);
 
 	const pdfIdRef = useRef(0);
 	const requestIdRef = useRef(0);
@@ -150,9 +153,13 @@ export function ResumePreviewClient({
 			try {
 				if (stale()) return;
 				let pageMap: PageMap | undefined;
+				let lost: string[] | null = null;
 				const blob = await createResumePdfBlob(resumeData, undefined, renderOptions, {
 					onPageMap: (map) => {
 						pageMap = map;
+					},
+					onLostCharacters: (characters) => {
+						lost = characters;
 					},
 				});
 
@@ -161,11 +168,12 @@ export function ResumePreviewClient({
 
 					hasPreviewRef.current = true;
 					setFailure(null);
+					setLostCharacters(lost);
 					setPreviewLayers((current) => addPreviewLayer(current, nextPdf));
 				}
 			} catch (error) {
 				if (stale()) return;
-				// Name the cause the user can fix (an unsupported character, a font that didn't load); keep other engine errors generic.
+				// Name the cause the user can fix (a font that didn't load); keep other engine errors generic.
 				const textLoss = error instanceof Error && error.cause === "pdf-text-loss";
 				if (!hasPreviewRef.current) {
 					setFailure(textLoss ? getReadableErrorMessage(error, "") : t`Something went wrong`);
@@ -203,16 +211,27 @@ export function ResumePreviewClient({
 
 	const visiblePdf = getActivePreviewLayer(previewLayers);
 	const resolvedPageGap = getResumePreviewGapValue(pageGap);
+	// Pages stack in one grid cell; the notice takes the row above them.
+	const layerRow = lostCharacters ? "row-start-2" : "row-start-1";
 
 	return (
 		<div className={cn("grid", className)}>
 			<ResumeAccessibleText data={resumeData} />
+			{lostCharacters && (
+				<p
+					role="status"
+					className="sticky top-3 z-10 col-start-1 row-start-1 mb-3 flex max-w-md items-start gap-2 justify-self-center rounded-lg border border-warn bg-warn-soft px-3 py-2 text-sm text-warn-text shadow-e1"
+				>
+					<Icon name="warning" size={18} className="mt-px shrink-0" />
+					{getLostCharactersMessage(lostCharacters)}
+				</p>
+			)}
 			<AnimatePresence initial={false}>
 				{!visiblePdf && (
 					// Holds under the first render until it's opaque, then drops out, like any replaced layer.
 					<m.div
 						key="loader"
-						className="col-start-1 row-start-1"
+						className={cn("col-start-1", layerRow)}
 						exit={{ opacity: 0 }}
 						transition={reducedMotion ? INSTANT_TRANSITION : EXITING_TRANSITION}
 					>
@@ -249,7 +268,7 @@ export function ResumePreviewClient({
 						aria-hidden={visiblePdf.phase !== "active"}
 						data-resume-preview-template={visiblePdf.template}
 						style={{ "--resume-preview-page-gap": resolvedPageGap } as MotionStyle}
-						className={cn("col-start-1 row-start-1", visiblePdf.phase !== "active" && "pointer-events-none")}
+						className={cn("col-start-1", layerRow, visiblePdf.phase !== "active" && "pointer-events-none")}
 						initial={{ opacity: visiblePdf.phase === "active" ? 1 : 0 }}
 						animate={{ opacity: visiblePdf.phase === "active" ? 1 : 0 }}
 						exit={{ opacity: 0 }}

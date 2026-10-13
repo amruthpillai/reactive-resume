@@ -1,11 +1,9 @@
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 import { ORPCError } from "@orpc/client";
 
 export function getReadableErrorMessage(error: unknown, fallback: string): string {
-	if (error instanceof Error && error.cause === "pdf-text-loss") {
-		if (error.message.startsWith("Fonts could not be loaded:")) return t`Fonts could not be loaded. Retry the export.`;
-		return t`Some PDF text could not be rendered. Choose a font containing these characters, then retry the export.`;
-	}
+	// A font download failed (see `assertPdfFonts`).
+	if (error instanceof Error && error.cause === "pdf-text-loss") return t`Fonts could not be loaded. Try again.`;
 	if (error instanceof ORPCError && error.code === "BAD_REQUEST") {
 		const data: unknown = error.data;
 		if (typeof data === "object" && data !== null && "issues" in data && Array.isArray(data.issues)) {
@@ -58,5 +56,16 @@ export function getResumeErrorMessage(error: unknown): string {
 			RESUME_LOCKED: "This resume is locked. Unlock it first to make changes.",
 		},
 		fallback: "Something went wrong. Please try again.",
+	});
+}
+
+/** Characters no font in the resume can draw, as the PDF engine names them (`"₹" (U+20B9)`); they print as "?". */
+export function getLostCharactersMessage(characters: readonly string[]): string {
+	if (characters.length === 0)
+		return t`Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them.`;
+	const list = characters.join(", ");
+	return plural(characters.length, {
+		one: `Your selected font can't display ${list}. It shows as “?”. In Design, choose a font that has it.`,
+		other: `Your selected font can't display ${list}. They show as “?”. In Design, choose a font that has them.`,
 	});
 }

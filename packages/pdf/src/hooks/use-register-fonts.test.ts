@@ -1,9 +1,11 @@
 import type { PdfFontRequest } from "./use-register-fonts";
 import type { ResumeData, Typography } from "@reactive-resume/schema/resume/data";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { getWebFontSource } from "@reactive-resume/fonts";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { resolvePdfFonts, resumeContentScripts } from "./use-register-fonts";
+import { resolvePdfFonts, resumeContentScripts, resumeUsesItalic } from "./use-register-fonts";
 
 const typography = {
 	body: {
@@ -63,6 +65,9 @@ describe("resolvePdfFonts", () => {
 				src: cjkFallbackSource,
 			}),
 		);
+		// Each Noto CJK face is ~15 MB: the 500 body and 600 heading draw with the nearest face (#3593).
+		const cjkWeights = new Set(registered.filter((font) => font.family === "Noto Serif SC").map((font) => font.weight));
+		expect([...cjkWeights].sort()).toEqual([400, 700]);
 	});
 
 	it("registers the family's true Bold face when the stored weights stop below it (#3310)", () => {
@@ -219,5 +224,36 @@ describe("resumeContentScripts", () => {
 
 	it("returns an empty set for Latin-only content", () => {
 		expect(resumeContentScripts(withSummary("Reactive Resume")).size).toBe(0);
+	});
+});
+
+describe("italic faces", () => {
+	const withSummary = (html: string, stylesheet?: string) => {
+		const data = structuredClone(defaultResumeData);
+		data.summary.content = html;
+		if (stylesheet) data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 1, text: stylesheet } };
+		return data;
+	};
+
+	// Without them, italic text has no face: CJK italics print as "?" (#3593 follow-up).
+	it.each([
+		["plain text", withSummary("<p>Plain</p>"), false],
+		["rich-text emphasis", withSummary("<p>An <em>emphasised</em> word</p>"), true],
+		["a stylesheet", withSummary("<p>Plain</p>", "summary { font-style: italic; }"), true],
+	])("are registered only when the resume uses italics: %s", (_, data, italic) => {
+		expect(resumeUsesItalic(data)).toBe(italic);
+		const fonts = resolvePdfFonts(typography, "en-US", false, undefined, resumeUsesItalic(data)).fonts;
+		expect(fonts.some((font) => font.italic)).toBe(italic);
+	});
+
+	it("are never asked for by a template's own styles", () => {
+		const templates = new URL("../templates", import.meta.url).pathname;
+		const sources = readdirSync(templates, { recursive: true, encoding: "utf8" }).filter(
+			(file) => /\.tsx?$/.test(file) && !/\.test\./.test(file),
+		);
+		const italic = sources.filter((file) =>
+			/fontStyle:\s*["']italic["']/.test(readFileSync(join(templates, file), "utf8")),
+		);
+		expect(italic).toEqual([]);
 	});
 });

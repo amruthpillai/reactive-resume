@@ -1,10 +1,12 @@
 import { execFileSync } from "node:child_process";
 import { expect, it } from "vitest";
+import * as forme from "@formepdf/core";
 import { act } from "react";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createResumePdfFile } from "../server";
+import { lostCharacters, renderResume } from "./render";
 
-async function exportText(html: string, font = "Noto Sans", locale = "en-US") {
+function summaryResume(html: string, font = "Noto Sans", locale = "en-US") {
 	const data = structuredClone(defaultResumeData);
 	data.picture.hidden = true;
 	data.summary.content = html;
@@ -12,6 +14,11 @@ async function exportText(html: string, font = "Noto Sans", locale = "en-US") {
 	data.metadata.layout.pages = [{ fullWidth: true, main: ["summary"], sidebar: [] }];
 	data.metadata.typography.body.fontFamily = font;
 	data.metadata.typography.heading.fontFamily = font;
+	return data;
+}
+
+async function exportText(html: string, font = "Noto Sans", locale = "en-US") {
+	const data = summaryResume(html, font, locale);
 	const file = await act(() => createResumePdfFile({ data, filename: "text.pdf" }));
 	// PDF.js ignores /ActualText and infers separators from glyph positions, which corrupts
 	// shaped clusters and emoji. Poppler reads the PDF's logical text, including these spans.
@@ -48,6 +55,8 @@ it.each(["span", "em", "a"])(
 	},
 );
 
-it("reports unsupported characters instead of returning a successful lossy export", { timeout: 60_000 }, async () => {
-	await expect(exportText("<p>Unsupported \u{10FFFF}</p>")).rejects.toThrow(/text.*render|font/i);
+it('exports characters no font can draw as "?" and names them', { timeout: 60_000 }, async () => {
+	expect(await exportText("<p>Unsupported \u{10FFFF}</p>")).toContain("Unsupported ?");
+	const result = await act(() => renderResume(forme, { data: summaryResume("<p>Unsupported \u{10FFFF}</p>") }));
+	expect(lostCharacters(result.warnings)).toEqual([expect.stringContaining("U+10FFFF")]);
 });

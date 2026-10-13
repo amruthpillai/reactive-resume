@@ -11,7 +11,7 @@ import { toast } from "@reactive-resume/ui/components/toast";
 import { downloadWithAnchor } from "@reactive-resume/utils/file";
 import { createResumePdfBlob } from "./pdf-document";
 import { resolvePublicResumePdfBlob } from "@/features/resume/public/public-pdf";
-import { getReadableErrorMessage } from "@/libs/error-message";
+import { getLostCharactersMessage, getReadableErrorMessage } from "@/libs/error-message";
 import { client } from "@/libs/orpc/client";
 import { createSectionTitleResolverForLocale } from "@/libs/resume/section-title-locale";
 
@@ -62,6 +62,10 @@ export function getDefaultFileName(resume: ExportableResume, target: ResumeExpor
 	return [...words(resume.name || resume.slug), ...(target === "cover-letter" ? suffix : [])].join("-") || "Resume";
 }
 
+// The file still downloads, with "?" for each character no font can draw.
+const warnLostCharacters = (characters: string[]) =>
+	toast.add({ type: "warning", id: "pdf-lost-characters", description: getLostCharactersMessage(characters) });
+
 /** Builds one export file. It throws when the file can't be made, so each caller decides how to say so. */
 export async function createExportFile(
 	resume: ExportableResume,
@@ -75,7 +79,9 @@ export async function createExportFile(
 
 	const data = getResumeExportData(resume.data, target);
 	if (format === "pdf") {
-		return createResumePdfBlob(data, undefined, target === "cover-letter" ? options : undefined);
+		return createResumePdfBlob(data, undefined, target === "cover-letter" ? options : undefined, {
+			onLostCharacters: warnLostCharacters,
+		});
 	}
 
 	const resolveTitle = await createSectionTitleResolver(data);
@@ -174,7 +180,7 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 		const makeBlob = () =>
 			exportOptions.publicResumePdf
 				? resolvePublicResumePdfBlob({ data: resume.data, ...exportOptions.publicResumePdf })
-				: createResumePdfBlob(resume.data);
+				: createResumePdfBlob(resume.data, undefined, undefined, { onLostCharacters: warnLostCharacters });
 		try {
 			printPdf(await makeBlob());
 		} catch (error) {

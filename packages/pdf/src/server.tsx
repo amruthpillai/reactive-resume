@@ -5,7 +5,7 @@ import type { Template } from "@reactive-resume/schema/templates";
 import * as forme from "@formepdf/core";
 import { parseResumeData } from "@reactive-resume/schema/resume/data";
 import { readServerImage } from "./forme/images.node.ts";
-import { assertPdfText, renderResume } from "./forme/render";
+import { assertPdfFonts, renderResume } from "./forme/render";
 
 export { configureOwnPictureReader } from "./forme/images.node";
 
@@ -29,6 +29,7 @@ export const createResumePdfFile = async ({
 		data: parseResumeData(input.data),
 		readImage: (source) => readServerImage(source, uploadOrigin),
 	});
-	assertPdfText(result);
+	// Characters no font can draw print as "?" rather than failing the file; the editor names them.
+	assertPdfFonts(result);
 	return new File([result.pdf as Uint8Array<ArrayBuffer>], filename, { type: "application/pdf" });
 };

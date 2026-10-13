@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import * as forme from "@formepdf/core";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { createFontPreparer, createFontSubsetter } from "./font-subset";
-import { assertPdfText, renderResume } from "./render";
+import { lostCharacters, renderResume } from "./render";
 
 const wasm = readFileSync(createRequire(import.meta.url).resolve("harfbuzzjs/dist/harfbuzz-subset.wasm"));
 
@@ -35,7 +35,8 @@ describe("fonts cut to the document's characters (#3593)", () => {
 		const result = await renderResume(engine, { data });
 
 		// Bold and italic CJK, list markers and the name all keep their glyphs.
-		expect(() => assertPdfText(result)).not.toThrow();
+		expect(result.missingFonts).toEqual([]);
+		expect(lostCharacters(result.warnings)).toBeNull();
 		// Each whole Noto Sans SC face is over 10 MB.
 		expect(fontBytes).toBeLessThan(2_000_000);
 	});

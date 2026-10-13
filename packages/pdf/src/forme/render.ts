@@ -10,7 +10,12 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import type { ReactElement } from "react";
 import { createElement } from "react";
 import { ResumeDocument } from "../document";
-import { resolvePdfFonts, resumeContentContainsCJK, resumeContentScripts } from "../hooks/use-register-fonts";
+import {
+	resolvePdfFonts,
+	resumeContentContainsCJK,
+	resumeContentScripts,
+	resumeUsesItalic,
+} from "../hooks/use-register-fonts";
 import { extractPageMap, NODE_CONTENT_PREFIX, NODE_SOURCE_PREFIX, parseResumeNodeKey } from "../page-map";
 import { loadFonts } from "./fonts";
 import { loadIcons } from "./icons";
@@ -22,7 +27,7 @@ import { FIXED_SOURCE, FREE_FORM_MEASURE_HEIGHT, LIST_ROLE, toFormeDocument } fr
 export type FormeEngine = {
 	renderSerializedDocWithLayout: (document: Record<string, unknown>) => Promise<RenderWithLayoutResult>;
 	/** What to hand Forme for a font's bytes, given every character the document draws (see `browser.tsx`). */
-	prepareFont?: ((bytes: Uint8Array, text: string) => Uint8Array | string) | undefined;
+	prepareFont?: ((bytes: Uint8Array, text: string) => Uint8Array | string | Promise<Uint8Array | string>) | undefined;
 };
 
 export type RenderResumeInput = {
@@ -42,26 +47,29 @@ export type RenderedResume = {
 	layout: RenderWithLayoutResult["layout"];
 	/** Font families that couldn't be downloaded; their text falls back to the standard PDF fonts. */
 	missingFonts: string[];
-	/** Rendering diagnostics; export entrypoints reject warnings that indicate lost text. */
+	/** Rendering diagnostics; `lostCharacters` reads the characters no font could draw from them. */
 	warnings: string[];
 };
 
-/** A downloadable file must retain its text; preview success and downloaded fonts alone cannot prove that. */
-export function assertPdfText({ missingFonts, warnings }: Pick<RenderedResume, "missingFonts" | "warnings">) {
+/** A failed font download would print the resume in other fonts: the file waits for a retry instead. */
+export function assertPdfFonts({ missingFonts }: Pick<RenderedResume, "missingFonts">) {
 	if (missingFonts.length > 0)
 		throw new Error(`Fonts could not be loaded: ${missingFonts.join(", ")}. Retry the export.`, {
 			cause: "pdf-text-loss",
 		});
-	if (
-		warnings.some(
-			(warning) =>
-				warning.includes('was rendered as "?"') || warning.includes("character(s) of source text did not render"),
-		)
-	)
-		throw new Error(
-			"Some PDF text could not be rendered. Choose a font containing these characters, then retry the export.",
-			{ cause: "pdf-text-loss" },
-		);
+}
+
+/**
+ * The characters no font in the resume can draw, as Forme names them (`"₹" (U+20B9)`); Forme draws them as "?".
+ * Null when every character rendered; empty when text was lost without Forme naming the characters.
+ */
+export function lostCharacters(warnings: readonly string[]): string[] | null {
+	const lost = warnings.filter(
+		(warning) =>
+			warning.includes('was rendered as "?"') || warning.includes("character(s) of source text did not render"),
+	);
+	if (lost.length === 0) return null;
+	return [...new Set(lost.flatMap((warning) => warning.match(/"[^"]*" \(U\+[0-9A-F]+\)/g) ?? []))];
 }
 
 /** Every character in the document's strings, sorted: its text, plus style values and links, which cost little. */
@@ -179,6 +187,16 @@ function measuredHeight(result: RenderWithLayoutResult, pageIndex: number, margi
 	return Math.max(FREE_FORM_MIN_HEIGHT, Math.ceil(bottom + marginBottom));
 }
 
+/** The font faces a resume's PDF embeds: its typography, italics if it uses any, and a fallback per writing system. */
+export const resumeFontRequests = (data: ResumeData) =>
+	resolvePdfFonts(
+		data.metadata.typography,
+		data.metadata.page.locale as Locale,
+		resumeContentContainsCJK(data),
+		resumeContentScripts(data),
+		resumeUsesItalic(data),
+	).fonts;
+
 /**
  * Renders a resume or letter to PDF bytes with its page map. Every PDF in the app goes through here: the live
  * preview, downloads, thumbnails, the public page and the server export.
@@ -207,18 +225,14 @@ export async function renderResumeElement(
 	readImage?: (source: string) => Promise<Uint8Array>,
 ): Promise<RenderedResume> {
 	const data = (element.props as { data?: ResumeData }).data;
-	const fontRequests = data
-		? resolvePdfFonts(
-				data.metadata.typography,
-				data.metadata.page.locale as Locale,
-				resumeContentContainsCJK(data),
-				resumeContentScripts(data),
-			).fonts
-		: [];
-	const [{ fonts, warnings: fontWarnings, missing }] = await Promise.all([loadFonts(fontRequests), loadIcons()]);
-
+	// Font downloads start first: they're the largest wait, and the tree needs only the icons.
+	const fontsLoaded = loadFonts(data ? resumeFontRequests(data) : []);
+	await loadIcons();
 	const tree = renderHostTree(element);
-	const { images, warnings: imageWarnings } = await loadImages(imageSources(tree), readImage);
+	const [{ fonts, warnings: fontWarnings, missing }, { images, warnings: imageWarnings }] = await Promise.all([
+		fontsLoaded,
+		loadImages(imageSources(tree), readImage),
+	]);
 
 	const breakBeforeListItems = new Set<number>();
 	const breakBeforeNodes = new Set<string>();
@@ -234,12 +248,14 @@ export async function renderResumeElement(
 				freeFormHeights,
 			});
 		// Forme rewrites the font entries it's given (bytes to base64), so each render gets its own.
-		const render = ({ document }: ConvertedDocument) => {
+		const render = async ({ document }: ConvertedDocument) => {
 			if (!formeFonts) {
 				const { prepareFont } = engine;
 				const text = prepareFont ? documentText(document) : "";
 				formeFonts = prepareFont
-					? fonts.map((font) => ({ ...font, src: prepareFont(font.src as Uint8Array, text) }))
+					? await Promise.all(
+							fonts.map(async (font) => ({ ...font, src: await prepareFont(font.src as Uint8Array, text) })),
+						)
 					: fonts;
 			}
 			return engine.renderSerializedDocWithLayout({ ...document, fonts: formeFonts.map((font) => ({ ...font })) });
