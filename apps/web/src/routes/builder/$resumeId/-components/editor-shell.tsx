@@ -29,6 +29,7 @@ import { IssueStepper } from "@/features/resume/editor/check/page-layer";
 import { useIsLandscape } from "@/features/resume/editor/chrome";
 import { useEditorStore } from "@/features/resume/editor/store";
 import { useEditorMode } from "@/features/resume/editor/use-editor-mode";
+import { useResumeWebMcpTools } from "@/features/resume/editor/webmcp";
 import { revealSelectionInPanel } from "@/features/resume/editor/write/reveal";
 
 /**
@@ -50,6 +51,7 @@ export function EditorShell() {
 	useEffect(() => resetEditor, [resetEditor]);
 	useOpenVersionFromUrl();
 	useOpenAssistantFromUrl();
+	useResumeWebMcpTools(routeApi.useParams().resumeId);
 
 	return (
 		<Tabs value={mode} onValueChange={(value) => setMode(value as EditorMode)} className="contents">

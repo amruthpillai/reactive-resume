@@ -24,6 +24,7 @@ import { BreakpointIndicator } from "@/components/layout/breakpoint-indicator";
 import { DonationToast } from "@/components/ui/donation-toast";
 import { DialogManager } from "@/dialogs/manager";
 import { CommandPalette } from "@/features/command-palette";
+import { useDocumentWebMcpTools } from "@/features/documents/webmcp";
 import { ThemeProvider } from "@/features/theme/provider";
 import { ConfirmDialogProvider } from "@/hooks/use-confirm";
 import { loadRootContext } from "@/libs/root-context";
@@ -52,8 +53,11 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootComponent() {
-	const { theme, locale, queryClient } = Route.useRouteContext();
+	const { theme, locale, queryClient, session } = Route.useRouteContext();
 	const dir = isRTL(locale) ? "rtl" : "ltr";
+
+	// WebMCP: browser agents can list and open the signed-in user's documents from any page.
+	useDocumentWebMcpTools(session !== null);
 
 	// Suppress the app-wide donation toast inside the builder so it doesn't cover the right-sidebar controls.
 	const isBuilder = useRouterState({ select: (s) => s.location.pathname.startsWith("/builder") });

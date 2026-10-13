@@ -4,6 +4,7 @@ import type { IconName } from "@reactive-resume/ui/components/icon";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useHotkey } from "@tanstack/react-hotkeys";
+import { getRouteApi } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Icon } from "@reactive-resume/ui/components/icon";
 import { Tabs, TabsContent } from "@reactive-resume/ui/components/tabs";
@@ -31,10 +32,13 @@ import {
 	useOpenLetterAssistantFromUrl,
 	useOpenLetterVersionFromUrl,
 } from "@/features/letters/use-letter-mode";
+import { useLetterWebMcpTools } from "@/features/letters/webmcp";
 import { usePreviewPausedStore } from "@/features/resume/builder/draft";
 import { useIsLandscape } from "@/features/resume/editor/chrome";
 import { useEditorStore } from "@/features/resume/editor/store";
 import { switchModeInstantly } from "@/libs/motion";
+
+const routeApi = getRouteApi("/builder/letter/$coverLetterId");
 
 /**
  * The letter editor: the resume editor's shell with Write and Design (no Check). The panel holds who the letter is
@@ -60,6 +64,7 @@ export function LetterShell() {
 	useOpenLetterAssistantFromUrl();
 	useLinkedUpdateNotice();
 	useUnsavedGuard();
+	useLetterWebMcpTools(routeApi.useParams().coverLetterId);
 
 	return (
 		<Tabs value={mode} onValueChange={(value) => setMode(value as LetterMode)} className="contents">

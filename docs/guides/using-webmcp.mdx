@@ -1,0 +1,88 @@
+---
+title: "Using WebMCP"
+description: "Let the AI agent in your browser read, check and edit the resume or cover letter open in Reactive Resume, through the tools the page offers with WebMCP."
+---
+
+[WebMCP](https://webmachinelearning.github.io/webmcp/) is a browser feature that lets a web page offer tools to the AI agent built into your browser. When your browser supports it, Reactive Resume offers tools for your documents: the agent can list and open them, read the one you have open, run Check on a resume, and edit it. It works in the tab you already have open, with your own sign-in, and every change shows on the page as it's made.
+
+## WebMCP or the MCP server
+
+|                         | WebMCP                                              | [MCP server](/guides/using-the-mcp-server)            |
+| ----------------------- | --------------------------------------------------- | ----------------------------------------------------- |
+| Where the agent runs    | In your browser, beside the Reactive Resume tab     | Anywhere: Claude, Cursor, Codex or another MCP client |
+| How it signs in         | It doesn't: it uses the tab you're signed in to     | OAuth or an API key                                   |
+| What it can work on     | Your documents, and the one open in the editor      | Resumes, cover letters, applications and career data  |
+| How you see its edits   | On the page as they happen, each one a step to undo | After the edit, when the editor syncs                 |
+| What you need to set up | A browser with WebMCP, and Reactive Resume open     | A client connected to your instance's `/mcp` address  |
+
+## Before you start
+
+- **A browser with WebMCP.** WebMCP is new and still changing. In Chrome, turn it on at `chrome://flags/#enable-webmcp-testing` and restart the browser. Browsers without it don't offer the tools; Reactive Resume works as usual there.
+- **An agent that uses WebMCP**, such as your browser's built-in assistant or an extension that connects page tools to your AI agent.
+- **A Reactive Resume account.** The tools appear once you're signed in.
+
+## Try it
+
+Open a resume in the editor, then ask your browser's agent in plain language, for example:
+
+- "Check my resume and fix the date problems."
+- "Rewrite the summary so it leads with my backend experience."
+- "Switch the template to Onyx and make the primary color dark blue."
+- "Open my letter for Acme and address it to Dana Lee."
+
+## Tools
+
+Tools are offered while the page that runs them is open. An agent on the dashboard sees the document tools; once it opens a resume or letter, that editor's tools are added.
+
+### Anywhere, once you're signed in
+
+| Tool             | What it does                                                                                                  |
+| ---------------- | ------------------------------------------------------------------------------------------------------------- |
+| `list_documents` | Lists your resumes and saved cover letters, most recently edited first, with tags, lock state and linked job. |
+| `open_document`  | Opens a resume or letter from that list in the editor.                                                        |
+
+### In the resume editor
+
+| Tool                 | What it does                                                                                                                                          |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `read_resume`        | Reads the open resume as JSON, including edits that haven't saved yet and your private notes.                                                         |
+| `read_resume_schema` | Reads the JSON Schema of resume data, so the agent knows every field and allowed value.                                                               |
+| `apply_resume_patch` | Edits the open resume with [JSON Patch](/guides/using-the-patch-api) operations: content, sections, template, colors, typography and layout.          |
+| `check_resume`       | Runs [Check](/guides/checking-your-resume) and returns the score and the open issues, each pointing at the value to fix. Ignored issues are left out. |
+
+### In the cover letter editor
+
+| Tool                  | What it does                                                                                                        |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `read_cover_letter`   | Reads the open letter: its layout, recipient, date, greeting, body and sign-off, including edits not saved yet.     |
+| `update_cover_letter` | Changes the fields it's given (name, body, recipient, date, greeting or sign-off) and saves them before it returns. |
+
+## How edits work
+
+- **One patch, one step.** All of a patch's operations apply together or not at all, and the page updates at once. A message says the agent edited the resume; **Undo** in it, or <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>Z</kbd>, takes the edit back.
+- **Saved like your own typing.** Resume edits save automatically. Letter edits are saved before the tool returns; if the letter changed in another tab, the agent is told it wasn't saved.
+- **Checked first.** An edit that would leave the resume invalid, or a path that doesn't exist, changes nothing, and the agent is told what was wrong so it can try again.
+- **Locked documents stay locked.** The tools refuse to edit a locked resume or letter. Unlock it yourself if you want the agent to continue.
+
+## What the agent can and can't do
+
+The tools work only in your open tab, only while you're signed in, and only on your own documents. They can't delete, trash, share or lock documents, change sharing settings or passwords, or reach your account settings. Text a tool returns from your documents is marked as content to read, not instructions to follow, for agents that support the marking.
+
+Anything a tool returns, including your resume's private notes, goes to the agent and its AI provider, as with any page you ask it to read. Reactive Resume sends nothing to the agent on its own: it answers only the tool calls the agent makes.
+
+## Troubleshooting
+
+| Problem                                    | What to do                                                                                                      |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| The agent sees no Reactive Resume tools    | Check that your browser supports WebMCP and you're signed in. Reload the tab after turning on the browser flag. |
+| The agent doesn't see `read_resume`        | The editor tools appear once a resume is open. Ask the agent to open it, or open it yourself.                   |
+| A tool says the document is locked         | Unlock the document from its menu, then ask again.                                                              |
+| A tool says the document is no longer open | You or the agent opened another document. Ask the agent to open the one it was working on.                      |
+| An edit to dates doesn't stick             | The agent changed the `period` or `date` text. Ask it to write the `dates` object instead.                      |
+
+## Related guides
+
+- [Using the MCP server](/guides/using-the-mcp-server): the same documents from AI clients outside the browser.
+- [Using the patch API](/guides/using-the-patch-api): how resume edits are expressed.
+- [Checking your resume](/guides/checking-your-resume): what Check looks at.
+- [Undoing changes and version history](/guides/undoing-changes-and-version-history): taking back an edit, or going back to an earlier version.
