@@ -114,20 +114,9 @@ export function Outline({ locked, page }: OutlineProps) {
 			{hiddenRows.length > 0 && (
 				<div className="grid gap-0.5">
 					<Divider label={<Trans>Hidden sections</Trans>} />
-					{hiddenRows.map((row) => {
-						// Hidden rows sit outside the drag flow, so their menu moves them in the full print order.
-						const index = rows.findIndex((candidate) => candidate.id === row.id);
-						return (
-							<OutlineSection
-								key={row.id}
-								sectionId={row.id}
-								locked={locked}
-								page={page}
-								draggable={false}
-								onMove={(direction) => move(row.id, rows[direction === "up" ? index - 1 : index + 1], direction)}
-							/>
-						);
-					})}
+					{hiddenRows.map((row) => (
+						<OutlineSection key={row.id} sectionId={row.id} locked={locked} page={page} />
+					))}
 				</div>
 			)}
 		</DndContext>
@@ -153,12 +142,10 @@ type OutlineSectionProps = {
 	sectionId: string;
 	locked: boolean;
 	page: PageSettings;
-	/** Hidden sections render in a group outside the drag flow, so they aren't draggable. */
-	draggable?: boolean;
-	onMove: (direction: "up" | "down") => void;
+	onMove?: ((direction: "up" | "down") => void) | undefined;
 };
 
-function OutlineSection({ sectionId, locked, page, draggable = true, onMove }: OutlineSectionProps) {
+function OutlineSection({ sectionId, locked, page, onMove }: OutlineSectionProps) {
 	const { i18n } = useLingui();
 	// Select the type (a string) rather than a new section object, so the row renders only when it changes.
 	const type = useCurrentBuilderResumeSelector((resume) => getSectionType(resume.data, sectionId) ?? null);
@@ -169,7 +156,7 @@ function OutlineSection({ sectionId, locked, page, draggable = true, onMove }: O
 	if (!stableSection) return null;
 
 	return (
-		<SectionRow section={stableSection} locked={locked} draggable={draggable} onMove={onMove}>
+		<SectionRow section={stableSection} locked={locked} onMove={onMove}>
 			{stableSection.kind === "summary" ? (
 				<SummaryEditor locked={locked} />
 			) : (

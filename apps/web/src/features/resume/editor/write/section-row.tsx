@@ -1,7 +1,6 @@
 import type { WriteSection } from "./model";
-import type { DraggableAttributes, DraggableSyntheticListeners } from "@dnd-kit/core";
 import type { SectionType } from "@reactive-resume/schema/resume/data";
-import type { CSSProperties, KeyboardEvent, ReactNode } from "react";
+import type { KeyboardEvent, ReactNode } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { plural, t } from "@lingui/core/macro";
@@ -48,70 +47,16 @@ export function useSectionTitle(section: WriteSection) {
 type SectionRowProps = {
 	section: WriteSection;
 	locked: boolean;
-	/** ⌥↑ / ⌥↓ on the focused title. */
-	onMove: (direction: "up" | "down") => void;
-	/** Hidden sections sit in the Hidden group, outside the drag flow, so they render without a drag handle. */
-	draggable?: boolean;
+	/** ⌥↑ / ⌥↓ on the focused title. Hidden sections sit outside the print order, so they have none. */
+	onMove?: ((direction: "up" | "down") => void) | undefined;
 	children: ReactNode;
-};
-
-type RowProps = Omit<SectionRowProps, "draggable">;
-
-/** What a row in the drag flow gets from dnd-kit; a row outside it has none. */
-type RowDrag = {
-	attributes: DraggableAttributes;
-	listeners: DraggableSyntheticListeners;
-	setNodeRef: (element: HTMLElement | null) => void;
-	style: CSSProperties;
-	isDragging: boolean;
 };
 
 /**
  * An outline row: drag handle, title (opens the section), entry count, the eye (hidden sections keep their
  * content but aren't printed), the chevron and the ⋯ menu. Open, it shows the section's entries.
  */
-export function SectionRow({ draggable = true, ...props }: SectionRowProps) {
-	return draggable ? <SortableSectionRow {...props} /> : <FixedSectionRow {...props} />;
-}
-
-/** A row in the drag flow: reorderable with the pointer or the keyboard. */
-function SortableSectionRow({ section, locked, onMove, children }: RowProps) {
-	const { setNodeRef, transform, transition, isDragging, attributes, listeners } = useSortable({
-		id: section.id,
-		disabled: locked,
-		transition: DRAG_SETTLE,
-	});
-
-	return (
-		<SectionRowBody
-			section={section}
-			locked={locked}
-			onMove={onMove}
-			drag={{
-				attributes,
-				listeners,
-				setNodeRef,
-				style: { transform: CSS.Translate.toString(transform), transition },
-				isDragging,
-			}}
-		>
-			{children}
-		</SectionRowBody>
-	);
-}
-
-/** A row outside the drag flow (a hidden section): it keeps its place, without a drag interaction. */
-function FixedSectionRow({ section, locked, onMove, children }: RowProps) {
-	return (
-		<SectionRowBody section={section} locked={locked} onMove={onMove}>
-			{children}
-		</SectionRowBody>
-	);
-}
-
-type SectionRowBodyProps = RowProps & { drag?: RowDrag };
-
-function SectionRowBody({ section, locked, onMove, drag, children }: SectionRowBodyProps) {
+export function SectionRow({ section, locked, onMove, children }: SectionRowProps) {
 	const title = useSectionTitle(section);
 	const hidden = useCurrentBuilderResumeSelector((resume) => getSectionObject(resume.data, section)?.hidden ?? false);
 	const count = useCurrentBuilderResumeSelector((resume) => getEntries(resume.data, section).length);
@@ -121,6 +66,11 @@ function SectionRowBody({ section, locked, onMove, drag, children }: SectionRowB
 	const open = useEditorStore((state) => state.openSections.includes(section.id));
 	const setOpen = useEditorStore((state) => state.setSectionOpen);
 	const updateResumeData = useUpdateResumeData();
+	const { setNodeRef, transform, transition, isDragging, attributes, listeners } = useSortable({
+		id: section.id,
+		disabled: locked || hidden,
+		transition: DRAG_SETTLE,
+	});
 
 	const toggleHidden = () =>
 		updateResumeData(
@@ -134,37 +84,34 @@ function SectionRowBody({ section, locked, onMove, drag, children }: SectionRowB
 	const onTitleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
 		if (!event.altKey || (event.key !== "ArrowUp" && event.key !== "ArrowDown")) return;
 		event.preventDefault();
-		onMove(event.key === "ArrowUp" ? "up" : "down");
+		onMove?.(event.key === "ArrowUp" ? "up" : "down");
 	};
 
 	return (
 		<div
-			ref={drag?.setNodeRef ?? null}
+			ref={setNodeRef}
 			id={`sidebar-${section.id}`}
 			data-section-id={section.id}
-			style={drag?.style}
+			style={{ transform: CSS.Translate.toString(transform), transition: transition }}
 			className={cn(
 				"relative scroll-mt-[60px] rounded-lg transition-shadow duration-quick ease-enter",
-				drag?.isDragging && "z-10 bg-raised shadow-e2",
+				isDragging && "z-10 bg-raised shadow-e2",
 			)}
 		>
 			<div className="group/row flex h-11 items-center gap-0.5 rounded-lg pe-1 hover:bg-hover">
-				{drag ? (
-					<button
-						type="button"
-						aria-label={t`Reorder ${title}`}
-						disabled={locked}
-						className="flex h-11 w-7 shrink-0 cursor-grab items-center justify-center text-ink-3 active:cursor-grabbing disabled:cursor-default"
-						{...(drag.attributes ?? {})}
-						{...(drag.listeners ?? {})}
-					>
-						<Icon name="dots-six-vertical" size={18} />
-					</button>
-				) : (
-					<span aria-hidden="true" className="flex h-11 w-7 shrink-0 items-center justify-center text-ink-3/40">
-						<Icon name="dots-six-vertical" size={18} />
-					</span>
-				)}
+				<button
+					type="button"
+					aria-label={t`Reorder ${title}`}
+					disabled={locked || hidden}
+					className={cn(
+						"flex h-11 w-7 shrink-0 cursor-grab items-center justify-center text-ink-3 active:cursor-grabbing disabled:cursor-default",
+						hidden && "opacity-40",
+					)}
+					{...attributes}
+					{...listeners}
+				>
+					<Icon name="dots-six-vertical" size={18} />
+				</button>
 
 				<button
 					type="button"
@@ -224,7 +171,7 @@ function SectionRowBody({ section, locked, onMove, drag, children }: SectionRowB
 	);
 }
 
-type SectionMenuProps = { section: WriteSection; title: string; onMove: (direction: "up" | "down") => void };
+type SectionMenuProps = Pick<SectionRowProps, "section" | "onMove"> & { title: string };
 
 /** Everything else a section can do: add, sort, heading, rename, icon, layout and reset or delete. */
 function SectionMenu({ section, title, onMove }: SectionMenuProps) {
@@ -333,14 +280,18 @@ function SectionMenu({ section, title, onMove }: SectionMenuProps) {
 							<Trans>Sort by date</Trans>
 						</DropdownMenuItem>
 					)}
-					<DropdownMenuItem onClick={() => onMove("up")}>
-						<Icon name="arrow-up" />
-						<Trans>Move up</Trans>
-					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => onMove("down")}>
-						<Icon name="arrow-down" />
-						<Trans>Move down</Trans>
-					</DropdownMenuItem>
+					{onMove && (
+						<>
+							<DropdownMenuItem onClick={() => onMove("up")}>
+								<Icon name="arrow-up" />
+								<Trans>Move up</Trans>
+							</DropdownMenuItem>
+							<DropdownMenuItem onClick={() => onMove("down")}>
+								<Icon name="arrow-down" />
+								<Trans>Move down</Trans>
+							</DropdownMenuItem>
+						</>
+					)}
 					<DropdownMenuItem onClick={rename}>
 						<Icon name="pencil-simple" />
 						<Trans>Rename…</Trans>
