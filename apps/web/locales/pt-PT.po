@@ -118,6 +118,11 @@ msgstr "{0, plural, one {# contacto tem um e-mail inválido ou não tem nome; a 
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# dia} other {# dias}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {# documento movido para a Lixeira} other {# documentos movidos para a Lixeira}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, one {Começou há # minuto} other {Começou há # minutos}}"
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, one {usado em # item guardado} other {usado em # itens guardados}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {A fonte selecionada não consegue apresentar {list}. Aparece como “?”. Em Design, escolha uma fonte que o inclua.} other {A fonte selecionada não consegue apresentar {list}. Aparecem como “?”. Em Design, escolha uma fonte que os inclua.}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {Entrada #} other {Entradas #}}"
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, one {Aplicar # alteração} other {Aplicar # alterações}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "{count} selecionados"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, one {# dia no escritório por semana} other {# dias no escritório por semana}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, one {# dia no escritório, o seu limite} other {# dias no
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {Documento #} other {Documentos #}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {# documento atualizado} other {# documentos atualizados}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "Albanês"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "Alinhar ao centro"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "Alinhar à esquerda"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "Alinhar à direita"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "Melhor para candidaturas"
 msgid "Blocker"
 msgstr "Bloqueio"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "Azul"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Quadro"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "Limpar secção"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "Limpar seleção"
 
@@ -2648,6 +2683,10 @@ msgstr "Fechado"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "Coach"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "Código"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "Copie agora. Para sua segurança, não será mostrado novamente."
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "Copiar link"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "Copiar link público"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "Balanço"
 msgid "Deep breath."
 msgstr "Respire fundo."
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "Predefinido"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "Pesos da fonte"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "Não foi possível carregar as fontes. Tente exportar novamente."
+msgid "Fonts could not be loaded. Try again."
+msgstr "Não foi possível carregar as fontes. Tente novamente."
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "Nota final"
 msgid "Greek"
 msgstr "Grego"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "Verde"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "Saudação"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "Cinzento"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "Cabeçalho"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "Cabeçalho"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "Título 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "Título 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "Título 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "Ocultar a foto"
 msgid "High"
 msgstr "Alto"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "Realce"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "Hindi"
@@ -5373,6 +5441,10 @@ msgstr "História"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "Início"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "Linha horizontal"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "Em boa companhia"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "Aumente o espaçamento entre linhas para que duas linhas não se fundam numa só."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "Aumentar avanço"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "john.doe"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON lido"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "Justificar"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,10 +6258,14 @@ msgstr "carta"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
+#: src/routes/builder/letter/-components/write-panel.tsx
+msgid "Letter"
+msgstr "Carta"
+
 #: src/features/resume/editor/design/style-groups.tsx
 #: src/routes/builder/$resumeId/-components/page-canvas.tsx
 #: src/routes/builder/letter/-components/letter-page.tsx
-#: src/routes/builder/letter/-components/write-panel.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
 msgid "Letter"
 msgstr "Carta"
 
@@ -6286,6 +6370,7 @@ msgstr "Ligar um formulário de emprego"
 msgid "Link an application…"
 msgstr "Ligue um formulário de emprego…"
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,10 +6554,11 @@ msgid "Locations"
 msgstr "Locais"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
-msgstr "Edição de bloqueio"
+msgstr "Bloquear edição"
 
 #: src/features/documents/document-card.tsx
 msgid "Locked"
@@ -6536,6 +6622,14 @@ msgstr "Torne-o mais específico"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Torne-o mais curto"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "Tornar privado"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "Tornar público"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "Mais formatos de download"
 msgid "More for {title}"
 msgstr "Mais opções para {title}"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "Mais formatação"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "Mais opções"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "Mover para Entrevista"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "Subir"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "Mova o seu email e número de telefone para o topo da primeira página."
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "{0} de {1} movidos para a Lixeira. Os documentos bloqueados foram ignorados."
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "Ou por palavras suas…"
 msgid "Or upload a resume PDF"
 msgstr "Ou carregue um PDF do currículo"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "Laranja"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "Organização"
@@ -7848,6 +7957,10 @@ msgstr "em 100"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "Desatualizado: o texto mudou desde então."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "Diminuir avanço"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "página."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "Papel"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "Parágrafo"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "Fornecido pelo seu servidor: {connectedProvider}."
 msgid "Provider"
 msgstr "Fornecedor"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "Publicações"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "Editora"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "Roxo"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "Retângulo"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "Retângulo (largura total)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "Vermelho"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "Ver abaixo"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
 msgstr "Selecionar"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "Selecionar {0}"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "Selecione {0} em {1}"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "Selecionar tudo"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "Selecione um fornecedor de IA"
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "Selecionar..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "Documentos selecionados"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "Partilhar seções"
 msgid "Share via…"
 msgstr "Partilhe por…"
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "Mostre-os novamente"
 msgid "Shown in your timezone."
 msgstr "Apresentado no seu fuso horário."
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "Mostra as etiquetas que todos têm em comum. As etiquetas que adicionar são aplicadas a todos os documentos; as que remover saem de todos. Os documentos bloqueados ficam como estão."
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "Formulário de coluna única inspirado no currículo japonês rirekisho: um cabeçalho de campos delimitados e cada secção como uma tabela com uma barra de título sólida. Denso e rápido de ler, adequado para engenharia, operações ou candidaturas no Japão."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "Um layout de coluna única inspirado num artigo de revista: o seu nome em letras grandes por baixo de um título curto em maiúsculas, um resumo em itálico e títulos de secção em itálico. Um design refinado para escritores, designers e profissionais de comunicação."
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "Coluna única composta como um artigo de revista: um nome em grande destaque sob um antetítulo em maiúsculas e o resumo como uma entrada maior; refinado para escritores, designers e funções de comunicação."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "Não foi possível ler alguns detalhes da vaga. Preencha o cargo e a emp
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "Algumas linhas estão armazenadas fora da ordem de leitura."
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "Não foi possível renderizar algum texto PDF. Escolha uma fonte que contenha estes caracteres e tente exportar novamente."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "História não encontrada"
 msgid "Strengthen"
 msgstr "Reforçar"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "Rasurado"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "Verbo mais forte"
@@ -10823,12 +10969,18 @@ msgstr "Etiqueta"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "Etiquetas"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "As etiquetas podem ser usadas para categorizar o seu currículo por palavras-chave."
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "Etiquetas de {0} documentos"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "A testar…"
 msgid "Text"
 msgstr "Texto"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "Alinhamento do texto"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "Cor do texto"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "Cor do texto"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "O texto está na área de cabeçalho ou rodapé."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "Tamanho do texto"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "Estilo de texto"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11895,6 +12059,10 @@ msgstr "Fontes"
 msgid "Ukrainian"
 msgstr "Ucraniano"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "Sublinhado"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "Sublinhar ligações"
@@ -11949,6 +12117,7 @@ msgstr "A desassociar a sua conta de {providerName}..."
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "Desbloquear"
@@ -12021,6 +12190,10 @@ msgstr "Atualizado"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "{0} atualizado"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "{done} de {total} atualizados. Foram ignorados os documentos bloqueados e, nos links públicos, as cartas."
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "O seu navegador converte a sua fala em texto. Consoante o navegador, o f
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "O agente de IA do seu navegador editou esta carta."
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "O agente de IA do seu navegador editou este currículo."
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "O seu currículo usa \"eu\" e \"meu\"."
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "O seu currículo, ao vivo em"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "A fonte selecionada não consegue apresentar alguns caracteres. Aparecem como “?”. Em Design, escolha uma fonte que os inclua."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

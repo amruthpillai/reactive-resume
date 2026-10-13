@@ -118,6 +118,11 @@ msgstr "{0, plural, one {# ಸಂಪರ್ಕವು ಅಮಾನ್ಯವಾದ 
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# ದಿನ} other {# ದಿನಗಳು}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {# ದಾಖಲೆಯನ್ನು ಅನುಪಯುಕ್ತಕ್ಕೆ ಸರಿಸಲಾಗಿದೆ} other {# ದಾಖಲೆಗಳನ್ನು ಅನುಪಯುಕ್ತಕ್ಕೆ ಸರಿಸಲಾಗಿದೆ}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, one {# ನಿಮಿಷದ ಹಿಂದೆ ಪ್ರಾರಂ
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, one {# ಉಳಿಸಿದ ಐಟಂನಲ್ಲಿ ಬಳಸಲಾಗಿದೆ} other {# ಉಳಿಸಿದ ಐಟಂಗಳಲ್ಲಿ ಬಳಸಲಾಗಿದೆ}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {ನೀವು ಆಯ್ಕೆ ಮಾಡಿದ ಫಾಂಟ್ {list} ಅನ್ನು ತೋರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಅದು “?” ಆಗಿ ಕಾಣಿಸುತ್ತದೆ. ವಿನ್ಯಾಸದಲ್ಲಿ, ಅದನ್ನು ಹೊಂದಿರುವ ಫಾಂಟ್ ಆಯ್ಕೆಮಾಡಿ.} other {ನೀವು ಆಯ್ಕೆ ಮಾಡಿದ ಫಾಂಟ್ {list} ಅನ್ನು ತೋರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಅವು “?” ಆಗಿ ಕಾಣಿಸುತ್ತವೆ. ವಿನ್ಯಾಸದಲ್ಲಿ, ಅವುಗಳನ್ನು ಹೊಂದಿರುವ ಫಾಂಟ್ ಆಯ್ಕೆಮಾಡಿ.}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {# ಪ್ರವೇಶ} other {# ನಮೂದುಗ�
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, one {# ಬದಲಾವಣೆಯನ್ನು ಅನ್ವಯಿಸಿ} other {# ಬದಲಾವಣೆಗಳನ್ನು ಅನ್ವಯಿಸಿ}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "{count} ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, one {ವಾರಕ್ಕೆ # ಕಚೇರಿ ದಿನ} other {ವಾರಕ್ಕೆ # ಕಚೇರಿ ದಿನಗಳು}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, one {# ಕಚೇರಿ ದಿನ, ನಿಮ್ಮ ಮಿ�
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {# ಡಾಕ್ಯುಮೆಂಟ್} other {# ದಾಖಲೆಗಳು}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {# ದಾಖಲೆಯನ್ನು ನವೀಕರಿಸಲಾಗಿದೆ} other {# ದಾಖಲೆಗಳನ್ನು ನವೀಕರಿಸಲಾಗಿದೆ}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "ಅಲ್ಬೇನಿಯನ್"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "ಮಧ್ಯಕ್ಕೆ ಜೋಡಿಸಿ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "ಎಡಕ್ಕೆ ಜೋಡಿಸಿ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "ಬಲಕ್ಕೆ ಜೋಡಿಸಿ"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "ಅರ್ಜಿ ಸಲ್ಲಿಸಲು ಉತ್ತಮ"
 msgid "Blocker"
 msgstr "ನಿರ್ಬಂಧಕ"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "ನೀಲಿ"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "ಬೋರ್ಡ್"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "ವಿಭಾಗವನ್ನು ತೆರವುಗೊಳಿಸಿ"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "ಆಯ್ಕೆಯನ್ನು ತೆರವುಗೊಳಿಸಿ"
 
@@ -2648,6 +2683,10 @@ msgstr "ಮುಚ್ಚಲಾಗಿದೆ"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "ಕೋಚ್"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "ಕೋಡ್"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "ಈಗ ಅದನ್ನು ನಕಲಿಸಿ. ನಿಮ್ಮ ಭದ್�
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "ಲಿಂಕ್ ನಕಲಿಸಿ"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "ಸಾರ್ವಜನಿಕ ಲಿಂಕ್ ನಕಲಿಸಿ"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "ಪರಾಮರ್ಶೆ"
 msgid "Deep breath."
 msgstr "ಆಳವಾಗಿ ಉಸಿರಾಡಿ."
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "ಡೀಫಾಲ್ಟ್"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "ಅಕ್ಷರಗಳ ರೂಪಾಂತರಗಳು"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "ಫಾಂಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಲಿಲ್ಲ. ರಫ್ತು ಮಾಡಲು ಮರುಪ್ರಯತ್ನಿಸಿ."
+msgid "Fonts could not be loaded. Try again."
+msgstr "ಫಾಂಟ್‌ಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "ಗ್ರೇಡ್"
 msgid "Greek"
 msgstr "ಗ್ರೀಕ್"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "ಹಸಿರು"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "ಸಂಬೋಧನೆ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "ಬೂದು"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "ಶಿರೋಲೇಖ"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "ಶೀರ್ಷಿಕೆ (Heading)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "ಶೀರ್ಷಿಕೆ 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "ಶೀರ್ಷಿಕೆ 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "ಶೀರ್ಷಿಕೆ 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "ಫೋಟೋವನ್ನು ಮರೆಮಾಡಿ"
 msgid "High"
 msgstr "ಹೆಚ್ಚು"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "ಹೈಲೈಟ್"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "ಹಿಂದಿ"
@@ -5373,6 +5441,10 @@ msgstr "ಇತಿಹಾಸ"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "ಮುಖ್ಯ ಪುಟ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "ಅಡ್ಡ ರೇಖೆ"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "ಒಳ್ಳೆಯ ಕಂಪನಿಯಲ್ಲಿ"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "ಎರಡು ಸಾಲುಗಳು ಒಂದಾಗಿ ವಿಲೀನವಾಗದಂತೆ ಸಾಲಿನ ಅಂತರವನ್ನು ಹೆಚ್ಚಿಸಿ."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "ಇಂಡೆಂಟ್ ಹೆಚ್ಚಿಸಿ"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "john.doe"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON ಓದಿದೆ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "ಎರಡೂ ಬದಿಗೆ ಜೋಡಿಸಿ"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,12 +6258,16 @@ msgstr "ಪತ್ರ"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
-#: src/features/resume/editor/design/style-groups.tsx
-#: src/routes/builder/$resumeId/-components/page-canvas.tsx
-#: src/routes/builder/letter/-components/letter-page.tsx
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Letter"
 msgstr "ಪತ್ರ"
+
+#: src/features/resume/editor/design/style-groups.tsx
+#: src/routes/builder/$resumeId/-components/page-canvas.tsx
+#: src/routes/builder/letter/-components/letter-page.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
+msgid "Letter"
+msgstr "ಲೆಟರ್"
 
 #: src/features/career/workspace/shell.tsx
 msgid "Letter · not sent yet"
@@ -6286,6 +6370,7 @@ msgstr "ಉದ್ಯೋಗ ಅರ್ಜಿಯನ್ನು ಲಿಂಕ್ ಮಾ
 msgid "Link an application…"
 msgstr "ಉದ್ಯೋಗ ಅರ್ಜಿಯನ್ನು ಲಿಂಕ್ ಮಾಡಿ..."
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,10 +6554,11 @@ msgid "Locations"
 msgstr "ಸ್ಥಳಗಳು"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
-msgstr "ಲಾಕ್ ಸಂಪಾದನೆ"
+msgstr "ಸಂಪಾದನೆಯನ್ನು ಲಾಕ್ ಮಾಡಿ"
 
 #: src/features/documents/document-card.tsx
 msgid "Locked"
@@ -6536,6 +6622,14 @@ msgstr "ಅದನ್ನು ಹೆಚ್ಚು ನಿರ್ದಿಷ್ಟವಾ�
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "ಅದನ್ನು ಚಿಕ್ಕದಾಗಿಸಿ"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "ಖಾಸಗಿ ಮಾಡಿ"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "ಸಾರ್ವಜನಿಕ ಮಾಡಿ"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "ಇನ್ನಷ್ಟು ಡೌನ್‌ಲೋಡ್ ಫಾರ್ಮ್�
 msgid "More for {title}"
 msgstr "{title} ಗಾಗಿ ಇನ್ನಷ್ಟು"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "ಇನ್ನಷ್ಟು ಫಾರ್ಮ್ಯಾಟಿಂಗ್"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "ಹೆಚ್ಚಿನ ಆಯ್ಕೆಗಳು"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "ಸಂದರ್ಶನಕ್ಕೆ ಸರಿಸಿ"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "ಮೇಲಕ್ಕೆ ಸರಿಸಿ"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "ನಿಮ್ಮ ಇಮೇಲ್ ಮತ್ತು ಫೋನ್ ಸಂಖ್ಯೆಯನ್ನು ಮೊದಲ ಪುಟದ ಮೇಲ್ಭಾಗಕ್ಕೆ ಸರಿಸಿ."
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "{1} ರಲ್ಲಿ {0} ಅನ್ನು ಅನುಪಯುಕ್ತಕ್ಕೆ ಸರಿಸಲಾಗಿದೆ. ಲಾಕ್ ಮಾಡಲಾದ ದಾಖಲೆಗಳನ್ನು ಬಿಟ್ಟುಬಿಡಲಾಗಿದೆ."
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "ಅಥವಾ ನಿಮ್ಮ ಮಾತಿನಲ್ಲಿ..."
 msgid "Or upload a resume PDF"
 msgstr "ಅಥವಾ ರೆಸ್ಯೂಮ್ PDF ಅಪ್‌ಲೋಡ್ ಮಾಡಿ"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "ಕಿತ್ತಳೆ"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "ಸಂಸ್ಥೆ"
@@ -7848,6 +7957,10 @@ msgstr "100 ರಲ್ಲಿ"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "ಅವಧಿ ಮೀರಿದೆ: ಪಠ್ಯವು ಅಂದಿನಿಂದ ಬದಲಾಗಿದೆ."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "ಇಂಡೆಂಟ್ ಕಡಿಮೆ ಮಾಡಿ"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "ಪುಟದಲ್ಲಿ."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "ಪೇಪರ್"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "ಪ್ಯಾರಾಗ್ರಾಫ್"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "ನಿಮ್ಮ ಸರ್ವರ್‌ನಿಂದ ಒದಗಿಸಲಾ�
 msgid "Provider"
 msgstr "ಪೂರೈಕೆದಾರ"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "ಪ್ರಕಟನೆಗಳು"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "ಪ್ರಕಾಶಕರು"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "ನೇರಳೆ"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "ಆಯತ"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "ಆಯತ (ಪೂರ್ಣ ಅಗಲ)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "ಕೆಂಪು"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9223,7 +9350,7 @@ msgstr "ರೆಸ್ಯೂಮ್ ಸಲ್ಲಿಸಲಾಗಿದೆ (ಐಚ್
 #: src/features/command-palette/pages/resumes.tsx
 #: src/features/documents/documents-page.tsx
 msgid "Resumes"
-msgstr "ರೆಸ್ಯೂಮೇ"
+msgstr "ರೆಸ್ಯೂಮ್‌ಗಳು"
 
 #: src/features/settings/preferences.tsx
 msgid "Resumes always render on white paper, whatever the theme."
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "ಕೆಳಗೆ ನೋಡಿ"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
 msgstr "ಆಯ್ಕೆ ಮಾಡಿ"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "{0} ಆಯ್ಕೆಮಾಡಿ"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "{1} ನಲ್ಲಿ {0} ಆಯ್ಕೆಮಾಡಿ"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "ಎಲ್ಲವನ್ನೂ ಆಯ್ಕೆಮಾಡಿ"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "AI ಪೂರೈಕೆದಾರರನ್ನು ಆಯ್ಕೆಮಾಡ�
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "ಆಯ್ಕೆಮಾಡಿ..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "ಆಯ್ಕೆಮಾಡಿದ ದಾಖಲೆಗಳು"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "ವಿಭಾಗಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ"
 msgid "Share via…"
 msgstr "ಇದರ ಮೂಲಕ ಹಂಚಿಕೊಳ್ಳಿ..."
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "ಅವುಗಳನ್ನು ಮತ್ತೆ ತೋರಿಸಿ"
 msgid "Shown in your timezone."
 msgstr "ನಿಮ್ಮ ಸಮಯ ವಲಯದಲ್ಲಿ ತೋರಿಸಲಾಗಿದೆ."
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "ಎಲ್ಲಾ ದಾಖಲೆಗಳಲ್ಲೂ ಸಾಮಾನ್ಯವಾಗಿರುವ ಟ್ಯಾಗ್‌ಗಳನ್ನು ತೋರಿಸುತ್ತದೆ. ನೀವು ಸೇರಿಸುವ ಟ್ಯಾಗ್‌ಗಳು ಪ್ರತಿಯೊಂದು ದಾಖಲೆಗೂ ಸೇರುತ್ತವೆ; ನೀವು ತೆಗೆದುಹಾಕುವ ಟ್ಯಾಗ್‌ಗಳು ಎಲ್ಲದರಿಂದಲೂ ತೆಗೆದುಹೋಗುತ್ತವೆ. ಲಾಕ್ ಮಾಡಲಾದ ದಾಖಲೆಗಳು ಹಾಗೆಯೇ ಉಳಿಯುತ್ತವೆ."
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "ಜಪಾನೀಸ್ ರಿರೆಕಿಶೋ ರೆಸ್ಯೂಮ್‌ನಿಂದ ಪ್ರೇರಿತವಾದ ಏಕ-ಕಾಲಮ್ ರೂಪ: ಗಡಿಯಿರುವ ಕ್ಷೇತ್ರಗಳಿಂದ ಮಾಡಿದ ಹೆಡರ್ ಮತ್ತು ಪ್ರತಿ ವಿಭಾಗವನ್ನು ಘನ ಶೀರ್ಷಿಕೆ ಪಟ್ಟಿಯೊಂದಿಗೆ ಟೇಬಲ್‌ನಂತೆ ಪ್ರಸ್ತುತಪಡಿಸಲಾಗಿದೆ. ಕಾಂಪಾಕ್ಟ್ ಮತ್ತು ಸ್ಕ್ಯಾನ್ ಮಾಡಲು ಸುಲಭ, ಎಂಜಿನಿಯರಿಂಗ್ ಉದ್ಯೋಗಗಳು, ಕಾರ್ಯಾಚರಣೆಗಳ ಉದ್ಯೋಗಗಳು ಅಥವಾ ಜಪಾನ್‌ನಲ್ಲಿನ ಉದ್ಯೋಗ ಅರ್ಜಿಗಳಿಗೆ ಸೂಕ್ತವಾಗಿದೆ."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "ನಿಯತಕಾಲಿಕದ ಲೇಖನದಿಂದ ಪ್ರೇರಿತವಾದ ಏಕ-ಕಾಲಮ್ ಲೇಔಟ್: ದೊಡ್ಡಕ್ಷರದಲ್ಲಿ ಸಣ್ಣ ಶೀರ್ಷಿಕೆಯ ಕೆಳಗೆ ದೊಡ್ಡ ಪ್ರಕಾರದಲ್ಲಿ ನಿಮ್ಮ ಹೆಸರು, ಇಟಾಲಿಕ್ಸ್‌ನಲ್ಲಿ ಸಾರಾಂಶ ಮತ್ತು ಇಟಾಲಿಕ್ಸ್‌ನಲ್ಲಿ ವಿಭಾಗ ಶೀರ್ಷಿಕೆಗಳು. ಬರಹಗಾರರು, ವಿನ್ಯಾಸಕರು ಮತ್ತು ಸಂವಹನ ವೃತ್ತಿಪರರಿಗೆ ಸಂಸ್ಕರಿಸಿದ ವಿನ್ಯಾಸ."
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "ನಿಯತಕಾಲಿಕದ ವಿಶೇಷ ಲೇಖನದಂತೆ ರೂಪಿಸಿದ ಏಕ-ಕಾಲಮ್ ವಿನ್ಯಾಸ: ದೊಡ್ಡಕ್ಷರದ ಚಿಕ್ಕ ಮೇಲ್ಸಾಲಿನ ಕೆಳಗೆ ದೊಡ್ಡ ಹೆಸರು, ಮತ್ತು ಸಾರಾಂಶವು ದೊಡ್ಡ ಪರಿಚಯ ಪ್ಯಾರಾಗ್ರಾಫ್ ಆಗಿ; ಬರಹಗಾರರು, ವಿನ್ಯಾಸಕರು ಮತ್ತು ಸಂವಹನ ಪಾತ್ರಗಳಿಗಾಗಿ ಪರಿಷ್ಕರಿಸಲಾಗಿದೆ."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "ಕೆಲವು ಉದ್ಯೋಗ ವಿವರಗಳನ್ನು ಓದ
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "ಕೆಲವು ಸಾಲುಗಳನ್ನು ಓದುವ ಕ್ರಮದಿಂದ ಹೊರಗಿಟ್ಟು ಸಂಗ್ರಹಿಸಲಾಗಿದೆ."
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "ಕೆಲವು PDF ಪಠ್ಯವನ್ನು ಸಲ್ಲಿಸಲಾಗಲಿಲ್ಲ. ಈ ಅಕ್ಷರಗಳನ್ನು ಹೊಂದಿರುವ ಫಾಂಟ್ ಅನ್ನು ಆಯ್ಕೆ ಮಾಡಿ, ನಂತರ ರಫ್ತು ಮಾಡಲು ಮರುಪ್ರಯತ್ನಿಸಿ."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "ಕಥೆ ಕಂಡುಬಂದಿಲ್ಲ"
 msgid "Strengthen"
 msgstr "ಬಲಪಡಿಸಬೇಕಾದ್ದು"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "ಸ್ಟ್ರೈಕ್‌ಥ್ರೂ"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "ಬಲವಾದ ಕ್ರಿಯಾಪದ"
@@ -10823,12 +10969,18 @@ msgstr "ಟ್ಯಾಗ್ ಮಾಡಿ"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "ಟ್ಯಾಗ್‌ಗಳು"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "ಟ್ಯಾಗ್‌ಗಳನ್ನು ಕೀವರ್ಡ್‌ಗಳ ಮೂಲಕ ನಿಮ್ಮ ರೆಸ್ಯೂಮ್ ಅನ್ನು ವರ್ಗೀಕರಿಸಲು ಬಳಸಬಹುದು."
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "{0} ದಾಖಲೆಗಳ ಟ್ಯಾಗ್‌ಗಳು"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,9 +11112,17 @@ msgstr "… ಪರೀಕ್ಷಿಸಲಾಗುತ್ತಿದೆ"
 msgid "Text"
 msgstr "ಪಠ್ಯ"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "ಪಠ್ಯ ಜೋಡಣೆ"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
 msgstr "ಅಕ್ಷರದ ಬಣ್ಣ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
+msgstr "ಪಠ್ಯದ ಬಣ್ಣ"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text comes out in the order a person reads it, at a size and spacing that survive."
@@ -10995,6 +11155,10 @@ msgstr "ಪಠ್ಯವು ಹೆಡರ್ ಅಥವಾ ಫುಟರ್ ಪ್�
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "ಪಠ್ಯದ ಗಾತ್ರ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "ಪಠ್ಯ ಶೈಲಿ"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11715,7 +11879,7 @@ msgstr "ಅನುವಾದಗಳು"
 #: src/features/documents/trash-page.tsx
 #: src/routes/dashboard/-components/app-shell.tsx
 msgid "Trash"
-msgstr "ಮರುಬಳಕೆ ಬಿನ್"
+msgstr "ಅನುಪಯುಕ್ತ"
 
 #: src/features/documents/trash-page.tsx
 msgid "Trash is empty"
@@ -11895,6 +12059,10 @@ msgstr "ಮುದ್ರಣಕಲೆ"
 msgid "Ukrainian"
 msgstr "ಉಕ್ರೇನಿಯನ್"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "ಅಡಿಗೆರೆ"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "ಲಿಂಕ್‌ಗಳನ್ನು ಅಂಡರ್‌ಲೈನ್ ಮಾಡಿ"
@@ -11949,9 +12117,10 @@ msgstr "ನಿಮ್ಮ {providerName} ಖಾತೆಯನ್ನು ಅನಿರ�
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
-msgstr "ಅನಿರ್ಬಂಧಿಸಿ"
+msgstr "ಅನ್‌ಲಾಕ್ ಮಾಡಿ"
 
 #: src/features/resume/editor/write/write-panel.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
@@ -12021,6 +12190,10 @@ msgstr "ನವೀಕರಿಸಲಾಗಿದೆ"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "{0} ನವೀಕರಿಸಲಾಗಿದೆ"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "{total} ರಲ್ಲಿ {done} ನವೀಕರಿಸಲಾಗಿದೆ. ಲಾಕ್ ಮಾಡಲಾದ ದಾಖಲೆಗಳನ್ನು ಮತ್ತು ಸಾರ್ವಜನಿಕ ಲಿಂಕ್‌ಗಳಿಗಾಗಿ ಕವರ್ ಲೆಟರ್‌ಗಳನ್ನು ಬಿಟ್ಟುಬಿಡಲಾಗಿದೆ."
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "ನಿಮ್ಮ ಬ್ರೌಸರ್ ನಿಮ್ಮ ಮಾತನ್ನ
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನ AI ಏಜೆಂಟ್ ಈ ಪತ್ರವನ್ನು ಸಂಪಾದಿಸಿದೆ."
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನ AI ಏಜೆಂಟ್ ಈ ರೆಸ್ಯೂಮ್ ಅನ್ನು ಸಂಪಾದಿಸಿದೆ."
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "ನಿಮ್ಮ ರೆಸ್ಯೂಮೆ \"I\" ಮತ್ತು \"my\" �
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "ನಿಮ್ಮ ರೆಸ್ಯೂಮೆ, ಲೈವ್"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "ನೀವು ಆಯ್ಕೆ ಮಾಡಿದ ಫಾಂಟ್ ಕೆಲವು ಅಕ್ಷರಗಳನ್ನು ತೋರಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ. ಅವು “?” ಆಗಿ ಕಾಣಿಸುತ್ತವೆ. ವಿನ್ಯಾಸದಲ್ಲಿ, ಅವುಗಳನ್ನು ಹೊಂದಿರುವ ಫಾಂಟ್ ಆಯ್ಕೆಮಾಡಿ."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

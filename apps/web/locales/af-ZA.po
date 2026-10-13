@@ -118,6 +118,11 @@ msgstr "{0, plural, one {# kontak het 'n ongeldige e-pos of geen naam; sy werksa
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# dag} other {# dae}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {# dokument na asblik geskuif} other {# dokumente na asblik geskuif}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, one {# minuut gelede begin} other {# minute gelede begin}}"
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, one {gebruik in # gestoorde item} other {gebruik in # gestoorde items}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {Jou gekose lettertipe kan nie {list} wys nie. Dit verskyn as “?”. Kies in Ontwerp ’n lettertipe wat dit het.} other {Jou gekose lettertipe kan nie {list} wys nie. Hulle verskyn as “?”. Kies in Ontwerp ’n lettertipe wat hulle het.}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {# inskrywing} other {# inskrywings}}"
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, one {Pas # verandering toe} other {Pas # veranderinge toe}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "{count} gekies"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, one {# kantoordag per week} other {# kantoordae per week}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, one {# kantoordag, jou limiet} other {# kantoordae, jou l
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {# dokument} other {# dokumente}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {# dokument bygewerk} other {# dokumente bygewerk}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "Albanees"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "Belyn in die middel"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "Belyn links"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "Belyn regs"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "Beste vir aansoek"
 msgid "Blocker"
 msgstr "Struikelblok"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "Blou"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Bord"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "Vee afdeling uit"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "Vee seleksie uit"
 
@@ -2648,6 +2683,10 @@ msgstr "Gesluit"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "Afrigter"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "Kode"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "Kopieer dit nou. Vir jou sekuriteit sal dit nie weer gewys word nie."
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "Kopieer skakel"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "Kopieer openbare skakel"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "Nabespreking"
 msgid "Deep breath."
 msgstr "Haal diep asem."
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "Verstek"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "Lettertipegewigte"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "Lettertipes kon nie gelaai word nie. Probeer weer die uitvoer."
+msgid "Fonts could not be loaded. Try again."
+msgstr "Lettertipes kon nie gelaai word nie. Probeer weer."
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "Punt"
 msgid "Greek"
 msgstr "Grieks"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "Groen"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "Aanhef"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "Grys"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "Opskrif"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "Opskrif"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "Opskrif 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "Opskrif 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "Opskrif 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "Versteek die foto"
 msgid "High"
 msgstr "Hoog"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "Uitlig"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "Hindi"
@@ -5373,6 +5441,10 @@ msgstr "Geskiedenis"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "Tuis"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "Horisontale lyn"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "In goeie geselskap"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "Vergroot reëlspasiëring sodat twee reëls nie in een saamsmelt nie."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "Vergroot inkeping"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "johannes.smit"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON gelees"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "Uitvul"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,12 +6258,16 @@ msgstr "brief"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
+#: src/routes/builder/letter/-components/write-panel.tsx
+msgid "Letter"
+msgstr "Brief"
+
 #: src/features/resume/editor/design/style-groups.tsx
 #: src/routes/builder/$resumeId/-components/page-canvas.tsx
 #: src/routes/builder/letter/-components/letter-page.tsx
-#: src/routes/builder/letter/-components/write-panel.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
 msgid "Letter"
-msgstr "Letter"
+msgstr "US Letter"
 
 #: src/features/career/workspace/shell.tsx
 msgid "Letter · not sent yet"
@@ -6286,6 +6370,7 @@ msgstr "Koppel 'n werksaansoek"
 msgid "Link an application…"
 msgstr "Koppel 'n werksaansoek..."
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,6 +6554,7 @@ msgid "Locations"
 msgstr "Plekke"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
@@ -6536,6 +6622,14 @@ msgstr "Maak dit meer spesifiek"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Maak dit korter"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "Maak privaat"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "Maak openbaar"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "Meer aflaaiformate"
 msgid "More for {title}"
 msgstr "Meer vir {title}"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "Meer formatering"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "Meer opsies"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "Skuif na Onderhoud"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "Beweeg op"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "Skuif jou e-pos en telefoonnommer na die bopunt van bladsy een."
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "{0} van {1} na asblik geskuif. Gesluite dokumente is oorgeslaan."
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "Of in jou eie woorde..."
 msgid "Or upload a resume PDF"
 msgstr "Of laai ’n CV-PDF op"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "Oranje"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "Organisasie"
@@ -7848,6 +7957,10 @@ msgstr "uit 100"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "Verouderd: die teks het sedertdien verander."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "Verklein inkeping"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "bladsy."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "Papier"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "Paragraaf"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "Verskaf deur jou bediener: {connectedProvider}."
 msgid "Provider"
 msgstr "Verskaffer"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "Publikasies"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "Uitgewer"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "Pers"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "Reghoek"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "Reghoek (volle breedte)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "Rooi"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "Sien hieronder"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
 msgstr "Kies"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "Kies {0}"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "Kies {0} by {1}"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "Kies alles"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "Kies 'n KI-verskaffer"
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "Kies..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "Gekose dokumente"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "Deel afdelings"
 msgid "Share via…"
 msgstr "Deel via..."
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "Wys hulle weer"
 msgid "Shown in your timezone."
 msgstr "Gewys in jou tydsone."
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "Wys die merkers wat hulle almal deel. Merkers wat jy byvoeg, kom op elke dokument; merkers wat jy verwyder, gaan van elkeen af. Gesluite dokumente bly soos hulle is."
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "'n Enkelkolomvorm geïnspireer deur die Japannese rirekisho-cv: 'n kopskrif gemaak van omringde velde, en elke afdeling aangebied as 'n tabel met 'n soliede titelbalk. Kompak en maklik om te skandeer, geskik vir ingenieurswerke, bedryfstake of werksaansoeke in Japan."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "'n Enkelkolom-uitleg wat deur 'n tydskrifartikel geïnspireer is: jou naam in groot skrif onder 'n kort opskrif in hoofletters, 'n opsomming in kursief, en afdelingsopskrifte in kursief. 'n Verfynde ontwerp vir skrywers, ontwerpers en kommunikasiekundiges."
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "Enkelkolom, uitgelê soos ’n tydskrifartikel: ’n groot vertoonnaam onder ’n bo-opskrif in hoofletters en die opsomming as ’n groter inleidingsparagraaf; verfyn vir skrywers, ontwerpers en kommunikasierolle."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "Sommige werkbesonderhede kon nie gelees word nie. Vul die pos en maatska
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "Sommige reëls word buite leesorde gebêre."
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "Sommige PDF-teks kon nie weergegee word nie. Kies 'n lettertipe wat hierdie karakters bevat, en probeer dan weer die uitvoer."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "Storie nie gevind nie"
 msgid "Strengthen"
 msgstr "Versterk"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "Deurhaal"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "Sterker werkwoord"
@@ -10823,12 +10969,18 @@ msgstr "Merk"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "Merkers"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Merkers kan gebruik word om jou CV volgens sleutelwoorde te kategoriseer."
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "Merkers vir {0} dokumente"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "Toetsing…"
 msgid "Text"
 msgstr "Teks"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "Teksbelyning"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "Tekskleur"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "Tekskleur"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "Teks sit in die opskrif- of voetskrifarea."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "Teks grootte"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "Teksstyl"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11895,6 +12059,10 @@ msgstr "Tipografie"
 msgid "Ukrainian"
 msgstr "Oekraïens"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "Onderstreep"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "Onderstreep skakels"
@@ -11949,6 +12117,7 @@ msgstr "Ontkoppel tans jou {providerName}-rekening..."
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "Ontsluit"
@@ -12021,6 +12190,10 @@ msgstr "Opgedateer"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "Opgedateer {0}"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "{done} van {total} bygewerk. Gesluite dokumente, en briewe vir openbare skakels, is oorgeslaan."
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "Jou blaaier verander jou spraak in teks. Afhangend van die blaaier kan d
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "Jou blaaier se KI-agent het hierdie brief gewysig."
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "Jou blaaier se KI-agent het hierdie CV gewysig."
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "Jou CV gebruik \"ek\" en \"my\"."
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "Jou CV, woon by"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "Jou gekose lettertipe kan sommige karakters nie wys nie. Hulle verskyn as “?”. Kies in Ontwerp ’n lettertipe wat hulle het."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

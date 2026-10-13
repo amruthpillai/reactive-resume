@@ -118,6 +118,11 @@ msgstr "{0, plural, other {# 个联系人的电子邮件无效或没有姓名；
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {#日} other {#天}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {已将 # 个文件移至垃圾箱} other {已将 # 个文件移至垃圾箱}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, other {# 分钟前已开始}}"
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, other {用于 # 个已保存项}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {您选择的字体无法显示 {list}，它会显示为“?”。请在“设计”中选择包含该字符的字体。} other {您选择的字体无法显示 {list}，它们会显示为“?”。请在“设计”中选择包含这些字符的字体。}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {#条目} other {# 条目}}"
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, other {应用 # 项更改}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "已选择 {count} 项"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, other {每周到办公室 # 天}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, other {到办公室 # 天，正好是您的上限}}"
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {#文档} other {#文档}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {已更新 # 个文件} other {已更新 # 个文件}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "阿尔巴尼亚语"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "居中对齐"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "左对齐"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "右对齐"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "最适合申请"
 msgid "Blocker"
 msgstr "阻断性问题"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "蓝色"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "看板"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "清除部分"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "清除选择"
 
@@ -2648,6 +2683,10 @@ msgstr "关闭"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "教练"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "代码"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "现在复制它。为了您的安全，它不会再次显示。"
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "复制链接"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "复制公共链接"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "复盘"
 msgid "Deep breath."
 msgstr "深呼吸。"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "默认"
@@ -3998,7 +4042,7 @@ msgstr "文档"
 #: src/features/documents/documents-page.tsx
 #: src/routes/dashboard/-components/app-shell.tsx
 msgid "Documents"
-msgstr "文件"
+msgstr "文档"
 
 #: src/features/applications/components/detail/sent-documents.tsx
 #: src/features/career/workspace/shell.tsx
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "字体粗细"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "无法加载字体。重试导出。"
+msgid "Fonts could not be loaded. Try again."
+msgstr "无法加载字体。请重试。"
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "成绩"
 msgid "Greek"
 msgstr "希腊语"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "绿色"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "称呼"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "灰色"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "标头"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "标题文字"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "标题 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "标题 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "标题 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "隐藏照片"
 msgid "High"
 msgstr "高的"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "高亮"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "印地语"
@@ -5373,6 +5441,10 @@ msgstr "历史"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "首页"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "水平线"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "在好的公司里"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "增加行距，避免两行文字被合并成一行。"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "增加缩进"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "john.doe"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON 已读"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "两端对齐"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,12 +6258,16 @@ msgstr "信"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
-#: src/features/resume/editor/design/style-groups.tsx
-#: src/routes/builder/$resumeId/-components/page-canvas.tsx
-#: src/routes/builder/letter/-components/letter-page.tsx
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Letter"
 msgstr "信件"
+
+#: src/features/resume/editor/design/style-groups.tsx
+#: src/routes/builder/$resumeId/-components/page-canvas.tsx
+#: src/routes/builder/letter/-components/letter-page.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
+msgid "Letter"
+msgstr "Letter"
 
 #: src/features/career/workspace/shell.tsx
 msgid "Letter · not sent yet"
@@ -6286,6 +6370,7 @@ msgstr "链接职位申请"
 msgid "Link an application…"
 msgstr "链接工作申请..."
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,6 +6554,7 @@ msgid "Locations"
 msgstr "地点"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
@@ -6536,6 +6622,14 @@ msgstr "使其更具体"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "让它更短"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "设为私密"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "设为公开"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "更多下载格式"
 msgid "More for {title}"
 msgstr "“{title}”的更多操作"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "更多格式"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "更多选择"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "移至面试"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "向上移动"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "把你的电子邮件和电话号码移到第一页顶部。"
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "已将 {1} 个中的 {0} 个移至垃圾箱。已跳过锁定的文件。"
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "或者用你自己的话说..."
 msgid "Or upload a resume PDF"
 msgstr "或上传简历 PDF"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "橙色"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "组织"
@@ -7848,6 +7957,10 @@ msgstr "满分 100"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "已过时：此后文本已更改。"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "减少缩进"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "纸上。"
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "纸"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "段落"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "由您的服务器提供：{connectedProvider}。"
 msgid "Provider"
 msgstr "服务提供商"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "出版物"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "发布者"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "紫色"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "矩形"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "矩形（全宽）"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "红色"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "见下文"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
 msgstr "选择"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "选择 {0}"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "在 {1} 处选择 {0}"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "全选"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "选择一家人工智能提供商"
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "选择..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "所选文件"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "分享部分"
 msgid "Share via…"
 msgstr "分享通过..."
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "再次向他们展示"
 msgid "Shown in your timezone."
 msgstr "按您的时区显示。"
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "显示所有文件共有的标签。您添加的标签会应用到每个文件；您移除的标签会从每个文件中移除。锁定的文件保持不变。"
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "灵感源自日本履历书的单栏表格式设计：页眉由带边框的字段单元格组成，每个部分都采用带实心标题栏的表格。布局紧凑、便于快速浏览，适合工程、运营岗位或在日本求职。"
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "如杂志专题般的单栏排版：大号姓名上方有一行大写短标题，摘要作为斜体导语，各部分标题也采用斜体。风格精致，适合写作者、设计师和传播类岗位。"
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "单栏排版，如同杂志专题文章：大号姓名位于大写眉题下方，摘要以更大的导语呈现；精致典雅，适合作家、设计师和传播类职位。"
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "部分职位信息无法读取。请填写职位和公司，或粘贴单
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "有些行的存储顺序和阅读顺序不一致。"
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "某些 PDF 文本无法呈现。选择包含这些字符的字体，然后重试导出。"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "未找到故事"
 msgid "Strengthen"
 msgstr "可加强"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "删除线"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "更强的动词"
@@ -10823,12 +10969,18 @@ msgstr "标签"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "标签"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "标签可用于通过关键词对简历进行分类。"
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "{0} 个文件的标签"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "测试…"
 msgid "Text"
 msgstr "文本"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "文本对齐"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "文本颜色"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "文本颜色"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "文字位于页眉或页脚区域。"
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "文字大小"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "文本样式"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11715,7 +11879,7 @@ msgstr "翻译"
 #: src/features/documents/trash-page.tsx
 #: src/routes/dashboard/-components/app-shell.tsx
 msgid "Trash"
-msgstr "回收站"
+msgstr "垃圾箱"
 
 #: src/features/documents/trash-page.tsx
 msgid "Trash is empty"
@@ -11895,6 +12059,10 @@ msgstr "排版"
 msgid "Ukrainian"
 msgstr "乌克兰语"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "下划线"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "下划线链接"
@@ -11949,6 +12117,7 @@ msgstr "正在取消关联你的 {providerName} 账号…"
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "解锁"
@@ -12021,6 +12190,10 @@ msgstr "已更新"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "更新{0}"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "已更新 {total} 个中的 {done} 个。已跳过锁定的文件，公共链接操作也已跳过求职信。"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "您的浏览器会将语音转为文字。根据浏览器不同，其厂
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "您浏览器中的人工智能代理编辑了这封信件。"
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "您浏览器中的人工智能代理编辑了这份简历。"
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "你的简历使用了“我”和“我的”这类词。"
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "您的简历，居住地址"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "您选择的字体无法显示部分字符，它们会显示为“?”。请在“设计”中选择包含这些字符的字体。"
 
 #: src/features/career/coach.tsx
 msgid "your stories"

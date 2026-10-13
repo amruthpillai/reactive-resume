@@ -161,7 +161,11 @@ type ResumePageCaptionProps = {
 function ResumePageCaption(props: ResumePageCaptionProps) {
 	const { pageNumber, viewing, previewTemplate, pendingOnPage, mode, format, overflow } = props;
 	const { i18n } = useLingui();
-	const formatLabel = { a4: "A4", letter: t`Letter`, "free-form": t`Free-form` }[format];
+	const formatLabel = {
+		a4: "A4",
+		letter: t({ message: "Letter", context: "US Letter paper size (8.5 × 11 in), shown beside A4" }),
+		"free-form": t`Free-form`,
+	}[format];
 
 	if (pageNumber === 1) {
 		return (

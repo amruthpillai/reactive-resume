@@ -289,7 +289,7 @@ export function PageGroup() {
 					className="w-full"
 				>
 					<SegmentedControlItem value="letter">
-						<Trans>Letter</Trans>
+						<Trans context="US Letter paper size (8.5 × 11 in), shown beside A4">Letter</Trans>
 					</SegmentedControlItem>
 					<SegmentedControlItem value="a4">A4</SegmentedControlItem>
 					<SegmentedControlItem value="free-form">

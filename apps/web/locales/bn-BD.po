@@ -118,6 +118,11 @@ msgstr "{0, plural, one {#টি পরিচিতির ইমেল অবৈ
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# দিন} other {# দিন}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {#টি নথি ট্র্যাশে সরানো হয়েছে} other {#টি নথি ট্র্যাশে সরানো হয়েছে}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, one {# মিনিট আগে শুরু হয়ে�
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, one {#টি সংরক্ষিত আইটেমে ব্যবহৃত} other {#টি সংরক্ষিত আইটেমে ব্যবহৃত}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {আপনার নির্বাচিত ফন্ট {list} দেখাতে পারে না। এটি “?” হিসেবে দেখায়। ডিজাইন-এ এমন একটি ফন্ট বেছে নিন যাতে এটি আছে।} other {আপনার নির্বাচিত ফন্ট {list} দেখাতে পারে না। এগুলো “?” হিসেবে দেখায়। ডিজাইন-এ এমন একটি ফন্ট বেছে নিন যাতে এগুলো আছে।}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {# এন্ট্রি} other {# এন্ট্�
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, one {#টি পরিবর্তন প্রয়োগ করুন} other {#টি পরিবর্তন প্রয়োগ করুন}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "{count}টি নির্বাচিত"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, one {সপ্তাহে # দিন অফিস} other {সপ্তাহে # দিন অফিস}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, one {# দিন অফিস, ঠিক আপনার 
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {# নথি} other {# নথি}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {#টি নথি হালনাগাদ হয়েছে} other {#টি নথি হালনাগাদ হয়েছে}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "আলবেনিয়ান"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "মাঝে সারিবদ্ধ করুন"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "বামে সারিবদ্ধ করুন"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "ডানে সারিবদ্ধ করুন"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "আবেদন করার জন্য সেরা"
 msgid "Blocker"
 msgstr "ব্লকার"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "নীল"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "বোর্ড"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "বিভাগ পরিষ্কার করুন"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "নির্বাচন পরিষ্কার করুন"
 
@@ -2648,6 +2683,10 @@ msgstr "বন্ধ"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "কোচ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "কোড"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "এখন কপি করুন। আপনার নিরাপত�
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "লিঙ্ক কপি করুন"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "পাবলিক লিঙ্ক কপি করুন"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "ফিরে দেখা"
 msgid "Deep breath."
 msgstr "গভীর শ্বাস নিন।"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "ডিফল্ট"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "ফন্টের ওজনসমূহ"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "হরফ লোড করা যায়নি. এক্সপোর্ট পুনরায় চেষ্টা করুন."
+msgid "Fonts could not be loaded. Try again."
+msgstr "ফন্ট লোড করা যায়নি। আবার চেষ্টা করুন।"
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "গ্রেড"
 msgid "Greek"
 msgstr "গ্রিক"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "সবুজ"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "সম্ভাষণ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "ধূসর"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "হেডার"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "হেডিং"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "হেডিং ১"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "হেডিং ২"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "হেডিং ৩"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "ছবি লুকান"
 msgid "High"
 msgstr "উচ্চ"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "হাইলাইট"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "হিন্দি"
@@ -5373,6 +5441,10 @@ msgstr "ইতিহাস"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "হোম"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "অনুভূমিক রেখা"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "ভালো কোম্পানিতে"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "লাইন স্পেসিং বাড়ান, যাতে দুটি লাইন একটিতে মিশে না যায়।"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "ইন্ডেন্ট বাড়ান"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "জন ডো"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON পড়া হয়েছে"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "জাস্টিফাই"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,12 +6258,16 @@ msgstr "চিঠি"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
-#: src/features/resume/editor/design/style-groups.tsx
-#: src/routes/builder/$resumeId/-components/page-canvas.tsx
-#: src/routes/builder/letter/-components/letter-page.tsx
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Letter"
 msgstr "লেটার"
+
+#: src/features/resume/editor/design/style-groups.tsx
+#: src/routes/builder/$resumeId/-components/page-canvas.tsx
+#: src/routes/builder/letter/-components/letter-page.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
+msgid "Letter"
+msgstr "US Letter"
 
 #: src/features/career/workspace/shell.tsx
 msgid "Letter · not sent yet"
@@ -6286,6 +6370,7 @@ msgstr "একটি চাকরির আবেদন লিঙ্ক কর�
 msgid "Link an application…"
 msgstr "একটি চাকরির আবেদন লিঙ্ক করুন..."
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,10 +6554,11 @@ msgid "Locations"
 msgstr "অবস্থান"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
-msgstr "লক এডিটিং"
+msgstr "সম্পাদনা লক করুন"
 
 #: src/features/documents/document-card.tsx
 msgid "Locked"
@@ -6536,6 +6622,14 @@ msgstr "এটা আরো নির্দিষ্ট করুন"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "এটি ছোট করুন"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "ব্যক্তিগত করুন"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "পাবলিক করুন"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "আরো ডাউনলোড ফরম্যাট"
 msgid "More for {title}"
 msgstr "{title}-এর জন্য আরও"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "আরও বিন্যাস"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "আরও বিকল্প"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "ইন্টারভিউতে সরান"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "উপরে সরান"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "আপনার ইমেইল ও ফোন নম্বর প্রথম পৃষ্ঠার শীর্ষে নিয়ে যান।"
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "{1}টির মধ্যে {0}টি ট্র্যাশে সরানো হয়েছে। তালাবদ্ধ নথিগুলো বাদ দেওয়া হয়েছে।"
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "অথবা আপনার নিজের ভাষায়..."
 msgid "Or upload a resume PDF"
 msgstr "অথবা একটি জীবনবৃত্তান্ত PDF আপলোড করুন"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "কমলা"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "প্রতিষ্ঠান"
@@ -7848,6 +7957,10 @@ msgstr "১০০-এর মধ্যে"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "পুরানো: এর পর থেকে পাঠ্যটি পরিবর্তিত হয়েছে।"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "ইন্ডেন্ট কমান"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "পাতায়।"
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "কাগজ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "অনুচ্ছেদ"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,11 +8589,13 @@ msgstr "আপনার সার্ভার দ্বারা সরবরা
 msgid "Provider"
 msgstr "প্রদানকারী"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
 msgid "Public"
-msgstr "জনসাধারণ"
+msgstr "সর্বজনীন"
 
 #: src/features/resume/share/link-tab.tsx
 msgid "Public link"
@@ -8498,6 +8617,10 @@ msgstr "প্রকাশনাসমূহ"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "প্রকাশক"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "বেগুনি"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "আয়তক্ষেত্র"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "আয়তক্ষেত্র (পূর্ণ প্রস্থ)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "লাল"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "নিচে দেখুন"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
 msgstr "নির্বাচন করুন"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "{0} নির্বাচন করুন"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "{1} এ {0} নির্বাচন করুন"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "সব নির্বাচন করুন"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "একটি এআই প্রদানকারী নির্বা
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "নির্বাচন করুন..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "নির্বাচিত নথি"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "ভাগ ভাগ করুন"
 msgid "Share via…"
 msgstr "এর মাধ্যমে শেয়ার করুন..."
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "তাদের আবার দেখান"
 msgid "Shown in your timezone."
 msgstr "আপনার টাইমজোনে দেখানো হয়।"
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "সবগুলোতে থাকা অভিন্ন ট্যাগগুলো দেখায়। আপনি যে ট্যাগ যোগ করবেন তা প্রতিটি নথিতে যুক্ত হবে; যে ট্যাগ সরাবেন তা প্রতিটি থেকে সরে যাবে। তালাবদ্ধ নথিগুলো যেমন আছে তেমনই থাকবে।"
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "জাপানি রিরেকিশো সারসংকলন দ্বারা অনুপ্রাণিত একটি একক-কলাম ফর্ম: সীমানাযুক্ত ক্ষেত্র দিয়ে তৈরি একটি শিরোনাম, এবং প্রতিটি বিভাগ একটি শক্ত শিরোনাম বার সহ একটি টেবিল হিসাবে উপস্থাপিত। কম্প্যাক্ট এবং স্ক্যান করা সহজ, জাপানে ইঞ্জিনিয়ারিং চাকরি, অপারেশন জব বা চাকরির আবেদনের জন্য উপযুক্ত।"
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "একটি ম্যাগাজিন নিবন্ধ দ্বারা অনুপ্রাণিত একটি একক-কলাম বিন্যাস: বড় হাতের একটি ছোট শিরোনামের নীচে আপনার নাম বড় আকারে, তির্যকগুলিতে একটি সারাংশ এবং তির্যকগুলিতে বিভাগ শিরোনাম৷ লেখক, ডিজাইনার এবং যোগাযোগ পেশাদারদের জন্য একটি পরিমার্জিত নকশা।"
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "ম্যাগাজিনের ফিচারের মতো সাজানো এক-কলামের লেআউট: বড় হাতের অক্ষরে লেখা ছোট উপরের লাইনের নিচে বড় নাম, আর সারাংশটি বড় ভূমিকা অনুচ্ছেদ হিসেবে; লেখক, ডিজাইনার ও কমিউনিকেশন ভূমিকার জন্য পরিমার্জিত।"
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "চাকরির কিছু বিস্তারিত পড়া
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "কিছু লাইন পড়ার ক্রমের বাইরে সংরক্ষিত আছে।"
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "কিছু PDF পাঠ্য রেন্ডার করা যায়নি৷ এই অক্ষর সমন্বিত একটি ফন্ট চয়ন করুন, তারপর এক্সপোর্ট পুনরায় চেষ্টা করুন."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "গল্প পাওয়া যায়নি"
 msgid "Strengthen"
 msgstr "জোরদার করুন"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "স্ট্রাইকথ্রু"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "শক্তিশালী ক্রিয়া"
@@ -10823,12 +10969,18 @@ msgstr "ট্যাগ"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "ট্যাগসমূহ"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "ট্যাগ ব্যবহার করে কীওয়ার্ডের ভিত্তিতে আপনার জীবনবৃত্তান্তকে শ্রেণিবিন্যাস করতে পারেন।"
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "{0}টি নথির ট্যাগ"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "পরীক্ষা…"
 msgid "Text"
 msgstr "পাঠ্য"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "টেক্সট সারিবদ্ধকরণ"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "টেক্সটের রঙ"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "টেক্সটের রঙ"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "টেক্সট হেডার বা ফুটার এলাক�
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "পাঠ্যের আকার"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "টেক্সট স্টাইল"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11715,7 +11879,7 @@ msgstr "অনুবাদসমূহ"
 #: src/features/documents/trash-page.tsx
 #: src/routes/dashboard/-components/app-shell.tsx
 msgid "Trash"
-msgstr "রিসাইকেল বিন"
+msgstr "ট্র্যাশ"
 
 #: src/features/documents/trash-page.tsx
 msgid "Trash is empty"
@@ -11895,6 +12059,10 @@ msgstr "টাইপোগ্রাফি"
 msgid "Ukrainian"
 msgstr "ইউক্রেনীয়"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "আন্ডারলাইন"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "আন্ডারলাইন লিঙ্ক"
@@ -11949,6 +12117,7 @@ msgstr "আপনার {providerName} অ্যাকাউন্টের ল�
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "আনলক করুন"
@@ -12021,6 +12190,10 @@ msgstr "আপডেট করা হয়েছে"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "{0} আপডেট করা হয়েছে"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "{total}টির মধ্যে {done}টি হালনাগাদ হয়েছে। তালাবদ্ধ নথি এবং পাবলিক লিঙ্কের জন্য চিঠিগুলো বাদ দেওয়া হয়েছে।"
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "আপনার ব্রাউজার আপনার কথাকে
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "আপনার ব্রাউজারের এআই এজেন্ট এই চিঠিটি সম্পাদনা করেছে।"
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "আপনার ব্রাউজারের এআই এজেন্ট এই জীবনবৃত্তান্তটি সম্পাদনা করেছে।"
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "আপনার জীবনবৃত্তান্তে \"I\" এব�
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "আপনার জীবনবৃত্তান্ত, লাইভ এ"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "আপনার নির্বাচিত ফন্ট কিছু অক্ষর দেখাতে পারে না। এগুলো “?” হিসেবে দেখায়। ডিজাইন-এ এমন একটি ফন্ট বেছে নিন যাতে এগুলো আছে।"
 
 #: src/features/career/coach.tsx
 msgid "your stories"

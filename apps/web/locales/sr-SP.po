@@ -118,6 +118,11 @@ msgstr "{0, plural, one {# контакт има неважећу е-пошту 
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# дан} other {# дана}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {# документ је премештен у Отпад} few {# документа су премештена у Отпад} other {# докумената је премештено у Отпад}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, one {Почело пре # минут} few {Почело п�
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, one {коришћено у # сачуваној ставци} few {коришћено у # сачуване ставке} other {коришћено у # сачуваних ставки}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {Изабрани фонт не може да прикаже {list}. Приказује се као “?”. У одељку Дизајн изаберите фонт који га садржи.} few {Изабрани фонт не може да прикаже {list}. Приказују се као “?”. У одељку Дизајн изаберите фонт који их садржи.} other {Изабрани фонт не може да прикаже {list}. Приказују се као “?”. У одељку Дизајн изаберите фонт који их садржи.}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {# унос} other {# уноси}}"
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, one {Примени # измену} few {Примени # измене} other {Примени # измена}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "Изабрано: {count}"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, one {# дан у канцеларији недељно} few {# дана у канцеларији недељно} other {# дана у канцеларији недељно}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, one {# дан у канцеларији, ваше огр�
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {# документ} other {# документи}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {# документ је ажуриран} few {# документа су ажурирана} other {# докумената је ажурирано}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "Албански"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "Поравнај по средини"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "Поравнај лево"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "Поравнај десно"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "Најбоље за пријаву"
 msgid "Blocker"
 msgstr "Блокатор"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "Плава"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Табла"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "Очистите одељак"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "Обриши избор"
 
@@ -2648,6 +2683,10 @@ msgstr "Затворено"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "Саветник"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "Код"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "Копирајте га сада. Због ваше безбедност
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "Копирај везу"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "Копирај јавну везу"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "Анализа"
 msgid "Deep breath."
 msgstr "Дубок удах."
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "Подразумевано"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "Дебљине фонта"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "Фонтови се не могу учитати. Покушајте поново са извозом."
+msgid "Fonts could not be loaded. Try again."
+msgstr "Фонтови нису могли да се учитају. Покушајте поново."
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "Оцена"
 msgid "Greek"
 msgstr "Грчки"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "Зелена"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "Обраћање"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "Сива"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "Хеадер"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "Насловни стил"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "Наслов 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "Наслов 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "Наслов 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "Сакриј фотографију"
 msgid "High"
 msgstr "Високо"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "Истицање"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "Хинди"
@@ -5373,6 +5441,10 @@ msgstr "Историја"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "Почетна"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "Хоризонтална линија"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "У добром друштву"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "Повећајте проред како се два реда не би спојила у један."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "Повећај увлачење"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "Џон Доу"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON прочитано"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "Обострано поравнање"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,12 +6258,16 @@ msgstr "писмо"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
+#: src/routes/builder/letter/-components/write-panel.tsx
+msgid "Letter"
+msgstr "Писмо"
+
 #: src/features/resume/editor/design/style-groups.tsx
 #: src/routes/builder/$resumeId/-components/page-canvas.tsx
 #: src/routes/builder/letter/-components/letter-page.tsx
-#: src/routes/builder/letter/-components/write-panel.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
 msgid "Letter"
-msgstr "Летер"
+msgstr "US Letter"
 
 #: src/features/career/workspace/shell.tsx
 msgid "Letter · not sent yet"
@@ -6286,6 +6370,7 @@ msgstr "Повежите пријаву за посао"
 msgid "Link an application…"
 msgstr "Повежите пријаву за посао…"
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,6 +6554,7 @@ msgid "Locations"
 msgstr "Локације"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
@@ -6536,6 +6622,14 @@ msgstr "Нека буде конкретније"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Нека буде краће"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "Учини приватним"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "Учини јавним"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "Више формата за преузимање"
 msgid "More for {title}"
 msgstr "Још за {title}"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "Још форматирања"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "Више опција"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "Премести у фазу Интервју"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "Помери се горе"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "Преместите свој имејл и број телефона на врх прве странице."
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "У Отпад премештено: {0} од {1}. Закључани документи су прескочени."
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "Или својим речима…"
 msgid "Or upload a resume PDF"
 msgstr "Или отпремите PDF резимеа"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "Наранџаста"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "Организација"
@@ -7848,6 +7957,10 @@ msgstr "од 100"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "Застарео: текст се од тада променио."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "Смањи увлачење"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "страници."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "Папир"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "Пасус"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "Обезбеђује ваш сервер: {connectedProvider}."
 msgid "Provider"
 msgstr "Провајдер"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "Публикације"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "Издавач"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "Љубичаста"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "Правоугаоник"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "Правоугаоник (пуна ширина)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "Црвена"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "Погледајте испод"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
 msgstr "Изаберите"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "Изабери {0}"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "Изаберите {0} на {1}"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "Изабери све"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "Изаберите добављача вештачке интелиге�
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "Изаберите..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "Изабрани документи"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "Делите секције"
 msgid "Share via…"
 msgstr "Подели путем…"
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "Покажи их поново"
 msgid "Shown in your timezone."
 msgstr "Приказано у вашој временској зони."
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "Приказује ознаке које су свима заједничке. Ознаке које додате иду на сваки документ; ознаке које уклоните уклањају се са свих. Закључани документи остају непромењени."
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "Образац са једном колоном инспирисан јапанским резимеом рирекишо: заглавље од обрубљених поља, а сваки одељак као табела са пуном насловном траком. Компактан и лак за брз преглед, погодан за инжењерске и оперативне послове или пријаве за посао у Јапану."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "Изглед у једној колони инспирисан чланком из часописа: ваше име великим словима испод кратког наслова великим словима, резиме у курзиву и наслови одељака у курзиву. Префињен дизајн за писце, дизајнере и професионалце у комуникацијама."
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "Једна колона сложена као чланак у часопису: велико име испод наднаслова исписаног великим словима и резиме као већи увод; префињено за писце, дизајнере и улоге у комуникацијама."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "Неки детаљи о послу нису могли да се про
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "Неки редови су сачувани ван редоследа читања."
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "Неки текст PDF није могао да се прикаже. Изаберите фонт који садржи ове знакове, а затим поново покушајте да извршите извоз."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "Прича није пронађена"
 msgid "Strengthen"
 msgstr "За јачање"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "Прецртано"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "Јачи глагол"
@@ -10823,12 +10969,18 @@ msgstr "Таг"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "Ознаке"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Ознаке се могу користити за категоризацију резимеа по кључним речима."
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "Ознаке за документе: {0}"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "Тестирање…"
 msgid "Text"
 msgstr "Текст"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "Поравнање текста"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "Боја текста"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "Боја текста"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "Текст се налази у подручју заглавља или
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "Величина текста"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "Стил текста"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11715,7 +11879,7 @@ msgstr "Преводи"
 #: src/features/documents/trash-page.tsx
 #: src/routes/dashboard/-components/app-shell.tsx
 msgid "Trash"
-msgstr "Рецицле бин"
+msgstr "Отпад"
 
 #: src/features/documents/trash-page.tsx
 msgid "Trash is empty"
@@ -11895,6 +12059,10 @@ msgstr "Типографија"
 msgid "Ukrainian"
 msgstr "Украјински"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "Подвучено"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "Подвуци везе"
@@ -11949,6 +12117,7 @@ msgstr "Прекид повезивања вашег {providerName} налога
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "Откључај"
@@ -12021,6 +12190,10 @@ msgstr "Ажурирано"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "Ажурирано {0}"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "Ажурирано: {done} од {total}. Прескочени су закључани документи, а за јавне везе и писма."
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "Ваш прегледач претвара ваш говор у текс
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "AI агент у вашем прегледачу је уредио ово писмо."
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "AI агент у вашем прегледачу је уредио овај резиме."
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "Ваша биографија користи „I“ и „my“."
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "Ваш резиме, уживо на"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "Изабрани фонт не може да прикаже неке знакове. Приказују се као “?”. У одељку Дизајн изаберите фонт који их садржи."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

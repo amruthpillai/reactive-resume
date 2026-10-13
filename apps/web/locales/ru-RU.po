@@ -118,6 +118,11 @@ msgstr "{0, plural, one {Контакт # имеет неверный адрес
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# день} other {# дней}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {# документ перемещён в корзину} few {# документа перемещены в корзину} many {# документов перемещены в корзину} other {# документа перемещены в корзину}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, one {Началось # минуту назад} few {Нач
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, one {используется в # сохраненном материале} few {используется в # сохраненных материалах} many {используется в # сохраненных материалах} other {используется в # сохраненного материала}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {Выбранный шрифт не может отобразить {list}. Символ показывается как “?”. В разделе «Дизайн» выберите шрифт, в котором он есть.} few {Выбранный шрифт не может отобразить {list}. Эти символы показываются как “?”. В разделе «Дизайн» выберите шрифт, в котором они есть.} many {Выбранный шрифт не может отобразить {list}. Эти символы показываются как “?”. В разделе «Дизайн» выберите шрифт, в котором они есть.} other {Выбранный шрифт не может отобразить {list}. Эти символы показываются как “?”. В разделе «Дизайн» выберите шрифт, в котором они есть.}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {# запись} other {Записи #}}"
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, one {Применить # изменение} few {Применить # изменения} many {Применить # изменений} other {Применить # изменения}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "Выбрано: {count}"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, one {# день в офисе в неделю} few {# дня в офисе в неделю} many {# дней в офисе в неделю} other {# дня в офисе в неделю}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, one {# день в офисе, ровно ваш лими
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {Документ #} other {Документы #}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {# документ обновлён} few {# документа обновлены} many {# документов обновлены} other {# документа обновлены}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "Албанский"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "По центру"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "По левому краю"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "По правому краю"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "Лучше всего подходит для подачи заявки"
 msgid "Blocker"
 msgstr "Блокер"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "Синий"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Доска"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "Очистить раздел"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "Четкий выбор"
 
@@ -2648,6 +2683,10 @@ msgstr "Закрыто"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "Коуч"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "Код"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "Скопируйте его сейчас. В целях вашей бе�
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "Копировать ссылку"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "Копировать публичную ссылку"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "Разбор"
 msgid "Deep breath."
 msgstr "Глубокий вдох."
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "По умолчанию"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "Начертания шрифта"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "Не удалось загрузить шрифты. Повторите экспорт."
+msgid "Fonts could not be loaded. Try again."
+msgstr "Не удалось загрузить шрифты. Попробуйте ещё раз."
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "Оценка"
 msgid "Greek"
 msgstr "Греческий"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "Зелёный"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "Приветствие"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "Серый"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "Заголовок"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "Заголовок"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "Заголовок 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "Заголовок 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "Заголовок 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "Скрыть фото"
 msgid "High"
 msgstr "Высокий"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "Выделение цветом"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "Хинди"
@@ -5373,6 +5441,10 @@ msgstr "История"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "Главная"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "Горизонтальная линия"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "В хорошей компании"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "Увеличьте межстрочный интервал, чтобы две строки не сливались в одну."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "Увеличить отступ"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "john.doe"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON читать"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "По ширине"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,10 +6258,14 @@ msgstr "письмо"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
+#: src/routes/builder/letter/-components/write-panel.tsx
+msgid "Letter"
+msgstr "Письмо"
+
 #: src/features/resume/editor/design/style-groups.tsx
 #: src/routes/builder/$resumeId/-components/page-canvas.tsx
 #: src/routes/builder/letter/-components/letter-page.tsx
-#: src/routes/builder/letter/-components/write-panel.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
 msgid "Letter"
 msgstr "Letter"
 
@@ -6286,6 +6370,7 @@ msgstr "Привязать заявку на работу"
 msgid "Link an application…"
 msgstr "Ссылка на заявку на работу…"
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,10 +6554,11 @@ msgid "Locations"
 msgstr "Места"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
-msgstr "Редактирование блокировки"
+msgstr "Заблокировать редактирование"
 
 #: src/features/documents/document-card.tsx
 msgid "Locked"
@@ -6536,6 +6622,14 @@ msgstr "Сделайте это более конкретным"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Сделайте это короче"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "Сделать приватным"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "Сделать публичным"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "Больше форматов загрузки"
 msgid "More for {title}"
 msgstr "Другие действия: {title}"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "Другое форматирование"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "Больше возможностей"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "Перевести в «Собеседование»"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "Вверх"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "Переместите email и номер телефона в начало первой страницы."
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "Перемещено в корзину: {0} из {1}. Заблокированные документы пропущены."
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "Или своими словами…"
 msgid "Or upload a resume PDF"
 msgstr "Или загрузите PDF резюме"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "Оранжевый"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "Организация"
@@ -7848,6 +7957,10 @@ msgstr "из 100"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "Устарело: текст с тех пор изменился."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "Уменьшить отступ"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "странице."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "Бумага"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "Абзац"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "Предоставляется вашим сервером: {connectedPr
 msgid "Provider"
 msgstr "Провайдер"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "Публикации"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "Издатель"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "Фиолетовый"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "Прямоугольник"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "Прямоугольник (на всю ширину)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "Красный"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "См. ниже"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
-msgstr "Выбирать"
+msgstr "Выбрать"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "Выбрать {0}"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "Выберите {0} в {1}."
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "Выбрать все"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "Выберите поставщика ИИ."
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "Выбрать..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "Выбранные документы"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "Поделиться разделами"
 msgid "Share via…"
 msgstr "Поделиться через…"
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "Покажи им еще раз"
 msgid "Shown in your timezone."
 msgstr "Показано в вашем часовом поясе."
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "Показаны теги, общие для всех. Добавленные теги появятся у каждого документа, а удалённые исчезнут у всех. Заблокированные документы останутся без изменений."
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "Форма с одним столбцом, вдохновленная японским резюме рирекисё: заголовок состоит из полей с границами, и каждый раздел представлен в виде таблицы со сплошной строкой заголовка. Компактный и удобный для сканирования, подходит для инженерных и эксплуатационных работ, а также для трудоустройства в Японии."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "Макет в одну колонку, вдохновленный журнальной статьей: ваше имя написано крупным шрифтом под коротким заголовком в верхнем регистре, резюме выделено курсивом, а заголовки разделов выделены курсивом. Изысканный дизайн для писателей, дизайнеров и специалистов по связям с общественностью."
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "Одна колонка в стиле журнальной статьи: крупное имя под надзаголовком прописными буквами и резюме в виде увеличенного лида; изысканный вариант для авторов, дизайнеров и специалистов по коммуникациям."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "Не удалось прочитать некоторые данные �
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "Некоторые строки хранятся не в порядке чтения."
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "Некоторый текст PDF не удалось отобразить. Выберите шрифт, содержащий эти символы, затем повторите экспорт."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "История не найдена"
 msgid "Strengthen"
 msgstr "Усилить"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "Зачёркнутый"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "Сильный глагол"
@@ -10823,12 +10969,18 @@ msgstr "Ярлык"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "Теги"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Теги можно использовать для категоризации резюме по ключевым словам."
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "Теги для документов: {0}"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "Тестирование…"
 msgid "Text"
 msgstr "Текст"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "Выравнивание текста"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "Цвет текста"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "Цвет текста"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "Текст расположен в области колонтитула
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "Размер текста"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "Стиль текста"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11895,6 +12059,10 @@ msgstr "Типография"
 msgid "Ukrainian"
 msgstr "Украинский"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "Подчёркнутый"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "Подчеркнуть ссылки"
@@ -11949,6 +12117,7 @@ msgstr "Отвязка учетной записи {providerName}..."
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "Разблокировать"
@@ -12021,6 +12190,10 @@ msgstr "Обновлено"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "Обновлен {0}"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "Обновлено: {done} из {total}. Пропущены заблокированные документы, а для публичных ссылок — письма."
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "Ваш браузер преобразует речь в текст. В 
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "ИИ-агент вашего браузера отредактировал это письмо."
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "ИИ-агент вашего браузера отредактировал это резюме."
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "В вашем резюме используются «I» и «my»."
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "Ваше резюме, живите по адресу"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "Выбранный шрифт не может отобразить некоторые символы. Они показываются как “?”. В разделе «Дизайн» выберите шрифт, в котором они есть."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

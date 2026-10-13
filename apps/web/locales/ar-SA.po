@@ -118,6 +118,11 @@ msgstr "{0, plural, one {جهة اتصال واحدة بها بريد إلكتر
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {يوم #} other {أيام #}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, zero {لم يُنقل أي مستند إلى سلة المهملات} one {تم نقل مستند واحد إلى سلة المهملات} two {تم نقل مستندين إلى سلة المهملات} few {تم نقل # مستندات إلى سلة المهملات} many {تم نقل # مستندًا إلى سلة المهملات} other {تم نقل # مستند إلى سلة المهملات}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, zero {بدأت الآن} one {بدأت قبل دقيقة} tw
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, zero {غير مستخدمة في أي عنصر محفوظ} one {مستخدمة في عنصر محفوظ واحد} two {مستخدمة في عنصرين محفوظين} few {مستخدمة في # عناصر محفوظة} many {مستخدمة في # عنصرًا محفوظًا} other {مستخدمة في # عنصر محفوظ}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {لا يمكن للخط الذي اخترته عرض {list}. يظهر على شكل “?”. في التصميم، اختر خطًا يتضمنه.} two {لا يمكن للخط الذي اخترته عرض {list}. يظهران على شكل “?”. في التصميم، اختر خطًا يتضمنهما.} other {لا يمكن للخط الذي اخترته عرض {list}. تظهر على شكل “?”. في التصميم، اختر خطًا يتضمنها.}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {إدخال #} other {إدخالات #}}"
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, zero {لا تغييرات لتطبيقها} one {طبّق تغييرًا واحدًا} two {طبّق تغييرين} few {طبّق # تغييرات} many {طبّق # تغييرًا} other {طبّق # تغيير}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "تم تحديد {count}"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, zero {لا أيام في المكتب أسبوعيًا} one {يوم واحد في المكتب أسبوعيًا} two {يومان في المكتب أسبوعيًا} few {# أيام في المكتب أسبوعيًا} many {# يومًا في المكتب أسبوعيًا} other {# يوم في المكتب أسبوعيًا}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, zero {لا أيام في المكتب، وهو حدّك} 
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {وثيقة #} other {وثائق #}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, zero {لم يُحدَّث أي مستند} one {تم تحديث مستند واحد} two {تم تحديث مستندين} few {تم تحديث # مستندات} many {تم تحديث # مستندًا} other {تم تحديث # مستند}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "الألبانية"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "توسيط"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "محاذاة لليسار"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "محاذاة لليمين"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "الأفضل للتقديم"
 msgid "Blocker"
 msgstr "عائق حاسم"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "أزرق"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "لوحة"
@@ -2570,7 +2604,7 @@ msgstr "مسح"
 
 #: src/features/resume/editor/write/rich-text-editor.tsx
 msgid "Clear formatting"
-msgstr "تنسيق واضح"
+msgstr "مسح التنسيق"
 
 #: src/routes/dashboard/applications/index.tsx
 msgid "Clear search"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "مسح القسم"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "كليرست"
 
@@ -2648,6 +2683,10 @@ msgstr "مغلق"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "المدرّب"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "رمز برمجي"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "انسخه الآن. حرصًا على أمانك، لن يتم عرضه
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "نسخ الوصلة"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "نسخ الرابط العام"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3699,6 +3742,7 @@ msgstr "ما بعد المقابلة"
 msgid "Deep breath."
 msgstr "خذ نفسًا عميقًا."
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "الافتراضي"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "أوزان الخط"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "لا يمكن تحميل الخطوط. أعد محاولة التصدير."
+msgid "Fonts could not be loaded. Try again."
+msgstr "تعذّر تحميل الخطوط. حاول مرة أخرى."
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "التقدير"
 msgid "Greek"
 msgstr "اليونانية"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "أخضر"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "التحية"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "رمادي"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "رأس"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "العناوين"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "عنوان 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "عنوان 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "عنوان 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "إخفاء الصورة"
 msgid "High"
 msgstr "عالي"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "تمييز"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "الهندية"
@@ -5373,6 +5441,10 @@ msgstr "تاريخ"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "الصفحة الرئيسية"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "خط أفقي"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "في شركة جيدة"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "زد تباعد الأسطر حتى لا يندمج سطران في سطر واحد."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "زيادة المسافة البادئة"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "جون.دو"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "قراءة JSON"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "ضبط"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,12 +6258,16 @@ msgstr "خطاب"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
-#: src/features/resume/editor/design/style-groups.tsx
-#: src/routes/builder/$resumeId/-components/page-canvas.tsx
-#: src/routes/builder/letter/-components/letter-page.tsx
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Letter"
 msgstr "رسالة"
+
+#: src/features/resume/editor/design/style-groups.tsx
+#: src/routes/builder/$resumeId/-components/page-canvas.tsx
+#: src/routes/builder/letter/-components/letter-page.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
+msgid "Letter"
+msgstr "US Letter"
 
 #: src/features/career/workspace/shell.tsx
 msgid "Letter · not sent yet"
@@ -6286,6 +6370,7 @@ msgstr "ربط طلب الوظيفة"
 msgid "Link an application…"
 msgstr "ربط طلب التوظيف..."
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,6 +6554,7 @@ msgid "Locations"
 msgstr "الأماكن"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
@@ -6476,7 +6562,7 @@ msgstr "قفل التحرير"
 
 #: src/features/documents/document-card.tsx
 msgid "Locked"
-msgstr "مغلق"
+msgstr "مقفل"
 
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Locked. Unlock to edit."
@@ -6536,6 +6622,14 @@ msgstr "اجعلها أكثر تحديدًا"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "اجعلها أقصر"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "جعله خاصًا"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "جعله عامًا"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "المزيد من صيغ التحميل"
 msgid "More for {title}"
 msgstr "المزيد لـ {title}"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "مزيد من التنسيق"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "المزيد من الخيارات"
@@ -6855,10 +6953,11 @@ msgid "Move to Interview"
 msgstr "انقل إلى المقابلة"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
-msgstr "الانتقال إلى سلة المهملات"
+msgstr "نقل إلى سلة المهملات"
 
 #: src/features/applications/components/application-actions-menu.tsx
 #: src/features/applications/components/list-view.tsx
@@ -6873,6 +6972,12 @@ msgstr "تحرك للأعلى"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "انقل بريدك الإلكتروني ورقم هاتفك إلى أعلى الصفحة الأولى."
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "تم نقل {0} من {1} إلى سلة المهملات. تم تخطي المستندات المقفلة."
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "أو بكلامك.."
 msgid "Or upload a resume PDF"
 msgstr "أو ارفع سيرة ذاتية بصيغة PDF"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "برتقالي"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "المنظمة"
@@ -7848,6 +7957,10 @@ msgstr "من أصل 100"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "قديم: لقد تغير النص منذ ذلك الحين."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "إنقاص المسافة البادئة"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "واحدة."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "ورق"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "فقرة"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "المقدمة من الخادم الخاص بك: {connectedProvider}."
 msgid "Provider"
 msgstr "المزوّد"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "المنشورات"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "الناشر"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "بنفسجي"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "مستطيل"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "مستطيل (عرض كامل)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "أحمر"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "انظر أدناه"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
-msgstr "يختار"
+msgstr "تحديد"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "تحديد {0}"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "حدد {0} في {1}"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "تحديد الكل"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "اختر مزودًا لخدمات الذكاء الاصطناعي"
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "تحديد..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "المستندات المحددة"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "مشاركة الأقسام"
 msgid "Share via…"
 msgstr "شارك عبر…"
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "أظهرهم مرة أخرى"
 msgid "Shown in your timezone."
 msgstr "معروض بمنطقتك الزمنية."
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "يعرض الوسوم المشتركة بينها جميعًا. الوسوم التي تضيفها تُضاف إلى كل مستند، والوسوم التي تزيلها تُزال من كل مستند. تبقى المستندات المقفلة كما هي."
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "نموذج ذو عمود واحد مستوحى من السيرة الذاتية اليابانية rirekisho: رأس مصنوع من حقول محاطة، ويتم تقديم كل قسم كجدول بشريط عنوان ثابت. صغير الحجم وسهل المسح الضوئي، ومناسب للوظائف الهندسية أو وظائف العمليات أو طلبات العمل في اليابان."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "تخطيط ذو عمود واحد مستوحى من مقال في مجلة: اسمك بخط كبير أسفل عنوان قصير بأحرف كبيرة، وملخص بخط مائل، وعناوين الأقسام بخط مائل. تصميم راقي للكتاب والمصممين ومحترفي الاتصالات."
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "عمود واحد منسق كمقال مجلة: اسم كبير بارز أسفل سطر تمهيدي بأحرف كبيرة، والملخص كفقرة تقديمية أكبر؛ أنيق للكتّاب والمصممين وأدوار الاتصال."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "تعذّرت قراءة بعض تفاصيل الوظيفة. املأ ا�
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "بعض الأسطر مُخزَّنة خارج ترتيب القراءة."
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "لا يمكن عرض بعض نصوص PDF. اختر خطًا يحتوي على هذه الأحرف، ثم أعد محاولة التصدير."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "القصة غير موجودة"
 msgid "Strengthen"
 msgstr "عزّز"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "يتوسطه خط"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "فعل أقوى"
@@ -10823,12 +10969,18 @@ msgstr "علامة"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "الوسوم"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "يمكن استخدام الوسوم لتصنيف سيرتك الذاتية حسب الكلمات المفتاحية."
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "الوسوم لـ {0} من المستندات"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "اختبار…"
 msgid "Text"
 msgstr "نص"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "محاذاة النص"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "لون النص"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "لون النص"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "يقع النص في منطقة الترويسة أو التذييل."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "حجم النص"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "نمط النص"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11895,6 +12059,10 @@ msgstr "الطباعة"
 msgid "Ukrainian"
 msgstr "الأوكرانية"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "تسطير"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "تسطير الروابط"
@@ -11949,6 +12117,7 @@ msgstr "جاري إلغاء ربط حسابك على {providerName}..."
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "فتح القفل"
@@ -12021,6 +12190,10 @@ msgstr "تم التحديث"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "تم تحديث {0}"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "تم تحديث {done} من {total}. تم تخطي المستندات المقفلة، والرسائل بالنسبة للروابط العامة."
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "يحوّل متصفحك كلامك إلى نص. بحسب المتصفح�
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "عدّل وكيل الذكاء الاصطناعي في متصفحك هذه الرسالة."
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "عدّل وكيل الذكاء الاصطناعي في متصفحك هذه السيرة الذاتية."
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "تستخدم سيرتك الذاتية \"I\" و\"my\" (أنا وملكي
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "سيرتك الذاتية، تعيش في"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "لا يمكن للخط الذي اخترته عرض بعض الأحرف. تظهر على شكل “?”. في التصميم، اختر خطًا يتضمنها."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

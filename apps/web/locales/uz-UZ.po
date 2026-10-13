@@ -118,6 +118,11 @@ msgstr "{0, plural, one {# kontaktining e-pochta manzili yaroqsiz yoki ismi yo�
 msgid "{0, plural, one {# day} other {# days}}"
 msgstr "{0, plural, one {# kuni} other {# kunlar}}"
 
+#. placeholder {0}: done.length
+#: src/features/documents/document-actions.tsx
+msgid "{0, plural, one {# document moved to Trash} other {# documents moved to Trash}}"
+msgstr "{0, plural, one {# ta hujjat chiqindiga o‘tkazildi} other {# ta hujjat chiqindiga o‘tkazildi}}"
+
 #. placeholder {0}: output.skipped.length
 #: src/features/assistant/conversation.tsx
 msgid "{0, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -222,6 +227,11 @@ msgstr "{0, plural, one {# daqiqa oldin boshlandi} other {# daqiqa oldin boshlan
 #: src/features/career/knowledge/facts.tsx
 msgid "{0, plural, one {used in # saved item} other {used in # saved items}}"
 msgstr "{0, plural, one {# ta saqlangan elementda foydalanilgan} other {# ta saqlangan elementda foydalanilgan}}"
+
+#. placeholder {0}: characters.length
+#: src/libs/error-message.ts
+msgid "{0, plural, one {Your selected font can't display {list}. It shows as “?”. In Design, choose a font that has it.} other {Your selected font can't display {list}. They show as “?”. In Design, choose a font that has them.}}"
+msgstr "{0, plural, one {Tanlangan shrift {list} belgisini ko‘rsata olmaydi. U “?” bo‘lib ko‘rinadi. Dizayn bo‘limida uni qo‘llab-quvvatlaydigan shriftni tanlang.} other {Tanlangan shrift {list} belgilarini ko‘rsata olmaydi. Ular “?” bo‘lib ko‘rinadi. Dizayn bo‘limida ularni qo‘llab-quvvatlaydigan shriftni tanlang.}}"
 
 #. placeholder {0}: when(runAt)
 #: src/features/career/workspace/prepare.tsx
@@ -447,6 +457,10 @@ msgstr "{count, plural, one {# kirish} other {# yozuvlari}}"
 msgid "{count, plural, one {Apply # change} other {Apply # changes}}"
 msgstr "{count, plural, one {# ta o'zgarishni qo'llash} other {# ta o'zgarishni qo'llash}}"
 
+#: src/features/documents/documents-page.tsx
+msgid "{count} selected"
+msgstr "{count} ta tanlandi"
+
 #: src/features/career/offers.tsx
 msgid "{days, plural, one {# office day a week} other {# office days a week}}"
 msgstr "{days, plural, one {Haftasiga # kun ofisda} other {Haftasiga # kun ofisda}}"
@@ -466,6 +480,10 @@ msgstr "{days, plural, one {# ofis kuni, chegarangizga teng} other {# ofis kuni,
 #: src/features/settings/account/data.tsx
 msgid "{documents, plural, one {# document} other {# documents}}"
 msgstr "{documents, plural, one {# hujjati} other {# hujjatlari}}"
+
+#: src/features/documents/document-actions.tsx
+msgid "{done, plural, one {# document updated} other {# documents updated}}"
+msgstr "{done, plural, one {# ta hujjat yangilandi} other {# ta hujjat yangilandi}}"
 
 #. placeholder {0}: items.length
 #: src/features/career/workspace/apply.tsx
@@ -1501,6 +1519,18 @@ msgstr "Alban tili"
 msgid "Alex Morgan"
 msgstr "Alex Morgan"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align centre"
+msgstr "Markazga tekislash"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align left"
+msgstr "Chapga tekislash"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Align right"
+msgstr "O‘ngga tekislash"
+
 #: src/features/career/knowledge/facts.tsx
 #: src/features/career/workspace/saved.tsx
 #: src/features/documents/documents-page.tsx
@@ -2147,6 +2177,10 @@ msgstr "Ariza topshirish uchun eng yaxshisi"
 msgid "Blocker"
 msgstr "Toʻsiq"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Blue"
+msgstr "Ko‘k"
+
 #: src/routes/dashboard/applications/index.tsx
 msgid "Board"
 msgstr "Doska"
@@ -2585,6 +2619,7 @@ msgid "Clear section"
 msgstr "Bo'limni tozalash"
 
 #: src/components/ui/combobox.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Clear selection"
 msgstr "Tanlovni tozalash"
 
@@ -2648,6 +2683,10 @@ msgstr "Yopiq"
 #: src/routes/dashboard/career/route.tsx
 msgid "Coach"
 msgstr "Murabbiy"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Code"
+msgstr "Kod"
 
 #: src/routes/builder/$resumeId/-components/design-panel.tsx
 #: src/routes/builder/letter/-components/design-panel.tsx
@@ -2985,6 +3024,10 @@ msgstr "Hozir nusxa ko'chiring. Xavfsizligingiz uchun u boshqa ko'rsatilmaydi."
 #: src/features/resume/public/public-resume.tsx
 msgid "Copy link"
 msgstr "Havolani nusxalash"
+
+#: src/features/documents/document-actions.tsx
+msgid "Copy public link"
+msgstr "Umumiy havolani nusxalash"
 
 #: src/features/career/offers.tsx
 msgid "Copy questions"
@@ -3466,7 +3509,7 @@ msgstr "To'ldirish"
 #: src/features/applications/components/detail/sent-documents.tsx
 #: src/features/applications/components/list-view.tsx
 msgid "Cover letter"
-msgstr "Muqova xati"
+msgstr "Motivatsion xat"
 
 #: src/libs/resume/section-title.ts
 #: src/libs/resume/section.tsx
@@ -3498,7 +3541,7 @@ msgstr "Muqova xati topshirildi (ixtiyoriy)"
 #: src/features/command-palette/pages/navigation.tsx
 #: src/features/homepage/sections.tsx
 msgid "Cover letters"
-msgstr "Muqova xatlari"
+msgstr "Motivatsion xatlar"
 
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Create"
@@ -3699,6 +3742,7 @@ msgstr "Tahlil"
 msgid "Deep breath."
 msgstr "Chuqur nafas oling."
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
 #: src/features/settings/ai/providers.tsx
 msgid "Default"
 msgstr "Standart"
@@ -4965,8 +5009,8 @@ msgid "Font Weights"
 msgstr "Shrift qalinliklari"
 
 #: src/libs/error-message.ts
-msgid "Fonts could not be loaded. Retry the export."
-msgstr "Shriftlarni yuklab bo‘lmadi. Eksportni qaytadan urinib ko'ring."
+msgid "Fonts could not be loaded. Try again."
+msgstr "Shriftlarni yuklab bo‘lmadi. Qayta urinib ko‘ring."
 
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "For"
@@ -5215,9 +5259,17 @@ msgstr "Baholar"
 msgid "Greek"
 msgstr "Yunon tili"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Green"
+msgstr "Yashil"
+
 #: src/routes/builder/letter/-components/write-panel.tsx
 msgid "Greeting"
 msgstr "Murojaat"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Grey"
+msgstr "Kulrang"
 
 #: src/features/documents/documents-page.tsx
 msgid "Grid"
@@ -5244,6 +5296,18 @@ msgstr "Sarlavha"
 msgctxt "Headings or Titles (H1, H2, H3, H4, H5, H6)"
 msgid "Heading"
 msgstr "Sarlavha"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 1"
+msgstr "Sarlavha 1"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 2"
+msgstr "Sarlavha 2"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Heading 3"
+msgstr "Sarlavha 3"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Heading changed"
@@ -5350,6 +5414,10 @@ msgstr "Suratni yashirish"
 msgid "High"
 msgstr "Yuqori"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Highlight"
+msgstr "Ajratib ko‘rsatish"
+
 #: src/libs/locale.ts
 msgid "Hindi"
 msgstr "Hind tili"
@@ -5373,6 +5441,10 @@ msgstr "Tarix"
 #: src/features/command-palette/pages/navigation.tsx
 msgid "Home"
 msgstr "Bosh sahifa"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Horizontal line"
+msgstr "Gorizontal chiziq"
 
 #: src/features/homepage/sections.tsx
 msgid "Hosting and development are paid for by people like you. Optional tip:"
@@ -5580,6 +5652,10 @@ msgstr "Yaxshi kompaniyada"
 #: src/features/ats-checker/messages.ts
 msgid "Increase line spacing so two lines are not merged into one."
 msgstr "Ikki qator birlashib ketmasligi uchun qatorlar oraligʻini oshiring."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Indent"
+msgstr "Chekinishni oshirish"
 
 #: src/libs/locale.ts
 msgid "Indonesian"
@@ -5872,6 +5948,10 @@ msgstr "jon.doe"
 #: src/features/resume/import/read-file.ts
 msgid "JSON read"
 msgstr "JSON o'qildi"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Justify"
+msgstr "Ikki tomonga tekislash"
 
 #: src/libs/locale.ts
 msgid "Kannada"
@@ -6178,10 +6258,14 @@ msgstr "xat"
 
 #: src/features/assistant/document.ts
 #: src/features/documents/document-card.tsx
+#: src/routes/builder/letter/-components/write-panel.tsx
+msgid "Letter"
+msgstr "Xat"
+
 #: src/features/resume/editor/design/style-groups.tsx
 #: src/routes/builder/$resumeId/-components/page-canvas.tsx
 #: src/routes/builder/letter/-components/letter-page.tsx
-#: src/routes/builder/letter/-components/write-panel.tsx
+msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
 msgid "Letter"
 msgstr "Letter"
 
@@ -6286,6 +6370,7 @@ msgstr "Ishga arizani bog'lang"
 msgid "Link an application…"
 msgstr "Ishga ariza havolasi…"
 
+#: src/features/documents/document-actions.tsx
 #: src/features/resume/public/public-resume.tsx
 #: src/features/resume/share/link-tab.tsx
 msgid "Link copied"
@@ -6469,6 +6554,7 @@ msgid "Locations"
 msgstr "Joylar"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Lock editing"
@@ -6536,6 +6622,14 @@ msgstr "Buni aniqroq qiling"
 #: src/features/resume/editor/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Uni qisqartiring"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make private"
+msgstr "Shaxsiy qilish"
+
+#: src/features/documents/documents-page.tsx
+msgid "Make public"
+msgstr "Ommaviy qilish"
 
 #: src/features/assistant/assistant-panel.tsx
 msgid "Make the opening stronger"
@@ -6759,6 +6853,10 @@ msgstr "Ko'proq yuklab olish formatlari"
 msgid "More for {title}"
 msgstr "“{title}” uchun boshqa amallar"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "More formatting"
+msgstr "Boshqa formatlash"
+
 #: src/features/resume/editor/write/fields.tsx
 msgid "More options"
 msgstr "Boshqa variantlar"
@@ -6855,6 +6953,7 @@ msgid "Move to Interview"
 msgstr "Intervyu bosqichiga o'tkazish"
 
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/routes/builder/$resumeId/-components/document-menu.tsx
 #: src/routes/builder/letter/-components/letter-bar.tsx
 msgid "Move to Trash"
@@ -6873,6 +6972,12 @@ msgstr "Yuqoriga siljiting"
 #: src/features/ats-checker/messages.ts
 msgid "Move your email and phone number to the top of page one."
 msgstr "Elektron pochta va telefon raqamingizni birinchi sahifaning yuqorisiga koʻchiring."
+
+#. placeholder {0}: done.length
+#. placeholder {1}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Moved {0} of {1} to Trash. Locked documents were skipped."
+msgstr "{1} tadan {0} tasi chiqindiga o‘tkazildi. Qulflangan hujjatlar o‘tkazib yuborildi."
 
 #. placeholder {0}: getStageLabel(entry.stage)
 #. placeholder {0}: getStageLabel(status)
@@ -7812,6 +7917,10 @@ msgstr "Yoki o'z so'zlaringiz bilan ..."
 msgid "Or upload a resume PDF"
 msgstr "Yoki rezyume PDF faylini yuklang"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Orange"
+msgstr "To‘q sariq"
+
 #: src/features/resume/editor/write/entries.tsx
 msgid "Organization"
 msgstr "Tashkilot"
@@ -7848,6 +7957,10 @@ msgstr "100 dan"
 #: src/features/resume/editor/proposals/proposal-list.tsx
 msgid "Out of date: the text has changed since."
 msgstr "Eskirgan: matn o'shandan beri o'zgargan."
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Outdent"
+msgstr "Chekinishni kamaytirish"
 
 #: src/features/homepage/prepare.tsx
 msgid "Own and evolve a design system"
@@ -7901,6 +8014,10 @@ msgstr "sahifada."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Paper"
 msgstr "Qog'oz"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Paragraph"
+msgstr "Xatboshi"
 
 #: src/features/assistant/document.ts
 #: src/features/resume/editor/check/writing-tab.tsx
@@ -8472,6 +8589,8 @@ msgstr "Serveringiz tomonidan taqdim etilgan: {connectedProvider}."
 msgid "Provider"
 msgstr "Provayder"
 
+#: src/features/documents/document-card.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/homepage/share.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 #: src/routes/builder/$resumeId/-components/editor-bar.tsx
@@ -8498,6 +8617,10 @@ msgstr "Nashrlar"
 #: src/features/resume/editor/write/entries.tsx
 msgid "Publisher"
 msgstr "Nashriyotchi"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Purple"
+msgstr "Binafsha"
 
 #: src/features/ats-checker/messages.ts
 msgid "Put a plain email address near the top of the first page. It is what most systems file you under."
@@ -8831,6 +8954,10 @@ msgstr "Toʻgʻri burchakli"
 #: src/components/level/combobox.tsx
 msgid "Rectangle (Full Width)"
 msgstr "Toʻgʻri burchakli (toʻliq kenglik)"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Red"
+msgstr "Qizil"
 
 #: src/features/resume/stylesheet/toolbar.tsx
 msgid "Redo resume change"
@@ -9808,14 +9935,24 @@ msgid "See below"
 msgstr "Quyida qarang"
 
 #: src/features/applications/components/list-view.tsx
+#: src/features/documents/document-actions.tsx
 msgid "Select"
 msgstr "Tanlang"
+
+#. placeholder {0}: document.name
+#: src/features/documents/document-card.tsx
+msgid "Select {0}"
+msgstr "{0} ni tanlash"
 
 #. placeholder {0}: application.role
 #. placeholder {1}: application.company
 #: src/features/applications/components/list-view.tsx
 msgid "Select {0} at {1}"
 msgstr "{1} da {0} ni tanlang"
+
+#: src/features/documents/documents-page.tsx
+msgid "Select all"
+msgstr "Hammasini tanlash"
 
 #: src/features/settings/integrations/components/ai-provider-picker.tsx
 msgid "Select an AI provider"
@@ -9824,6 +9961,10 @@ msgstr "Sun'iy intellekt provayderini tanlang"
 #: src/components/ui/combobox.tsx
 msgid "Select..."
 msgstr "Tanlang..."
+
+#: src/features/documents/documents-page.tsx
+msgid "Selected documents"
+msgstr "Tanlangan hujjatlar"
 
 #: src/features/homepage/footer.tsx
 msgid "Self-hosting"
@@ -10004,6 +10145,7 @@ msgstr "Bo'limlarni almashish"
 msgid "Share via…"
 msgstr "Bu orqali ulashish…"
 
+#: src/features/documents/documents-page.tsx
 #: src/libs/resume/section.tsx
 #: src/routes/builder/$resumeId/-components/document-details.tsx
 msgid "Sharing"
@@ -10112,6 +10254,10 @@ msgstr "Ularni yana ko'rsating"
 msgid "Shown in your timezone."
 msgstr "Vaqt mintaqangizda ko'rsatilgan."
 
+#: src/features/documents/document-actions.tsx
+msgid "Shows the tags they all share. Tags you add go on every document; tags you remove come off every one. Locked documents are left as they are."
+msgstr "Barchasi uchun umumiy teglar ko‘rsatiladi. Siz qo‘shgan teglar har bir hujjatga qo‘shiladi, olib tashlaganlaringiz esa har biridan olib tashlanadi. Qulflangan hujjatlar o‘zgarishsiz qoladi."
+
 #. Layout editor column label for the secondary sidebar area
 #: src/features/homepage/sheet.tsx
 #: src/features/resume/editor/design/template-group.tsx
@@ -10212,8 +10358,8 @@ msgid "Single-column ruled form inspired by the Japanese rirekisho: a bordered h
 msgstr "Yapon rirekisho rezyumesidan ilhomlangan bitta ustunli shakl: chegaralangan maydonlardan iborat sarlavha va har bir bo'lim qattiq sarlavha satriga ega jadval sifatida taqdim etilgan. Yaponiyadagi muhandislik ishlari, operatsion ishlar yoki ish arizalari uchun ixcham va skanerlash oson."
 
 #: src/dialogs/resume/template/data.ts
-msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker, the summary as an italic standfirst and italic section headings; refined for writers, designers, and communications roles."
-msgstr "Jurnal maqolasidan ilhomlangan bir ustunli tartib: ismingiz katta shriftda qisqa sarlavha ostida katta harflar bilan, xulosa kursivda va boʻlim sarlavhalari kursivda. Yozuvchilar, dizaynerlar va aloqa mutaxassislari uchun nozik dizayn."
+msgid "Single-column set like a magazine feature: a large display name under an uppercase kicker and the summary as a larger standfirst; refined for writers, designers, and communications roles."
+msgstr "Jurnal maqolasi kabi tuzilgan bir ustunli maket: bosh harflardagi kichik sarlavha ostida yirik ism va xulosa kattaroq kirish xatboshisi sifatida; yozuvchilar, dizaynerlar va kommunikatsiya mutaxassislari uchun nafis tanlov."
 
 #: src/dialogs/resume/template/data.ts
 msgid "Single-column with a magenta left border accent; compact and efficient for entry-level or internship applications."
@@ -10336,10 +10482,6 @@ msgstr "Ba'zi ish tafsilotlarini o'qib bo'lmadi. Lavozim va kompaniyani to'ldiri
 #: src/features/ats-checker/messages.ts
 msgid "Some lines are stored out of reading order."
 msgstr "Ba'zi qatorlar oʻqish tartibidan tashqarida saqlangan."
-
-#: src/libs/error-message.ts
-msgid "Some PDF text could not be rendered. Choose a font containing these characters, then retry the export."
-msgstr "Baʼzi PDF matnlarini koʻrsatib boʻlmadi. Ushbu belgilarni o'z ichiga olgan shriftni tanlang, keyin eksportni qaytadan urinib ko'ring."
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Some systems mishandle images, and photos are discouraged in some countries."
@@ -10673,6 +10815,10 @@ msgstr "Hikoya topilmadi"
 msgid "Strengthen"
 msgstr "Kuchaytirish kerak"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Strikethrough"
+msgstr "Ustidan chizilgan"
+
 #: src/features/resume/editor/write/improve.tsx
 msgid "Stronger verb"
 msgstr "Kuchliroq fe'l"
@@ -10823,12 +10969,18 @@ msgstr "teg"
 #: src/features/applications/components/import-applications-sheet.tsx
 #: src/features/career/knowledge/stories.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 msgid "Tags"
 msgstr "Teglar"
 
 #: src/dialogs/resume/index.tsx
 msgid "Tags can be used to categorize your resume by keywords."
 msgstr "Teglar rezyumeningizni kalit so'zlar orqali toifalash uchun ishlatilishi mumkin."
+
+#. placeholder {0}: documents.length
+#: src/features/documents/document-actions.tsx
+msgid "Tags for {0} documents"
+msgstr "{0} ta hujjat uchun teglar"
 
 #: src/features/ats-checker/messages.ts
 msgid "Tags give software an explicit reading order. Enable them when exporting, if your tool offers it."
@@ -10960,8 +11112,16 @@ msgstr "Sinov…"
 msgid "Text"
 msgstr "Matn"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text alignment"
+msgstr "Matnni tekislash"
+
 #: src/routes/builder/$resumeId/-sidebar/right/sections/design.tsx
 msgid "Text Color"
+msgstr "Matn rangi"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text colour"
 msgstr "Matn rangi"
 
 #: src/features/resume/editor/check/issues.ts
@@ -10995,6 +11155,10 @@ msgstr "Matn sarlavha yoki pastki qism hududida joylashgan."
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Text size"
 msgstr "Matn hajmi"
+
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Text style"
+msgstr "Matn uslubi"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Text this close to the edge can be cut off. Use at least {minimum} pt."
@@ -11715,7 +11879,7 @@ msgstr "Tarjimalar"
 #: src/features/documents/trash-page.tsx
 #: src/routes/dashboard/-components/app-shell.tsx
 msgid "Trash"
-msgstr "Qayta ishlash qutisi"
+msgstr "Chiqindi"
 
 #: src/features/documents/trash-page.tsx
 msgid "Trash is empty"
@@ -11895,6 +12059,10 @@ msgstr "Tipografiya"
 msgid "Ukrainian"
 msgstr "Ukrain tili"
 
+#: src/features/resume/editor/write/rich-text-editor.tsx
+msgid "Underline"
+msgstr "Tagiga chizilgan"
+
 #: src/features/resume/editor/design/style-groups.tsx
 msgid "Underline links"
 msgstr "Havolalar tagiga chizish"
@@ -11949,6 +12117,7 @@ msgstr "{providerName} hisobingizni ajratib qoʻyilmoqda..."
 #. Primary action button label to unlock a password-protected resume
 #: src/features/auth/pages/resume-password.tsx
 #: src/features/documents/document-actions.tsx
+#: src/features/documents/documents-page.tsx
 #: src/features/resume/editor/write/write-panel.tsx
 msgid "Unlock"
 msgstr "Blokdan chiqarish"
@@ -12021,6 +12190,10 @@ msgstr "Yangilangan"
 #: src/features/applications/components/list-view.tsx
 msgid "Updated {0}"
 msgstr "Yangilangan {0}"
+
+#: src/features/documents/document-actions.tsx
+msgid "Updated {done} of {total}. Locked documents, and letters for public links, were skipped."
+msgstr "{total} tadan {done} tasi yangilandi. Qulflangan hujjatlar va umumiy havolalar uchun xatlar o‘tkazib yuborildi."
 
 #: src/dialogs/auth/change-password.tsx
 msgid "Updating your password..."
@@ -12975,11 +13148,11 @@ msgstr "Brauzeringiz nutqingizni matnga aylantiradi. Brauzerga qarab, uning ishl
 
 #: src/features/letters/webmcp.ts
 msgid "Your browser's AI agent edited this letter."
-msgstr ""
+msgstr "Brauzeringizdagi AI agenti ushbu xatni tahrirladi."
 
 #: src/features/resume/editor/webmcp.ts
 msgid "Your browser's AI agent edited this resume."
-msgstr ""
+msgstr "Brauzeringizdagi AI agenti ushbu rezyumeni tahrirladi."
 
 #: src/features/career/workspace/practise.tsx
 msgid "Your browser's dictation stopped. Try again, or type your answer."
@@ -13162,6 +13335,10 @@ msgstr "Rezyumeingiz \"I\" va \"my\" so'zlarini ishlatadi."
 #: src/features/homepage/share.tsx
 msgid "Your resume, live at"
 msgstr "Sizning rezyume, yashash manzili"
+
+#: src/libs/error-message.ts
+msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
+msgstr "Tanlangan shrift ba’zi belgilarni ko‘rsata olmaydi. Ular “?” bo‘lib ko‘rinadi. Dizayn bo‘limida ularni qo‘llab-quvvatlaydigan shriftni tanlang."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

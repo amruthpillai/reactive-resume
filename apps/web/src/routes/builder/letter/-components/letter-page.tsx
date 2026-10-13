@@ -97,7 +97,11 @@ export function LetterPage() {
 
 	const isPhone = breakpoint === "mobile";
 	const format = data.metadata.page.format;
-	const formatLabel = { a4: "A4", letter: t`Letter`, "free-form": t`Free-form` }[format];
+	const formatLabel = {
+		a4: "A4",
+		letter: t({ message: "Letter", context: "US Letter paper size (8.5 × 11 in), shown beside A4" }),
+		"free-form": t`Free-form`,
+	}[format];
 	// Desktop: the page moves aside so it stays visible beside the Share & export sheet.
 	const shifted = sheetOpen && (breakpoint === "desktop" || breakpoint === "wide");
 
