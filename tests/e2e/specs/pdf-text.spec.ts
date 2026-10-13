@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import { expect, test } from "../fixtures/test";
 
-test("browser PDF downloads preserve shaped scripts and report unsupported text", async ({
+test("browser PDF downloads preserve shaped scripts and name unsupported text without blocking", async ({
 	authPage: page,
 }, testInfo) => {
 	test.setTimeout(180_000);
@@ -41,15 +41,14 @@ test("browser PDF downloads preserve shaped scripts and report unsupported text"
 	data.summary.content = "<p>Unsupported \u{10FFFF}</p>";
 	expect((await page.request.put(`/api/openapi/resumes/${id}`, { data: { data } })).ok()).toBe(true);
 	await page.goto(`/builder/${id}`);
-	const textLoss = page.getByText(
-		"Some PDF text could not be rendered. Choose a font containing these characters, then retry the export.",
-	);
-	// The preview reports it first (#3581), in place of the page it couldn't draw (#3593); the download adds its own.
+	// A character no font can draw prints as "?": the preview renders and names it, and the download still saves.
+	const textLoss = page.getByText(/can't display .*\(U\+10FFFF\)/);
 	await expect(textLoss).toHaveCount(1);
-	await expect(page.getByRole("button", { name: "Try again" })).toBeVisible();
+	const lossyDownload = page.waitForEvent("download");
 	await page.getByRole("button", { name: "Download PDF", exact: true }).click();
+	expect(await (await lossyDownload).failure()).toBeNull();
 	await expect(textLoss).toHaveCount(2);
-	const rejected = await page.request.get(`/api/openapi/resumes/${id}/pdf`);
-	expect(rejected.status()).toBe(400);
-	expect(await rejected.text()).toContain("Choose a font containing these characters");
+	const exported = await page.request.get(`/api/openapi/resumes/${id}/pdf`);
+	expect(exported.status()).toBe(200);
+	expect(exported.headers()["content-type"]).toContain("application/pdf");
 });
