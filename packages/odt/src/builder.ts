@@ -1,13 +1,12 @@
-import type { InlineStyle, OdtBlock, OdtInline, OdtListItem, ParagraphPreset } from "./types";
-import type { ZipEntry } from "./zip";
-import type { ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
-import { templateLayouts } from "@reactive-resume/schema/templates";
-import { parseColorString } from "@reactive-resume/utils/color";
+import type { InlineStyle, OdtBlock, OdtInline, OdtListItem, SectionTitleResolver } from "./types";
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import { isCoverLetterOnlyDocument } from "@reactive-resume/resume/export-sections";
+import { toSafeLink } from "@reactive-resume/utils/link";
 import { isRTL } from "@reactive-resume/utils/locale";
-import { toSafeLink } from "./html-to-odt";
-import { renderBuiltInSection, renderCustomSection, renderSummary } from "./sections";
+import { toHex } from "./html-to-odt";
+import { renderSection } from "./sections";
 import { paragraph, text } from "./types";
-import { escapeXml, escapeXmlText } from "./xml";
+import { escapeXml } from "./xml";
 
 // --- ODF namespaces ---
 
@@ -31,12 +30,7 @@ const NS_DECLARATIONS = [
 	`xmlns:svg="${SVG_NS}"`,
 ].join(" ");
 
-// --- Units and colors ---
-
-/** Points (as stored in resume metadata) to centimetres (as ODF expects). */
-function ptToCm(pt: number): string {
-	return ((pt * 2.54) / 72).toFixed(3);
-}
+// --- Units ---
 
 /** Rounds to a fixed number of decimals to keep the generated XML compact. */
 function round(value: number, digits = 1): number {
@@ -44,109 +38,51 @@ function round(value: number, digits = 1): number {
 	return Math.round(value * factor) / factor;
 }
 
-/** Formats sRGB channels as a lowercase `rrggbb` string. */
-function rgbToHex(r: number, g: number, b: number): string {
-	return [r, g, b].map((channel) => channel.toString(16).padStart(2, "0")).join("");
-}
-
-/** Parses an `rgba()` colour to `rrggbb`, falling back when unparsable. */
-function getColorHex(rgba: string, fallback: string): string {
-	const parsed = parseColorString(rgba);
-	return parsed ? rgbToHex(parsed.r, parsed.g, parsed.b) : fallback;
-}
+/** Points (as stored in resume metadata) to centimetres (as ODF expects). */
+const ptToCm = (pt: number) => round((pt * 2.54) / 72, 3);
 
 // DOCX/ODT have fixed pages; free-form resumes intentionally fall back to A4.
 const A4_PAGE_SIZE = { width: 21, height: 29.7 };
 const LETTER_PAGE_SIZE = { width: 21.59, height: 27.94 };
 
-const PRESET_STYLE: Record<ParagraphPreset, string> = {
-	body: "Body",
-	title: "Title",
-	subtitle: "Subtitle",
-	contact: "Contact",
-	entryHeading: "EntryHeading",
-	meta: "Meta",
-	quote: "Quote",
-	code: "CodeBlock",
-};
+// --- Body ---
 
-// --- Automatic styles (content-dependent: inline colours and highlights) ---
+/**
+ * Names content-dependent text properties (inline colours, highlights) as automatic styles T1, T2, …,
+ * reusing a name when the same properties recur.
+ */
+type TextStyleNamer = (properties: string) => string;
 
-/** Interns the automatic (content-dependent) text styles a document needs and names them. */
-class StyleRegistry {
-	private readonly byKey = new Map<string, string>();
-	private readonly xml = new Map<string, string>();
-	private counter = 0;
-	private linkName: string | undefined;
-
-	constructor(private readonly primaryColor: string) {}
-
-	/** Interns a text style, returning an existing name when the same properties recur. */
-	private registerText(key: string, properties: string): string {
-		const existing = this.byKey.get(key);
-		if (existing) return existing;
-
-		const name = `T${++this.counter}`;
-		this.byKey.set(key, name);
-		this.xml.set(name, `<style:style style:name="${name}" style:family="text">${properties}</style:style>`);
-		return name;
-	}
-
-	/** Registers and returns a text-colour style. */
-	color(hex: string): string {
-		return this.registerText(`color:${hex}`, `<style:text-properties fo:color="#${hex}"/>`);
-	}
-
-	/** Registers and returns a highlight (background) style. */
-	highlight(hex: string): string {
-		return this.registerText(`highlight:${hex}`, `<style:text-properties fo:background-color="#${hex}"/>`);
-	}
-
-	/** Links share the resume's primary colour, matching the PDF and DOCX exports. */
-	link(): string {
-		this.linkName ??= this.registerText(
-			"link",
-			`<style:text-properties fo:color="#${this.primaryColor}" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>`,
-		);
-		return this.linkName;
-	}
-
-	/** Joins every registered automatic style into stylesheet markup. */
-	serialize(): string {
-		return [...this.xml.values()].join("");
-	}
-}
-
-/** Maps an inline style to the ODF text styles it needs, registering colours on demand. */
-function inlineStyleNames(style: InlineStyle, registry: StyleRegistry): string[] {
+/** Maps an inline style to the ODF text styles it needs. */
+function inlineStyleNames(style: InlineStyle, textStyle: TextStyleNamer): string[] {
 	const names: string[] = [];
 	if (style.code) names.push("Code");
 	if (style.bold) names.push("Bold");
 	if (style.italic) names.push("Italic");
 	if (style.underline) names.push("Underline");
 	if (style.strike) names.push("Strike");
-	if (style.color) names.push(registry.color(style.color));
-	if (style.highlight) names.push(registry.highlight(style.highlight));
+	if (style.color) names.push(textStyle(`fo:color="#${style.color}"`));
+	if (style.highlight) names.push(textStyle(`fo:background-color="#${style.highlight}"`));
 	return names;
 }
 
 /** Serialises a run of inline nodes to ODF XML. */
-function serializeInline(nodes: readonly OdtInline[], registry: StyleRegistry): string {
-	return nodes.map((node) => serializeInlineNode(node, registry)).join("");
+function serializeInline(nodes: readonly OdtInline[], textStyle: TextStyleNamer): string {
+	return nodes.map((node) => serializeInlineNode(node, textStyle)).join("");
 }
 
 /** Serialises a single inline node to ODF XML. */
-function serializeInlineNode(node: OdtInline, registry: StyleRegistry): string {
+function serializeInlineNode(node: OdtInline, textStyle: TextStyleNamer): string {
 	switch (node.type) {
 		case "tab":
 			return "<text:tab/>";
 		case "break":
 			return "<text:line-break/>";
 		case "link":
-			return `<text:a xlink:type="simple" xlink:href="${escapeXml(node.href)}"><text:span text:style-name="${registry.link()}">${serializeInline(node.children, registry)}</text:span></text:a>`;
+			return `<text:a xlink:type="simple" xlink:href="${escapeXml(node.href)}"><text:span text:style-name="Link">${serializeInline(node.children, textStyle)}</text:span></text:a>`;
 		case "text": {
-			let output = escapeXmlText(node.text);
-			for (const style of inlineStyleNames(node.style, registry)) {
+			let output = escapeXml(node.text);
+			for (const style of inlineStyleNames(node.style, textStyle)) {
 				output = `<text:span text:style-name="${style}">${output}</text:span>`;
 			}
 			return output;
@@ -155,129 +91,67 @@ function serializeInlineNode(node: OdtInline, registry: StyleRegistry): string {
 }
 
 /** Serialises one list item, nesting any blocks it contains. */
-function serializeListItem(item: OdtListItem, registry: StyleRegistry): string {
+function serializeListItem(item: OdtListItem, textStyle: TextStyleNamer): string {
 	let inner = "";
 	for (const block of item.blocks) {
-		if (block.type === "paragraph" && !block.preset && !block.indent) {
-			inner += `<text:p text:style-name="ListParagraph">${serializeInline(block.children, registry)}</text:p>`;
+		if (block.type === "paragraph" && !block.style && !block.indent) {
+			inner += `<text:p text:style-name="ListParagraph">${serializeInline(block.children, textStyle)}</text:p>`;
 		} else {
-			inner += serializeBlock(block, registry);
+			inner += serializeBlock(block, textStyle);
 		}
 	}
 	return `<text:list-item>${inner || "<text:p/>"}</text:list-item>`;
 }
 
 /** Serialises a block (heading, list, paragraph or rule) to ODF XML. */
-function serializeBlock(block: OdtBlock, registry: StyleRegistry): string {
+function serializeBlock(block: OdtBlock, textStyle: TextStyleNamer): string {
 	switch (block.type) {
 		case "rule":
-			return "<text:p/>";
+			return '<text:p text:style-name="Rule"/>';
 		case "heading": {
 			const level = Math.min(Math.max(block.level, 1), 6);
-			return `<text:h text:outline-level="${level}" text:style-name="SectionHeading">${serializeInline(block.children, registry)}</text:h>`;
+			return `<text:h text:outline-level="${level}" text:style-name="SectionHeading">${serializeInline(block.children, textStyle)}</text:h>`;
 		}
 		case "list": {
 			const style = block.ordered ? "NumberList" : "BulletList";
-			const items = block.items.map((item) => serializeListItem(item, registry)).join("");
+			const items = block.items.map((item) => serializeListItem(item, textStyle)).join("");
 			return `<text:list text:style-name="${style}">${items}</text:list>`;
 		}
 		case "paragraph": {
-			const style = block.indent ? `Indent${Math.min(block.indent, 8)}` : PRESET_STYLE[block.preset ?? "body"];
-			return `<text:p text:style-name="${style}">${serializeInline(block.children, registry)}</text:p>`;
+			const style = block.indent ? `Indent${Math.min(block.indent, 8)}` : (block.style ?? "Body");
+			return `<text:p text:style-name="${style}">${serializeInline(block.children, textStyle)}</text:p>`;
 		}
 	}
 }
 
 // --- Header ---
 
-/** True when every section in the layout is a visible cover-letter section, as in DOCX. */
-function isCoverLetterOnlyDocument(data: ResumeData): boolean {
-	const sectionIds = data.metadata.layout.pages.flatMap((page) => [...page.main, ...page.sidebar]);
-	if (sectionIds.length === 0) return false;
-	return sectionIds.every((sectionId) => {
-		const section = data.customSections.find((customSection) => customSection.id === sectionId);
-		return section?.type === "cover-letter" && !section.hidden && section.items.some((item) => !item.hidden);
-	});
-}
-
 /** Builds the name, headline and contact line that head the document. */
 function buildHeaderBlocks(data: ResumeData): OdtBlock[] {
 	const { basics } = data;
 	const blocks: OdtBlock[] = [];
 
-	if (basics.name) blocks.push(paragraph([text(basics.name)], "title"));
-	if (basics.headline) blocks.push(paragraph([text(basics.headline)], "subtitle"));
+	if (basics.name) blocks.push(paragraph([text(basics.name)], "Title"));
+	if (basics.headline) blocks.push(paragraph([text(basics.headline)], "Subtitle"));
 
 	const contact: OdtInline[] = [];
-	const addSeparator = () => {
+	const add = (label: string, link?: string) => {
+		if (!label) return;
+		const href = link ? toSafeLink(link) : null;
 		if (contact.length > 0) contact.push(text("  |  "));
+		contact.push(href ? { type: "link", href, children: [text(label)] } : text(label));
 	};
 
-	if (basics.email) {
-		const href = toSafeLink(`mailto:${basics.email}`);
-		if (href) {
-			addSeparator();
-			contact.push({ type: "link", href, children: [text(basics.email)] });
-		}
-	}
+	add(basics.email, `mailto:${basics.email}`);
+	add(basics.phone);
+	add(basics.location);
+	const website = toSafeLink(basics.website.url);
+	if (website) add(basics.website.label || website, website);
+	for (const field of basics.customFields) add(field.text, field.link);
 
-	if (basics.phone) {
-		addSeparator();
-		contact.push(text(basics.phone));
-	}
-
-	if (basics.location) {
-		addSeparator();
-		contact.push(text(basics.location));
-	}
-
-	if (basics.website.url) {
-		const href = toSafeLink(basics.website.url);
-		if (href) {
-			addSeparator();
-			contact.push({ type: "link", href, children: [text(basics.website.label || href)] });
-		}
-	}
-
-	for (const field of basics.customFields) {
-		if (!field.text) continue;
-		addSeparator();
-		const href = field.link ? toSafeLink(field.link) : null;
-		if (href) contact.push({ type: "link", href, children: [text(field.text)] });
-		else contact.push(text(field.text));
-	}
-
-	if (contact.length > 0) blocks.push(paragraph(contact, "contact"));
+	if (contact.length > 0) blocks.push(paragraph(contact, "Contact"));
 
 	return blocks;
-}
-
-// --- Section dispatch (mirrors the DOCX builder) ---
-
-/** Resolves a section's (usually empty) stored title from its id — locale-aware, supplied by the caller. */
-export type SectionTitleResolver = (sectionId: string) => string | undefined;
-
-/** Fills a section's stored (usually empty) title from the locale-aware resolver. */
-function titled<T extends { title: string }>(section: T, sectionId: string, resolveTitle?: SectionTitleResolver): T {
-	return { ...section, title: resolveTitle?.(sectionId)?.trim() || section.title };
-}
-
-/** Renders any section id - summary, built-in or custom - to ODT blocks. */
-function renderSection(sectionId: string, data: ResumeData, resolveTitle?: SectionTitleResolver): OdtBlock[] {
-	if (sectionId === "summary") {
-		return renderSummary(titled(data.summary, sectionId, resolveTitle));
-	}
-
-	if (sectionId in data.sections) {
-		const section = data.sections[sectionId as SectionType];
-		if (section) return renderBuiltInSection(sectionId as SectionType, titled(section, sectionId, resolveTitle));
-		return [];
-	}
-
-	const customSection = data.customSections.find((candidate) => candidate.id === sectionId);
-	if (customSection) return renderCustomSection(titled(customSection, sectionId, resolveTitle));
-
-	return [];
 }
 
 // --- Style sheet ---
@@ -321,7 +195,6 @@ function buildStylesXml(
 	const { primary, textColor } = config;
 
 	const paragraphStyles = [
-		`<style:style style:name="Standard" style:family="paragraph" style:class="text"/>`,
 		`<style:style style:name="Body" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.12cm"/></style:style>`,
 		`<style:style style:name="Title" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-bottom="0.08cm"/><style:text-properties style:font-name="HeadingFont" fo:font-size="${config.nameSize}pt" fo:font-weight="bold" fo:color="#${primary}"/></style:style>`,
 		`<style:style style:name="Subtitle" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-bottom="0.15cm"/><style:text-properties fo:font-size="${config.bodySize}pt" fo:font-style="italic" fo:color="#${textColor}"/></style:style>`,
@@ -331,6 +204,7 @@ function buildStylesXml(
 		`<style:style style:name="Meta" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-bottom="0.1cm"/><style:text-properties fo:font-style="italic" fo:color="#${textColor}"/></style:style>`,
 		`<style:style style:name="Quote" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-left="0.5cm" fo:margin-bottom="0.12cm"/><style:text-properties fo:font-style="italic"/></style:style>`,
 		`<style:style style:name="CodeBlock" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-bottom="0.12cm"/><style:text-properties style:font-name="CodeFont" fo:font-size="${config.codeSize}pt"/></style:style>`,
+		`<style:style style:name="Rule" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-bottom="0.12cm" fo:border-bottom="0.5pt solid #${textColor}" fo:padding="0cm"/></style:style>`,
 		`<style:style style:name="ListParagraph" style:family="paragraph" style:parent-style-name="Standard"><style:paragraph-properties fo:margin-bottom="0.05cm"/></style:style>`,
 		...Array.from(
 			{ length: 8 },
@@ -344,6 +218,7 @@ function buildStylesXml(
 		`<style:style style:name="Italic" style:family="text"><style:text-properties fo:font-style="italic"/></style:style>`,
 		`<style:style style:name="Underline" style:family="text"><style:text-properties style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/></style:style>`,
 		`<style:style style:name="Strike" style:family="text"><style:text-properties style:text-line-through-style="solid"/></style:style>`,
+		`<style:style style:name="Link" style:family="text"><style:text-properties fo:color="#${primary}" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/></style:style>`,
 		`<style:style style:name="Code" style:family="text"><style:text-properties style:font-name="CodeFont" fo:font-size="${config.codeSize}pt"/></style:style>`,
 	].join("");
 
@@ -386,12 +261,12 @@ function buildStylesXml(
 }
 
 /** Wraps the document body in the `content.xml` envelope. */
-function buildContentXml(body: string, registry: StyleRegistry, config: StyleConfig): string {
+function buildContentXml(body: string, automaticStyles: string, config: StyleConfig): string {
 	return [
 		XML_DECLARATION,
 		`<office:document-content ${NS_DECLARATIONS} xmlns:dc="${DC_NS}" office:version="1.3">`,
 		fontFaceDecls(config.bodyFont, config.headingFont),
-		`<office:automatic-styles>${registry.serialize()}</office:automatic-styles>`,
+		`<office:automatic-styles>${automaticStyles}</office:automatic-styles>`,
 		"<office:body><office:text>",
 		body,
 		"</office:text></office:body>",
@@ -404,7 +279,7 @@ function buildMetaXml(title: string): string {
 	return [
 		XML_DECLARATION,
 		`<office:document-meta xmlns:office="${OFFICE_NS}" xmlns:meta="${META_NS}" xmlns:dc="${DC_NS}" office:version="1.3">`,
-		`<office:meta><dc:title>${escapeXmlText(title)}</dc:title><meta:generator>Reactive Resume</meta:generator></office:meta>`,
+		`<office:meta><dc:title>${escapeXml(title)}</dc:title><meta:generator>Reactive Resume</meta:generator></office:meta>`,
 		"</office:document-meta>",
 	].join("");
 }
@@ -422,16 +297,17 @@ const MANIFEST = [
 export const ODT_MIME_TYPE = "application/vnd.oasis.opendocument.text";
 
 /**
- * Builds the OpenDocument Text file set from resume data.
+ * Builds the OpenDocument Text files from resume data, `mimetype` first as ODF requires.
  *
- * Layout is intentionally single-column: pages that use a sidebar print its sections after the
- * main ones, matching the ATS-safe fallback of the PDF and DOCX exports. The result is a fully
- * editable ODT document rather than a pixel-perfect reproduction of the template.
+ * Layout is intentionally single-column: the header comes first, then each page's main sections followed by its
+ * sidebar ones (full-width pages print no sidebar, as in the PDF). The result is a fully editable ODT document
+ * rather than a pixel-perfect reproduction of the template.
  */
-export function buildOdtFiles(data: ResumeData, resolveTitle?: SectionTitleResolver): ZipEntry[] {
-	const primary = getColorHex(data.metadata.design.colors.primary, "dc2626");
-	const textColor = getColorHex(data.metadata.design.colors.text, "000000");
-	const background = getColorHex(data.metadata.design.colors.background, "ffffff");
+export function buildOdtFiles(data: ResumeData, resolveTitle?: SectionTitleResolver): Record<string, string> {
+	const { colors } = data.metadata.design;
+	const primary = toHex(colors.primary) ?? "dc2626";
+	const textColor = toHex(colors.text) ?? "000000";
+	const background = toHex(colors.background) ?? "ffffff";
 
 	const { page, typography } = data.metadata;
 	const pageSize = page.format === "letter" ? LETTER_PAGE_SIZE : A4_PAGE_SIZE;
@@ -450,50 +326,39 @@ export function buildOdtFiles(data: ResumeData, resolveTitle?: SectionTitleResol
 		bodyFont: typography.body.fontFamily || "Inter",
 	};
 
-	const templateLayout = templateLayouts[data.metadata.template];
-	const showHeader = !isCoverLetterOnlyDocument(data);
-	const registry = new StyleRegistry(primary);
-	const blocks: OdtBlock[] = [];
-
-	if (templateLayout.headerPlacement === "full-width" && showHeader) {
-		blocks.push(...buildHeaderBlocks(data));
-	}
-
+	const blocks = isCoverLetterOnlyDocument(data) ? [] : buildHeaderBlocks(data);
 	for (const layoutPage of data.metadata.layout.pages) {
-		const sidebar = layoutPage.fullWidth ? [] : layoutPage.sidebar;
-		const isSplit = templateLayout.columns !== 1 && sidebar.length > 0;
-
-		if (!isSplit) {
-			for (const sectionId of [...layoutPage.main, ...sidebar]) {
-				blocks.push(...renderSection(sectionId, data, resolveTitle));
-			}
-			continue;
+		for (const sectionId of [...layoutPage.main, ...(layoutPage.fullWidth ? [] : layoutPage.sidebar)]) {
+			blocks.push(...renderSection(sectionId, data, resolveTitle));
 		}
-
-		if (templateLayout.headerPlacement === "main-only" && showHeader) blocks.push(...buildHeaderBlocks(data));
-		for (const sectionId of layoutPage.main) blocks.push(...renderSection(sectionId, data, resolveTitle));
-
-		if (templateLayout.headerPlacement === "sidebar-only" && showHeader) blocks.push(...buildHeaderBlocks(data));
-		for (const sectionId of layoutPage.sidebar) blocks.push(...renderSection(sectionId, data, resolveTitle));
 	}
 
-	const body = blocks.map((block) => serializeBlock(block, registry)).join("");
+	const textStyles = new Map<string, string>();
+	const textStyle: TextStyleNamer = (properties) => {
+		let name = textStyles.get(properties);
+		if (!name) textStyles.set(properties, (name = `T${textStyles.size + 1}`));
+		return name;
+	};
+	const body = blocks.map((block) => serializeBlock(block, textStyle)).join("");
+	const automaticStyles = [...textStyles]
+		.map(
+			([properties, name]) =>
+				`<style:style style:name="${name}" style:family="text"><style:text-properties ${properties}/></style:style>`,
+		)
+		.join("");
 
-	const styles = buildStylesXml(config, {
-		width: pageSize.width,
-		height: pageSize.height,
-		marginX: Number(ptToCm(page.marginX)),
-		marginY: Number(ptToCm(page.marginY)),
-		background,
-		writingMode: isRTL(page.locale) ? "rl-tb" : "lr-tb",
-	});
-
-	// ODF requires `mimetype` to be the first, uncompressed entry.
-	return [
-		{ path: "mimetype", content: ODT_MIME_TYPE },
-		{ path: "META-INF/manifest.xml", content: MANIFEST },
-		{ path: "content.xml", content: buildContentXml(body, registry, config) },
-		{ path: "styles.xml", content: styles },
-		{ path: "meta.xml", content: buildMetaXml(data.basics.name || "Resume") },
-	];
+	return {
+		mimetype: ODT_MIME_TYPE,
+		"META-INF/manifest.xml": MANIFEST,
+		"content.xml": buildContentXml(body, automaticStyles, config),
+		"styles.xml": buildStylesXml(config, {
+			width: pageSize.width,
+			height: pageSize.height,
+			marginX: ptToCm(page.marginX),
+			marginY: ptToCm(page.marginY),
+			background,
+			writingMode: isRTL(page.locale) ? "rl-tb" : "lr-tb",
+		}),
+		"meta.xml": buildMetaXml(data.basics.name || "Resume"),
+	};
 }

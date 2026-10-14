@@ -1177,6 +1177,9 @@ importers:
 
   packages/docx:
     dependencies:
+      '@reactive-resume/resume':
+        specifier: workspace:*
+        version: link:../resume
       '@reactive-resume/schema':
         specifier: workspace:*
         version: link:../schema
@@ -1378,12 +1381,18 @@ importers:
 
   packages/odt:
     dependencies:
+      '@reactive-resume/resume':
+        specifier: workspace:*
+        version: link:../resume
       '@reactive-resume/schema':
         specifier: workspace:*
         version: link:../schema
       '@reactive-resume/utils':
         specifier: workspace:*
         version: link:../utils
+      fflate:
+        specifier: 'catalog:'
+        version: 0.8.3
       node-html-parser:
         specifier: ^9.0.4
         version: 9.0.4
@@ -1391,9 +1400,6 @@ importers:
       '@reactive-resume/config':
         specifier: workspace:*
         version: link:../config
-      '@reactive-resume/resume':
-        specifier: workspace:*
-        version: link:../resume
       '@typescript/native-preview':
         specifier: 'catalog:'
         version: 7.0.0-dev.20260707.2

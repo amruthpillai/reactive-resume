@@ -14,11 +14,11 @@ import {
 	TextRun,
 	WidthType,
 } from "docx";
+import { isCoverLetterOnlyDocument } from "@reactive-resume/resume/export-sections";
 import { templateLayouts } from "@reactive-resume/schema/templates";
 import { parseColorString } from "@reactive-resume/utils/color";
+import { toSafeLink } from "@reactive-resume/utils/link";
 import { isRTL } from "@reactive-resume/utils/locale";
-import { shouldShowResumeHeader } from "./cover-letter";
-import { toSafeDocxLink } from "./link-utils";
 import { renderBuiltInSection, renderCustomSection, renderSummary, setRenderConfig } from "./section-renderers";
 
 // --- Color helpers ---
@@ -184,7 +184,7 @@ function buildHeader(data: ResumeData, colorHex: string, textColorHex: string): 
 	};
 
 	if (basics.email) {
-		const mailtoLink = toSafeDocxLink(`mailto:${basics.email}`);
+		const mailtoLink = toSafeLink(`mailto:${basics.email}`);
 		if (mailtoLink) {
 			addSeparator();
 			contactParts.push(
@@ -209,7 +209,7 @@ function buildHeader(data: ResumeData, colorHex: string, textColorHex: string): 
 	}
 
 	if (basics.website.url) {
-		const websiteLink = toSafeDocxLink(basics.website.url);
+		const websiteLink = toSafeLink(basics.website.url);
 		if (websiteLink) {
 			addSeparator();
 			contactParts.push(
@@ -233,7 +233,7 @@ function buildHeader(data: ResumeData, colorHex: string, textColorHex: string): 
 		if (!field.text) continue;
 		addSeparator();
 		if (field.link) {
-			const customLink = toSafeDocxLink(field.link);
+			const customLink = toSafeLink(field.link);
 			if (customLink) {
 				contactParts.push(
 					new ExternalHyperlink({
@@ -376,7 +376,7 @@ export function buildDocument(data: ResumeData, resolveTitle?: SectionTitleResol
 		textColorHex,
 		primaryColorHex: colorHex,
 	};
-	const showHeader = shouldShowResumeHeader(data);
+	const showHeader = !isCoverLetterOnlyDocument(data);
 
 	// Header placement depends on template
 	if (layout.headerPlacement === "full-width" && showHeader) {

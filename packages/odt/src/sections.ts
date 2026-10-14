@@ -1,360 +1,151 @@
-import type { OdtBlock } from "./types";
-import type { CustomSection, CustomSectionType, ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
-import { htmlToOdtBlocks, toSafeLink } from "./html-to-odt";
-import { entryHeading, linkParagraph, paragraph, sectionHeading, text } from "./types";
+import type { OdtBlock, OdtInline, SectionTitleResolver } from "./types";
+import type { ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
+import { toSafeLink } from "@reactive-resume/utils/link";
+import { htmlToOdtBlocks } from "./html-to-odt";
+import { paragraph, text } from "./types";
 
 type Sections = ResumeData["sections"];
+type ItemOf<T extends SectionType> = Sections[T]["items"][number];
 
-/** A section heading, skipped when the section hides its title. */
-function headingBlocks(section: { showHeading?: boolean | undefined }, title: string): OdtBlock[] {
-	return section.showHeading !== false && title ? [sectionHeading(title)] : [];
+/** `Primary — Secondary`, with an optional right-aligned meta suffix (period, date). */
+function entryHeading(primary: string, secondary?: string, meta?: string, bold = true): OdtBlock {
+	const children: OdtInline[] = [text(primary, bold ? { bold: true } : {})];
+	if (secondary) children.push(text(` — ${secondary}`));
+	if (meta) children.push({ type: "tab" }, text(meta, { italic: true }));
+	return paragraph(children, "EntryHeading");
 }
 
-/** An italic muted line combining location and period, when either is present. */
-function locationAndPeriod(location: string, period: string): OdtBlock | null {
-	const parts = [location, period].filter(Boolean);
-	if (parts.length === 0) return null;
-	return paragraph([text(parts.join(" | "))], "meta");
+/** `**Name** — detail: extras`, for the compact sections (skills, languages, profiles, …). */
+function labelled(name: string, detail?: string, extras?: string): OdtBlock {
+	const children = [text(name, { bold: true })];
+	if (detail) children.push(text(` — ${detail}`));
+	if (extras) children.push(text(`: ${extras}`));
+	return paragraph(children);
 }
 
-/** A website link block, or null when the URL fails the safe-link check. */
-function websiteBlock(url: string, label: string): OdtBlock | null {
+/** An italic muted line (location, grade), when there is anything to print. */
+const meta = (value: string): OdtBlock[] => (value ? [paragraph([text(value)], "Meta")] : []);
+
+/** A website link, labelled with its URL when no label was set; nothing when the URL fails the safe-link check. */
+function website({ url, label }: { url: string; label: string }): OdtBlock[] {
 	const href = toSafeLink(url);
-	if (!href) return null;
-	return linkParagraph(href, label || href);
+	return href ? [paragraph([{ type: "link", href, children: [text(label || href)] }])] : [];
 }
 
-/** Rich-text content is stored as HTML, so each field is converted to its own block sequence. */
-function descriptionBlocks(html: string): OdtBlock[] {
-	return htmlToOdtBlocks(html);
-}
-
-/** Renders the summary section as its heading plus its rich-text blocks. */
-export function renderSummary(summary: ResumeData["summary"]): OdtBlock[] {
-	if (summary.hidden || !summary.content) return [];
-	return [...headingBlocks(summary, summary.title), ...descriptionBlocks(summary.content)];
-}
-
-/** Renders work experience, including entries that list several roles. */
-function renderExperience(section: Sections["experience"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
+/** Each built-in item type to its blocks, mirroring the DOCX and Markdown exports. */
+const renderItem: { [T in SectionType]: (item: ItemOf<T>, section: Sections[T]) => OdtBlock[] } = {
+	experience: (item) => {
 		const roles = item.roles.filter((role) => role.position.trim());
-
-		if (roles.length > 0) {
-			blocks.push(entryHeading(item.company, undefined, item.period));
-
-			const location = locationAndPeriod(item.location, "");
-			if (location) blocks.push(location);
-
-			for (const role of roles) {
-				blocks.push(entryHeading(role.position, role.period));
-				if (role.description) blocks.push(...descriptionBlocks(role.description));
-			}
-		} else {
-			blocks.push(entryHeading(item.company, item.position, item.period));
-
-			const location = locationAndPeriod(item.location, "");
-			if (location) blocks.push(location);
-		}
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders education entries with degree, area, grade and location. */
-function renderEducation(section: Sections["education"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		const degreeArea = [item.degree, item.area].filter(Boolean).join(", ");
-		blocks.push(entryHeading(item.school, degreeArea, item.period));
-
-		if (item.grade) blocks.push(paragraph([text(`Grade: ${item.grade}`)], "meta"));
-
-		const location = locationAndPeriod(item.location, "");
-		if (location) blocks.push(location);
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders project entries with their descriptions and links. */
-function renderProjects(section: Sections["projects"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		blocks.push(entryHeading(item.name, undefined, item.period));
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders skills, either inline with keywords or as a bulleted keyword list. */
-function renderSkills(section: Sections["skills"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		const children = [text(item.name, { bold: true })];
-
-		if (item.proficiency) children.push(text(` — ${item.proficiency}`));
-
-		if (section.keywordLayout !== "list" && item.keywords.length > 0) {
-			children.push(text(`: ${item.keywords.join(", ")}`));
-		}
-
-		blocks.push(paragraph(children));
-
-		if (section.keywordLayout === "list") {
-			blocks.push({
-				type: "list",
-				ordered: false,
-				items: item.keywords.map((keyword) => ({ blocks: [paragraph([text(keyword)])] })),
-			});
-		}
-	}
-
-	return blocks;
-}
-
-/** Renders language entries with their fluency. */
-function renderLanguages(section: Sections["languages"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		const children = [text(item.language, { bold: true })];
-		if (item.fluency) children.push(text(` — ${item.fluency}`));
-		blocks.push(paragraph(children));
-	}
-
-	return blocks;
-}
-
-/** Renders interest entries with their keywords. */
-function renderInterests(section: Sections["interests"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		const children = [text(item.name, { bold: true })];
-		if (item.keywords.length > 0) children.push(text(`: ${item.keywords.join(", ")}`));
-		blocks.push(paragraph(children));
-	}
-
-	return blocks;
-}
-
-/** Renders award entries with their awarder and date. */
-function renderAwards(section: Sections["awards"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		blocks.push(entryHeading(item.title, item.awarder, item.date, false));
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders certification entries with their issuer and date. */
-function renderCertifications(section: Sections["certifications"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		blocks.push(entryHeading(item.title, item.issuer, item.date));
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders publication entries with their publisher and date. */
-function renderPublications(section: Sections["publications"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		blocks.push(entryHeading(item.title, item.publisher, item.date));
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders volunteer entries with their organization and period. */
-function renderVolunteer(section: Sections["volunteer"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		blocks.push(entryHeading(item.organization, undefined, item.period));
-
-		const location = locationAndPeriod(item.location, "");
-		if (location) blocks.push(location);
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders reference entries with their position and phone. */
-function renderReferences(section: Sections["references"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		const children = [text(item.name, { bold: true })];
-		if (item.position) children.push(text(` — ${item.position}`));
-		blocks.push(paragraph(children));
-
-		if (item.phone) blocks.push(paragraph([text(item.phone)]));
-
-		if (item.description) blocks.push(...descriptionBlocks(item.description));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Renders social profile entries with their network and username. */
-function renderProfiles(section: Sections["profiles"]): OdtBlock[] {
-	const items = section.items.filter((item) => !item.hidden);
-	if (section.hidden || items.length === 0) return [];
-
-	const blocks = headingBlocks(section, section.title);
-
-	for (const item of items) {
-		const children = [text(item.network, { bold: true })];
-		if (item.username) children.push(text(` — ${item.username}`));
-		blocks.push(paragraph(children));
-
-		const website = websiteBlock(item.website.url, item.website.label);
-		if (website) blocks.push(website);
-	}
-
-	return blocks;
-}
-
-/** Built-in section type to renderer, mirroring the DOCX/PDF export order. */
-const sectionRenderers: Record<SectionType, (section: Sections[SectionType]) => OdtBlock[]> = {
-	experience: renderExperience as (section: Sections[SectionType]) => OdtBlock[],
-	education: renderEducation as (section: Sections[SectionType]) => OdtBlock[],
-	projects: renderProjects as (section: Sections[SectionType]) => OdtBlock[],
-	skills: renderSkills as (section: Sections[SectionType]) => OdtBlock[],
-	languages: renderLanguages as (section: Sections[SectionType]) => OdtBlock[],
-	interests: renderInterests as (section: Sections[SectionType]) => OdtBlock[],
-	awards: renderAwards as (section: Sections[SectionType]) => OdtBlock[],
-	certifications: renderCertifications as (section: Sections[SectionType]) => OdtBlock[],
-	publications: renderPublications as (section: Sections[SectionType]) => OdtBlock[],
-	volunteer: renderVolunteer as (section: Sections[SectionType]) => OdtBlock[],
-	references: renderReferences as (section: Sections[SectionType]) => OdtBlock[],
-	profiles: renderProfiles as (section: Sections[SectionType]) => OdtBlock[],
+		return [
+			entryHeading(item.company, roles.length > 0 ? undefined : item.position, item.period),
+			...meta(item.location),
+			...roles.flatMap((role) => [entryHeading(role.position, role.period), ...htmlToOdtBlocks(role.description)]),
+			...htmlToOdtBlocks(item.description),
+			...website(item.website),
+		];
+	},
+	education: (item) => [
+		entryHeading(item.school, [item.degree, item.area].filter(Boolean).join(", "), item.period),
+		...meta(item.grade ? `Grade: ${item.grade}` : ""),
+		...meta(item.location),
+		...htmlToOdtBlocks(item.description),
+		...website(item.website),
+	],
+	projects: (item) => [
+		entryHeading(item.name, undefined, item.period),
+		...htmlToOdtBlocks(item.description),
+		...website(item.website),
+	],
+	skills: (item, section) => {
+		const asList = section.keywordLayout === "list";
+		return [
+			labelled(item.name, item.proficiency, asList ? undefined : item.keywords.join(", ")),
+			...(asList && item.keywords.length > 0
+				? [
+						{
+							type: "list",
+							ordered: false,
+							items: item.keywords.map((keyword) => ({ blocks: [paragraph([text(keyword)])] })),
+						} satisfies OdtBlock,
+					]
+				: []),
+		];
+	},
+	languages: (item) => [labelled(item.language, item.fluency)],
+	interests: (item) => [labelled(item.name, undefined, item.keywords.join(", "))],
+	awards: (item) => [
+		entryHeading(item.title, item.awarder, item.date, false),
+		...htmlToOdtBlocks(item.description),
+		...website(item.website),
+	],
+	certifications: (item) => [
+		entryHeading(item.title, item.issuer, item.date),
+		...htmlToOdtBlocks(item.description),
+		...website(item.website),
+	],
+	publications: (item) => [
+		entryHeading(item.title, item.publisher, item.date),
+		...htmlToOdtBlocks(item.description),
+		...website(item.website),
+	],
+	volunteer: (item) => [
+		entryHeading(item.organization, undefined, item.period),
+		...meta(item.location),
+		...htmlToOdtBlocks(item.description),
+		...website(item.website),
+	],
+	references: (item) => [
+		labelled(item.name, item.position),
+		...(item.phone ? [paragraph([text(item.phone)])] : []),
+		...htmlToOdtBlocks(item.description),
+		...website(item.website),
+	],
+	profiles: (item) => [labelled(item.network, item.username), ...website(item.website)],
 };
 
-/** Dispatches a built-in section to its renderer, or an empty list when unknown. */
-export function renderBuiltInSection(type: SectionType, section: Sections[SectionType]): OdtBlock[] {
-	const renderer = sectionRenderers[type];
-	return renderer ? renderer(section) : [];
+type HeadedSection = { title: string; showHeading?: boolean | undefined };
+
+const heading = (section: HeadedSection, title: string): OdtBlock[] =>
+	section.showHeading !== false && title ? [{ type: "heading", level: 1, children: [text(title)] }] : [];
+
+/** A built-in-typed section's heading and visible items; nothing when the section or every item is hidden. */
+function renderItems<T extends SectionType>(type: T, section: Sections[T], title: string): OdtBlock[] {
+	const items = (section.items as ItemOf<T>[]).filter((item) => !item.hidden);
+	if (section.hidden || items.length === 0) return [];
+	const render = renderItem[type] as (item: ItemOf<T>, section: Sections[T]) => OdtBlock[];
+	return [...heading(section, title), ...items.flatMap((item) => render(item, section))];
 }
 
-/** Custom sections reuse the built-in renderers, or print their own HTML for summary/cover-letter types. */
-export function renderCustomSection(section: CustomSection): OdtBlock[] {
-	if (section.hidden) return [];
+/** Renders any section id (summary, built-in or custom) under its locale-aware title. */
+export function renderSection(sectionId: string, data: ResumeData, resolveTitle?: SectionTitleResolver): OdtBlock[] {
+	const titleOf = (stored: string) => resolveTitle?.(sectionId)?.trim() || stored;
 
-	const items = section.items.filter((item) => !item.hidden);
-	if (items.length === 0) return [];
-
-	const type = section.type as CustomSectionType;
-
-	if (type === "summary") {
-		const blocks: OdtBlock[] = [];
-		for (const item of items) if ("content" in item && item.content) blocks.push(...descriptionBlocks(item.content));
-		return blocks.length > 0 ? [...headingBlocks(section, section.title), ...blocks] : [];
+	if (sectionId === "summary") {
+		const { summary } = data;
+		if (summary.hidden || !summary.content) return [];
+		return [...heading(summary, titleOf(summary.title)), ...htmlToOdtBlocks(summary.content)];
 	}
 
-	if (type === "cover-letter") {
-		const blocks: OdtBlock[] = [];
-		for (const item of items) {
-			if ("recipient" in item && item.recipient) blocks.push(...descriptionBlocks(item.recipient));
-			if ("content" in item && item.content) blocks.push(...descriptionBlocks(item.content));
-		}
-		return blocks;
+	if (sectionId in data.sections) {
+		const section = data.sections[sectionId as SectionType];
+		return renderItems(sectionId as SectionType, section, titleOf(section.title));
 	}
 
-	const renderer = sectionRenderers[type as SectionType];
-	if (!renderer) return [];
+	const custom = data.customSections.find((candidate) => candidate.id === sectionId);
+	if (!custom || custom.hidden) return [];
 
-	const synthetic = {
-		...(section.type === "skills" ? { keywordLayout: section.keywordLayout } : {}),
-		title: section.title,
-		columns: section.columns,
-		hidden: false,
-		showHeading: section.showHeading,
-		items,
-	} as Sections[SectionType];
+	// Summary and cover-letter sections print their own rich text; a letter prints no heading.
+	if (custom.type === "summary" || custom.type === "cover-letter") {
+		const blocks = custom.items
+			.filter((item) => !item.hidden)
+			.flatMap((item) => [
+				...("recipient" in item ? htmlToOdtBlocks(item.recipient) : []),
+				...("content" in item ? htmlToOdtBlocks(item.content) : []),
+			]);
+		if (blocks.length === 0) return [];
+		return custom.type === "summary" ? [...heading(custom, titleOf(custom.title)), ...blocks] : blocks;
+	}
 
-	return renderer(synthetic);
+	// Other custom sections share a built-in type's item shape, so they reuse its renderer.
+	return renderItems(custom.type, custom as unknown as Sections[SectionType], titleOf(custom.title));
 }

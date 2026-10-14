@@ -3,7 +3,7 @@ import type { HTMLElement, Node } from "node-html-parser";
 import { ExternalHyperlink, HeadingLevel, Paragraph, TextRun } from "docx";
 import { parse, NodeType } from "node-html-parser";
 import { isDarkColor, parseColorString } from "@reactive-resume/utils/color";
-import { toSafeDocxLink } from "./link-utils";
+import { toSafeLink } from "@reactive-resume/utils/link";
 
 export interface HtmlStyleConfig {
 	font?: string;
@@ -129,7 +129,7 @@ function collectInlineChildren(node: Node, style: InlineStyle): InlineChild[] {
 		}
 
 		if (tag === "A") {
-			const href = toSafeDocxLink(el.getAttribute("href") ?? "");
+			const href = toSafeLink(el.getAttribute("href") ?? "");
 			const linkChildren = collectInlineChildren(el, { ...style, color: currentLinkColor, underline: {} });
 			if (linkChildren.length > 0 && href) {
 				children.push(new ExternalHyperlink({ link: href, children: linkChildren as TextRun[] }));

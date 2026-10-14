@@ -6,19 +6,14 @@ const XML_ESCAPES: Record<string, string> = {
 	"'": "&apos;",
 };
 
-/** Escapes text and attribute values for XML. */
-export function escapeXml(value: string): string {
-	return value.replace(/[&<>"']/g, (character) => XML_ESCAPES[character] ?? character);
-}
-
 /**
- * XML 1.0 forbids most C0 control characters (only tab, newline and carriage return are legal).
- * Rich-text fields can carry stray controls from pasted content; drop them so the document stays valid.
+ * Characters XML 1.0 forbids: C0 controls other than tab, newline and carriage return, plus U+FFFE and U+FFFF.
+ * Pasted text can carry them, and one is enough to make the whole document unreadable.
  */
 // oxlint-disable-next-line no-control-regex -- matching the illegal XML control range is the point.
-const INVALID_XML_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
+const INVALID_XML_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\uFFFE\uFFFF]/g;
 
-/** Escapes text for XML and drops the control characters XML 1.0 forbids. */
-export function escapeXmlText(value: string): string {
-	return escapeXml(value.replace(INVALID_XML_CHARS, ""));
+/** Escapes text or an attribute value for XML, dropping the characters XML 1.0 forbids. */
+export function escapeXml(value: string): string {
+	return value.replace(INVALID_XML_CHARS, "").replace(/[&<>"']/g, (character) => XML_ESCAPES[character] ?? character);
 }

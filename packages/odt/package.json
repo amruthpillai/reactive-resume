@@ -14,13 +14,14 @@
 		"test:agent": "vitest run --reporter=agent --reporter=json --outputFile.json=reports/vitest-results.json --passWithNoTests"
 	},
 	"dependencies": {
+		"@reactive-resume/resume": "workspace:*",
 		"@reactive-resume/schema": "workspace:*",
 		"@reactive-resume/utils": "workspace:*",
+		"fflate": "catalog:",
 		"node-html-parser": "^9.0.4"
 	},
 	"devDependencies": {
 		"@reactive-resume/config": "workspace:*",
-		"@reactive-resume/resume": "workspace:*",
 		"@typescript/native-preview": "catalog:",
 		"typescript": "catalog:"
 	}

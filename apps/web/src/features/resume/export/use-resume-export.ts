@@ -147,16 +147,6 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 		}
 	}, [resume]);
 
-	const onDownloadODT = useCallback(async () => {
-		if (!resume) return;
-		try {
-			const blob = await createExportFile(resume, "odt");
-			downloadWithAnchor(blob, `${getDefaultFileName(resume)}.odt`);
-		} catch {
-			toast.add({ type: "error", description: t`Could not generate the ODT. Please try again.` });
-		}
-	}, [resume]);
-
 	const onDownloadPDF = useCallback(async () => {
 		if (!resume) return;
 		const toastId = toast.add({
@@ -205,5 +195,5 @@ export function useResumeExport(resume: ExportableResume | undefined, exportOpti
 		toast.close(toastId);
 	}, [exportOptions.publicResumePdf, resume]);
 
-	return { onDownloadJSON, onDownloadMarkdown, onDownloadDOCX, onDownloadODT, onDownloadPDF, onPrint, isExporting };
+	return { onDownloadJSON, onDownloadMarkdown, onDownloadDOCX, onDownloadPDF, onPrint, isExporting };
 }

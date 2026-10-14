@@ -1,4 +1,5 @@
 import type { CustomSection, CustomSectionType, ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
+import { isCoverLetterOnlyDocument } from "./export-sections";
 
 type Sections = ResumeData["sections"];
 
@@ -8,17 +9,6 @@ type Sections = ResumeData["sections"];
  * localized headings like "Experience". Without one, the stored (usually empty) title is used.
  */
 export type SectionTitleResolver = (sectionId: string) => string | undefined;
-
-function isCoverLetterSection(data: ResumeData, sectionId: string): boolean {
-	const section = data.customSections.find((customSection) => customSection.id === sectionId);
-	return section?.type === "cover-letter" && visibleItems(section).length > 0;
-}
-
-function isCoverLetterOnlyDocument(data: ResumeData): boolean {
-	const sectionIds = data.metadata.layout.pages.flatMap((page) => [...page.main, ...page.sidebar]);
-
-	return sectionIds.length > 0 && sectionIds.every((sectionId) => isCoverLetterSection(data, sectionId));
-}
 
 /**
  * Serializes resume data to Markdown — a compact, readable format well suited for feeding

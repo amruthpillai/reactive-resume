@@ -41,13 +41,11 @@ async function fileResponse(
 			const { getResumeSectionTitle } = await import("@reactive-resume/pdf/section-title");
 			const resolveTitle = (id: string) => getResumeSectionTitle(data, id);
 			if (format === "md") body = new File([buildMarkdown(data, resolveTitle)], filename, { type: "text/markdown" });
-			else if (format === "odt") {
-				const { buildOdt } = await import("@reactive-resume/odt");
-				const blob = await buildOdt(data, resolveTitle);
-				body = new File([blob], filename, { type: blob.type });
-			} else {
-				const { buildDocx } = await import("@reactive-resume/docx");
-				const blob = await buildDocx(data, resolveTitle);
+			else {
+				const blob =
+					format === "odt"
+						? await (await import("@reactive-resume/odt")).buildOdt(data, resolveTitle)
+						: await (await import("@reactive-resume/docx")).buildDocx(data, resolveTitle);
 				body = new File([blob], filename, { type: blob.type });
 			}
 		}

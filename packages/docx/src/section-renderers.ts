@@ -1,8 +1,8 @@
 import type { HtmlStyleConfig } from "./html-to-docx";
 import type { CustomSection, CustomSectionType, ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
 import { BorderStyle, ExternalHyperlink, HeadingLevel, Paragraph, TabStopPosition, TabStopType, TextRun } from "docx";
+import { toSafeLink } from "@reactive-resume/utils/link";
 import { htmlToParagraphs } from "./html-to-docx";
-import { toSafeDocxLink } from "./link-utils";
 
 type Sections = ResumeData["sections"];
 
@@ -124,7 +124,7 @@ function locationAndPeriod(location: string, period: string): Paragraph | null {
 }
 
 function websiteParagraph(url: string, label: string): Paragraph | null {
-	const safeUrl = toSafeDocxLink(url);
+	const safeUrl = toSafeLink(url);
 	if (!safeUrl) return null;
 
 	return new Paragraph({

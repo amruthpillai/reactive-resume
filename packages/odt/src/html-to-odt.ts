@@ -2,30 +2,11 @@ import type { InlineStyle, OdtBlock, OdtInline, OdtListItem } from "./types";
 import type { HTMLElement, Node } from "node-html-parser";
 import { parse, NodeType } from "node-html-parser";
 import { isDarkColor, parseColorString } from "@reactive-resume/utils/color";
+import { toSafeLink } from "@reactive-resume/utils/link";
 import { paragraph, text } from "./types";
 
-const SAFE_LINK_SCHEMES = new Set(["http:", "https:", "mailto:", "tel:"]);
-
-/** Keeps only links the document can open safely; drops `javascript:`, `data:` and relative URLs. */
-export function toSafeLink(value: string): string | null {
-	const input = value.trim();
-	if (!input) return null;
-
-	if (input.startsWith("mailto:")) {
-		const email = input.slice("mailto:".length).trim();
-		return email ? `mailto:${email}` : null;
-	}
-
-	try {
-		const url = new URL(input);
-		return SAFE_LINK_SCHEMES.has(url.protocol) ? url.toString() : null;
-	} catch {
-		return null;
-	}
-}
-
 /** Parses a CSS colour to lowercase `rrggbb`, or null when it cannot be read. */
-function toHex(value: string): string | null {
+export function toHex(value: string): string | null {
 	const parsed = parseColorString(value);
 	if (!parsed) return null;
 	return [parsed.r, parsed.g, parsed.b].map((channel) => channel.toString(16).padStart(2, "0")).join("");
@@ -187,16 +168,6 @@ function processBlock(element: HTMLElement, blocks: OdtBlock[]): void {
 		return;
 	}
 
-	if (tag === "P" || tag === "DIV") {
-		const children = collectInline(element, {});
-		if (children.length > 0) {
-			const indent = Number(element.getAttribute("data-indent"));
-			const validIndent = Number.isInteger(indent) && indent > 0 && indent <= 8 ? indent : undefined;
-			blocks.push(paragraph(children, undefined, validIndent));
-		}
-		return;
-	}
-
 	if (tag === "UL" || tag === "OL") {
 		blocks.push(convertList(element, tag === "OL"));
 		return;
@@ -207,19 +178,19 @@ function processBlock(element: HTMLElement, blocks: OdtBlock[]): void {
 		for (const child of element.childNodes) {
 			if (child.nodeType === NodeType.TEXT_NODE) {
 				const value = (child.textContent ?? "").trim();
-				if (value) inner.push(paragraph([text(value)], "quote"));
+				if (value) inner.push(paragraph([text(value)]));
 			} else if (child.nodeType === NodeType.ELEMENT_NODE) {
 				processBlock(child as HTMLElement, inner);
 			}
 		}
-		for (const block of inner) if (block.type === "paragraph") block.preset = "quote";
+		for (const block of inner) if (block.type === "paragraph") block.style = "Quote";
 		blocks.push(...inner);
 		return;
 	}
 
 	if (tag === "PRE") {
 		const value = element.textContent ?? "";
-		if (value) blocks.push({ type: "paragraph", children: [text(value)], preset: "code" });
+		if (value) blocks.push(paragraph([text(value)], "CodeBlock"));
 		return;
 	}
 
@@ -228,20 +199,18 @@ function processBlock(element: HTMLElement, blocks: OdtBlock[]): void {
 		return;
 	}
 
-	if (tag === "LI") {
-		const children = collectInline(element, {});
-		if (children.length > 0) blocks.push(paragraph(children));
-		return;
-	}
-
-	// Fallback: an unknown element that carries inline content is treated as a paragraph.
+	// Paragraphs, and any other element carrying inline content. TipTap stores indentation as `data-indent`.
 	const children = collectInline(element, {});
-	if (children.length > 0) blocks.push(paragraph(children));
+	if (children.length === 0) return;
+	const indent = Number(element.getAttribute("data-indent"));
+	blocks.push(
+		paragraph(children, undefined, Number.isInteger(indent) && indent > 0 && indent <= 8 ? indent : undefined),
+	);
 }
 
 /** Converts the constrained TipTap rich-text HTML stored on resume fields into ODT blocks. */
 export function htmlToOdtBlocks(html: string): OdtBlock[] {
-	if (!html?.trim()) return [];
+	if (!html.trim()) return [];
 
 	const root = parse(html);
 	// Script and style text is code, not content: drop it before the walk below can print it.
