@@ -85075,7 +85075,7 @@
 		"/resumes/{id}/exports/{format}": {
 			"get": {
 				"operationId": "exportResumeFile",
-				"summary": "Download a resume in PDF, DOCX, Markdown or JSON",
+				"summary": "Download a resume in PDF, DOCX, ODT, Markdown or JSON",
 				"description": "Renders the resume as a file in the chosen format.",
 				"tags": [
 					"Resumes"
@@ -85098,6 +85098,7 @@
 							"enum": [
 								"pdf",
 								"docx",
+								"odt",
 								"md",
 								"json"
 							],
@@ -85180,7 +85181,7 @@
 		"/cover-letters/{id}/exports/{format}": {
 			"get": {
 				"operationId": "exportCoverLetterFile",
-				"summary": "Download a cover letter in PDF, DOCX, Markdown or JSON",
+				"summary": "Download a cover letter in PDF, DOCX, ODT, Markdown or JSON",
 				"description": "Renders the cover letter as a file in the chosen format. Linked sender details and design come live from its resume. Structured letter greetings default to English; pass `words` to localize them. Dates use the document's locale.",
 				"tags": [
 					"Cover Letters"
@@ -85203,6 +85204,7 @@
 							"enum": [
 								"pdf",
 								"docx",
+								"odt",
 								"md",
 								"json"
 							],

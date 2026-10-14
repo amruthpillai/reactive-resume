@@ -35,3 +35,16 @@ it("exports saved data as round-trippable JSON, readable Markdown and a Word doc
 	expect(strFromU8(xml)).toContain("Ada Lovelace");
 	expect(getResume).toHaveBeenCalledWith({ id: "resume-1", userId: "owner" });
 });
+
+it("exports an editable OpenDocument Text file", async () => {
+	const odt = await call(documentExports.resume, { id: "resume-1", format: "odt" }, { context });
+	expect(odt.headers["content-disposition"]).toContain(".odt");
+	const files = unzipSync(new Uint8Array(await odt.body.arrayBuffer()));
+	expect(strFromU8(files.mimetype ?? new Uint8Array())).toBe("application/vnd.oasis.opendocument.text");
+	const content = files["content.xml"];
+	expect(content).toBeDefined();
+	if (!content) throw new Error("Missing OpenDocument content");
+	const xml = strFromU8(content);
+	expect(xml).toContain("Ada Lovelace");
+	expect(xml).toContain("Builds analytical engines.");
+});

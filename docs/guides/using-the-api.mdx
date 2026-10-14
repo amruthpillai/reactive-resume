@@ -117,7 +117,7 @@ Additional app workflows have REST endpoints:
 | Workflow                                                                                | Endpoint                                                                         |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | PDF, JSON Resume, Reactive Resume v4/current, LinkedIn imports                          | `POST /resumes/file-imports`                                                     |
-| PDF, Word, Markdown and JSON exports                                                    | `GET /resumes/{id}/exports/{format}`, `GET /cover-letters/{id}/exports/{format}` |
+| PDF, Word, OpenDocument, Markdown and JSON exports                                      | `GET /resumes/{id}/exports/{format}`, `GET /cover-letters/{id}/exports/{format}` |
 | Editor content checks and job-term matching                                             | `GET /resumes/{id}/checks`, `POST /resumes/{id}/job-matches`                     |
 | Public PDF readability checker                                                          | `POST /pdf-checks`                                                               |
 | File uploads and deletion                                                               | `POST /files`, `DELETE /files`                                                   |

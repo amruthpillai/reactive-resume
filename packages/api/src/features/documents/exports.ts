@@ -13,10 +13,11 @@ import { resumeService } from "../resume/service";
 
 const exportInput = z.object({
 	id: z.string().min(1),
-	format: z.enum(["pdf", "docx", "md", "json"]),
+	format: z.enum(["pdf", "docx", "odt", "md", "json"]),
 });
 const exportOutput = z.object({ headers: z.object({ "content-disposition": z.string() }), body: z.file() });
 
+/** Builds the download response (headers + body) for a resume or cover letter in the requested format. */
 async function fileResponse(
 	data: ResumeData,
 	name: string,
@@ -40,7 +41,11 @@ async function fileResponse(
 			const { getResumeSectionTitle } = await import("@reactive-resume/pdf/section-title");
 			const resolveTitle = (id: string) => getResumeSectionTitle(data, id);
 			if (format === "md") body = new File([buildMarkdown(data, resolveTitle)], filename, { type: "text/markdown" });
-			else {
+			else if (format === "odt") {
+				const { buildOdt } = await import("@reactive-resume/odt");
+				const blob = await buildOdt(data, resolveTitle);
+				body = new File([blob], filename, { type: blob.type });
+			} else {
 				const { buildDocx } = await import("@reactive-resume/docx");
 				const blob = await buildDocx(data, resolveTitle);
 				body = new File([blob], filename, { type: blob.type });
@@ -60,7 +65,7 @@ export const documentExports = {
 			path: "/resumes/{id}/exports/{format}",
 			tags: ["Resumes"],
 			operationId: "exportResumeFile",
-			summary: "Download a resume in PDF, DOCX, Markdown or JSON",
+			summary: "Download a resume in PDF, DOCX, ODT, Markdown or JSON",
 			description: "Renders the resume as a file in the chosen format.",
 			outputStructure: "detailed",
 		})
@@ -77,7 +82,7 @@ export const documentExports = {
 			path: "/cover-letters/{id}/exports/{format}",
 			tags: ["Cover Letters"],
 			operationId: "exportCoverLetterFile",
-			summary: "Download a cover letter in PDF, DOCX, Markdown or JSON",
+			summary: "Download a cover letter in PDF, DOCX, ODT, Markdown or JSON",
 			description:
 				"Renders the cover letter as a file in the chosen format. Linked sender details and design come live from its resume. Structured letter greetings default to English; pass `words` to localize them. Dates use the document's locale.",
 			outputStructure: "detailed",
