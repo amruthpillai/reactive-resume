@@ -51,7 +51,7 @@ export const getExportFormats = (): DownloadFormat[] => [
 	},
 	{
 		id: "odt",
-		label: t`OpenDocument`,
+		label: "OpenDocument",
 		extension: ".odt",
 		icon: "file-doc",
 		description: t`For LibreOffice and other open-source editors. Layout is simplified.`,
