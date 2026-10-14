@@ -69,7 +69,7 @@ export function Share() {
 
 	const formats = [
 		{ icon: "file-pdf", label: "PDF" },
-		{ icon: "file-text", label: t`Word` },
+		{ icon: "file-text", label: "Word" },
 		{ icon: "brackets-curly", label: "JSON" },
 	] as const;
 
