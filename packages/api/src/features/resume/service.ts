@@ -355,6 +355,34 @@ async function notifyResumeUpdated(event: ResumeUpdatedEvent) {
 	}
 }
 
+async function updateResumePasswordTx(
+	client: DbOrTx,
+	input: {
+		id: string;
+		userId: string;
+		password: string | null;
+	},
+) {
+	const [existing] = await client
+		.select({ isLocked: schema.resume.isLocked })
+		.from(schema.resume)
+		.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+		.for("update");
+
+	if (!existing) throw new ORPCError("NOT_FOUND");
+	if (existing.isLocked) throw new ORPCError("RESUME_LOCKED", { status: 403 });
+
+	const [resume] = await client
+		.update(schema.resume)
+		.set({ password: input.password })
+		.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+		.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
+
+	if (!resume) throw new ORPCError("NOT_FOUND");
+
+	return resume;
+}
+
 export const resumeService = {
 	tags,
 	statistics,
@@ -755,13 +783,13 @@ export const resumeService = {
 	setPassword: async (input: { id: string; userId: string; password: string }) => {
 		const hashedPassword = await hash(input.password, 10);
 
-		const [resume] = await db
-			.update(schema.resume)
-			.set({ password: hashedPassword })
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
-			.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
-
-		if (!resume) throw new ORPCError("NOT_FOUND");
+		const resume = await db.transaction((tx) =>
+			updateResumePasswordTx(tx, {
+				id: input.id,
+				userId: input.userId,
+				password: hashedPassword,
+			}),
+		);
 
 		await notifyResumeUpdated({
 			type: "resume.updated",
@@ -801,13 +829,13 @@ export const resumeService = {
 	},
 
 	removePassword: async (input: { id: string; userId: string }) => {
-		const [resume] = await db
-			.update(schema.resume)
-			.set({ password: null })
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
-			.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
-
-		if (!resume) throw new ORPCError("NOT_FOUND");
+		const resume = await db.transaction((tx) =>
+			updateResumePasswordTx(tx, {
+				id: input.id,
+				userId: input.userId,
+				password: null,
+			}),
+		);
 
 		await notifyResumeUpdated({
 			type: "resume.updated",

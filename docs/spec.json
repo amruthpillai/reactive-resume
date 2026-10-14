@@ -1,7 +1,7 @@
 {
 	"info": {
 		"title": "Reactive Resume",
-		"version": "6.0.2",
+		"version": "6.0.3",
 		"description": "Reactive Resume API. Mutations do not support Idempotency-Key. Do not automatically retry POST, PUT, PATCH or DELETE requests after a timeout: first read the resource to determine whether the operation succeeded. Existing enum values and response shapes are retained for compatibility.",
 		"license": {
 			"name": "MIT",
@@ -53765,6 +53765,21 @@
 											"isLocked": {
 												"type": "boolean"
 											},
+											"isPublic": {
+												"type": "boolean",
+												"description": "Whether a resume's public link is on; always false for letters."
+											},
+											"slug": {
+												"anyOf": [
+													{
+														"type": "string"
+													},
+													{
+														"type": "null"
+													}
+												],
+												"description": "A resume's public address, /{username}/{slug}; null for letters."
+											},
 											"trashedAt": {
 												"anyOf": [
 													{
@@ -53822,6 +53837,8 @@
 											"name",
 											"tags",
 											"isLocked",
+											"isPublic",
+											"slug",
 											"trashedAt",
 											"createdAt",
 											"updatedAt",
@@ -54804,6 +54821,10 @@
 											"type": "boolean",
 											"description": "Whether email-based authentication is disabled on this instance."
 										},
+										"allowGuestLogin": {
+											"type": "boolean",
+											"description": "Whether visitors can continue as a guest on this instance."
+										},
 										"smtpEnabled": {
 											"type": "boolean",
 											"description": "Whether outbound email (SMTP) is configured on this instance."
@@ -54816,6 +54837,7 @@
 									"required": [
 										"disableSignups",
 										"disableEmailAuth",
+										"allowGuestLogin",
 										"smtpEnabled",
 										"careerSchedulingEnabled"
 									]
@@ -74401,7 +74423,7 @@
 			"put": {
 				"operationId": "setResumePassword",
 				"summary": "Set resume password",
-				"description": "Sets or updates a password on a resume. When a password is set, viewers of the public resume must enter the password before the resume data is revealed. The password must be between 6 and 64 characters. Requires authentication.",
+				"description": "Sets or updates a password on a resume. When a password is set, viewers of the public resume must enter the password before the resume data is revealed. The password must be between 6 and 64 characters. Locked resumes cannot be modified. Requires authentication.",
 				"tags": [
 					"Resume Sharing"
 				],
@@ -74439,6 +74461,66 @@
 				"responses": {
 					"200": {
 						"description": "The resume password was set successfully."
+					},
+					"403": {
+						"description": "403",
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": true
+												},
+												"code": {
+													"const": "RESUME_LOCKED"
+												},
+												"status": {
+													"const": 403
+												},
+												"message": {
+													"type": "string",
+													"default": "Unlock the resume first."
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										},
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": false
+												},
+												"code": {
+													"type": "string"
+												},
+												"status": {
+													"type": "number"
+												},
+												"message": {
+													"type": "string"
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										}
+									]
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "Structured API error. See status and code; do not branch on message text.",
@@ -74494,7 +74576,7 @@
 			"delete": {
 				"operationId": "removeResumePassword",
 				"summary": "Remove resume password",
-				"description": "Removes password protection from a resume. After removal, the resume (if public) can be viewed without entering a password. Requires authentication.",
+				"description": "Removes password protection from a resume. After removal, the resume (if public) can be viewed without entering a password. Locked resumes cannot be modified. Requires authentication.",
 				"tags": [
 					"Resume Sharing"
 				],
@@ -74512,6 +74594,66 @@
 				"responses": {
 					"200": {
 						"description": "The resume password was removed successfully."
+					},
+					"403": {
+						"description": "403",
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": true
+												},
+												"code": {
+													"const": "RESUME_LOCKED"
+												},
+												"status": {
+													"const": 403
+												},
+												"message": {
+													"type": "string",
+													"default": "Unlock the resume first."
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										},
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": false
+												},
+												"code": {
+													"type": "string"
+												},
+												"status": {
+													"type": "number"
+												},
+												"message": {
+													"type": "string"
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										}
+									]
+								}
+							}
+						}
 					},
 					"default": {
 						"description": "Structured API error. See status and code; do not branch on message text.",

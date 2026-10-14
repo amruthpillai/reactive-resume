@@ -7,6 +7,7 @@ import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 const dbMock = vi.hoisted(() => ({
 	select: vi.fn(),
 	transaction: vi.fn(),
+	update: vi.fn(),
 }));
 const compareMock = vi.hoisted(() => vi.fn());
 const publishResumeUpdatedMock = vi.hoisted(() => vi.fn());
@@ -173,6 +174,7 @@ const createRestoreHarness = (currentData: ResumeData, restoredData: ResumeData)
 beforeEach(() => {
 	dbMock.select.mockReset();
 	dbMock.transaction.mockReset();
+	dbMock.update.mockReset();
 	compareMock.mockReset();
 	publishResumeUpdatedMock.mockReset();
 	grantResumeAccessMock.mockReset();
@@ -382,6 +384,84 @@ describe("delete", () => {
 			code: "RESUME_LOCKED",
 			status: 403,
 		});
+	});
+});
+
+describe("setPassword", () => {
+	const runTransaction = (tx: unknown) => {
+		dbMock.transaction.mockImplementationOnce(async (cb: (tx: unknown) => Promise<unknown>) => cb(tx));
+	};
+
+	it("throws NOT_FOUND when the resume does not exist", async () => {
+		const select = createLockedSelectChain([]);
+		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
+
+		await expect(
+			resumeService.setPassword({ id: "r1", userId: "u1", password: "newPassword123" }),
+		).rejects.toMatchObject({
+			code: "NOT_FOUND",
+		});
+	});
+
+	it("throws RESUME_LOCKED when the resume is locked", async () => {
+		const select = createLockedSelectChain([{ isLocked: true }]);
+		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
+
+		await expect(
+			resumeService.setPassword({ id: "r1", userId: "u1", password: "newPassword123" }),
+		).rejects.toMatchObject({
+			code: "RESUME_LOCKED",
+			status: 403,
+		});
+	});
+
+	it("updates password when the resume is unlocked", async () => {
+		const select = createLockedSelectChain([{ isLocked: false }]);
+		const update = createUpdateChain([{ id: "r1", updatedAt: new Date() }]);
+		runTransaction({
+			select: vi.fn().mockReturnValueOnce(select.chain),
+			update: vi.fn().mockReturnValueOnce(update.chain),
+		});
+
+		await expect(
+			resumeService.setPassword({ id: "r1", userId: "u1", password: "newPassword123" }),
+		).resolves.toBeUndefined();
+	});
+});
+
+describe("removePassword", () => {
+	const runTransaction = (tx: unknown) => {
+		dbMock.transaction.mockImplementationOnce(async (cb: (tx: unknown) => Promise<unknown>) => cb(tx));
+	};
+
+	it("throws NOT_FOUND when the resume does not exist", async () => {
+		const select = createLockedSelectChain([]);
+		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
+
+		await expect(resumeService.removePassword({ id: "r1", userId: "u1" })).rejects.toMatchObject({
+			code: "NOT_FOUND",
+		});
+	});
+
+	it("throws RESUME_LOCKED when the resume is locked", async () => {
+		const select = createLockedSelectChain([{ isLocked: true }]);
+		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
+
+		await expect(resumeService.removePassword({ id: "r1", userId: "u1" })).rejects.toMatchObject({
+			code: "RESUME_LOCKED",
+			status: 403,
+		});
+	});
+
+	it("removes password when the resume is unlocked", async () => {
+		const select = createLockedSelectChain([{ isLocked: false }]);
+		const update = createUpdateChain([{ id: "r1", updatedAt: new Date() }]);
+		runTransaction({
+			select: vi.fn().mockReturnValueOnce(select.chain),
+			update: vi.fn().mockReturnValueOnce(update.chain),
+		});
+
+		await expect(resumeService.removePassword({ id: "r1", userId: "u1" })).resolves.toBeUndefined();
 	});
 });
 

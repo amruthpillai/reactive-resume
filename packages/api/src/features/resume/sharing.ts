@@ -52,12 +52,13 @@ export const sharingRouter = {
 			operationId: "setResumePassword",
 			summary: "Set resume password",
 			description:
-				"Sets or updates a password on a resume. When a password is set, viewers of the public resume must enter the password before the resume data is revealed. The password must be between 6 and 64 characters. Requires authentication.",
+				"Sets or updates a password on a resume. When a password is set, viewers of the public resume must enter the password before the resume data is revealed. The password must be between 6 and 64 characters. Locked resumes cannot be modified. Requires authentication.",
 			successDescription: "The resume password was set successfully.",
 		})
 		.input(resumeDto.setPassword.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.setPassword.output)
+		.errors({ RESUME_LOCKED: { status: 403, message: "Unlock the resume first." } })
 		.handler(({ context, input }) =>
 			resumeService.setPassword({
 				id: input.id,
@@ -103,12 +104,13 @@ export const sharingRouter = {
 			operationId: "removeResumePassword",
 			summary: "Remove resume password",
 			description:
-				"Removes password protection from a resume. After removal, the resume (if public) can be viewed without entering a password. Requires authentication.",
+				"Removes password protection from a resume. After removal, the resume (if public) can be viewed without entering a password. Locked resumes cannot be modified. Requires authentication.",
 			successDescription: "The resume password was removed successfully.",
 		})
 		.input(resumeDto.removePassword.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.removePassword.output)
+		.errors({ RESUME_LOCKED: { status: 403, message: "Unlock the resume first." } })
 		.handler(({ context, input }) =>
 			resumeService.removePassword({
 				id: input.id,
