@@ -4,6 +4,47 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v6.0.3" description="14th October 2026">
+
+## Highlights
+
+- **Format text the way you want.** The editor toolbar brings back alignment and underline, plus a **More formatting** menu with strikethrough, code, highlight, text colour, headings, indent and outdent, horizontal lines and clear formatting. [a07989895](https://github.com/reactive-resume/reactive-resume/commit/a07989895)
+- **Work on many documents at once.** Select documents in the library from a checkbox, the document menu or **Select all**, then change their tags, make them public or private, lock or unlock them, or move them to Trash with Undo. Public resumes now show a globe badge, a **Copy public link** action and a **Public** filter. [a07989895](https://github.com/reactive-resume/reactive-resume/commit/a07989895)
+- **Exports no longer fail on unusual characters.** A character that no loaded font can draw now prints as "?", and the preview names it, instead of stopping the preview and the download. Chinese, Japanese and Korean resumes load much faster, both on first open and while you edit. Thanks to @larafabiaaan-svg for reporting [#3593](https://github.com/reactive-resume/reactive-resume/issues/3593). [38fddfd10](https://github.com/reactive-resume/reactive-resume/commit/38fddfd10), [a07989895](https://github.com/reactive-resume/reactive-resume/commit/a07989895)
+- **Let an AI agent in your browser edit the open document.** Browsers that support WebMCP can now list and open your documents, read and change the resume in the editor as one undoable step, check its score, and update cover letters, all with your existing session. [Using WebMCP](/guides/using-webmcp). [d9019ce85](https://github.com/reactive-resume/reactive-resume/commit/d9019ce85)
+
+## Resume Builder & PDF Export
+
+- Moved hidden sections into a **Hidden sections** group at the end of the Write outline, so they no longer take up space between the sections on your page. Thanks to @vergiLgood1, and to @GoldenSection0618 for the request. [#3614](https://github.com/reactive-resume/reactive-resume/pull/3614)
+- Fixed custom page background colours, which stopped appearing on the page. Thanks to @DvP17 for reporting [#3610](https://github.com/reactive-resume/reactive-resume/issues/3610). [0c6e75eec](https://github.com/reactive-resume/reactive-resume/commit/0c6e75eec)
+- Fixed exports failing for resumes with arrows such as → and ⇦. Thanks to @vergiLgood1 and @anirudhqwerty. [#3613](https://github.com/reactive-resume/reactive-resume/pull/3613), [#3617](https://github.com/reactive-resume/reactive-resume/pull/3617)
+- Fixed previews and exports failing when a paragraph ends in a line break. When the first preview fails, it now shows the reason and a **Try again** button instead of loading forever. [38fddfd10](https://github.com/reactive-resume/reactive-resume/commit/38fddfd10)
+- Fonts now download from Google's China domain when the usual font server fails or is slow, and italic fonts load only when the resume uses italics. Templates no longer use italics, so Smeargle's section headings are now upright. [a07989895](https://github.com/reactive-resume/reactive-resume/commit/a07989895)
+
+## Sign-in & Accounts
+
+- Added optional guest sessions. With `FLAG_ENABLE_GUEST_LOGIN=true`, the sign-in page offers **Continue as guest**, so people can build and download a resume without an account. Guests who later sign up or sign in keep their resumes, cover letters and applications. Thanks to @ambi88dex. [#3609](https://github.com/reactive-resume/reactive-resume/pull/3609)
+- Made social sign-in faster on installations with many users. [38fddfd10](https://github.com/reactive-resume/reactive-resume/commit/38fddfd10)
+
+## AI Agents & MCP
+
+- Gave every MCP tool a readable title and clearer descriptions, so AI apps and connector directories show and use them correctly. [c9794c864](https://github.com/reactive-resume/reactive-resume/commit/c9794c864), [a03c0e254](https://github.com/reactive-resume/reactive-resume/commit/a03c0e254), [5f841d894](https://github.com/reactive-resume/reactive-resume/commit/5f841d894), [a42e9a6c0](https://github.com/reactive-resume/reactive-resume/commit/a42e9a6c0)
+
+## Translations
+
+- Translated the new strings in every language and fixed mistranslations, such as a cover letter translated as an alphabet letter or a paper size, and **Clear formatting** and **Lock editing**. [a07989895](https://github.com/reactive-resume/reactive-resume/commit/a07989895), [bdd0a009f](https://github.com/reactive-resume/reactive-resume/commit/bdd0a009f)
+
+## Self-Hosting & Maintenance
+
+- **Two database migrations apply on startup.** One adds the guest flag to users; the other adds a unique index on `account (provider_id, account_id)`. On large installations, build the index first without blocking sign-ins: `CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS "account_provider_id_account_id_unique" ON "account" ("provider_id","account_id");` [38fddfd10](https://github.com/reactive-resume/reactive-resume/commit/38fddfd10), [#3609](https://github.com/reactive-resume/reactive-resume/pull/3609)
+- Added a [Hostinger guide](/self-hosting/hostinger) with a one-click VPS deploy. [66b638da9](https://github.com/reactive-resume/reactive-resume/commit/66b638da9)
+- Docker images now publish to GitHub Container Registry first and mirror to Docker Hub, so Docker Hub outages no longer block releases. [96aad51b0](https://github.com/reactive-resume/reactive-resume/commit/96aad51b0)
+- Patched security advisories and updated dependencies. [59b5edc61](https://github.com/reactive-resume/reactive-resume/commit/59b5edc61), [5d3bc56d3](https://github.com/reactive-resume/reactive-resume/commit/5d3bc56d3), [489144381](https://github.com/reactive-resume/reactive-resume/commit/489144381)
+
+**Full Changelog**: [v6.0.2...v6.0.3](https://github.com/reactive-resume/reactive-resume/compare/v6.0.2...v6.0.3)
+
+</Update>
+
 <Update label="v6.0.2" description="9th October 2026">
 
 ## Highlights
