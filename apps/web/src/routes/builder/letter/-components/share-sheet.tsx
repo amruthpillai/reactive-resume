@@ -90,7 +90,7 @@ type LetterFormat = ExportFormat | "both";
 const PAUSE_BETWEEN_FILES_MS = 400;
 
 /**
- * Download: the letter as PDF (or Word, Markdown, JSON), or, for a letter with a resume, both as two PDFs named to
+ * Download: the letter as PDF (or Word, OpenDocument, Markdown, JSON), or, for a letter with a resume, both as two PDFs named to
  * match: First-Last-Resume.pdf and First-Last-Cover-Letter.pdf.
  */
 function LetterDownloadTab() {
