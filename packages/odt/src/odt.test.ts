@@ -75,7 +75,7 @@ describe("buildOdtFiles", () => {
 describe("htmlToOdtBlocks", () => {
 	it("maps TipTap blocks and keeps only safe links", () => {
 		const blocks = htmlToOdtBlocks(
-			'<h2>Sub</h2><ul><li><p>One</p><ul><li><p>Nested</p></li></ul></li></ul><ol><li><p>First</p></li></ol><blockquote><p>Quoted</p></blockquote><pre>code</pre><hr><p data-indent="2"><a href="javascript:alert(1)">bad</a> <a href="https://example.com">good</a></p>',
+			'<h2>Sub</h2><ul><li><p>One</p><ul><li><p>Nested</p></li></ul></li></ul><ol><li><p>First</p></li></ol><blockquote><p>Quoted</p></blockquote><pre>a\nb</pre><hr><p data-indent="2"><a href="javascript:alert(1)">bad</a> <a href="https://example.com">good</a></p>',
 		);
 
 		expect(blocks.map((block) => (block.type === "paragraph" ? (block.style ?? block.indent) : block.type))).toEqual([
@@ -87,6 +87,7 @@ describe("htmlToOdtBlocks", () => {
 			"rule",
 			2,
 		]);
+		expect(blocks[4]).toMatchObject({ children: [{ text: "a" }, { type: "break" }, { text: "b" }] });
 		const nested = blocks[1]?.type === "list" ? blocks[1].items[0]?.blocks[1] : undefined;
 		expect(nested?.type).toBe("list");
 		expect(blocks.at(-1)).toMatchObject({

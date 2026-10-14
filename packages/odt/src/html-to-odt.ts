@@ -189,8 +189,13 @@ function processBlock(element: HTMLElement, blocks: OdtBlock[]): void {
 	}
 
 	if (tag === "PRE") {
-		const value = element.textContent ?? "";
-		if (value) blocks.push(paragraph([text(value)], "CodeBlock"));
+		// ODF reads a newline in a paragraph as a space, so keep the code's lines as line breaks.
+		const lines = (element.textContent ?? "").split("\n");
+		const children = lines.flatMap((line, index): OdtInline[] => [
+			...(index > 0 ? [{ type: "break" } as const] : []),
+			...(line ? [text(line)] : []),
+		]);
+		if (children.some((child) => child.type === "text")) blocks.push(paragraph(children, "CodeBlock"));
 		return;
 	}
 
