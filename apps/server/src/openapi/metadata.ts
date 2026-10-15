@@ -62,7 +62,7 @@ export function handleOAuthProtectedResource() {
 }
 
 /** integrations.sh discovery document (v3): every agent-facing surface of this instance and how it authenticates. */
-export function buildIntegrations() {
+function buildIntegrations() {
 	const baseUrl = appUrl();
 	const basis = { via: "declared", source: `${baseUrl}/.well-known/integrations.json` } as const;
 	const apiKey = {
