@@ -52,7 +52,7 @@ export const sharingRouter = {
 			operationId: "setResumePassword",
 			summary: "Set resume password",
 			description:
-				"Sets or updates a password on a resume. When a password is set, viewers of the public resume must enter the password before the resume data is revealed. The password must be between 6 and 64 characters. Locked resumes cannot be modified. Requires authentication.",
+				"Sets or updates a password on a resume. When a password is set, viewers of the public resume must enter the password before the resume data is revealed. The password must be between 6 and 64 characters. Locked resumes can't be changed; unlock the resume first. Requires authentication.",
 			successDescription: "The resume password was set successfully.",
 		})
 		.input(resumeDto.setPassword.input)
@@ -104,7 +104,7 @@ export const sharingRouter = {
 			operationId: "removeResumePassword",
 			summary: "Remove resume password",
 			description:
-				"Removes password protection from a resume. After removal, the resume (if public) can be viewed without entering a password. Locked resumes cannot be modified. Requires authentication.",
+				"Removes password protection from a resume. After removal, the resume (if public) can be viewed without entering a password. Locked resumes can't be changed; unlock the resume first. Requires authentication.",
 			successDescription: "The resume password was removed successfully.",
 		})
 		.input(resumeDto.removePassword.input)

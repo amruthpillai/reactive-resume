@@ -67,7 +67,7 @@ vi.mock("drizzle-orm", () => ({
 		join: (values: unknown[]) => values,
 	}),
 }));
-vi.mock("bcryptjs", () => ({ hash: vi.fn(), compare: compareMock }));
+vi.mock("bcryptjs", () => ({ hash: vi.fn(async () => "hashed-password"), compare: compareMock }));
 vi.mock("./events", () => ({ publishResumeUpdated: publishResumeUpdatedMock }));
 vi.mock("./access", () => ({
 	grantResumeAccess: grantResumeAccessMock,
@@ -387,81 +387,31 @@ describe("delete", () => {
 	});
 });
 
-describe("setPassword", () => {
-	const runTransaction = (tx: unknown) => {
-		dbMock.transaction.mockImplementationOnce(async (cb: (tx: unknown) => Promise<unknown>) => cb(tx));
-	};
-
-	it("throws NOT_FOUND when the resume does not exist", async () => {
-		const select = createLockedSelectChain([]);
-		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
-
-		await expect(
-			resumeService.setPassword({ id: "r1", userId: "u1", password: "newPassword123" }),
-		).rejects.toMatchObject({
-			code: "NOT_FOUND",
-		});
-	});
-
-	it("throws RESUME_LOCKED when the resume is locked", async () => {
-		const select = createLockedSelectChain([{ isLocked: true }]);
-		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
-
-		await expect(
-			resumeService.setPassword({ id: "r1", userId: "u1", password: "newPassword123" }),
-		).rejects.toMatchObject({
-			code: "RESUME_LOCKED",
-			status: 403,
-		});
-	});
-
-	it("updates password when the resume is unlocked", async () => {
-		const select = createLockedSelectChain([{ isLocked: false }]);
+describe.each([
+	{
+		name: "setPassword",
+		run: () => resumeService.setPassword({ id: "r1", userId: "u1", password: "newPassword123" }),
+		written: "hashed-password",
+	},
+	{ name: "removePassword", run: () => resumeService.removePassword({ id: "r1", userId: "u1" }), written: null },
+])("$name", ({ run, written }) => {
+	it("writes the password when the resume is unlocked", async () => {
 		const update = createUpdateChain([{ id: "r1", updatedAt: new Date() }]);
-		runTransaction({
-			select: vi.fn().mockReturnValueOnce(select.chain),
-			update: vi.fn().mockReturnValueOnce(update.chain),
-		});
+		dbMock.update.mockReturnValueOnce(update.chain);
 
-		await expect(
-			resumeService.setPassword({ id: "r1", userId: "u1", password: "newPassword123" }),
-		).resolves.toBeUndefined();
-	});
-});
-
-describe("removePassword", () => {
-	const runTransaction = (tx: unknown) => {
-		dbMock.transaction.mockImplementationOnce(async (cb: (tx: unknown) => Promise<unknown>) => cb(tx));
-	};
-
-	it("throws NOT_FOUND when the resume does not exist", async () => {
-		const select = createLockedSelectChain([]);
-		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
-
-		await expect(resumeService.removePassword({ id: "r1", userId: "u1" })).rejects.toMatchObject({
-			code: "NOT_FOUND",
-		});
+		await expect(run()).resolves.toBeUndefined();
+		expect(update.set).toHaveBeenCalledWith({ password: written });
+		expect(update.where).toHaveBeenCalledWith(expect.arrayContaining([["is_locked", false]]));
 	});
 
-	it("throws RESUME_LOCKED when the resume is locked", async () => {
-		const select = createLockedSelectChain([{ isLocked: true }]);
-		runTransaction({ select: vi.fn().mockReturnValueOnce(select.chain) });
+	it.each([
+		{ code: "RESUME_LOCKED", rows: [{ id: "r1" }] },
+		{ code: "NOT_FOUND", rows: [] },
+	])("throws $code when no unlocked row matches", async ({ code, rows }) => {
+		dbMock.update.mockReturnValueOnce(createUpdateChain([]).chain);
+		dbMock.select.mockReturnValueOnce(createSelectChain(rows));
 
-		await expect(resumeService.removePassword({ id: "r1", userId: "u1" })).rejects.toMatchObject({
-			code: "RESUME_LOCKED",
-			status: 403,
-		});
-	});
-
-	it("removes password when the resume is unlocked", async () => {
-		const select = createLockedSelectChain([{ isLocked: false }]);
-		const update = createUpdateChain([{ id: "r1", updatedAt: new Date() }]);
-		runTransaction({
-			select: vi.fn().mockReturnValueOnce(select.chain),
-			update: vi.fn().mockReturnValueOnce(update.chain),
-		});
-
-		await expect(resumeService.removePassword({ id: "r1", userId: "u1" })).resolves.toBeUndefined();
+		await expect(run()).rejects.toMatchObject({ code });
 	});
 });
 
