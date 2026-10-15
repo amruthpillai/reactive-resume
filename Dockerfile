@@ -74,7 +74,7 @@ COPY --chmod=755 apps/server/docker-entrypoint.sh /usr/local/bin/docker-entrypoi
 
 WORKDIR /app
 
-# Starts as root only to fix data-directory ownership (Cloudron mounts it root-owned); the app runs as `node`.
+# Starts as root only so Cloudron can fix its root-owned data directory; the app always runs as `node`.
 # Run with `--user node` (or Kubernetes `runAsUser: 1000`) to skip that step.
 ENTRYPOINT ["docker-entrypoint.sh"]
 
