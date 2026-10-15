@@ -9,6 +9,26 @@ export function deploymentEnvironment(input: NodeJS.ProcessEnv): NodeJS.ProcessE
 			: value("VERCEL_URL");
 	const appUrl = value("APP_URL") ?? (vercel && hostname ? `https://${hostname}` : undefined);
 	const hasS3 = value("S3_ACCESS_KEY_ID") && value("S3_SECRET_ACCESS_KEY") && value("S3_BUCKET");
+	// Cloudron addons supply their own variable names: https://docs.cloudron.io/packaging/addons
+	const mailFrom = value("CLOUDRON_MAIL_FROM");
+	const cloudron: Record<string, string | undefined> =
+		value("CLOUDRON") === "1"
+			? {
+					APP_URL: value("CLOUDRON_APP_ORIGIN"),
+					DATABASE_URL: value("CLOUDRON_POSTGRESQL_URL"),
+					REDIS_URL: value("CLOUDRON_REDIS_URL"),
+					TRUSTED_PROXIES: value("CLOUDRON_PROXY_IP"),
+					SMTP_HOST: value("CLOUDRON_MAIL_SMTP_SERVER"),
+					SMTP_PORT: value("CLOUDRON_MAIL_SMTP_PORT"),
+					SMTP_USER: value("CLOUDRON_MAIL_SMTP_USERNAME"),
+					SMTP_PASS: value("CLOUDRON_MAIL_SMTP_PASSWORD"),
+					SMTP_FROM: mailFrom && `${value("CLOUDRON_MAIL_FROM_DISPLAY_NAME") ?? "Reactive Resume"} <${mailFrom}>`,
+					OAUTH_PROVIDER_NAME: value("CLOUDRON_OIDC_PROVIDER_NAME"),
+					OAUTH_CLIENT_ID: value("CLOUDRON_OIDC_CLIENT_ID"),
+					OAUTH_CLIENT_SECRET: value("CLOUDRON_OIDC_CLIENT_SECRET"),
+					OAUTH_DISCOVERY_URL: value("CLOUDRON_OIDC_DISCOVERY_URL"),
+				}
+			: {};
 	return {
 		...input,
 		APP_URL: appUrl,
@@ -27,5 +47,6 @@ export function deploymentEnvironment(input: NodeJS.ProcessEnv): NodeJS.ProcessE
 					? (value("VERCEL_BRANCH_URL") ?? hostname ?? "preview")
 					: "production"
 				: "default"),
+		...Object.fromEntries(Object.entries(cloudron).map(([key, alias]) => [key, value(key) ?? alias])),
 	};
 }

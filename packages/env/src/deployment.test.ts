@@ -37,4 +37,29 @@ describe("deployment environment", () => {
 			deploymentEnvironment({ ...base, APP_URL: "https://custom.example", REDIS_URL: "rediss://explicit" }),
 		).toMatchObject({ APP_URL: "https://custom.example", REDIS_URL: "rediss://explicit" });
 	});
+	it("reads Cloudron addon variables without overriding explicit settings", () => {
+		const cloudron = {
+			CLOUDRON_APP_ORIGIN: "https://resume.cloudron.example",
+			CLOUDRON_POSTGRESQL_URL: "postgres://user:pass@postgresql:5432/db",
+			CLOUDRON_PROXY_IP: "172.18.0.1",
+			CLOUDRON_MAIL_FROM: "resume@cloudron.example",
+			CLOUDRON_OIDC_CLIENT_ID: "client",
+		};
+		expect(deploymentEnvironment({ ...cloudron, CLOUDRON: "1" })).toMatchObject({
+			APP_URL: "https://resume.cloudron.example",
+			DATABASE_URL: "postgres://user:pass@postgresql:5432/db",
+			TRUSTED_PROXIES: "172.18.0.1",
+			SMTP_FROM: "Reactive Resume <resume@cloudron.example>",
+			OAUTH_CLIENT_ID: "client",
+		});
+		expect(
+			deploymentEnvironment({
+				...cloudron,
+				CLOUDRON: "1",
+				APP_URL: "https://custom.example",
+				SMTP_FROM: "Me <me@x.y>",
+			}),
+		).toMatchObject({ APP_URL: "https://custom.example", SMTP_FROM: "Me <me@x.y>" });
+		expect(deploymentEnvironment(cloudron)).toMatchObject({ APP_URL: undefined, DATABASE_URL: undefined });
+	});
 });

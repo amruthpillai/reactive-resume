@@ -70,10 +70,13 @@ COPY --from=builder --chown=node:node /app/apps/web/dist ./apps/web/dist
 COPY --from=builder --chown=node:node /app/apps/web/dist-prerender ./apps/web/dist-prerender
 COPY --from=builder --chown=node:node /app/apps/server/dist ./apps/server/dist
 COPY --from=pruner --chown=node:node /app/migrations ./migrations
+COPY --chmod=755 apps/server/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 WORKDIR /app
 
-USER node
+# Starts as root only to fix data-directory ownership (Cloudron mounts it root-owned); the app runs as `node`.
+# Run with `--user node` (or Kubernetes `runAsUser: 1000`) to skip that step.
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 3000/tcp
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
