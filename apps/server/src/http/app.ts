@@ -10,8 +10,10 @@ import { prepareStagedBody, withStagedBody } from "@reactive-resume/api/features
 import { env } from "@reactive-resume/env/server";
 import { prepareMcpDiscovery } from "@reactive-resume/mcp";
 import { handleMcp } from "../mcp/handler";
-import { handleOpenApi } from "../openapi/handler";
+import { handleOpenApi, handleOpenApiDocument } from "../openapi/handler";
 import {
+	handleApiCatalog,
+	handleIntegrations,
 	handleMcpServerCard,
 	handleOAuthAuthorizationServer,
 	handleOAuthProtectedResource,
@@ -20,6 +22,7 @@ import {
 	handleWellKnownFallback,
 } from "../openapi/metadata";
 import { handleRpc } from "../rpc/handler";
+import { handleAgentSkillArchive, handleAgentSkillsIndex } from "../static/agent-skills";
 import { handleSchemaJson } from "../static/schema";
 import { handleLlms, handleRobots, handleSitemap } from "../static/seo";
 import { handleUpload } from "../static/uploads";
@@ -107,9 +110,18 @@ export function createApp(options: AppOptions = {}) {
 	app.get("/api/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/uploads/*", (c) => handleUpload(c.req.raw));
 	app.get("/schema.json", () => handleSchemaJson());
+	app.get("/openapi.json", () => handleOpenApiDocument());
 	app.all("/mcp", (c) => handleMcp(c.req.raw, client(c)));
 	app.all("/mcp/*", (c) => handleMcp(c.req.raw, client(c)));
 
+	app.get("/.well-known/integrations.json", () => handleIntegrations());
+	app.on(["GET", "HEAD"], "/.well-known/api-catalog", (c) => handleApiCatalog({ head: c.req.method === "HEAD" }));
+	app.on(["GET", "HEAD"], "/.well-known/agent-skills/index.json", (c) =>
+		handleAgentSkillsIndex({ head: c.req.method === "HEAD" }),
+	);
+	app.on(["GET", "HEAD"], "/.well-known/agent-skills/:filename", (c) =>
+		handleAgentSkillArchive(c.req.param("filename"), { head: c.req.method === "HEAD" }),
+	);
 	app.get("/.well-known/mcp/server-card.json", () => handleMcpServerCard());
 	app.get("/.well-known/oauth-authorization-server", (c) => handleOAuthAuthorizationServer(c.req.raw));
 	app.get("/.well-known/oauth-authorization-server/*", (c) => handleOAuthAuthorizationServer(c.req.raw));

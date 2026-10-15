@@ -1,6 +1,6 @@
 import type { TsdownPlugin } from "tsdown";
 import { readdirSync, readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "tsdown";
 
@@ -80,6 +80,25 @@ const promptAssetsPlugin: TsdownPlugin = {
 	},
 };
 
+const agentSkillsDir = resolve(dirname(fileURLToPath(import.meta.url)), "../../plugins/reactive-resume/skills");
+
+// Copies the published agent skills beside the bundle; src/static/agent-skills.ts archives them for discovery.
+const agentSkillAssetsPlugin: TsdownPlugin = {
+	name: "agent-skill-assets",
+	buildStart() {
+		for (const entry of readdirSync(agentSkillsDir, { recursive: true, withFileTypes: true })) {
+			if (!entry.isFile()) continue;
+			const path = join(entry.parentPath, entry.name);
+
+			this.emitFile({
+				type: "asset",
+				fileName: `agent-skills/${relative(agentSkillsDir, path).split("\\").join("/")}`,
+				source: readFileSync(path),
+			});
+		}
+	},
+};
+
 export default defineConfig({
 	entry: {
 		index: "src/index.ts",
@@ -105,5 +124,5 @@ export default defineConfig({
 		alwaysBundle: shouldBundle,
 		neverBundle: shouldExternalizeThirdParty,
 	},
-	plugins: [promptAssetsPlugin],
+	plugins: [promptAssetsPlugin, agentSkillAssetsPlugin],
 });

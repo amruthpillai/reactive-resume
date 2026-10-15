@@ -25,6 +25,13 @@ const openAPIHandler = new OpenAPIHandler(openAPIRouter, {
 	],
 });
 
+/** The OpenAPI document at its well-known root address, `/openapi.json`, for API discovery tools. */
+export async function handleOpenApiDocument() {
+	return Response.json(await generateOpenApiSpec({ appUrl: env.APP_URL, version: appVersion }), {
+		headers: { "Cache-Control": "public, max-age=3600" },
+	});
+}
+
 export async function handleOpenApi(request: Request, trustedClient: string) {
 	const pathname = new URL(request.url).pathname;
 	if (request.method === "GET" && ["/api/openapi/spec.json", "/api/openapi/spec"].includes(pathname)) {

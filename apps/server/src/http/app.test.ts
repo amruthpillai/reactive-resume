@@ -7,12 +7,15 @@ const mocks = vi.hoisted(() => ({
 	handleOAuth: vi.fn(),
 	handleRpc: vi.fn(),
 	handleOpenApi: vi.fn(),
+	handleOpenApiDocument: vi.fn(),
 	handleHealth: vi.fn(),
 	handleUpload: vi.fn(),
 	handleMcp: vi.fn(),
 	handleResumePdfDownload: vi.fn(),
 	handlePublicResumePdf: vi.fn(),
 	handleMcpServerCard: vi.fn(),
+	handleIntegrations: vi.fn(),
+	handleApiCatalog: vi.fn(),
 	handleOAuthAuthorizationServer: vi.fn(),
 	handleOAuthProtectedResource: vi.fn(),
 	handleOpenIdConfiguration: vi.fn(),
@@ -44,10 +47,13 @@ vi.mock("../rpc/handler", () => ({
 
 vi.mock("../openapi/handler", () => ({
 	handleOpenApi: mocks.handleOpenApi,
+	handleOpenApiDocument: mocks.handleOpenApiDocument,
 }));
 
 vi.mock("../openapi/metadata", () => ({
 	handleMcpServerCard: mocks.handleMcpServerCard,
+	handleIntegrations: mocks.handleIntegrations,
+	handleApiCatalog: mocks.handleApiCatalog,
 	handleOAuthAuthorizationServer: mocks.handleOAuthAuthorizationServer,
 	handleOAuthProtectedResource: mocks.handleOAuthProtectedResource,
 	handleOpenIdConfiguration: mocks.handleOpenIdConfiguration,
@@ -99,6 +105,9 @@ beforeEach(() => {
 	mocks.handleResumePdfDownload.mockResolvedValue(new Response("pdf"));
 	mocks.handlePublicResumePdf.mockResolvedValue(new Response("public-pdf"));
 	mocks.handleMcpServerCard.mockReturnValue(new Response("server-card"));
+	mocks.handleIntegrations.mockReturnValue(new Response("integrations"));
+	mocks.handleApiCatalog.mockReturnValue(new Response("api-catalog"));
+	mocks.handleOpenApiDocument.mockResolvedValue(new Response("openapi-document"));
 	mocks.handleOAuthAuthorizationServer.mockReturnValue(new Response("oauth-authorization-server"));
 	mocks.handleOAuthProtectedResource.mockReturnValue(new Response("oauth-protected-resource"));
 	mocks.handleOpenIdConfiguration.mockReturnValue(new Response("openid-configuration"));
@@ -189,6 +198,20 @@ describe("createApp", () => {
 		expect(mocks.handleRpc).toHaveBeenNthCalledWith(2, unknownRpcRequest, "unknown");
 		expect(mocks.handleOpenApi).toHaveBeenNthCalledWith(1, trustedOpenApiRequest, "203.0.113.9");
 		expect(mocks.handleOpenApi).toHaveBeenNthCalledWith(2, unknownOpenApiRequest, "unknown");
+	});
+
+	it.each([
+		["/openapi.json", "openapi-document"],
+		["/.well-known/integrations.json", "integrations"],
+		["/.well-known/api-catalog", "api-catalog"],
+		["/.well-known/mcp/server-card.json", "server-card"],
+	])("routes discovery document %s before the well-known fallback", async (path, body) => {
+		const { createApp } = await import("./app");
+
+		const response = await createApp().fetch(new Request(`http://localhost:3001${path}`));
+
+		expect(await response.text()).toBe(body);
+		expect(mocks.handleWellKnownFallback).not.toHaveBeenCalled();
 	});
 
 	it("routes GET / to the web app before static files", async () => {

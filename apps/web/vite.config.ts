@@ -63,7 +63,7 @@ async function prerenderPages() {
 const linguiPlugin = () =>
 	lingui({ macroTransform: { parser: { syntax: "typescript", tsx: true, decorators: true } } });
 
-const serverPaths = ["/api", "/mcp", "/uploads", "/.well-known", "/schema.json"] as const;
+const serverPaths = ["/api", "/mcp", "/uploads", "/.well-known", "/schema.json", "/openapi.json"] as const;
 
 const serverProxy = serverPaths.reduce(
 	(acc, path) => {

@@ -17,7 +17,7 @@
 			"functions": {
 				"vercel.mjs": {
 					"maxDuration": 300,
-					"includeFiles": "{apps/web/dist/index.html,apps/web/dist-prerender/**,apps/server/dist/prompts/**}"
+					"includeFiles": "{apps/web/dist/index.html,apps/web/dist-prerender/**,apps/server/dist/prompts/**,apps/server/dist/agent-skills/**}"
 				}
 			}
 		}
@@ -28,7 +28,7 @@
 		{ "source": "/mcp(/.*)?", "destination": { "service": "backend" } },
 		{ "source": "/\\.well-known(/.*)?", "destination": { "service": "backend" } },
 		{
-			"source": "/(index\\.html|robots\\.txt|sitemap\\.xml|llms\\.txt|schema\\.json)",
+			"source": "/(index\\.html|robots\\.txt|sitemap\\.xml|llms\\.txt|schema\\.json|openapi\\.json)",
 			"destination": { "service": "backend" }
 		},
 		{ "source": "/(.*\\.[^/]+)", "destination": { "service": "frontend" } },
