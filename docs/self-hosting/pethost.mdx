@@ -39,11 +39,15 @@ doesn't need them. See [How the pieces fit](/self-hosting/docker#how-the-pieces-
 
 ## Finish the setup
 
-Each setting below is an environment variable. Add it to the project's `.env` in the Pethost panel and deploy the
-project again; the app restarts with the new value.
+Each setting below is an environment variable. Change it in the Pethost panel and deploy the project again; the app
+restarts with the new value.
 
-- **Keep it private.** After your own account exists, add `FLAG_DISABLE_SIGNUPS=true`. Nobody else can sign up;
+- **Keep it private.** After your own account exists, add `FLAG_DISABLE_SIGNUPS=true` to `.env`. Nobody else can sign up;
   existing accounts keep working.
-- **Send real emails.** Add the `SMTP_*` settings from the [reference](/self-hosting/environment-variables#email) to
-  the project's `compose.yaml` and `.env`, so verification and password-reset emails reach your inbox.
+- **Send real emails.** Add the `SMTP_*` settings from the [reference](/self-hosting/environment-variables#email)
+  so verification and password-reset emails reach your inbox.
 - **Sign in with Google, GitHub or SSO.** Add the provider settings from [Single sign-on (SSO)](/self-hosting/sso).
+
+The template's `compose.yaml` passes only `FLAG_DISABLE_SIGNUPS` through from `.env`. For the email and sign-in
+settings, add each variable to the `environment` of the `reactive-resume` service in `compose.yaml` as well, for
+example `SMTP_HOST: ${SMTP_HOST}`, and its value to `.env`.
