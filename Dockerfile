@@ -28,6 +28,8 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     pnpm install --frozen-lockfile
 
 COPY --from=pruner /app/out/full/ ./
+# The server build bundles the published agent skills, which live outside any workspace package and so outside the prune.
+COPY --from=pruner /app/plugins/reactive-resume/skills ./plugins/reactive-resume/skills
 RUN rm -rf apps/web/dist apps/web/dist-prerender apps/server/dist && pnpm turbo run build --filter=web --filter=server --force
 
 FROM base AS runtime-pruner
