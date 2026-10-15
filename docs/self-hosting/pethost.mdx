@@ -1,0 +1,49 @@
+---
+title: "Self-hosting on Pethost"
+description: "Deploy Reactive Resume on Pethost from a one-click template, then add email and close sign-ups."
+---
+
+[Pethost](https://pethost.dev) has a one-click template for Reactive Resume. It runs the app and its database as a
+Docker Compose project, generates the secrets and serves the app at its own address with HTTPS.
+
+## What the template sets up
+
+The template deploys two containers:
+
+| Container       | Purpose                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------- |
+| Reactive Resume | The app, from the `amruthpillai/reactive-resume:v6.0.3` image, with uploads on a volume at `/app/data`. |
+| PostgreSQL 18   | Stores accounts, resumes, cover letters and applications, on its own volume.                            |
+
+`APP_URL` is set to the project's address, and `AUTH_SECRET`, `ENCRYPTION_SECRET` and the database password are
+generated when the project is created. Redis and S3 storage aren't included; a single app container with local storage
+doesn't need them. See [How the pieces fit](/self-hosting/docker#how-the-pieces-fit) for what each service does.
+
+## Deploy
+
+<Steps>
+  <Step title="Open the template">
+    Open the [Reactive Resume template on Pethost](https://pethost.dev/templates/reactive-resume/) and select
+    **Deploy on Pethost**.
+  </Step>
+  <Step title="Create the project">
+    After signing in, select **Create project**. The template asks for nothing; the first start applies the database
+    migrations, which takes about a minute.
+  </Step>
+  <Step title="Create your account">
+    Open the project's address, select **Build your resume** and sign up with your email address; see [Creating an
+    account](/guides/creating-an-account). You're signed in right away. Until you add SMTP settings, verification
+    emails aren't sent; their links are written to the app log instead.
+  </Step>
+</Steps>
+
+## Finish the setup
+
+Each setting below is an environment variable. Add it to the project's `.env` in the Pethost panel and deploy the
+project again; the app restarts with the new value.
+
+- **Keep it private.** After your own account exists, add `FLAG_DISABLE_SIGNUPS=true`. Nobody else can sign up;
+  existing accounts keep working.
+- **Send real emails.** Add the `SMTP_*` settings from the [reference](/self-hosting/environment-variables#email) to
+  the project's `compose.yaml` and `.env`, so verification and password-reset emails reach your inbox.
+- **Sign in with Google, GitHub or SSO.** Add the provider settings from [Single sign-on (SSO)](/self-hosting/sso).
