@@ -32,3 +32,27 @@ it("falls back to fonts.gstatic.cn when fonts.gstatic.com doesn't answer, then s
 	expect(requested.at(-1)).toBe("fonts.gstatic.cn");
 	expect(requested).toHaveLength(3);
 });
+
+it("finishes a slow download that keeps sending, and fails one that stops (#3627)", async () => {
+	vi.useFakeTimers();
+	// Sends a byte every 20 s, ten times, then ends; a path with "stops" never ends. Aborting errors it, as with fetch.
+	vi.stubGlobal("fetch", (input: URL, init: RequestInit) => {
+		const body = new ReadableStream<Uint8Array>({
+			async start(stream) {
+				init.signal?.addEventListener("abort", () => stream.error(init.signal?.reason));
+				for (let index = 0; index < 10; index++) {
+					await new Promise((resolve) => setTimeout(resolve, 20_000));
+					stream.enqueue(new Uint8Array([index]));
+				}
+				if (!input.pathname.includes("stops")) stream.close();
+			},
+		});
+		return Promise.resolve(new Response(body));
+	});
+
+	const slow = loadFonts([font("/s/test/slow.ttf")]);
+	const stops = loadFonts([font("/s/test/stops.ttf")]);
+	await vi.advanceTimersByTimeAsync(300_000);
+	expect((await slow).missing).toEqual([]);
+	expect((await stops).missing).toEqual(["Test"]);
+});

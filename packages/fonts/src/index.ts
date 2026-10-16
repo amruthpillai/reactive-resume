@@ -161,6 +161,17 @@ function getPunctuationFallbackFont(category: FontCategory | null) {
 	return getWebFont(family) ? family : null;
 }
 
+// The Noto CJK faces, 10–15 MB per weight file.
+const cjkFontFamilies = new Set(
+	Object.entries(scriptFonts)
+		.filter(([script]) => isCjkScript(script as Script))
+		.flatMap(([, variants]) => [variants.serif, variants.sansSerif]),
+);
+
+export function isCjkFontFamily(family: string) {
+	return cjkFontFamilies.has(family);
+}
+
 export function isStandardPdfFontFamily(family: string) {
 	return standardFontList.some((font) => font.family === family);
 }

@@ -4,8 +4,9 @@ import { prepareFontBytes } from "./font-bytes";
 
 // One download per font file for the life of the page or server process.
 const cache = new Map<string, Promise<Uint8Array>>();
-// A stalled download fails the render instead of holding the preview on its loader. CJK faces are 10–15 MB.
-const DOWNLOAD_TIMEOUT_MS = 120_000;
+// A download that stops sending fails the render instead of holding the preview on its loader. One that is slow but
+// still sending finishes: CJK faces are 10–15 MB, and a resume can need five at once (#3627).
+const STALL_TIMEOUT_MS = 30_000;
 
 // Google serves the same files from fonts.gstatic.cn, which loads where fonts.gstatic.com is blocked or slow
 // (mainland China). Each download starts on the host that last answered; when that host fails, or sends nothing
@@ -62,12 +63,35 @@ function fetchFont(src: string, signal: AbortSignal): Promise<Response> {
 	});
 }
 
+async function download(src: string): Promise<Uint8Array> {
+	const controller = new AbortController();
+	let stall: ReturnType<typeof setTimeout> | undefined;
+	const progress = () => {
+		clearTimeout(stall);
+		stall = setTimeout(() => controller.abort(new Error(`Font ${src}: download stalled`)), STALL_TIMEOUT_MS);
+	};
+	progress();
+	try {
+		const response = await fetchFont(src, controller.signal);
+		progress();
+		const body = response.body?.pipeThrough(
+			new TransformStream<Uint8Array, Uint8Array>({
+				transform: (chunk, stream) => {
+					progress();
+					stream.enqueue(chunk);
+				},
+			}),
+		);
+		return new Uint8Array(await new Response(body).arrayBuffer());
+	} finally {
+		clearTimeout(stall);
+	}
+}
+
 const load = (src: string) => {
 	let bytes = cache.get(src);
 	if (!bytes) {
-		bytes = fetchFont(src, AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS))
-			.then((response) => response.arrayBuffer())
-			.then((buffer) => prepareFontBytes(new Uint8Array(buffer)));
+		bytes = download(src).then(prepareFontBytes);
 		// A failed download may succeed next time.
 		bytes.catch(() => cache.delete(src));
 		cache.set(src, bytes);

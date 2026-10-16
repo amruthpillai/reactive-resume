@@ -6,6 +6,7 @@ import {
 	getFont,
 	getPdfFallbackFontFamilies,
 	getWebFontSource,
+	isCjkFontFamily,
 	isStandardPdfFontFamily,
 	resolveBoldFontWeight,
 	resolveLegacyFontAlias,
@@ -254,7 +255,9 @@ export const resolvePdfFonts = (
 	const registerFont = (family: string, weight: number, italic = false) => {
 		if (isStandardPdfFontFamily(family)) return;
 
-		const normalizedWeight = toFontWeight(weight);
+		// A CJK face is 10–15 MB, so CJK families get Regular and Bold only; Forme draws other weights with the
+		// nearest one. Every stored weight made a CJK resume's first preview download up to ~70 MB (#3593, #3627).
+		const normalizedWeight = isCjkFontFamily(family) ? (weight <= 500 ? "400" : "700") : toFontWeight(weight);
 		const key = `${family}:${normalizedWeight}:${italic}`;
 		if (fonts.has(key)) return;
 
@@ -287,8 +290,7 @@ export const resolvePdfFonts = (
 	const bodyFallbacks = getPdfFallbackFontFamilies(bodyFontFamily, { locale, scripts: fallbackScripts });
 	const headingFallbacks = getPdfFallbackFontFamilies(headingFontFamily, { locale, scripts: fallbackScripts });
 
-	// Fallbacks get Regular and Bold only; Forme draws other weights with the nearest face. A Noto CJK face is
-	// 10–15 MB, so every weight of the primary font made a CJK resume's first preview download ~60 MB (#3593).
+	// Fallbacks get Regular and Bold only; Forme draws other weights with the nearest face.
 	const registerFallbacks = (families: string[], storedWeights: readonly string[]) => {
 		for (const family of families) {
 			const weights = new Set([400]);
