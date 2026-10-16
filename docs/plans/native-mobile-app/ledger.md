@@ -2,12 +2,12 @@
 
 Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, BLOCKED, MERGED, DROPPED.
 
-| Task                      | Harness     | Agent | Branch     | Status | Notes                                                                               |
-| ------------------------- | ----------- | ----- | ---------- | ------ | ----------------------------------------------------------------------------------- |
-| S1 Forme native module    | Codex       |       | mobile/S1  | TODO   |                                                                                     |
-| S2 PDF pipeline on Hermes | Claude Code |       | mobile/S2  | TODO   |                                                                                     |
-| S3 Native auth spike      | Claude Code |       | mobile/S3  | TODO   |                                                                                     |
-| DS1 Design directions     | Claude Code |       | mobile/DS1 | TODO   | Started alongside M0 because it is independent of the spikes (coordinator decision) |
+| Task                      | Harness     | Agent    | Branch     | Status  | Notes                                                                               |
+| ------------------------- | ----------- | -------- | ---------- | ------- | ----------------------------------------------------------------------------------- |
+| S1 Forme native module    | Codex       | 3777064e | mobile/S1  | RUNNING |                                                                                     |
+| S2 PDF pipeline on Hermes | Claude Code | 30d200d5 | mobile/S2  | RUNNING |                                                                                     |
+| S3 Native auth spike      | Claude Code | ccae31ab | mobile/S3  | RUNNING |                                                                                     |
+| DS1 Design directions     | Claude Code | e6048448 | mobile/DS1 | RUNNING | Started alongside M0 because it is independent of the spikes (coordinator decision) |
 
 ## Gates
 
