@@ -19,6 +19,15 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | G2b mockups approved        | pending |
 | G-store owner inputs        | pending |
 
+## Owner design answers (G2a, 2026-10-17)
+
+1. Direction B, "Outline first". Not mixed with A's Page half-sheet.
+2. The raised "+" is B's pill, the same as web.
+3. No undo/redo controls on phone. Answer was "skip". Hardware-keyboard ⌘Z on tablet stays in M8-T1.
+4. In A, Download PDF only inside Share & export: yes. Moot, since B was chosen.
+5. Trash as a row at the end of the library: yes.
+6. Letter cards show live text until on-device renders exist: yes.
+
 ## Log
 
 - 2026-10-17: Plan committed. M0 spikes and DS1 launched.
