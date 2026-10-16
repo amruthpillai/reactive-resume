@@ -31,3 +31,6 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 ## Log
 
 - 2026-10-17: Plan committed. M0 spikes and DS1 launched.
+- 2026-10-17: G2a answered (Direction B). DS2 review running.
+- 2026-10-17: S2 found `expo@latest` is SDK 58.0.14 (RN 0.88.0, React 19.3.0). Catalog React 19.3 and `react-reconciler@0.34.0` resolve to one copy, so the S2 React risk is gone. M1 targets SDK 58.
+- 2026-10-17: Learned that `paseo send` to a running agent interrupts it. Send only to idle agents.

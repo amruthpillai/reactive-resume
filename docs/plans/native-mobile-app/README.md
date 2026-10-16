@@ -328,7 +328,7 @@ paseo wait <agentId>                 # coordinator only; prefer finish notificat
 2. **Message channels.** The coordinator is a Claude Code session outside Paseo. It learns that an agent went idle through `paseo wait <id>`, run in the background, so an agent cannot message it directly. Only these channels exist:
    - **Builder to coordinator:** end your turn. Your last message is either the final report (§3.5) or a `QUESTION:` block with `STATUS: blocked`. The coordinator reads it with `paseo logs <id>` and answers with `paseo send <id>`. You then continue in the same session.
    - **Reviewer to builder, on the same task:** the reviewer ends its turn with its findings. The coordinator forwards them with `paseo send <builderId>`.
-   - **Coordinator to anyone:** `paseo send`.
+   - **Coordinator to anyone:** `paseo send`. Only send to an **idle** agent. A message sent to a running agent interrupts its current turn.
    - Builders never message other builders. Cross-task needs go to the coordinator.
 3. **STOP rules.** The agent stops and ends its turn with `QUESTION:` instead of improvising when:
    - a quoted excerpt no longer matches the code;
