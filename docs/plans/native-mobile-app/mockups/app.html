@@ -45,6 +45,9 @@
 				--page-select-fill: #3373441f;
 				--page-select-line: #337344;
 				--selected-fill: var(--accent-soft);
+				--line-strong: oklch(
+					0.62 0.01 95
+				); /* lineStrong: control boundaries (inputs, radios, checkboxes, switch off) */
 				--paper-ink: #1c1b15; /* paperInk: text on the white page in both themes */
 				--paper-line: #dfdeda; /* paperLine: rules on the white page in both themes */
 				--resume-accent: #337344; /* sample data: the template accent colour stored in the resume, not a UI token */
@@ -95,6 +98,7 @@
 				--shadow-3: 0 2px 6px oklch(0 0 0 / 0.4), 0 28px 64px -12px oklch(0 0 0 / 0.7);
 				--shadow-page: 0 1px 2px oklch(0 0 0 / 0.4), 0 12px 36px -12px oklch(0 0 0 / 0.6);
 				--bezel: oklch(0.29 0.007 95);
+				--line-strong: oklch(0.55 0.008 95);
 			}
 			@media (prefers-reduced-motion: reduce) {
 				:root {
@@ -611,6 +615,7 @@
 				align-items: center;
 			}
 			.back {
+				min-width: 44px;
 				display: flex;
 				align-items: center;
 				gap: 0;
@@ -755,7 +760,7 @@
 				width: 51px;
 				height: 31px;
 				border-radius: 999px;
-				background: var(--line-2);
+				background: var(--line-strong);
 				position: relative;
 				flex: none;
 			}
@@ -779,7 +784,7 @@
 			.and .sw {
 				width: 52px;
 				height: 32px;
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--line-strong);
 				background: var(--sunken);
 			}
 			.and .sw::after {
@@ -787,7 +792,7 @@
 				height: 16px;
 				top: 6px;
 				left: 6px;
-				background: var(--line-2);
+				background: var(--line-strong);
 				box-shadow: none;
 			}
 			.and .sw.on {
@@ -844,7 +849,7 @@
 			.btn.sm::after {
 				content: "";
 				position: absolute;
-				inset: -4px 0;
+				inset: -6px 0;
 			}
 			.btn.sm {
 				position: relative;
@@ -880,7 +885,7 @@
 				align-items: center;
 				gap: 8px;
 				padding: 0 12px;
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				border-radius: 10px;
 				background: var(--raised);
 				font-size: 16px;
@@ -938,7 +943,7 @@
 				width: 22px;
 				height: 22px;
 				border-radius: 50%;
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--line-strong);
 				flex: none;
 				display: grid;
 				place-items: center;
@@ -957,7 +962,7 @@
 				width: 24px;
 				height: 24px;
 				border-radius: 50%;
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--line-strong);
 				background: var(--raised);
 				display: grid;
 				place-items: center;
@@ -1098,6 +1103,8 @@
 			}
 			.typetabs > span {
 				min-height: 44px;
+				min-width: 44px;
+				justify-content: center;
 				display: flex;
 				align-items: center;
 				gap: 6px;
@@ -1294,9 +1301,38 @@
 			.drow .check {
 				position: static;
 			}
-			.drow.trashed .thumb,
-			.drow.trashed .info {
+			.drow.trashed .thumb {
 				opacity: 0.7;
+			}
+			/* ink3 on selectedFill is 4.46:1; selected rows and sidebar counts use ink2. */
+			.drow.sel .muted,
+			.trow.sel .muted,
+			.side .si.on .n:not(.dot) {
+				color: var(--ink-2);
+			}
+			.trow {
+				display: grid;
+				grid-template-columns: 44px minmax(0, 1fr) 90px 150px 120px 44px;
+				gap: 14px;
+				align-items: center;
+				min-height: 64px;
+				border-bottom: 1px solid var(--line);
+				font-size: 14px;
+			}
+			.trow > button:not(.ib) {
+				align-self: stretch;
+				align-content: center;
+				min-height: 64px;
+			}
+			.trow.th {
+				min-height: 40px;
+				font-size: 12px;
+				color: var(--ink-3);
+				font-weight: 600;
+			}
+			.trow .thumb {
+				width: 40px;
+				border-radius: 3px;
 			}
 			.trash-row {
 				display: flex;
@@ -2109,7 +2145,13 @@
 				padding-bottom: 4px;
 				margin: 18px 0 8px;
 			}
+			.cpill::after {
+				content: "";
+				position: absolute;
+				inset: -6px 0;
+			}
 			.cpill {
+				position: relative;
 				display: inline-flex;
 				align-items: center;
 				gap: 4px;
@@ -2848,10 +2890,19 @@
 			function docsBody({ view = "list", sel = null, list = DOCS, trash = true } = {}) {
 				const x = X();
 				const body =
-					view === "grid" || x.tab
+					view === "grid"
 						? `<div class="${x.tab ? "gridN" : "grid2"}">${list.map((d) => card(d, { sel: sel ? sel.includes(d.id) : null })).join("")}</div>`
-						: `<div class="rows">${list.map((d) => drow(d, { sel: sel ? sel.includes(d.id) : null })).join("")}</div>`;
+						: x.tab
+							? `<div class="trow th"><span></span><span>Name</span><span>Type</span><span>Application</span><span>Edited</span><span></span></div>${list.map((d) => trow(d, sel ? sel.includes(d.id) : null)).join("")}`
+							: `<div class="rows">${list.map((d) => drow(d, { sel: sel ? sel.includes(d.id) : null })).join("")}</div>`;
 				return `<div class="scroll" style="padding:8px ${x.tab ? "32px" : "16px"} 24px">${body}${trash && !sel && !x.tab ? trashRow() : ""}</div>`;
+			}
+			// Tablet list view: the web table (Name, Type, Application, Edited).
+			function trow(d, sel = null) {
+				return `<div class="trow${sel ? " sel" : ""}"${sel ? ' style="background:var(--selected-fill)"' : ""}>${sel !== null ? `<span class="cbox${sel ? " on" : ""}" style="margin-left:10px">${sel ? ic("check", 14) : ""}</span>` : thumb(d, false)}
+					<button style="display:grid;gap:3px;text-align:start"><span class="b trunc">${d.name}</span><span class="tags" style="display:flex;gap:4px">${d.isNew ? `<span class="badge accent">New</span>` : ""}${d.public ? `<span class="badge accent">${ic("globe", 12)}Public</span>` : ""}${d.locked ? `<span class="badge plain">${ic("lock", 12)}Locked</span>` : ""}${d.tags.map((t) => `<span class="badge plain">#${t}</span>`).join("")}</span></button>
+					<span class="ink2">${d.type === "letter" ? "Letter" : "Resume"}</span><span class="ink2 trunc">${d.co || "—"}</span><span class="muted">${d.edited}</span>
+					<button class="ib" aria-label="Options for ${d.name}">${ic("dots-three", 20)}</button></div>`;
 			}
 			// The Documents tab root, used as the background of many frames.
 			function library(o = {}) {
@@ -3389,7 +3440,11 @@
 				body: () =>
 					newSheet(
 						`${group([
-							fmt("file-pdf", "PDF", "Read on this device. No AI needed. Scanned images have no text to read."),
+							fmt(
+								"file-pdf",
+								"PDF",
+								"Read on the server from its text layer. No AI needed. Up to 10 MB. Scanned images have no text to read.",
+							),
 							fmt(
 								"file-doc",
 								"Word (.docx)",
@@ -3603,15 +3658,15 @@
 			const acct = (
 				o = {},
 			) => `${nav({ back: "Settings", title: "Account" })}<div class="scroll" style="padding-top:8px">
-				<div style="display:grid;justify-items:center;gap:8px;padding:8px 0 18px"><span class="avatar lg">${ME.initials}</span><div class="hstack">${btn("Change photo", "ghost sm")}</div></div>
-				${group([`<div class="lrow noicon" style="display:block;padding:12px 16px">${field({ label: "Name", v: ME.name })}</div>`, `<div class="lrow noicon" style="display:block;padding:12px 16px">${field({ label: "Username", v: o.badUser ? "Alex Morgan" : ME.user, pre: "rxresu.me/", focus: !!o.badUser, err: o.badUser ? "Use 3 to 64 lowercase letters, numbers, dots, hyphens and underscores." : "" })}</div>`], { h: "Profile" })}
+				<div style="display:grid;justify-items:center;gap:8px;padding:8px 0 18px"><span class="avatar lg" style="position:relative">${ME.initials}${o.uploading ? `<span class="spin" style="position:absolute;inset:-8px;display:grid;place-items:center;color:var(--accent)">${ic("circle-notch", 88)}</span>` : ""}</span><div class="hstack">${o.uploading ? `<span class="small ink2" style="min-height:36px;display:grid;place-items:center">Uploading photo…</span>` : btn("Change photo", "ghost sm")}</div></div>
+				${group([`<div class="lrow noicon" style="display:block;padding:12px 16px">${field({ label: "Name", v: o.badName ? "" : ME.name, ph: "Your name", focus: !!o.badName, err: o.badName ? "Enter a name, up to 64 characters." : "" })}</div>`, `<div class="lrow noicon" style="display:block;padding:12px 16px">${field({ label: "Username", v: o.badUser ? "Alex Morgan" : ME.user, pre: "rxresu.me/", focus: !!o.badUser, err: o.badUser ? "Use 3 to 64 lowercase letters, numbers, dots, hyphens and underscores." : "" })}</div>`], { h: "Profile" })}
 				${
-					o.badUser
+					o.badUser || o.badName
 						? ""
 						: `${group([row({ icon: "envelope-simple", t: "Email", s: ME.email, ext: true }), row({ icon: "password", t: "Password", s: "Last changed in March 2026", ext: true }), row({ icon: "shield-check", t: "Two-factor authentication", s: "A code from an authenticator app at sign-in", v: "Off", ext: true }), row({ icon: "fingerprint", t: "Passkeys", s: "Sign in with your fingerprint, face or device PIN", v: "1", ext: true }), row({ icon: "plugs-connected", t: "Linked accounts", s: "Google, GitHub", ext: true })], { h: "Sign-in & security", f: "These open your account page on rxresu.me in a browser tab inside the app." })}
 				${group([row({ icon: "download-simple", t: "Export everything", s: "All documents and applications as JSON, in one zip" }), row({ icon: "trash", t: "Delete account", s: "Permanently removes everything. Export first if you want a copy.", cls: "danger" })], { h: "Your data" })}
 				${group([`<button class="lrow center danger">${ic("sign-out", 20)}Sign out</button>`])}`
-				}</div>${o.badUser ? keyboard() : tabbar("settings")}`;
+				}</div>${o.badUser || o.badName ? keyboard() : tabbar("settings")}${o.toast || ""}`;
 			D("ST2", "Account", {
 				kind: "push",
 				tab: "settings",
@@ -3659,9 +3714,9 @@
 					return `<div class="browserbar">${x.and ? `<button class="ib ink" aria-label="Close">${ic("x", 24)}</button><span class="url"><span class="b" style="color:var(--ink)">Reactive Resume</span><span class="xs">rxresu.me</span></span><button class="ib ink">${ic("share-network", 22)}</button><button class="ib ink">${ic("dots-three", 22)}</button>` : `<button class="tb">Done</button><span class="url">${ic("lock", 14)}rxresu.me</span><button class="ib ink">${ic("text-aa", 22)}</button>`}</div>
 						<div class="webpage"><div class="heading">Sign-in &amp; security</div>
 						<div class="tile"><span class="grow"><span class="b">Password</span><p>Last changed in March 2026</p></span>${btn("Change", "secondary sm")}</div>
-						<div class="tile"><span class="grow"><span class="b">Two-step verification</span><p>A code from an authenticator app at sign-in</p></span>${sw(false)}</div>
+						<div class="tile"><span class="grow"><span class="b">Two-factor authentication</span><p>A code from an authenticator app at sign-in</p></span>${sw(false)}</div>
 						<div class="tile"><span class="grow"><span class="b">Passkeys</span><p>Sign in with your fingerprint, face or device PIN</p></span>${btn("Add passkey", "secondary sm")}</div>
-						<p class="small muted">This is the web page, drawn here once. The app adds nothing to it.</p></div>
+						<p class="small muted">This is the web page, drawn here once. The app adds nothing to it. The label follows the glossary, “Two-factor authentication”, as ST2 does.</p></div>
 						${x.ios || x.tab ? `<div class="browserbar" style="border-top:1px solid var(--line);border-bottom:0" data-pad>${["caret-left", "caret-right", "share-network", "arrow-square-out"].map((i) => `<button class="ib ink grow">${ic(i, 22)}</button>`).join("")}</div>` : ""}`;
 				},
 				n: {
@@ -3784,7 +3839,7 @@
 				body: () =>
 					`${nav({ back: "AI & developer", title: "AI providers" })}<div class="scroll pad" style="padding-top:4px;display:grid;gap:12px;align-content:start"><p class="small ink2">Writing help, tailored suggestions and the assistant. The default provider is used wherever you don't pick one. Your keys stay encrypted.</p>
 					<button class="tile dash"><span class="ti">${ic("plus", 22)}</span><span><span class="tt">Add AI provider</span><p>Anthropic, Gemini, Ollama, OpenAI-compatible</p></span></button>
-					${banner("info", "info", "No AI provider yet", "Word import, Improve, the assistant, letter drafts and voice practise need one. Everything else works without.")}</div>${tabbar("settings")}`,
+					${banner("info", "info", "No AI provider yet", "Word import, Improve, the assistant, letter drafts, Career coaching and generation, and voice practise need one. Editing, Design, the readability checks and downloads work without one.")}</div>${tabbar("settings")}`,
 				n: {
 					g: "Loading: “Loading providers…” skeleton rows. Load error: “AI providers couldn't be loaded. Reload to try again.” with Try again.",
 				},
@@ -4002,7 +4057,7 @@
 					${btn("Check a sample file", "ghost")}
 					${field({ label: "Job posting · optional, adds a keyword match", ph: "Paste the posting to see which of its terms your resume already has.", area: true })}</div>`,
 				n: {
-					g: "Choose a PDF opens the picker filtered to PDF. Check a sample file runs the check on the sample resume.",
+					g: "Choose a PDF opens the picker filtered to PDF. Check a sample file runs the check on the sample resume. The check takes files up to 25 MB; importing into the editor takes up to 10 MB, so larger files get A4d instead of Fix these in the editor.",
 				},
 			});
 			D("A2", "Error", {
@@ -4028,8 +4083,13 @@
 						.join("")}</div>${btn("Cancel", "secondary")}</div>`,
 				n: { g: "Cancel stops the upload. Typically under 5 s." },
 			});
-			const atsHead = () =>
-				`<div class="hstack" style="gap:16px;padding:8px 0"><div class="ring" style="--v:.72;--ring:var(--warn)" role="img" aria-label="Readability score: 72 out of 100"><div>72</div></div><div style="display:grid;gap:4px"><div class="heading">Mostly readable</div><p class="small ink2">3 issues could cost you a match. The score reflects how reliably text is extracted, not your chances.</p></div></div>`;
+			const atsHead = (
+				v = 72,
+				verdict = "Mostly readable",
+				sub = "3 issues could cost you a match. The score reflects how reliably text is extracted, not your chances.",
+				tone = "warn",
+			) =>
+				`<div class="hstack" style="gap:16px;padding:8px 0"><div class="ring" style="--v:${v / 100};--ring:var(--${tone})" role="img" aria-label="Readability score: ${v} out of 100"><div>${v}</div></div><div style="display:grid;gap:4px"><div class="heading">${verdict}</div><p class="small ink2">${sub}</p></div></div>`;
 			const cat = (tone, icon, t, n, open = "") =>
 				`<div class="acc"><button class="acc-h" aria-expanded="${!!open}"><span style="color:var(--${tone})">${ic(icon, 22, true)}</span><span class="grow b">${t}</span><span class="small muted">${n}</span>${ic("caret-down", 18)}</button>${open ? `<div class="acc-b">${open}</div>` : ""}</div>`;
 			const atsTabs = (on) =>
@@ -4040,7 +4100,7 @@
 				kind: "full",
 				body: () => `${atsNav("Report")}<div class="scroll pad">${atsHead()}${atsTabs("Report")}
 					${cat("danger-text", "warning-circle", "Layout", "2", "<div><b>Two columns are read out of order</b><span>Move dates into the same column as the role, or use a one-column template.</span></div><div><b>Text in the header is an image</b><span>Type your name and contact details as text.</span></div>")}
-					${cat("warn", "warning", "Contact details", "1")}${cat("accent", "info", "Writing", "2 · Not scored")}
+					${cat("warn-text", "warning", "Contact details", "1")}${cat("accent", "info", "Writing", "2 · Not scored")}
 					<p class="xs muted" style="padding:14px 0">This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected, and no tool can.</p>
 					${btn("Check another file", "ghost full")}</div>${fixBar()}`,
 				n: {
@@ -4050,8 +4110,8 @@
 			D("A5", "Report · posting terms", {
 				kind: "full",
 				body: () => `${atsNav("Report")}<div class="scroll pad">${atsHead()}${atsTabs("Report")}
-					${cat("warn", "list-checks", "Terms from the posting", "9/14", `<div><span>Not found:</span></div><div class="chips" style="flex-wrap:wrap">${["Perforce", "HLSL", "multiplayer", "shipped titles", "mentoring"].map((t) => chip(t)).join("")}</div><div><span>Already covered:</span></div><div class="chips" style="flex-wrap:wrap">${["Unity", "C#", "Unreal Engine", "gameplay"].map((t) => chip(t, true)).join("")}</div><span class="xs">Counted separately from the parse score. Coverage does not predict anything.</span>`)}
-					${cat("danger-text", "warning-circle", "Layout", "2")}${cat("warn", "warning", "Contact details", "1")}</div>${fixBar()}`,
+					${cat("warn-text", "list-checks", "Terms from the posting", "9/14", `<div><span>Not found:</span></div><div class="chips" style="flex-wrap:wrap">${["Perforce", "HLSL", "multiplayer", "shipped titles", "mentoring"].map((t) => chip(t)).join("")}</div><div><span>Already covered:</span></div><div class="chips" style="flex-wrap:wrap">${["Unity", "C#", "Unreal Engine", "gameplay"].map((t) => chip(t, true)).join("")}</div><span class="xs">Counted separately from the parse score. Coverage does not predict anything.</span>`)}
+					${cat("danger-text", "warning-circle", "Layout", "2")}${cat("warn-text", "warning", "Contact details", "1")}</div>${fixBar()}`,
 				n: {
 					g: "Only when a posting was pasted. All found: “Every term the posting stresses is already there.” No terms: “No specific terms could be pulled out of that job description…”.",
 				},
@@ -4072,8 +4132,394 @@ Architected and implemented core combat system including hit detection, combo me
 			D("A7", "Importing into the editor", {
 				kind: "full",
 				body: () =>
-					`${atsNav("Report")}<div class="scroll"><div class="empty" style="padding-top:120px"><span class="spin" style="color:var(--accent)">${ic("circle-notch", 32)}</span><div class="heading">Importing it into your new resume…</div><p>Every issue will be waiting for you in Check.</p></div></div>`,
+					`${atsNav("Report")}<div class="scroll"><div class="empty" style="padding-top:120px"><span class="spin" style="color:var(--accent)">${ic("circle-notch", 32)}</span><div class="heading">Importing it into your new resume…</div><p>The editor opens on Check, which checks the imported resume again.</p></div></div>`,
 				n: { g: "Then the builder opens on Check. Failure: “Couldn't import the file. Try again from Documents.”" },
+			});
+
+			/* ---------- States added in the DS4 fix round. Each one is placed after the frame it extends. ---------- */
+			function DX(after, id, t, spec) {
+				const parent = SCREENS.find((s) => s.id === after);
+				SCREENS.push({ ...parent, n: {}, ...spec, id, t, after });
+			}
+			const keyRows = () =>
+				group([
+					keyRow("Claude Desktop", "12 Sep 2026", "today", "11 Nov 2026"),
+					keyRow("Backup script", "2 Feb 2026", "Never", "Never"),
+				]);
+			const keysPage = (inner, extra = "") =>
+				`${nav({ back: "AI & developer", title: "API keys", end: `<button class="tb">New key</button>` })}<div class="scroll" style="padding-top:4px"><p class="small ink2" style="padding:0 20px 12px">For scripts, extensions and MCP clients. Keys act as you and can read and edit your documents.</p>${inner}</div>${extra}${tabbar("settings")}`;
+			const loadingRows = (n, label) =>
+				`<div aria-busy="true" aria-label="${label}">${group(Array.from({ length: n }, () => `<div class="lrow">${sk("22px", 22, 6)}<span class="txt" style="gap:6px">${sk("55%", 14)}${sk("80%", 12)}</span></div>`))}<p class="small muted" style="padding:0 20px">${label}</p></div>`;
+			const errorBlock = (t, b = "") =>
+				`<div style="padding:0 16px">${banner("danger", "warning-circle", t, b, ["Try again"])}</div>`;
+			const provPage = (inner) =>
+				`${nav({ back: "AI & developer", title: "AI providers", end: `<button class="ib ink" aria-label="Add provider">${ic("plus", 24)}</button>` })}<div class="scroll" style="padding-top:4px"><p class="small ink2" style="padding:0 20px 12px">Writing help, tailored suggestions and the assistant. The default provider is used wherever you don't pick one. Your keys stay encrypted.</p>${inner}</div>${tabbar("settings")}`;
+			const webPage = (inner) =>
+				`${nav({ back: "AI & developer", title: "Web access" })}<div class="scroll" style="padding-top:4px"><p class="small ink2" style="padding:0 20px 12px">Read the job links you save. Saving and preparing jobs works without a connection.</p>${inner}</div>${tabbar("settings")}`;
+			const webRows = (badge, sub) =>
+				group([
+					`<div class="lrow">${ic("globe", 22)}<span class="txt"><span class="hstack" style="gap:6px">Built-in reader<span class="badge accent">Active</span></span><small>${sub}</small></span></div>`,
+					`<div class="lrow" style="align-items:flex-start">${ic("magnifying-glass", 22)}<span class="txt"><span class="hstack" style="gap:6px">Search and enhanced reading${badge}</span><small>Search from Applications and the assistant, and read pages the built-in reader can't. One service covers both.</small></span></div>`,
+				]);
+			const result = (ok, t) =>
+				`<div class="hstack small" style="color:var(--${ok ? "accent-text" : "danger-text"})">${ic(ok ? "check-circle" : "warning-circle", 16)}${t}</div>`;
+			const mcpPage = (
+				inner,
+			) => `${nav({ back: "AI & developer", title: "MCP server" })}<div class="scroll pad" style="padding-top:4px;display:grid;gap:14px;align-content:start"><p class="small ink2">Let AI clients like Claude or Cursor read and edit your resumes, using an API key above.</p><div class="code">https://rxresu.me/mcp</div>
+				<div class="lgroup" style="margin:8px 0 0"><div class="gh" style="padding-left:4px">Connected applications</div><p class="small ink2" style="padding:0 4px 8px">Revoke an application's access to your account.</p>${inner}</div></div>${tabbar("settings")}`;
+
+			DX("D2", "D2b", "Library · grid, selecting", {
+				body: () => library({ view: "grid", sel: [1, 5], selecting: 2, selbar: selbar() }),
+				n: {
+					g: "Grid view in selection mode: checks sit on the thumbnails. The tablet list view is D1 on the Tablet toggle (the web table: Name, Type, Application, Edited).",
+				},
+			});
+			DX("D11", "D11b", "Link to application · empty", {
+				body: () =>
+					library({ view: "list" }) +
+					sheet(
+						`<p class="small ink2">The application this letter is for.</p><div class="empty" style="padding:28px 8px"><span class="ei">${ic("briefcase", 28)}</span><p>No applications yet. Add one in Applications first.</p>${btn("Go to Applications", "secondary")}</div>`,
+						{ title: "Link to application", start: `<button class="tb dim">Cancel</button>` },
+					),
+				n: {
+					g: "Go to Applications closes the sheet and switches to the Applications tab. Unlink is absent because the letter isn't linked.",
+				},
+			});
+			DX("N6", "N6b", "Copy for a job · no resumes", {
+				body: () =>
+					newSheet(
+						`<div class="field"><label>Start from</label><div class="banner info" role="status">${ic("info", 20)}<div class="grow">You don't have a resume to copy yet. Import or create a resume first, then return to copy it for this job.</div></div></div>`,
+						{
+							title: "Copy a resume for a job",
+							start: `<button class="back" aria-label="Back">${backIcon()}</button>`,
+							foot: btn("Import or create a resume", "primary full"),
+						},
+					),
+				n: { g: "Import or create a resume returns to the New sheet (N1)." },
+			});
+			DX("D18", "D18b", "Trash · load error", {
+				body: () =>
+					`${nav({ back: "Documents", title: X().ios ? "" : "Trash" })}${X().ios ? large("Trash") : ""}<div class="scroll"><div class="empty"><span class="ei">${ic("cloud-slash", 28)}</span><div class="heading">Couldn't load Trash</div><p>Check your connection and try again.</p>${btn(`${ic("arrow-clockwise", 18)}Try again`, "secondary")}</div></div>${tabbar("documents")}`,
+				n: { g: "Try again shows “Retrying…”. Pull to refresh also retries." },
+			});
+			const scoped = (title, rows, create = "") =>
+				`${sbar("")}<div class="scroll">${create ? group([row({ icon: "plus", t: create, cls: "accent" })]) : ""}${group(
+					rows.map(([i, t, s]) => row({ icon: i, t, s })),
+					{ h: title },
+				)}</div>${X().tab ? "" : keyboard("search")}`;
+			DX("Q2", "Q4", "Search · Resumes", {
+				body: () =>
+					searchFrame(
+						scoped(
+							"Resumes",
+							DOCS.filter((d) => d.type === "resume")
+								.slice(0, 6)
+								.map((d) => ["file-text", d.name, `Edited ${d.edited}`]),
+							"Create a new resume",
+						),
+					),
+				n: {
+					g: "From “Search for… Resumes”. Sorted by last edited; typing filters. Back (Android) or the empty-field backspace returns to the first page, as on web.",
+				},
+			});
+			DX("Q4", "Q5", "Search · Applications, loading", {
+				body: () =>
+					searchFrame(
+						`${sbar("")}<div class="scroll">${group([row({ icon: "plus", t: "New Application", cls: "accent" })])}${loadingRows(4, "Loading applications…")}</div>${X().tab ? "" : keyboard("search")}`,
+					),
+				n: {
+					g: "Loaded rows show company with the role below. Same loading row for “Loading resumes…” and “Loading conversations…”.",
+				},
+			});
+			DX("Q5", "Q6", "Search · Assistant conversations", {
+				body: () =>
+					searchFrame(
+						scoped("Assistant conversations", [
+							["chat-circle", "Tailor for Northwind Labs", "Senior Game Developer"],
+							["chat-circle", "Shorten the summary", "Technical Artist"],
+							["chat-circle", "Prepare for the Fieldnote screening", "Gameplay Programmer, Fieldnote"],
+						]),
+					),
+				n: {
+					g: "Rows show the thread title and its document. There is no create row, as on web; start a thread from the assistant.",
+				},
+			});
+			DX("ST3", "ST3b", "Name error + save failed", {
+				body: () => acct({ badName: true, toast: toast("Couldn't save. Try again.", "", X().tab ? 32 : 300) }),
+				n: {
+					g: "Empty name or more than 64 characters shows the error; the last saved name is kept. A failed save shows the toast and keeps the typed value so nothing is lost.",
+				},
+			});
+			DX("ST4", "ST4b", "Photo uploading", {
+				body: () => acct({ uploading: true }),
+				n: {
+					g: "After the crop, the avatar shows a progress ring and “Uploading photo…”. Leaving the page keeps the upload going.",
+				},
+			});
+			DX("ST4b", "ST4c", "Photo upload failed", {
+				body: () => acct({ toast: toast("Couldn't upload the photo.", "Try again") }),
+				n: { g: "The old photo stays. Try again re-sends the cropped image." },
+			});
+			DX("ST6", "ST6b", "Export failed", {
+				body: () => acct({ toast: toast("Couldn't export. Try again.", "Try again") }),
+				n: { g: "The Export row returns from its spinner to normal. Try again restarts the export." },
+			});
+			const delAlert = (v, state) =>
+				acct() +
+				alertBox({
+					t: "Delete your account?",
+					d: "8 documents, 5 applications, 2 API keys and every public link are removed permanently. This can't be undone.",
+					body: `<div style="padding-top:8px;text-align:start">${field({ label: "Type <b>delete</b> to confirm", v, focus: state === "typing" })}</div>`,
+					acts: [
+						{ t: "Keep account" },
+						{
+							t:
+								state === "pending"
+									? `<span class="hstack" style="justify-content:center"><span class="spin">${ic("circle-notch", 18)}</span>Deleting…</span>`
+									: "Delete",
+							c: `danger bold${state === "typing" ? " dis" : ""}`,
+						},
+					],
+				});
+			DX("ST7", "ST7b", "Delete account · not confirmed", {
+				body: () =>
+					delAlert("delet", "typing").replace(
+						'class="danger bold dis"',
+						'class="danger bold" disabled aria-disabled="true" style="opacity:.45"',
+					),
+				n: {
+					g: "Delete is disabled until the word matches. The dimmed button keeps its label so screen readers announce “Delete, dimmed”.",
+				},
+			});
+			DX("ST7b", "ST7c", "Delete account · deleting", {
+				body: () => delAlert("delete", "pending"),
+				n: {
+					g: "Both buttons are inactive while deleting. On success: toast “Your account was deleted.” and the server picker.",
+				},
+			});
+			DX("ST7c", "ST7d", "Delete account · failed", {
+				body: () => acct({ toast: toast("Couldn't delete the account.", "Try again") }),
+				n: { g: "The alert closes and the account stays. Try again reopens the confirm with the field empty." },
+			});
+			DX("ST9", "ST9b", "Language", {
+				body: () => `${nav({ back: "Preferences", title: "Language" })}<div style="padding:0 16px 8px;flex:none"><div class="search">${ic("magnifying-glass", 20)}<span>Search languages</span></div></div>
+					<div class="scroll">${group(
+						[
+							["en-US", "English", true],
+							["de-DE", "Deutsch"],
+							["fr-FR", "Français"],
+							["pt-PT", "Português"],
+							["ar-SA", "العربية"],
+							["ja-JP", "日本語"],
+						].map(
+							([c, n, on]) =>
+								`<button class="lrow noicon"><span class="mono muted" style="width:52px">${c}</span><span class="txt"><span>${n}</span></span>${on ? `<span style="color:var(--accent-text)">${ic("check", 20)}</span>` : ""}</button>`,
+						),
+						{ f: "Interface only. Each resume sets its own language in Design." },
+					)}${group([row({ icon: "translate", t: "Help translate", ext: true })])}</div>${tabbar("settings")}`,
+				n: {
+					g: "Tap a language: the interface reloads its strings in place. Arabic and other right-to-left languages also flip the layout, which needs an app restart; the app offers “Restart now”.",
+				},
+			});
+			DX("ST12", "ST12b", "AI providers · managed by server", {
+				body: () =>
+					provPage(
+						group([
+							`<div class="lrow">${ic("robot", 22)}<span class="txt"><span class="hstack" style="gap:6px"><span class="b">OpenAI</span><span class="badge accent">Default</span></span><small>gpt-5 · Managed by your server</small></span></div>`,
+							provRow("Anthropic Claude", "claude-sonnet-5-5", "9f2a", `<span class="badge accent">Ready</span>`),
+						]),
+					),
+				n: { g: "The server-managed provider has no menu: it can't be edited, tested or removed here." },
+			});
+			DX("ST12b", "ST12c", "AI providers · loading", {
+				body: () => provPage(loadingRows(2, "Loading providers…")),
+				n: { g: "Skeleton rows until the list loads." },
+			});
+			DX("ST12c", "ST12d", "AI providers · unavailable", {
+				body: () =>
+					provPage(
+						`<div style="padding:0 16px">${banner("warn", "warning", "AI providers aren't available on this server until ENCRYPTION_SECRET is set.", "Ask your administrator. Everything that doesn't need AI keeps working.")}</div>`,
+					),
+				n: { g: "No add button: providers can't be saved without the secret." },
+			});
+			DX("ST12d", "ST12e", "AI providers · load error", {
+				body: () => provPage(errorBlock("AI providers couldn't be loaded. Reload to try again.")),
+				n: { g: "Try again refetches. Pull to refresh does the same." },
+			});
+			const PROVIDERS = [
+				"OpenAI",
+				"Anthropic Claude",
+				"Google Gemini",
+				"Vercel AI Gateway",
+				"OpenRouter",
+				"Mistral AI",
+				"Cohere",
+				"xAI Grok",
+				"Groq",
+				"DeepSeek",
+				"Together.ai",
+				"Fireworks",
+				"Cerebras",
+				"Perplexity",
+				"Ollama",
+				"OpenAI-compatible",
+			];
+			DX("ST14", "ST14b", "Add provider · provider picker", {
+				body: () =>
+					aiRoot() +
+					sheet(
+						group(
+							PROVIDERS.map(
+								(n) =>
+									`<button class="lrow">${ic("robot", 22)}<span class="txt"><span>${n}</span></span>${n === "Anthropic Claude" ? `<span style="color:var(--accent-text)">${ic("check", 20)}</span>` : ""}</button>`,
+							),
+						),
+						{ title: "Provider", start: `<button class="back" aria-label="Back">${backIcon()}</button>`, full: true },
+					),
+				n: {
+					g: "Pushed inside the Add provider sheet. Picking a provider returns to the form and sets the model hint and placeholders.",
+				},
+			});
+			DX("ST14b", "ST14c", "Add provider · model suggestions", {
+				body: () =>
+					aiRoot() +
+					sheet(
+						`<div style="display:grid;gap:12px">${field({ label: "Provider", v: "Anthropic Claude", end: ic("caret-down", 18) })}${field({ label: "Model", v: "claude-s", focus: true, hint: "Suggestions from models.dev. You can also enter any model ID." })}${group(["claude-sonnet-5-5", "claude-sonnet-4-5", "claude-opus-5-5"].map((m) => `<button class="lrow noicon"><span class="txt mono"><span>${m}</span></span></button>`))}</div>`,
+						{ title: "Add provider", start: `<button class="tb dim">Cancel</button>`, kb: true },
+					),
+				n: {
+					g: "Suggestions filter as you type; tap one to fill the field. Any other ID is accepted.",
+					k: "Model field: no autocorrect, no autocapitalise. The suggestion list sits between the field and the keyboard.",
+				},
+			});
+			DX("ST14c", "ST14d", "Add provider · no suggestions", {
+				body: () =>
+					aiRoot() +
+					sheet(
+						`<div style="display:grid;gap:14px">${field({ label: "Provider", v: "OpenAI-compatible", end: ic("caret-down", 18) })}${field({ label: "Model", ph: "Model ID", hint: "Enter any model ID supported by your endpoint." })}${field({ label: "Base URL", ph: "https://gateway.example.com/v1" })}<p class="hint">Other hints: “No suggestions for this provider. Enter any model ID.” · “Loading model suggestions…” · “Model suggestions are unavailable…”</p></div>`,
+						{
+							title: "Add provider",
+							start: `<button class="tb dim">Cancel</button>`,
+							foot: btn("Save and test", "primary full"),
+						},
+					),
+				n: { g: "When models.dev has no list for the provider, the Model field is free text with the hint shown." },
+			});
+			DX("ST16", "ST16b", "Web access · connected, tested", {
+				body: () =>
+					webPage(`${webRows(`<span class="badge accent">Connection saved</span>`, "Used when Firecrawl can't read a page. No account needed.")}
+					<div style="padding:0 16px;display:grid;gap:10px"><div class="tile" style="display:grid;gap:6px"><span class="b">Firecrawl</span><span class="small muted">Key stored encrypted</span>${result(true, "Search works.")}${result(false, "Enhanced reading failed. The service quota is exhausted.")}<span class="small ink2">The built-in reader remains active.</span><span class="xs muted">Tested with Firecrawl. Only this service was tested.</span></div>
+					<div class="btnrow">${btn("Test connection", "secondary")}${btn("Change connection", "secondary")}</div>${btn("Remove connection", "ghost full")}</div>`),
+				n: {
+					g: "Test connection shows “Testing search and reading with Firecrawl…”, then one line for search and one for reading. Remove asks for confirmation.",
+				},
+			});
+			DX("ST16b", "ST16c", "Web access · managed by server", {
+				body: () =>
+					webPage(
+						`${webRows(`<span class="badge plain">Managed by server</span>`, "Used when Tavily can't read a page. No account needed.")}<div style="padding:0 16px;display:grid;gap:10px">${banner("info", "info", "Provided by your server: Tavily.", "Search and reading are set up for everyone here. Ask your administrator about changes.")}${btn("Test connection", "secondary full")}</div>`,
+					),
+				n: { g: "No Change or Remove: the connection belongs to the server." },
+			});
+			DX("ST16c", "ST16d", "Web access · loading and error", {
+				body: () =>
+					webPage(
+						`${loadingRows(2, "Loading web access…")}${errorBlock("Web access settings couldn't be saved or loaded.")}`,
+					),
+				n: {
+					g: "Drawn together: skeleton while loading; if it fails, the skeleton is replaced by the error with Try again.",
+				},
+			});
+			DX("ST17", "ST17b", "API keys · loading", {
+				body: () => keysPage(loadingRows(2, "Loading keys…")),
+				n: { g: "Skeleton rows until the list loads." },
+			});
+			DX("ST17b", "ST17c", "API keys · empty", {
+				body: () =>
+					keysPage(
+						`<div class="empty"><span class="ei">${ic("key", 28)}</span><div class="heading">No keys yet.</div><p>Create one for an MCP client, a script or an extension.</p>${btn("New key", "secondary")}</div>`,
+					),
+				n: { g: "New key opens the create sheet (ST18)." },
+			});
+			DX("ST17c", "ST17d", "API keys · revoke failed", {
+				body: () => keysPage(keyRows(), toast("Couldn't revoke the key.", "Try again")),
+				n: { g: "The key stays in the list and keeps working." },
+			});
+			DX("ST18", "ST18b", "New API key · failed", {
+				body: () =>
+					aiRoot() +
+					sheet(
+						`<div style="display:grid;gap:16px">${field({ label: "What's it for?", v: "Claude Desktop" })}<div class="field"><label>Access</label>${segc(["Read only", "Read, write and delete"], "Read, write and delete")}</div><div class="field"><label>Expires</label>${segc(["30 days", "90 days", "Never"], "30 days")}</div>${banner("danger", "warning-circle", "Couldn't create the key. Try again.")}</div>`,
+						{
+							title: "New API key",
+							start: `<button class="tb dim">Cancel</button>`,
+							foot: btn("Create key", "primary full"),
+						},
+					),
+				n: { g: "Fields stay filled; Create key retries." },
+			});
+			DX("ST20", "ST20b", "Connected applications · loading", {
+				body: () =>
+					mcpPage(
+						`<div class="gb" aria-busy="true"><div class="lrow">${sk("22px", 22)}<span class="txt" style="gap:6px">${sk("40%", 14)}${sk("60%", 12)}</span></div></div><p class="small muted" style="padding:6px 4px">Loading connections...</p>`,
+					),
+				n: { g: "Skeleton row until loaded." },
+			});
+			DX("ST20b", "ST20c", "Connected applications · empty", {
+				body: () => mcpPage(`<p class="small muted" style="padding:8px 4px">No connected applications.</p>`),
+				n: { g: "Apps appear here after you approve them on the web consent page." },
+			});
+			DX("ST20c", "ST20d", "Connected applications · errors", {
+				body: () =>
+					mcpPage(
+						`${banner("danger", "warning-circle", "Could not load connected applications.", "", ["Try again"])}`,
+					) + toast("Could not revoke this connection. Try again.", "Try again"),
+				n: {
+					g: "Load error replaces the list. A failed revoke keeps the row and shows the toast; both are drawn together here.",
+				},
+			});
+			const pubFootShare = () =>
+				`<div class="hstack" style="padding:10px 16px;background:var(--surface);border-top:1px solid var(--line);flex:none" data-pad>${btn(`${ic("share-network", 20)}Share`, "primary grow")}</div>`;
+			DX("P1", "P1b", "Public resume · downloads off", {
+				body: () => `${pubBar()}<div class="scroll" style="background:var(--paper)">${reflow()}</div>${pubFootShare()}`,
+				n: { g: "The owner turned visitor downloads off: Download PDF is hidden and Share fills the bar." },
+			});
+			const pubFootBusy = () =>
+				`<div class="hstack" style="padding:10px 16px;background:var(--surface);border-top:1px solid var(--line);flex:none" data-pad>${btn(`<span class="spin">${ic("circle-notch", 20)}</span>Downloading…`, "primary grow", 'aria-busy="true"')}<button class="btn secondary" aria-label="Share" style="padding:0;width:48px">${ic("share-network", 20)}</button></div>`;
+			DX("P2", "P2b", "Download PDF · downloading", {
+				body: () => `${pubBar()}<div class="scroll" style="background:var(--paper)">${reflow()}</div>${pubFootBusy()}`,
+				n: { g: "The button shows progress and ignores further taps. Share still works." },
+			});
+			DX("P2b", "P2c", "Download PDF · failed", {
+				body: () =>
+					`${pubBar()}<div class="scroll" style="background:var(--paper)">${reflow()}</div>${pubFoot()}${toast("Couldn't download the PDF. Try again.", "Retry", X().tab ? 96 : 100)}`,
+				n: { g: "Retry starts the download again. Offline: “You're offline. Try again when you reconnect.”" },
+			});
+			DX("A4", "A4b", "Report · nothing to fix", {
+				body: () =>
+					`${atsNav("Report")}<div class="scroll pad">${atsHead(94, "Reads cleanly", "Nothing here should cost you a match. The score reflects how reliably text is extracted, not your chances.", "accent")}${atsTabs("Report")}${cat("accent", "info", "Writing", "1 · Not scored", "<div><b>Lead with results</b><span>Two bullets start with “Responsible for”. Start with what changed instead.</span></div>")}<p class="xs muted" style="padding:14px 0">This measures how faithfully software can extract this file's text. It does not predict whether an application will be rejected, and no tool can.</p>${btn("Check another file", "ghost full")}</div>${fixBar()}`,
+				n: {
+					g: "Only Writing tips remain; they never affect the score. The editor button stays, for people who want to edit there.",
+				},
+			});
+			DX("A4b", "A4c", "Report · truncated", {
+				body: () =>
+					`${atsNav("Report")}<div class="scroll pad">${atsHead()}<div style="padding-bottom:10px">${banner("info", "info", "Only the first 10 pages were checked.", "The rest of the file isn't in this report.")}</div>${atsTabs("Report")}${cat("danger-text", "warning-circle", "Layout", "2")}${cat("warn-text", "warning", "Contact details", "1")}</div>${fixBar()}`,
+				n: { g: "Shown above the categories when the file has more pages than the checker reads." },
+			});
+			DX("A4c", "A4d", "Report · too large to import", {
+				body: () =>
+					`${atsNav("Report")}<div class="scroll pad">${atsHead()}${atsTabs("Report")}${cat("danger-text", "warning-circle", "Layout", "2")}${cat("warn-text", "warning", "Contact details", "1")}</div><div style="padding:10px 16px;background:var(--surface);border-top:1px solid var(--line);flex:none;display:grid;gap:8px" data-pad>${banner("warn", "warning", "This file is 18 MB. Imports take files up to 10 MB.", "Export a smaller PDF and check it again, or start a blank resume and fix these there.")}<div class="btnrow">${btn("Check another file", "secondary")}${btn("Start blank", "primary")}</div></div>`,
+				n: {
+					g: "The checker reads PDFs up to 25 MB, but import takes up to 10 MB (POST /resumes/file-imports). Over 10 MB, Fix these in the editor is replaced by this bar before anything is uploaded again.",
+				},
+			});
+			DX("A5", "A6b", "Original page", {
+				body: () =>
+					`${atsNav("Report")}<div class="scroll pad">${atsHead()}${atsTabs("Original page")}<div style="background:var(--sunken);border-radius:12px;padding:16px;display:grid;justify-items:center;gap:8px"><img src="assets/onyx.jpg" alt="Page 1 of the uploaded PDF" style="width:100%;box-shadow:var(--shadow-page)" /><span class="xs muted">Page 1 of 2 · pinch to zoom</span></div></div>${fixBar()}`,
+				n: {
+					g: "The uploaded PDF, rasterised on the device (modules/pdf-pages); swipe down for page 2, pinch 100–300%. Tabs switch in place with a d2 cross-fade; reduced motion: instant.",
+				},
 			});
 
 			/* ================= Rendering ================= */
@@ -4084,6 +4530,10 @@ Architected and implemented core combat system including hit detection, combo me
 				["k", "Keyboard"],
 				["p", "iOS and Android"],
 			];
+			for (const s of SCREENS.filter((x) => x.after)) {
+				SCREENS.splice(SCREENS.indexOf(s), 1);
+				SCREENS.splice(SCREENS.findIndex((x) => x.id === s.after) + 1, 0, s);
+			}
 			function deviceHTML(s) {
 				const x = X();
 				const dev = DEV[S.device];

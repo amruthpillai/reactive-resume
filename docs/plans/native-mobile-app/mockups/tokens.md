@@ -8,43 +8,47 @@ The React Native token table for `apps/mobile/src/ui/tokens.ts`. M1 copies it wi
 
 ## 1. Colours
 
-| Token          | Light       | Dark        | Use                                                                    |
-| -------------- | ----------- | ----------- | ---------------------------------------------------------------------- |
-| `bg`           | `#F8F7F3`   | `#100F0C`   | App desk, screen background                                            |
-| `surface`      | `#FEFDFC`   | `#171613`   | Panels, cards, tab bar, top bars                                       |
-| `raised`       | `#FFFFFF`   | `#1F1E1A`   | Menus, sheets, dialogs, inputs, list groups                            |
-| `sunken`       | `#F0EFEB`   | `#0B0A08`   | Wells, search field, segmented track, page canvas, skeleton base       |
-| `line`         | `#DFDEDA`   | `#2C2B27`   | Dividers, card borders                                                 |
-| `line2`        | `#C5C4BE`   | `#494843`   | Input borders, grabber, unchecked checkbox, skeleton highlight         |
-| `ink`          | `#1C1B15`   | `#EFEEEB`   | Primary text, icons on surfaces                                        |
-| `ink2`         | `#4F4D47`   | `#BCBAB5`   | Secondary text, inactive tab                                           |
-| `ink3`         | `#6D6C65`   | `#979590`   | Meta, placeholder. The lightest colour allowed for text                |
-| `accent`       | `#337344`   | `#6FC082`   | Primary action, current tab marker, focus ring, switch on              |
-| `accentHover`  | `#206133`   | `#83D494`   | Pressed state of filled accent buttons                                 |
-| `onAccent`     | `#F7FEF8`   | `#07150A`   | Text and icons on `accent`                                             |
-| `accentSoft`   | `#DCF2DF`   | `#1A3520`   | Selected chip and row, "New" badge, proposals, Android active-tab pill |
-| `accentText`   | `#195C2E`   | `#8FD89E`   | Accent text and text buttons on `bg`/`surface`/`raised`                |
-| `danger`       | `#BA3630`   | `#D9544B`   | Filled destructive button                                              |
-| `dangerSoft`   | `#FFE7E4`   | `#47211D`   | Error banner, failed-field background                                  |
-| `dangerText`   | `#A92321`   | `#FDA297`   | Destructive menu items, error messages                                 |
-| `warn`         | `#D29922`   | `#E4B750`   | Check issue marker, score ring "fair"                                  |
-| `warnSoft`     | `#FCEDCD`   | `#3E2D10`   | Guest banner, session-expired banner, overflow caption                 |
-| `warnText`     | `#81520A`   | `#EFCC83`   | Text on `warnSoft`                                                     |
-| `infoSoft`     | `#E0F1FF`   | `#192F46`   | Offline banner, neutral guidance, assistant question                   |
-| `infoText`     | `#1D5B92`   | `#9DC9F7`   | Text on `infoSoft`                                                     |
-| `hover`        | `#1C1B150D` | `#FFFFFF0F` | Pointer hover (tablet trackpad only)                                   |
-| `press`        | `#1C1B1517` | `#FFFFFF1A` | Pressed rows and icon buttons (iOS highlight; Android ripple colour)   |
-| `scrim`        | `#17161152` | `#00000080` | Behind dialogs and alerts                                              |
-| `scrimSheet`   | `#1716112E` | `#00000080` | Behind bottom sheets and menus                                         |
-| `paper`        | `#FFFFFF`   | `#FFFFFF`   | The resume page. Never inverts                                         |
-| `paperInk`     | `#1C1B15`   | `#1C1B15`   | Text the app draws on paper (live letter text on cards, public reflow) |
-| `paperLine`    | `#DFDEDA`   | `#DFDEDA`   | Rules and pill borders the app draws on paper                          |
-| `stageSaved`   | `#908C7F`   | `#908C7F`   | Application stage dot. Always next to the stage name                   |
-| `stageApplied` | `#5590CC`   | `#5590CC`   | 〃                                                                     |
-| `stageScreen`  | `#00A0A6`   | `#00A0A6`   | 〃 (web `--stage-screening`)                                           |
-| `stageInterv`  | `#AF8433`   | `#AF8433`   | 〃 (web `--stage-interview`)                                           |
-| `stageOffer`   | `#579F68`   | `#579F68`   | 〃                                                                     |
-| `stageClosed`  | `#C67067`   | `#C67067`   | 〃                                                                     |
+| Token           | Light       | Dark        | Use                                                                                                                                           |
+| --------------- | ----------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bg`            | `#F8F7F3`   | `#100F0C`   | App desk, screen background                                                                                                                   |
+| `surface`       | `#FEFDFC`   | `#171613`   | Panels, cards, tab bar, top bars                                                                                                              |
+| `raised`        | `#FFFFFF`   | `#1F1E1A`   | Menus, sheets, dialogs, inputs, list groups                                                                                                   |
+| `sunken`        | `#F0EFEB`   | `#0B0A08`   | Wells, search field, segmented track, page canvas, skeleton base                                                                              |
+| `line`          | `#DFDEDA`   | `#2C2B27`   | Dividers, card borders                                                                                                                        |
+| `line2`         | `#C5C4BE`   | `#494843`   | Chip outlines, grabber, skeleton highlight. Not for control boundaries (1.75:1 on `raised`)                                                   |
+| `lineStrong`    | `#888680`   | `#73726C`   | Control boundaries: input borders, radio and checkbox rings, switch track off. ≥ 3:1 on `raised`, `surface`, `bg` and `sunken` in both themes |
+| `ink`           | `#1C1B15`   | `#EFEEEB`   | Primary text, icons on surfaces                                                                                                               |
+| `ink2`          | `#4F4D47`   | `#BCBAB5`   | Secondary text, inactive tab                                                                                                                  |
+| `ink3`          | `#6D6C65`   | `#979590`   | Meta, placeholder. The lightest colour allowed for text. Not on `selectedFill`/`accentSoft` (4.46:1); use `ink2` there                        |
+| `accent`        | `#337344`   | `#6FC082`   | Primary action, current tab marker, focus ring, switch on                                                                                     |
+| `accentHover`   | `#206133`   | `#83D494`   | Pressed state of filled accent buttons                                                                                                        |
+| `onAccent`      | `#F7FEF8`   | `#07150A`   | Text and icons on `accent`                                                                                                                    |
+| `accentSoft`    | `#DCF2DF`   | `#1A3520`   | Selected chip and row, "New" badge, proposals, Android active-tab pill                                                                        |
+| `accentText`    | `#195C2E`   | `#8FD89E`   | Accent text and text buttons on `bg`/`surface`/`raised`                                                                                       |
+| `danger`        | `#BA3630`   | `#D9544B`   | Filled destructive button                                                                                                                     |
+| `dangerSoft`    | `#FFE7E4`   | `#47211D`   | Error banner, failed-field background                                                                                                         |
+| `dangerText`    | `#A92321`   | `#FDA297`   | Destructive menu items, error messages                                                                                                        |
+| `warn`          | `#D29922`   | `#E4B750`   | Fills and large markers: score ring "fair". Light value is 2.5:1 on `raised`, so warning **icons and text** use `warnText`                    |
+| `warnSoft`      | `#FCEDCD`   | `#3E2D10`   | Guest banner, session-expired banner, overflow caption                                                                                        |
+| `warnText`      | `#81520A`   | `#EFCC83`   | Text on `warnSoft`                                                                                                                            |
+| `infoSoft`      | `#E0F1FF`   | `#192F46`   | Offline banner, neutral guidance, assistant question                                                                                          |
+| `infoText`      | `#1D5B92`   | `#9DC9F7`   | Text on `infoSoft`                                                                                                                            |
+| `hover`         | `#1C1B150D` | `#FFFFFF0F` | Pointer hover (tablet trackpad only)                                                                                                          |
+| `press`         | `#1C1B1517` | `#FFFFFF1A` | Pressed rows and icon buttons (iOS highlight; Android ripple colour)                                                                          |
+| `scrim`         | `#17161152` | `#00000080` | Behind dialogs and alerts                                                                                                                     |
+| `scrimSheet`    | `#1716112E` | `#00000080` | Behind bottom sheets and menus                                                                                                                |
+| `paper`         | `#FFFFFF`   | `#FFFFFF`   | The resume page. Never inverts                                                                                                                |
+| `paperInk`      | `#1C1B15`   | `#1C1B15`   | Text the app draws on paper (live letter text on cards, public reflow)                                                                        |
+| `paperLine`     | `#DFDEDA`   | `#DFDEDA`   | Rules and pill borders the app draws on paper                                                                                                 |
+| `paperAccent`   | `#337344`   | `#337344`   | Accent marks the app draws on paper (selection outline, proposal underline, issue pins in Check). Same value as `pageSelectLine`              |
+| `paperWarn`     | `#D29922`   | `#D29922`   | Warning outlines and pins on paper. 2.5:1 on white: pair it with `pageIssueFill` or a label; text on paper uses `paperInk`                    |
+| `paperWarnSoft` | `#FCEDCD`   | `#FCEDCD`   | Opaque warning chips and callouts drawn on paper (for example an issue number badge), with `paperInk` text                                    |
+| `stageSaved`    | `#908C7F`   | `#908C7F`   | Application stage dot. Always next to the stage name                                                                                          |
+| `stageApplied`  | `#5590CC`   | `#5590CC`   | 〃                                                                                                                                            |
+| `stageScreen`   | `#00A0A6`   | `#00A0A6`   | 〃 (web `--stage-screening`)                                                                                                                  |
+| `stageInterv`   | `#AF8433`   | `#AF8433`   | 〃 (web `--stage-interview`)                                                                                                                  |
+| `stageOffer`    | `#579F68`   | `#579F68`   | 〃                                                                                                                                            |
+| `stageClosed`   | `#C67067`   | `#C67067`   | 〃                                                                                                                                            |
 
 The stage colours are not redefined in dark mode on web either; they keep one value.
 
@@ -56,7 +60,7 @@ Tints are translucent fills. Each one has a name and a fixed value; screens neve
 | ------------------ | ----------- | ----------- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
 | `pageSelectFill`   | `#3373441F` | `#3373441F` | Fill of a tapped line on the page (Page tab, "Edit entry"). Paired with a 2 pt `pageSelectLine` outline | DS1 `color-mix(in oklch, var(--accent) 10%, transparent)`  |
 | `pageSelectLine`   | `#337344`   | `#337344`   | Outline of the tapped line on the page                                                                  | DS1 used `--accent`, which turns light green in dark mode  |
-| `pageIssueFill`    | `#D2992238` | `#D2992238` | Fill behind a Check issue on the page; outline is `warn` (light value `#D29922`)                        | new                                                        |
+| `pageIssueFill`    | `#D2992238` | `#D2992238` | Fill behind a Check issue on the page; outline is `paperWarn`                                           | new                                                        |
 | `pageProposalFill` | `#3373441F` | `#3373441F` | Fill behind a proposed edit on the page; drawn with a 2 pt dashed `pageSelectLine` underline            | new                                                        |
 | `selectedFill`     | `#DCF2DF`   | `#1A3520`   | Selected list row, selected card background, active tablet sidebar row. Alias of `accentSoft`           | new name only                                              |
 | —                  | —           | —           | Retired. Direction A's floating bar is gone (owner chose B), so no translucent chrome tint is needed    | DS1 `color-mix(in oklch, var(--surface) 92%, transparent)` |

@@ -128,3 +128,65 @@ The other DS2 gaps (Basics through Assistant, and the conflict sheet) belong to 
   - No WCAG contrast check of the token pairs; that is DS4's job.
   - Tablet frames are drawn iPad-style only. The Android tablet differences are in the notes.
   - No Artifact was published; README §2.2 mentions one, but the brief asks only for files.
+
+## DS4 fix round
+
+The DS4a review (Codex) found 19 gaps and 15 fixes. All 34 are fixed; I disputed none. `app.html` now has 114 frames.
+
+New frames carry a suffix and sit right after the frame they extend. For example, D11b comes after D11. The 0-issues result in the Checks list below covers these new frames too.
+
+**Owner decisions applied:**
+
+- Copy that has no web source is approved.
+- The ATS "not stored" line is confirmed true.
+- tokens.md now has `paperAccent`, `paperWarn` and `paperWarnSoft`, with light values in both themes. DS3c uses these names.
+
+### Gaps
+
+| Finding                                                          | Status | Where                                                                                                                                                                                  |
+| ---------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1 tablet List view missing                                      | FIXED  | The tablet List view is now the web table (Name, Type, Application, Edited); D1 uses it on the Tablet toggle and D2 stays Grid. Added D2b, grid while selecting.                       |
+| D11 empty application picker                                     | FIXED  | D11b, with "No applications yet. Add one in Applications first." and Go to Applications.                                                                                               |
+| N6 no source resumes                                             | FIXED  | N6b, with the web message and an "Import or create a resume" button.                                                                                                                   |
+| D18 Trash load failure                                           | FIXED  | D18b, Couldn't load Trash, with Try again.                                                                                                                                             |
+| Q1/Q2 scoped lists and loading                                   | FIXED  | Q4 Resumes (with Create a new resume), Q5 Applications loading ("Loading applications…"), Q6 Assistant conversations. Q2 keeps the combined results as the mobile first page.          |
+| ST2/ST3 name validation and failed save                          | FIXED  | ST3b: "Enter a name, up to 64 characters." plus the toast "Couldn't save. Try again."                                                                                                  |
+| ST4 avatar pending and failure                                   | FIXED  | ST4b uploading (progress ring, "Uploading photo…"). ST4c "Couldn't upload the photo." with Try again.                                                                                  |
+| ST6/ST7 export failure; delete not confirmed, pending and failed | FIXED  | ST6b "Couldn't export. Try again." ST7b Delete disabled while the field reads "delet". ST7c Deleting…. ST7d "Couldn't delete the account."                                             |
+| ST9 language picker                                              | FIXED  | ST9b, a searchable list with locale code and name, plus Help translate.                                                                                                                |
+| ST12/ST13 managed, loading, configuration and load error         | FIXED  | ST12b Managed by your server. ST12c Loading providers…. ST12d the ENCRYPTION_SECRET notice. ST12e load error with Try again.                                                           |
+| ST14 provider picker and model suggestions                       | FIXED  | ST14b, the picker with all 16 providers. ST14c, the suggestion list above the keyboard. ST14d, the free-text fallback with the other hint variants.                                    |
+| ST15 Base URL missing                                            | FIXED  | ST15 has a Base URL field (`https://gateway.example.com/v1`).                                                                                                                          |
+| ST16 saved connection, test results, managed, loading, retry     | FIXED  | ST16b, saved Firecrawl with separate search and reading results and Test / Change / Remove. ST16c, Provided by your server: Tavily. ST16d, loading plus the load error with Try again. |
+| ST17–ST19 loading, empty, create and revoke failures             | FIXED  | ST17b loading. ST17c empty ("No keys yet."). ST17d "Couldn't revoke the key." ST18b "Couldn't create the key. Try again."                                                              |
+| ST20 connected apps loading, empty and errors                    | FIXED  | ST20b "Loading connections...". ST20c "No connected applications.". ST20d "Could not load connected applications." and "Could not revoke this connection. Try again."                  |
+| P1 downloads off                                                 | FIXED  | P1b, a Share-only bar.                                                                                                                                                                 |
+| P2 download pending and failure                                  | FIXED  | P2b Downloading…. P2c "Couldn't download the PDF. Try again." with Retry.                                                                                                              |
+| A4–A6 Original page                                              | FIXED  | A6b, the uploaded PDF page rasterised on device, pinch to zoom, with the tab-switch transition in its notes.                                                                           |
+| A4 zero-issue and truncated                                      | FIXED  | A4b Reads cleanly / "Nothing here should cost you a match." A4c "Only the first 10 pages were checked."                                                                                |
+
+### Fixes
+
+| Finding                               | Status | Change                                                                                                                                                                                                                                                                |
+| ------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ink3` on `selectedFill` 4.46:1       | FIXED  | Selected rows (D2b, D10, D12, D13) and the active sidebar count use `ink2`, which is 7.18:1 light and 6.92:1 dark. tokens.md notes the rule on `ink3`.                                                                                                                |
+| Trashed rows at 0.7 opacity           | FIXED  | Only the thumbnail dims; the text stays opaque.                                                                                                                                                                                                                       |
+| `line2` control boundaries 1.75:1     | FIXED  | New token `lineStrong` (`#888680` / `#73726C`) is used for inputs, radios, checkboxes and the switch track when off. It is ≥ 3.16:1 on `raised`, `surface`, `bg` and `sunken` in light, and ≥ 3.44:1 in dark. `line2` is limited to chips, the grabber and skeletons. |
+| Warning icons in `warn` 2.52:1        | FIXED  | ATS category icons use `warnText`. tokens.md says icons and text use `warnText`; `warn` is for fills and the score ring.                                                                                                                                              |
+| All tab 31×44                         | FIXED  | Type tabs have a minimum width of 44 pt.                                                                                                                                                                                                                              |
+| Icon-only Back 36×44                  | FIXED  | `.back` has a minimum width of 44 pt on every platform.                                                                                                                                                                                                               |
+| Bordered small buttons 42 pt          | FIXED  | The hit extension grew to 6 pt above and below, so a 36 pt button reaches 48 pt.                                                                                                                                                                                      |
+| Contact pills 32 pt                   | FIXED  | The pills extend their hit area to 44 pt.                                                                                                                                                                                                                             |
+| ST5 "Two-step verification"           | FIXED  | The mock web page now uses the glossary's "Two-factor authentication", matching ST2. The live web string (`security.tsx:56`) is outside DS3a ownership. FOLLOW-UP: change it to the glossary term.                                                                    |
+| N2 "Read on this device"              | FIXED  | Now reads "Read on the server from its text layer. No AI needed. Up to 10 MB."                                                                                                                                                                                        |
+| ST13 overclaims what works without AI | FIXED  | Now names Career coaching and generation among the features that need AI. It says only editing, Design, the readability checks and downloads work without it.                                                                                                         |
+| A7 "Every issue will be waiting"      | FIXED  | Now "The editor opens on Check, which checks the imported resume again." It promises access to Check, not the original report.                                                                                                                                        |
+| A1/A7 25 MB check vs 10 MiB import    | FIXED  | A1 notes the limit. A4d replaces Fix these in the editor for files over 10 MB, with "Export a smaller PDF…" and Start blank.                                                                                                                                          |
+
+**tokens.md additions:** `lineStrong`, `paperAccent`, `paperWarn` and `paperWarnSoft`. `pageIssueFill`'s outline now names `paperWarn`.
+
+**Checks:**
+
+- Playwright renders all 6 theme and device combinations with 114 frames each: 0 page errors, 0 overflow, 0 targets under 44 pt.
+- I reviewed screenshots of D1 (tablet), ST14c, A4d (dark Android) and ST7b.
+- `oxfmt --check` passes.
