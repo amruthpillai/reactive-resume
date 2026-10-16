@@ -2,12 +2,17 @@
 
 Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, BLOCKED, MERGED, DROPPED.
 
-| Task                      | Harness     | Agent    | Branch     | Status  | Notes                                                                               |
-| ------------------------- | ----------- | -------- | ---------- | ------- | ----------------------------------------------------------------------------------- |
-| S1 Forme native module    | Codex       | 3777064e | mobile/S1  | RUNNING |                                                                                     |
-| S2 PDF pipeline on Hermes | Claude Code | 30d200d5 | mobile/S2  | RUNNING |                                                                                     |
-| S3 Native auth spike      | Claude Code | ccae31ab | mobile/S3  | RUNNING |                                                                                     |
-| DS1 Design directions     | Claude Code | e6048448 | mobile/DS1 | RUNNING | Started alongside M0 because it is independent of the spikes (coordinator decision) |
+| Task                                          | Harness     | Agent    | Branch            | Status  | Notes                                                                               |
+| --------------------------------------------- | ----------- | -------- | ----------------- | ------- | ----------------------------------------------------------------------------------- |
+| S1 Forme native module                        | Codex       | 3777064e | mobile/S1         | RUNNING |                                                                                     |
+| S2 PDF pipeline on Hermes                     | Claude Code | 30d200d5 | mobile/S2         | RUNNING |                                                                                     |
+| S3 Native auth spike                          | Claude Code | ccae31ab | mobile/S3         | RUNNING |                                                                                     |
+| DS1 Design directions                         | Claude Code | e6048448 | mobile/DS1        | MERGED  | Started alongside M0 because it is independent of the spikes (coordinator decision) |
+| DS2 Review DS1                                | Codex       | 61b41c19 | (in DS1 worktree) | MERGED  | 67 gaps, reports/DS2.md                                                             |
+| DS3a Shell, documents, account, utilities     | Claude Code | 53e27e1f | mobile/DS3a       | RUNNING | app.html, tokens.md, index hub                                                      |
+| DS3b Builder Write and Page, letters          | Claude Code | 43127d18 | mobile/DS3b       | RUNNING | builder.html                                                                        |
+| DS3c Design, Check, Share, History, Assistant | Claude Code | eac233e3 | mobile/DS3c       | RUNNING | design.html                                                                         |
+| DS3d Applications and Career                  | Codex       | 8cd42ec8 | mobile/DS3d       | RUNNING | career.html                                                                         |
 
 ## Gates
 
@@ -34,3 +39,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: G2a answered (Direction B). DS2 review running.
 - 2026-10-17: S2 found `expo@latest` is SDK 58.0.14 (RN 0.88.0, React 19.3.0). Catalog React 19.3 and `react-reconciler@0.34.0` resolve to one copy, so the S2 React risk is gone. M1 targets SDK 58.
 - 2026-10-17: Learned that `paseo send` to a running agent interrupts it. Send only to idle agents.
+- 2026-10-17: DS1 merged. DS2 recorded. DS3 split into four parallel parts (a/b/c Claude, d Codex). Merge commits use `chore(mobile): merge …` because commitlint rejects `merge`.
