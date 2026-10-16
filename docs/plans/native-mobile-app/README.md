@@ -338,7 +338,7 @@ paseo wait <agentId>                 # coordinator only; prefer finish notificat
 4. **The ledger is single-writer.**
    - Only the coordinator edits `ledger.md`.
    - Agents write `reports/<task-id>.md` on their own branch. One file per task, so merges never conflict.
-5. **Waiting.** Never end your turn while you wait on a background build or process. Paseo does not reliably wake an idle agent when a background job finishes. Wait in the foreground in chunks under 10 minutes, for example a timeout loop that greps the log. End your turn only with the final report or a `QUESTION:`.
+5. **Waiting.** Never end your turn while you wait on a background build or process. Paseo does not reliably wake an idle agent when a background job finishes. Wait in the foreground in chunks under 10 minutes, for example a timeout loop that greps the log. The same applies to background subagents and to `ScheduleWakeup`: collect their results before you end your turn. End your turn only with the final report or a `QUESTION:`.
 6. **Commits.**
    - Lowercase Conventional Commits (`feat(mobile): …`), one or more per task.
    - No AI attribution, no co-author trailers, no session links (AGENTS.md).
