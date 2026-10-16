@@ -2,10 +2,10 @@
 
 Installs Reactive Resume on [Cloudron](https://cloudron.io) as a community app. It runs the official image unchanged: on Cloudron (`CLOUDRON=1`), the app reads the PostgreSQL, Redis, email and OpenID Connect addon variables itself, and the image entrypoint generates `AUTH_SECRET` and `ENCRYPTION_SECRET` once in `/app/data`.
 
-Once a version is published (see below), install it from the Cloudron dashboard under **App Store → Community apps** with this URL:
+Install it from the Cloudron dashboard under **App Store → Community apps** with this URL:
 
 ```
-https://github.com/reactive-resume/reactive-resume/blob/main/cloudron/CloudronVersions.json
+https://raw.githubusercontent.com/reactive-resume/reactive-resume/main/cloudron/CloudronVersions.json
 ```
 
 ## Publish a new version
