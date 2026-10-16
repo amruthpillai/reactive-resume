@@ -1,0 +1,3924 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Applications & Career · DS3d · Reactive Resume</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/* Desk & Paper tokens, copied from packages/ui/src/styles/globals.css. oklch is the source of truth. */
+			:root {
+				color-scheme: light;
+				--bg: oklch(0.975 0.005 95); /* #F8F7F3 */
+				--surface: oklch(0.995 0.002 95); /* #FEFDFC */
+				--raised: oklch(1 0 0);
+				--sunken: oklch(0.952 0.006 95); /* #F0EFEB */
+				--line: oklch(0.9 0.006 95);
+				--line-2: oklch(0.82 0.008 95);
+				--ink: oklch(0.22 0.01 95); /* #1C1B15 */
+				--ink-2: oklch(0.42 0.01 95);
+				--ink-3: oklch(0.53 0.01 95);
+				--accent: oklch(0.5 0.1 150); /* #337344 */
+				--on-accent: oklch(0.99 0.01 150);
+				--accent-soft: oklch(0.94 0.035 150);
+				--accent-text: oklch(0.42 0.1 150);
+				--danger-text: oklch(0.48 0.17 27);
+				--danger-soft: oklch(0.95 0.03 27);
+				--warn: oklch(0.72 0.14 80);
+				--warn-soft: oklch(0.95 0.045 85);
+				--warn-text: oklch(0.48 0.1 70);
+				--hover: oklch(0.22 0.01 95 / 0.05);
+				--press: oklch(0.22 0.01 95 / 0.09);
+				--scrim: oklch(0.2 0.01 95 / 0.32);
+				--scrim-sheet: oklch(0.2 0.01 95 / 0.18);
+				--paper: #ffffff;
+				--shadow-1: 0 1px 2px oklch(0.2 0.01 95 / 0.07);
+				--shadow-2: 0 1px 2px oklch(0.2 0.01 95 / 0.06), 0 10px 28px -8px oklch(0.2 0.01 95 / 0.18);
+				--shadow-3: 0 2px 6px oklch(0.2 0.01 95 / 0.08), 0 28px 64px -16px oklch(0.2 0.01 95 / 0.3);
+				--shadow-page: 0 1px 2px oklch(0.2 0.01 95 / 0.08), 0 12px 36px -12px oklch(0.2 0.01 95 / 0.25);
+				--d1: 120ms;
+				--d2: 200ms;
+				--d3: 320ms;
+				--ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+				--bezel: oklch(0.22 0.01 95); /* hardware, the ink value */
+				--font-ui: "Hanken Grotesk", system-ui, sans-serif;
+				--font-display: "Newsreader", Georgia, serif;
+			}
+			.dark {
+				color-scheme: dark;
+				--bg: oklch(0.17 0.006 95); /* #100F0C */
+				--surface: oklch(0.2 0.006 95);
+				--raised: oklch(0.235 0.007 95);
+				--sunken: oklch(0.145 0.006 95);
+				--line: oklch(0.29 0.007 95);
+				--line-2: oklch(0.4 0.008 95);
+				--ink: oklch(0.95 0.005 95);
+				--ink-2: oklch(0.79 0.008 95);
+				--ink-3: oklch(0.67 0.008 95);
+				--accent: oklch(0.74 0.12 150); /* #6FC082 */
+				--on-accent: oklch(0.18 0.03 150);
+				--accent-soft: oklch(0.3 0.05 150);
+				--accent-text: oklch(0.82 0.11 150);
+				--danger-text: oklch(0.8 0.11 27);
+				--danger-soft: oklch(0.3 0.06 27);
+				--warn: oklch(0.8 0.13 85);
+				--warn-soft: oklch(0.31 0.05 80);
+				--warn-text: oklch(0.86 0.1 85);
+				--hover: oklch(1 0 0 / 0.06);
+				--press: oklch(1 0 0 / 0.1);
+				--scrim: oklch(0 0 0 / 0.5);
+				--scrim-sheet: oklch(0 0 0 / 0.5);
+				--shadow-1: 0 1px 2px oklch(0 0 0 / 0.4);
+				--shadow-2: 0 1px 2px oklch(0 0 0 / 0.4), 0 12px 32px -8px oklch(0 0 0 / 0.55);
+				--shadow-3: 0 2px 6px oklch(0 0 0 / 0.4), 0 28px 64px -12px oklch(0 0 0 / 0.7);
+				--shadow-page: 0 1px 2px oklch(0 0 0 / 0.4), 0 12px 36px -12px oklch(0 0 0 / 0.6);
+				--bezel: oklch(0.29 0.007 95);
+			}
+
+			:root {
+				--stage-saved: oklch(0.64 0.02 95);
+				--stage-applied: oklch(0.64 0.11 250);
+				--stage-screening: oklch(0.64 0.11 200);
+				--stage-interview: oklch(0.64 0.11 80);
+				--stage-offer: oklch(0.64 0.11 150);
+				--stage-closed: oklch(0.64 0.11 27);
+				--info-soft: oklch(0.95 0.03 250);
+				--info-text: oklch(0.46 0.11 250);
+			}
+			.dark {
+				--info-soft: oklch(0.3 0.05 250);
+				--info-text: oklch(0.82 0.08 250);
+			}
+			* {
+				box-sizing: border-box;
+				min-width: 0;
+			}
+			body {
+				margin: 0;
+				background: var(--bg);
+				color: var(--ink);
+				font: 15px/1.45 var(--font-ui);
+			}
+			button,
+			input,
+			select,
+			textarea {
+				font: inherit;
+				color: inherit;
+			}
+			button,
+			a,
+			input,
+			select,
+			textarea {
+				touch-action: manipulation;
+			}
+			button {
+				cursor: pointer;
+			}
+			button,
+			a {
+				min-width: 44px;
+				min-height: 44px;
+			}
+			button {
+				border: 0;
+				background: none;
+				padding: 10px 12px;
+				border-radius: 8px;
+				transition: background var(--d1) var(--ease);
+			}
+			button:hover {
+				background: var(--hover);
+			}
+			button:active {
+				background: var(--press);
+			}
+			button:disabled {
+				cursor: default;
+				color: var(--ink-3);
+				background: var(--sunken);
+			}
+			a {
+				display: inline-flex;
+				align-items: center;
+				color: var(--accent-text);
+				padding: 8px;
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+			:focus-visible {
+				outline: 2px solid var(--accent);
+				outline-offset: 2px;
+			}
+			h1,
+			h2,
+			h3,
+			p {
+				margin: 0;
+			}
+			h1,
+			h2 {
+				font-family: var(--font-display);
+				font-weight: 500;
+				line-height: 1.15;
+			}
+			h1 {
+				font-size: 38px;
+			}
+			h2 {
+				font-size: 30px;
+			}
+			h3 {
+				font-size: 17px;
+				font-weight: 600;
+			}
+			p {
+				max-width: 68ch;
+			}
+			small,
+			.meta {
+				font-size: 13px;
+				color: var(--ink-3);
+			}
+			.intro {
+				padding: 28px 30px 20px;
+				border-bottom: 1px solid var(--line);
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 24px;
+			}
+			.intro p {
+				margin-top: 8px;
+				color: var(--ink-2);
+			}
+			.controls {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+				align-items: center;
+			}
+			.seg {
+				display: flex;
+				padding: 3px;
+				border-radius: 10px;
+				background: var(--sunken);
+				gap: 2px;
+			}
+			.seg button {
+				white-space: nowrap;
+			}
+			.seg button[aria-pressed="true"] {
+				background: var(--raised);
+				box-shadow: var(--shadow-1);
+				font-weight: 600;
+			}
+			.layout {
+				display: grid;
+				grid-template-columns: 238px minmax(0, 1fr);
+				min-height: calc(100vh - 130px);
+			}
+			.index {
+				padding: 16px 12px;
+				position: sticky;
+				top: 0;
+				height: 100vh;
+				overflow: auto;
+				border-right: 1px solid var(--line);
+			}
+			.index h3 {
+				font-size: 14px;
+				padding: 18px 10px 6px;
+				color: var(--ink-2);
+			}
+			.index button {
+				display: block;
+				width: 100%;
+				text-align: start;
+				font-size: 14px;
+				padding: 10px;
+			}
+			.index button[aria-current="page"] {
+				background: var(--accent-soft);
+				color: var(--accent-text);
+				font-weight: 600;
+			}
+			.preview {
+				padding: 26px 26px 40px;
+				overflow: hidden;
+			}
+			.caption {
+				display: flex;
+				justify-content: space-between;
+				gap: 14px;
+				max-width: 1180px;
+				margin: 0 auto 24px;
+			}
+			.caption h2 {
+				font-size: 26px;
+			}
+			.device-holder {
+				display: flex;
+				justify-content: center;
+				overflow: auto;
+				padding: 12px;
+			}
+			.device {
+				width: 393px;
+				height: 852px;
+				flex: none;
+				border-radius: 46px;
+				background: var(--bg);
+				box-shadow:
+					0 0 0 10px var(--bezel),
+					var(--shadow-3);
+				overflow: hidden;
+				position: relative;
+				isolation: isolate;
+				display: flex;
+				flex-direction: column;
+			}
+			.device.android {
+				width: 412px;
+				height: 915px;
+				border-radius: 28px;
+			}
+			.device.tablet {
+				width: 1180px;
+				height: 820px;
+				border-radius: 24px;
+			}
+			.system {
+				height: 54px;
+				flex: none;
+				padding: 14px 27px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				font-weight: 600;
+				position: relative;
+			}
+			.island {
+				position: absolute;
+				top: 10px;
+				left: calc(50% - 62px);
+				height: 36px;
+				width: 124px;
+				border-radius: 20px;
+				background: var(--bezel);
+			}
+			.android .system {
+				height: 36px;
+				padding: 8px 22px;
+				font-size: 14px;
+			}
+			.android .island {
+				height: 14px;
+				width: 14px;
+				left: calc(50% - 7px);
+			}
+			.tablet .system {
+				height: 30px;
+				font-size: 13px;
+			}
+			.tablet .island {
+				display: none;
+			}
+			.app {
+				flex: 1;
+				min-height: 0;
+				display: flex;
+			}
+			.side {
+				display: none;
+			}
+			.tablet .side {
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+				width: 210px;
+				flex: none;
+				padding: 20px 16px;
+				border-inline-end: 1px solid var(--line);
+				background: var(--surface);
+			}
+			.side h3 {
+				font-family: var(--font-display);
+				font-size: 24px;
+				margin: 6px 8px 20px;
+			}
+			.side button {
+				text-align: start;
+			}
+			.side .selected {
+				background: var(--accent-soft);
+				color: var(--accent-text);
+			}
+			.shell {
+				display: flex;
+				flex-direction: column;
+				flex: 1;
+				min-height: 0;
+				position: relative;
+			}
+			.top {
+				padding: 8px 16px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				min-height: 60px;
+				border-bottom: 1px solid var(--line);
+				background: var(--bg);
+				flex: none;
+			}
+			.top .title {
+				flex: 1;
+			}
+			.top h2 {
+				font-size: 26px;
+			}
+			.icon {
+				width: 44px;
+				min-width: 44px;
+				height: 44px;
+				padding: 0;
+				display: grid;
+				place-items: center;
+				font-size: 22px;
+			}
+			.icon svg {
+				width: 23px;
+				height: 23px;
+				stroke: currentColor;
+				fill: none;
+				stroke-width: 1.6;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+			.body {
+				overflow: auto;
+				overscroll-behavior: contain;
+				flex: 1;
+				padding: 18px 20px 28px;
+				display: flex;
+				flex-direction: column;
+				gap: 18px;
+				animation: arrive var(--d2) var(--ease);
+			}
+			.body > * {
+				flex-shrink: 0;
+			}
+			.tablet .body {
+				padding: 24px 28px;
+			}
+			.stack {
+				display: grid;
+				gap: 14px;
+			}
+			.row {
+				display: flex;
+				gap: 8px;
+				align-items: center;
+			}
+			.row.wrap {
+				flex-wrap: wrap;
+			}
+			.between {
+				justify-content: space-between;
+			}
+			.grow {
+				flex: 1;
+			}
+			.card {
+				padding: 16px;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				background: var(--surface);
+				display: grid;
+				gap: 10px;
+			}
+			.card h2 {
+				font-size: 25px;
+			}
+			.card.accent,
+			.notice {
+				background: var(--accent-soft);
+				color: var(--accent-text);
+				border-color: var(--accent-soft);
+			}
+			.notice,
+			.warning,
+			.error,
+			.info {
+				padding: 12px 14px;
+				border-radius: 10px;
+				font-size: 14px;
+				display: grid;
+				gap: 8px;
+			}
+			.notice {
+				background: var(--accent-soft);
+			}
+			.warning {
+				background: var(--warn-soft);
+				color: var(--warn-text);
+			}
+			.error {
+				background: var(--danger-soft);
+				color: var(--danger-text);
+			}
+			.info {
+				background: var(--info-soft);
+				color: var(--info-text);
+			}
+			.primary {
+				background: var(--accent);
+				color: var(--on-accent);
+				font-weight: 600;
+			}
+			.primary:hover {
+				background: var(--accent);
+				filter: brightness(0.96);
+			}
+			.secondary {
+				border: 1px solid var(--line-2);
+				background: var(--raised);
+			}
+			.danger {
+				color: var(--danger-text);
+			}
+			.link {
+				color: var(--accent-text);
+				text-align: start;
+			}
+			.wide {
+				width: 100%;
+			}
+			.badge {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				border-radius: 6px;
+				background: var(--sunken);
+				padding: 3px 7px;
+				font-size: 12px;
+				font-weight: 600;
+				color: var(--ink-2);
+				width: fit-content;
+			}
+			.badge.good {
+				background: var(--accent-soft);
+				color: var(--accent-text);
+			}
+			.badge.warn {
+				background: var(--warn-soft);
+				color: var(--warn-text);
+			}
+			.dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				display: inline-block;
+				background: var(--stage-interview);
+				flex: none;
+			}
+			.dot.saved {
+				background: var(--stage-saved);
+			}
+			.dot.applied {
+				background: var(--stage-applied);
+			}
+			.dot.screening {
+				background: var(--stage-screening);
+			}
+			.dot.offer {
+				background: var(--stage-offer);
+			}
+			.dot.closed {
+				background: var(--stage-closed);
+			}
+			.divider {
+				border: 0;
+				border-top: 1px solid var(--line);
+				margin: 2px 0;
+			}
+			.field {
+				display: grid;
+				gap: 6px;
+				font-size: 13px;
+				color: var(--ink-2);
+			}
+			input,
+			select,
+			textarea {
+				width: 100%;
+				min-height: 44px;
+				background: var(--raised);
+				border: 1px solid var(--line-2);
+				border-radius: 8px;
+				padding: 10px 12px;
+				font-size: 16px;
+				color: var(--ink);
+			}
+			textarea {
+				resize: vertical;
+				min-height: 96px;
+				line-height: 1.5;
+			}
+			.check {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				min-height: 44px;
+				cursor: pointer;
+				font-size: 14px;
+			}
+			.check input {
+				width: 22px;
+				height: 22px;
+				min-height: 22px;
+				accent-color: var(--accent);
+				flex: none;
+			}
+			.check:has(input:disabled) {
+				color: var(--ink-3);
+			}
+			.tabs {
+				display: flex;
+				gap: 4px;
+				overflow-x: auto;
+				flex: none;
+				border-bottom: 1px solid var(--line);
+				padding: 2px 12px;
+				scrollbar-width: thin;
+			}
+			.tabs button {
+				white-space: nowrap;
+				border-radius: 0;
+				color: var(--ink-2);
+				border-bottom: 2px solid var(--line);
+			}
+			.tabs button[aria-current="page"] {
+				border-color: var(--accent);
+				color: var(--accent-text);
+				font-weight: 600;
+			}
+			.bottom {
+				display: flex;
+				align-items: center;
+				justify-content: space-around;
+				flex: none;
+				padding: 6px 5px;
+				background: var(--surface);
+				border-top: 1px solid var(--line);
+				gap: 2px;
+			}
+			.bottom button {
+				display: grid;
+				justify-items: center;
+				gap: 3px;
+				font-size: 10px;
+				padding: 4px 2px;
+				flex: 1;
+				min-width: 44px;
+			}
+			.bottom svg {
+				width: 22px;
+				height: 22px;
+			}
+			.bottom .active {
+				color: var(--accent-text);
+			}
+			.new-pill {
+				padding: 5px 12px;
+				border-radius: 999px;
+				background: var(--accent);
+				color: var(--on-accent);
+				font-size: 13px;
+				font-weight: 600;
+				transform: translateY(-7px);
+			}
+			.tablet .bottom {
+				display: none;
+			}
+			.home {
+				height: 28px;
+				flex: none;
+				display: grid;
+				place-items: center;
+				background: var(--surface);
+			}
+			.home span {
+				width: 134px;
+				height: 5px;
+				background: var(--ink);
+				border-radius: 6px;
+			}
+			.android .home {
+				height: 24px;
+			}
+			.android .home span {
+				width: 108px;
+				height: 4px;
+			}
+			.tablet .home {
+				height: 18px;
+			}
+			.list-row {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				border-bottom: 1px solid var(--line);
+				padding: 8px 0;
+				min-height: 78px;
+			}
+			.list-row h3 {
+				font-size: 16px;
+			}
+			.list-row .entry {
+				text-align: start;
+				flex: 1;
+				padding: 7px 2px;
+			}
+			.list-row .check {
+				width: 44px;
+				justify-content: center;
+			}
+			.stage-title {
+				font-size: 13px;
+				font-weight: 600;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding-block: 5px;
+			}
+			.board {
+				display: flex;
+				overflow-x: auto;
+				gap: 14px;
+				scroll-snap-type: x mandatory;
+			}
+			.column {
+				min-width: 268px;
+				width: 268px;
+				padding: 12px;
+				background: var(--sunken);
+				border-radius: 12px;
+				display: grid;
+				align-content: start;
+				gap: 12px;
+				scroll-snap-align: start;
+			}
+			.tablet .column {
+				width: 250px;
+				min-width: 250px;
+			}
+			.funnel {
+				display: grid;
+				gap: 12px;
+			}
+			.funnel-row {
+				display: grid;
+				grid-template-columns: 82px 1fr 28px;
+				gap: 8px;
+				align-items: center;
+				font-size: 14px;
+			}
+			.bar {
+				height: 18px;
+				background: var(--accent-soft);
+				border-radius: 6px;
+				overflow: hidden;
+			}
+			.bar span {
+				display: block;
+				height: 100%;
+				background: var(--accent);
+			}
+			.calendar {
+				display: grid;
+				grid-template-columns: repeat(7, minmax(44px, 1fr));
+				gap: 0;
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				overflow: auto;
+			}
+			.calendar > * {
+				text-align: center;
+				min-height: 44px;
+				padding: 10px 0;
+				font-size: 14px;
+			}
+			.calendar button[data-event] {
+				background: var(--accent-soft);
+				color: var(--accent-text);
+				font-weight: 700;
+			}
+			.stepper {
+				display: flex;
+				gap: 6px;
+				overflow: auto;
+				padding-bottom: 6px;
+			}
+			.stepper button {
+				font-size: 12px;
+				min-width: 64px;
+				border-bottom: 3px solid var(--line);
+				border-radius: 0;
+				padding: 8px 4px;
+			}
+			.stepper button.current {
+				border-color: var(--stage-interview);
+				font-weight: 600;
+			}
+			.split {
+				display: grid;
+				gap: 18px;
+			}
+			.tablet .split {
+				grid-template-columns: 270px minmax(0, 1fr);
+				align-items: start;
+			}
+			.tablet .two-col {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 18px;
+				align-items: start;
+			}
+			.facts {
+				display: grid;
+				gap: 1px;
+			}
+			.fact-line {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+				border-bottom: 1px solid var(--line);
+				min-height: 48px;
+			}
+			.fact-line span:first-child {
+				width: 82px;
+				flex: none;
+				color: var(--ink-3);
+				font-size: 13px;
+			}
+			.fact-line button {
+				text-align: start;
+				flex: 1;
+			}
+			.timeline {
+				padding-inline-start: 18px;
+				border-inline-start: 1px solid var(--line-2);
+				display: grid;
+				gap: 22px;
+			}
+			.timeline article {
+				position: relative;
+			}
+			.timeline article::before {
+				content: "";
+				position: absolute;
+				inset-inline-start: -23px;
+				top: 6px;
+				width: 9px;
+				height: 9px;
+				border-radius: 50%;
+				background: var(--accent);
+			}
+			.sheet {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				align-items: end;
+				background: var(--scrim-sheet);
+				z-index: 8;
+			}
+			.sheet-panel {
+				width: 100%;
+				max-height: 91%;
+				background: var(--surface);
+				border-radius: 18px 18px 0 0;
+				box-shadow: var(--shadow-3);
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				animation: sheet-in var(--d3) var(--ease);
+			}
+			.sheet.half .sheet-panel {
+				max-height: 68%;
+			}
+			.grab {
+				min-height: 44px;
+				width: 100%;
+				display: grid;
+				place-items: center;
+				cursor: ns-resize;
+			}
+			.grab span {
+				height: 5px;
+				width: 36px;
+				border-radius: 6px;
+				background: var(--line-2);
+			}
+			.sheet-head {
+				padding: 0 18px 12px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 10px;
+			}
+			.sheet-head h2 {
+				font-size: 28px;
+			}
+			.sheet-scroll {
+				padding: 4px 20px 26px;
+				overflow: auto;
+				display: grid;
+				gap: 16px;
+			}
+			.tablet .sheet {
+				justify-content: end;
+			}
+			.tablet .sheet-panel {
+				width: 480px;
+				max-height: 100%;
+				height: 100%;
+				border-radius: 18px 0 0 18px;
+			}
+			.tablet .sheet.half .sheet-panel {
+				max-height: 100%;
+			}
+			.footer-actions {
+				display: flex;
+				gap: 8px;
+				justify-content: end;
+				padding: 12px 20px;
+				border-top: 1px solid var(--line);
+				background: var(--surface);
+			}
+			.toast {
+				position: absolute;
+				bottom: 100px;
+				inset-inline: 14px;
+				z-index: 20;
+				display: flex;
+				gap: 8px;
+				align-items: center;
+				padding: 10px 12px;
+				border-radius: 12px;
+				background: var(--raised);
+				border: 1px solid var(--line-2);
+				box-shadow: var(--shadow-2);
+				font-size: 14px;
+			}
+			.tablet .toast {
+				inset-inline: auto 28px;
+				bottom: 28px;
+				max-width: 420px;
+			}
+			.toast button {
+				color: var(--accent-text);
+				font-weight: 600;
+			}
+			.toast span {
+				flex: 1;
+			}
+			.bubble {
+				border-radius: 12px;
+				padding: 14px;
+				background: var(--surface);
+				border: 1px solid var(--line);
+				display: grid;
+				gap: 10px;
+				max-width: 96%;
+			}
+			.bubble.mine {
+				background: var(--sunken);
+				border: 0;
+				margin-inline-start: 32px;
+			}
+			.composer {
+				padding: 10px 16px;
+				border-top: 1px solid var(--line);
+				display: grid;
+				gap: 8px;
+				background: var(--surface);
+			}
+			.composer textarea {
+				min-height: 72px;
+			}
+			.privacy {
+				font-size: 12px;
+				color: var(--ink-3);
+			}
+			.wave {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 4px;
+				height: 80px;
+			}
+			.wave span {
+				width: 5px;
+				border-radius: 6px;
+				background: var(--accent);
+				height: 30px;
+				animation: record var(--d3) var(--ease) infinite alternate;
+			}
+			.wave span:nth-child(3n) {
+				height: 58px;
+				animation-delay: var(--d1);
+			}
+			.wave span:nth-child(2n) {
+				height: 42px;
+				animation-delay: var(--d2);
+			}
+			.voice-time {
+				font-family: var(--font-display);
+				font-size: 42px;
+				text-align: center;
+			}
+			.skeleton {
+				background: var(--sunken);
+				height: 20px;
+				border-radius: 6px;
+				margin: 8px 0;
+			}
+			.skeleton.tall {
+				height: 110px;
+			}
+			.skeleton.short {
+				width: 65%;
+			}
+			.offer-table {
+				display: grid;
+				gap: 10px;
+			}
+			.offer-table .fact-line {
+				align-items: start;
+				padding: 8px 0;
+			}
+			.offer-table .fact-line span:first-child {
+				width: 105px;
+			}
+			.empty {
+				padding: 34px 8px;
+				display: grid;
+				gap: 16px;
+				text-align: center;
+				justify-items: center;
+			}
+			.empty svg {
+				width: 38px;
+				height: 38px;
+				color: var(--ink-3);
+			}
+			.screen-notes {
+				max-width: 950px;
+				margin: 30px auto 0;
+				padding-top: 18px;
+				border-top: 1px solid var(--line);
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 14px 30px;
+				color: var(--ink-2);
+				font-size: 14px;
+			}
+			.screen-notes dt {
+				font-weight: 600;
+				color: var(--ink);
+				margin-bottom: 4px;
+			}
+			.screen-notes dd {
+				margin: 0;
+			}
+			.foot {
+				max-width: 950px;
+				margin: 20px auto;
+				color: var(--ink-3);
+				font-size: 13px;
+			}
+			.tablet .body.workspace {
+				padding: 18px 24px;
+			}
+			.workspace-context {
+				display: none;
+			}
+			.tablet .workspace-context {
+				display: grid;
+			}
+			.keyboard {
+				display: grid;
+				gap: 8px;
+				padding: 16px 8px;
+				background: var(--sunken);
+				text-align: center;
+				font-size: 13px;
+				color: var(--ink-2);
+			}
+			.keyboard-row {
+				display: flex;
+				justify-content: space-around;
+				gap: 5px;
+			}
+			.keyboard-row span {
+				padding: 10px 8px;
+				background: var(--raised);
+				border-radius: 6px;
+				flex: 1;
+				box-shadow: var(--shadow-1);
+			}
+			.key-done {
+				text-align: end;
+				color: var(--accent-text);
+				padding-inline: 8px;
+			}
+			.sheet-backdrop {
+				flex: 1;
+				width: 100%;
+				min-height: 44px;
+				border-radius: 0;
+			}
+			.sheet-panel ~ .sheet-backdrop {
+				display: none;
+			}
+			.sheet {
+				flex-direction: column;
+			}
+			.tablet .sheet {
+				flex-direction: row;
+			}
+			.tablet .sheet-backdrop {
+				height: 100%;
+			}
+			.progress {
+				height: 8px;
+				border-radius: 6px;
+				background: var(--line);
+				overflow: hidden;
+			}
+			.progress span {
+				height: 100%;
+				display: block;
+				background: var(--accent);
+				width: 65%;
+			}
+			.rtl-sample {
+				font-size: 16px;
+				line-height: 1.8;
+			}
+			.label-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+			.badge-count {
+				font: 600 11px var(--font-ui);
+				color: var(--accent-text);
+			}
+			@keyframes arrive {
+				from {
+					opacity: 0;
+				}
+				to {
+					opacity: 1;
+				}
+			}
+			@keyframes sheet-in {
+				from {
+					transform: translateY(24px);
+					opacity: 0;
+				}
+				to {
+					transform: translateY(0);
+					opacity: 1;
+				}
+			}
+			@keyframes record {
+				to {
+					transform: scaleY(0.6);
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				:root {
+					--d1: 1ms;
+					--d2: 1ms;
+					--d3: 1ms;
+				}
+				*,
+				*::before,
+				*::after {
+					animation: none !important;
+					scroll-behavior: auto !important;
+				}
+			}
+			@media (max-width: 1400px) {
+				.device-holder:has(.tablet) {
+					justify-content: start;
+				}
+			}
+			@media (max-width: 850px) {
+				.intro {
+					display: grid;
+					padding: 20px;
+				}
+				.layout {
+					grid-template-columns: 180px minmax(0, 1fr);
+				}
+				.preview {
+					padding: 20px 12px;
+				}
+				.index {
+					font-size: 13px;
+				}
+				.index button {
+					font-size: 13px;
+				}
+				.screen-notes {
+					grid-template-columns: 1fr;
+				}
+				.caption {
+					display: grid;
+				}
+			}
+			@media (max-width: 620px) {
+				.layout {
+					display: block;
+				}
+				.index {
+					position: relative;
+					height: 220px;
+					border-bottom: 1px solid var(--line);
+					display: block;
+				}
+				.index button {
+					display: inline-block;
+					width: auto;
+				}
+				.index h3 {
+					display: inline-block;
+				}
+				.device-holder {
+					justify-content: start;
+				}
+				.intro h1 {
+					font-size: 30px;
+				}
+			}
+			button {
+				min-width: 44px;
+			}
+			:root {
+				--accent-hover: oklch(0.44 0.1 150);
+			}
+			.dark {
+				--accent-hover: oklch(0.8 0.12 150);
+			}
+			.primary:hover {
+				background: var(--accent-hover);
+				filter: none;
+			}
+			svg {
+				fill: none;
+				stroke: currentColor;
+				stroke-width: 1.6;
+				stroke-linecap: round;
+				stroke-linejoin: round;
+			}
+			.device[dir="rtl"] .top .icon:first-child svg {
+				transform: scaleX(-1);
+			}
+			.card.accent .meta {
+				color: var(--accent-text);
+			}
+			.tabs button {
+				flex: none;
+			}
+			.rtl-sample {
+				display: grid;
+				gap: 18px;
+			}
+			.phosphor,
+			.icon .phosphor {
+				fill: currentColor;
+				stroke: none;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="intro">
+			<div>
+				<p class="meta">Reactive Resume · Native mobile · Direction B · DS3d</p>
+				<h1>Your search, in hand.</h1>
+				<p>Applications and Career. Select a screen, then compare devices and themes.</p>
+			</div>
+			<div class="controls">
+				<div class="seg" role="group" aria-label="Theme">
+					<button data-theme="light" aria-pressed="true">Light</button
+					><button data-theme="dark" aria-pressed="false">Dark</button>
+				</div>
+				<div class="seg" role="group" aria-label="Device">
+					<button data-device="iphone" aria-pressed="true">iPhone</button
+					><button data-device="android" aria-pressed="false">Android</button
+					><button data-device="tablet" aria-pressed="false">Tablet</button>
+				</div>
+			</div>
+		</header>
+		<div class="layout">
+			<nav class="index" aria-label="Screen and state index" id="index"></nav>
+			<main class="preview">
+				<header class="caption">
+					<div>
+						<h2 id="screen-title"></h2>
+						<p class="meta" id="screen-description"></p>
+					</div>
+					<span class="meta" id="dimensions">393 × 852 pt</span>
+				</header>
+				<div class="device-holder">
+					<div class="device" id="device">
+						<div class="system">
+							<span>9:41</span><span class="island" aria-hidden="true"></span
+							><span role="img" aria-label="Full signal and battery">▰ ▰</span>
+						</div>
+						<div class="app" id="app"></div>
+						<div class="home" aria-hidden="true"><span></span></div>
+					</div>
+				</div>
+				<dl class="screen-notes" id="notes"></dl>
+				<p class="foot">
+					Interactive design prototype. Fictional application data; resume evidence from sample.ts. No live requests,
+					microphone use, notification prompts, file uploads or AI calls. All actions stay in this page.
+				</p>
+			</main>
+		</div>
+		<script>
+			const paths = {
+				documents:
+					'<path d="M213.66,82.34l-56-56A8,8,0,0,0,152,24H56A16,16,0,0,0,40,40V216a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V88A8,8,0,0,0,213.66,82.34ZM160,51.31,188.69,80H160ZM200,216H56V40h88V88a8,8,0,0,0,8,8h48V216Zm-32-80a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,136Zm0,32a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,168Z"/>',
+				applications:
+					'<path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z"/>',
+				career:
+					'<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216ZM172.42,72.84l-64,32a8.05,8.05,0,0,0-3.58,3.58l-32,64A8,8,0,0,0,80,184a8.1,8.1,0,0,0,3.58-.84l64-32a8.05,8.05,0,0,0,3.58-3.58l32-64a8,8,0,0,0-10.74-10.74ZM138,138,97.89,158.11,118,118l40.15-20.07Z"/>',
+				settings:
+					'<path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A112.1,112.1,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.62a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.08,8.08,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8.08,8.08,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z"/>',
+				back: '<path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"/>',
+				plus: '<path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/>',
+				more: '<path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"/>',
+				coach:
+					'<path d="M197.58,129.06,146,110l-19-51.62a15.92,15.92,0,0,0-29.88,0L78,110l-51.62,19a15.92,15.92,0,0,0,0,29.88L78,178l19,51.62a15.92,15.92,0,0,0,29.88,0L146,178l51.62-19a15.92,15.92,0,0,0,0-29.88ZM137,164.22a8,8,0,0,0-4.74,4.74L112,223.85,91.78,169A8,8,0,0,0,87,164.22L32.15,144,87,123.78A8,8,0,0,0,91.78,119L112,64.15,132.22,119a8,8,0,0,0,4.74,4.74L191.85,144ZM144,40a8,8,0,0,1,8-8h16V16a8,8,0,0,1,16,0V32h16a8,8,0,0,1,0,16H184V64a8,8,0,0,1-16,0V48H152A8,8,0,0,1,144,40ZM248,88a8,8,0,0,1-8,8h-8v8a8,8,0,0,1-16,0V96h-8a8,8,0,0,1,0-16h8V72a8,8,0,0,1,16,0v8h8A8,8,0,0,1,248,88Z"/>',
+				search:
+					'<path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/>',
+				close:
+					'<path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/>',
+				check:
+					'<path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/>',
+			};
+			const icon = (name) =>
+				`<svg class="phosphor" aria-hidden="true" viewBox="0 0 256 256">${paths[name] || paths.documents}</svg>`;
+
+			const esc = (value) =>
+				String(value).replace(
+					/[&<>"']/g,
+					(c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+				);
+			const btn = (label, to, kind = "secondary") => `<button class="${kind}" data-go="${to}">${label}</button>`;
+			const act = (label, action, kind = "secondary") =>
+				`<button class="${kind}" data-action="${action}">${label}</button>`;
+			const ib = (name, label, to) =>
+				`<button class="icon" aria-label="${label}" data-go="${to}">${icon(name)}</button>`;
+			let fieldId = 0;
+			const field = (label, value = "", type = "text") => {
+				const id = `field-${++fieldId}`;
+				return `<label class="field" for="${id}">${label}<input id="${id}" type="${type}" value="${esc(value)}"></label>`;
+			};
+			const area = (label, value = "", rows = 3) => {
+				const id = `field-${++fieldId}`;
+				return `<label class="field" for="${id}">${label}<textarea id="${id}" rows="${rows}">${esc(value)}</textarea></label>`;
+			};
+			const select = (label, items) => {
+				const id = `field-${++fieldId}`;
+				return `<label class="field" for="${id}">${label}<select id="${id}">${items.map((t) => `<option>${t}</option>`).join("")}</select></label>`;
+			};
+			const check = (label, on = false, disabled = false) =>
+				`<label class="check"><input type="checkbox" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}><span>${label}</span></label>`;
+			const badge = (label, kind = "") => `<span class="badge ${kind}">${label}</span>`;
+			const card = (title, body, kind = "") =>
+				`<section class="card ${kind}">${title ? `<h3>${title}</h3>` : ""}${body}</section>`;
+			const note = (text, kind = "notice") => `<div class="${kind}">${text}</div>`;
+			const heading = (title, subtitle = "") =>
+				`<div class="stack"><h2>${title}</h2>${subtitle ? `<p class="meta">${subtitle}</p>` : ""}</div>`;
+			const stage = (name) => `<span class="dot ${name.toLowerCase()}"></span>${name}`;
+			const ai = () =>
+				`<p class="privacy">Sends this posting, notes, documents and enabled Knowledge to your AI connection. Your provider may charge.</p>`;
+			const save = (to = "app-detail", label = "Save changes") =>
+				`<div class="row wrap">${btn("Cancel", to)}${act(label, `save:${to}`, "primary")}</div>`;
+			const empty = (title, copy, action, to) =>
+				`<div class="empty">${icon("applications")}<h2>${title}</h2><p class="meta">${copy}</p>${btn(action, to, "primary")}</div>`;
+			const screenList = [];
+			function add(id, group, title, description, body, options = {}) {
+				screenList.push({ id, group, title, description, body, ...options });
+			}
+			const viewTabs = (selected) =>
+				`<div class="tabs" role="navigation" aria-label="Application views">${[
+					["List", "app-list"],
+					["Board", "app-board"],
+					["Calendar", "app-calendar"],
+					["Insights", "app-insights"],
+				]
+					.map(
+						([name, id]) =>
+							`<button data-go="${id}" aria-current="${name === selected ? "page" : "false"}">${name}</button>`,
+					)
+					.join("")}</div>`;
+			const careerTabs = (selected) =>
+				`<div class="tabs" role="navigation" aria-label="Career sections">${[
+					["Today", "career-today"],
+					["Coach", "career-coach"],
+					["Knowledge", "career-facts"],
+					["Offers", "career-offers"],
+				]
+					.map(
+						([name, id]) =>
+							`<button data-go="${id}" aria-current="${name === selected ? "page" : "false"}">${name}</button>`,
+					)
+					.join("")}</div>`;
+			const knowledgeTabs = (selected) =>
+				`<div class="tabs" role="navigation" aria-label="Knowledge sections">${[
+					["Facts", "career-facts"],
+					["Stories", "career-stories"],
+					["Preferences", "career-preferences"],
+				]
+					.map(
+						([name, id]) =>
+							`<button data-go="${id}" aria-current="${name === selected ? "page" : "false"}">${name}</button>`,
+					)
+					.join("")}</div>`;
+			const workspaceTabs = () =>
+				`<div class="tabs" role="navigation" aria-label="Application workspace tabs">${["Fit", "Apply", "Prepare", "Practise", "Debrief", "Messages", "Saved"].map((name) => `<button data-go="ws-${name.toLowerCase()}" aria-current="${workspaceTab() === name ? "page" : "false"}">${name}${name === "Saved" ? " (6)" : ""}</button>`).join("")}</div>`;
+			const records = [
+				["Interview", "Fieldnote", "Senior Game Developer", "Technical interview · Mon 19 Oct, 16:00"],
+				["Offer", "Northwind Labs", "Game Developer", "Respond by Thu 22 Oct"],
+				["Screening", "Parcel & Co.", "Gameplay Programmer", "Screening · Tue 20 Oct"],
+				["Applied", "Lumen", "Unity Developer", "Follow up · Wed 21 Oct"],
+				["Saved", "Fieldnote", "Tools Programmer", "Prepare a resume"],
+			];
+			const applicationRows = (bulk = false) =>
+				records
+					.map(
+						([s, c, r, next], i) =>
+							`<section><div class="stage-title">${stage(s)} <span class="meta">1</span></div><div class="list-row">${bulk ? check(`Select ${c}`, i < 2) : ""}<button class="entry" data-go="${i === 0 ? "app-detail" : `app-context-${i}`}"><h3>${r}</h3><p>${c}</p><span class="meta">${next}</span></button>${ib("more", `Options for ${r} at ${c}`, "app-actions")}</div></section>`,
+					)
+					.join("");
+			function boardCard(status) {
+				const i = records.findIndex((record) => record[0] === status);
+				const record = records[i];
+				return card(
+					record[1],
+					`<p>${record[2]}</p><p class="meta">${record[3]}</p>${btn("Open", i === 0 ? "app-detail" : `app-context-${i}`)}${btn("Move to…", "app-move", "link")}`,
+				);
+			}
+
+			const listHeader = () =>
+				`<div class="row">${field("Search applications", "", "search")}${ib("more", "Sort and actions", "app-sort")}</div><div class="row between">${btn("Select", "app-bulk", "link")}${btn("Import / export CSV", "app-csv-menu", "link")}</div>`;
+			const listBody = () =>
+				listHeader() + applicationRows() + check("Show closed") + btn("Save job", "app-add", "primary");
+			add("app-list", "Applications", "Applications", "Grouped by stage; what needs you first.", listBody, {
+				view: "List",
+			});
+			add(
+				"app-sort",
+				"Applications",
+				"Sort and filter",
+				"Sort within each stage; filters stay visible.",
+				() =>
+					select("Sort by", ["Updated", "Role", "Next step"]) +
+					select("Direction", ["Newest first / Descending", "Oldest first / Ascending"]) +
+					field("Search role, company or contact", "Fieldnote", "search") +
+					check("Show closed") +
+					btn("Apply filters", "app-search-results", "primary"),
+				{ sheet: true, back: "app-list" },
+			);
+			add(
+				"app-search-results",
+				"Applications",
+				"Search results",
+				"Query and clear-search recovery.",
+				() =>
+					field("Search applications", "Fieldnote", "search") +
+					card("Fieldnote", `<p>Senior Game Developer</p>${btn("Open application", "app-detail")}`) +
+					btn("Clear search", "app-list"),
+				{ view: "List" },
+			);
+			add(
+				"app-search-empty",
+				"Applications",
+				"No matching applications",
+				"Empty search keeps recovery beside query.",
+				() =>
+					field("Search applications", "Astronaut", "search") +
+					empty(
+						"No applications match “Astronaut”.",
+						"Try another role, company or contact.",
+						"Clear search",
+						"app-list",
+					),
+				{ view: "List" },
+			);
+			add(
+				"app-actions",
+				"Applications",
+				"Application options",
+				"Move, close or permanently delete.",
+				() =>
+					heading("Fieldnote", "Senior Game Developer") +
+					btn("Move to…", "app-move") +
+					btn("Close…", "app-close") +
+					btn("Delete…", "app-delete", "danger"),
+				{ sheet: true, back: "app-list" },
+			);
+			add(
+				"app-move",
+				"Applications",
+				"Move to stage",
+				"Accessible alternative to dragging.",
+				() =>
+					["Saved", "Applied", "Screening", "Interview", "Offer"].map((s) => act(stage(s), `stage:${s}`)).join("") +
+					note("Moving to Applied asks what you actually sent.", "info"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-bulk",
+				"Applications",
+				"2 selected",
+				"Bulk controls remain above the list.",
+				() =>
+					`<div class="row wrap">${btn("Move", "app-bulk-move")}${btn("Tag", "app-bulk-tag")}${btn("Close", "app-bulk-close")}${btn("Delete", "app-bulk-delete", "danger")}${btn("Clear", "app-list", "link")}</div>` +
+					applicationRows(true),
+				{ view: "List" },
+			);
+			add(
+				"app-bulk-move",
+				"Applications",
+				"Move 2 applications",
+				"One stage for selected applications.",
+				() =>
+					select("Move to", ["Screening", "Interview", "Offer", "Saved", "Applied"]) +
+					act("Move 2 applications", "bulk-move", "primary"),
+				{ sheet: true, back: "app-bulk" },
+			);
+			add(
+				"app-bulk-tag",
+				"Applications",
+				"Tag 2 applications",
+				"Add tag to selection.",
+				() => field("Tag", "Games") + act("Add tag", "bulk-tag", "primary"),
+				{ sheet: true, back: "app-bulk" },
+			);
+			const reasons = () =>
+				select("Reason", ["Not selected", "I withdrew", "Accepted another offer", "No response", "Accepted offer"]);
+			add(
+				"app-bulk-close",
+				"Applications",
+				"Close 2 applications",
+				"Reason is retained for Insights.",
+				() => reasons() + act("Close applications", "bulk-close", "primary"),
+				{ sheet: true, back: "app-bulk" },
+			);
+			add(
+				"app-bulk-delete",
+				"Applications",
+				"Delete 2 applications?",
+				"Destructive confirmation.",
+				() =>
+					note("They and their timelines are deleted permanently. This can’t be undone.", "error") +
+					btn("Cancel", "app-bulk") +
+					act("Delete permanently", "bulk-delete", "danger"),
+				{ sheet: true, back: "app-bulk" },
+			);
+			add(
+				"app-bulk-result",
+				"Applications",
+				"Bulk update result",
+				"Partial failure keeps retry and selection.",
+				() =>
+					note("Updated 1 of 2. Northwind Labs could not be updated.", "warning") +
+					card(
+						"Northwind Labs",
+						"<p>Game Developer · Still at Offer</p>" + btn("Retry failed application", "app-bulk", "primary"),
+					) +
+					btn("Back to applications", "app-list"),
+				{ view: "List" },
+			);
+			add(
+				"app-delete",
+				"Applications",
+				"Delete this application?",
+				"Permanent delete has no Undo promise.",
+				() =>
+					heading("Senior Game Developer", "Fieldnote") +
+					note("This application and its timeline are deleted permanently. This can’t be undone.", "error") +
+					btn("Cancel", "app-detail") +
+					act("Delete permanently", "delete-application", "danger"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-board",
+				"Applications",
+				"Board",
+				"Phone swipes columns; tablet shows adjacent stages.",
+				() =>
+					`<div class="board">${["Saved", "Applied", "Screening", "Interview", "Offer", "Closed"].map((s, i) => `<section class="column"><h3 class="stage-title">${stage(s)} ${s === "Closed" ? "0" : "1"}</h3>${s === "Closed" ? '<p class="meta">Drop here to close with a reason.</p>' : boardCard(s)}</section>`).join("")}</div><p class="meta">Swipe horizontally for stages. Long press a card to drag; Move to… offers the same action.</p>`,
+				{ view: "Board" },
+			);
+			add(
+				"app-calendar",
+				"Applications",
+				"Calendar",
+				"October 2026 · interview dates and agenda.",
+				() =>
+					`<div class="row between">${act("‹ Previous", "month-prev")}${act("This month", "month-reset")}${act("Next ›", "month-next")}</div><h3 id="calendar-month">October 2026</h3><div class="calendar">${["M", "T", "W", "T", "F", "S", "S"].map((s) => `<span aria-hidden="true">${s}</span>`).join("")}${Array.from({ length: 3 }, () => "<span></span>").join("")}${Array.from({ length: 31 }, (_, i) => `<button data-go="${[18].includes(i) ? "app-interview" : "app-interview-new"}" ${[18].includes(i) ? 'data-event="true"' : ""} aria-label="Schedule or view interview on ${i + 1} October">${i + 1}</button>`).join("")}</div>${card("Upcoming interviews", `<p>Mon 19 Oct, 16:00 · Europe/Berlin</p><p>Fieldnote · Technical · 60 min</p>${btn("Edit interview", "app-interview")}${btn("Schedule interview", "app-interview-new", "primary")}`)}`,
+				{ view: "Calendar" },
+			);
+			add(
+				"app-insights",
+				"Applications",
+				"Insights",
+				"Reached-stage counts, reply time and source.",
+				() =>
+					heading(
+						"How far applications get",
+						"Counts everyone who reached each stage, including applications now closed.",
+					) +
+					`<div class="funnel">${[
+						["Applied", 12, 100],
+						["Screening", 6, 50],
+						["Interview", 3, 25],
+						["Offer", 1, 8],
+					]
+						.map(
+							([s, n, w]) =>
+								`<div class="funnel-row"><span>${s}</span><div class="bar"><span style="width:${w}%"></span></div><strong>${n}</strong></div>`,
+						)
+						.join("")}</div>` +
+					card("Replies", "<p>50% heard back · 5 days median to first reply</p>") +
+					card(
+						"Tailored vs. base resume",
+						'<p>4 of 6 tailored applications got a reply; 2 of 6 sent with another resume.</p><p class="meta">Small numbers, but worth noticing.</p>',
+					) +
+					card("Applications over time", "<p>Last 8 weeks · 1, 0, 2, 1, 3, 2, 1, 2 sent</p>") +
+					card("Where applications come from", "<p>Referral 5 · Company site 4 · LinkedIn 3</p>") +
+					btn("Pipeline flow", "app-pipeline") +
+					btn("Export CSV", "app-csv-export"),
+				{ view: "Insights" },
+			);
+			add(
+				"app-pipeline",
+				"Applications",
+				"Pipeline flow",
+				"Accessible stage totals accompany flow.",
+				() =>
+					heading("Where your applications went", "12 sent · 5 active · 7 closed") +
+					[
+						"Saved → Applied: 12",
+						"Applied → Screening: 6",
+						"Screening → Interview: 3",
+						"Interview → Offer: 1",
+						"Closed: 7",
+					]
+						.map((t) => card("", `<p>${t}</p>`))
+						.join("") +
+					act("Share PNG", "share-pipeline"),
+				{ view: "Insights" },
+			);
+			add(
+				"app-add",
+				"Add & import",
+				"Save a job",
+				"Paste link or text; manual entry stays available.",
+				() =>
+					area("Job link or posting text", "https://jobs.example.com/fieldnote/game-developer") +
+					btn("Read posting", "app-parsing", "primary") +
+					btn("Paste description instead", "app-paste", "link") +
+					btn("Search job postings", "app-search", "link") +
+					btn("Fill details manually", "app-review", "link"),
+				{ sheet: true, back: "app-list" },
+			);
+			add(
+				"app-paste",
+				"Add & import",
+				"Paste description",
+				"Original link stays with this job.",
+				() =>
+					area(
+						"Pasted description",
+						"Fieldnote is hiring a Senior Game Developer. Build gameplay systems in C++ and Unreal Engine. Hybrid in Seattle.",
+					) +
+					btn("Fill fields", "app-parsing", "primary") +
+					note("AI reads pasted text only when you ask. You can fill the fields manually.", "info"),
+				{ sheet: true, back: "app-add" },
+			);
+			const skeleton = () =>
+				'<div aria-label="Loading" role="status"><div class="skeleton short"></div><div class="skeleton"></div><div class="skeleton tall"></div><div class="skeleton"></div><div class="skeleton tall"></div></div>';
+			add(
+				"app-parsing",
+				"Add & import",
+				"Reading the posting…",
+				"Cancelable progress; no automatic background jump.",
+				() =>
+					skeleton() +
+					note("Reading role, company and requirements. Nothing is saved yet.", "info") +
+					btn("Review parsed details", "app-review", "primary") +
+					btn("Cancel", "app-add"),
+				{ sheet: true, back: "app-add" },
+			);
+			const factsFields = () =>
+				field("Company", "Fieldnote") +
+				field("Role / title", "Senior Game Developer") +
+				field("Location", "Seattle, WA · Hybrid") +
+				field("Salary range", "Not listed") +
+				field("Source", "Company site") +
+				field("Job posting link", "https://jobs.example.com/fieldnote/game-developer", "url") +
+				select("Stage", ["Saved", "Already applied", "Already interviewing"]) +
+				field("Stage date", "2026-10-17", "date") +
+				select("Resume", ["Game Developer · David Kowalski", "None"]) +
+				select("Cover letter submitted (optional)", ["None", "Fieldnote · Cover letter"]) +
+				field("Tags", "Games, C++") +
+				field("Follow-up date", "2026-10-21", "date") +
+				field("Follow-up note", "Email the recruiter") +
+				area("Notes", "Ask about the gameplay team.");
+			add(
+				"app-review",
+				"Add & import",
+				"Review job details",
+				"Autofill is editable before save.",
+				() =>
+					note("Found the role and company. Review the details before saving.") +
+					factsFields() +
+					area(
+						"Saved description",
+						"Build gameplay systems in C++ and Unreal Engine. Requirements: C++, gameplay architecture, cross-functional work.",
+					) +
+					note(
+						"Retrieved 17 Oct 2026. Origin freshness is unknown. Review clipped descriptions before preparing.",
+						"warning",
+					) +
+					act("Save job", "save-job", "primary") +
+					act("Save and prepare resume", "save-tailor"),
+				{ sheet: true, back: "app-add" },
+			);
+			add(
+				"app-add-error",
+				"Add & import",
+				"Posting couldn’t be read",
+				"Retry, paste and manual recovery.",
+				() =>
+					note("That link couldn’t be read. Paste the posting text instead.", "error") +
+					btn("Retry", "app-parsing", "primary") +
+					btn("Paste description instead", "app-paste") +
+					btn("Fill details manually", "app-review"),
+				{ sheet: true, back: "app-add" },
+			);
+			add(
+				"app-search",
+				"Add & import",
+				"Search job postings",
+				"Web search connection is required.",
+				() =>
+					field("Role, company or location", "Game Developer Seattle", "search") +
+					act("Search", "search-postings", "primary") +
+					card(
+						"Senior Game Developer · Fieldnote",
+						'<p>Unreal Engine, C++ · Seattle · Open posting</p><p class="meta">jobs.example.com</p>' +
+							btn("View posting", "app-posting") +
+							btn("Use posting", "app-add"),
+					) +
+					note("Uses the web search service set up in Settings. Search results wait for your review.", "info"),
+				{ sheet: true, back: "app-add" },
+			);
+			add(
+				"app-add-provider",
+				"Add & import",
+				"Read without AI",
+				"Structured link reading or manual details still work.",
+				() =>
+					note("Connect an AI provider in Settings to read details from pasted text.", "warning") +
+					btn("Fill details manually", "app-review", "primary") +
+					btn("Connect AI provider", "provider-handoff") +
+					btn("Try reading the link", "app-parsing"),
+				{ sheet: true, back: "app-add" },
+			);
+			add(
+				"app-posting",
+				"Application detail",
+				"Saved posting",
+				"Saved description with source and completeness.",
+				() =>
+					heading("Senior Game Developer", "Fieldnote · Company site") +
+					area(
+						"Job description",
+						"Build gameplay systems in C++ and Unreal Engine. Work with designers, artists and QA.",
+					) +
+					card("What it asks for", "<p>C++ · Unreal Engine · Gameplay architecture · Team collaboration</p>") +
+					note(
+						"Retrieved 17 Oct 2026 using the built-in reader. Retrieval time does not establish origin freshness.",
+						"info",
+					) +
+					save(),
+				{ back: "app-detail" },
+			);
+			const nextCard = () =>
+				card(
+					"Next step",
+					`<p><strong>Technical interview</strong></p><p>Mon 19 Oct, 16:00–17:00</p><p class="meta">Europe/Berlin · 07:00 America/Los_Angeles</p><div class="row wrap">${btn("Edit", "app-interview")}${btn("Reminder", "app-reminder")}${btn("Add to calendar", "app-ics")}</div>`,
+					"accent",
+				);
+			const sentCard = () =>
+				card(
+					"What you sent",
+					`<p>Game Developer · David Kowalski</p><span class="meta">Version sent 12 Oct · Check 86</span>${btn("Open version sent", "app-sent")}<hr class="divider"><p>Fieldnote · Cover letter</p><span class="meta">Linked · not sent yet</span>${btn("Record submission", "app-submission")}`,
+				);
+			const detail = () =>
+				`<div class="stepper" aria-label="Stages">${["Saved", "Applied", "Screening", "Interview", "Offer"].map((s) => `<button class="${s === "Interview" ? "current" : ""}" data-go="${s === "Applied" ? "app-submission" : "app-move"}">${s}</button>`).join("")}</div>` +
+				nextCard() +
+				btn("Open workspace", "ws-fit", "primary") +
+				sentCard() +
+				card(
+					"Facts",
+					`<div class="facts">${[
+						["Salary", "Not listed"],
+						["Source", "Company site"],
+						["Applied", "12 Oct 2026"],
+						["Location", "Seattle · Hybrid"],
+					]
+						.map(([k, v]) => `<div class="fact-line"><span>${k}</span><button data-go="app-edit">${v}</button></div>`)
+						.join("")}</div>${btn("Edit details", "app-edit", "link")}`,
+				) +
+				`<div class="row wrap">${badge("Games")}${badge("C++")}${btn("Edit tags", "app-tags", "link")}</div>` +
+				card("Contacts", `<p>Sam Rivera · Recruiter</p>${btn("Manage contacts", "app-contacts")}`) +
+				btn("Notes", "app-notes") +
+				btn("Timeline", "app-timeline") +
+				btn("Attachments", "app-attachments") +
+				btn("View posting", "app-posting") +
+				btn("Close application…", "app-close", "danger");
+			add("app-detail", "Application detail", "Fieldnote", "Senior Game Developer · Interview", detail, {
+				back: "app-list",
+			});
+			add(
+				"app-edit",
+				"Application detail",
+				"Edit application",
+				"All current editable application fields.",
+				() =>
+					factsFields() +
+					area("Job description", "Build gameplay systems in C++ and Unreal Engine.") +
+					btn("Attach a resume file (PDF)", "app-attachments") +
+					btn("Attach a cover letter (PDF)", "app-attachments") +
+					save(),
+				{ back: "app-detail" },
+			);
+			add(
+				"app-tags",
+				"Application detail",
+				"Application tags",
+				"Remove and add labels.",
+				() => check("Games", true) + check("C++", true) + field("Add a tag", "Unreal Engine") + save(),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-sent",
+				"Application detail",
+				"Version sent",
+				"Read-only snapshot; linked is distinct from submitted.",
+				() =>
+					note("You’re looking at the resume sent on 12 Oct. It can’t be edited.", "info") +
+					card(
+						"David Kowalski",
+						`<p>Game Developer | Unity & Unreal Engine Specialist</p><hr class="divider"><h3>Cascade Studios</h3><p>Senior Game Developer · March 2022–Present</p><p>Developed custom editor tools in C++ that reduced level designer iteration time by 40%.</p>`,
+					) +
+					btn("Back to latest document", "document-handoff") +
+					btn("Back to application", "app-detail"),
+				{ back: "app-detail" },
+			);
+			add(
+				"app-submission",
+				"Application detail",
+				"Mark as applied",
+				"Keep exact versions actually submitted.",
+				() =>
+					note(
+						"Confirm submission and choose the documents you actually sent. Their current versions will be saved.",
+						"info",
+					) +
+					field("Application date", "2026-10-17", "date") +
+					select("Resume submitted (optional)", ["Game Developer · David Kowalski", "None"]) +
+					select("Cover letter submitted (optional)", ["Fieldnote · Cover letter", "None"]) +
+					act("Confirm applied", "confirm-applied", "primary") +
+					btn("Cancel", "app-detail"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-contacts",
+				"Application detail",
+				"Contacts",
+				"Optional email validation; remove contact.",
+				() =>
+					card(
+						"Sam Rivera",
+						"<p>Recruiter · Fieldnote</p><p>sam@example.com · +1 555 0100</p>" +
+							act("Remove contact", "remove-contact", "danger"),
+					) +
+					field("Name", "Sam Rivera") +
+					field("Role (optional)", "Talent partner") +
+					select("Label", ["Recruiter", "Hiring manager", "Referral", "Interviewer"]) +
+					field("Email (optional)", "sam@example.com", "email") +
+					field("Phone (optional)", "+1 555 0100", "tel") +
+					save("app-detail", "Add contact"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-notes",
+				"Application detail",
+				"Notes",
+				"Draft stays visible on failure.",
+				() =>
+					area(
+						"Anything to remember about this job",
+						"Ask about ownership of the combat system. Team uses Unreal Engine 5.",
+						7,
+					) +
+					act("Save notes", "save:app-detail", "primary") +
+					btn("See save failure", "app-notes-error", "link"),
+				{ back: "app-detail", keyboard: true },
+			);
+			add(
+				"app-notes-error",
+				"Application detail",
+				"Notes not saved",
+				"Retry preserves draft.",
+				() =>
+					area("Anything to remember about this job", "Ask about ownership of the combat system.", 6) +
+					note("Couldn’t save the notes. Your text is still here.", "error") +
+					act("Retry save", "save:app-detail", "primary"),
+				{ back: "app-notes" },
+			);
+			add(
+				"app-timeline",
+				"Application detail",
+				"Timeline",
+				"Dated history and entry editing.",
+				() =>
+					`<div class="timeline"><article><p class="meta">17 Oct, 10:20 · Europe/Berlin</p><h3>Technical interview scheduled</h3>${btn("Edit interview", "app-interview", "link")}</article><article><p class="meta">15 Oct, 14:10</p><h3>Moved to Interview</h3>${btn("Edit date", "app-timeline-edit", "link")}</article><article><p class="meta">12 Oct, 09:00</p><h3>Applied</h3><p>Resume version saved.</p></article></div>` +
+					area("Add a note", "Recruiter confirmed the technical round.") +
+					act("Add note", "add-timeline-note", "primary"),
+				{ back: "app-detail" },
+			);
+			add(
+				"app-timeline-edit",
+				"Application detail",
+				"Edit timeline entry",
+				"Date, note and permanent entry deletion.",
+				() =>
+					field("Date", "2026-10-15T14:10", "datetime-local") +
+					area("Note", "Moved to Interview") +
+					save("app-timeline") +
+					btn("Delete entry…", "app-timeline-delete", "danger"),
+				{ sheet: true, back: "app-timeline" },
+			);
+			add(
+				"app-timeline-delete",
+				"Application detail",
+				"Delete this entry?",
+				"Explicit confirmation for permanent timeline deletion.",
+				() =>
+					note("It’s removed from the timeline for good.", "error") +
+					btn("Cancel", "app-timeline") +
+					act("Delete entry", "delete-timeline", "danger"),
+				{ sheet: true, back: "app-timeline" },
+			);
+			add(
+				"app-attachments",
+				"Application detail",
+				"Attachments",
+				"Document picker and PDF limits.",
+				() =>
+					card(
+						"Resume file",
+						`<p>David-Kowalski.pdf · 248 KB</p>${act("Preview PDF", "preview-file")}${act("Remove file", "remove-file", "danger")}`,
+					) +
+					btn("Attach a resume file (PDF)", "app-file-picker") +
+					btn("Attach a cover letter (PDF)", "app-file-picker") +
+					note(
+						"PDF only · up to 10 MB each. Linking a Reactive Resume enables AI match scoring and tailoring.",
+						"info",
+					),
+				{ back: "app-detail" },
+			);
+			add(
+				"app-file-picker",
+				"Application detail",
+				"Choose a PDF",
+				"Native document picker design.",
+				() =>
+					heading("Files", "On this device") +
+					card("David-Kowalski.pdf", `<p>PDF document · 248 KB</p>${act("Choose file", "choose-file", "primary")}`) +
+					btn("Cancel", "app-attachments") +
+					btn("See invalid-file state", "app-file-error", "link"),
+				{ sheet: true, back: "app-attachments" },
+			);
+			add(
+				"app-file-error",
+				"Application detail",
+				"Attachment couldn’t be added",
+				"Type, size and retry guidance.",
+				() =>
+					note("Choose a PDF smaller than 10 MB. The selected DOCX was not uploaded.", "error") +
+					btn("Choose another file", "app-file-picker", "primary") +
+					btn("Retry PDF upload", "app-attachments"),
+				{ sheet: true, back: "app-attachments" },
+			);
+			add(
+				"app-close",
+				"Application detail",
+				"Close this application",
+				"Reason retained; linked documents unaffected.",
+				() =>
+					reasons() +
+					note("The reason is kept for Insights. Linked documents aren’t touched.", "info") +
+					act("Close application", "close-application", "primary") +
+					btn("Cancel", "app-detail"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-closed",
+				"Application detail",
+				"Application closed",
+				"Outcome and reopen path.",
+				() =>
+					badge("Closed") +
+					heading("Fieldnote", "Senior Game Developer") +
+					card("Outcome", "<p>I withdrew · 17 Oct 2026</p>") +
+					btn("Reopen", "app-move", "primary") +
+					btn("View timeline", "app-timeline"),
+				{ back: "app-list" },
+			);
+			const interviewFields = (fresh = false) =>
+				select("Type", ["Technical", "Screening", "Behavioral", "Onsite", "Other"]) +
+				field("Date", fresh ? "2026-10-20" : "2026-10-19", "date") +
+				field("Time · America/Los_Angeles", "07:00", "time") +
+				select("Length · minutes", ["60", "30", "45", "90"]) +
+				select("Interview timezone", ["America/Los_Angeles", "Europe/Berlin", "UTC"]) +
+				note("07:00 in America/Los_Angeles is 16:00 in your timezone (Europe/Berlin).", "info") +
+				field("Location", "https://video.example.com/fieldnote", "url") +
+				heading("Who you’ll meet") +
+				field("Name", "Sam Rivera") +
+				field("Role", "Gameplay lead") +
+				field("Profile link (optional)", "https://example.com/sam", "url") +
+				act("Remove person", "remove-person", "link") +
+				act("Add a person", "add-person") +
+				`<p class="privacy">Public HTTPS profile links are optional and only used if Web research is on.</p>` +
+				area("What they asked you to prepare", "Walk through a gameplay system you designed.") +
+				check("Remind me on this device", true) +
+				btn("Reminder settings", "app-reminder", "link") +
+				act("Save interview", "save-interview", "primary") +
+				(fresh ? "" : act("Delete interview", "delete-interview", "danger"));
+			add(
+				"app-interview",
+				"Application detail",
+				"Edit interview",
+				"Type, timezone, people and local reminder.",
+				() => interviewFields(),
+				{ back: "app-detail" },
+			);
+			add(
+				"app-interview-new",
+				"Application detail",
+				"Schedule an interview",
+				"Application picker from Calendar.",
+				() =>
+					select("Application", ["Fieldnote · Senior Game Developer", "Parcel & Co. · Gameplay Programmer"]) +
+					interviewFields(true),
+				{ back: "app-calendar" },
+			);
+			add(
+				"app-interview-error",
+				"Application detail",
+				"Check interview time",
+				"DST gap is validated before saving.",
+				() =>
+					field("Date", "2027-03-28", "date") +
+					field("Time · Europe/Berlin", "02:30", "time") +
+					note("This time does not exist in the selected timezone. Choose another time.", "error") +
+					btn("Choose another time", "app-interview", "primary"),
+				{ back: "app-interview" },
+			);
+			add(
+				"app-reminder",
+				"Reminders & CSV",
+				"On-device reminder",
+				"Local notification; no push subscription.",
+				() =>
+					heading("Technical interview", "Mon 19 Oct, 16:00 · Europe/Berlin") +
+					check("Remind me on this device", true) +
+					select("Before interview", ["30 minutes", "10 minutes", "1 hour", "1 day"]) +
+					note("Only this device schedules the notification. Allow notifications when the system asks.", "info") +
+					btn("Allow notifications", "app-permission", "primary") +
+					btn("Notifications denied", "app-permission-denied", "link") +
+					btn("Share calendar event (.ics)", "app-ics"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-permission",
+				"Reminders & CSV",
+				"Allow notifications",
+				"System prompt shown only after opt-in.",
+				() =>
+					card(
+						"“Reactive Resume” would like to send you notifications",
+						"<p>Interview and follow-up reminders on this device.</p>" +
+							act("Allow", "allow-reminder", "primary") +
+							btn("Don’t allow", "app-permission-denied"),
+					),
+				{ sheet: true, back: "app-reminder" },
+			);
+			add(
+				"app-permission-denied",
+				"Reminders & CSV",
+				"Notifications are off",
+				"Permission recovery and .ics alternative.",
+				() =>
+					note("The interview is saved. To get a reminder, allow notifications in your device settings.", "warning") +
+					act("Open device settings", "device-settings") +
+					btn("Share calendar event (.ics)", "app-ics", "primary") +
+					btn("Continue without reminder", "app-detail"),
+				{ sheet: true, back: "app-reminder" },
+			);
+			add(
+				"app-ics",
+				"Reminders & CSV",
+				"Share calendar event",
+				"Uses system share sheet; no calendar-write permission.",
+				() =>
+					card(
+						"Fieldnote · Technical interview",
+						'<p>Mon 19 Oct, 16:00–17:00 Europe/Berlin</p><p class="meta">Fieldnote-interview.ics · Includes timezone and video link.</p>',
+					) +
+					act("Share .ics", "share-ics", "primary") +
+					act("Save to Files", "save-ics") +
+					btn("Back to application", "app-detail"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-follow-up",
+				"Reminders & CSV",
+				"Set a follow-up",
+				"Next-step note with local reminder.",
+				() =>
+					field("Date", "2026-10-21", "date") +
+					field("What to do", "Email the recruiter") +
+					check("Remind me on this device", true) +
+					btn("Reminder settings", "app-reminder", "link") +
+					save(),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-csv-menu",
+				"Reminders & CSV",
+				"Import or export CSV",
+				"Separate review and export flows.",
+				() => btn("Import from CSV", "app-csv-import") + btn("Export to CSV", "app-csv-export"),
+				{ sheet: true, back: "app-list" },
+			);
+			add(
+				"app-csv-import",
+				"Reminders & CSV",
+				"Import from CSV",
+				"Upload or paste; nothing saved before mapping.",
+				() =>
+					act("Upload .csv", "pick-csv") +
+					area(
+						"CSV data",
+						"Company,Title,Status\nFieldnote,Senior Game Developer,Interview\nLumen,Unity Developer,Applied",
+						5,
+					) +
+					btn("Review columns", "app-csv-map", "primary") +
+					btn("Use sample", "app-csv-map", "link"),
+				{ sheet: true, back: "app-list" },
+			);
+			add(
+				"app-csv-map",
+				"Reminders & CSV",
+				"Match columns",
+				"Column mapping precedes import.",
+				() =>
+					heading("2 rows ready", "Company and Role required.") +
+					select("Company goes to", ["Company", "Leave out"]) +
+					select("Title goes to", ["Role", "Leave out"]) +
+					select("Status goes to", ["Stage", "Leave out"]) +
+					select("Unmapped column goes to", [
+						"Leave out",
+						"Notes",
+						"Tags",
+						"Contact name",
+						"Contact email",
+						"Contact phone",
+						"Stage date",
+						"Salary",
+						"Source",
+						"Location",
+						"Link",
+						"Job description",
+						"Posting source",
+						"Contact role",
+						"Contact label",
+						"Archived (closes it)",
+						"Contacts",
+					]) +
+					note("Preview: Fieldnote · Senior Game Developer · Interview") +
+					btn("Import 2 applications", "app-csv-progress", "primary") +
+					btn("Review invalid values", "app-csv-error", "link"),
+				{ sheet: true, back: "app-csv-import" },
+			);
+			add(
+				"app-csv-error",
+				"Reminders & CSV",
+				"Fix CSV values",
+				"Invalid values and skipped rows are explicit.",
+				() =>
+					note("Row 2, Stage: “Maybe” is invalid. Fix the CSV or leave this column out before importing.", "error") +
+					note(
+						"Rows without Company or Role are skipped. Only the first 500 rows import at once; split larger files.",
+						"warning",
+					) +
+					btn("Back to column mapping", "app-csv-map", "primary") +
+					act("Download invalid rows", "invalid-csv"),
+				{ sheet: true, back: "app-csv-map" },
+			);
+			add(
+				"app-csv-progress",
+				"Reminders & CSV",
+				"Importing applications…",
+				"In-flight writes have no misleading Cancel.",
+				() =>
+					skeleton() +
+					note("Importing 2 rows. Keep this screen open.", "info") +
+					btn("View completed result", "app-csv-done", "primary"),
+				{ sheet: true, back: "app-csv-import" },
+			);
+			add(
+				"app-csv-done",
+				"Reminders & CSV",
+				"Import complete",
+				"Result names skipped rows.",
+				() =>
+					note("Imported 2 applications. 1 row had no company or role and was skipped.") +
+					act("Share skipped row CSV", "invalid-csv") +
+					btn("Open Applications", "app-list", "primary"),
+				{ sheet: true, back: "app-list" },
+			);
+			add(
+				"app-csv-export",
+				"Reminders & CSV",
+				"Export applications",
+				"Filters, dates and native share.",
+				() =>
+					select("Applications to export", ["Current filters", "All applications (including closed)"]) +
+					field("Application date from", "2026-10-01", "date") +
+					field("Application date to", "2026-10-31", "date") +
+					note("Includes application details, contacts, notes and timeline history.", "info") +
+					act("Share CSV", "export-csv", "primary") +
+					btn("See date validation", "app-export-error", "link"),
+				{ sheet: true, back: "app-list" },
+			);
+			add(
+				"app-export-error",
+				"Reminders & CSV",
+				"Check export dates",
+				"Reversed range never exports silently.",
+				() =>
+					field("Application date from", "2026-10-31", "date") +
+					field("Application date to", "2026-10-01", "date") +
+					note("Start date must be on or before end date.", "error") +
+					btn("Correct dates", "app-csv-export", "primary"),
+				{ sheet: true, back: "app-csv-export" },
+			);
+			const workspaceContext = () =>
+				`<aside class="stack workspace-context">${nextCard()}${sentCard()}${btn("Details", "app-detail")}${btn("Ask the coach", "ws-coach", "primary")}</aside>`;
+			const evidence = () =>
+				card(
+					"C++ gameplay architecture",
+					badge("Supported", "good") +
+						'<p>Architected combat systems serving 15+ enemy types at Cascade Studios.</p><p class="meta">From resume · David Kowalski</p>',
+				) +
+				card(
+					"Unreal Engine",
+					badge("Partly supported", "warn") +
+						"<p>Gameplay experience is recorded. Networking evidence is not recorded.</p>" +
+						btn("Add evidence", "ws-evidence", "link"),
+				) +
+				card(
+					"Multiplayer networking",
+					badge("Missing evidence", "warn") +
+						"<p>No enabled fact backs this requirement. This is missing evidence, not missing ability.</p>" +
+						btn("Clarify", "ws-evidence", "link"),
+				);
+			add(
+				"ws-fit",
+				"Workspace",
+				"Fit",
+				"Requirements against evidence; unknowns stay explicit.",
+				() =>
+					heading("Strong gameplay evidence", "1 supported · 1 partly · 1 missing") +
+					evidence() +
+					card(
+						"Worth asking",
+						"<p>What does multiplayer ownership look like in this role?</p>" + act("Add to questions", "add-question"),
+					) +
+					btn("Check again", "ws-fit-loading") +
+					ai(),
+				{ workspace: true },
+			);
+			add(
+				"ws-fit-empty",
+				"Workspace",
+				"Check fit",
+				"First run explains data sent and provider.",
+				() =>
+					empty(
+						"Check this role against your evidence",
+						"Requirements are checked against your enabled facts and stories.",
+						"Check fit",
+						"ws-fit-loading",
+					) + ai(),
+				{ workspace: true },
+			);
+			add(
+				"ws-fit-loading",
+				"Workspace",
+				"Checking fit…",
+				"Keep existing evidence while generating.",
+				() =>
+					skeleton() +
+					note("Reading the posting and enabled Knowledge.", "info") +
+					btn("View result", "ws-fit", "primary"),
+				{ workspace: true },
+			);
+			add(
+				"ws-evidence",
+				"Workspace",
+				"Add evidence",
+				"Review new fact and its application scope.",
+				() =>
+					area("What you did", "I implemented gameplay systems in C++ at Cascade Studios.") +
+					select("Use for", ["Fieldnote only", "All applications"]) +
+					act("Save to Knowledge", "save-evidence", "primary") +
+					btn("Cancel", "ws-fit"),
+				{ workspace: true, sheet: true, back: "ws-fit" },
+			);
+			add(
+				"ws-apply",
+				"Workspace",
+				"Apply",
+				"Draft answers, review checklist, record sent versions.",
+				() =>
+					card(
+						"Documents for this job",
+						`<p>Game Developer · David Kowalski</p>${btn("Open resume", "document-handoff")}<p>Fieldnote · Cover letter</p>${btn("Open letter", "letter-handoff")}`,
+					) +
+					area("Question from the form", "Why do you want this role?") +
+					area(
+						"Answer",
+						"I build gameplay systems in C++ and Unreal Engine. I would like to understand how your team gives developers ownership.",
+						4,
+					) +
+					`<p class="meta">132 / 1,000 characters · 27 / 200 words</p><div class="row wrap">${act("Draft", "draft-answer")}${act("Tighten", "tighten-answer")}${btn("Question options", "ws-question-options")}</div>` +
+					act("Add a question from the form", "add-form-question") +
+					card(
+						"Before you submit",
+						check("Review resume and cover letter in their editors") +
+							check("Check every claim, date and result") +
+							check("Review required form answers") +
+							check("Submit through the employer’s site yourself") +
+							check("Mark as applied to keep exact versions"),
+					) +
+					btn("Mark as applied", "app-submission", "primary") +
+					act("Copy answers", "copy-answers") +
+					act("Download answers (.md / .txt)", "download-answers") +
+					ai(),
+				{ workspace: true },
+			);
+			add(
+				"ws-question-options",
+				"Workspace",
+				"Question options",
+				"Count limits, edit and remove.",
+				() =>
+					select("Count by", ["Characters", "Words"]) +
+					field("Limit", "1000", "number") +
+					area("Question", "Why do you want this role?") +
+					act("Accept question changes", "save:ws-apply", "primary") +
+					act("Remove question", "remove-question", "danger"),
+				{ workspace: true, sheet: true, back: "ws-apply" },
+			);
+			add(
+				"ws-prepare",
+				"Workspace",
+				"Prepare",
+				"Timed plan, opening, stories and questions.",
+				() =>
+					heading("A focused plan for this round", "Fieldnote · Technical · Mon 19 Oct, 16:00") +
+					card(
+						"Your focus",
+						"<p>Explain your own decisions in the combat system.</p>" +
+							check("10 min · Your opening") +
+							check("20 min · Walk through architecture") +
+							check("15 min · Practise one story") +
+							check("5 min · Questions to ask"),
+					) +
+					card(
+						"Stories to bring",
+						"<p>Editor tools at Cascade Studios</p>" +
+							btn("Open story", "career-story") +
+							btn("Practise", "ws-practise"),
+					) +
+					card("Questions to ask", "<p>What does success look like at 90 days?</p>") +
+					btn("Read 10-minute briefing", "ws-briefing", "primary") +
+					btn("Plan again", "ws-fit-loading") +
+					btn("Refresh the briefing 24 hours before", "career-schedule-prepare") +
+					btn("Add an interview", "app-interview-new") +
+					ai(),
+				{ workspace: true },
+			);
+			add(
+				"ws-prepare-empty",
+				"Workspace",
+				"Add an interview",
+				"No interview state has a direct next action.",
+				() =>
+					empty(
+						"Add an interview to plan for it",
+						"Once a round is scheduled, Prepare builds a timed plan, opening and questions.",
+						"Add an interview",
+						"app-interview-new",
+					),
+				{ workspace: true },
+			);
+			add(
+				"ws-briefing",
+				"Workspace",
+				"10-minute briefing",
+				"Works without AI or new research.",
+				() =>
+					note("Starts in 10 minutes · 16:00 Europe/Berlin", "warning") +
+					card("Check the details", check("Time, video link and who you’ll meet") + check("Glance at what you sent")) +
+					card("Your opening", "<p>Current focus, relevant experience, why this role.</p>") +
+					card(
+						"Two stories",
+						"<p>Situation, task, action, result, reflection. Leave out numbers you’re unsure of.</p>",
+					) +
+					card("Questions to ask", "<p>Success at 90 days · next step</p>") +
+					btn("Rehearse aloud", "ws-practise", "primary"),
+				{ workspace: true, sheet: true, back: "ws-prepare" },
+			);
+			const question = () =>
+				heading(
+					"Tell me about work you’re proud of.",
+					"Question 1 of 3 · Simulated practice, not a question from Fieldnote.",
+				);
+			const speechNotice = () =>
+				note(
+					"Your recording goes to your selected AI connection after you stop. Your provider may charge. The server keeps transcripts, never recordings.",
+					"info",
+				);
+			add(
+				"ws-practise",
+				"Workspace",
+				"Practise",
+				"Typed or server-transcribed answer; no browser dictation.",
+				() =>
+					question() +
+					`<div class="row">${btn("Type", "ws-practise", "primary")}${btn("Speak", "ws-record-ready")}</div>` +
+					area(
+						"Your answer",
+						"At Cascade Studios, I developed custom editor tools in C++ that reduced level designer iteration time by 40%.",
+						5,
+					) +
+					btn("Get feedback", "ws-feedback", "primary") +
+					btn("Hear it", "ws-playback") +
+					btn("Voice settings", "ws-voice-settings") +
+					card(
+						"Your attempts",
+						"<p>Today, 09:20 · Typed</p><p>Start with your own part before describing team results.</p>",
+					) +
+					ai(),
+				{ workspace: true },
+			);
+			add(
+				"ws-record-ready",
+				"Workspace",
+				"Record your answer",
+				"Permission requested on record, with typed fallback.",
+				() =>
+					question() +
+					speechNotice() +
+					card(
+						"",
+						`<div class="voice-time">0:00</div>${btn("Record your answer", "ws-recording", "primary")}<p class="meta">Up to 2 minutes · 2 MB maximum.</p>`,
+					) +
+					btn("Type instead", "ws-practise") +
+					btn("Microphone denied", "ws-voice-error", "link"),
+				{ workspace: true },
+			);
+			const wave = () => `<div class="wave" aria-hidden="true">${"<span></span>".repeat(24)}</div>`;
+			add(
+				"ws-recording",
+				"Workspace",
+				"Recording",
+				"Stop triggers transcription; elapsed time is visible.",
+				() =>
+					question() +
+					card(
+						"",
+						wave() +
+							'<div class="voice-time" role="timer" aria-label="Recording time">0:42</div>' +
+							btn("Stop recording", "ws-transcribing", "primary"),
+					) +
+					note("Stop when you’re done. Nothing is sent until then.", "info") +
+					btn("Cancel recording", "ws-practise"),
+				{ workspace: true },
+			);
+			add(
+				"ws-transcribing",
+				"Workspace",
+				"Transcribing…",
+				"Recording stays available on failure.",
+				() =>
+					heading("Transcribing your answer", "Using your selected AI connection") +
+					skeleton() +
+					btn("Review transcript", "ws-transcript", "primary") +
+					btn("See transcription error", "ws-transcribe-error", "link") +
+					btn("Type instead", "ws-practise"),
+				{ workspace: true },
+			);
+			add(
+				"ws-transcript",
+				"Workspace",
+				"Review transcript",
+				"Check names and numbers before feedback.",
+				() =>
+					badge("Transcribed", "good") +
+					area(
+						"Your answer",
+						"At Cascade Studios I developed custom editor tools in C++ that reduced level designer iteration time by 40%.",
+						6,
+					) +
+					note("Check numbers and names before using it.", "warning") +
+					act("Write numbers as digits", "digits") +
+					btn("Get feedback", "ws-feedback", "primary") +
+					btn("Record again", "ws-record-ready") +
+					btn("Play recording", "ws-playback"),
+				{ workspace: true },
+			);
+			add(
+				"ws-playback",
+				"Workspace",
+				"Playback",
+				"Question speech or retained local recording.",
+				() =>
+					question() +
+					card(
+						"Playing aloud",
+						wave() +
+							act("Stop audio", "stop-audio", "primary") +
+							'<p class="meta">00:08 / 00:18 · Selected AI voice</p>',
+					) +
+					note("If spoken audio is unavailable, continue with the text question.", "info") +
+					btn("Continue with answer", "ws-practise"),
+				{ workspace: true },
+			);
+			add(
+				"ws-voice-settings",
+				"Workspace",
+				"Voice settings",
+				"Explicit providers and local retention choice.",
+				() =>
+					select("Transcribe answers with", ["Selected AI connection", "Add a connection in Settings"]) +
+					select("Read questions with", ["Selected AI connection", "Text only"]) +
+					select("Model", ["Provider default"]) +
+					check("Keep the recording on this device so I can share it") +
+					note("Speech may be billed separately. Without a speech connection, type your answer instead.", "info") +
+					save("ws-practise"),
+				{ workspace: true, sheet: true, back: "ws-practise" },
+			);
+			add(
+				"ws-transcribe-error",
+				"Workspace",
+				"Couldn’t transcribe",
+				"Recording preserved; retry or type.",
+				() =>
+					note("Couldn’t transcribe. Your recording is still here.", "error") +
+					btn("Try again", "ws-transcribing", "primary") +
+					btn("Play recording", "ws-playback") +
+					btn("Type instead", "ws-practise"),
+				{ workspace: true },
+			);
+			add(
+				"ws-voice-error",
+				"Workspace",
+				"Microphone is off",
+				"Settings recovery never blocks typing.",
+				() =>
+					note("Allow microphone access in device settings, or type your answer.", "warning") +
+					act("Open device settings", "device-settings") +
+					btn("Type instead", "ws-practise", "primary"),
+				{ workspace: true },
+			);
+			add(
+				"ws-no-provider",
+				"Workspace",
+				"Connect an AI provider",
+				"Voice transcription and feedback require AI.",
+				() =>
+					question() +
+					note(
+						"None of your AI connections can transcribe speech. Add one in Settings, or type your answer.",
+						"warning",
+					) +
+					btn("Connect AI provider", "provider-handoff", "primary") +
+					area("Your answer", "You can type and review your answer here.") +
+					note("Feedback needs an AI connection. Nothing is sent until you ask.", "info"),
+				{ workspace: true },
+			);
+			add(
+				"ws-feedback",
+				"Workspace",
+				"Practice feedback",
+				"Evidence-backed strengths, next attempt and Saved.",
+				() =>
+					card(
+						"What works",
+						"<p>Your own contribution is clear, and the editor-tool result is backed by your resume.</p>",
+					) +
+					card("Strengthen", "<p>Explain the design constraint before the implementation.</p>") +
+					card(
+						"Try this opening",
+						"<p>At Cascade Studios, I built tools in C++ to shorten level-designer iteration.</p>",
+					) +
+					btn("Try again with this", "ws-practise", "primary") +
+					act("Next question", "next-question") +
+					btn("Saved to Saved · Practice", "ws-saved", "link"),
+				{ workspace: true },
+			);
+			add(
+				"ws-debrief",
+				"Workspace",
+				"Debrief",
+				"Capture interview, review and choose what to remember.",
+				() =>
+					heading("Write it down while it’s fresh", "After the technical interview") +
+					area("What did they ask?", "How did you design the editor tools?") +
+					area(
+						"What did you say, as close as you remember?",
+						"I explained the workflow, C++ tooling and iteration-time result.",
+					) +
+					select("How did it land?", ["Went well", "Mixed", "Didn’t land"]) +
+					btn("Review my answer", "ws-debrief-review", "primary") +
+					ai(),
+				{ workspace: true },
+			);
+			add(
+				"ws-debrief-review",
+				"Workspace",
+				"Debrief review",
+				"Observation separated from supported evidence.",
+				() =>
+					badge("Observation") +
+					card("For the next round", "<p>Lead with the problem, then name the part you owned.</p>") +
+					card("Supported", "<p>The 40% iteration-time result is in your resume.</p>") +
+					btn("Remember for Fieldnote only?", "ws-remember") +
+					card(
+						"This week: make your evidence easier to follow",
+						check("10 min · Rehearse the opening") + check("15 min · Compare two attempts"),
+					) +
+					btn("Add to calendar", "app-ics") +
+					`<p class="privacy">Practice priorities, not conclusions about why an employer decided anything.</p>`,
+				{ workspace: true },
+			);
+			add(
+				"ws-remember",
+				"Workspace",
+				"Remember this?",
+				"Scope and consent before retention.",
+				() =>
+					area("Fact", "I explained how my C++ tooling improved designer iteration.") +
+					select("Scope", ["Fieldnote only", "All applications"]) +
+					act("Remember", "remember-fact", "primary") +
+					btn("Keep without remembering", "ws-debrief-review"),
+				{ workspace: true, sheet: true, back: "ws-debrief-review" },
+			);
+			add(
+				"ws-messages",
+				"Workspace",
+				"Messages",
+				"Read, edit reply, then review proposed changes.",
+				() =>
+					area(
+						"Paste a message from Fieldnote",
+						"We’d like to move forward. Please confirm your availability for a technical interview next week.",
+					) +
+					btn("Read it for me", "ws-message-review", "primary") +
+					ai(),
+				{ workspace: true },
+			);
+			add(
+				"ws-message-review",
+				"Workspace",
+				"Review message",
+				"You send replies from your own email.",
+				() =>
+					card("They’re asking for your availability", "<p>The interview time is not confirmed.</p>") +
+					area(
+						"Suggested reply · edit before sending",
+						"Thanks for the update. I’m available Monday at 16:00 Europe/Berlin. Could you confirm who I’ll meet?",
+					) +
+					act("Copy reply", "copy-reply") +
+					`<p class="privacy">You send it from your own email.</p>` +
+					card(
+						"Proposed changes",
+						check("Move to Interview", true) +
+							check("Follow up on 21 Oct if no reply", true) +
+							check("Save offer terms to compare", false) +
+							act("Apply 2 changes", "apply-proposals", "primary"),
+					) +
+					note("Confirm the time before adding a new interview.", "warning"),
+				{ workspace: true },
+			);
+			add(
+				"ws-saved",
+				"Workspace",
+				"Saved",
+				"Every result, newest first; filters and delete.",
+				() =>
+					select("Kind", ["All", "Fit", "Briefing", "Practice", "Debrief", "Answers", "Reply", "Offer"]) +
+					[
+						"Fit check · Today, 09:30",
+						"Practice feedback · Today, 09:20",
+						"Briefing · 16 Oct, 12:00",
+						"Reply · 15 Oct, 14:10",
+						"Answers · 12 Oct, 09:00",
+						"Offer · Northwind Labs",
+					]
+						.map((t, i) =>
+							card(
+								t,
+								`<p class="meta">Used posting, notes and 2 enabled facts.</p>${btn(i === 5 ? "Open in Offers" : "Open saved version", i === 5 ? "career-offers" : "ws-saved-version")}${act("Delete", "delete-saved", "danger")}`,
+							),
+						)
+						.join(""),
+				{ workspace: true },
+			);
+			add(
+				"ws-saved-empty",
+				"Workspace",
+				"Nothing saved yet",
+				"Explains which tabs produce saved items.",
+				() =>
+					empty(
+						"Nothing saved yet",
+						"Fit checks, briefings, practice feedback, debriefs, answers and replies land here.",
+						"Check fit",
+						"ws-fit-empty",
+					),
+				{ workspace: true },
+			);
+			add(
+				"ws-saved-version",
+				"Workspace",
+				"Saved Fit check",
+				"Read-only result with return to live workspace.",
+				() =>
+					note("You’re looking at a saved version. It can’t be edited.", "info") +
+					evidence() +
+					btn("Back to current", "ws-fit", "primary"),
+				{ workspace: true, readOnly: true },
+			);
+			const chatMessages = () =>
+				`<div class="bubble mine"><p>How should I explain my editor-tool work?</p></div><div class="bubble"><h3>Start with the designer’s problem.</h3><p>Then explain your own C++ decisions and the result you can support: 40% less iteration time.</p><div class="row wrap">${badge("1 fact")}${badge("1 story")}${badge("Resume")}</div>${btn("View supporting fact", "career-fact-source", "link")}</div>`;
+			const coachControls = () =>
+				`<div class="row wrap">${check("Knowledge", true)}${check("Application", true)}${check("Web research", false)}${check("Offers", false)}</div>`;
+			add(
+				"ws-coach",
+				"Workspace",
+				"Coach",
+				"Application context remains explicit in sheet.",
+				() =>
+					note("Fieldnote · Fit. Coach reads this posting, notes and what you sent.", "info") +
+					btn("Conversations", "career-conversations", "link") +
+					chatMessages() +
+					coachControls() +
+					area("Ask about this application…", "How should I prepare for this round?") +
+					btn("Send", "ws-coach-stream", "primary") +
+					ai(),
+				{ workspace: true, sheet: true, back: "ws-fit" },
+			);
+			const scheduleRow = () =>
+				card(
+					"Schedules",
+					`<div class="row between"><p>Opportunity discovery</p>${btn("Edit", "career-schedule")}</div><p class="meta">Daily at 08:00 · Europe/Berlin · Next Sun 18 Oct</p>${check("Turn this schedule on", true)}<hr class="divider"><p>Fieldnote interview preparation</p><p class="meta">24 hours before · Selected AI connection</p>${btn("Edit preparation", "career-schedule-prepare", "link")}${btn("Add schedule", "career-schedule", "link")}`,
+				);
+			add(
+				"career-today",
+				"Career",
+				"Today",
+				"Needs-you items, discovered roles, next interview and schedules.",
+				() =>
+					heading("Make room for the next step.", "Saturday 17 October · Europe/Berlin") +
+					card(
+						"Needs you",
+						`<p><strong>Fieldnote briefing is ready</strong></p><p class="meta">Interview preparation · Unread</p><div class="row wrap">${btn("Open briefing", "ws-briefing", "primary")}${act("Mark as read", "mark-read", "link")}</div>`,
+					) +
+					card(
+						"New roles from your search",
+						'<p><strong>Tools Programmer · Lumen</strong></p><p>Seattle · Office days not stated</p><p class="meta">Found today · Salary not listed</p>' +
+							btn("Read posting", "app-posting") +
+							act("Track in Applications", "track-role", "primary") +
+							act("Not for me", "hide-role", "link"),
+					) +
+					`<p class="privacy">Nothing is applied for or created until you choose.</p>` +
+					card(
+						"Coming up",
+						`<p>Technical interview · Fieldnote</p><p class="meta">Mon 19 Oct, 16:00 · Europe/Berlin</p>${btn("Open workspace", "ws-prepare")}`,
+					) +
+					scheduleRow(),
+				{ career: "Today" },
+			);
+			add(
+				"career-today-empty",
+				"Career",
+				"You’re up to date",
+				"First-run discovery is opt-in.",
+				() =>
+					empty(
+						"You’re up to date",
+						"New roles, reminders and finished briefings appear here.",
+						"Set up discovery",
+						"career-schedule",
+					) +
+					card("No new roles", "<p>Discovery is paused.</p>" + btn("Open the schedule", "career-schedule")) +
+					card(
+						"Nothing scheduled yet",
+						"<p>Reminders appear here. Email copies are optional and need a verified address.</p>" +
+							btn("Add schedule", "career-schedule"),
+					),
+				{ career: "Today" },
+			);
+			const scheduleCommon = () =>
+				select("AI connection", ["Your selected AI connection"]) +
+				note("Sends this application and enabled Knowledge to this connection. Your provider may charge.", "info") +
+				check("Turn this schedule on", false) +
+				check("Also email a copy", false) +
+				`<p class="privacy">Always appears in Today. Email requires a verified address and server mail setup.</p>` +
+				act("Save schedule", "save-schedule", "primary") +
+				btn("Cancel", "career-today");
+			const scheduleKind = () =>
+				`<div class="row wrap">${btn("Find roles", "career-schedule")}${btn("Prepare", "career-schedule-prepare")}${btn("Remind me", "career-schedule-follow")}</div>`;
+			add(
+				"career-schedule",
+				"Career schedules",
+				"Opportunity discovery",
+				"Explicit opt-in and server capability.",
+				() =>
+					scheduleKind() +
+					field("Look for", "Game Developer · Seattle · Unreal Engine") +
+					select("How often", ["Every day", "Every 3 days", "Every week"]) +
+					field("First run", "2026-10-18", "date") +
+					field("Time · Europe/Berlin", "08:00", "time") +
+					note(
+						"Uses web search set up in Settings. Results wait in Today. Applications and documents are never created for you.",
+						"info",
+					) +
+					check("Turn this schedule on", false) +
+					check("Also email a copy", false) +
+					act("Save schedule", "save-schedule", "primary") +
+					btn("Server setup unavailable", "career-schedule-unavailable", "link") +
+					btn("Cancel", "career-today"),
+				{ career: "Today", sheet: true, back: "career-today" },
+			);
+			add(
+				"career-schedule-prepare",
+				"Career schedules",
+				"Interview preparation",
+				"Timezone-aware lead time and data-sharing opt-in.",
+				() =>
+					scheduleKind() +
+					select("Interview", ["Fieldnote · Technical · Mon 19 Oct, 16:00"]) +
+					select("Prepare a briefing", ["24 hours before", "2 hours before", "Morning of · 08:00 local"]) +
+					note("Runs Sun 18 Oct, 16:00 Europe/Berlin. If the lead time has passed, the briefing runs now.", "info") +
+					scheduleCommon() +
+					act("Delete schedule", "delete-schedule", "danger"),
+				{ career: "Today", sheet: true, back: "career-today" },
+			);
+			add(
+				"career-schedule-follow",
+				"Career schedules",
+				"Follow-up reminder",
+				"Server Today schedule distinct from on-device notification.",
+				() =>
+					scheduleKind() +
+					select("Application", ["Lumen · Unity Developer"]) +
+					field("Remind me on", "2026-10-21", "date") +
+					field("Time · Europe/Berlin", "09:00", "time") +
+					check("Turn this schedule on", true) +
+					check("Also email a copy", false) +
+					btn("Add on-device notification", "app-follow-up") +
+					act("Save schedule", "save-schedule", "primary") +
+					btn("Cancel", "career-today"),
+				{ career: "Today", sheet: true, back: "career-today" },
+			);
+			add(
+				"career-schedule-unavailable",
+				"Career schedules",
+				"Scheduled work unavailable",
+				"Server, web search and AI requirements.",
+				() =>
+					note("Scheduled work isn’t available on this server.", "warning") +
+					card(
+						"Discovery",
+						"<p>Set up web search in Settings to find roles.</p>" + btn("Open web search settings", "web-handoff"),
+					) +
+					card(
+						"Interview preparation",
+						"<p>Connect an AI provider to refresh a briefing automatically.</p>" +
+							btn("Connect AI provider", "provider-handoff"),
+					) +
+					btn("Use manual preparation", "ws-briefing", "primary"),
+				{ career: "Today", sheet: true, back: "career-today" },
+			);
+			add(
+				"career-schedule-error",
+				"Career schedules",
+				"Schedule not saved",
+				"Invalid date and recoverable save failure.",
+				() =>
+					field("First run", "2026-10-16", "date") +
+					field("Time · Europe/Berlin", "08:00", "time") +
+					note("Pick a time after now. Your settings are still here.", "error") +
+					btn("Correct and retry", "career-schedule", "primary"),
+				{ career: "Today", sheet: true, back: "career-today" },
+			);
+			add(
+				"career-coach",
+				"Coach & Knowledge",
+				"Coach",
+				"Whole-search conversation with context controls.",
+				() =>
+					btn("Conversations", "career-conversations", "link") +
+					chatMessages() +
+					coachControls() +
+					select("AI connection", ["Selected AI connection"]) +
+					area("Message the coach", "Help me compare my next steps.") +
+					btn("Attach a file", "coach-attachment") +
+					btn("Send", "career-coach-stream", "primary") +
+					`<p class="privacy">Your message and selected context go to your AI connection only when you send.</p>`,
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-stream",
+				"Coach & Knowledge",
+				"Coach is writing…",
+				"Streaming, context and Stop.",
+				() =>
+					`<div class="bubble mine"><p>Help me compare my next steps.</p></div><div class="bubble" role="status"><h3>Writing an answer…</h3><p>Start with the next interview. Your strongest evidence is your C++ editor-tool work…</p>${badge("Knowledge on")}${badge("Web research off")}</div>` +
+					btn("Stop", "career-coach-stopped", "primary"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-stopped",
+				"Coach & Knowledge",
+				"Coach stopped",
+				"Partial answer stays readable.",
+				() =>
+					note("Stopped. Nothing else will be generated.", "info") +
+					chatMessages() +
+					btn("Continue conversation", "career-coach", "primary"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-error",
+				"Coach & Knowledge",
+				"Coach didn’t respond",
+				"Retry and change connection preserve message.",
+				() =>
+					`<div class="bubble mine"><p>Help me compare my next steps.</p></div>` +
+					note("Your AI connection didn’t respond. Your message is still here.", "error") +
+					btn("Try again", "career-coach-stream", "primary") +
+					select("Change connection", ["Selected AI connection", "Choose another saved connection"]) +
+					btn("Connection settings", "provider-handoff"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-conversations",
+				"Coach & Knowledge",
+				"Conversations",
+				"Thread list, new, delete and transcript.",
+				() =>
+					btn("New conversation", "career-coach", "primary") +
+					card(
+						"Editor-tool interview story",
+						`<p class="meta">Today · Selected AI connection</p>${btn("Open", "career-coach")}${act("Share transcript", "share-transcript")}${act("Delete conversation", "delete-conversation", "danger")}`,
+					),
+				{ career: "Coach", sheet: true, back: "career-coach" },
+			);
+			add(
+				"coach-attachment",
+				"Coach & Knowledge",
+				"Attach a file",
+				"Document picker review before send.",
+				() =>
+					card("David-Kowalski.pdf", "<p>PDF · 248 KB</p>" + act("Attach", "attach-coach-file", "primary")) +
+					note("The attachment is sent with your next message to the selected AI connection.", "info") +
+					btn("Cancel", "career-coach"),
+				{ career: "Coach", sheet: true, back: "career-coach" },
+			);
+			const sampleFact =
+				"Developed C++ editor tools that reduced level designer iteration time by 40% at Cascade Studios.";
+			const factCard = () =>
+				card(
+					"Accomplishment",
+					`<p>${sampleFact}</p><p class="meta">From your resume · All applications</p>${check("Use in coaching", true)}<div class="row wrap">${btn("Source", "career-fact-source", "link")}${btn("Correct", "career-fact-correct", "link")}${act("Forget", "forget-fact", "danger")}</div>`,
+				);
+			add(
+				"career-facts",
+				"Coach & Knowledge",
+				"Facts",
+				"Source-backed knowledge, memory consent and scope.",
+				() =>
+					knowledgeTabs("Facts") +
+					select("Remember facts from my messages", ["Ask first", "Automatically", "Never"]) +
+					field("Search facts", "", "search") +
+					select("Type", ["All", "Accomplishment", "Experience", "Skill", "Preference"]) +
+					area("New fact", "") +
+					select("Fact type", ["Accomplishment", "Experience", "Skill", "Preference"]) +
+					act("Add", "add-fact", "primary") +
+					factCard() +
+					note(
+						"Enabled facts, stories and preferences can be sent to your AI connection. Nothing is remembered in Ask first mode until you agree.",
+						"info",
+					),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-facts-empty",
+				"Coach & Knowledge",
+				"No facts yet",
+				"Manual entry or Coach with explicit permission.",
+				() =>
+					knowledgeTabs("Facts") +
+					empty(
+						"No facts yet",
+						"Add an experience you can support, or ask the coach to remember one.",
+						"Add a fact",
+						"career-fact-correct",
+					),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-fact-correct",
+				"Coach & Knowledge",
+				"Correct this fact",
+				"Original stays in history.",
+				() =>
+					area("Fact", sampleFact, 5) +
+					select("Fact type", ["Accomplishment", "Experience", "Skill", "Preference"]) +
+					select("Scope", ["All applications", "Fieldnote only"]) +
+					check("Use in coaching", true) +
+					note("The original stays in the history. Stories using this fact will ask for review.", "info") +
+					act("Save correction", "save-fact", "primary") +
+					btn("Cancel", "career-facts"),
+				{ career: "Knowledge", sheet: true, back: "career-facts" },
+			);
+			add(
+				"career-fact-source",
+				"Coach & Knowledge",
+				"Fact source",
+				"Provenance, corrections and usage remain visible.",
+				() =>
+					card(
+						"From your resume",
+						"<p>David Kowalski · Experience · Cascade Studios</p><p>Developed custom editor tools in C++ that reduced level designer iteration time by 40%.</p>",
+					) +
+					card("History", "<p>Added 12 Oct 2026 · No corrections</p>") +
+					card("Used in", "<p>Editor tools at Cascade Studios · Story</p><p>Fieldnote · Fit check</p>") +
+					btn("Correct", "career-fact-correct") +
+					act("Use for Fieldnote only", "scope-fact") +
+					act("Forget", "forget-fact", "danger"),
+				{ career: "Knowledge", sheet: true, back: "career-facts" },
+			);
+			add(
+				"career-stories",
+				"Coach & Knowledge",
+				"Stories",
+				"STARR stories backed by enabled facts.",
+				() =>
+					knowledgeTabs("Stories") +
+					card(
+						"Editor tools at Cascade Studios",
+						badge("4 of 5 parts") +
+							badge("Tools") +
+							"<p>Reduced level designer iteration time by 40%.</p>" +
+							btn("Open story", "career-story"),
+					) +
+					btn("Add a story", "career-story-editor", "primary") +
+					note("Situation, Task, Action, Result, Reflection. Leave unknown outcomes blank.", "info"),
+				{ career: "Knowledge" },
+			);
+			const storyParts = [
+				["Situation", "Level designers needed shorter iteration cycles."],
+				["Task", "Develop custom editor tools at Cascade Studios."],
+				["Action", "Implemented custom editor tools in C++."],
+				["Result", "Reduced level designer iteration time by 40%."],
+				["Reflection", ""],
+			];
+			add(
+				"career-story",
+				"Coach & Knowledge",
+				"Editor tools at Cascade Studios",
+				"Supporting fact changed: review before reuse.",
+				() =>
+					note("A fact changed. Review this story.", "warning") +
+					storyParts
+						.map(([k, v]) => card(k, `<p>${v || "Not recorded yet. Leave blank until you can support it."}</p>`))
+						.join("") +
+					card("Backed by", `<p>${sampleFact}</p>${btn("View source", "career-fact-source")}`) +
+					btn("Edit", "career-story-editor") +
+					btn("Practise", "ws-practise", "primary"),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-story-editor",
+				"Coach & Knowledge",
+				"Edit STARR story",
+				"Situation, Task, Action required; results may stay blank.",
+				() =>
+					field("Title", "Editor tools at Cascade Studios") +
+					field("Tags, separated by commas", "Tools, C++") +
+					storyParts
+						.map(([k, v]) => area(k + (["Situation", "Task", "Action"].includes(k) ? " (required)" : ""), v, 3))
+						.join("") +
+					heading("Backed by") +
+					check(sampleFact, true) +
+					note("Only enabled facts can back a story. Leave unsupported outcomes blank.", "info") +
+					act("Save story", "save-story", "primary") +
+					act("Delete story", "delete-story", "danger") +
+					btn("Cancel", "career-stories"),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-preferences",
+				"Coach & Knowledge",
+				"Preferences",
+				"Comparable requirements and timezone.",
+				() =>
+					knowledgeTabs("Preferences") +
+					heading("What you’re looking for", "Saved") +
+					field("Target roles", "Game Developer, Gameplay Programmer") +
+					field("Where you want to work", "Seattle, Remote") +
+					area("What matters to you", "Ownership of gameplay systems; room to mentor others.") +
+					heading("Requirements", "Numbers let the coach compare without guessing.") +
+					field("Minimum base salary", "95000", "number") +
+					select("Currency", ["USD", "EUR", "GBP"]) +
+					select("Pay period", ["/ year", "/ month", "/ hour"]) +
+					select("Office days a week, at most", ["2", "Any", "Remote", "1", "3", "4", "5"]) +
+					field("Notice period · weeks", "4", "number") +
+					select("Timezone", ["Europe/Berlin", "America/Los_Angeles", "UTC"]) +
+					note("Times are shown in Europe/Berlin. Changes apply across Career.", "info") +
+					act("Save preferences", "save-preferences", "primary") +
+					btn("See save failure", "career-preferences-error", "link"),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-preferences-error",
+				"Coach & Knowledge",
+				"Preferences not saved",
+				"Draft and retry remain visible.",
+				() =>
+					field("Minimum base salary", "95k") +
+					note("Enter a full amount, such as 95000. Your previous amount is unchanged.", "error") +
+					btn("Correct and retry", "career-preferences", "primary"),
+				{ career: "Knowledge" },
+			);
+			const offerCard = (company, base, currency = "USD") =>
+				card(
+					company,
+					`${badge(company === "Fieldnote" ? "Verbal offer" : "Written offer")}<div class="offer-table">${[
+						["Base salary", `${currency} ${base} / year`],
+						["Bonus", "Unknown · ask"],
+						["Equity", "Value uncertain"],
+						["Where you work", "Seattle · 2 office days"],
+						["Leave", "25 days"],
+						["Learning budget", "Not in the offer · ask"],
+						["Other benefits", "Not recorded"],
+						["Respond by", "Thu 22 Oct 2026"],
+					]
+						.map(([k, v]) => `<div class="fact-line"><span>${k}</span><span>${v}</span></div>`)
+						.join("")}</div>${btn("Choose another offer", "career-offer-picker", "link")}`,
+				);
+			add(
+				"career-offers",
+				"Offers",
+				"Compare offers",
+				"Stacked on phone; two columns on tablet.",
+				() =>
+					note(
+						"Compared in original currency and pay period. Comparing doesn’t share anything with the coach.",
+						"info",
+					) +
+					`<div class="two-col stack">${offerCard("Fieldnote", "110,000")}${offerCard("Northwind Labs", "105,000")}</div>` +
+					card(
+						"Your requirements",
+						"<p>USD 95,000 minimum / year · Both meet it.</p><p>At most 2 office days · Both meet it.</p>",
+					) +
+					note(
+						"Totals aren’t added up. Bonus and equity depend on conditions; equity value is uncertain. Read original offer documents.",
+						"warning",
+					) +
+					btn("Plan what to ask", "career-offer-questions", "primary") +
+					act("Swap", "swap-offers") +
+					btn("Different currency example", "career-offers-currency"),
+				{ career: "Offers" },
+			);
+			add(
+				"career-offer-picker",
+				"Offers",
+				"Choose an offer",
+				"Saved offers stay tied to application.",
+				() =>
+					btn("Fieldnote · Verbal · 17 Oct", "career-offers") +
+					btn("Northwind Labs · Written · 16 Oct", "career-offers") +
+					btn("Lumen · EUR · Written", "career-offers-currency"),
+				{ career: "Offers", sheet: true, back: "career-offers" },
+			);
+			add(
+				"career-offers-currency",
+				"Offers",
+				"Compare different currencies",
+				"No invented conversion or aggregate compensation.",
+				() =>
+					`<div class="two-col stack">${offerCard("Fieldnote", "110,000")}${offerCard("Lumen", "95,000", "EUR")}</div>` +
+					note("Different currency, not compared. Different pay periods are not compared either.", "warning") +
+					btn("Plan what to ask", "career-offer-questions", "primary"),
+				{ career: "Offers" },
+			);
+			add(
+				"career-offers-empty",
+				"Offers",
+				"No offers to compare yet",
+				"Messages feeds offers with user review.",
+				() =>
+					empty(
+						"No offers to compare yet",
+						"Paste an offer into an application’s Messages tab, then choose to save its terms.",
+						"Open Messages",
+						"ws-messages",
+					),
+				{ career: "Offers" },
+			);
+			add(
+				"career-offer-questions",
+				"Offers",
+				"Ask before deciding",
+				"Unknown terms become questions; coach optional.",
+				() =>
+					card(
+						"Ask both",
+						"<p>What does the bonus depend on, and how much paid out last year?</p><p>What is the equity vesting and exercise window?</p><p>Is there a learning budget?</p>",
+					) +
+					act("Copy questions", "copy-questions", "primary") +
+					btn("Discuss with Coach", "career-coach") +
+					`<p class="privacy">Opening Coach lets you choose which offers to share.</p>`,
+				{ career: "Offers" },
+			);
+			add(
+				"app-empty",
+				"States & recovery",
+				"Track your first job",
+				"First-run applications.",
+				() =>
+					empty(
+						"Track your first job",
+						"Paste a job link. Save the posting for Check, the assistant and your letter.",
+						"Save job",
+						"app-add",
+					) + btn("Import from CSV", "app-csv-import"),
+				{ view: "List" },
+			);
+			add("app-loading", "States & recovery", "Loading applications", "Skeleton matches grouped list.", skeleton, {
+				view: "List",
+			});
+			add(
+				"app-error",
+				"States & recovery",
+				"Applications unavailable",
+				"Retry loads same view.",
+				() => note("Couldn’t load applications. Try again.", "error") + btn("Retry", "app-list", "primary"),
+				{ view: "List" },
+			);
+			add(
+				"app-offline",
+				"States & recovery",
+				"Applications offline",
+				"Cached records; no queued application edits promised.",
+				() =>
+					note("Offline · Showing last loaded applications. Connect to change your pipeline.", "warning") +
+					applicationRows() +
+					btn("Retry connection", "app-list", "primary"),
+				{ view: "List", offline: true },
+			);
+			add(
+				"career-loading",
+				"States & recovery",
+				"Loading Career",
+				"Skeleton for Today, Knowledge and Offers.",
+				skeleton,
+				{ career: "Today" },
+			);
+			add(
+				"career-error",
+				"States & recovery",
+				"Career unavailable",
+				"Retry preserves route.",
+				() =>
+					note("Career couldn’t be loaded. Your saved data hasn’t changed.", "error") +
+					btn("Retry", "career-today", "primary"),
+				{ career: "Today" },
+			);
+			add(
+				"career-offline",
+				"States & recovery",
+				"Career offline",
+				"Cached Today; generation and schedule edits unavailable.",
+				() =>
+					note("Offline · Last loaded Today. Connect to run coaching or edit schedules.", "warning") +
+					card(
+						"Coming up",
+						'<p>Fieldnote · Mon 19 Oct, 16:00 Europe/Berlin</p><p class="meta">Local reminders already scheduled on this device still work.</p>',
+					) +
+					btn("Retry connection", "career-today", "primary"),
+				{ career: "Today" },
+			);
+			add("ws-loading", "States & recovery", "Loading workspace", "Tabs remain visible.", skeleton, {
+				workspace: true,
+			});
+			add(
+				"ws-error",
+				"States & recovery",
+				"Workspace unavailable",
+				"Route-specific retry.",
+				() =>
+					note("This workspace couldn’t be loaded.", "error") +
+					btn("Try again", "ws-fit", "primary") +
+					btn("Back to applications", "app-list"),
+				{ workspace: true },
+			);
+			add(
+				"ws-offline",
+				"States & recovery",
+				"Workspace offline",
+				"Cached preparation remains useful.",
+				() =>
+					note(
+						"Offline · You can read the last loaded briefing. Connect to save application changes or use AI.",
+						"warning",
+					) +
+					card("Your opening", "<p>Focus, experience, why this role. Rehearse with what you have.</p>") +
+					btn("Read cached briefing", "ws-briefing") +
+					btn("Retry connection", "ws-prepare"),
+				{ workspace: true },
+			);
+			add(
+				"ws-locked",
+				"States & recovery",
+				"Linked resume locked",
+				"Lock belongs to document, not application.",
+				() =>
+					note("Game Developer · David Kowalski is locked. Unlock it in the builder to edit.", "warning") +
+					card("What you sent", "<p>The sent version remains read-only.</p>" + btn("Open version sent", "app-sent")) +
+					btn("Open latest and unlock", "document-handoff", "primary") +
+					btn("Continue application workspace", "ws-fit"),
+				{ workspace: true },
+			);
+			add(
+				"career-rtl",
+				"States & recovery",
+				"Career · العربية",
+				"Mirrored navigation, mixed-direction company and timezone.",
+				() =>
+					`<div class="rtl-sample" lang="ar" dir="rtl"><h2>خطوتك التالية</h2><p class="meta">السبت ١٧ أكتوبر · <bdi>Europe/Berlin</bdi></p>${card("يحتاج إلى مراجعتك", "<p>ملخص المقابلة جاهز</p><p><bdi>Fieldnote</bdi> · مقابلة تقنية</p>" + btn("فتح الملخص", "ws-briefing", "primary"))}${card("موعدك القادم", "<p>الاثنين ١٩ أكتوبر، ١٦:٠٠</p><p><bdi>Europe/Berlin</bdi></p>")}${btn("الإعدادات المفضلة", "career-preferences")}</div>`,
+				{ career: "Today", rtl: true },
+			);
+			add(
+				"provider-handoff",
+				"Owned elsewhere",
+				"AI provider setup",
+				"Handoff contract to DS3a Settings → AI.",
+				() =>
+					note("Open Settings → AI & developer → AI providers. Return here after connecting a provider.", "info") +
+					btn("Back to Practise", "ws-no-provider") +
+					btn("Return with provider connected", "ws-practise", "primary"),
+				{ back: "ws-no-provider" },
+			);
+			add(
+				"web-handoff",
+				"Owned elsewhere",
+				"Web search setup",
+				"Handoff contract to DS3a Settings → web access.",
+				() =>
+					note("Open Settings → AI & developer → Web access keys. Return to this schedule after setup.", "info") +
+					btn("Back to schedule", "career-schedule"),
+				{ back: "career-schedule" },
+			);
+			add(
+				"document-handoff",
+				"Owned elsewhere",
+				"Open linked resume",
+				"Handoff contract to DS3b builder; current document, not sent snapshot.",
+				() =>
+					card(
+						"Game Developer · David Kowalski",
+						"<p>Opens the latest resume in Builder → Write. Lock controls belong to the document menu.</p>",
+					) + btn("Return to application", "app-detail"),
+				{ back: "app-detail" },
+			);
+			add(
+				"letter-handoff",
+				"Owned elsewhere",
+				"Open cover letter",
+				"Handoff contract to DS3b letter editor.",
+				() =>
+					card("Fieldnote · Cover letter", "<p>Opens the linked cover letter in its native editor.</p>") +
+					btn("Return to Apply", "ws-apply"),
+				{ back: "ws-apply" },
+			);
+			add(
+				"ws-coach-stream",
+				"Workspace",
+				"Coach is writing about Fieldnote…",
+				"Application-specific streaming keeps scope and Stop.",
+				() =>
+					note("Fieldnote only · Fit · Knowledge on · Web research off", "info") +
+					'<div class="bubble" role="status"><h3>Writing an answer…</h3><p>For this technical round, start with your C++ design decisions and the result you can support…</p></div>' +
+					btn("Stop", "ws-coach-stopped", "primary"),
+				{ workspace: true, sheet: true, back: "ws-coach" },
+			);
+			add(
+				"ws-coach-stopped",
+				"Workspace",
+				"Application coach stopped",
+				"Partial answer retained with same application context.",
+				() =>
+					note("Stopped · Fieldnote conversation", "info") +
+					chatMessages() +
+					btn("Continue conversation", "ws-coach", "primary"),
+				{ workspace: true, sheet: true, back: "ws-coach" },
+			);
+			add(
+				"ws-coach-error",
+				"Workspace",
+				"Application coach unavailable",
+				"Retry keeps application and draft.",
+				() =>
+					note("Your AI connection didn’t respond. Your question about Fieldnote is still here.", "error") +
+					area("Ask about this application…", "How should I prepare for this round?") +
+					btn("Try again", "ws-coach-stream", "primary") +
+					btn("Connection settings", "provider-handoff"),
+				{ workspace: true, sheet: true, back: "ws-coach" },
+			);
+
+			add(
+				"career-undo",
+				"States & recovery",
+				"Undo after forgetting",
+				"Frozen toast preview; actual actions offer Undo for six seconds.",
+				() =>
+					heading("Facts", "Fact removed from Knowledge.") +
+					note("Undo is available briefly after forgetting. The original fact returns when you choose Undo.", "info"),
+				{ career: "Knowledge", previewToast: true },
+			);
+
+			add(
+				"ws-message-applied",
+				"Workspace",
+				"Message changes applied",
+				"Selected changes visible with six-second Undo.",
+				() =>
+					badge("Applied", "good") +
+					card(
+						"Application updated",
+						"<p>Stage: Interview</p><p>Follow-up: 21 Oct · Confirm interview availability</p>",
+					) +
+					btn("Continue in workspace", "ws-fit"),
+				{ workspace: true },
+			);
+
+			records.slice(1).forEach(([status, company, role, next], offset) => {
+				const n = offset + 1;
+				add(
+					`app-context-${n}`,
+					"Applications",
+					`${company} · ${role}`,
+					"Selected row keeps its company, role and stage.",
+					() =>
+						heading(role, company) +
+						badge(status) +
+						card(
+							"Next step",
+							`<p>${next}</p>` +
+								(status === "Offer"
+									? btn("Compare offers", "career-offers", "primary")
+									: status === "Applied"
+										? btn("Set a follow-up", "app-follow-up")
+										: btn("View posting", "app-posting")),
+						) +
+						card(
+							"Documents for this job",
+							'<p>Game Developer · David Kowalski</p><p class="meta">Linked · not sent yet</p>' +
+								btn("Open resume", "document-handoff"),
+						) +
+						card(
+							"Facts",
+							`<p>Company: ${company}</p><p>Role: ${role}</p><p>Stage: ${status}</p><p>Salary: Not listed</p><p>Source: Company site</p>`,
+						),
+					{ back: "app-list" },
+				);
+			});
+
+			let current,
+				device = "iphone",
+				toastTimer = null,
+				undo = null,
+				hiddenEntities = new Set();
+			const screenById = new Map(screenList.map((s) => [s.id, s]));
+			function bottom(career = false) {
+				return `<nav class="bottom" aria-label="App navigation"><button data-action="documents-handoff">${icon("documents")}<span>Documents <b class="badge-count">8</b></span></button><button class="${career ? "" : "active"}" data-go="app-list">${icon("applications")}<span>Applications <b class="badge-count">5</b></span></button><button data-go="app-add" aria-label="New"><span class="new-pill">+ New</span></button><button class="${career ? "active" : ""}" data-go="career-today">${icon("career")}<span>Career <b class="badge-count">2</b></span></button><button data-action="settings-handoff">${icon("settings")}<span>Settings</span></button></nav>`;
+			}
+			function sidebar() {
+				return `<aside class="side" aria-label="Tablet app navigation"><h3>Reactive Resume</h3>${act("Documents · 8", "documents-handoff")}${btn("Applications · 5", "app-list", current.career ? "" : "selected")}${btn("+ New", "app-add", "primary")}${btn("Career · 2 unread", "career-today", current.career ? "selected" : "")}${act("Settings", "settings-handoff")}<span class="grow"></span><p class="meta">David Kowalski<br>rxresu.me</p></aside>`;
+			}
+			function workspaceTab() {
+				const id = current.id;
+				if (/question-options|ws-apply/.test(id)) return "Apply";
+				if (/prepare|briefing/.test(id)) return "Prepare";
+				if (/practise|record|transcrib|transcript|playback|voice|feedback|no-provider/.test(id)) return "Practise";
+				if (/debrief|remember/.test(id)) return "Debrief";
+				if (/message/.test(id)) return "Messages";
+				if (/saved/.test(id)) return "Saved";
+				return "Fit";
+			}
+
+			function renderTop(s) {
+				const isws = s.workspace;
+				return `<header class="top">${s.back || isws ? ib("back", isws ? "Back to applications" : "Back", s.back || "app-list") : ""}<div class="title"><h2>${isws ? "Fieldnote" : s.career ? "Career" : s.id === "app-detail" ? "Fieldnote" : s.title}</h2>${isws ? '<p class="meta">Senior Game Developer · Interview</p>' : ""}</div>${isws ? ib("more", "Application details", "app-detail") + ib("coach", "Ask the coach", "ws-coach") : ib("plus", "Save a job", "app-add")}</header>`;
+			}
+			function body(s) {
+				return typeof s.body === "function" ? s.body() : s.body;
+			}
+			function notes(s) {
+				const notes = [
+					[
+						"Gestures",
+						s.workspace
+							? "Swipe workspace tabs horizontally. Back returns to Applications; scrolling stays inside the current tab."
+							: s.view === "Board"
+								? "Swipe stage columns. Long press to drag; Move to… provides an equal button action."
+								: "Scroll content vertically. Tap rows for details; long press application rows starts multi-select.",
+					],
+					[
+						"Sheet detents",
+						s.sheet
+							? "Phone: Half (50%) and Full (91%); forms open Full. Grabber toggles detents, backdrop or Back dismisses. Tablet: 480 pt trailing panel."
+							: "No sheet on this screen. Detail forms and workspace are full screen; secondary actions open sheets.",
+					],
+					[
+						"Transitions",
+						`d1 120 ms for press/toggles; d2 200 ms for screen crossfade; d3 320 ms for sheets/toasts. cubic-bezier(.2,.8,.2,1). Reduced motion removes slides, fades and waveform animation.`,
+					],
+					[
+						"Keyboard",
+						s.keyboard
+							? "Notes input lifts above keyboard; scroll focused field into view. Done dismisses; Back dismisses keyboard before navigation."
+							: "Text fields use 16 pt input. Focused field scrolls above keyboard; sheets expand to Full. Number/date/time keyboards follow field type. Done dismisses; unsaved drafts stay during retry.",
+					],
+					[
+						"iOS / Android",
+						"iOS: edge Back gesture, native share sheet, notification permission after opt-in. Android: system Back closes keyboard, then sheet, then screen; system file/share picker, notification permission on supported versions.",
+					],
+					[
+						"Accessibility",
+						`44 × 44 pt minimum controls; checkbox labels provide 44 pt hit areas, grabber is a 44 pt button. Visible focus, semantic labels, stage text beside colours.${s.rtl ? " This screen mirrors navigation and retains Latin values in bidi isolates." : ""}`,
+					],
+				];
+				return notes.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("");
+			}
+			function render(id, replace = false) {
+				if (!screenById.has(id)) id = "app-list";
+				current = screenById.get(id);
+				fieldId = 0;
+				if (location.hash !== `#${id}`) {
+					if (replace) history.replaceState(null, "", `#${id}`);
+					else history.pushState(null, "", `#${id}`);
+				}
+				const s = current;
+				document.querySelector("#screen-title").textContent = s.title;
+				document.querySelector("#screen-description").textContent = `${s.id} · ${s.description}`;
+				document.querySelector("#device").className = `device ${device === "iphone" ? "" : device}`;
+				document.querySelector("#device").dir = s.rtl ? "rtl" : "ltr";
+				const underlying = s.workspace
+					? screenById.get("ws-fit")
+					: s.career
+						? screenById.get("career-today")
+						: screenById.get("app-list");
+				const visible = s.sheet ? underlying : s;
+				let content = body(visible);
+				if (visible.workspace)
+					content = `<div class="split">${workspaceContext()}<div class="stack">${content}</div></div>`;
+				let shell =
+					renderTop(visible) +
+					(visible.workspace
+						? workspaceTabs()
+						: visible.career
+							? careerTabs(visible.career)
+							: visible.view
+								? viewTabs(visible.view)
+								: "") +
+					`<div class="body ${visible.workspace ? "workspace" : ""}" id="screen-body">${content}</div>` +
+					(visible.workspace ? "" : bottom(Boolean(visible.career)));
+				if (s.keyboard)
+					shell += `<div class="keyboard" aria-label="Keyboard placement illustration"><p class="key-done">Done</p><div class="keyboard-row" aria-hidden="true">${"qwertyuiop"
+						.split("")
+						.map((c) => `<span>${c}</span>`)
+						.join("")}</div><p>Keyboard · focused field scrolls above</p></div>`;
+				if (s.sheet) {
+					shell = `<div class="surface-wrap" inert style="display:flex;flex-direction:column;flex:1;min-height:0">${shell}</div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><button class="sheet-backdrop" data-go="${s.back || "app-list"}" aria-label="Dismiss sheet"></button><section class="sheet-panel"><button class="grab" data-action="detent" aria-label="Expand or collapse sheet"><span></span></button><header class="sheet-head"><h2 id="sheet-title">${s.title}</h2>${ib("close", "Close sheet", s.back || "app-list")}</header><div class="sheet-scroll">${body(s)}</div></section></div>`;
+				}
+				document.querySelector("#app").innerHTML =
+					(s.workspace ? "" : sidebar()) + `<section class="shell" aria-label="${s.title}">${shell}</section>`;
+				document.querySelector("#notes").innerHTML = notes(s);
+				document.querySelector("#dimensions").textContent =
+					device === "tablet" ? "1180 × 820 pt · landscape" : device === "android" ? "412 × 915 pt" : "393 × 852 pt";
+				document
+					.querySelectorAll("[data-screen]")
+					.forEach((b) => b.setAttribute("aria-current", b.dataset.screen === id ? "page" : "false"));
+				if (s.readOnly)
+					document
+						.querySelectorAll(
+							'#screen-body input,#screen-body textarea,#screen-body select,#screen-body button[data-go="ws-evidence"]',
+						)
+						.forEach((el) => (el.disabled = true));
+				if (s.offline)
+					document.querySelectorAll('#screen-body [data-go="app-actions"]').forEach((el) => (el.disabled = true));
+				if (hiddenEntities.has("fact") && s.id === "career-facts") {
+					const c = document.querySelector("#screen-body .card");
+					if (c) c.remove();
+				}
+				if (hiddenEntities.has("role") && s.id === "career-today") {
+					const c = [...document.querySelectorAll("#screen-body .card")].find((c) =>
+						c.textContent.includes("New roles"),
+					);
+					if (c) c.remove();
+				}
+				if (hiddenEntities.has("read") && s.id === "career-today") {
+					const c = [...document.querySelectorAll("#screen-body .card")].find((c) =>
+						c.textContent.includes("Needs you"),
+					);
+					if (c) c.remove();
+				}
+				if (undo) showToast(undo.message, true);
+				else if (s.previewToast)
+					document
+						.querySelector(".shell")
+						.insertAdjacentHTML(
+							"beforeend",
+							'<div class="toast" role="status"><span>Fact forgotten</span><button data-go="career-facts">Undo</button></div>',
+						);
+				document
+					.querySelectorAll(".sheet-scroll input,.sheet-scroll textarea")
+					.forEach((el) =>
+						el.addEventListener("focus", () => document.querySelector(".sheet")?.classList.remove("half")),
+					);
+			}
+			function showToast(message, canUndo = false) {
+				document.querySelector(".toast")?.remove();
+				const shell = document.querySelector(".shell");
+				shell.insertAdjacentHTML(
+					"beforeend",
+					`<div class="toast" role="status"><span>${esc(message)}</span>${canUndo ? '<button data-action="undo">Undo</button>' : '<button data-action="dismiss-toast" aria-label="Dismiss message">×</button>'}</div>`,
+				);
+			}
+			function toast(message) {
+				if (undo) {
+					clearTimeout(toastTimer);
+					undo = null;
+				}
+				showToast(message);
+				clearTimeout(toastTimer);
+				toastTimer = setTimeout(() => document.querySelector(".toast")?.remove(), 6000);
+			}
+			function reversible(message, entity, to) {
+				if (undo) {
+					clearTimeout(toastTimer);
+					undo = null;
+				}
+				if (entity) hiddenEntities.add(entity);
+				undo = { message, entity, to: current.id };
+				render(to || current.id);
+				toastTimer = setTimeout(() => {
+					undo = null;
+					document.querySelector(".toast")?.remove();
+				}, 6000);
+			}
+			function requiredValid() {
+				const root = document.querySelector(".sheet-scroll") || document.querySelector("#screen-body");
+				for (const el of root.querySelectorAll("input,textarea")) {
+					const label = el.closest("label")?.childNodes[0]?.textContent?.trim();
+					if (
+						[
+							"Company",
+							"Role / title",
+							"Name",
+							"Title",
+							"Situation (required)",
+							"Task (required)",
+							"Action (required)",
+						].includes(label)
+					)
+						el.required = true;
+					if (!el.reportValidity()) return false;
+				}
+				return true;
+			}
+			function handle(action, button) {
+				if (action === "detent") {
+					const sheet = document.querySelector(".sheet");
+					sheet.classList.toggle("half");
+					button.setAttribute("aria-expanded", String(!sheet.classList.contains("half")));
+					return;
+				}
+				if (action === "undo" && undo) {
+					const pending = undo;
+					clearTimeout(toastTimer);
+					if (pending.entity) hiddenEntities.delete(pending.entity);
+					undo = null;
+					render(pending.to);
+					toast("Undone");
+					return;
+				}
+				if (action === "dismiss-toast") {
+					document.querySelector(".toast")?.remove();
+					return;
+				}
+				if (action.startsWith("save:")) {
+					if (!requiredValid()) return;
+					render(action.slice(5));
+					toast("Saved changes · prototype");
+					return;
+				}
+				if (action.startsWith("stage:")) {
+					if (action === "stage:Applied") render("app-submission");
+					else {
+						render("app-detail");
+						toast(`Moved to ${action.slice(6)} · prototype`);
+					}
+					return;
+				}
+				const routes = {
+					"save-job": ["app-detail", "Saved job to Applications"],
+					"save-tailor": ["document-handoff", "Job saved · choose a resume to copy"],
+					"confirm-applied": ["app-detail", "Marked as applied. Versions sent are kept."],
+					"close-application": ["app-closed", "Application closed"],
+					"delete-application": ["app-list", "Application permanently deleted · prototype"],
+					"bulk-delete": ["app-list", "Deleted 2 applications · prototype"],
+					"bulk-close": ["app-bulk-result", "Updated selection"],
+					"bulk-move": ["app-bulk-result", "Updated selection"],
+					"bulk-tag": ["app-bulk-result", "Tag added to selection"],
+					"save-interview": ["app-detail", "Interview saved · reminder scheduled on this device"],
+					"allow-reminder": ["app-detail", "Local reminder enabled · prototype"],
+					"choose-file": ["app-attachments", "PDF attached · prototype"],
+					"save-evidence": ["ws-fit", "Saved to Knowledge as a fact"],
+					"save-fact": ["career-facts", "Correction saved; original retained"],
+					"save-story": ["career-stories", "Story saved"],
+					"save-preferences": ["career-preferences", "Preferences saved"],
+					"save-schedule": ["career-today", "Schedule saved"],
+					"attach-coach-file": ["career-coach", "David-Kowalski.pdf attached to next message"],
+					"search-postings": ["app-search", "Found 1 posting · prototype"],
+					"delete-timeline": ["app-timeline", "Timeline entry deleted · prototype"],
+				};
+				if (routes[action]) {
+					if (!requiredValid()) return;
+					const [id, message] = routes[action];
+					render(id);
+					toast(message);
+					return;
+				}
+				const undoActions = {
+					"forget-fact": ["Fact forgotten", "fact", "career-facts"],
+					"hide-role": ["Hidden from New roles", "role", "career-today"],
+					"mark-read": ["Marked as read", "read", "career-today"],
+					"track-role": ["Saved to Applications with the posting", "role", "career-today"],
+					"delete-story": ["Story deleted", null, "career-stories"],
+					"delete-saved": ["Deleted from Saved", null, "ws-saved"],
+					"delete-conversation": ["Conversation deleted", null, "career-conversations"],
+					"delete-schedule": ["Schedule deleted", null, "career-today"],
+					"delete-interview": ["Interview deleted", null, "app-detail"],
+					"apply-proposals": ["Application updated", null, "ws-message-applied"],
+					"remember-fact": ["Remembered for Fieldnote only", null, "career-facts"],
+					"remove-question": ["Question removed", null, "ws-apply"],
+				};
+				if (undoActions[action]) {
+					reversible(...undoActions[action]);
+					return;
+				}
+				if (action === "add-person") {
+					button.insertAdjacentHTML(
+						"beforebegin",
+						`<div class="card">${field("Name", "")}${field("Role", "")}${field("Profile link (optional)", "", "url")}${act("Remove person", "remove-person", "link")}</div>`,
+					);
+					return;
+				}
+				if (action === "remove-person") {
+					const added = button.closest(".card");
+					if (added) {
+						added.remove();
+						return;
+					}
+					toast("Person removed · prototype");
+					return;
+				}
+				if (action === "add-form-question") {
+					button.insertAdjacentHTML("beforebegin", area("Question from the form", "") + area("Answer", ""));
+					return;
+				}
+				if (action === "add-fact") {
+					const input = document.querySelector("textarea");
+					if (!input?.value.trim()) {
+						input?.focus();
+						toast("Write a fact before adding it.");
+						return;
+					}
+					input.insertAdjacentHTML("afterend", card("Added by you", `<p>${esc(input.value)}</p>`));
+					input.value = "";
+					toast("Fact added · prototype");
+					return;
+				}
+				if (action === "add-timeline-note") {
+					const input = document.querySelector("textarea");
+					if (!input.value.trim()) {
+						input.focus();
+						return;
+					}
+					document
+						.querySelector(".timeline")
+						.insertAdjacentHTML(
+							"afterbegin",
+							`<article><p class="meta">Today · Europe/Berlin</p><p>${esc(input.value)}</p></article>`,
+						);
+					input.value = "";
+					return;
+				}
+				if (action === "next-question") {
+					render("ws-practise");
+					document.querySelector("#screen-body h2").textContent = "Why do you want this role at Fieldnote?";
+					return;
+				}
+				if (action === "draft-answer" || action === "tighten-answer") {
+					const fields = document.querySelectorAll("textarea");
+					fields[1].value =
+						action === "draft-answer"
+							? "I build gameplay systems in C++ and Unreal Engine, and I value ownership of gameplay architecture."
+							: "I build C++ gameplay systems and want to own meaningful architecture decisions.";
+					toast("AI suggestion · review before using · prototype");
+					return;
+				}
+				if (action === "swap-offers") {
+					const grid = document.querySelector(".two-col");
+					grid.append(grid.firstElementChild);
+					return;
+				}
+				if (action.startsWith("month-")) {
+					const label = document.querySelector("#calendar-month");
+					label.textContent =
+						action === "month-next" ? "November 2026" : action === "month-prev" ? "September 2026" : "October 2026";
+					toast("Month navigation preview; interview data is fictional.");
+					return;
+				}
+				const feedback = {
+					"export-csv": "CSV prepared · native share sheet preview",
+					"share-ics": "Calendar event ready for system share · prototype",
+					"save-ics": "Calendar event ready for Files · prototype",
+					"share-pipeline": "Pipeline PNG ready for system share · prototype",
+					"pick-csv": "Native document picker preview · sample CSV is ready to review",
+					"invalid-csv": "Skipped/invalid rows ready to share · prototype",
+					"preview-file": "PDF opens in native document preview · prototype",
+					"remove-file": "Attachment removed · prototype",
+					"remove-contact": "Contact removed · prototype",
+					"copy-answers": "Answers copied · prototype",
+					"copy-reply": "Reply copied · send from your own email",
+					"copy-questions": "Questions copied · prototype",
+					"download-answers": "Choose Markdown or plain text in system share sheet · prototype",
+					"stop-audio": "Audio stopped · prototype",
+					digits: "Numbers formatted as digits · prototype",
+					"scope-fact": "Fact restricted to Fieldnote · prototype",
+					"device-settings": "Opens this app’s page in device settings · prototype",
+					"share-transcript": "Transcript ready to share · prototype",
+					"add-question": "Added to Prepare questions · prototype",
+					"documents-handoff": "Documents belongs to DS3a app.html",
+					"settings-handoff": "Settings belongs to DS3a app.html",
+				};
+				toast(feedback[action] || "Prototype action recorded");
+			}
+			const nav = document.querySelector("#index");
+			for (const group of new Set(screenList.map((s) => s.group))) {
+				nav.insertAdjacentHTML("beforeend", `<h3>${group}</h3>`);
+				for (const s of screenList.filter((s) => s.group === group))
+					nav.insertAdjacentHTML(
+						"beforeend",
+						`<button data-screen="${s.id}" data-go="${s.id}" aria-current="false">${s.title}</button>`,
+					);
+			}
+
+			document.addEventListener("click", (event) => {
+				const b = event.target.closest("button");
+				if (!b) return;
+				if (b.dataset.theme) {
+					document.documentElement.classList.toggle("dark", b.dataset.theme === "dark");
+					document.querySelectorAll("[data-theme]").forEach((el) => el.setAttribute("aria-pressed", String(el === b)));
+					return;
+				}
+				if (b.dataset.device) {
+					device = b.dataset.device;
+					document.querySelectorAll("[data-device]").forEach((el) => el.setAttribute("aria-pressed", String(el === b)));
+					render(current.id);
+					return;
+				}
+				if (b.dataset.go) {
+					render(b.dataset.go);
+					return;
+				}
+				if (b.dataset.action) handle(b.dataset.action, b);
+			});
+			document.addEventListener("keydown", (event) => {
+				if (event.key === "Escape" && current.sheet) {
+					render(current.back || "app-list");
+				}
+			});
+			window.addEventListener("popstate", () => render(location.hash.slice(1), true));
+			render(location.hash.slice(1) || "app-list", true);
+		</script>
+	</body>
+</html>

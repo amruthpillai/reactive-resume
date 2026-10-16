@@ -1,0 +1,92 @@
+{
+	"success": true,
+	"data": {
+		"axeVersion": "4.12.1",
+		"counts": { "inapplicable": 45, "incomplete": 1, "passes": 14, "violations": 0 },
+		"incomplete": [
+			{
+				"help": "Elements must meet minimum color contrast ratio thresholds",
+				"helpUrl": "https://dequeuniversity.com/rules/axe/4.12/color-contrast?application=axeAPI",
+				"id": "color-contrast",
+				"impact": "serious",
+				"nodeCount": 31,
+				"nodes": [
+					{
+						"failureSummary": "Fix any of the following:\n  Element content contains only non-text characters",
+						"html": "<span role=\"img\" aria-label=\"Full signal and battery\">▰ ▰</span>",
+						"target": ["span[role=\"img\"]"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<h3>Next step</h3>",
+						"target": [".accent > h3"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<strong>Technical interview</strong>",
+						"target": ["strong"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<p>Mon 19 Oct, 16:00–17:00</p>",
+						"target": [".accent > p:nth-child(3)"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<p class=\"meta\">Europe/Berlin · 07:00 America/Los_Angeles</p>",
+						"target": [".accent > .meta"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<button class=\"secondary\" data-go=\"app-interview\">Edit</button>",
+						"target": [".secondary[data-go=\"app-interview\"]"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<button class=\"secondary\" data-go=\"app-reminder\">Reminder</button>",
+						"target": [".secondary[data-go=\"app-reminder\"]"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<button class=\"secondary\" data-go=\"app-ics\">Add to calendar</button>",
+						"target": [".secondary[data-go=\"app-ics\"]"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<h3>What you sent</h3>",
+						"target": ["aside > .card:nth-child(2) > h3"]
+					},
+					{
+						"failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element",
+						"html": "<p>Game Developer · David Kowalski</p>",
+						"target": [".card:nth-child(2) > p:nth-child(2)"]
+					}
+				],
+				"tags": [
+					"cat.color",
+					"wcag2aa",
+					"wcag143",
+					"TTv5",
+					"TT13.c",
+					"EN-301-549",
+					"EN-9.1.4.3",
+					"ACT",
+					"RGAAv4",
+					"RGAA-3.2.1"
+				]
+			}
+		],
+		"lifecycle": {
+			"effectiveLaunch": { "browserLaunched": true, "engine": "chrome", "launchHash": 11677035664275010974 },
+			"launched": false,
+			"relaunchedBrowser": false,
+			"restartedBackground": false,
+			"restoreStatus": "not_configured",
+			"reused": true,
+			"saveStatus": "not_attempted"
+		},
+		"url": "file:///Users/amruth/.paseo/worktrees/3ndg7wnq/mobile-ds3d/docs/plans/native-mobile-app/mockups/career.html#ws-fit",
+		"violations": []
+	},
+	"error": null
+}
