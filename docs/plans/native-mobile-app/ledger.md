@@ -33,6 +33,12 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 5. Trash as a row at the end of the library: yes.
 6. Letter cards show live text until on-device renders exist: yes.
 
+## Owner design answers (DS3 questions, 2026-10-17)
+
+1. Copy without a web source (server picker, sign-in states, offline strip, toasts) is approved.
+2. The ATS line "checked on the server and not stored" holds after verification. The coordinator checked `packages/api/src/features/resume/checks.ts:49-72`: `checkPdf` extracts in memory with no storage or DB writes, and its OpenAPI description says "stores nothing". **Constraint:** any future change to `/pdf-checks` must keep that true, or the copy must change.
+3. All the DS3c phone-only adaptations are approved: press-and-hold template preview, offline PDF download with a banner, locked banners with Unlock, proposed-edit markings persisting on Page, and an always-visible ⋯ for deleting versions and conversations.
+
 ## Log
 
 - 2026-10-17: Plan committed. M0 spikes and DS1 launched.
