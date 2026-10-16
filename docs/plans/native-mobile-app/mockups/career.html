@@ -804,7 +804,7 @@
 				border-bottom: 1px solid var(--line);
 				min-height: 48px;
 			}
-			.fact-line span:first-child {
+			.fact-line > span:first-child {
 				width: 82px;
 				flex: none;
 				color: var(--ink-3);
@@ -1006,7 +1006,7 @@
 				align-items: start;
 				padding: 8px 0;
 			}
-			.offer-table .fact-line span:first-child {
+			.offer-table .fact-line > span:first-child {
 				width: 105px;
 			}
 			.empty {
@@ -1251,6 +1251,61 @@
 				fill: currentColor;
 				stroke: none;
 			}
+
+			.sent-indicator {
+				display: flex;
+				align-items: center;
+				flex-wrap: wrap;
+				gap: 6px;
+				padding: 6px 0 10px;
+			}
+			.sent-indicator svg {
+				width: 18px;
+				height: 18px;
+			}
+			summary {
+				min-width: 44px;
+				min-height: 44px;
+				cursor: pointer;
+				padding: 10px 0;
+				font-weight: 600;
+			}
+			details[open] summary {
+				margin-bottom: 12px;
+			}
+			del {
+				color: var(--ink-3);
+			}
+			ins {
+				color: var(--accent-text);
+				background: var(--accent-soft);
+				text-decoration: none;
+			}
+			.confirm-guard {
+				z-index: 30;
+				justify-content: center;
+			}
+			.confirm-guard .sheet-panel {
+				height: auto;
+				max-height: 70%;
+			}
+			.attachment-chip {
+				padding: 4px 8px 4px 12px;
+				border-radius: 8px;
+			}
+			input,
+			select,
+			textarea {
+				border-color: var(--line-2);
+			}
+			.tabs .badge {
+				margin-inline-start: 6px;
+			}
+			.comparison-note {
+				display: block;
+				color: var(--accent-text);
+				margin-top: 4px;
+			}
 		</style>
 	</head>
 	<body>
@@ -1337,15 +1392,15 @@
 			let fieldId = 0;
 			const field = (label, value = "", type = "text") => {
 				const id = `field-${++fieldId}`;
-				return `<label class="field" for="${id}">${label}<input id="${id}" type="${type}" value="${esc(value)}"></label>`;
+				return `<label class="field" for="${id}">${label}<input id="${id}" type="${type}" data-field="${esc(label)}" value="${esc(value)}"></label>`;
 			};
 			const area = (label, value = "", rows = 3) => {
 				const id = `field-${++fieldId}`;
-				return `<label class="field" for="${id}">${label}<textarea id="${id}" rows="${rows}">${esc(value)}</textarea></label>`;
+				return `<label class="field" for="${id}">${label}<textarea id="${id}" data-field="${esc(label)}" rows="${rows}">${esc(value)}</textarea></label>`;
 			};
 			const select = (label, items) => {
 				const id = `field-${++fieldId}`;
-				return `<label class="field" for="${id}">${label}<select id="${id}">${items.map((t) => `<option>${t}</option>`).join("")}</select></label>`;
+				return `<label class="field" for="${id}">${label}<select id="${id}" data-field="${esc(label)}">${items.map((t) => `<option>${t}</option>`).join("")}</select></label>`;
 			};
 			const check = (label, on = false, disabled = false) =>
 				`<label class="check"><input type="checkbox" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}><span>${label}</span></label>`;
@@ -1402,7 +1457,7 @@
 					)
 					.join("")}</div>`;
 			const workspaceTabs = () =>
-				`<div class="tabs" role="navigation" aria-label="Application workspace tabs">${["Fit", "Apply", "Prepare", "Practise", "Debrief", "Messages", "Saved"].map((name) => `<button data-go="ws-${name.toLowerCase()}" aria-current="${workspaceTab() === name ? "page" : "false"}">${name}${name === "Saved" ? " (6)" : ""}</button>`).join("")}</div>`;
+				`<div class="tabs" role="navigation" aria-label="Application workspace tabs">${["Fit", "Apply", "Prepare", "Practise", "Debrief", "Messages", "Saved"].map((name) => `<button data-go="ws-${name.toLowerCase()}" aria-current="${workspaceTab() === name ? "page" : "false"}">${name}${name === "Saved" ? badge("6") : name === "Prepare" ? badge("23 h", "warn") : name === "Messages" ? badge("2 unread", "good") : ""}</button>`).join("")}</div>`;
 			const records = [
 				["Interview", "Fieldnote", "Senior Game Developer", "Technical interview · Mon 19 Oct, 16:00"],
 				["Offer", "Northwind Labs", "Game Developer", "Respond by Thu 22 Oct"],
@@ -1410,26 +1465,33 @@
 				["Applied", "Lumen", "Unity Developer", "Follow up · Wed 21 Oct"],
 				["Saved", "Fieldnote", "Tools Programmer", "Prepare a resume"],
 			];
-			const applicationRows = (bulk = false) =>
+			const sentIndicator = (i) =>
+				`<div class="sent-indicator"><span class="meta">Sent</span>${i === 0 ? icon("documents") + '<span class="meta">Resume</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 5h18v14H3z M3 5l9 8 9-8"/></svg><span class="meta">Letter</span>' : i === 3 ? icon("documents") + '<span class="meta">Resume</span>' : badge("None", "warn")}</div>`;
+			const applicationRows = (bulk = false, collapsed = false) =>
 				records
 					.map(
-						([s, c, r, next], i) =>
-							`<section><div class="stage-title">${stage(s)} <span class="meta">1</span></div><div class="list-row">${bulk ? check(`Select ${c}`, i < 2) : ""}<button class="entry" data-go="${i === 0 ? "app-detail" : `app-context-${i}`}"><h3>${r}</h3><p>${c}</p><span class="meta">${next}</span></button>${ib("more", `Options for ${r} at ${c}`, "app-actions")}</div></section>`,
+						([status, company, role, next], i) =>
+							`<section><button class="stage-title" data-action="toggle-stage" aria-expanded="${!(collapsed && i === 0)}">${stage(status)} <span class="meta">1</span><span aria-hidden="true">${collapsed && i === 0 ? "▸" : "▾"}</span></button><div class="stage-content" ${collapsed && i === 0 ? "hidden" : ""}><div class="list-row">${bulk ? check(`Select ${company}`, i < 2) : ""}<button class="entry" data-go="${i === 0 ? "app-detail" : `app-context-${i}`}"><h3>${role}</h3><p>${company}</p><span class="meta">${next}</span></button>${ib("more", `Options for ${role} at ${company}`, "app-actions")}</div>${sentIndicator(i)}</div></section>`,
 					)
 					.join("");
+
 			function boardCard(status) {
 				const i = records.findIndex((record) => record[0] === status);
 				const record = records[i];
 				return card(
 					record[1],
-					`<p>${record[2]}</p><p class="meta">${record[3]}</p>${btn("Open", i === 0 ? "app-detail" : `app-context-${i}`)}${btn("Move to…", "app-move", "link")}`,
+					`<p>${record[2]}</p><p class="meta">${record[3]}</p>${btn("Open", i === 0 ? "app-detail" : `app-context-${i}`)}${btn("Move to…", "app-move", "link")}${status === "Saved" ? act("Show 20 more", "page-stage") : ""}`,
 				);
 			}
 
 			const listHeader = () =>
 				`<div class="row">${field("Search applications", "", "search")}${ib("more", "Sort and actions", "app-sort")}</div><div class="row between">${btn("Select", "app-bulk", "link")}${btn("Import / export CSV", "app-csv-menu", "link")}</div>`;
 			const listBody = () =>
-				listHeader() + applicationRows() + check("Show closed") + btn("Save job", "app-add", "primary");
+				listHeader() +
+				followUpNudge() +
+				applicationRows() +
+				check("Show closed") +
+				btn("Save job", "app-add", "primary");
 			add("app-list", "Applications", "Applications", "Grouped by stage; what needs you first.", listBody, {
 				view: "List",
 			});
@@ -1575,7 +1637,7 @@
 				"Board",
 				"Phone swipes columns; tablet shows adjacent stages.",
 				() =>
-					`<div class="board">${["Saved", "Applied", "Screening", "Interview", "Offer", "Closed"].map((s, i) => `<section class="column"><h3 class="stage-title">${stage(s)} ${s === "Closed" ? "0" : "1"}</h3>${s === "Closed" ? '<p class="meta">Drop here to close with a reason.</p>' : boardCard(s)}</section>`).join("")}</div><p class="meta">Swipe horizontally for stages. Long press a card to drag; Move to… offers the same action.</p>`,
+					`<div class="board">${["Saved", "Applied", "Screening", "Interview", "Offer", "Closed"].map((s, i) => `<section class="column"><h3 class="stage-title">${stage(s)} ${s === "Closed" ? "0" : s === "Saved" ? "21" : "1"}</h3>${s === "Closed" ? '<p class="meta">Drop here to close with a reason.</p>' : boardCard(s)}</section>`).join("")}</div><p class="meta">Swipe horizontally for stages. Long press a card to drag; Move to… offers the same action.</p>`,
 				{ view: "Board" },
 			);
 			add(
@@ -1584,7 +1646,8 @@
 				"Calendar",
 				"October 2026 · interview dates and agenda.",
 				() =>
-					`<div class="row between">${act("‹ Previous", "month-prev")}${act("This month", "month-reset")}${act("Next ›", "month-next")}</div><h3 id="calendar-month">October 2026</h3><div class="calendar">${["M", "T", "W", "T", "F", "S", "S"].map((s) => `<span aria-hidden="true">${s}</span>`).join("")}${Array.from({ length: 3 }, () => "<span></span>").join("")}${Array.from({ length: 31 }, (_, i) => `<button data-go="${[18].includes(i) ? "app-interview" : "app-interview-new"}" ${[18].includes(i) ? 'data-event="true"' : ""} aria-label="Schedule or view interview on ${i + 1} October">${i + 1}</button>`).join("")}</div>${card("Upcoming interviews", `<p>Mon 19 Oct, 16:00 · Europe/Berlin</p><p>Fieldnote · Technical · 60 min</p>${btn("Edit interview", "app-interview")}${btn("Schedule interview", "app-interview-new", "primary")}`)}`,
+					`<div class="row between">${act("‹ Previous", "month-prev")}${act("This month", "month-reset")}${act("Next ›", "month-next")}</div><h3 id="calendar-month">October 2026</h3><div class="calendar">${["M", "T", "W", "T", "F", "S", "S"].map((s) => `<span aria-hidden="true">${s}</span>`).join("")}${Array.from({ length: 3 }, () => "<span></span>").join("")}${Array.from({ length: 31 }, (_, i) => `<button data-go="${[18].includes(i) ? "app-interview" : "app-interview-new"}" ${[18].includes(i) ? 'data-event="true"' : ""} aria-label="Schedule or view interview on ${i + 1} October">${i + 1}</button>`).join("")}</div>${card("Upcoming interviews", `<p>Mon 19 Oct, 16:00 · Europe/Berlin</p><p>Fieldnote · Technical · 60 min</p>${btn("Edit interview", "app-interview")}${btn("Schedule interview", "app-interview-new", "primary")}`)}` +
+					(btn("View application", "app-detail", "link") + btn("Empty agenda", "app-calendar-empty", "link")),
 				{ view: "Calendar" },
 			);
 			add(
@@ -1711,7 +1774,8 @@
 						"warning",
 					) +
 					act("Save job", "save-job", "primary") +
-					act("Save and prepare resume", "save-tailor"),
+					act("Save and prepare resume", "save-tailor") +
+					btn("Already applied: record without preparing", "app-review-record", "link"),
 				{ sheet: true, back: "app-add" },
 			);
 			add(
@@ -1733,14 +1797,16 @@
 				"Web search connection is required.",
 				() =>
 					field("Role, company or location", "Game Developer Seattle", "search") +
-					act("Search", "search-postings", "primary") +
+					btn("Search", "app-search-loading", "primary") +
 					card(
 						"Senior Game Developer · Fieldnote",
 						'<p>Unreal Engine, C++ · Seattle · Open posting</p><p class="meta">jobs.example.com</p>' +
 							btn("View posting", "app-posting") +
 							btn("Use posting", "app-add"),
 					) +
-					note("Uses the web search service set up in Settings. Search results wait for your review.", "info"),
+					note("Uses the web search service set up in Settings. Search results wait for your review.", "info") +
+					btn("No results", "app-search-none", "link") +
+					btn("Search failed", "app-search-failed", "link"),
 				{ sheet: true, back: "app-add" },
 			);
 			add(
@@ -1787,6 +1853,8 @@
 				);
 			const detail = () =>
 				`<div class="stepper" aria-label="Stages">${["Saved", "Applied", "Screening", "Interview", "Offer"].map((s) => `<button class="${s === "Interview" ? "current" : ""}" data-go="${s === "Applied" ? "app-submission" : "app-move"}">${s}</button>`).join("")}</div>` +
+				note("Interview · for 4 days", "info") +
+				act("Move to Offer", "stage:Offer") +
 				nextCard() +
 				btn("Open workspace", "ws-fit", "primary") +
 				sentCard() +
@@ -1807,7 +1875,8 @@
 				btn("Timeline", "app-timeline") +
 				btn("Attachments", "app-attachments") +
 				btn("View posting", "app-posting") +
-				btn("Close application…", "app-close", "danger");
+				btn("Close application…", "app-close", "danger") +
+				btn("No linked letter", "app-detail-no-letter", "link");
 			add("app-detail", "Application detail", "Fieldnote", "Senior Game Developer · Interview", detail, {
 				back: "app-list",
 			});
@@ -1860,6 +1929,8 @@
 					field("Application date", "2026-10-17", "date") +
 					select("Resume submitted (optional)", ["Game Developer · David Kowalski", "None"]) +
 					select("Cover letter submitted (optional)", ["Fieldnote · Cover letter", "None"]) +
+					check("Submitted attached resume: David-Kowalski.pdf", true) +
+					check("Submitted attached cover letter: Fieldnote-letter.pdf", false) +
 					act("Confirm applied", "confirm-applied", "primary") +
 					btn("Cancel", "app-detail"),
 				{ sheet: true, back: "app-detail" },
@@ -1880,7 +1951,8 @@
 					select("Label", ["Recruiter", "Hiring manager", "Referral", "Interviewer"]) +
 					field("Email (optional)", "sam@example.com", "email") +
 					field("Phone (optional)", "+1 555 0100", "tel") +
-					save("app-detail", "Add contact"),
+					save("app-detail", "Add contact") +
+					(btn("No contacts yet", "app-contacts-empty", "link") + btn("Invalid email", "app-contacts-error", "link")),
 				{ sheet: true, back: "app-detail" },
 			);
 			add(
@@ -2125,7 +2197,8 @@
 					field("What to do", "Email the recruiter") +
 					check("Remind me on this device", true) +
 					btn("Reminder settings", "app-reminder", "link") +
-					save(),
+					save() +
+					act("Clear", "clear-follow-up", "link"),
 				{ sheet: true, back: "app-detail" },
 			);
 			add(
@@ -2145,7 +2218,7 @@
 					act("Upload .csv", "pick-csv") +
 					area(
 						"CSV data",
-						"Company,Title,Status\nFieldnote,Senior Game Developer,Interview\nLumen,Unity Developer,Applied",
+						"Company,Title,Status,Contact name,Contact email\nFieldnote,Senior Game Developer,Interview,Sam,sam@example.com\nLumen,Unity Developer,Applied,,broken",
 						5,
 					) +
 					btn("Review columns", "app-csv-map", "primary") +
@@ -2183,7 +2256,10 @@
 					]) +
 					note("Preview: Fieldnote · Senior Game Developer · Interview") +
 					btn("Import 2 applications", "app-csv-progress", "primary") +
-					btn("Review invalid values", "app-csv-error", "link"),
+					btn("Review invalid values", "app-csv-error", "link") +
+					select("Contact name goes to", ["Contact name", "Leave out"]) +
+					select("Contact email goes to", ["Contact email", "Leave out"]) +
+					note("1 contact has an invalid email or no name; its application still imports.", "warning"),
 				{ sheet: true, back: "app-csv-import" },
 			);
 			add(
@@ -2209,7 +2285,8 @@
 				() =>
 					skeleton() +
 					note("Importing 2 rows. Keep this screen open.", "info") +
-					btn("View completed result", "app-csv-done", "primary"),
+					btn("View completed result", "app-csv-done", "primary") +
+					btn("Import failed", "app-csv-failed", "link"),
 				{ sheet: true, back: "app-csv-import" },
 			);
 			add(
@@ -2254,18 +2331,21 @@
 			const evidence = () =>
 				card(
 					"C++ gameplay architecture",
-					badge("Supported", "good") +
+					badge("Posting") +
+						badge("Supported", "good") +
 						'<p>Architected combat systems serving 15+ enemy types at Cascade Studios.</p><p class="meta">From resume · David Kowalski</p>',
 				) +
 				card(
 					"Unreal Engine",
-					badge("Partly supported", "warn") +
+					badge("Posting") +
+						badge("Partly supported", "warn") +
 						"<p>Gameplay experience is recorded. Networking evidence is not recorded.</p>" +
 						btn("Add evidence", "ws-evidence", "link"),
 				) +
 				card(
 					"Multiplayer networking",
-					badge("Missing evidence", "warn") +
+					badge("Inferred") +
+						badge("Missing evidence", "warn") +
 						"<p>No enabled fact backs this requirement. This is missing evidence, not missing ability.</p>" +
 						btn("Clarify", "ws-evidence", "link"),
 				);
@@ -2282,7 +2362,11 @@
 						"<p>What does multiplayer ownership look like in this role?</p>" + act("Add to questions", "add-question"),
 					) +
 					btn("Check again", "ws-fit-loading") +
-					ai(),
+					ai() +
+					card(
+						"Against your requirements",
+						"<p>✓ Met · At most 2 office days: this role asks for 2.</p><p>× Not met · Seattle only: this role also requires travel.</p><p>? Unknown · Minimum base salary: not in the posting.</p>",
+					),
 				{ workspace: true },
 			);
 			add(
@@ -2351,7 +2435,11 @@
 					btn("Mark as applied", "app-submission", "primary") +
 					act("Copy answers", "copy-answers") +
 					act("Download answers (.md / .txt)", "download-answers") +
-					ai(),
+					ai() +
+					(card("Backed by", btn("C++ editor tools · Cascade Studios", "career-fact-source", "link")) +
+						btn("Submitted answers", "ws-apply-submitted", "link") +
+						btn("30-question limit", "ws-apply-cap", "link") +
+						btn("Answer too long", "ws-apply-limit", "link")),
 				{ workspace: true },
 			);
 			add(
@@ -2374,25 +2462,27 @@
 				"Timed plan, opening, stories and questions.",
 				() =>
 					heading("A focused plan for this round", "Fieldnote · Technical · Mon 19 Oct, 16:00") +
-					card(
-						"Your focus",
-						"<p>Explain your own decisions in the combat system.</p>" +
-							check("10 min · Your opening") +
-							check("20 min · Walk through architecture") +
-							check("15 min · Practise one story") +
-							check("5 min · Questions to ask"),
+					planChecklist(
+						[
+							["Your opening", 10],
+							["Walk through architecture", 20],
+							["Practise one story", 15],
+							["Questions to ask", 5],
+						],
+						"min",
 					) +
 					card(
 						"Stories to bring",
 						"<p>Editor tools at Cascade Studios</p>" +
 							btn("Open story", "career-story") +
-							btn("Practise", "ws-practise"),
+							btn("Practise", "ws-practise-story"),
 					) +
-					card("Questions to ask", "<p>What does success look like at 90 days?</p>") +
 					btn("Read 10-minute briefing", "ws-briefing", "primary") +
 					btn("Plan again", "ws-fit-loading") +
 					btn("Refresh the briefing 24 hours before", "career-schedule-prepare") +
-					btn("Add an interview", "app-interview-new") +
+					btn("Scheduled, no plan yet", "ws-prepare-unplanned", "link") +
+					btn("10 minutes before", "ws-prepare-soon", "link") +
+					btn("After the interview", "ws-prepare-after", "link") +
 					ai(),
 				{ workspace: true },
 			);
@@ -2416,15 +2506,21 @@
 				"10-minute briefing",
 				"Works without AI or new research.",
 				() =>
-					note("Starts in 10 minutes · 16:00 Europe/Berlin", "warning") +
-					card("Check the details", check("Time, video link and who you’ll meet") + check("Glance at what you sent")) +
-					card("Your opening", "<p>Current focus, relevant experience, why this role.</p>") +
+					card("Your focus", "<p>Explain your own decisions in the combat system.</p>") +
+					card(
+						"Your opening",
+						"<p>I build gameplay systems in C++ and Unreal Engine. At Cascade Studios I built tools to shorten level-designer iteration.</p>",
+					) +
 					card(
 						"Two stories",
-						"<p>Situation, task, action, result, reflection. Leave out numbers you’re unsure of.</p>",
+						"<p>Editor tools at Cascade Studios</p><p>Combat systems serving 15+ enemy types</p>" +
+							btn("View supporting story", "career-story"),
 					) +
-					card("Questions to ask", "<p>Success at 90 days · next step</p>") +
-					btn("Rehearse aloud", "ws-practise", "primary"),
+					card(
+						"Keep it honest",
+						"<p>Name your own part. Only use numbers you can support; say when an outcome is unknown.</p>",
+					) +
+					btn("Back to preparation", "ws-prepare"),
 				{ workspace: true, sheet: true, back: "ws-prepare" },
 			);
 			const question = () =>
@@ -2457,7 +2553,10 @@
 						"Your attempts",
 						"<p>Today, 09:20 · Typed</p><p>Start with your own part before describing team results.</p>",
 					) +
-					ai(),
+					ai() +
+					(btn("Practise a specific story", "ws-practise-story", "link") +
+						btn("Recalled question", "ws-practise-recalled", "link") +
+						btn("Open earlier attempt", "ws-practise-attempt", "link")),
 				{ workspace: true },
 			);
 			add(
@@ -2473,7 +2572,9 @@
 						`<div class="voice-time">0:00</div>${btn("Record your answer", "ws-recording", "primary")}<p class="meta">Up to 2 minutes · 2 MB maximum.</p>`,
 					) +
 					btn("Type instead", "ws-practise") +
-					btn("Microphone denied", "ws-voice-error", "link"),
+					btn("Microphone denied", "ws-voice-error", "link") +
+					(btn("Choose an audio file", "ws-audio-file", "link") +
+						note("WebM, MP4, MP3, WAV or Ogg · up to 2 MB.", "info")),
 				{ workspace: true },
 			);
 			const wave = () => `<div class="wave" aria-hidden="true">${"<span></span>".repeat(24)}</div>`;
@@ -2491,7 +2592,9 @@
 							btn("Stop recording", "ws-transcribing", "primary"),
 					) +
 					note("Stop when you’re done. Nothing is sent until then.", "info") +
-					btn("Cancel recording", "ws-practise"),
+					btn("Cancel recording", "ws-practise") +
+					(btn("Recording failure states", "ws-record-failed", "link") +
+						btn("2-minute limit", "ws-record-limit", "link")),
 				{ workspace: true },
 			);
 			add(
@@ -2593,7 +2696,11 @@
 					) +
 					btn("Connect AI provider", "provider-handoff", "primary") +
 					area("Your answer", "You can type and review your answer here.") +
-					note("Feedback needs an AI connection. Nothing is sent until you ask.", "info"),
+					note("Feedback needs an AI connection. Nothing is sent until you ask.", "info") +
+					(heading("Other workspace tabs") +
+						["Fit", "Apply", "Prepare", "Debrief", "Messages"]
+							.map((tab) => btn(tab + " without AI", "ws-" + tab.toLowerCase() + "-no-provider"))
+							.join("")),
 				{ workspace: true },
 			);
 			add(
@@ -2630,7 +2737,8 @@
 					) +
 					select("How did it land?", ["Went well", "Mixed", "Didn’t land"]) +
 					btn("Review my answer", "ws-debrief-review", "primary") +
-					ai(),
+					ai() +
+					note("After your first review, a light plan for this week appears here.", "info"),
 				{ workspace: true },
 			);
 			add(
@@ -2642,13 +2750,19 @@
 					badge("Observation") +
 					card("For the next round", "<p>Lead with the problem, then name the part you owned.</p>") +
 					card("Supported", "<p>The 40% iteration-time result is in your resume.</p>") +
+					card("Practice priority", "<p>Explain the design constraint before the implementation.</p>") +
 					btn("Remember for Fieldnote only?", "ws-remember") +
-					card(
-						"This week: make your evidence easier to follow",
-						check("10 min · Rehearse the opening") + check("15 min · Compare two attempts"),
+					heading("This week: make your evidence easier to follow") +
+					planChecklist(
+						[
+							["Mon · Rehearse the opening", 10],
+							["Wed · Compare two attempts", 15],
+						],
+						"done",
 					) +
 					btn("Add to calendar", "app-ics") +
-					`<p class="privacy">Practice priorities, not conclusions about why an employer decided anything.</p>`,
+					btn("Week plan empty", "ws-debrief-week-empty", "link") +
+					'<p class="privacy">Practice priorities, not conclusions about why an employer decided anything.</p>',
 				{ workspace: true },
 			);
 			add(
@@ -2715,11 +2829,9 @@
 						"Answers · 12 Oct, 09:00",
 						"Offer · Northwind Labs",
 					]
-						.map((t, i) =>
-							card(
-								t,
-								`<p class="meta">Used posting, notes and 2 enabled facts.</p>${btn(i === 5 ? "Open in Offers" : "Open saved version", i === 5 ? "career-offers" : "ws-saved-version")}${act("Delete", "delete-saved", "danger")}`,
-							),
+						.map(
+							(title, i) =>
+								`<section class="card" data-entity="saved-${i}"><details><summary>${title}</summary><div class="stack"><p>1 supported, 1 partly supported, 1 with no evidence yet. Gameplay experience is backed by your resume.</p><p class="meta">Used posting, notes and 2 enabled facts.</p>${btn(i === 5 ? "Open in Offers" : "Open saved version", i === 5 ? "career-offers" : "ws-saved-version")}</div></details>${act("Delete", "delete-saved", "danger")}</section>`,
 						)
 						.join(""),
 				{ workspace: true },
@@ -2750,7 +2862,7 @@
 				{ workspace: true, readOnly: true },
 			);
 			const chatMessages = () =>
-				`<div class="bubble mine"><p>How should I explain my editor-tool work?</p></div><div class="bubble"><h3>Start with the designer’s problem.</h3><p>Then explain your own C++ decisions and the result you can support: 40% less iteration time.</p><div class="row wrap">${badge("1 fact")}${badge("1 story")}${badge("Resume")}</div>${btn("View supporting fact", "career-fact-source", "link")}</div>`;
+				`<div class="bubble mine"><p>How should I explain my editor-tool work?</p></div><div class="bubble"><h3>Start with the designer’s problem.</h3><p>Then explain your own C++ decisions and the result you can support: 40% less iteration time.</p><div class="row wrap">${badge("1 fact")}${badge("1 story")}${badge("Resume")}</div>${btn("View supporting fact", "career-fact-source", "link")}${act("Copy", "copy-coach-answer", "link")}</div>`;
 			const coachControls = () =>
 				`<div class="row wrap">${check("Knowledge", true)}${check("Application", true)}${check("Web research", false)}${check("Offers", false)}</div>`;
 			add(
@@ -2760,12 +2872,15 @@
 				"Application context remains explicit in sheet.",
 				() =>
 					note("Fieldnote · Fit. Coach reads this posting, notes and what you sent.", "info") +
-					btn("Conversations", "career-conversations", "link") +
+					btn("Conversations", "ws-coach-conversations", "link") +
 					chatMessages() +
 					coachControls() +
 					area("Ask about this application…", "How should I prepare for this round?") +
 					btn("Send", "ws-coach-stream", "primary") +
-					ai(),
+					ai() +
+					(btn("New conversation", "ws-coach-new", "link") +
+						btn("Attach a file", "ws-coach-attachments") +
+						btn("No provider: connect here", "ws-coach-provider", "link")),
 				{ workspace: true, sheet: true, back: "ws-fit" },
 			);
 			const scheduleRow = () =>
@@ -2796,7 +2911,16 @@
 						"Coming up",
 						`<p>Technical interview · Fieldnote</p><p class="meta">Mon 19 Oct, 16:00 · Europe/Berlin</p>${btn("Open workspace", "ws-prepare")}`,
 					) +
-					scheduleRow(),
+					scheduleRow() +
+					(card(
+						"Needs you · Follow-up",
+						"<p>Lumen · No reply for 7 days</p>" + btn("Review draft", "career-follow-up-draft"),
+					) +
+						card(
+							"Needs you · Discovered roles",
+							"<p>3 new roles wait for your review.</p>" + btn("Review", "career-discovery-review"),
+						) +
+						btn("Show 2 read", "career-today-read", "link")),
 				{ career: "Today" },
 			);
 			add(
@@ -2848,7 +2972,8 @@
 					check("Also email a copy", false) +
 					act("Save schedule", "save-schedule", "primary") +
 					btn("Server setup unavailable", "career-schedule-unavailable", "link") +
-					btn("Cancel", "career-today"),
+					btn("Cancel", "career-today") +
+					btn("Preview discard guard", "career-schedule-discard", "link"),
 				{ career: "Today", sheet: true, back: "career-today" },
 			);
 			add(
@@ -2910,7 +3035,10 @@
 					field("First run", "2026-10-16", "date") +
 					field("Time · Europe/Berlin", "08:00", "time") +
 					note("Pick a time after now. Your settings are still here.", "error") +
-					btn("Correct and retry", "career-schedule", "primary"),
+					btn("Correct and retry", "career-schedule", "primary") +
+					["query", "dst", "interview", "application", "connection"]
+						.map((kind) => btn("Check " + kind, "career-schedule-" + kind))
+						.join(""),
 				{ career: "Today", sheet: true, back: "career-today" },
 			);
 			add(
@@ -2926,7 +3054,12 @@
 					area("Message the coach", "Help me compare my next steps.") +
 					btn("Attach a file", "coach-attachment") +
 					btn("Send", "career-coach-stream", "primary") +
-					`<p class="privacy">Your message and selected context go to your AI connection only when you send.</p>`,
+					`<p class="privacy">Your message and selected context go to your AI connection only when you send.</p>` +
+					(btn("New conversation", "career-coach-empty", "link") +
+						btn("Ask-first memory", "career-coach-memory", "link") +
+						btn("Automatic memory", "career-coach-remembered", "link") +
+						btn("Sources and saved story", "career-coach-sources", "link") +
+						btn("Coach setup and loading errors", "career-coach-unavailable", "link")),
 				{ career: "Coach" },
 			);
 			add(
@@ -2969,11 +3102,8 @@
 				"Conversations",
 				"Thread list, new, delete and transcript.",
 				() =>
-					btn("New conversation", "career-coach", "primary") +
-					card(
-						"Editor-tool interview story",
-						`<p class="meta">Today · Selected AI connection</p>${btn("Open", "career-coach")}${act("Share transcript", "share-transcript")}${act("Delete conversation", "delete-conversation", "danger")}`,
-					),
+					btn("New conversation", "career-coach-empty", "primary") +
+					`<section class="card" data-entity="career-conversation"><h3>${esc(conversationTitle)}</h3><p class="meta">Today · Selected AI connection</p>${btn("Open", "career-coach")}${btn("Rename conversation", "career-conversation-rename")}${act("Share transcript", "share-transcript")}${act("Delete conversation", "delete-conversation", "danger")}</section>`,
 				{ career: "Coach", sheet: true, back: "career-coach" },
 			);
 			add(
@@ -2982,8 +3112,11 @@
 				"Attach a file",
 				"Document picker review before send.",
 				() =>
-					card("David-Kowalski.pdf", "<p>PDF · 248 KB</p>" + act("Attach", "attach-coach-file", "primary")) +
-					note("The attachment is sent with your next message to the selected AI connection.", "info") +
+					heading("Attachments", "Each file is reviewed before sending.") +
+					attachmentChips() +
+					btn("Choose another file", "coach-attachment", "link") +
+					note("Attachments are sent with your next message to the selected AI connection.", "info") +
+					act("Attach selected files", "attach-coach-file", "primary") +
 					btn("Cancel", "career-coach"),
 				{ career: "Coach", sheet: true, back: "career-coach" },
 			);
@@ -2992,7 +3125,7 @@
 			const factCard = () =>
 				card(
 					"Accomplishment",
-					`<p>${sampleFact}</p><p class="meta">From your resume · All applications</p>${check("Use in coaching", true)}<div class="row wrap">${btn("Source", "career-fact-source", "link")}${btn("Correct", "career-fact-correct", "link")}${act("Forget", "forget-fact", "danger")}</div>`,
+					`<p>${sampleFact}</p><p class="meta">From your resume · ${factWide ? "All applications" : "Fieldnote only"}</p>${check("Use in coaching", true)}<div class="row wrap">${btn("Source", "career-fact-source", "link")}${btn("Correct", "career-fact-correct", "link")}${act("Forget", "forget-fact", "danger")}</div>`,
 				);
 			add(
 				"career-facts",
@@ -3011,7 +3144,8 @@
 					note(
 						"Enabled facts, stories and preferences can be sent to your AI connection. Nothing is remembered in Ask first mode until you agree.",
 						"info",
-					),
+					) +
+					btn("No facts match", "career-facts-filtered", "link"),
 				{ career: "Knowledge" },
 			);
 			add(
@@ -3057,7 +3191,8 @@
 					card("History", "<p>Added 12 Oct 2026 · No corrections</p>") +
 					card("Used in", "<p>Editor tools at Cascade Studios · Story</p><p>Fieldnote · Fit check</p>") +
 					btn("Correct", "career-fact-correct") +
-					act("Use for Fieldnote only", "scope-fact") +
+					note("Scope: " + (factWide ? "All applications" : "Fieldnote only"), "info") +
+					act("Use for all applications", "widen-fact") +
 					act("Forget", "forget-fact", "danger"),
 				{ career: "Knowledge", sheet: true, back: "career-facts" },
 			);
@@ -3076,7 +3211,9 @@
 							btn("Open story", "career-story"),
 					) +
 					btn("Add a story", "career-story-editor", "primary") +
-					note("Situation, Task, Action, Result, Reflection. Leave unknown outcomes blank.", "info"),
+					note("Situation, Task, Action, Result, Reflection. Leave unknown outcomes blank.", "info") +
+					(btn("No stories yet", "career-stories-empty", "link") +
+						btn("Story not found", "career-story-missing", "link")),
 				{ career: "Knowledge" },
 			);
 			const storyParts = [
@@ -3154,7 +3291,7 @@
 					btn("Correct and retry", "career-preferences", "primary"),
 				{ career: "Knowledge" },
 			);
-			const offerCard = (company, base, currency = "USD") =>
+			const offerCard = (company, base, currency = "USD", urgent = false) =>
 				card(
 					company,
 					`${badge(company === "Fieldnote" ? "Verbal offer" : "Written offer")}<div class="offer-table">${[
@@ -3167,7 +3304,10 @@
 						["Other benefits", "Not recorded"],
 						["Respond by", "Thu 22 Oct 2026"],
 					]
-						.map(([k, v]) => `<div class="fact-line"><span>${k}</span><span>${v}</span></div>`)
+						.map(
+							([k, v]) =>
+								`<div class="fact-line"><span>${k}</span><span>${k === "Respond by" ? (urgent ? 'Sun 18 Oct 2026, 20:00 Europe/Berlin<span class="warning">In 36 hours · Less than 48 hours left</span>' : v + '<small class="meta"> · In 5 days</small>') : v}${k === "Base salary" && company === "Fieldnote" && current.id === "career-offers" ? '<small class="comparison-note">USD 5,000 more a year</small>' : ""}</span></div>`,
+						)
 						.join("")}</div>${btn("Choose another offer", "career-offer-picker", "link")}`,
 				);
 			add(
@@ -3191,7 +3331,13 @@
 					) +
 					btn("Plan what to ask", "career-offer-questions", "primary") +
 					act("Swap", "swap-offers") +
-					btn("Different currency example", "career-offers-currency"),
+					btn("Different currency example", "career-offers-currency") +
+					(card(
+						"Per-term differences",
+						"<p>Base salary · Fieldnote offers USD 5,000 more a year.</p><p>Learning budget · Unknown: ask both companies.</p><p>Bonus conditions · Unknown: ask both companies.</p>" +
+							btn("Deadline under 48 hours", "career-offer-urgent", "link"),
+					) +
+						btn("Only one offer", "career-offer-single", "link")),
 				{ career: "Offers" },
 			);
 			add(
@@ -3324,7 +3470,9 @@
 				() =>
 					note("This workspace couldn’t be loaded.", "error") +
 					btn("Try again", "ws-fit", "primary") +
-					btn("Back to applications", "app-list"),
+					btn("Back to applications", "app-list") +
+					(btn("Saved version belongs to another tab", "ws-version-wrong-tab") +
+						btn("Saved version no longer available", "ws-version-missing")),
 				{ workspace: true },
 			);
 			add(
@@ -3499,6 +3647,966 @@
 				);
 			});
 
+			// DS4: complete review states using the same frame, tokens and controls.
+			const followUpNudge = () =>
+				`<aside class="warning" data-entity="follow-up-nudge"><p>Lumen: no reply for 7 days. A short follow-up is usually fine now.</p><div class="row wrap">${btn("Open", "app-context-3")}${act("Dismiss", "dismiss-nudge", "link")}</div></aside>`;
+			const attachmentChips = () =>
+				`<div class="stack">${["David-Kowalski.pdf · 248 KB", "Interview-notes.txt · 2 KB"].map((name, i) => `<div class="row secondary attachment-chip"><span class="grow">${name}</span><button class="icon" data-action="remove-attachment-chip" aria-label="Remove ${name}">×</button></div>`).join("")}</div>`;
+			function planChecklist(rows, unit) {
+				const total = unit === "min" ? rows.reduce((sum, row) => sum + row[1], 0) : rows.length;
+				return `<section class="card" data-progress-unit="${unit}" data-total="${total}"><p class="meta progress-copy" role="status">0 of ${total} ${unit}${unit === "done" ? " · 25 minutes in total" : ""}</p>${rows.map(([label, minutes]) => check(`${minutes} min · ${label}`).replace("<input", '<input data-weight="' + minutes + '"')).join("")}</section>`;
+			}
+			const providerSetup = (back) =>
+				heading("Connect an AI provider", "The coach uses your own key. Nothing is sent until you connect one.") +
+				select("Provider", ["OpenAI", "Anthropic", "Other · OpenAI-compatible"]) +
+				field("Base URL (for compatible providers)", "https://api.example.com/v1", "url") +
+				field("API key", "", "password") +
+				field("Model", "Your provider’s model") +
+				act("Connect and test", "connect-inline:" + back, "primary") +
+				btn("More providers in Settings", "provider-handoff", "link");
+			add(
+				"app-list-collapsed",
+				"Applications",
+				"Collapsed stage group",
+				"Tap Interview to expand the grouped list.",
+				() => listHeader() + applicationRows(false, true),
+				{ view: "List" },
+			);
+			add(
+				"app-calendar-empty",
+				"Applications",
+				"Nothing scheduled yet",
+				"Empty calendar agenda has a schedule action.",
+				() =>
+					empty(
+						"Nothing scheduled yet",
+						"Add screening calls and technical interviews to see them here and on the calendar.",
+						"Schedule interview",
+						"app-interview-new",
+					),
+				{ view: "Calendar" },
+			);
+			add(
+				"app-review-record",
+				"Add & import",
+				"Record application",
+				"Save an already submitted application without preparing a resume.",
+				() =>
+					field("Company", "Fieldnote") +
+					field("Role / title", "Senior Game Developer") +
+					select("Stage", ["Already applied", "Already interviewing", "Saved"]) +
+					field("Application date", "2026-10-17", "date") +
+					select("Resume submitted (optional)", ["Game Developer · David Kowalski", "None"]) +
+					select("Cover letter submitted (optional)", ["None", "Fieldnote · Cover letter"]) +
+					act("Record application", "save-job", "primary") +
+					act("Save and prepare resume", "save-tailor"),
+				{ sheet: true, back: "app-review" },
+			);
+			add(
+				"app-search-loading",
+				"Add & import",
+				"Searching job postings…",
+				"Progress remains cancelable.",
+				() =>
+					field("Role, company or location", "Game Developer Seattle", "search") +
+					skeleton() +
+					btn("View results", "app-search", "primary") +
+					btn("Cancel", "app-add") +
+					btn("No results", "app-search-none", "link") +
+					btn("Search failed", "app-search-failed", "link"),
+				{ sheet: true, back: "app-add" },
+			);
+			add(
+				"app-search-none",
+				"Add & import",
+				"No postings found",
+				"No-result recovery preserves the query.",
+				() =>
+					field("Role, company or location", "Game Developer Seattle", "search") +
+					note("No postings found. Try different keywords.", "info") +
+					btn("Search again", "app-search-loading", "primary") +
+					btn("Paste a posting link", "app-add"),
+				{ sheet: true, back: "app-search" },
+			);
+			add(
+				"app-search-failed",
+				"Add & import",
+				"Job search failed",
+				"Retry or paste the posting directly.",
+				() =>
+					field("Role, company or location", "Game Developer Seattle", "search") +
+					note("Job search failed. Try again or paste a posting link.", "error") +
+					btn("Retry", "app-search-loading", "primary") +
+					btn("Paste a posting link", "app-add"),
+				{ sheet: true, back: "app-search" },
+			);
+			add(
+				"app-detail-no-letter",
+				"Application detail",
+				"Documents for this job",
+				"No linked cover letter offers Write a letter.",
+				() =>
+					heading("Fieldnote", "Senior Game Developer") +
+					card(
+						"What you sent",
+						'<p>Game Developer · David Kowalski</p><p class="meta">Resume version sent 12 Oct</p>' +
+							btn("Open version sent", "app-sent"),
+					) +
+					card("No cover letter linked", btn("Write a letter", "letter-handoff", "primary")),
+				{ back: "app-detail" },
+			);
+			add(
+				"app-contacts-empty",
+				"Application detail",
+				"No contacts yet",
+				"Empty contacts list keeps Add contact.",
+				() => note("No contacts yet.", "info") + btn("Add contact", "app-contacts", "primary"),
+				{ sheet: true, back: "app-detail" },
+			);
+			add(
+				"app-contacts-error",
+				"Application detail",
+				"Check contact email",
+				"Invalid email preserves the contact draft.",
+				() =>
+					field("Name", "Sam Rivera") +
+					field("Role (optional)", "Talent partner") +
+					select("Label", ["Recruiter", "Hiring manager", "Referral", "Interviewer"]) +
+					field("Email (optional)", "sam@", "email") +
+					field("Phone (optional)", "", "tel") +
+					note("Enter a valid email address.", "error") +
+					save("app-contacts", "Add contact"),
+				{ sheet: true, back: "app-contacts" },
+			);
+			add(
+				"app-csv-failed",
+				"Reminders & CSV",
+				"Import failed",
+				"Keep mapping and data for retry.",
+				() =>
+					note("Import failed. Check the CSV and try again.", "error") +
+					btn("Review columns", "app-csv-map") +
+					btn("Retry import", "app-csv-progress", "primary"),
+				{ sheet: true, back: "app-csv-map" },
+			);
+			add(
+				"ws-fit-evidence-saved",
+				"Workspace",
+				"Evidence saved to Knowledge",
+				"Undo reopens the requirement.",
+				() =>
+					note("Saved to Knowledge as a fact.") +
+					card(
+						"Your evidence",
+						"<p>Developed C++ tools at Cascade Studios.</p>" + badge("Posting") + badge("Supported", "good"),
+					) +
+					btn("Back to Fit", "ws-fit"),
+				{ workspace: true, tab: "Fit", previewToast: true },
+			);
+			add(
+				"ws-apply-submitted",
+				"Workspace",
+				"Submitted answers",
+				"Read-only answers retain the versions actually sent.",
+				() =>
+					note(
+						"Submitted on Mon 12 Oct. The versions you sent are kept in Saved. Edits here don’t change what Fieldnote received.",
+					) +
+					card(
+						"Why do you want this role?",
+						"<p>I build gameplay systems in C++ and Unreal Engine, and value ownership of gameplay architecture.</p>",
+					) +
+					note("These are the answers saved when you applied.", "info") +
+					act("Use these answers", "use-submitted-answers", "primary"),
+				{ workspace: true, tab: "Apply", readOnly: true },
+			);
+			add(
+				"ws-apply-cap",
+				"Workspace",
+				"30-question limit",
+				"Add action disables at the limit.",
+				() =>
+					heading("Application questions", "30 of 30 questions") +
+					card("Question 30", "<p>When can you start?</p>" + area("Answer", "After my notice period.")) +
+					'<button class="secondary" disabled>Add a question from the form</button>' +
+					note("You can keep up to 30 application questions.", "warning") +
+					btn("Remove a question", "ws-question-options"),
+				{ workspace: true, tab: "Apply" },
+			);
+			add(
+				"ws-apply-limit",
+				"Workspace",
+				"Shorten application answers",
+				"Over-limit answers block Mark as applied.",
+				() =>
+					area("Question from the form", "Why do you want this role?") +
+					area("Answer", "A draft that exceeds the employer’s limit…") +
+					note(
+						"Shorten questions to 2,000 characters and answers to 6,000 characters before marking this applied.",
+						"error",
+					) +
+					'<button class="primary" disabled>Mark as applied</button>' +
+					btn("Edit answers", "ws-apply"),
+				{ workspace: true, tab: "Apply" },
+			);
+			add(
+				"ws-apply-proposal",
+				"Workspace",
+				"Review answer proposal",
+				"Draft and Tighten propose a word diff before replacement.",
+				() =>
+					heading("Why do you want this role?") +
+					card(
+						"Proposed answer",
+						"<p><del>I build gameplay systems in C++ and Unreal Engine. I would like to understand how your team gives developers ownership.</del> <ins>I build C++ gameplay systems and want to own architecture decisions.</ins></p>",
+					) +
+					card("Backed by", btn("C++ editor tools · Cascade Studios", "career-fact-source", "link")) +
+					act("Accept", "accept-answer", "primary") +
+					btn("Skip", "ws-apply"),
+				{ workspace: true, tab: "Apply" },
+			);
+			add(
+				"ws-prepare-unplanned",
+				"Workspace",
+				"Plan my preparation",
+				"Interview exists but no plan has been generated.",
+				() =>
+					heading("A focused plan for this round", "Fieldnote · Technical · Mon 19 Oct, 16:00") +
+					note(
+						"A timed plan, your opening, the stories to bring and questions to ask. It becomes your checklist 10 minutes before the call.",
+						"info",
+					) +
+					btn("Plan my preparation", "ws-prepare", "primary") +
+					ai(),
+				{ workspace: true, tab: "Prepare" },
+			);
+			add(
+				"ws-prepare-after",
+				"Workspace",
+				"How did it go?",
+				"After the interview, prompt a debrief.",
+				() =>
+					empty(
+						"How did it go?",
+						"Write down what they asked while it’s fresh. The coach compares your answers with your stories.",
+						"Start a debrief",
+						"ws-debrief",
+					),
+				{ workspace: true, tab: "Prepare" },
+			);
+			add(
+				"ws-prepare-soon",
+				"Workspace",
+				"Starts in 10 minutes",
+				"Inline checklist is distinct from the briefing contents.",
+				() =>
+					note("Fieldnote · Technical · Starts in 10 minutes", "warning") +
+					planChecklist(
+						[
+							["Check time, link, people and what you sent", 2],
+							["Your two-minute introduction", 2],
+							["Pick two examples: situation, action, result", 4],
+							["Questions to ask: success at 90 days and next step", 2],
+						],
+						"min",
+					) +
+					btn("Read briefing", "ws-briefing") +
+					btn("Rehearse aloud", "ws-record-ready", "primary"),
+				{ workspace: true, tab: "Prepare" },
+			);
+			add(
+				"ws-audio-file",
+				"Workspace",
+				"Choose an audio file",
+				"Native picker accepts WebM, MP4, MP3, WAV or Ogg, up to 2 MB.",
+				() =>
+					note("Choose a WebM, MP4, MP3, WAV or Ogg file up to 2 MB.", "info") +
+					card(
+						"Practice-answer.mp3",
+						"<p>MP3 · 1.2 MB · 42 seconds</p>" + btn("Transcribe selected file", "ws-transcribing", "primary"),
+					) +
+					btn("Type instead", "ws-practise"),
+				{ workspace: true, tab: "Practise", sheet: true, back: "ws-record-ready" },
+			);
+			add(
+				"ws-record-failed",
+				"Workspace",
+				"Recording failed",
+				"Size, availability and start failures have equal recovery.",
+				() =>
+					note("That recording was empty or over 2 MB. Try a shorter answer.", "error") +
+					btn("Record a shorter answer", "ws-record-ready", "primary") +
+					btn("Device cannot record", "ws-record-unavailable") +
+					btn("Couldn’t start recording", "ws-record-start-error") +
+					btn("Choose an audio file", "ws-audio-file") +
+					btn("Type instead", "ws-practise"),
+				{ workspace: true, tab: "Practise" },
+			);
+			add(
+				"ws-record-unavailable",
+				"Workspace",
+				"Can’t record on this device",
+				"File and typed alternatives remain available.",
+				() =>
+					note("This device can’t record here. Choose an audio file, or type your answer.", "error") +
+					btn("Choose an audio file", "ws-audio-file", "primary") +
+					btn("Type instead", "ws-practise"),
+				{ workspace: true, tab: "Practise" },
+			);
+			add(
+				"ws-record-start-error",
+				"Workspace",
+				"Couldn’t start recording",
+				"Retry does not discard an existing answer.",
+				() =>
+					note("Couldn’t start recording. Choose an audio file, or type your answer.", "error") +
+					btn("Try recording again", "ws-record-ready") +
+					btn("Choose an audio file", "ws-audio-file") +
+					btn("Type instead", "ws-practise", "primary"),
+				{ workspace: true, tab: "Practise" },
+			);
+			add(
+				"ws-record-limit",
+				"Workspace",
+				"Stopped at 2:00",
+				"Automatic stop goes to transcription.",
+				() =>
+					note("Recording stopped at the 2-minute limit. Transcribing what you said.", "info") +
+					skeleton() +
+					btn("Review transcript", "ws-transcript", "primary"),
+				{ workspace: true, tab: "Practise", toastMessage: "Recording stopped at the 2-minute limit." },
+			);
+			add(
+				"ws-practise-story",
+				"Workspace",
+				"Practising your story",
+				"Specific story supplies the question and supporting facts.",
+				() =>
+					badge("Practice") +
+					heading("Practising your story: Editor tools at Cascade Studios") +
+					card("Question", "<p>What was your part, what did you do, and what changed?</p>") +
+					area("Your answer", "I developed custom editor tools in C++ at Cascade Studios.") +
+					btn("Get feedback", "ws-feedback", "primary") +
+					btn("Story unavailable", "ws-practise-story-unavailable", "link") +
+					btn("Story failed to load", "ws-practise-story-error", "link"),
+				{ workspace: true, tab: "Practise" },
+			);
+			add(
+				"ws-practise-story-unavailable",
+				"Workspace",
+				"Story unavailable",
+				"Deleted or switched-off supporting facts block this story.",
+				() =>
+					note("This story is unavailable or uses facts that are switched off.", "warning") +
+					btn("Practise another question", "ws-practise", "primary") +
+					btn("Open Knowledge", "career-stories"),
+				{ workspace: true, tab: "Practise" },
+			);
+			add(
+				"ws-practise-story-error",
+				"Workspace",
+				"Story couldn’t be loaded",
+				"Retry or practise another question.",
+				() =>
+					note("Your story couldn’t be loaded.", "error") +
+					btn("Try again", "ws-practise-story", "primary") +
+					btn("Practise another question", "ws-practise"),
+				{ workspace: true, tab: "Practise" },
+			);
+			add(
+				"ws-practise-recalled",
+				"Workspace",
+				"Recalled question",
+				"Origin distinguishes an interview recollection from simulation.",
+				() =>
+					badge("Recalled") +
+					heading("How did you design the editor tools?", "From your interview debrief · Fieldnote") +
+					area("Your answer", "") +
+					btn("Get feedback", "ws-feedback", "primary"),
+				{ workspace: true, tab: "Practise" },
+			);
+			add(
+				"ws-practise-attempt",
+				"Workspace",
+				"Earlier practice attempt",
+				"Prior answer and feedback stay read-only.",
+				() =>
+					note("Today, 09:20 · Typed · Read-only attempt", "info") +
+					card("Your answer", "<p>I built C++ tools at Cascade Studios to shorten designer iteration.</p>") +
+					card("Feedback", "<p>Start with the problem, then explain your own decisions.</p>") +
+					btn("Try again with this", "ws-practise", "primary"),
+				{ workspace: true, tab: "Practise", readOnly: true },
+			);
+			add(
+				"ws-debrief-week-empty",
+				"Workspace",
+				"No week plan yet",
+				"First-review empty state has a next step.",
+				() =>
+					note("After your first review, a light plan for this week appears here.", "info") +
+					btn("Write a debrief", "ws-debrief", "primary"),
+				{ workspace: true, tab: "Debrief" },
+			);
+			for (const tab of ["Fit", "Apply", "Prepare", "Debrief", "Messages"]) {
+				const forms = {
+					Fit: card(
+						"Check this role against your evidence",
+						"<p>Gaps mean missing evidence, never missing ability.</p>",
+					),
+					Apply:
+						area("Question from the form", "Why do you want this role?") +
+						area("Answer", "You can write and review this yourself."),
+					Prepare:
+						card("Fieldnote technical interview", "<p>Mon 19 Oct, 16:00 Europe/Berlin</p>") +
+						btn("Use the manual briefing", "ws-prepare-soon"),
+					Debrief: area("What did they ask?", "") + area("What did you say?", ""),
+					Messages: area("Paste a message from Fieldnote", ""),
+				};
+				add(
+					`ws-${tab.toLowerCase()}-no-provider`,
+					"Workspace",
+					`${tab} without AI`,
+					"Manual work stays available; generation asks for a provider.",
+					() =>
+						forms[tab] +
+						note("Connect an AI provider in Settings to use coaching. Nothing is sent until you ask.", "warning") +
+						btn("Connect an AI provider", "provider-handoff", "primary"),
+					{ workspace: true, tab },
+				);
+			}
+			add(
+				"ws-coach-new",
+				"Workspace",
+				"New application conversation",
+				"Empty composer keeps Fieldnote context.",
+				() =>
+					note("Fieldnote only · Posting, notes and documents sent are available to this conversation.", "info") +
+					area("Ask about this application…", "") +
+					btn("Send", "ws-coach-stream", "primary") +
+					btn("Attach a file", "ws-coach-attachments"),
+				{ workspace: true, sheet: true, back: "ws-coach" },
+			);
+			add(
+				"ws-coach-conversations",
+				"Workspace",
+				"Application conversations",
+				"New and delete-with-Undo remain inside the sheet.",
+				() =>
+					btn("New conversation", "ws-coach-new", "primary") +
+					`<section class="card" data-entity="application-conversation"><h3>Prepare for Fieldnote</h3>${btn("Open", "ws-coach")}${act("Delete conversation", "delete-conversation", "danger")}</section>`,
+				{ workspace: true, sheet: true, back: "ws-coach" },
+			);
+			add(
+				"ws-coach-attachments",
+				"Workspace",
+				"Application coach attachments",
+				"Several files can be removed individually before sending.",
+				() =>
+					attachmentChips() +
+					note("Only this application conversation receives these files when you send.", "info") +
+					act("Attach selected files", "attach-application-files", "primary"),
+				{ workspace: true, sheet: true, back: "ws-coach" },
+			);
+			add(
+				"ws-coach-provider",
+				"Workspace",
+				"Connect provider in Coach",
+				"Inline provider setup belongs to this application sheet.",
+				() => providerSetup("ws-coach"),
+				{ workspace: true, sheet: true, back: "ws-coach" },
+			);
+			add(
+				"ws-version-wrong-tab",
+				"Workspace",
+				"Saved version belongs to another tab",
+				"Open through Saved to preserve its owning tab.",
+				() =>
+					note("This saved version belongs to a different tab. Open it from Saved.", "error") +
+					btn("Open Saved", "ws-saved", "primary") +
+					btn("Back to current", "ws-fit"),
+				{ workspace: true },
+			);
+			add(
+				"ws-version-missing",
+				"Workspace",
+				"Saved version unavailable",
+				"Missing/deleted version does not become editable.",
+				() =>
+					note("This saved version is no longer available.", "error") +
+					btn("Back to current", "ws-fit", "primary") +
+					btn("Open Saved", "ws-saved"),
+				{ workspace: true },
+			);
+			add(
+				"career-follow-up-draft",
+				"Career",
+				"Review follow-up draft",
+				"Needs-you follow-up opens an editable draft.",
+				() =>
+					heading("Lumen", "No reply for 7 days") +
+					area(
+						"Draft",
+						"Hello, I’m following up on my Unity Developer application. Is there an update on next steps?",
+					) +
+					act("Copy draft", "copy-reply", "primary") +
+					note("Send from your own email.", "info") +
+					act("Mark as read", "mark-read", "link"),
+				{ career: "Today" },
+			);
+			add(
+				"career-discovery-review",
+				"Career",
+				"Review discovered roles",
+				"Discovery waits for explicit tracking.",
+				() =>
+					card(
+						"Tools Programmer · Lumen",
+						"<p>Seattle · Salary not listed</p>" +
+							act("Track in Applications", "track-role", "primary") +
+							act("Not for me", "hide-role", "link"),
+					),
+				{ career: "Today" },
+			);
+			add(
+				"career-today-read",
+				"Career",
+				"Read items",
+				"Previously read needs-you items can be reopened.",
+				() =>
+					heading("2 read") +
+					card("Follow-up draft · Lumen", btn("Review draft", "career-follow-up-draft")) +
+					card("Discovered roles", btn("Review", "career-discovery-review")) +
+					btn("Back to unread", "career-today"),
+				{ career: "Today" },
+			);
+			add(
+				"career-role-tracked",
+				"Career",
+				"Role tracked",
+				"Confirmation leaves a 10-second Undo window.",
+				() =>
+					card(
+						"Tools Programmer · Lumen",
+						note("Saved to Applications with the posting.") +
+							act("Undo", "undo", "link") +
+							'<p class="meta">Undo is available for 10 seconds.</p>' +
+							btn("Open application", "app-context-3"),
+					),
+				{ career: "Today" },
+			);
+			add(
+				"career-schedule-discard",
+				"Career schedules",
+				"Discard changes?",
+				"Guard protects unsaved schedule settings.",
+				() =>
+					note("You have unsaved changes.", "warning") +
+					btn("Keep editing", "career-schedule", "primary") +
+					btn("Discard", "career-today"),
+				{ career: "Today", sheet: true, back: "career-schedule" },
+			);
+			const scheduleFailures = [
+				["query", "Add search terms", field("Look for", "") + note("Add a role or company to look for.", "error")],
+				[
+					"dst",
+					"Choose an existing time",
+					field("Date", "2027-03-28", "date") +
+						field("Time · Europe/Berlin", "02:30", "time") +
+						note("This time does not exist in your timezone. Choose another time.", "error"),
+				],
+				[
+					"interview",
+					"No interview to prepare",
+					note("Add an interview in an application first.", "warning") +
+						btn("Add an interview", "app-interview-new") +
+						'<button class="primary" disabled>Save schedule</button>',
+				],
+				[
+					"application",
+					"No application for follow-up",
+					note("Add an application first.", "warning") +
+						btn("Save job", "app-add") +
+						'<button class="primary" disabled>Save schedule</button>',
+				],
+				[
+					"connection",
+					"Connection removed",
+					note(
+						"Its connection was switched off or removed, so it runs on your default connection until you choose another.",
+						"warning",
+					) +
+						select("AI connection", ["Your default connection", "Choose another saved connection"]) +
+						note("You can also pause this schedule before changing the connection.", "info"),
+				],
+			];
+			for (const [kind, title, body] of scheduleFailures)
+				add(
+					`career-schedule-${kind}`,
+					"Career schedules",
+					title,
+					"Schedule validation and blocked-state recovery.",
+					() => body + btn("Back to schedule", "career-schedule"),
+					{ career: "Today", sheet: true, back: "career-schedule" },
+				);
+			add(
+				"career-coach-empty",
+				"Coach & Knowledge",
+				"What are you working on?",
+				"Starter prompts keep selected context visible.",
+				() =>
+					heading(
+						"What are you working on?",
+						"Ask about your search, or bring an accomplishment you want to explain better.",
+					) +
+					[
+						"Which opportunities best match my priorities?",
+						"Help me turn an accomplishment into a Situation, Task, Action, Result and Reflection story.",
+						"What interview answers should I practise?",
+					]
+						.map((text) => `<button class="secondary" data-action="starter">${text}</button>`)
+						.join("") +
+					coachControls() +
+					area("Ask about your next career step…", "") +
+					btn("Send", "career-coach-stream", "primary"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-memory",
+				"Coach & Knowledge",
+				"Remember this for future coaching?",
+				"Ask-first mode requires explicit Remember or Not now.",
+				() =>
+					chatMessages() +
+					card(
+						"Remember this for future coaching?",
+						"<p>Developed C++ tools at Cascade Studios.</p>" +
+							act("Remember", "remember-career", "primary") +
+							btn("Not now", "career-coach"),
+					),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-remembered",
+				"Coach & Knowledge",
+				"Remembered with Undo",
+				"Automatic memory remains reversible.",
+				() =>
+					chatMessages() +
+					note("Remembered: “Developed C++ tools at Cascade Studios.”") +
+					act("Undo", "undo-memory", "link"),
+				{
+					career: "Coach",
+					toastMessage: "Remembered: Developed C++ tools at Cascade Studios.",
+					toastAction: "undo-memory",
+				},
+			);
+			add(
+				"career-coach-sources",
+				"Coach & Knowledge",
+				"Answer sources and story saved",
+				"Citations, Copy and saved-story confirmation live under the answer.",
+				() =>
+					chatMessages() +
+					card(
+						"Sources",
+						'<a href="https://example.com/fieldnote-team" target="_blank" rel="noreferrer">Fieldnote team · example source</a><a href="https://example.com/fieldnote-role" target="_blank" rel="noreferrer">Role requirements · example source</a>',
+					) +
+					act("Copy answer", "copy-coach-answer") +
+					note("Saved a story: Editor tools at Cascade Studios") +
+					btn("View", "career-story", "link"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-unavailable",
+				"Coach & Knowledge",
+				"Coach unavailable",
+				"Server setup, provider and Knowledge failures have distinct recovery.",
+				() =>
+					note(
+						"The coach isn’t set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it.",
+						"warning",
+					) +
+					btn("Open Knowledge", "career-facts") +
+					btn("No provider connected", "career-coach-provider") +
+					btn("Knowledge failed to load", "career-coach-knowledge-error") +
+					btn("Conversation can’t open", "career-coach-conversation-error"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-provider",
+				"Coach & Knowledge",
+				"Connect Career Coach",
+				"Inline no-provider state with connection test.",
+				() => providerSetup("career-coach-empty"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-knowledge-error",
+				"Coach & Knowledge",
+				"Knowledge failed to load",
+				"Retry or explicitly turn Knowledge off before sending.",
+				() =>
+					note("Your Knowledge couldn’t be loaded. Retry or switch Knowledge off to continue without it.", "error") +
+					check("Knowledge", true) +
+					btn("Retry", "career-coach", "primary") +
+					act("Continue without Knowledge", "continue-without-knowledge"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-coach-conversation-error",
+				"Coach & Knowledge",
+				"Conversation can’t open",
+				"Retry same thread or start a fresh conversation.",
+				() =>
+					note("This conversation couldn’t be opened.", "error") +
+					btn("Try again", "career-coach", "primary") +
+					btn("New conversation", "career-coach-empty"),
+				{ career: "Coach" },
+			);
+			add(
+				"career-conversation-rename",
+				"Coach & Knowledge",
+				"Rename conversation",
+				"Conversation title can change without replacing the thread.",
+				() =>
+					field("Conversation name", "Editor-tool interview story") +
+					act("Save name", "rename-conversation", "primary") +
+					btn("Cancel", "career-conversations"),
+				{ career: "Coach", sheet: true, back: "career-conversations" },
+			);
+			add(
+				"career-facts-filtered",
+				"Coach & Knowledge",
+				"No facts match",
+				"Filters keep explicit clear recovery.",
+				() =>
+					field("Search facts", "Networking", "search") +
+					select("Type", ["Skill", "All", "Experience"]) +
+					note("No facts match. Try another word or type.", "info") +
+					btn("Show all types", "career-facts", "primary"),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-stories-empty",
+				"Coach & Knowledge",
+				"No stories yet",
+				"Empty stories list explains five-part story.",
+				() =>
+					empty(
+						"No stories yet",
+						"Write one about something you did, in five parts. Leave a part blank until you can support it.",
+						"Add a story",
+						"career-story-editor",
+					),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-story-missing",
+				"Coach & Knowledge",
+				"Story not found",
+				"Deleted/unavailable story offers return and creation.",
+				() =>
+					heading("Story not found") +
+					note("It may have been deleted. Choose another story or add a new one.", "warning") +
+					btn("Back to stories", "career-stories", "primary") +
+					btn("Add a story", "career-story-editor"),
+				{ career: "Knowledge" },
+			);
+			add(
+				"career-offer-single",
+				"Offers",
+				"Save another offer to compare",
+				"One offer stays readable while awaiting another.",
+				() =>
+					offerCard("Fieldnote", "110,000") +
+					card(
+						"Save another offer to compare",
+						"<p>Paste an offer into an application’s Messages tab.</p>" +
+							btn("Open Messages", "ws-messages", "primary"),
+					),
+				{ career: "Offers" },
+			);
+			add(
+				"career-offer-urgent",
+				"Offers",
+				"Offer deadline approaching",
+				"Respond-by countdown warns below 48 hours.",
+				() =>
+					offerCard("Fieldnote", "110,000", "USD", true) + btn("Plan what to ask", "career-offer-questions", "primary"),
+				{ career: "Offers" },
+			);
+
+			let scheduleDirty = false,
+				conversationTitle = "Editor-tool interview story",
+				factWide = false;
+			function requestScreen(id) {
+				if (document.querySelector(".confirm-guard")) return;
+				if (scheduleDirty && current.group === "Career schedules" && id !== current.id) {
+					const sheet = document.querySelector(".sheet");
+					if (sheet) sheet.inert = true;
+					document
+						.querySelector(".shell")
+						.insertAdjacentHTML(
+							"beforeend",
+							`<div class="sheet confirm-guard" role="alertdialog" aria-modal="true" aria-labelledby="discard-title"><section class="sheet-panel"><div class="sheet-scroll"><h2 id="discard-title">Discard changes?</h2><p>You have unsaved changes.</p>${act("Keep editing", "keep-schedule", "primary")}<button class="secondary" data-action="discard-schedule" data-destination="${id}">Discard</button></div></section></div>`,
+						);
+					document.querySelector(".confirm-guard button").focus();
+					return;
+				}
+				scheduleDirty = false;
+				render(id);
+			}
+			function handleReviewAction(action, button) {
+				if (action === "toggle-stage") {
+					const open = button.getAttribute("aria-expanded") === "true";
+					button.setAttribute("aria-expanded", String(!open));
+					button.nextElementSibling.hidden = open;
+					return true;
+				}
+				if (action === "dismiss-nudge") {
+					button.closest("[data-entity]").remove();
+					return true;
+				}
+				if (action === "page-stage") {
+					button.insertAdjacentHTML(
+						"beforebegin",
+						card("Another saved role", "<p>Game Developer · Northwind Labs</p>" + btn("Open", "app-context-1")),
+					);
+					button.textContent = "Show 19 more";
+					return true;
+				}
+				if (action === "clear-follow-up") {
+					render("app-detail");
+					toast("Follow-up cleared · prototype");
+					return true;
+				}
+				if (action === "save-evidence") {
+					if (requiredValid()) reversible("Saved to Knowledge as a fact", null, "ws-fit-evidence-saved");
+					return true;
+				}
+				if (action === "use-submitted-answers") {
+					const answer = document.querySelector("#screen-body .card p").textContent;
+					render("ws-apply");
+					document.querySelectorAll("#screen-body textarea")[1].value = answer;
+					toast("Submitted answers copied into working answers · prototype");
+					return true;
+				}
+				if (action === "accept-answer") {
+					render("ws-apply");
+					document.querySelectorAll("#screen-body textarea")[1].value =
+						"I build C++ gameplay systems and want to own architecture decisions.";
+					toast("Answer accepted · prototype");
+					return true;
+				}
+				if (action === "track-role") {
+					reversible("Saved to Applications with the posting", "role", "career-role-tracked", 10000);
+					return true;
+				}
+				if (action === "delete-saved" || action === "delete-conversation") {
+					const entity = button.closest("[data-entity]")?.dataset.entity;
+					reversible(action === "delete-saved" ? "Deleted from Saved" : "Conversation deleted", entity, current.id);
+					return true;
+				}
+				if (action === "remove-attachment-chip") {
+					button.closest(".attachment-chip").remove();
+					return true;
+				}
+				if (action === "attach-application-files") {
+					render("ws-coach");
+					toast("Files attached to this application conversation · prototype");
+					return true;
+				}
+				if (action.startsWith("connect-inline:")) {
+					const root = document.querySelector(".sheet-scroll") || document.querySelector("#screen-body");
+					for (const el of root.querySelectorAll('input[data-field="API key"],input[data-field="Model"]')) {
+						el.required = true;
+						if (!el.reportValidity()) return true;
+					}
+					render(action.slice(15));
+					toast("Provider connection tested · prototype; no network request made");
+					return true;
+				}
+				if (action === "widen-fact") {
+					factWide = true;
+					render("career-facts");
+					toast("Fact available to all applications · prototype");
+					return true;
+				}
+				if (action === "remember-career") {
+					reversible("Remembered for future coaching", null, "career-coach-remembered");
+					return true;
+				}
+				if (action === "undo-memory") {
+					render("career-coach");
+					toast("Fact no longer remembered · prototype");
+					return true;
+				}
+				if (action === "continue-without-knowledge") {
+					render("career-coach-empty");
+					const label = [...document.querySelectorAll(".check")].find(
+						(label) => label.textContent.trim() === "Knowledge",
+					);
+					label.querySelector("input").checked = false;
+					return true;
+				}
+				if (action === "copy-coach-answer") {
+					toast("Answer copied · prototype");
+					return true;
+				}
+				if (action === "starter") {
+					const text = button.textContent;
+					render("career-coach");
+					document.querySelector("#screen-body textarea").value = text;
+					return true;
+				}
+				if (action === "keep-schedule") {
+					document.querySelector(".confirm-guard").remove();
+					document.querySelector(".sheet").inert = false;
+					return true;
+				}
+				if (action === "discard-schedule") {
+					const id = button.dataset.destination;
+					scheduleDirty = false;
+					render(id);
+					return true;
+				}
+				if (action === "rename-conversation") {
+					const input = document.querySelector('input[data-field="Conversation name"]');
+					if (!input.value.trim()) {
+						input.required = true;
+						input.reportValidity();
+						return true;
+					}
+					conversationTitle = input.value.trim();
+					render("career-conversations");
+					toast("Conversation renamed · prototype");
+					return true;
+				}
+				if (action === "save-schedule") scheduleDirty = false;
+				return false;
+			}
+			document.addEventListener("input", (event) => {
+				if (current.group === "Career schedules" && event.target.matches("input,textarea,select")) scheduleDirty = true;
+			});
+			document.addEventListener("change", (event) => {
+				const target = event.target;
+				if (current.group === "Career schedules" && target.matches("input,textarea,select")) scheduleDirty = true;
+				if (target.matches('select[data-field="Stage"]') && ["app-review", "app-review-record"].includes(current.id)) {
+					document.querySelector('.sheet-scroll [data-action="save-job"]').textContent =
+						target.value === "Saved" ? "Save job" : "Record application";
+				}
+				const progress = target.closest("[data-progress-unit]");
+				if (progress) {
+					const checked = [...progress.querySelectorAll("input:checked")];
+					const done =
+						progress.dataset.progressUnit === "min"
+							? checked.reduce((sum, input) => sum + Number(input.dataset.weight), 0)
+							: checked.length;
+					progress.querySelector(".progress-copy").textContent =
+						`${done} of ${progress.dataset.total} ${progress.dataset.progressUnit}${progress.dataset.progressUnit === "done" ? " · 25 minutes in total" : ""}`;
+				}
+			});
+
 			let current,
 				device = "iphone",
 				toastTimer = null,
@@ -3512,6 +4620,7 @@
 				return `<aside class="side" aria-label="Tablet app navigation"><h3>Reactive Resume</h3>${act("Documents · 8", "documents-handoff")}${btn("Applications · 5", "app-list", current.career ? "" : "selected")}${btn("+ New", "app-add", "primary")}${btn("Career · 2 unread", "career-today", current.career ? "selected" : "")}${act("Settings", "settings-handoff")}<span class="grow"></span><p class="meta">David Kowalski<br>rxresu.me</p></aside>`;
 			}
 			function workspaceTab() {
+				if (current.tab) return current.tab;
 				const id = current.id;
 				if (/question-options|ws-apply/.test(id)) return "Apply";
 				if (/prepare|briefing/.test(id)) return "Prepare";
@@ -3639,13 +4748,19 @@
 					);
 					if (c) c.remove();
 				}
+				document.querySelectorAll("[data-entity]").forEach((el) => {
+					if (hiddenEntities.has(el.dataset.entity)) el.remove();
+				});
 				if (undo) showToast(undo.message, true);
-				else if (s.previewToast)
+				else if (s.toastMessage) {
+					showToast(s.toastMessage);
+					if (s.toastAction) document.querySelector(".toast button").outerHTML = act("Undo", s.toastAction, "link");
+				} else if (s.previewToast)
 					document
 						.querySelector(".shell")
 						.insertAdjacentHTML(
 							"beforeend",
-							'<div class="toast" role="status"><span>Fact forgotten</span><button data-go="career-facts">Undo</button></div>',
+							`<div class="toast" role="status"><span>${s.id === "ws-fit-evidence-saved" ? "Saved to Knowledge as a fact" : "Fact forgotten"}</span><button data-go="${s.id === "ws-fit-evidence-saved" ? "ws-fit" : "career-facts"}">Undo</button></div>`,
 						);
 				document
 					.querySelectorAll(".sheet-scroll input,.sheet-scroll textarea")
@@ -3670,7 +4785,7 @@
 				clearTimeout(toastTimer);
 				toastTimer = setTimeout(() => document.querySelector(".toast")?.remove(), 6000);
 			}
-			function reversible(message, entity, to) {
+			function reversible(message, entity, to, duration = 6000) {
 				if (undo) {
 					clearTimeout(toastTimer);
 					undo = null;
@@ -3681,7 +4796,8 @@
 				toastTimer = setTimeout(() => {
 					undo = null;
 					document.querySelector(".toast")?.remove();
-				}, 6000);
+					document.querySelectorAll('[data-action="undo"]').forEach((button) => (button.disabled = true));
+				}, duration);
 			}
 			function requiredValid() {
 				const root = document.querySelector(".sheet-scroll") || document.querySelector("#screen-body");
@@ -3704,6 +4820,7 @@
 				return true;
 			}
 			function handle(action, button) {
+				if (handleReviewAction(action, button)) return;
 				if (action === "detent") {
 					const sheet = document.querySelector(".sheet");
 					sheet.classList.toggle("half");
@@ -3801,7 +4918,17 @@
 					return;
 				}
 				if (action === "add-form-question") {
+					const count = document.querySelectorAll('#screen-body textarea[data-field="Question from the form"]').length;
+					if (count >= 30) {
+						button.disabled = true;
+						toast("You can keep up to 30 application questions.");
+						return;
+					}
 					button.insertAdjacentHTML("beforebegin", area("Question from the form", "") + area("Answer", ""));
+					if (count + 1 === 30) {
+						button.disabled = true;
+						button.insertAdjacentHTML("afterend", note("You can keep up to 30 application questions.", "warning"));
+					}
 					return;
 				}
 				if (action === "add-fact") {
@@ -3837,14 +4964,10 @@
 					return;
 				}
 				if (action === "draft-answer" || action === "tighten-answer") {
-					const fields = document.querySelectorAll("textarea");
-					fields[1].value =
-						action === "draft-answer"
-							? "I build gameplay systems in C++ and Unreal Engine, and I value ownership of gameplay architecture."
-							: "I build C++ gameplay systems and want to own meaningful architecture decisions.";
-					toast("AI suggestion · review before using · prototype");
+					render("ws-apply-proposal");
 					return;
 				}
+
 				if (action === "swap-offers") {
 					const grid = document.querySelector(".two-col");
 					grid.append(grid.firstElementChild);
@@ -3907,14 +5030,18 @@
 					return;
 				}
 				if (b.dataset.go) {
-					render(b.dataset.go);
+					requestScreen(b.dataset.go);
 					return;
 				}
 				if (b.dataset.action) handle(b.dataset.action, b);
 			});
 			document.addEventListener("keydown", (event) => {
+				if (event.key === "Escape" && document.querySelector(".confirm-guard")) {
+					handleReviewAction("keep-schedule");
+					return;
+				}
 				if (event.key === "Escape" && current.sheet) {
-					render(current.back || "app-list");
+					requestScreen(current.back || "app-list");
 				}
 			});
 			window.addEventListener("popstate", () => render(location.hash.slice(1), true));
