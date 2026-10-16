@@ -1,0 +1,34 @@
+{
+	"name": "@reactive-resume/forme-native",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"main": "src/index.ts",
+	"types": "src/index.ts",
+	"exports": {
+		".": "./src/index.ts"
+	},
+	"files": [
+		"src",
+		"ios",
+		"android",
+		"expo-module.config.json",
+		"rust"
+	],
+	"scripts": {
+		"typecheck": "tsgo --noEmit",
+		"build:native": "bash rust/build.sh"
+	},
+	"peerDependencies": {
+		"expo": "^57.0.0",
+		"react-native": "^0.86.0"
+	},
+	"dependencies": {
+		"expo-modules-core": "~57.0.23"
+	},
+	"devDependencies": {
+		"@formepdf/core": "0.28.0",
+		"@reactive-resume/config": "workspace:*",
+		"@typescript/native-preview": "catalog:"
+	}
+}
