@@ -40,3 +40,20 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: S2 found `expo@latest` is SDK 58.0.14 (RN 0.88.0, React 19.3.0). Catalog React 19.3 and `react-reconciler@0.34.0` resolve to one copy, so the S2 React risk is gone. M1 targets SDK 58.
 - 2026-10-17: Learned that `paseo send` to a running agent interrupts it. Send only to idle agents.
 - 2026-10-17: DS1 merged. DS2 recorded. DS3 split into four parallel parts (a/b/c Claude, d Codex). Merge commits use `chore(mobile): merge …` because commitlint rejects `merge`.
+- 2026-10-17: S1 succeeded; Claude review `540e56a5` found NO BLOCKERS. Merged only `packages/forme-native` (commit 7de1cb42a cherry-picked), the report and the small evidence files. Fixtures and the spike app stay on `mobile/S1`.
+- 2026-10-17: S2 succeeded; Codex review `825455ab` found one blocker in the _proposed_ `packages-pdf.patch`: the `images.ts` `arrayBuffer()` fallback buffers unbounded data before the 12 MB check. The patch is not applied yet. M1 applies it **without** that fallback; mobile passes `expo/fetch` (streaming) so the existing `getReader()` path enforces the limit.
+
+## Carry-forward for M1 (from S1/S2 and their reviews)
+
+- **Pins:** Expo SDK 58 / RN 0.88.0 / React 19.3.0. Bump `packages/forme-native` peers from `expo ^57`, `react-native ^0.86` and `expo-modules-core ~57` to SDK 58, and rebuild.
+- **`packages/pdf`:** apply `reports/S2/packages-pdf.patch` (from branch `mobile/S2`) minus the `arrayBuffer` fallback. The font cache wrapper must fall back to the network on disk errors.
+- **Polyfills:** `crypto.getRandomValues` (add `expo-crypto`, approved as an addition to §1.4) and `Array.prototype.toSorted`.
+- **forme-native:**
+  - `turbo.json` tags `runtime:native`, `role:rendering`.
+  - Add `rust-toolchain.toml`; pin the cbindgen version.
+  - Android: decide whether to use a dedicated executor so long renders don't block Expo's shared async queue.
+  - Narrow the replacer so only `fonts[].src` becomes a data URI.
+- **Before M8 (EAS):** `build.sh` is macOS-only and the binaries are gitignored, so EAS Linux Android and Rust-less iOS builds fail. Choose a prebuilt-artifact strategy (for example, build in CI and fetch at `prebuild`).
+- **M8 notices:** HarfBuzz Old-MIT and the Rust crate notices.
+- **Bundle:** consider loading `phosphor-icons.json` (766 KB) as an asset rather than bundling it eagerly.
+- **Android build:** needs a full JDK. Homebrew `openjdk@17` lacks `jlink`; use Android Studio's JBR 21.
