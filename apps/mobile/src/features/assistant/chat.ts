@@ -1,0 +1,171 @@
+// The assistant's chat on oRPC, ported from apps/web/src/features/assistant/chat.ts.
+import type { MessageContext } from "./transport";
+import type { AgentMessagesApi } from "./transport";
+import type { RouterOutput } from "@/api/client";
+import type { ChatTransport, FileUIPart, UIMessage } from "ai";
+import { useChat } from "@ai-sdk/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { resumeAgentStream, sendAgentMessage } from "./transport";
+import { client, orpc, streamClient } from "@/api/client";
+import { useSession } from "@/auth/session";
+
+export type { MessageContext } from "./transport";
+export type ChatAttachment = { id: string; filename: string; mediaType: string };
+export type ThreadSummary = RouterOutput["agent"]["threads"]["list"][number];
+
+export const attachmentPart = (attachment: ChatAttachment): FileUIPart => ({
+	type: "file",
+	url: `agent-attachment:${attachment.id}`,
+	mediaType: attachment.mediaType,
+	filename: attachment.filename,
+});
+
+export const textOf = (message: UIMessage) =>
+	message.parts
+		.flatMap((part) => (part.type === "text" ? [part.text] : []))
+		.join("")
+		.trim();
+
+export type WebSource = { url: string; title: string };
+
+// Hosts only: IP literals and local names are never shown as sources (web: agentWebSources).
+const PUBLIC_URL = /^(https?):\/\/([^/?#@\s]+)([^#\s]*)/i;
+
+function publicSourceUrl(value: string) {
+	const match = PUBLIC_URL.exec(value.trim());
+	const host = match?.[2]?.toLowerCase().replace(/\.$/, "");
+	if (!match || !host) return null;
+	if (
+		!host.includes(".") ||
+		/^[\d.]+$/.test(host) ||
+		host.includes(":") ||
+		/(?:^|\.)(?:localhost|local|internal|lan)$/.test(host) ||
+		host.endsWith(".home.arpa")
+	)
+		return null;
+	return `${match[1]?.toLowerCase()}://${host}${match[3] ?? ""}`;
+}
+
+/** Sources from successful retrieval and native source parts, never links invented in response text. */
+export function webSources(message: UIMessage): WebSource[] {
+	const sources = new Map<string, WebSource>();
+	const add = (value: unknown, title: unknown) => {
+		const url = typeof value === "string" ? publicSourceUrl(value) : null;
+		if (url && !sources.has(url)) sources.set(url, { url, title: (typeof title === "string" && title.trim()) || url });
+	};
+	for (const part of message.parts) {
+		if (part.type === "source-url") {
+			add(part.url, part.title);
+			continue;
+		}
+		const tool = part as { state?: string; output?: unknown };
+		if (tool.state !== "output-available") continue;
+		if (part.type === "tool-search_web" && Array.isArray(tool.output))
+			for (const result of tool.output as { url?: unknown; title?: unknown }[]) add(result.url, result.title);
+		if (part.type === "tool-read_page" && tool.output && typeof tool.output === "object") {
+			const page = tool.output as { resolvedUrl?: unknown; requestedUrl?: unknown };
+			add(page.resolvedUrl ?? page.requestedUrl, "");
+		}
+	}
+	return [...sources.values()];
+}
+
+type TranscriptLabels = { user: string; assistant: string; sources: string };
+
+/** The conversation as plain text, speaker by speaker, for Copy transcript. Tool steps are left out. */
+export function transcriptOf(messages: readonly UIMessage[], labels: TranscriptLabels) {
+	return messages
+		.flatMap((message) => {
+			const sources = webSources(message)
+				.map((source) => `${source.title}: ${source.url}`)
+				.join("\n");
+			const content = [textOf(message), ...(sources ? [`${labels.sources}:\n${sources}`] : [])]
+				.filter(Boolean)
+				.join("\n\n");
+			return content ? [`${message.role === "user" ? labels.user : labels.assistant}: ${content}`] : [];
+		})
+		.join("\n\n");
+}
+
+/** Conversations for the signed-in server, newest first. */
+export function useThreads() {
+	const session = useSession();
+	const options = orpc.agent.threads.list.queryOptions({ input: {} });
+	return useQuery({
+		...options,
+		queryKey: [...options.queryKey, session.server],
+		enabled: session.status === "signed-in",
+	});
+}
+
+export const refreshThreads = (queryClient: ReturnType<typeof useQueryClient>) =>
+	void queryClient.invalidateQueries({ queryKey: orpc.agent.threads.key() });
+
+const agentMessages: AgentMessagesApi = {
+	// The server validates the message against its own UI message schema.
+	send: (input, options) => streamClient.agent.messages.send(input as never, options),
+	resume: (input) => streamClient.agent.messages.resume(input),
+};
+
+type UseAssistantChatInput = {
+	threadId: string;
+	initialMessages: UIMessage[];
+	/** A reply was streaming when the conversation opened: pick it up again (needs Redis on the server). */
+	resume: boolean;
+	/** Read when a message is sent, so the chips always apply to the next message. */
+	context: MessageContext;
+	onFinish: () => void;
+};
+
+/**
+ * The conversation's chat: messages stream in over oRPC, answers to the assistant's questions continue the reply,
+ * and only the newest message is sent (the server keeps the transcript).
+ */
+export function useAssistantChat({ threadId, initialMessages, resume, context, onFinish }: UseAssistantChatInput) {
+	const contextRef = useRef(context);
+	useLayoutEffect(() => {
+		contextRef.current = context;
+	});
+
+	const transport = useMemo<ChatTransport<UIMessage>>(
+		() => ({
+			// The server's resumable stream replays the reply from its start, so the client starts the message over.
+			resumeStreamIsReplay: true,
+			sendMessages: (options) => sendAgentMessage(agentMessages, threadId, contextRef.current, options),
+			reconnectToStream: () => resumeAgentStream(agentMessages, threadId),
+		}),
+		[threadId],
+	);
+
+	return useChat<UIMessage>({
+		id: threadId,
+		messages: initialMessages,
+		resume,
+		transport,
+		throttle: 50,
+		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+		onFinish,
+	});
+}
+
+/**
+ * A conversation whose connection was switched off or removed continues on `provider` (the default, which its privacy
+ * line names), rather than failing on send.
+ */
+export function useConversationConnection(
+	summary: { id: string; aiProviderId: string | null } | undefined,
+	provider: { id: string } | undefined,
+) {
+	const queryClient = useQueryClient();
+	const staleId = summary && provider && summary.aiProviderId !== provider.id ? summary.id : null;
+	const providerId = provider?.id;
+	useEffect(() => {
+		if (!staleId || !providerId) return;
+		void client.agent.threads
+			.update({ id: staleId, aiProviderId: providerId })
+			.then(() => refreshThreads(queryClient))
+			.catch(() => undefined);
+	}, [staleId, providerId, queryClient]);
+}
