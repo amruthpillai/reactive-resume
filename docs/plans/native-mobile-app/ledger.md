@@ -203,3 +203,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M6-T2 second review: 4 more blockers (drafts cleared on optimistic values, scope cached across accounts, delayed Apply not identity-bound, unbounded/conflicting retries). Round 3.
 - 2026-10-17: M4-T1 done (review `895bc4ca`); M5-T3 done (review `ad729a91`). M3-T5 second review: 2 blockers (CSS-encoded marks lost, picture scope race); round 3.
 - 2026-10-17: Reviews: M4-T1 (`895bc4ca`) 6 blockers; M5-T3 (`ad729a91`) 4 blockers; M7-T3 done (review `5e7fbf24`). M3-T5, M6-T2 final checks running. Coordinator fixed the M5-T1 scenario harness routes mock (`bfaea3847`).
+- 2026-10-17: M6-T3 merged (four review rounds; 17 transport scenarios) and M7-T2 merged after it. Pending: M3-T1 final check; M3-T5/M6-T2 one blocker each; M4-T2 2 blockers (link → version conflict, plurals); coordinator approves Check running all 22 rules locally.
