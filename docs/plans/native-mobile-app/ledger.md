@@ -32,6 +32,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | FIXING  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
 | M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
+| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | RUNNING | briefs/W5.md; JS-only                                                               |
 
 ## Gates
 
