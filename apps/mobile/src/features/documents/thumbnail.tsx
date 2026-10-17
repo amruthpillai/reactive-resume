@@ -8,9 +8,9 @@ import { useSession } from "@/auth/session";
 import { useLetterStore } from "@/draft/runtime";
 import { Icon, Text, useTheme } from "@/ui";
 
-type ThumbnailProps = { document: DocumentSummary; compact?: boolean };
+type ThumbnailProps = { document: DocumentSummary; visible: boolean; compact?: boolean };
 
-export function Thumbnail({ document, compact = false }: ThumbnailProps) {
+export function Thumbnail({ document, visible, compact = false }: ThumbnailProps) {
 	const { t } = useLingui();
 	const { colors, space, radius, size } = useTheme();
 	const session = useSession();
@@ -18,7 +18,7 @@ export function Thumbnail({ document, compact = false }: ThumbnailProps) {
 	const letter = useQuery({
 		...options,
 		queryKey: [...options.queryKey, session.server, document.updatedAt.getTime()],
-		enabled: document.type === "letter" && session.status === "signed-in",
+		enabled: visible && document.type === "letter" && session.status === "signed-in",
 	});
 	const draftText = useLetterStore((state) => (state.document?.id === document.id ? state.data?.content : undefined));
 	return (

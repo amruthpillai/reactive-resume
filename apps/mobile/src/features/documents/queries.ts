@@ -1,5 +1,5 @@
 import type { DocumentSummary } from "./filter";
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 import { ORPCError } from "@orpc/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getNetworkStateAsync } from "expo-network";
@@ -8,6 +8,12 @@ import { documentRef } from "./filter";
 import { client, orpc } from "@/api/client";
 import { getServer, useSession } from "@/auth/session";
 import { showToast } from "@/ui";
+
+type BatchOptions = {
+	applies?: (document: DocumentSummary) => boolean;
+	alreadyDone?: (document: DocumentSummary) => boolean;
+	notify?: boolean;
+};
 
 export function documentError(error: unknown) {
 	if (error instanceof ORPCError) {
@@ -92,12 +98,13 @@ export function useDocumentOperations() {
 	const batch = async (
 		documents: readonly DocumentSummary[],
 		task: (document: DocumentSummary) => Promise<unknown>,
-		applies: (document: DocumentSummary) => boolean = () => true,
+		{ applies = () => true, alreadyDone = () => false, notify = true }: BatchOptions = {},
 	) => {
 		const done: DocumentSummary[] = [];
+		const unchanged = documents.filter(alreadyDone).length;
 		// Sequential calls avoid overwhelming per-account mutation limits.
 		for (const document of documents) {
-			if (!applies(document)) continue;
+			if (alreadyDone(document) || !applies(document)) continue;
 			if (getServer() !== session.server) break;
 			try {
 				await task(document);
@@ -106,35 +113,44 @@ export function useDocumentOperations() {
 				/* Remaining documents can still succeed. */
 			}
 		}
-		if (done.length !== documents.length) {
+		const completed = done.length + unchanged;
+		const message =
+			completed === documents.length
+				? plural(completed, { one: "# document updated", other: "# documents updated" })
+				: t`Updated ${completed} of ${documents.length}. Locked documents, and letters for public links, were skipped. Refresh and retry any failures.`;
+		if (completed !== documents.length) {
 			partial.current = true;
-			setError(
-				t`Updated ${done.length} of ${documents.length}. Locked documents, and letters for public links, were skipped. Refresh and retry any failures.`,
-			);
+			setError(message);
 		}
-		showToast({ message: t`${done.length} of ${documents.length} documents updated.` });
+		if (notify) showToast({ message });
 		return done;
 	};
 	const trash = async (documents: readonly DocumentSummary[]) => {
 		let done: DocumentSummary[] = [];
+		let attempted = false;
 		const success = await run(async () => {
-			done = await batch(
-				documents,
-				(document) => client.documents.trash(documentRef(document)),
-				(document) => !document.isLocked,
-			);
+			attempted = true;
+			done = await batch(documents, (document) => client.documents.trash(documentRef(document)), {
+				applies: (document) => !document.isLocked,
+				notify: false,
+			});
 		});
-		if (done.length)
+		if (attempted)
 			showToast({
-				message: t`Moved ${done.length} of ${documents.length} to Trash.`,
-				action: {
-					label: t`Undo`,
-					onPress: () => {
-						void idle.current.then(() =>
-							run(() => batch(done, (document) => client.documents.restore(documentRef(document)))),
-						);
-					},
-				},
+				message:
+					done.length === documents.length
+						? plural(done.length, { one: "# document moved to Trash", other: "# documents moved to Trash" })
+						: t`Moved ${done.length} of ${documents.length} to Trash. Locked documents were skipped. Refresh and retry any failures.`,
+				action: done.length
+					? {
+							label: t`Undo`,
+							onPress: () => {
+								void idle.current.then(() =>
+									run(() => batch(done, (document) => client.documents.restore(documentRef(document)))),
+								);
+							},
+						}
+					: undefined,
 			});
 		return success;
 	};

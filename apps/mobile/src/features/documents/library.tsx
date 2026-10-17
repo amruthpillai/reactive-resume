@@ -1,5 +1,7 @@
 import type { DocumentSheet } from "./document-sheets";
 import type { DocumentSort, DocumentSummary, DocumentTypeFilter } from "./filter";
+import type { FlatListProps } from "react-native";
+import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
@@ -38,6 +40,7 @@ import {
 
 type DocumentItemProps = {
 	document: DocumentSummary;
+	visible: boolean;
 	grid: boolean;
 	selected: boolean;
 	selecting: boolean;
@@ -51,6 +54,7 @@ type DocumentItemProps = {
 
 function DocumentItem({
 	document,
+	visible,
 	grid,
 	selected,
 	selecting,
@@ -65,7 +69,9 @@ function DocumentItem({
 	const { colors, space, radius, size } = useTheme();
 	const ids = useNewDocuments((state) => state.ids);
 	const trashed = document.trashedAt;
-	const meta = trashed ? t`${daysLeftInTrash(trashed)} days left` : document.updatedAt.toLocaleDateString(i18n.locale);
+	const meta = trashed
+		? plural(daysLeftInTrash(trashed), { one: "# day left", other: "# days left" })
+		: document.updatedAt.toLocaleDateString(i18n.locale);
 	const body = (
 		<View
 			style={{
@@ -86,7 +92,7 @@ function DocumentItem({
 				onLongPress={trashed ? onMenu : onSelect}
 				style={{ flex: 1, flexDirection: grid ? "column" : "row", gap: space.s3, minHeight: size.hit }}
 			>
-				<Thumbnail document={document} compact={!grid} />
+				<Thumbnail document={document} visible={visible} compact={!grid} />
 				<View style={{ flex: 1, gap: space.s1 }}>
 					<Text variant="label" numberOfLines={2}>
 						{document.name}
@@ -136,6 +142,7 @@ function DocumentItem({
 }
 
 type DocumentsLibraryProps = { trashed?: boolean };
+const viewabilityConfig = { itemVisiblePercentThreshold: 1 };
 
 export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 	const { t } = useLingui();
@@ -160,6 +167,13 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 	const [selection, setSelection] = useState<string[]>([]);
 	const [sheet, setSheet] = useState<DocumentSheet | null>(null);
 	const [purge, setPurge] = useState<DocumentSummary[] | null>(null);
+	const [visible, setVisible] = useState<string[]>([]);
+	const onViewableItemsChanged = useCallback<NonNullable<FlatListProps<DocumentSummary>["onViewableItemsChanged"]>>(
+		({ viewableItems }) => {
+			setVisible(viewableItems.filter((token) => token.isViewable).map((token) => token.key));
+		},
+		[],
+	);
 	const grid = !trashed && (view ?? (width >= 768 ? "grid" : "list")) === "grid";
 	const columns = grid ? (width >= 1000 ? 3 : 2) : 1;
 	const all = session.status === "signed-in" ? (documents.data ?? []) : [];
@@ -279,11 +293,17 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 									{ value: "all", label: t`All (${all.length})` },
 									{
 										value: "resume",
-										label: t`Resumes (${all.filter((document) => document.type === "resume").length})`,
+										label: plural(all.filter((document) => document.type === "resume").length, {
+											one: "Resume (#)",
+											other: "Resumes (#)",
+										}),
 									},
 									{
 										value: "letter",
-										label: t`Letters (${all.filter((document) => document.type === "letter").length})`,
+										label: plural(all.filter((document) => document.type === "letter").length, {
+											one: "Letter (#)",
+											other: "Letters (#)",
+										}),
 									},
 								]}
 							/>
@@ -322,7 +342,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 					/>
 					{selecting && (
 						<View style={{ gap: space.s2 }}>
-							<Text variant="label">{t`${selected.length} selected`}</Text>
+							<Text variant="label">{plural(selected.length, { one: "# selected", other: "# selected" })}</Text>
 							<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
 								<Button label={t`Select all`} variant="ghost" onPress={() => setSelection(filtered.map(documentKey))} />
 								{(["tags", "sharing", "lock"] as const).map((kind) => (
@@ -352,6 +372,9 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 						data={filtered}
 						numColumns={columns}
 						keyExtractor={documentKey}
+						extraData={visible}
+						viewabilityConfig={viewabilityConfig}
+						onViewableItemsChanged={onViewableItemsChanged}
 						refreshing={documents.isFetching && !documents.isPending}
 						onRefresh={() => {
 							void documents.refetch();
@@ -363,6 +386,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 							<View style={{ flex: 1, maxWidth: `${100 / columns}%` }}>
 								<DocumentItem
 									document={item}
+									visible={visible.includes(documentKey(item))}
 									grid={grid}
 									selected={selection.includes(documentKey(item))}
 									selecting={selecting}
@@ -409,7 +433,9 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 									<Card>
 										<ListRow
 											title={t`Trash`}
-											subtitle={counts.data ? t`${counts.data.trash} documents` : undefined}
+											subtitle={
+												counts.data ? plural(counts.data.trash, { one: "# document", other: "# documents" }) : undefined
+											}
 											leading="trash"
 											chevron
 											onPress={() => router.push(routes.trash())}
@@ -456,7 +482,10 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 				message={
 					purge?.length === 1
 						? t`“${purge[0]?.name}” will be deleted for good and can't be restored.`
-						: t`${purge?.length ?? 0} documents will be deleted for good and can't be restored.`
+						: plural(purge?.length ?? 0, {
+								one: "# document will be deleted for good and can't be restored.",
+								other: "# documents will be deleted for good and can't be restored.",
+							})
 				}
 				confirmLabel={t`Delete forever`}
 				destructive

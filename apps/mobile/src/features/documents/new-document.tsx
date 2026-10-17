@@ -1,5 +1,6 @@
 import type { ImportedDocument } from "./import-file";
 import type { DocumentPickerAsset } from "expo-document-picker";
+import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { getDocumentAsync } from "expo-document-picker";
@@ -33,12 +34,13 @@ export function NewDocument() {
 	const [sourceId, setSourceId] = useState<string | null>(params.sourceResumeId ?? null);
 	const [jobId, setJobId] = useState<string | null>(params.applicationId ?? null);
 	const [name, setName] = useState<string | null>(null);
-	const [aiPdf, setAiPdf] = useState(false);
+	const [aiPdf, setAiPdf] = useState<boolean | null>(null);
 	const [asset, setAsset] = useState<DocumentPickerAsset | null>(null);
 	const [busy, setBusy] = useState(false);
 	const [progress, setProgress] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [created, setCreated] = useState<ImportedDocument | null>(null);
+	const [applicationLinked, setApplicationLinked] = useState(false);
 	const [summary, setSummary] = useState<string | null>(null);
 	const running = useRef(false);
 	const mounted = useRef(true);
@@ -105,6 +107,15 @@ export function NewDocument() {
 		}
 	};
 	const current = (signal: AbortSignal) => mounted.current && !signal.aborted && getServer() === session.server;
+	const linkToApplication = async (document: ImportedDocument, signal: AbortSignal) => {
+		if (!current(signal) || document.type !== "resume" || !params.applicationId) return;
+		await client.documents.linkApplication({ ...document, applicationId: params.applicationId }, { signal });
+		if (current(signal)) setApplicationLinked(true);
+	};
+	const onCopiedForJob = (resumeId: string) => {
+		// ASSISTANT HANDOFF (M6-T3): open this copy with the Assistant ready to tailor it for the linked job.
+		open({ id: resumeId, type: "resume" });
+	};
 	const create = (kind: "blank" | "sample" | "letter") =>
 		run(async (signal) => {
 			let document: ImportedDocument;
@@ -135,7 +146,8 @@ export function NewDocument() {
 			}
 			if (current(signal)) {
 				setCreated(document);
-				open(document);
+				await linkToApplication(document, signal);
+				if (current(signal)) open(document);
 			}
 		});
 	const copy = () =>
@@ -148,17 +160,21 @@ export function NewDocument() {
 			if (current(signal)) {
 				const document = { id, type: "resume" as const };
 				setCreated(document);
-				open(document);
+				setApplicationLinked(true);
+				if (job && ai.hasAIProvider) onCopiedForJob(id);
+				else open(document);
 			}
 		});
 	const read = (picked: DocumentPickerAsset) =>
 		run(async (signal) => {
 			setProgress(t`Reading the file and finding sections…`);
-			const document = await importDocument(picked, ai.hasAIProvider, aiPdf, signal);
+			const document = await importDocument(picked, ai.hasAIProvider, aiPdf ?? ai.hasAIProvider, signal);
 			if (!current(signal)) return;
 			setCreated(document);
 			useNewDocuments.getState().markNew(document);
 			cleanupFile();
+			await linkToApplication(document, signal);
+			if (!current(signal)) return;
 			if (document.type === "resume") {
 				try {
 					const resume = await client.resume.getById({ id: document.id }, { signal });
@@ -172,7 +188,7 @@ export function NewDocument() {
 					const entries = sections.reduce((total, section) => total + section.items.length, 0);
 					if (current(signal))
 						setSummary(
-							t`${sections.length} sections and ${entries} entries found. ${flagged} dates need a quick look.`,
+							t`${plural(sections.length, { one: "# section", other: "# sections" })} and ${plural(entries, { one: "# entry", other: "# entries" })} found. ${plural(flagged, { one: "# date needs a quick look.", other: "# dates need a quick look." })}`,
 						);
 				} catch {
 					/* Import already succeeded; a summary failure must not offer a duplicate import. */
@@ -230,7 +246,18 @@ export function NewDocument() {
 						<>
 							<Text variant="heading">{t`Document ready`}</Text>
 							<Text color="ink2">{summary ?? t`Your document was saved. Review it in the editor.`}</Text>
-							<Button label={t`Open in editor`} onPress={() => open(created)} />
+							{created.type === "resume" && params.applicationId && !applicationLinked && (
+								<Button
+									label={t`Retry linking to application`}
+									loading={busy}
+									onPress={() => void run((signal) => linkToApplication(created, signal))}
+								/>
+							)}
+							<Button
+								label={t`Open in editor`}
+								disabled={!!(created.type === "resume" && params.applicationId && !applicationLinked)}
+								onPress={() => open(created)}
+							/>
 							<Button
 								label={t`Stay in Documents`}
 								variant="secondary"
@@ -364,10 +391,15 @@ export function NewDocument() {
 							{step === "import" && (
 								<>
 									<Text variant="heading">{t`Import a resume`}</Text>
-									<Text color="ink2">{t`PDF text is read on your server without AI. Word (.docx) needs an AI provider. Current and v4 Reactive Resume JSON, cover letters, JSON Resume and LinkedIn exports (.zip) are supported. Up to 10 MB.`}</Text>
+									<Text color="ink2">{t`PDF uses your AI provider when one is ready. Turn off the AI switch to read its text layer on your server. Word (.docx) needs an AI provider. Current and v4 Reactive Resume JSON, cover letters, JSON Resume and LinkedIn exports (.zip) are supported. Up to 10 MB.`}</Text>
 									<View style={{ flexDirection: "row", alignItems: "center", gap: space.s3 }}>
 										<Text style={{ flex: 1 }}>{t`Use AI for PDF imports`}</Text>
-										<Switch label={t`Use AI for PDF imports`} value={aiPdf} onValueChange={setAiPdf} disabled={busy} />
+										<Switch
+											label={t`Use AI for PDF imports`}
+											value={aiPdf ?? ai.hasAIProvider}
+											onValueChange={setAiPdf}
+											disabled={busy}
+										/>
 									</View>
 									<Text
 										variant="caption"

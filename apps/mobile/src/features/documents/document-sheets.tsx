@@ -207,7 +207,7 @@ export function DocumentSheets({ value, onClose, onChange, onSelect }: DocumentS
 										value.documents,
 										(document) =>
 											client.documents.setTags({ ...documentRef(document), tags: changedTags(document, shared, tags) }),
-										(document) => !document.isLocked,
+										{ applies: (document) => !document.isLocked },
 									),
 								)
 							}
@@ -259,13 +259,15 @@ export function DocumentSheets({ value, onClose, onChange, onSelect }: DocumentS
 								label={isPublic ? t`Public link on` : t`Public link off`}
 								variant="secondary"
 								loading={operations.busy}
-								disabled={!targets.some((document) => document.type === "resume")}
 								onPress={() =>
 									void execute(() =>
 										operations.batch(
 											value.documents,
 											(document) => client.resume.update({ id: document.id, isPublic }),
-											(document) => document.type === "resume" && !document.isLocked,
+											{
+												applies: (document) => document.type === "resume" && !document.isLocked,
+												alreadyDone: (document) => document.isPublic === isPublic,
+											},
 										),
 									)
 								}
@@ -282,8 +284,10 @@ export function DocumentSheets({ value, onClose, onChange, onSelect }: DocumentS
 							loading={operations.busy}
 							onPress={() =>
 								void execute(() =>
-									operations.batch(value.documents, (document) =>
-										client.documents.setLocked({ ...documentRef(document), isLocked }),
+									operations.batch(
+										value.documents,
+										(document) => client.documents.setLocked({ ...documentRef(document), isLocked }),
+										{ alreadyDone: (document) => document.isLocked === isLocked },
 									),
 								)
 							}
