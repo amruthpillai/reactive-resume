@@ -1,14 +1,18 @@
 # Native Forme bridge
 
-Expo SDK 57 module backed by `forme-pdf = "=0.28.0"`. No WASM or WebView is used by the renderer or subsetter.
+Expo SDK 58 / React Native 0.88 module backed by `forme-pdf = "=0.28.0"`. No WASM or WebView is used by the renderer or subsetter.
 
 ## Build
 
-Install Rust targets and tools from the S1 brief, Xcode, Android SDK/NDK 28.2.13676358, then run:
+Install rustup, Xcode, Android SDK/NDK 28.2.13676358, cargo-ndk 4.1.2 and **cbindgen 0.29.4**, then run:
 
 ```sh
+cargo install cbindgen --version 0.29.4 --locked
+cargo install cargo-ndk --version 4.1.2 --locked
 bash packages/forme-native/rust/build.sh
 ```
+
+`rust/rust-toolchain.toml` pins Rust **1.95.0** and installs the two iOS and three Android targets through rustup. `build.sh` rejects any other cbindgen version before generating files. Run Cargo commands from `rust/` so rustup picks up that pin. The build script currently requires macOS; EAS binary delivery remains an M8 task.
 
 This generates `ios/include/forme_native.h`, `ios/FormeNative.xcframework` (arm64 device and simulator), and Android `src/main/jniLibs/{arm64-v8a,armeabi-v7a,x86_64}/libforme_native.so`. Generated binaries are ignored; build them before Expo prebuild/pod install/Gradle. `CARGO_BUILD_JOBS` defaults to 4. Commit the Cargo lockfile with version changes.
 
@@ -17,16 +21,25 @@ Add this workspace package to the Expo app. Expo autolinking discovers its Swift
 ## JavaScript API
 
 ```ts
-import { renderSerializedDocWithLayout, subsetFont } from "@reactive-resume/forme-native";
+import { fetch } from "expo/fetch";
+import { nativeEngine, renderSerializedDocWithLayout, subsetFont } from "@reactive-resume/forme-native";
+import { configureFontReader, configureImageFetch, downloadFont, renderResumePdf } from "@reactive-resume/pdf/native";
 
 const result = await renderSerializedDocWithLayout(document);
 // result.pdf: Uint8Array; result.layout and result.warnings match the core types.
 const subset: Uint8Array = await subsetFont(fontBytes, documentText);
+
+// Configure once at startup. A disk-cache wrapper must use downloadFont on disk errors.
+configureFontReader(downloadFont);
+configureImageFetch((source, init) => fetch(String(source), init));
+const pdf = await renderResumePdf(nativeEngine, { data, onPageMap, onLostCharacters });
 ```
 
-Both expensive operations execute on native worker queues. JSON serialization and font-byte base64 encoding still run in JavaScript. Font `Uint8Array` sources become data URIs without mutating the input. Font/image URLs must be resolved by the caller; this bridge performs no downloads. Both operations reject on invalid input; Rust panics are contained at the C ABI. Out-of-memory aborts cannot be recovered.
+Both expensive operations execute on dedicated serial native workers: a Swift dispatch queue on iOS and an executor-backed coroutine scope on Android, separate from Expo's shared async queue. Android closes the worker when the module is destroyed. Expo still handles result conversion and Promise rejection. JSON serialization and font-byte base64 encoding still run in JavaScript. Only `fonts[].src` `Uint8Array` sources become data URIs, without mutating the input. Font/image URLs must be resolved by the caller; this bridge performs no downloads. Both operations reject on invalid input; Rust panics are contained at the C ABI. Out-of-memory aborts cannot be recovered.
 
-`subsetFont` is asynchronous by coordinator decision. It can be injected into `FormeEngine.prepareFont`; do not pass it into the synchronous browser `createFontPreparer`. Callers must include generated characters (digits, hyphens, fallback punctuation) in the requested text, as the browser preparer does.
+`nativeEngine` is structurally compatible with `FormeEngine` from `@reactive-resume/pdf/native`. Its async font preparer adds generated digits, hyphens and fallback punctuation, caches the last prepared data URI per font/character set, and embeds the full font if subsetting fails, matching the browser policy. `subsetFont` remains available for direct use; do not pass it into the synchronous browser `createFontPreparer`.
+
+`configureImageFetch` requires a streaming response body. Images stop downloading at 12 MB; there is no whole-body fallback. The app owns persistent font caching through `configureFontReader`; `downloadFont` retains the Google-host fallback and shared font conversion stays inside `packages/pdf`.
 
 HarfBuzz 8.4.0 is bundled through `harfbuzz-sys 0.8.0`. Its subsetter preserves Unicode mapping and all layout features, matching the browser policy. Typst `subsetter` was rejected because it removes the Unicode cmap and targets already-shaped PDF glyph embedding.
 
