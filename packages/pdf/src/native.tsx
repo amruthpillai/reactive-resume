@@ -8,8 +8,10 @@ import type { SectionTitleResolver } from "./section-title";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
 import { parseResumeData } from "@reactive-resume/schema/resume/data";
-import { assertPdfFonts, lostCharacters, renderResume } from "./forme/render";
+import { loadFonts } from "./forme/fonts";
+import { assertPdfFonts, lostCharacters, renderResume, resumeFontRequests } from "./forme/render";
 
+export type { ResumeRenderOptions } from "./context";
 export type { FormeEngine } from "./forme/render";
 export type { PageMap } from "./page-map";
 export { configureFontReader, downloadFont } from "./forme/fonts";
@@ -20,6 +22,8 @@ export type RenderResumePdfOptions = {
 	template?: Template | undefined;
 	renderOptions?: ResumeRenderOptions | undefined;
 	resolveSectionTitle?: SectionTitleResolver | undefined;
+	/** Mobile resolves server-relative sources and decodes data URIs before streaming remote images. */
+	readImage?: ((source: string) => Promise<Uint8Array>) | undefined;
 	/** Receives the header, section and item boxes of this render (see `page-map.ts`). */
 	onPageMap?: ((pageMap: PageMap) => void) | undefined;
 	/** Receives characters no font could draw; not called when every character rendered. */
@@ -39,3 +43,9 @@ export const renderResumePdf = async (
 	if (lost) onLostCharacters?.(lost);
 	return result.pdf;
 };
+
+/** Warm the persistent/in-memory font caches before opening the Page tab. The native engine is already linked. */
+export async function preloadResumePdf(data: ResumeData): Promise<void> {
+	const { missing } = await loadFonts(resumeFontRequests(parseResumeData(data)));
+	assertPdfFonts({ missingFonts: missing });
+}

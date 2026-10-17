@@ -1,0 +1,167 @@
+import type { Fact, Story } from "./hooks";
+import type { CareerStoryData } from "@reactive-resume/schema/career";
+import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
+import { useState } from "react";
+import { View } from "react-native";
+import { careerStoryInputSchema } from "@reactive-resume/schema/career";
+import { client, useCareerAction, useCareerQueries, useUndoRows } from "./hooks";
+import { Actions, EditorSheet, LoadState, SwitchRow } from "./shared";
+import { Banner, Button, Card, ChipInput, EmptyState, Text, TextArea, TextField, useTheme } from "@/ui";
+
+const parts = () =>
+	[
+		{ key: "situation", label: t`Situation (required)`, max: 4000 },
+		{ key: "task", label: t`Task (required)`, max: 4000 },
+		{ key: "action", label: t`Action (required)`, max: 6000 },
+		{ key: "result", label: t`Result`, max: 4000 },
+		{ key: "reflection", label: t`Reflection`, max: 4000 },
+	] as const;
+export function Stories() {
+	const { t } = useLingui();
+	const { space } = useTheme();
+	const { stories, facts } = useCareerQueries();
+	const [editor, setEditor] = useState<{ story: Story | null } | null>(null);
+	const undo = useUndoRows();
+	const rows = (stories.data ?? []).filter((row) => !undo.hidden.includes(row.id));
+	return (
+		<View style={{ gap: space.s4 }}>
+			<Text color="ink3">{t`Situation, Task, Action, Result, Reflection. Link each story to facts you can support; leave unknown outcomes blank.`}</Text>
+			<Button label={t`Add a story`} onPress={() => setEditor({ story: null })} />
+			<LoadState query={stories} />
+			<LoadState query={facts} />
+			{!stories.isError && !stories.isPending && !rows.length ? (
+				<EmptyState title={t`No stories yet`} message={t`Write one about something you did, in five parts.`} />
+			) : null}
+			{rows.map((story) => {
+				const changed = story.data.factIds.some((id) => {
+					const fact = facts.data?.find((row) => row.id === id);
+					const revision = fact?.revisions.at(-1);
+					return !fact || fact.status !== "active" || (revision && new Date(revision.at) > new Date(story.updatedAt));
+				});
+				return (
+					<Card key={story.id} style={{ gap: space.s3 }}>
+						<Text variant="title">{story.data.title}</Text>
+						{changed ? <Banner tone="warn" message={t`A fact changed. Review this story.`} /> : null}
+						{parts().map((part) => (
+							<View key={part.key}>
+								<Text variant="label">{part.label}</Text>
+								<Text>{story.data[part.key] || t`Not recorded yet. Leave blank until you can support it.`}</Text>
+							</View>
+						))}
+						<Text variant="label">{t`Backed by`}</Text>
+						{story.data.factIds.map((id) => (
+							<Text key={id} color="ink2">
+								{facts.data?.find((row) => row.id === id)?.text ?? t`Fact no longer available`}
+							</Text>
+						))}
+						<Text color="ink3">{story.data.tags.join(" · ")}</Text>
+						<Actions>
+							<Button label={t`Edit`} variant="secondary" onPress={() => setEditor({ story })} />
+							<Button
+								label={t`Delete story`}
+								variant="ghost"
+								onPress={() =>
+									undo.remove(story.id, t`Story deleted`, () => client.career.deleteStory({ id: story.id }))
+								}
+							/>
+						</Actions>
+					</Card>
+				);
+			})}
+			{editor && facts.data ? (
+				<StoryEditor
+					key={editor.story?.id ?? "new"}
+					story={editor.story}
+					facts={facts.data}
+					onClose={() => setEditor(null)}
+				/>
+			) : null}
+		</View>
+	);
+}
+
+type StoryEditorProps = { story: Story | null; facts: Fact[]; onClose: () => void };
+function StoryEditor({ story, facts, onClose }: StoryEditorProps) {
+	const { t } = useLingui();
+	const { space } = useTheme();
+	const [draft, setDraft] = useState<CareerStoryData>(
+		() =>
+			story?.data ?? {
+				applicationId: null,
+				title: "",
+				situation: "",
+				task: "",
+				action: "",
+				result: "",
+				reflection: "",
+				factIds: [],
+				tags: [],
+			},
+	);
+	const action = useCareerAction();
+	const available = facts.filter(
+		(fact) => fact.status === "active" && (!fact.applicationId || fact.applicationId === draft.applicationId),
+	);
+	const change = (patch: Partial<CareerStoryData>) => setDraft((current) => ({ ...current, ...patch }));
+	const payload = { ...draft, factIds: draft.factIds.filter((id) => available.some((fact) => fact.id === id)) };
+	const valid = careerStoryInputSchema.safeParse(payload).success;
+	const dirty =
+		JSON.stringify(draft) !==
+		JSON.stringify(
+			story?.data ?? {
+				applicationId: null,
+				title: "",
+				situation: "",
+				task: "",
+				action: "",
+				result: "",
+				reflection: "",
+				factIds: [],
+				tags: [],
+			},
+		);
+	return (
+		<EditorSheet
+			dirty={dirty}
+			pending={action.pending}
+			onClose={onClose}
+			title={story ? t`Edit STARR story` : t`New STARR story`}
+		>
+			<View style={{ padding: space.s4, gap: space.s4 }}>
+				<TextField label={t`Title`} value={draft.title} maxLength={200} onChangeText={(title) => change({ title })} />
+				<ChipInput label={t`Tags`} values={draft.tags} onChange={(tags) => change({ tags })} />
+				{parts().map((part) => (
+					<TextArea
+						key={part.key}
+						label={part.label}
+						value={draft[part.key]}
+						maxLength={part.max}
+						onChangeText={(value) => change({ [part.key]: value })}
+					/>
+				))}
+				<Text variant="label">{t`Backed by`}</Text>
+				<Text color="ink3">{t`Only enabled facts can back a story. Leave unsupported outcomes blank.`}</Text>
+				{available.map((fact) => (
+					<SwitchRow
+						key={fact.id}
+						label={fact.text}
+						value={draft.factIds.includes(fact.id)}
+						onValueChange={(enabled) =>
+							change({ factIds: enabled ? [...draft.factIds, fact.id] : draft.factIds.filter((id) => id !== fact.id) })
+						}
+					/>
+				))}
+				{action.error ? <Banner tone="danger" message={action.error} /> : null}
+				<Button
+					label={t`Save story`}
+					loading={action.pending}
+					disabled={!valid}
+					onPress={() => {
+						void action.run(() => client.career.saveStory({ ...payload, ...(story ? { id: story.id } : {}) }), onClose);
+					}}
+				/>
+			</View>
+		</EditorSheet>
+	);
+}

@@ -52,7 +52,13 @@ const config: ExpoConfig = {
 		"expo-system-ui",
 		"expo-status-bar",
 		["expo-splash-screen", { backgroundColor: "#F8F7F3", dark: { backgroundColor: "#100F0C" } }],
-		["expo-image-picker", { photosPermission: "Reactive Resume uses your photos to set the picture on your resume." }],
+		[
+			"expo-image-picker",
+			{
+				photosPermission: "Reactive Resume uses your photos to set the picture on your resume.",
+				cameraPermission: "Reactive Resume uses your camera to take a profile photo.",
+			},
+		],
 		[
 			"expo-audio",
 			{ microphonePermission: "Reactive Resume records your answers when you practise for an interview." },

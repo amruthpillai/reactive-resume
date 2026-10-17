@@ -1,16 +1,10 @@
 // The preview pipeline's contract (M3-T4 implements it): draft data in, rasterised pages and the page map out.
 // Renders run on the device through @reactive-resume/pdf/native and @reactive-resume/forme-native.
-import type { ResumeDocument } from "@reactive-resume/pdf/document";
-import type { PageMap } from "@reactive-resume/pdf/page-map";
+import type { PageMap, ResumeRenderOptions } from "@reactive-resume/pdf/native";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
-import type { ComponentProps } from "react";
 
-/**
- * `ResumeRenderOptions` from packages/pdf (for example `includeCoverLetterHeader` for letters). No public entry exports
- * it by name yet, so it is read off `ResumeDocument`'s props; switch to the named type once `./native` exports it.
- */
-export type ResumeRenderOptions = NonNullable<ComponentProps<typeof ResumeDocument>["renderOptions"]>;
+export type { ResumeRenderOptions } from "@reactive-resume/pdf/native";
 
 export type RenderRequest = {
 	/** Increases with every request. The scheduler drops a result when a newer request has been made. */
@@ -47,6 +41,8 @@ export type RenderedPages = {
 	pageMap: PageMap;
 	/** Characters no font could draw (`"₹" (U+20B9)`); empty when everything rendered. */
 	lostCharacters: string[];
+	/** Includes text loss for which the engine could not name a character. */
+	hasTextLoss?: boolean | undefined;
 	/** The PDF itself, for download, share and print. */
 	pdf: Uint8Array;
 };
