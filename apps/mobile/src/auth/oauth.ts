@@ -53,6 +53,8 @@ export function toOrigin(input: string): string | null {
 }
 
 type Metadata = {
+	issuer?: unknown;
+	authorization_response_iss_parameter_supported?: unknown;
 	authorization_endpoint?: unknown;
 	token_endpoint?: unknown;
 	revocation_endpoint?: unknown;
@@ -60,14 +62,23 @@ type Metadata = {
 	scopes_supported?: unknown;
 };
 
-type Discovery = DiscoveryDocument & { tokenEndpoint: string; registrationEndpoint: string };
+export type Discovery = DiscoveryDocument & {
+	issuer: string;
+	tokenEndpoint: string;
+	registrationEndpoint: string;
+	/** RFC 9207: the authorization response carries `iss`, which must then equal `issuer`. */
+	issParameterSupported: boolean;
+};
 
 const discoveries = new Map<string, Discovery>();
 const requestTimeout = 10_000;
 
-/** Why a server cannot be used: `unreachable` (no Reactive Resume answered) or `outdated` (no app sign-in yet). */
+/**
+ * Why a server cannot be used: `unreachable` (no Reactive Resume answered), `outdated` (no app sign-in yet) or
+ * `mismatch` (its metadata names another origin as issuer or endpoint).
+ */
 export class ServerError extends Error {
-	constructor(readonly reason: "unreachable" | "outdated") {
+	constructor(readonly reason: "unreachable" | "outdated" | "mismatch") {
 		super(reason);
 		this.name = "ServerError";
 	}
@@ -109,7 +120,20 @@ export async function discover(origin: string): Promise<Discovery> {
 	if (!registrationEndpoint || !supportsScopes) throw new ServerError("outdated");
 
 	const revocationEndpoint = string(metadata?.revocation_endpoint);
+	const issuer = string(metadata?.issuer);
+	// Mix-up defence (RFC 9207 §1): the issuer and every endpoint the app sends a code or token to must be on the
+	// origin the user chose. Better Auth's issuer is `<origin>/api/auth`.
+	const onOrigin = (url: string | undefined) => url === undefined || originOf(url) === origin;
+	if (
+		!issuer ||
+		!onOrigin(issuer) ||
+		![authorizationEndpoint, tokenEndpoint, registrationEndpoint, revocationEndpoint].every(onOrigin)
+	)
+		throw new ServerError("mismatch");
+
 	const discovery: Discovery = {
+		issuer,
+		issParameterSupported: metadata?.authorization_response_iss_parameter_supported === true,
 		authorizationEndpoint,
 		tokenEndpoint,
 		registrationEndpoint,
@@ -117,6 +141,42 @@ export async function discover(origin: string): Promise<Discovery> {
 	};
 	discoveries.set(origin, discovery);
 	return discovery;
+}
+
+const originOf = (url: string) => {
+	try {
+		return new URL(url).origin;
+	} catch {
+		return null;
+	}
+};
+
+/**
+ * The query and fragment parameters of a redirect URL, parsed by hand: React Native's `URLSearchParams` is not
+ * reliable (S3), so nothing here depends on it. Later duplicates win; `+` is a space (form encoding).
+ */
+export function parseRedirectParams(url: string): Record<string, string> {
+	const params: Record<string, string> = {};
+	const decode = (value: string) => {
+		try {
+			return decodeURIComponent(value.replaceAll("+", " "));
+		} catch {
+			return value;
+		}
+	};
+	const queryStart = url.indexOf("?");
+	const hashStart = url.indexOf("#");
+	const query = queryStart === -1 ? "" : url.slice(queryStart + 1, hashStart > queryStart ? hashStart : undefined);
+	const fragment = hashStart === -1 ? "" : url.slice(hashStart + 1);
+	for (const part of [query, fragment]) {
+		for (const pair of part.split("&")) {
+			if (!pair) continue;
+			const equals = pair.indexOf("=");
+			const key = decode(equals === -1 ? pair : pair.slice(0, equals));
+			params[key] = equals === -1 ? "" : decode(pair.slice(equals + 1));
+		}
+	}
+	return params;
 }
 
 /** The app's `client_id` on this server, if it registered there before. */

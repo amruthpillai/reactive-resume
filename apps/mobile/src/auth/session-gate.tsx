@@ -1,9 +1,10 @@
 import { useLingui } from "@lingui/react/macro";
+import { useQueryClient } from "@tanstack/react-query";
 import { router, useRootNavigationState, useSegments } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { hostOf } from "./auth-header";
-import { getSession, hasChosenServer, signOut, subscribeSession, useSession } from "./session";
+import { getSession, hasChosenServer, signOut, subscribeIdentity, subscribeSession, useSession } from "./session";
 import { useSignIn } from "./use-sign-in";
 import { routes } from "@/routes";
 import { Banner, Button, Sheet, showToast, useTheme } from "@/ui";
@@ -15,6 +16,7 @@ import { Banner, Button, Sheet, showToast, useTheme } from "@/ui";
  *   Switch server) always has the last word; then the AU7 toast.
  * - Signed in on an `(auth)` screen: go to Documents.
  * - Expired: stay where the user is, under a sheet that asks to sign in again (AU8).
+ * - Account change (sign-in, switch, sign-out, expiry): the React Query cache is cancelled and cleared.
  */
 export function SessionGate() {
 	const { t } = useLingui();
@@ -26,6 +28,17 @@ export function SessionGate() {
 	// The OAuth redirect route steps back by itself (app/(auth)/auth/native-callback.tsx).
 	const atCallback = path === "(auth)/auth/native-callback";
 	const where = useRef({ inAuth });
+	const queryClient = useQueryClient();
+
+	// Server data belongs to one account: drop it (and stop its requests) the moment the account changes.
+	useEffect(
+		() =>
+			subscribeIdentity(() => {
+				void queryClient.cancelQueries();
+				queryClient.clear();
+			}),
+		[queryClient],
+	);
 	const previous = useRef(status);
 
 	useEffect(() => {

@@ -11,6 +11,7 @@ export function signInErrorMessage(i18n: I18n, error: unknown): string {
 			return i18n._(msg`You cancelled the sign-in before it finished.`);
 		case "invalid_grant":
 		case "state_mismatch":
+		case "issuer_mismatch":
 			return i18n._(msg`This sign-in attempt expired or was already used. Please start again.`);
 		default:
 			return i18n._(msg`Something went wrong while signing you in. Please try again.`);
@@ -18,6 +19,10 @@ export function signInErrorMessage(i18n: I18n, error: unknown): string {
 }
 
 export function serverErrorMessage(i18n: I18n, error: ServerError): string {
+	if (error.reason === "mismatch")
+		return i18n._(
+			msg`This server reports a different address than the one you entered. Enter the address it uses, or ask your administrator.`,
+		);
 	return error.reason === "outdated"
 		? i18n._(msg`This server is too old for the app. Ask your administrator to update it.`)
 		: i18n._(
