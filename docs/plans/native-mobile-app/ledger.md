@@ -81,3 +81,9 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - RN `URLSearchParams.get()` is broken. Parse query strings by hand where needed.
 - Android needs JDK 17 or 21 (Gradle's Temurin or Android Studio's JBR), not the system JDK 27.
 - Watch for the RN 0.88 dev-inspector NPE on Android dev builds.
+- 2026-10-17: S3 review (Codex `86d20183`) found 3 blockers, all in the _proposal_, none in the spike. They are folded into SV4 in README §1.6:
+  - keep `sid` validation for tokens without `offline_access`
+  - document the ≤1 h JWT window after revocation
+  - `application_type: native` is not a trust signal; this is moot since SV5 stays browser-only
+- Correction to the S3 report: the code exchange and refresh inherit the stored resource when `resource` is omitted. M3-T1 still sends `resource` on authorize. The refresh reuse interval is 0.
+- 2026-10-17: DS3c merged (all 33 DS4c findings fixed, 112 frames). DS3b's first pass is done; Codex review DS4b `7d431744` is running.
