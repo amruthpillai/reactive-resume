@@ -29,7 +29,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
 | M5-T1 Applications list and add flow          | Codex       | 18332b0c | mobile/M5-T1      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
-| M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | FIXING  | briefs/W4.md; JS-only                                                               |
+| M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
 | M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
 | M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | RUNNING | briefs/W5.md; JS-only                                                               |
@@ -170,3 +170,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M5-T2 review `b1142334`: 6 blockers (notes save races and lost drafts, inline-edit draft loss, reminder lost on interview Undo, .ics leaks interviewer names, UTF-8 folding). Fix round also adds the `/applications/<id>/details` route helper and list navigation (ownership extension approved).
 - 2026-10-17: M6-T1 merged (FIXED 6, 33 scenarios).
 - 2026-10-17: M3-T4 merged (FIXED 7, second review NO BLOCKERS; 361 pdf tests pass on the integration branch). M3-T1 done but blocked on mounting `SessionGate` in `app/_layout.tsx`: approved, plus atomic server+token snapshot in `api/client.ts`, offline account scope, sign-out draft cleanup and https-only servers. Coordinator accepts the single redirect URI `https://rxresu.me/auth/native-callback` for every server and browser-based guest login (two taps) for v1.
+- 2026-10-17: M5-T2 merged (FIXED 6, 13 scenarios). Pending for M3-T1's sign-out cleanup: also clear unsaved application notes (kv keys scoped by server+account in `features/application-detail/notes-queue.ts`).
