@@ -10,7 +10,6 @@ import {
 	collectEvents,
 	dateOfKey,
 	dayKeyOf,
-	editableFollowUp,
 	groupByDay,
 	monthGrid,
 	shiftMonth,
@@ -358,11 +357,7 @@ function ApplicationCalendar() {
 				/>
 			) : null}
 			{editing?.kind === "follow-up" ? (
-				<FollowUpSheet
-					application={editableFollowUp(editing.application, timeZone)}
-					open={editorOpen}
-					onClose={() => setEditorOpen(false)}
-				/>
+				<FollowUpSheet application={editing.application} open={editorOpen} onClose={() => setEditorOpen(false)} />
 			) : null}
 		</>
 	);
