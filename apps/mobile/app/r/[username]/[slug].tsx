@@ -1,7 +1,7 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { useLocalSearchParams } from "expo-router";
+import { PublicResume } from "@/features/public/public-resume";
 
 export default function PublicResumeScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`Resume`} />;
+	const { username = "", slug = "" } = useLocalSearchParams<{ username: string; slug: string }>();
+	return <PublicResume username={username} slug={slug} />;
 }
