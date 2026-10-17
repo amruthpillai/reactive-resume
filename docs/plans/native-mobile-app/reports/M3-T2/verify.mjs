@@ -81,7 +81,6 @@ const mocks = {
 	"expo-haptics": "exports.impactAsync=async()=>{};exports.ImpactFeedbackStyle={Light:'light'};",
 	"react-native-gesture-handler/ReanimatedSwipeable": "module.exports='Swipeable';",
 	"@/components/collection-header": "exports.CollectionHeader='CollectionHeader';",
-	"@/components/forme-check": "exports.FormeCheck='FormeCheck';",
 	"@/draft/runtime": "exports.useLetterStore=(selector)=>selector({});exports.useResumeStore=(selector)=>selector({});",
 	"@reactive-resume/utils/string": "exports.stripHtml=(value)=>value?.replace(/<[^>]*>/g,'')??'';",
 };

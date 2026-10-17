@@ -17,7 +17,6 @@ import { Thumbnail } from "./thumbnail";
 import { client, orpc } from "@/api/client";
 import { useSession } from "@/auth/session";
 import { CollectionHeader } from "@/components/collection-header";
-import { FormeCheck } from "@/components/forme-check";
 import { routes } from "@/routes";
 import {
 	Banner,
@@ -433,20 +432,17 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 						}
 						ListFooterComponent={
 							!trashed ? (
-								<View>
-									<Card style={{ paddingVertical: space.s3 / 2 }}>
-										<ListRow
-											title={t`Trash`}
-											subtitle={
-												counts.data ? plural(counts.data.trash, { one: "# document", other: "# documents" }) : undefined
-											}
-											leading="trash"
-											chevron
-											onPress={() => router.push(routes.trash())}
-										/>
-									</Card>
-									{__DEV__ && <FormeCheck />}
-								</View>
+								<Card style={{ paddingVertical: space.s3 / 2 }}>
+									<ListRow
+										title={t`Trash`}
+										subtitle={
+											counts.data ? plural(counts.data.trash, { one: "# document", other: "# documents" }) : undefined
+										}
+										leading="trash"
+										chevron
+										onPress={() => router.push(routes.trash())}
+									/>
+								</Card>
 							) : undefined
 						}
 					/>
