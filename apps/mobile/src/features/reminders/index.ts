@@ -12,7 +12,7 @@ import { Platform } from "react-native";
 import { buildIcs } from "./ics";
 import { reminderId, reminderTime } from "./schedule";
 
-export { buildIcs, icsFileName } from "./ics";
+export * from "./ics";
 export * from "./schedule";
 
 export type ReminderTarget = {
@@ -108,6 +108,11 @@ export function useReminders(applicationId: string) {
 	};
 }
 
+/** Reminders of interviews hidden behind an undo toast: sync leaves them alone until the delete commits or is undone. */
+const held = new Set<string>();
+export const holdReminder = (entryId: string) => held.add(reminderId("interview", "", entryId));
+export const releaseReminder = (entryId: string) => held.delete(reminderId("interview", "", entryId));
+
 /**
  * Keeps scheduled reminders in step with the application: an interview moved (here or on the web) moves its reminder,
  * a deleted interview, cleared follow-up or closed application cancels it. Never asks for permission.
@@ -115,6 +120,7 @@ export function useReminders(applicationId: string) {
 export async function syncReminders(applicationId: string, targets: ReminderTarget[]) {
 	const byId = new Map(targets.map((target) => [idOf(target), target]));
 	for (const { id, data } of await scheduledFor(applicationId)) {
+		if (held.has(id)) continue;
 		const target = byId.get(id);
 		if (!target) await Notifications.cancelScheduledNotificationAsync(id);
 		else if (data.start !== target.start.toISOString() || data.title !== target.title || data.body !== target.body)

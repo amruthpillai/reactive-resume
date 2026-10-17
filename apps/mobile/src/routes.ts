@@ -27,6 +27,8 @@ export const routes = {
 	search: () => "/search" as const,
 	atsChecker: () => "/ats-checker" as const,
 	application: (id: string, tab: ApplicationTab = "fit") => `/applications/${segment(id)}/${tab}` as const,
+	/** The application detail; it shares the dynamic `[tab]` route with the workspace tabs. */
+	applicationDetails: (id: string) => `/applications/${segment(id)}/details` as const,
 	publicResume: (username: string, slug: string) => `/r/${segment(username)}/${segment(slug)}` as const,
 
 	// Resume builder

@@ -4,9 +4,11 @@ import type { ApplicationTimelineEntry, InterviewTimelineEntry } from "@reactive
 import type { ReactNode } from "react";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
+import { useQueryClient } from "@tanstack/react-query";
 import * as DocumentPicker from "expo-document-picker";
 import { File } from "expo-file-system";
 import { useRouter } from "expo-router";
+import Storage from "expo-sqlite/kv-store";
 import { openBrowserAsync } from "expo-web-browser";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
@@ -20,13 +22,16 @@ import {
 	useNow,
 	useUserTime,
 } from "./hooks";
+import { createNotesQueue } from "./notes-queue";
 import { ContactsSheet, FollowUpSheet, ReminderSheet, TimelineEntrySheet } from "./sheets";
+import { client, orpc } from "@/api/client";
 import { getServer } from "@/auth/session";
+import { getDraftScope } from "@/draft";
 import { applicationError } from "@/features/applications/error";
 import { describeNextStep, getNextStep } from "@/features/applications/next-step";
 import { useApplicationMutations } from "@/features/applications/queries";
 import { getStageColor, getStageLabel, PIPELINE } from "@/features/applications/stages";
-import { icsFileName, shareIcs, zonedParts } from "@/features/reminders";
+import { followUpEvent, icsFileName, interviewEvent, shareIcs, zonedParts } from "@/features/reminders";
 import { routes } from "@/routes";
 import {
 	Button,
@@ -165,20 +170,10 @@ export function NextStepCard({ application, onOpenInterview }: SectionProps & In
 
 	const addToCalendar = () => {
 		if (!dated) return;
-		const start = step.at;
-		const people = (interview?.participants ?? []).map((person) =>
-			[person.name, person.role].filter(Boolean).join(", "),
-		);
+		const title = `${text.title} · ${application.role}, ${application.company}`;
 		void shareIcs(
-			{
-				uid: interview ? interview.id : `follow-up-${application.id}`,
-				title: `${text.title} · ${application.role}, ${application.company}`,
-				start,
-				end: new Date(start.getTime() + (interview ? interview.durationMinutes : 30) * 60_000),
-				...(interview?.location ? { location: interview.location } : {}),
-				...(interview ? { description: [people.join("\n"), interview.notes].filter(Boolean).join("\n\n") } : {}),
-			},
-			icsFileName(application.company, zonedParts(start, timeZone).date),
+			interview ? interviewEvent(interview, title) : followUpEvent(application.id, step.at, title),
+			icsFileName(application.company, zonedParts(step.at, timeZone).date),
 		).catch(() => showToast({ message: t`Couldn't share the calendar event.` }));
 	};
 
@@ -323,7 +318,14 @@ export function WhatYouSent({ application }: SectionProps) {
 			{!resumeId || !coverLetterId ? (
 				<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
 					{!resumeId ? (
-						<Button size="sm" icon="copy" label={t`Prepare a resume`} onPress={() => router.push(routes.new())} />
+						<Button
+							size="sm"
+							icon="copy"
+							label={t`Prepare a resume`}
+							onPress={() =>
+								router.push(`${routes.new()}?step=copy&applicationId=${encodeURIComponent(application.id)}`)
+							}
+						/>
 					) : null}
 					{!coverLetterId ? (
 						<Button
@@ -344,25 +346,39 @@ export function WhatYouSent({ application }: SectionProps) {
 type InlineFactProps = {
 	label: string;
 	value: string | null;
-	onSave: (value: string | null) => void;
+	/** Resolves once saved; a rejection keeps the typed text for another try. */
+	onSave: (value: string | null) => Promise<unknown>;
+	/** Required facts (role, company) can't be emptied. */
+	required?: boolean | undefined;
 	/** Rejects a value before saving, for example a link without http(s). */
 	validate?: ((value: string) => string | null) | undefined;
 	keyboardType?: "default" | "url" | undefined;
 };
 
-/** A fact that edits in place: tap to type, Done or leaving saves, an unchanged value saves nothing. */
-function InlineFact({ label, value, onSave, validate, keyboardType = "default" }: InlineFactProps) {
+/** A fact that edits in place: tap to type, Done or leaving saves. The text stays until the save succeeds. */
+function InlineFact({ label, value, onSave, required, validate, keyboardType = "default" }: InlineFactProps) {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const [draft, setDraft] = useState<string | null>(null);
 	const [error, setError] = useState<string | null>(null);
-	const commit = () => {
-		if (draft === null) return;
+	const [saving, setSaving] = useState(false);
+	const commit = async () => {
+		// Done then blur both commit; one save at a time.
+		if (draft === null || saving) return;
 		const next = draft.trim() || null;
-		const problem = next && validate ? validate(next) : null;
+		const problem = next === null ? (required ? t`Enter a value.` : null) : validate ? validate(next) : null;
 		if (problem) return setError(problem);
-		if (next !== (value ?? null)) onSave(next);
-		setDraft(null);
-		setError(null);
+		if (next === (value ?? null)) return setDraft(null);
+		setSaving(true);
+		try {
+			await onSave(next);
+			setDraft(null);
+			setError(null);
+		} catch {
+			setError(t`Couldn't save. Your text is still here; try again.`);
+		} finally {
+			setSaving(false);
+		}
 	};
 
 	if (draft !== null)
@@ -379,8 +395,9 @@ function InlineFact({ label, value, onSave, validate, keyboardType = "default" }
 					setError(null);
 					setDraft(text);
 				}}
-				onSubmitEditing={commit}
-				onBlur={commit}
+				editable={!saving}
+				onSubmitEditing={() => void commit()}
+				onBlur={() => void commit()}
 			/>
 		);
 	return (
@@ -420,17 +437,18 @@ export function Facts({ application }: SectionProps) {
 	const { date } = useUserTime();
 	const { update } = useApplicationMutations();
 	const save = (patch: Omit<Parameters<typeof update.mutate>[0], "id">) =>
-		update.mutate({ id: application.id, ...patch }, { onError: () => showToast({ message: t`Couldn't save.` }) });
+		update.mutateAsync({ id: application.id, ...patch });
 
 	return (
 		<Section title={t`Facts`}>
 			<Card>
 				<View style={{ gap: space.s1 }}>
-					<InlineFact label={t`Role`} value={application.role} onSave={(role) => role && save({ role })} />
+					<InlineFact label={t`Role`} value={application.role} required onSave={(role) => save({ role: role ?? "" })} />
 					<InlineFact
 						label={t`Company`}
 						value={application.company}
-						onSave={(company) => company && save({ company })}
+						required
+						onSave={(company) => save({ company: company ?? "" })}
 					/>
 					<InlineFact label={t`Location`} value={application.location} onSave={(location) => save({ location })} />
 					<InlineFact label={t`Salary`} value={application.salary} onSave={(salary) => save({ salary })} />
@@ -486,36 +504,64 @@ export function Contacts({ application }: SectionProps) {
 }
 
 const NOTES_SAVE_DELAY_MS = 800;
+const notesQueue = createNotesQueue(Storage);
+// Partitioned like resume drafts (server + OAuth subject), so another account never sees or replays them.
+const notesKey = async (applicationId: string) =>
+	`reactive-resume:application-notes:${(await getDraftScope()) ?? JSON.stringify([getServer()])}:${applicationId}`;
 
-/** NOTES save a moment after typing stops, and when leaving; a failed save keeps the text and offers a retry. */
+/**
+ * NOTES save a moment after typing stops, on blur and when leaving. Saves are serialized per application with the
+ * latest text winning, and unsaved text is kept on the device (restored on the next visit) until a save succeeds.
+ */
 export function Notes({ application }: SectionProps) {
 	const { t } = useLingui();
-	const { update } = useApplicationMutations();
+	const queryClient = useQueryClient();
+	const id = application.id;
+	const [key, setKey] = useState<string | null>(null);
 	const [notes, setNotes] = useState(application.notes ?? "");
-	const pending = useRef<string | null>(null);
-	const mutate = update.mutate;
-	const save = useCallback(() => {
-		const value = pending.current;
-		if (value === null) return;
-		pending.current = null;
-		mutate(
-			{ id: application.id, notes: value.trim() ? value : null },
-			{
-				onError: () => {
-					pending.current ??= value;
-					showToast({ message: t`Couldn't save the notes. Your text is still here.` });
-				},
-			},
-		);
-	}, [application.id, mutate, t]);
+	const [failed, setFailed] = useState(false);
+	// Typed but not handed to the queue yet.
+	const unsent = useRef<string | null>(null);
 
 	useEffect(() => {
-		if (pending.current === null) return;
-		const timeout = setTimeout(save, NOTES_SAVE_DELAY_MS);
+		let live = true;
+		void notesKey(id).then((resolved) => {
+			if (!live) return;
+			const kept = notesQueue.kept(resolved);
+			if (kept !== null && unsent.current === null) {
+				unsent.current = kept;
+				setNotes(kept);
+			} else if (unsent.current !== null) notesQueue.keep(resolved, unsent.current);
+			setKey(resolved);
+		});
+		return () => {
+			live = false;
+		};
+	}, [id]);
+
+	const flush = useCallback(() => {
+		const value = unsent.current;
+		if (key === null || value === null) return;
+		unsent.current = null;
+		setFailed(false);
+		notesQueue
+			.save(key, value, async (text) => {
+				await client.applications.update({ id, notes: text.trim() ? text : null });
+				void queryClient.invalidateQueries({ queryKey: orpc.applications.key() });
+			})
+			.catch(() => {
+				setFailed(true);
+				showToast({ message: t`Couldn't save the notes. Your text is still here.` });
+			});
+	}, [id, key, queryClient, t]);
+
+	useEffect(() => {
+		if (unsent.current === null) return;
+		const timeout = setTimeout(flush, NOTES_SAVE_DELAY_MS);
 		return () => clearTimeout(timeout);
-	}, [notes, save]);
-	// Leaving mid-sentence still saves what was typed.
-	useEffect(() => () => save(), [save]);
+	}, [notes, flush]);
+	// Leaving mid-sentence still saves what was typed; the queue outlives this screen.
+	useEffect(() => () => flush(), [flush]);
 
 	return (
 		<Section title={t`Notes`}>
@@ -524,18 +570,19 @@ export function Notes({ application }: SectionProps) {
 				value={notes}
 				minLines={4}
 				onChangeText={(value) => {
-					pending.current = value;
+					unsent.current = value;
+					if (key !== null) notesQueue.keep(key, value);
 					setNotes(value);
 				}}
-				onBlur={save}
+				onBlur={flush}
 			/>
-			{update.isError ? (
+			{failed ? (
 				<Button
 					variant="link"
 					label={t`Retry save`}
 					onPress={() => {
-						pending.current = notes;
-						save();
+						unsent.current = notes;
+						flush();
 					}}
 				/>
 			) : null}

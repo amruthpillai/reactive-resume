@@ -188,7 +188,7 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 			});
 			if (!current(signal)) return;
 			onClose();
-			router.push(routes.application(id));
+			router.push(routes.applicationDetails(id));
 		});
 	const docs = documents.data ?? [];
 	return (

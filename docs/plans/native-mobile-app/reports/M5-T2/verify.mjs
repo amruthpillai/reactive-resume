@@ -1,7 +1,8 @@
-// M5-T2 scenarios: .ics text, reminder times across timezones, and the attachment check.
+// M5-T2 scenarios: .ics text, reminder times across timezones, the attachment check and the notes save queue.
 // Runs the shipped pure modules directly: `node docs/plans/native-mobile-app/reports/M5-T2/verify.mjs` (Node 24).
 import assert from "node:assert/strict";
-import { buildIcs, icsFileName } from "../../../../../apps/mobile/src/features/reminders/ics.ts";
+import { buildIcs, icsFileName, interviewEvent } from "../../../../../apps/mobile/src/features/reminders/ics.ts";
+import { createNotesQueue } from "../../../../../apps/mobile/src/features/application-detail/notes-queue.ts";
 import {
 	followUpStart,
 	reminderId,
@@ -108,10 +109,111 @@ scenario("attachment check: PDF up to 10 MB only", () => {
 	assert.equal(attachmentProblem({ name: "cv.pdf", mimeType: "application/pdf" }), "unknown-size");
 });
 
+scenario("ics: folding counts UTF-8 octets and never splits a code point (review 6)", () => {
+	const title = `面接 · ${"🎯 Café ".repeat(12)}— Zürich`;
+	const ics = buildIcs({ uid: "u", title, start: new Date(0), end: new Date(0) });
+	const lines = ics.split("\r\n");
+	const lone = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/;
+	for (const line of lines) {
+		assert.ok(Buffer.byteLength(line, "utf8") <= 75, `${Buffer.byteLength(line, "utf8")} octets: ${line}`);
+		assert.ok(!lone.test(line), `split surrogate pair: ${line}`);
+	}
+	const start = lines.findIndex((line) => line.startsWith("SUMMARY:"));
+	let unfolded = lines[start];
+	for (let i = start + 1; lines[i].startsWith(" "); i++) unfolded += lines[i].slice(1);
+	assert.equal(unfolded, `SUMMARY:${title}`);
+	assert.ok(lines.filter((line) => line.startsWith(" ")).length >= 2);
+});
+
+scenario("ics: interview event carries only its notes, never the people (review 5)", () => {
+	const interview = {
+		id: "e1",
+		at: new Date("2026-10-19T14:00:00Z"),
+		durationMinutes: 45,
+		location: "https://video.example.com/fieldnote",
+		notes: "Walk through a gameplay system you designed.",
+		participants: [{ name: "Sam Rivera", role: "Gameplay lead" }],
+	};
+	const event = interviewEvent(interview, "Technical interview · Senior Game Developer, Fieldnote");
+	assert.equal(event.description, interview.notes);
+	assert.equal(event.end.toISOString(), "2026-10-19T14:45:00.000Z");
+	const ics = buildIcs(event);
+	assert.ok(!ics.includes("Sam Rivera") && !ics.includes("Gameplay lead"));
+	assert.ok(ics.includes("DESCRIPTION:Walk through a gameplay system you designed."));
+	assert.ok(!buildIcs(interviewEvent({ ...interview, notes: "" }, "x")).includes("DESCRIPTION"));
+});
+
+const memoryStorage = () => {
+	const map = new Map();
+	return {
+		map,
+		getItemSync: (key) => map.get(key) ?? null,
+		setItemSync: (key, value) => map.set(key, value),
+		removeItemSync: (key) => map.delete(key),
+	};
+};
+const deferredSend = () => {
+	const calls = [];
+	const send = (value) =>
+		new Promise((resolve, reject) => {
+			calls.push({ value, resolve, reject });
+		});
+	return { calls, send };
+};
+const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+scenario("notes: saves never overlap; edits during a request coalesce, latest text wins (review 1)", async () => {
+	const storage = memoryStorage();
+	const queue = createNotesQueue(storage);
+	const { calls, send } = deferredSend();
+	storage.setItemSync("k", "A");
+	const first = queue.save("k", "A", send);
+	storage.setItemSync("k", "AB");
+	const second = queue.save("k", "AB", send);
+	storage.setItemSync("k", "ABC");
+	const third = queue.save("k", "ABC", send);
+	await tick();
+	assert.deepEqual(calls.map((call) => call.value), ["A"]); // one request in flight
+	calls[0].resolve();
+	await tick();
+	assert.deepEqual(calls.map((call) => call.value), ["A", "ABC"]); // "AB" coalesced away
+	assert.equal(storage.getItemSync("k"), "ABC"); // still kept: not saved yet
+	calls[1].resolve();
+	await Promise.all([first, second, third]);
+	assert.equal(storage.getItemSync("k"), null); // saved: nothing kept
+	assert.equal(calls.at(-1).value, "ABC");
+});
+
+scenario("notes: a failed save keeps the text on the device and retries the latest (review 1, 2)", async () => {
+	const storage = memoryStorage();
+	const queue = createNotesQueue(storage);
+	const { calls, send } = deferredSend();
+	storage.setItemSync("k", "draft");
+	const failed = queue.save("k", "draft", send);
+	await tick();
+	calls[0].reject(new Error("offline"));
+	await assert.rejects(failed);
+	assert.equal(storage.getItemSync("k"), "draft");
+	assert.equal(queue.kept("k"), "draft"); // restored on the next visit
+	storage.setItemSync("k", "draft 2");
+	const retry = queue.save("k", "draft 2", send);
+	await tick();
+	assert.equal(calls[1].value, "draft 2");
+	calls[1].resolve();
+	await retry;
+	assert.equal(storage.getItemSync("k"), null);
+	// Keys are independent: another application's save is not held behind this one.
+	const other = queue.save("j", "x", send);
+	await tick();
+	assert.equal(calls[2].value, "x");
+	calls[2].resolve();
+	await other;
+});
+
 let failed = 0;
 for (const { name, run } of scenarios) {
 	try {
-		run();
+		await run();
 		console.log(`pass  ${name}`);
 	} catch (error) {
 		failed++;

@@ -18,7 +18,15 @@ import {
 } from "./hooks";
 import { client } from "@/api/client";
 import { applicationDetailQueryKey, useInvalidateApplications } from "@/features/applications/queries";
-import { DEFAULT_LEAD, isTimeZone, REMINDER_LEADS, useReminders, zonedParts } from "@/features/reminders";
+import {
+	DEFAULT_LEAD,
+	holdReminder,
+	isTimeZone,
+	releaseReminder,
+	REMINDER_LEADS,
+	useReminders,
+	zonedParts,
+} from "@/features/reminders";
 import {
 	Button,
 	Chip,
@@ -225,13 +233,19 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 			current ? { ...current, activity: current.activity.filter((entry) => entry.id !== interview.id) } : current,
 		);
 		onClose();
+		// Its reminder stays scheduled through the undo window and is cancelled only once the delete commits.
+		holdReminder(interview.id);
+		const target = { kind: "interview", applicationId: application.id, entryId: interview.id } as const;
 		const timer = setTimeout(() => {
-			void reminders.turnOff({ kind: "interview", applicationId: application.id, entryId: interview.id });
 			// The form is gone by now, so this calls the client directly rather than through a mounted mutation.
 			void client.applications
 				.deleteTimelineEntry({ id: application.id, entryId: interview.id })
+				.then(() => reminders.turnOff(target))
 				.catch(() => showToast({ message: t`Couldn't delete the interview.` }))
-				.finally(() => void invalidate());
+				.finally(() => {
+					releaseReminder(interview.id);
+					void invalidate();
+				});
 		}, UNDO_MS);
 		showToast({
 			message: t`Interview deleted`,
@@ -240,6 +254,7 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 				label: t`Undo`,
 				onPress: () => {
 					clearTimeout(timer);
+					releaseReminder(interview.id);
 					void invalidate();
 				},
 			},
