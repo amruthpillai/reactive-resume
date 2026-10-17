@@ -43,7 +43,46 @@ const ENRICHED_TAGS = new Set([
 ]);
 const RENAMED: Record<string, string> = { strong: "b", em: "i", del: "s", strike: "s" };
 
-const INLINE = new Set(["span", "b", "strong", "i", "em", "u", "s", "del", "strike", "mark", "font", "a", "code"]);
+// Elements whose `style` marks become tags around their content: inline ones, and the blocks that hold inline content
+// directly (paragraphs, list items, headings). Tags open after the element's start tag and close before its end tag.
+const STYLED = new Set([
+	"span",
+	"b",
+	"strong",
+	"i",
+	"em",
+	"u",
+	"s",
+	"del",
+	"strike",
+	"mark",
+	"font",
+	"a",
+	"code",
+	"p",
+	"li",
+	"h1",
+	"h2",
+	"h3",
+	"h4",
+	"h5",
+	"h6",
+]);
+
+const styleOf = (attributes: string) => {
+	const style = /\sstyle\s*=\s*("([^"]*)"|'([^']*)')/i.exec(attributes);
+	return style ? (style[2] ?? style[3] ?? "") : "";
+};
+
+/** TipTap wraps list items in paragraphs; the editor's items hold text directly. Both styles move to the item. */
+const collapseListParagraphs = (html: string) =>
+	html.replaceAll(
+		/<li(\s[^>]*)?>\s*<p(\s[^>]*)?>([\s\S]*?)<\/p>\s*<\/li>/gi,
+		(_match, item: string | undefined, paragraph: string | undefined, content: string) => {
+			const style = [styleOf(item ?? ""), styleOf(paragraph ?? "")].filter(Boolean).join(";");
+			return style ? `<li style="${style.replaceAll('"', "'")}">${content}</li>` : `<li>${content}</li>`;
+		},
+	);
 
 /** The marks an inline `style` declares: bold, italic, underline and strikethrough, as the native normaliser reads. */
 function styleMarks(style: string): string[] {
@@ -57,7 +96,7 @@ function styleMarks(style: string): string[] {
 }
 
 /**
- * Turns CSS-encoded marks (`<span style="font-weight:700">`, Google Docs' `font-style:italic`, `text-decoration`)
+ * Turns CSS-encoded marks (`<span style="font-weight:700">`, `<p style="font-style:italic">`, `text-decoration`)
  * into tags before attributes are stripped, so editing one character doesn't drop them. A `<b>`/`<strong>` styled
  * `font-weight: normal` (Google Docs' wrapper) is not bold and is removed.
  */
@@ -67,7 +106,7 @@ function styleMarksToTags(html: string): string {
 		/<(\/?)([a-z][a-z0-9]*)(\s[^>]*)?>/gi,
 		(match, close: string, rawName: string, attributes = "") => {
 			const name = rawName.toLowerCase();
-			if (!INLINE.has(name)) return match;
+			if (!STYLED.has(name)) return match;
 			const stack = (open[name] ??= []);
 			if (close) {
 				const [drop, ...marks] = stack.pop() ?? [""];
@@ -76,8 +115,7 @@ function styleMarksToTags(html: string): string {
 					.reverse()
 					.join("")}${drop === "drop" ? "" : match}`;
 			}
-			const style = /\sstyle\s*=\s*("([^"]*)"|'([^']*)')/i.exec(attributes);
-			const css = style ? (style[2] ?? style[3] ?? "") : "";
+			const css = styleOf(attributes);
 			const normal = (name === "b" || name === "strong") && /font-weight\s*:\s*(normal|[1-4]00)\b/i.test(css);
 			const marks = styleMarks(css).filter((mark) => !(mark === "b" && (name === "b" || name === "strong")));
 			stack.push([normal ? "drop" : "", ...marks]);
@@ -96,9 +134,7 @@ export function toEnrichedHtml(html: string): string {
 	let body = html.trim();
 	if (!body) return "<html>\n<p></p>\n</html>";
 	if (!body.includes("<")) body = `<p>${encode(body)}</p>`;
-	body = styleMarksToTags(body)
-		// TipTap wraps list items in paragraphs; the editor's items hold text directly.
-		.replaceAll(/<li(\s[^>]*)?>\s*<p(\s[^>]*)?>([\s\S]*?)<\/p>\s*<\/li>/gi, "<li>$3</li>")
+	body = styleMarksToTags(collapseListParagraphs(body))
 		.replaceAll(/<(\/?)([a-z][a-z0-9]*)(\s[^>]*)?(\/?)>/gi, (_match, close: string, name: string, attributes = "") => {
 			const tag = RENAMED[name.toLowerCase()] ?? name.toLowerCase();
 			if (!ENRICHED_TAGS.has(tag)) return "";

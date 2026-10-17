@@ -453,5 +453,49 @@ await check("review 6: an upload writes only to the resume and account it starte
 	assert.equal(await moving, null);
 });
 
+// Final review round.
+
+await check("review 7: block-level CSS marks on p and li wrap the block's content in editor tags", () => {
+	const marks = [
+		["font-weight:700", "b"],
+		["font-weight: bold", "b"],
+		["font-style: italic", "i"],
+		["text-decoration: underline", "u"],
+		["text-decoration-line: line-through", "s"],
+	];
+	for (const [css, tag] of marks) {
+		assert.equal(
+			toEnrichedHtml(`<p style="${css}">Line <span>one</span></p>`),
+			`<html>\n<p><${tag}>Line one</${tag}></p>\n</html>`,
+			`p ${css}`,
+		);
+		assert.equal(
+			toEnrichedHtml(`<ul><li style="${css}">Item</li><li>Plain</li></ul>`),
+			`<html>\n<ul><li><${tag}>Item</${tag}></li>\n<li>Plain</li>\n</ul>\n</html>`,
+			`li ${css}`,
+		);
+		// TipTap's paragraph inside the item: either element's style carries over.
+		assert.equal(
+			toEnrichedHtml(`<ul><li><p style="${css}">Item</p></li></ul>`),
+			`<html>\n<ul><li><${tag}>Item</${tag}></li>\n</ul>\n</html>`,
+			`li > p ${css}`,
+		);
+	}
+	assert.equal(
+		toEnrichedHtml('<h2 style="font-style:italic; text-decoration: underline">Head</h2><p style="text-align:center">x</p>'),
+		"<html>\n<h2><i><u>Head</u></i></h2>\n<p>x</p>\n</html>",
+	);
+	assert.equal(
+		toEnrichedHtml('<ul><li style="font-weight:700"><p style="font-style:italic">Both</p></li></ul>'),
+		"<html>\n<ul><li><b><i>Both</i></b></li>\n</ul>\n</html>",
+	);
+	// Editing one character keeps a block's mark in what's written.
+	const session = createRichTextSession('<p style="font-weight:700">Bold line</p>');
+	assert.equal(session.markup, "<html>\n<p><b>Bold line</b></p>\n</html>");
+	session.change(session.markup);
+	session.focus();
+	assert.equal(session.change("<html>\n<p><b>Bold lines</b></p>\n</html>"), "<p><b>Bold lines</b></p>");
+});
+
 await drain();
 console.log(`${passed} scenarios passed`);
