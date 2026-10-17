@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "ใบสมัคร {0} ที่จะส่งออก"
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "ปรับใช้การแก้ไข {0} รายการแล้ว"
@@ -1167,7 +1168,6 @@ msgstr "การเชื่อมต่อ AI"
 msgid "AI connections are unavailable."
 msgstr "การเชื่อมต่อ AI ไม่พร้อมใช้งาน"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "ไม่สามารถโหลดการเชื่อมต่อ AI ได้"
@@ -1451,10 +1451,6 @@ msgstr "อัปเดตใบสมัครแล้ว"
 msgid "Application views"
 msgstr "มุมมองใบสมัคร"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "แท็บพื้นที่ทำงานใบสมัคร"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "จากน้อยไปมาก"
 msgid "Ask"
 msgstr "ถาม"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "ถามเกี่ยวกับใบสมัครนี้…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "ถามเกี่ยวกับก้าวต่อไปในอาชีพของคุณ…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "ถามเกี่ยวกับการหางานของคุณ หรือนำผลงานที่คุณอยากอธิบายให้ดีขึ้นมาคุยกัน คำตอบจะใช้สิ่งที่เปิดไว้ด้านล่าง และบอกว่าอ้างอิงจากอะไร"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "ถามอะไรก็ได้เกี่ยวกับงานนี้"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "ถามอะไรก็ได้เกี่ยวกับงานนี้ โค้ชจะอ่านประกาศงาน โน้ตของคุณ และสิ่งที่คุณส่งไป และรู้ว่าคุณอยู่ที่แท็บ {tabName}"
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "ถามหรืออธิบายการเปลี่ยนแ
 msgid "Aspect Ratio"
 msgstr "อัตราส่วนภาพ"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "ผู้ช่วย"
@@ -2373,7 +2374,6 @@ msgstr "เชื่อมต่อผู้ให้บริการ AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "ชื่อการสนทนา"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "บทสนทนา"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "การสนทนาเกี่ยวกับงานหนึ่งๆ อยู่ในพื้นที่ทำงานของงานนั้น"
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "ไม่สามารถโหลดการสนทนาได้"
 
@@ -2979,6 +2981,7 @@ msgstr "จดหมายสมัครงาน"
 msgid "Cover letter — {0}"
 msgstr "จดหมายปะหน้า — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "ลบ “{0}” หรือไม่?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "ลบ {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "แก้ไข"
 msgid "Edit {0}: {1}"
 msgstr "แก้ไข {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "แก้ไขแล้ว"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "การแบ่งคำ"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "ฉันดูจดหมายฉบับนี้และประกาศรับสมัครงานของ {company} ได้ คำแนะนำจะแสดงเป็นรายการแก้ไขที่คุณเลือกยอมรับได้ทีละรายการ"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "ฉันดูจดหมายฉบับนี้ได้ คำแนะนำจะแสดงเป็นรายการแก้ไขที่คุณเลือกยอมรับได้ทีละรายการ"
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "ฉันเห็น ประวัติย่อ นี้และประกาศรับสมัครงาน {company} คำแนะนำจะกลับมาเป็นการแก้ไขที่คุณสามารถยอมรับได้ทีละรายการ"
 
@@ -4808,6 +4821,10 @@ msgstr "ใช้ฟอนต์เพียงสองถึงสามตร
 msgid "Keep together"
 msgstr "อยู่ด้วยกันต่อไป"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "เก็บส่วนที่เฉพาะเจาะจงที่สุด"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "เก็บไว้เหมือนเดิม"
@@ -4901,6 +4918,10 @@ msgstr "จัดวางข้อความตามแนวนอน ข�
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "เค้าโครง"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "นำไปสู่เหตุผลที่คุณเหมาะสม"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "ส่วนหลัก"
 msgid "Make default"
 msgstr "ตั้งเป็นค่าเริ่มต้น"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "ทำให้เจาะจงมากขึ้น"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "ให้สั้นลง"
@@ -5288,6 +5314,10 @@ msgstr "ให้สั้นลง"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "จัดพื้นที่สำหรับขั้นตอนต่อไป"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "ทำให้ช่องเปิดแข็งแรงขึ้น"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "ใบสมัครใหม่"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "บทสนทนาใหม่"
 
@@ -6335,6 +6366,10 @@ msgstr "เปิดตัวแก้ไขในตัว"
 msgid "Open in Offers"
 msgstr "เปิดในข้อเสนองาน"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "เปิดจดหมาย"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "เปิดหน้าสาธารณะ"
@@ -6381,13 +6416,13 @@ msgstr "เปิดพื้นที่ทำงาน"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "กำลังเปิดการสนทนา…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "กำลังเปิดไฟล์"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "กำลังเปิดจดหมาย…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "ดึงข้อมูล {0} โดยใช้ {1} เวลาใ�
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "บันทึกเรื่องราว"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "บันทึกจดหมายสมัครงานก่อนส่งออก"
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "บันทึกเอกสารก่อนส่ง"
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "ส่ง PDF นี้ไปยังผู้ให้บริการ AI ที่กำหนดค่าไว้ของคุณ แทนที่จะอ่านเลเยอร์ข้อความ"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "ส่งข้อความของคุณ ใบสมัครนี้ (ประกาศงาน โน้ต เอกสารที่ส่งแล้ว) และคลังความรู้ที่เปิดใช้ไปยัง {connection}"
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "ส่งข้อความของคุณ ข้อความก่อนหน้า การสมัครงานนี้ (ประกาศรับสมัครงาน บันทึก และเอกสารที่ส่งแล้ว) และข้อมูลในคลังความรู้ที่เปิดใช้งานไปยัง {label}"
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "เช็คเป็นแบบกลไก สิ่งนี้จ�
 msgid "The coach doesn't remember anything from your messages."
 msgstr "โค้ชจะไม่จดจำอะไรจากข้อความของคุณ"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "ยังไม่ได้ตั้งค่าโค้ชบนเซิร์ฟเวอร์นี้ ผู้ดูแลเซิร์ฟเวอร์ต้องตั้งค่า ENCRYPTION_SECRET"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "ยังไม่ได้ตั้งค่าโค้ชบนเซิร์ฟเวอร์นี้ ผู้ดูแลเซิร์ฟเวอร์ต้องตั้งค่า ENCRYPTION_SECRET คลังความรู้ ข้อเสนองาน และใบสมัครของคุณใช้งานได้โดยไม่ต้องมีค่านี้"
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "โค้ชต้องใช้การเชื่อมต่อ AI จะไม่ส่งข้อมูลจนกว่าคุณร้องขอ"
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "โค้ชจะเสนอข้อเท็จจริงแต่ละข้อในแชต จะไม่มีอะไรถูกบันทึกจนกว่าคุณจะยอมรับ"
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "โค้ชอ่านประกาศงาน โน้ต และสิ่งที่คุณส่งไป พร้อมรู้ว่าคุณอยู่ใน {tabName} การสนทนาจะปรากฏในผู้ช่วย"
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "ลอง {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "ขีดเส้นใต้ลิงก์"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "ใช้เวอร์ชันเซิร์ฟเวอร์"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "ใช้เลข Hex หกหลัก เช่น #3E6B4F"
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "ใช้เลิกทำในตัวแก้ไขเพื่อย้อนกลับการเปลี่ยนแปลงก่อนหน้า"
@@ -10188,6 +10226,10 @@ msgstr "ใช้เมื่อ {connected} ไม่สามารถอ่�
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "ชื่อผู้ใช้"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "ใช้ข้อเท็จจริงจากประวัติย่อของคุณ"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "คุณออฟไลน์อยู่ ลองอีกครั�
 msgid "You're up to date"
 msgstr "คุณดูครบทุกอย่างแล้ว"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

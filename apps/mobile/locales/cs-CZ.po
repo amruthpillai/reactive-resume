@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} žádostí o zaměstnání k exportu."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "Použito úprav: {0}"
@@ -1167,7 +1168,6 @@ msgstr "Připojení k AI"
 msgid "AI connections are unavailable."
 msgstr "Připojení k AI nejsou k dispozici."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI připojení se nepodařilo načíst."
@@ -1451,10 +1451,6 @@ msgstr "Žádost aktualizována"
 msgid "Application views"
 msgstr "Zobrazení žádostí"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Karty pracovního prostoru žádosti"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Vzestupně"
 msgid "Ask"
 msgstr "Požádat"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Zeptejte se na tuto žádost…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Zeptejte se na další krok v kariéře…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Zeptejte se na své hledání nebo přineste úspěch, který chcete lépe vysvětlit. Odpovědi vycházejí z toho, co je níže zapnuté, a uvádějí, o co se opíraly."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Zeptejte se na cokoliv ohledně této práce"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Zeptejte se na cokoli k této pozici. Kouč čte inzerát, vaše poznámky i to, co jste odeslali, a ví, že jste na kartě {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Zeptejte se nebo popište změnu…"
 msgid "Aspect Ratio"
 msgstr "Poměr stran"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Asistent"
@@ -2373,7 +2374,6 @@ msgstr "Připojte poskytovatele AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Název konverzace"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Konverzace"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Konverzace o jedné pozici najdete v jejím pracovním prostoru."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Konverzace se nepodařilo načíst."
 
@@ -2979,6 +2981,7 @@ msgstr "Průvodní dopis"
 msgid "Cover letter — {0}"
 msgstr "Průvodní dopis — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Smazat „{0}“?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Smazat {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Upravit"
 msgid "Edit {0}: {1}"
 msgstr "Upravit {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Úprava byla použita"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Dělení slov"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Vidím tento dopis i pracovní nabídku společnosti {company}. Návrhy se zobrazí jako úpravy, které můžete přijímat jednotlivě."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Vidím tento dopis. Návrhy se zobrazí jako úpravy, které můžete přijímat jednotlivě."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Vidím tento životopis a nabídku práce {company}. Návrhy se vracejí jako úpravy, které můžete přijímat jeden po druhém."
 
@@ -4808,6 +4821,10 @@ msgstr "Držte se dvou až tří rodin písem. Každé další písmo je další
 msgid "Keep together"
 msgstr "Držte pohromadě"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Zachovává nejkonkrétnější části"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Zachováno tak, jak je"
@@ -4901,6 +4918,10 @@ msgstr "Uspořádejte text vodorovně. Otočené úseky bývají často vynechá
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Rozvržení"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Vede k tomu, proč se hodíte"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Hlavní"
 msgid "Make default"
 msgstr "Nastavit jako výchozí"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Upřesněte to"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Udělejte to kratší"
@@ -5288,6 +5314,10 @@ msgstr "Udělejte to kratší"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Udělejte prostor pro další krok."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Udělejte otvor pevnější"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Nová žádost"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Nový rozhovor"
 
@@ -6335,6 +6366,10 @@ msgstr "Otevřete v editoru"
 msgid "Open in Offers"
 msgstr "Otevřít v Nabídkách"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Otevřít dopis"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Otevřete veřejnou stránku"
@@ -6381,13 +6416,13 @@ msgstr "Otevřít pracovní prostor"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Otevírání konverzace…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Otevření souboru"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Otevírání dopisu…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Načteno {0} pomocí {1}. Čas načtení neurčuje čerstvost původu."
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Uložit příběh"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Před exportem si motivační dopis uložte."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Před odesláním dokument uložte."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Odešle toto PDF vašemu nakonfigurovanému poskytovateli AI namísto čtení jeho textové vrstvy."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Odešle vaši zprávu, tuto žádost (inzerát, poznámky, odeslané dokumenty) a zapnuté Znalosti do připojení {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Odešle vaši zprávu, předchozí zprávy, tuto žádost o práci (nabídku, poznámky a odeslané dokumenty) a zapnuté informace ze Znalostí službě {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Kontroly jsou mechanické. To se dotazuje jazykového modelu, jak může
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Kouč si z vašich zpráv nic nepamatuje."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Kouč není na tomto serveru nastaven. Správce serveru musí nastavit ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Kouč není na tomto serveru nastaven. Správce musí nastavit ENCRYPTION_SECRET. Znalosti, Nabídky a vaše žádosti fungují i bez něj."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Trenér potřebuje připojení AI. Nic není odesláno, dokud se nezeptáte."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Kouč každý fakt navrhne v chatu. Nic se neuloží, dokud nesouhlasíte."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Kouč si přečte nabídku práce, vaše poznámky a to, co jste odeslali, a ví, že jste na {tabName}. Chat přichází s Asistent."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Zkuste {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Podtrhněte odkazy"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Použít verzi serveru"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Použijte šest šestnáctkových číslic, například #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Chcete-li vrátit zpět dřívější změny, použijte Zpět tvůrce."
@@ -10188,6 +10226,10 @@ msgstr "Používá se, když {connected} nemůže číst stránku. Není potřeb
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Uživatelské jméno"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Používá fakta z vašeho životopisu"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Jste offline. Zkuste to znovu, až se znovu připojíte."
 msgid "You're up to date"
 msgstr "Máte vše vyřízeno"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

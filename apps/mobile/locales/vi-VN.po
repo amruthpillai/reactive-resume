@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Hồ sơ ứng tuyển cần xuất: {0}."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "Đã áp dụng {0} chỉnh sửa"
@@ -1167,7 +1168,6 @@ msgstr "Kết nối AI"
 msgid "AI connections are unavailable."
 msgstr "Kết nối AI không khả dụng."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "Không thể tải kết nối AI."
@@ -1451,10 +1451,6 @@ msgstr "Đã cập nhật hồ sơ ứng tuyển"
 msgid "Application views"
 msgstr "Chế độ xem hồ sơ ứng tuyển"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Các thẻ làm việc của hồ sơ ứng tuyển"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "tăng dần"
 msgid "Ask"
 msgstr "Hỏi"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Hỏi về hồ sơ ứng tuyển này…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Hỏi về bước tiếp theo trong sự nghiệp của bạn…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Hỏi về quá trình tìm việc, hoặc đưa ra một thành tích bạn muốn giải thích rõ hơn. Câu trả lời dùng những gì đang bật bên dưới và cho biết đã dựa vào đâu."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Hỏi bất cứ điều gì về công việc này"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Hỏi bất cứ điều gì về công việc này. Cố vấn đọc tin tuyển dụng, ghi chú của bạn và những gì bạn đã gửi, và biết bạn đang ở thẻ {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Hỏi hoặc mô tả một sự thay đổi…"
 msgid "Aspect Ratio"
 msgstr "Tỷ lệ khung hình"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Trợ lý"
@@ -2373,7 +2374,6 @@ msgstr "Kết nối nhà cung cấp AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Tên cuộc hội thoại"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Cuộc trò chuyện"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Các cuộc hội thoại về một công việc nằm trong không gian làm việc của công việc đó."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Không thể tải cuộc hội thoại ."
 
@@ -2979,6 +2981,7 @@ msgstr "Thư xin việc"
 msgid "Cover letter — {0}"
 msgstr "Thư xin việc — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Xóa “{0}”?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Xóa {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Biên tập"
 msgid "Edit {0}: {1}"
 msgstr "Chỉnh sửa {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Đã áp dụng chỉnh sửa"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Chia từ"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Tôi có thể xem thư này và tin tuyển dụng của {company}. Các đề xuất được hiển thị dưới dạng chỉnh sửa mà bạn có thể chấp nhận từng mục."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Tôi có thể xem thư này. Các đề xuất được hiển thị dưới dạng chỉnh sửa mà bạn có thể chấp nhận từng mục."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Tôi có thể xem sơ yếu lý lịch này và tin tuyển dụng {company}. Các đề xuất sẽ quay lại dưới dạng các chỉnh sửa mà bạn có thể chấp nhận từng chỉnh sửa một."
 
@@ -4808,6 +4821,10 @@ msgstr "Chỉ dùng hai hoặc ba họ font. Mỗi font thêm vào là thêm m�
 msgid "Keep together"
 msgstr "Hãy giữ vững sự đoàn kết"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Giữ những phần cụ thể nhất"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Giữ nguyên như cũ"
@@ -4901,6 +4918,10 @@ msgstr "Trình bày văn bản theo chiều ngang. Các đoạn bị xoay thư�
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Bố cục"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Dẫn đến lý do tại sao bạn phù hợp"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Chính"
 msgid "Make default"
 msgstr "Đặt làm mặc định"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Làm cho nó cụ thể hơn"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Làm cho nó ngắn hơn"
@@ -5288,6 +5314,10 @@ msgstr "Làm cho nó ngắn hơn"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Nhường chỗ cho bước tiếp theo."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Làm cho phần mở đầu mạnh mẽ hơn"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Hồ sơ ứng tuyển mới"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Cuộc trò chuyện mới"
 
@@ -6335,6 +6366,10 @@ msgstr "Mở trình chỉnh sửa trong"
 msgid "Open in Offers"
 msgstr "Mở trong Lời đề nghị"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Mở thư"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Mở trang công khai"
@@ -6381,13 +6416,13 @@ msgstr "Mở không gian làm việc"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Mở đầu cuộc trò chuyện…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Mở tập tin"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Đang mở thư…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Đã truy xuất {0} bằng {1}. Thời gian truy xuất không quyết 
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Lưu câu chuyện"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Lưu thư xin việc trước khi xuất."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Lưu tài liệu trước khi gửi."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Gửi PDF này tới nhà cung cấp AI đã định cấu hình của bạn thay vì đọc lớp văn bản của nó."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Gửi tin nhắn của bạn, hồ sơ ứng tuyển này (tin tuyển dụng, ghi chú, tài liệu đã gửi) và Kiến thức đang bật tới {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Gửi tin nhắn của bạn, các tin nhắn trước đó, hồ sơ ứng tuyển này (tin tuyển dụng, ghi chú và tài liệu đã gửi) cùng thông tin được bật trong mục Kiến thức đến {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Việc kiểm tra mang tính cơ học. Điều này hỏi mô hình ng�
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Cố vấn không ghi nhớ gì từ tin nhắn của bạn."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Huấn luyện viên chưa được thiết lập trên máy chủ này. Người quản trị máy chủ cần đặt ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Cố vấn chưa được thiết lập trên máy chủ này. Người vận hành máy chủ cần đặt ENCRYPTION_SECRET. Kiến thức, Lời đề nghị và hồ sơ ứng tuyển của bạn vẫn hoạt động mà không cần nó."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Huấn luyện viên cần kết nối AI. Không có gì được gửi cho đến khi bạn yêu cầu."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Cố vấn đề xuất từng dữ kiện trong cuộc trò chuyện. Không có gì được lưu cho đến khi bạn đồng ý."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Huấn luyện viên đọc tin tuyển dụng, ghi chú của bạn và những gì bạn đã gửi và biết bạn đang ở trên tab {tabName}. Cuộc trò chuyện xuất hiện trong “Trợ lý”."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Hãy thử {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Gạch chân các liên kết"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Sử dụng phiên bản máy chủ"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Dùng sáu chữ số Hex, như #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Sử dụng Hoàn tác trong trình chỉnh sửa sơ yếu lý lịch để hoàn tác các thay đổi trước đó."
@@ -10188,6 +10226,10 @@ msgstr "Được sử dụng khi {connected} không thể đọc một trang. Kh
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Tên người dùng"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Sử dụng thông tin thực tế từ sơ yếu lý lịch của bạn"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Bạn đang ngoại tuyến. Hãy thử lại khi bạn kết nối lạ
 msgid "You're up to date"
 msgstr "Bạn đã xem hết"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

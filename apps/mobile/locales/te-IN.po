@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "ఎగుమతి చేయాల్సిన దరఖాస్తులు: {0}."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} సవరణలు వర్తింపజేయబడ్డాయి"
@@ -1167,7 +1168,6 @@ msgstr "AI కనెక్షన్"
 msgid "AI connections are unavailable."
 msgstr "AI కనెక్షన్‌లు అందుబాటులో లేవు."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI కనెక్షన్‌లను లోడ్ చేయడం సాధ్యపడలేదు."
@@ -1451,10 +1451,6 @@ msgstr "దరఖాస్తు నవీకరించబడింది"
 msgid "Application views"
 msgstr "ఉద్యోగ దరఖాస్తు వీక్షణలు"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "ఉద్యోగ దరఖాస్తు వర్క్‌స్పేస్ ట్యాబ్‌లు"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "ఆరోహణ"
 msgid "Ask"
 msgstr "అడగండి"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "ఈ దరఖాస్తు గురించి అడగండి…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "మీ తదుపరి కెరీర్ అడుగు గురించి అడగండి…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "మీ ఉద్యోగ అన్వేషణ గురించి అడగండి, లేదా మరింత బాగా వివరించాలనుకునే విజయాన్ని తీసుకురండి. సమాధానాలు కింద ఆన్ చేసినవాటిని ఉపయోగిస్తాయి, వేటిపై ఆధారపడ్డాయో కూడా చెబుతాయి."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "ఈ ఉద్యోగం గురించి ఏదైనా అడగండి"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "ఈ ఉద్యోగం గురించి ఏదైనా అడగండి. కోచ్ ఉద్యోగ ప్రకటన, మీ నోట్స్, మీరు పంపినవి చదువుతుంది, మీరు {tabName}లో ఉన్నారని కూడా దానికి తెలుసు."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "మార్పుని అడగండి లేదా వివరి
 msgid "Aspect Ratio"
 msgstr "కారక నిష్పత్తి"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "సహాయకుడు"
@@ -2373,7 +2374,6 @@ msgstr "AI ప్రొవైడర్‌ని కనెక్ట్ చేయ�
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "సంభాషణ పేరు"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "సంభాషణలు"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "ఒక ఉద్యోగం గురించిన సంభాషణలు దాని వర్క్‌స్పేస్‌లో ఉంటాయి."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "సంభాషణలు లోడ్ కాలేదు."
 
@@ -2979,6 +2981,7 @@ msgstr "కవర్ లెటర్"
 msgid "Cover letter — {0}"
 msgstr "కవర్ లెటర్ — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "“{0}”ని తొలగించాలా?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0}ని తొలగించండి"
 
@@ -3618,6 +3622,7 @@ msgstr "సవరించు"
 msgid "Edit {0}: {1}"
 msgstr "సవరించు {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "సవరణ వర్తింపజేయబడింది"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "సంధి విచ్ఛిన్నం"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "ఈ లేఖను, {company} సంస్థ ఉద్యోగ ప్రకటనను నేను చూడగలను. సూచనలు మీరు ఒక్కొక్కటిగా అంగీకరించగల సవరణలుగా కనిపిస్తాయి."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "ఈ లేఖను నేను చూడగలను. సూచనలు మీరు ఒక్కొక్కటిగా అంగీకరించగల సవరణలుగా కనిపిస్తాయి."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "నేను ఈ రెజ్యూమ్ మరియు {company} జాబ్ పోస్టింగ్‌ని చూడగలను. మీరు ఒక్కొక్కటిగా ఆమోదించగలిగే సవరణలుగా సూచనలు తిరిగి వస్తాయి."
 
@@ -4808,6 +4821,10 @@ msgstr "రెండు లేదా మూడు ఫాంట్ కుటు�
 msgid "Keep together"
 msgstr "కలిసి ఉండండి"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "అత్యంత నిర్దిష్ట భాగాలను ఉంచుతుంది"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "అలాగే ఉంచారు"
@@ -4901,6 +4918,10 @@ msgstr "టెక్స్ట్‌ను హారిజాంటల్‌గ�
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "విన్యాసం"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "మీరు ఎందుకు సరిపోతారు అనే దానితో దారి తీస్తుంది"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "ప్రధానం"
 msgid "Make default"
 msgstr "డిఫాల్ట్‌గా చేయి"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "దీన్ని మరింత నిర్దిష్టంగా చేయండి"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "దానిని చిన్నదిగా చేయండి"
@@ -5288,6 +5314,10 @@ msgstr "దానిని చిన్నదిగా చేయండి"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "తదుపరి దశకు చోటు కల్పించండి."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "ఓపెనింగ్‌ను మరింత బలంగా చేయండి"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "కొత్త దరఖాస్తు"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "కొత్త సంభాషణ"
 
@@ -6335,6 +6366,10 @@ msgstr "ఇన్ ఎడిటర్‌ని తెరవండి"
 msgid "Open in Offers"
 msgstr "ఆఫర్‌లలో తెరువు"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "లేఖను తెరవండి"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "పబ్లిక్ పేజీని తెరవండి"
@@ -6381,13 +6416,13 @@ msgstr "వర్క్‌స్పేస్‌ను తెరువు"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "సంభాషణను తెరుస్తోంది..."
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "ఫైల్‌ను తెరవడం"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "లేఖ తెరవబడుతోంది…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{1}ని ఉపయోగించి {0} తిరిగి పొం�
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "కథను సేవ్ చేయి"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "కవర్ లెటర్‌ను ఎగుమతి చేసే ముందు దాన్ని సేవ్ చేయండి."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "పంపే ముందు పత్రాన్ని సేవ్ చేయండి."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "ఈ PDFని దాని టెక్స్ట్ లేయర్‌ని చదవడానికి బదులుగా మీ కాన్ఫిగర్ చేసిన AI ప్రొవైడర్‌కి పంపుతుంది."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "మీ సందేశం, ఈ దరఖాస్తు (ఉద్యోగ ప్రకటన, నోట్స్, పంపిన పత్రాలు), ఆన్ చేసిన నాలెడ్జ్‌ను {connection}కి పంపుతుంది."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "మీ సందేశం, మునుపటి సందేశాలు, ఈ ఉద్యోగ దరఖాస్తు (ప్రకటన, గమనికలు, పంపిన పత్రాలు) మరియు జ్ఞాన విభాగంలో ప్రారంభించిన సమాచారాన్ని {label}కు పంపుతుంది."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "తనిఖీలు యాంత్రికంగా ఉంటాయ�
 msgid "The coach doesn't remember anything from your messages."
 msgstr "కోచ్ మీ సందేశాల నుండి ఏదీ గుర్తుంచుకోదు."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "ఈ సర్వర్‌లో కోచ్ సెటప్ చేయబడలేదు. సర్వర్ నిర్వాహకులు ENCRYPTION_SECRETను సెట్ చేయాలి."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "ఈ సర్వర్‌లో కోచ్ సెటప్ చేయబడలేదు. దీన్ని నడిపేవారు ENCRYPTION_SECRET సెట్ చేయాలి. నాలెడ్జ్, ఆఫర్‌లు, మీ దరఖాస్తులు అది లేకుండానే పనిచేస్తాయి."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "కోచ్‌కి AI కనెక్షన్ అవసరం. మీరు అడిగే వరకు ఏమీ పంపబడదు."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "కోచ్ ప్రతి వాస్తవాన్ని చాట్‌లో ప్రతిపాదిస్తుంది. మీరు అంగీకరించే వరకు ఏదీ సేవ్ చేయబడదు."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "కోచ్ ఉద్యోగ ప్రకటన, గమనికలు, మీరు పంపినవి చదువుతుంది. మీరు {tabName}లో ఉన్నారని తెలుసుకుంటుంది. సహాయకుడితో పాటు చాట్ అందుబాటులోకి వస్తుంది."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "{suggestion}ని ప్రయత్నించండి"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "లింక్‌లను అండర్లైన్ చేయండ�
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "సర్వర్ సంస్కరణను ఉపయోగించ�
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "#3E6B4F వంటి ఆరు Hex అంకెలను ఉపయోగించండి."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "మునుపటి మార్పులను రద్దు చేయడానికి ఎడిటర్‌లోని “రద్దు చేయి” వాడండి."
@@ -10188,6 +10226,10 @@ msgstr "{connected} పేజీని చదవలేనప్పుడు ఉ�
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "యూజర్‌నేమ్"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "మీ రెజ్యూమే నుండి వాస్తవాలను ఉపయోగిస్తుంది"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "మీరు ఆఫ్‌లైన్‌లో ఉన్నారు. �
 msgid "You're up to date"
 msgstr "అన్నీ చూసేశారు"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

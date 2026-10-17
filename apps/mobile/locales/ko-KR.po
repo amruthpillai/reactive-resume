@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "내보낼 지원 {0}건."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} 수정사항 적용됨"
@@ -1167,7 +1168,6 @@ msgstr "AI 연결"
 msgid "AI connections are unavailable."
 msgstr "AI 연결을 사용할 수 없습니다."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI 연결을 로드할 수 없습니다."
@@ -1451,10 +1451,6 @@ msgstr "지원 내역이 업데이트되었습니다"
 msgid "Application views"
 msgstr "지원 목록 보기"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "지원 작업 공간 탭"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "오름차순"
 msgid "Ask"
 msgstr "묻다"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "이 지원 건에 대해 물어보세요…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "다음 커리어 단계에 대해 물어보세요…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "구직 활동에 대해 묻거나, 더 잘 설명하고 싶은 성과를 가져오세요. 답변은 아래에서 켜 둔 항목을 사용하며 무엇을 근거로 했는지 알려 줍니다."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "이 직업에 대해 무엇이든 물어보세요"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "이 일자리에 대해 무엇이든 물어보세요. 코치는 채용 공고, 노트, 보낸 내용을 읽고 지금 {tabName} 탭에 있다는 것을 압니다."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "변화를 묻거나 설명하세요…"
 msgid "Aspect Ratio"
 msgstr "가로세로 비율"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "어시스턴트"
@@ -2373,7 +2374,6 @@ msgstr "AI 공급자 연결"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "대화 이름"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "대화"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "특정 일자리에 관한 대화는 해당 워크스페이스에 있습니다."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "대화를 로드할 수 없습니다."
 
@@ -2979,6 +2981,7 @@ msgstr "자기소개서"
 msgid "Cover letter — {0}"
 msgstr "자기 소개서 — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "“{0}”을(를) 삭제할까요?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0} 삭제"
 
@@ -3618,6 +3622,7 @@ msgstr "편집하다"
 msgid "Edit {0}: {1}"
 msgstr "{0} 편집: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "수정사항 적용됨"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "단어 분할"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "이 자기소개서와 {company}의 채용 공고를 볼 수 있습니다. 제안은 수정안으로 표시되며 하나씩 수락할 수 있습니다."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "이 자기소개서를 볼 수 있습니다. 제안은 수정안으로 표시되며 하나씩 수락할 수 있습니다."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "이 이력서와 {company} 채용 공고를 볼 수 있습니다. 제안사항은 하나씩 수락할 수 있는 수정사항으로 다시 표시됩니다."
 
@@ -4808,6 +4821,10 @@ msgstr "폰트는 두세 종류로 유지하세요. 폰트가 추가될수록 �
 msgid "Keep together"
 msgstr "함께 하세요"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "가장 구체적인 부분을 유지합니다."
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "그대로 유지"
@@ -4901,6 +4918,10 @@ msgstr "텍스트를 가로로 배치하세요. 회전된 텍스트는 누락되
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "레이아웃"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "귀하에게 적합한 이유를 알려드립니다."
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "메인"
 msgid "Make default"
 msgstr "기본값으로 설정"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "좀 더 구체적으로 작성하세요"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "더 짧게 만드세요"
@@ -5288,6 +5314,10 @@ msgstr "더 짧게 만드세요"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "다음 단계를 위한 공간을 확보하세요."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "오프닝을 더욱 강하게 만들어라"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "새로운 신청서"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "새로운 대화"
 
@@ -6335,6 +6366,10 @@ msgstr "편집기에서 열기"
 msgid "Open in Offers"
 msgstr "오퍼에서 열기"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "자기소개서 열기"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "공개 페이지 열기"
@@ -6381,13 +6416,13 @@ msgstr "워크스페이스 열기"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "대화를 여는 중…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "파일 열기"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "자기소개서를 여는 중…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{1}를 사용하여 {0}를 검색했습니다. 검색 시간은 원본 �
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "스토리 저장"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "내보내기 전에 표지를 저장하십시오."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "보내기 전에 문서를 저장하세요."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "텍스트 레이어를 읽는 대신 이 PDF를 구성된 AI 공급자에게 보냅니다."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "메시지, 이 지원 내역(채용 공고, 노트, 보낸 문서), 켜 둔 지식을 {connection}에 전송합니다."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "메시지, 이전 메시지, 이 지원 정보(채용 공고, 메모, 보낸 문서), 활성화된 지식 정보를 {label}에 보냅니다."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "수표는 기계식입니다. 이는 독자가 목록 항목에 어떻�
 msgid "The coach doesn't remember anything from your messages."
 msgstr "코치는 메시지에서 아무것도 기억하지 않습니다."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "이 서버에는 코치가 설정되어 있지 않습니다. 서버 관리자가 ENCRYPTION_SECRET을 설정해야 합니다."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "이 서버에는 코치가 설정되어 있지 않습니다. 서버 운영자가 ENCRYPTION_SECRET을 설정해야 합니다. 지식, 오퍼, 지원 내역은 코치 없이도 작동합니다."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "코치는 AI 연결이 필요합니다. 요청하기 전까지는 아무것도 전송되지 않습니다."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "코치가 채팅에서 각 사실을 제안합니다. 동의하기 전에는 아무것도 저장되지 않습니다."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "코치는 채용 공고, 귀하의 메모 및 귀하가 보낸 내용을 읽고 귀하가 {tabName}에 있다는 것을 알고 있습니다. 채팅은 어시스턴트와 함께 도착합니다."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "{suggestion}를 사용해 보세요"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "링크에 밑줄을 긋습니다"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "서버 버전 사용"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "#3E6B4F처럼 16진수 여섯 자리를 사용하세요."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "이전 변경 사항을 되돌리려면 편집기의 실행 취소를 사용하세요."
@@ -10188,6 +10226,10 @@ msgstr "{connected}가 페이지를 읽을 수 없을 때 사용됩니다. 계�
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "사용자 이름"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "이력서의 사실을 사용합니다."
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "오프라인 상태입니다. 다시 연결되면 다시 시도하세요
 msgid "You're up to date"
 msgstr "모두 확인했습니다"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

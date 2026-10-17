@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} aansoeke om uit te voer."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} wysigings toegepas"
@@ -1167,7 +1168,6 @@ msgstr "KI-verbinding"
 msgid "AI connections are unavailable."
 msgstr "KI-verbindings is nie beskikbaar nie."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "KI-verbindings kon nie gelaai word nie."
@@ -1451,10 +1451,6 @@ msgstr "Aansoek bygewerk"
 msgid "Application views"
 msgstr "Aansoekaansigte"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Aansoekwerkspasie-oortjies"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Stygend"
 msgid "Ask"
 msgstr "Vra"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Vra oor hierdie aansoek…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Vra oor jou volgende loopbaanstap…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Vra oor jou soektog, of bring 'n prestasie wat jy beter wil verduidelik. Antwoorde gebruik wat hieronder aangeskakel is en sê waarop hulle gesteun het."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Vra enigiets oor hierdie werk"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Vra enigiets oor hierdie werk. Die afrigter lees die plasing, jou notas en wat jy gestuur het, en weet jy is op {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Vra, of beskryf 'n verandering..."
 msgid "Aspect Ratio"
 msgstr "Aspekverhouding"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Assistent"
@@ -2373,7 +2374,6 @@ msgstr "Koppel KI-verskaffer"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Gespreksnaam"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Gesprekke"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Gesprekke oor een werk woon in sy werkruimte."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Gesprekke kon nie laai nie."
 
@@ -2979,6 +2981,7 @@ msgstr "Dekbrief"
 msgid "Cover letter — {0}"
 msgstr "Dekbrief — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Vee “{0}” uit?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Vee {0} uit"
 
@@ -3618,6 +3622,7 @@ msgstr "Wysig"
 msgid "Edit {0}: {1}"
 msgstr "Wysig {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Redigering toegepas"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Aapstreep"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Ek kan hierdie brief en {company} se posadvertensie sien. Voorstelle verskyn as wysigings wat jy een vir een kan aanvaar."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Ek kan hierdie brief sien. Voorstelle verskyn as wysigings wat jy een vir een kan aanvaar."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Ek kan hierdie CV en die {company} posplasing sien. Voorstelle kom terug as wysigings wat jy een vir een kan aanvaar."
 
@@ -4808,6 +4821,10 @@ msgstr "Hou by twee of drie families. Elke ekstra lettertipe is nog 'n kans vir 
 msgid "Keep together"
 msgstr "Bly bymekaar"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Hou die mees spesifieke dele"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Gehou soos dit is"
@@ -4901,6 +4918,10 @@ msgstr "Lê die teks horisontaal uit. Gedraaide stukke word dikwels laat val of 
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Uitleg"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Lei met hoekom jy pas"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Hoof"
 msgid "Make default"
 msgstr "Maak verstek"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Maak dit meer spesifiek"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Maak dit korter"
@@ -5288,6 +5314,10 @@ msgstr "Maak dit korter"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Maak plek vir die volgende stap."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Maak die opening sterker"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Nuwe Aansoek"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Nuwe gesprek"
 
@@ -6335,6 +6366,10 @@ msgstr "Maak die in-redigeerder oop"
 msgid "Open in Offers"
 msgstr "Maak oop in Aanbiedinge"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Maak brief oop"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Maak die publieke bladsy oop"
@@ -6381,13 +6416,13 @@ msgstr "Maak werkruimte oop"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Maak tans die gesprek oop …"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Maak die lêer oop"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Maak die brief oop…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{0} herwin met behulp van {1}. Herwinningstyd bepaal nie die varsheid va
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Bewaar storie"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Stoor die dekbrief voordat jy dit uitvoer."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Stoor die dokument voordat jy dit stuur."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Stuur hierdie PDF na jou gekonfigureerde KI-verskaffer in plaas daarvan om sy tekslaag te lees."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Stuur jou boodskap, hierdie aansoek (plasing, notas, gestuurde dokumente) en Kennis wat aangeskakel is na {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Stuur jou boodskap, vorige boodskappe, hierdie werksaansoek (posadvertensie, notas en gestuurde dokumente) en geaktiveerde Kennis na {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Die tjeks is meganies. Dit vra 'n taalmodel hoe 'n leser op jou lysinskr
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Die afrigter onthou niks uit jou boodskappe nie."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Die afrigter is nie op hierdie bediener opgestel nie. Die persoon wat dit bestuur, moet ENCRYPTION_SECRET instel."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Die afrigter is nie op hierdie bediener opgestel nie. Wie dit bestuur, moet ENCRYPTION_SECRET instel. Kennis, Aanbiedinge en jou aansoeke werk daarsonder."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Die afrigter het 'n KI-verbinding nodig. Niks word gestuur totdat jy vra nie."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Die afrigter stel elke feit in die klets voor. Niks word bewaar totdat jy instem nie."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Die afrigter lees die posadvertensie, jou notas en wat jy gestuur het, en weet jy is op {tabName}. Gesels verskyn by die Assistent."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Probeer {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Onderstreep skakels"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Gebruik bediener weergawe"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Gebruik ses heksadesimale syfers, soos #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Gebruik die bouer se Ontdoen om vroeëre veranderinge ongedaan te maak."
@@ -10188,6 +10226,10 @@ msgstr "Word gebruik wanneer {connected} nie 'n bladsy kan lees nie. Geen rekeni
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Gebruikersnaam"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Gebruik feite uit jou CV"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Jy is vanlyn. Probeer weer wanneer jy weer koppel."
 msgid "You're up to date"
 msgstr "Jy is op datum"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

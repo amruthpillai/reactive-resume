@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Eksportuotinos {0} darbo paraiškos."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "Pritaikyta pakeitimų: {0}"
@@ -1167,7 +1168,6 @@ msgstr "AI ryšys"
 msgid "AI connections are unavailable."
 msgstr "AI ryšiai nepasiekiami."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "Nepavyko įkelti AI jungčių."
@@ -1451,10 +1451,6 @@ msgstr "Paraiška atnaujinta"
 msgid "Application views"
 msgstr "Paraiškų rodiniai"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Paraiškos darbo srities skirtukai"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Kylantis"
 msgid "Ask"
 msgstr "Paklausk"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Klauskite apie šią paraišką…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Klauskite apie kitą karjeros žingsnį…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Klauskite apie savo darbo paiešką arba atsineškite pasiekimą, kurį norite paaiškinti geriau. Atsakymai remiasi tuo, kas įjungta žemiau, ir nurodo, kuo rėmėsi."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Klauskite bet ko apie šį darbą"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Klauskite bet ko apie šį darbą. Konsultantas skaito skelbimą, jūsų pastabas ir tai, ką išsiuntėte, ir žino, kad esate skiltyje „{tabName}“."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Paklauskite arba aprašykite pakeitimą…"
 msgid "Aspect Ratio"
 msgstr "Vaizdo santykis"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Padėjėjas"
@@ -2373,7 +2374,6 @@ msgstr "Prisijunkite prie AI teikėjo"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Pokalbio pavadinimas"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Pokalbiai"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Pokalbiai apie konkretų darbą saugomi jo darbo erdvėje."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Nepavyko įkelti pokalbių."
 
@@ -2979,6 +2981,7 @@ msgstr "Motyvacinis laiškas"
 msgid "Cover letter — {0}"
 msgstr "Motyvacinis laiškas – {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Ištrinti „{0}“?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Ištrinti {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Redaguoti"
 msgid "Edit {0}: {1}"
 msgstr "Redaguoti {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Pritaikytas redagavimas"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Žodžių skyrimas"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Matau šį laišką ir įmonės {company} darbo skelbimą. Pasiūlymai pateikiami kaip pakeitimai, kuriuos galite priimti po vieną."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Matau šį laišką. Pasiūlymai pateikiami kaip pakeitimai, kuriuos galite priimti po vieną."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Matau šį gyvenimo aprašymą ir {company} darbo skelbimą. Pasiūlymai pateikiami kaip pakeitimai, kuriuos galite priimti po vieną."
 
@@ -4808,6 +4821,10 @@ msgstr "Naudokite ne daugiau kaip dvi ar tris šriftų šeimas. Kiekvienas papil
 msgid "Keep together"
 msgstr "Laikykitės kartu"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Išlaiko specifiškiausias dalis"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Laikytas toks, koks yra"
@@ -4901,6 +4918,10 @@ msgstr "Išdėstykite tekstą horizontaliai. Pasukti teksto fragmentai dažnai p
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Išdėstymas"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Nurodo, kodėl tu tinka"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Pagrindinis"
 msgid "Make default"
 msgstr "Nustatyti kaip numatytąjį"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Padarykite tai konkrečiau"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Sutrumpinkite"
@@ -5288,6 +5314,10 @@ msgstr "Sutrumpinkite"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Padarykite vietos kitam žingsniui."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Padarykite angą stipresnę"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Nauja paraiška"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Naujas pokalbis"
 
@@ -6335,6 +6366,10 @@ msgstr "Atidarykite redaktorių"
 msgid "Open in Offers"
 msgstr "Atidaryti pasiūlymuose"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Atverti laišką"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Atidarykite viešąjį puslapį"
@@ -6381,13 +6416,13 @@ msgstr "Atidaryti darbo erdvę"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Atidaromas pokalbis…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Failo atidarymas"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Atveriamas laiškas…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Gauta {0} naudojant {1}. Paėmimo laikas nenustato kilmės šviežumo."
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Išsaugoti istoriją"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Išsaugokite motyvacinį laišką prieš eksportuodami."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Prieš siųsdami išsaugokite dokumentą."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Siunčia šį PDF jūsų sukonfigūruotam AI teikėjui, o ne nuskaito jo teksto sluoksnį."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Siunčia jūsų žinutę, šią paraišką (skelbimą, pastabas, išsiųstus dokumentus) ir įjungtas Žinias ryšiui {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Siunčia jūsų žinutę, ankstesnes žinutes, šią darbo paraišką (skelbimą, pastabas ir išsiųstus dokumentus) bei įjungtą Žinių informaciją paslaugai {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Patikrinimai yra mechaniniai. Tai klausia kalbos modelio, kaip skaitytoj
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Konsultantas nieko neįsimena iš jūsų žinučių."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Šiame serveryje konsultantas nesukonfigūruotas. Serverio administratorius turi nustatyti ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Konsultantas šiame serveryje nenustatytas. Serverio administratorius turi nustatyti ENCRYPTION_SECRET. Žinios, Pasiūlymai ir jūsų paraiškos veikia ir be jo."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Autobusui reikia AI ryšio. Niekas nesiunčiamas, kol nepaprašius."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Konsultantas kiekvieną faktą pasiūlo pokalbyje. Kol nesutiksite, niekas neišsaugoma."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Treneris perskaito darbo skelbimą, jūsų pastabas ir tai, ką išsiuntėte, ir žino, kad esate {tabName}. Pokalbis ateina su Padėjėjas."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Išbandykite {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Pabraukite nuorodas"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Naudokite serverio versiją"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Naudokite šešis šešioliktainius skaitmenis, pvz., #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Norėdami anuliuoti ankstesnius pakeitimus, naudokite kūrėjo Atšaukti."
@@ -10188,6 +10226,10 @@ msgstr "Naudojama, kai {connected} negali nuskaityti puslapio. Paskyros nereikia
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Vartotojo vardas"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Naudoja faktus iš jūsų gyvenimo aprašymo"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Esate neprisijungęs. Bandykite dar kartą, kai vėl prisijungsite."
 msgid "You're up to date"
 msgstr "Viskas peržiūrėta"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

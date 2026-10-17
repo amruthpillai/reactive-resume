@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} exportálandó jelentkezés."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} szerkesztés alkalmazva"
@@ -1167,7 +1168,6 @@ msgstr "AI-kapcsolat"
 msgid "AI connections are unavailable."
 msgstr "Az AI-kapcsolatok nem érhetők el."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "Az AI kapcsolatokat nem sikerült betölteni."
@@ -1451,10 +1451,6 @@ msgstr "Jelentkezés frissítve"
 msgid "Application views"
 msgstr "Jelentkezési nézetek"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Jelentkezési munkaterület lapjai"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Emelkedő"
 msgid "Ask"
 msgstr "Kérdez"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Kérdezz erről a jelentkezésről…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Kérdezz a következő karrierlépésedről…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Kérdezz a keresésedről, vagy hozz egy eredményt, amelyet jobban szeretnél elmagyarázni. A válaszok az alább bekapcsoltakat használják, és megmondják, mire támaszkodtak."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Kérdezz bármit erről a munkáról"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Kérdezz bármit erről az állásról. A coach elolvassa a hirdetést, a jegyzeteidet és amit elküldtél, és tudja, hogy most ezen a lapon vagy: {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Kérdezz, vagy írj le egy változást…"
 msgid "Aspect Ratio"
 msgstr "Méretarány"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Helyettes"
@@ -2373,7 +2374,6 @@ msgstr "Csatlakoztassa az AI-szolgáltatót"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Beszélgetés neve"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Beszélgetések"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Egy adott állásról szóló beszélgetések annak munkaterében vannak."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "A beszélgetéseket nem sikerült betölteni."
 
@@ -2979,6 +2981,7 @@ msgstr "Motivációs levél"
 msgid "Cover letter — {0}"
 msgstr "Kísérőlevél — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Törli ezt: „{0}”?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0} törlése"
 
@@ -3618,6 +3622,7 @@ msgstr "Szerkesztés"
 msgid "Edit {0}: {1}"
 msgstr "Szerkesztés {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Szerkesztés alkalmazva"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Szótagolás"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Látom ezt a levelet és a(z) {company} álláshirdetését. A javaslatok egyenként elfogadható módosításokként jelennek meg."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Látom ezt a levelet. A javaslatok egyenként elfogadható módosításokként jelennek meg."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Látom ezt az önéletrajzot és a {company} álláshirdetést. A javaslatok szerkesztésként jelennek meg, amelyeket egyenként elfogadhat."
 
@@ -4808,6 +4821,10 @@ msgstr "Maradj két-három betűcsaládnál. Minden további betűtípus újabb 
 msgid "Keep together"
 msgstr "Tartsuk együtt"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Megtartja a legspecifikusabb részeket"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Megtartva, ahogy van"
@@ -4901,6 +4918,10 @@ msgstr "Rendezd a szöveget vízszintesen. Az elforgatott szövegrészek gyakran
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Elrendezés"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Megmutatja, hogy miért illik"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Fő"
 msgid "Make default"
 msgstr "Legyen az alapértelmezett"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Tedd pontosabbá"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Legyen rövidebb"
@@ -5288,6 +5314,10 @@ msgstr "Legyen rövidebb"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Adjon helyet a következő lépésnek."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Erősítse meg a nyílást"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Új jelentkezés"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Új beszélgetés"
 
@@ -6335,6 +6366,10 @@ msgstr "Nyissa meg a szerkesztőt"
 msgid "Open in Offers"
 msgstr "Megnyitás az Ajánlatokban"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Levél megnyitása"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Nyissa meg a nyilvános oldalt"
@@ -6381,13 +6416,13 @@ msgstr "Munkatér megnyitása"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "A beszélgetés megnyitása…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "A fájl megnyitása"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Levél megnyitása…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "A {0} letöltve a {1} használatával. A visszakeresési idő nem határ
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Történet mentése"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Exportálás előtt mentse el a motivációs levelet."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Küldés előtt mentsd a dokumentumot."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Ezt a PDF üzenetet elküldi a beállított AI-szolgáltatónak, ahelyett, hogy a szövegrétegét olvasná."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Elküldi az üzenetedet, ezt a jelentkezést (hirdetés, jegyzetek, elküldött dokumentumok) és a bekapcsolt Tudástárat ide: {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Elküldi az üzenetedet, a korábbi üzeneteket, ezt az álláspályázatot (hirdetés, jegyzetek és elküldött dokumentumok), valamint a Tudástár bekapcsolt adatait a(z) {label} szolgáltatásnak."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Az ellenőrzések mechanikusak. Ez megkérdezi a nyelvi modellt, hogyan 
 msgid "The coach doesn't remember anything from your messages."
 msgstr "A coach semmit sem jegyez meg az üzeneteidből."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "A karriertanácsadó nincs beállítva ezen a szerveren. A szerver üzemeltetőjének meg kell adnia az ENCRYPTION_SECRET értékét."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "A coach nincs beállítva ezen a szerveren. Az üzemeltetőnek be kell állítania az ENCRYPTION_SECRET értéket. A Tudástár, az Ajánlatok és a jelentkezéseid nélküle is működnek."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Az edzőnek AI-kapcsolatra van szüksége. Addig nem küldenek semmit, amíg Ön nem kéri."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "A coach minden tényt felajánl a csevegésben. Semmi sem kerül mentésre, amíg bele nem egyezel."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Az asszisztens elolvassa a hirdetést, a jegyzeteit és az elküldött anyagokat, és tudja, hogy a(z) {tabName} lapon van. A csevegés az Asszisztensnél érhető el."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Próbálja ki a következőt: {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "A hivatkozások aláhúzása"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Szerver verzió használata"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Használjon hat hexadecimális számjegyet, például: #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "A korábbi módosítások visszavonásához használja a készítő Visszavonás parancsát."
@@ -10188,6 +10226,10 @@ msgstr "Akkor használatos, ha a {connected} nem tud olvasni egy oldalt. Nincs s
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Felhasználónév"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Tényeket használ az önéletrajzából"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Ön offline állapotban van. Próbálja újra, amikor újracsatlakozik."
 msgid "You're up to date"
 msgstr "Mindennel naprakész vagy"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

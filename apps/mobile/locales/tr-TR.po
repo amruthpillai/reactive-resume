@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Dışa aktarma için {0} başvuruları."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} düzenleme uygulandı"
@@ -1167,7 +1168,6 @@ msgstr "Yapay zeka bağlantısı"
 msgid "AI connections are unavailable."
 msgstr "Yapay zeka bağlantıları kullanılamıyor."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI bağlantısı yüklenemedi."
@@ -1451,10 +1451,6 @@ msgstr "Başvuru güncellendi"
 msgid "Application views"
 msgstr "Başvuru görünümleri"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Başvuru çalışma alanı sekmeleri"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Artan"
 msgid "Ask"
 msgstr "Sormak"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Bu başvuru hakkında sorun…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Kariyerinizdeki bir sonraki adım hakkında sorun…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "İş aramanız hakkında sorun ya da daha iyi anlatmak istediğiniz bir başarıyı getirin. Cevaplar aşağıda açık olanları kullanır ve neye dayandığını söyler."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Bu iş hakkında ne istersen sor"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Bu iş hakkında her şeyi sorun. Koç ilanı, notlarınızı ve gönderdiklerinizi okur; {tabName} sekmesinde olduğunuzu da bilir."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Bir değişikliği sorun veya açıklayın…"
 msgid "Aspect Ratio"
 msgstr "En/Boy Oranı"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Asistan"
@@ -2373,7 +2374,6 @@ msgstr "AI sağlayıcısını bağlayın"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Konuşma adı"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Konuşmalar"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Tek bir işle ilgili konuşmalar o işin çalışma alanında durur."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Görüşmeler yüklenemedi."
 
@@ -2979,6 +2981,7 @@ msgstr "Ön Yazı"
 msgid "Cover letter — {0}"
 msgstr "Kapak mektubu — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "“{0}” silinsin mi?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0}'yu sil"
 
@@ -3618,6 +3622,7 @@ msgstr "Düzenlemek"
 msgid "Edit {0}: {1}"
 msgstr "{0}'ı düzenleyin: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Düzenleme uygulandı"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Heceleme"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Bu mektubu ve {company} şirketinin iş ilanını görebiliyorum. Öneriler, tek tek kabul edebileceğiniz düzenlemeler olarak gösterilir."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Bu mektubu görebiliyorum. Öneriler, tek tek kabul edebileceğiniz düzenlemeler olarak gösterilir."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Bu özgeçmişi ve {company} iş ilanını görebiliyorum. Öneriler, tek tek kabul edebileceğiniz düzenlemeler olarak geri gelir."
 
@@ -4808,6 +4821,10 @@ msgstr "İki veya üç yazı tipi ailesiyle sınırlı tutun. Her ek yazı tipi,
 msgid "Keep together"
 msgstr "Bir arada kalın"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "En spesifik parçaları tutar"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Olduğu gibi tutuldu"
@@ -4901,6 +4918,10 @@ msgstr "Metni yatay olarak yerleştirin. Döndürülmüş metin parçaları gene
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Düzen"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Neden uygun olduğunuza yol açar"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Ana"
 msgid "Make default"
 msgstr "Varsayılan yap"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Daha spesifik hale getirin"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Daha kısa yap"
@@ -5288,6 +5314,10 @@ msgstr "Daha kısa yap"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Bir sonraki adıma yer açın."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Açılışı güçlendirin"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Yeni Başvuru"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Yeni görüşme"
 
@@ -6335,6 +6366,10 @@ msgstr "Düzenleyiciyi açın"
 msgid "Open in Offers"
 msgstr "Teklifler'de aç"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Mektubu aç"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Genel sayfayı aç"
@@ -6381,13 +6416,13 @@ msgstr "Çalışma alanını aç"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Görüşme açılıyor…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Dosyayı açma"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Mektup açılıyor…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{1} kullanılarak {0} alındı. Geri alma süresi menşe tazeliğini sa�
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Hikayeyi kaydet"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Dışa aktarmadan önce ön yazıyı kaydedin."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Göndermeden önce belgeyi kaydedin."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Bu PDF'ı, metin katmanını okumak yerine yapılandırılmış AI sağlayıcınıza gönderir."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Mesajınızı, bu başvuruyu (ilan, notlar, gönderilen belgeler) ve Bilgi Bankasında açık olanları {connection} bağlantısına gönderir."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Mesajınızı, önceki mesajları, bu iş başvurusunu (ilan, notlar ve gönderilen belgeler) ve Bilgi bölümünde etkinleştirdiğiniz bilgileri {label} hizmetine gönderir."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Kontroller mekaniktir. Bu, bir dil modeline okuyucunun liste girişlerin
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Koç mesajlarınızdan hiçbir şey hatırlamaz."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Koç bu sunucuda yapılandırılmamış. Sunucu yöneticisinin ENCRYPTION_SECRET değerini ayarlaması gerekiyor."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Koç bu sunucuda kurulu değil. Sunucuyu çalıştıran kişinin ENCRYPTION_SECRET ayarlaması gerekiyor. Bilgi Bankası, Teklifler ve başvurularınız onsuz da çalışır."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Kariyer danışmanının bir AI bağlantısına ihtiyacı var. Siz sorana kadar hiçbir şey gönderilmez."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Koç her bilgiyi sohbette önerir. Siz onaylamadan hiçbir şey kaydedilmez."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Koç ilanı, notlarınızı ve gönderdiklerinizi okur, {tabName} sekmesinde olduğunuzu bilir. Sohbet Asistan içinde görünür."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "{suggestion}'ı deneyin"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Bağlantıların altını çizin"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Sunucu sürümünü kullan"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "#3E6B4F gibi altı Hex basamağı kullanın."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Daha önceki değişiklikleri geri almak için oluşturucunun Geri Al seçeneğini kullanın."
@@ -10188,6 +10226,10 @@ msgstr "{connected} bir sayfayı okuyamadığında kullanılır. Hesaba gerek yo
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Kullanıcı adı"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Özgeçmişinizdeki gerçekleri kullanır"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Çevrimdışısınız. Yeniden bağlandığınızda tekrar deneyin."
 msgid "You're up to date"
 msgstr "Her şeyi gördünüz"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

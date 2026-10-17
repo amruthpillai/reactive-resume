@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} candidaturas para exportação."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} edições aplicadas"
@@ -1167,7 +1168,6 @@ msgstr "Conexão de IA"
 msgid "AI connections are unavailable."
 msgstr "As conexões de IA não estão disponíveis."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "Não foi possível carregar as conexões de IA."
@@ -1451,10 +1451,6 @@ msgstr "Candidatura atualizada"
 msgid "Application views"
 msgstr "Visualizações de Candidatura"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Guias do espaço de trabalho Candidatura"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Ascendente"
 msgid "Ask"
 msgstr "Perguntar"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Pergunte sobre esta candidatura…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Pergunte sobre seu próximo passo na carreira…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Pergunte sobre sua busca ou traga uma conquista que você quer explicar melhor. As respostas usam o que está ativado abaixo e dizem em que se basearam."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Pergunte sobre esta vaga"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Pergunte qualquer coisa sobre esta vaga. O coach lê o anúncio, suas anotações e o que você enviou, e sabe que você está em {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Pergunte ou descreva uma mudança…"
 msgid "Aspect Ratio"
 msgstr "Proporção da imagem"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Assistente"
@@ -2373,7 +2374,6 @@ msgstr "Conectar provedor de IA"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Nome da conversa"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Conversas"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Conversas sobre uma vaga ficam no espaço de trabalho dela."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Não foi possível carregar as conversas."
 
@@ -2979,6 +2981,7 @@ msgstr "Carta de apresentação"
 msgid "Cover letter — {0}"
 msgstr "Carta de apresentação — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Excluir “{0}”?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Excluir {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Editar"
 msgid "Edit {0}: {1}"
 msgstr "Editar {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Edição aplicada"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Hifenização"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Posso ver esta carta e o anúncio de vaga da {company}. As sugestões aparecem como alterações que você pode aceitar uma por uma."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Posso ver esta carta. As sugestões aparecem como alterações que você pode aceitar uma por uma."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Posso ver este currículo e o anúncio de emprego {company}. As sugestões retornam como edições que você pode aceitar uma por uma."
 
@@ -4808,6 +4821,10 @@ msgstr "Limite-se a duas ou três famílias. Cada fonte extra é mais uma chance
 msgid "Keep together"
 msgstr "Mantenham-se unidos"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Mantém as partes mais específicas"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Mantido como está"
@@ -4901,6 +4918,10 @@ msgstr "Disponha o texto na horizontal. Trechos rotacionados costumam ser descar
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Layout"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Mostra por que você se encaixa"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Principal"
 msgid "Make default"
 msgstr "Definir como padrão"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Torne-o mais específico"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Torne-o mais curto"
@@ -5288,6 +5314,10 @@ msgstr "Torne-o mais curto"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Abra espaço para a próxima etapa."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Torne a abertura mais forte"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Nova candidatura"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Nova conversa"
 
@@ -6335,6 +6366,10 @@ msgstr "Abra o editor"
 msgid "Open in Offers"
 msgstr "Abrir em Propostas"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Abrir carta"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Abra a página pública"
@@ -6381,13 +6416,13 @@ msgstr "Abrir espaço de trabalho"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Abrindo a conversa…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Abrindo o arquivo"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Abrindo a carta…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{0} recuperado usando {1}. O tempo de recuperação não estabelece o fr
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Salvar história"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Salve a carta de apresentação antes de exportá-la."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Salve o documento antes de enviar."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Envia este PDF para seu provedor de IA configurado em vez de ler sua camada de texto."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Envia sua mensagem, esta candidatura (anúncio, anotações, documentos enviados) e o Conhecimento ativado para {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Envia sua mensagem, mensagens anteriores, esta candidatura (anúncio, notas e documentos enviados) e as informações ativadas em Conhecimento para {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "As verificações são mecânicas. Isso pergunta a um modelo de linguage
 msgid "The coach doesn't remember anything from your messages."
 msgstr "O coach não lembra nada das suas mensagens."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "O orientador não está configurado neste servidor. Quem administra o servidor precisa definir ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "O coach não está configurado neste servidor. Quem administra o servidor precisa definir ENCRYPTION_SECRET. Conhecimento, Propostas e suas candidaturas funcionam sem isso."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "O coach precisa de uma conexão de IA. Nada é enviado até você solicitar."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "O coach propõe cada fato no chat. Nada é salvo até você concordar."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "O coach lê o anúncio, suas notas e o que você enviou, e sabe que você está em {tabName}. A conversa aparece no Assistente."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Experimente {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Sublinhar links"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Usar versão do servidor"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Use seis dígitos Hex, como #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Use o Desfazer do construtor para desfazer alterações anteriores."
@@ -10188,6 +10226,10 @@ msgstr "Usado quando {connected} não consegue ler uma página. Nenhuma conta é
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Nome de usuário"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Usa fatos do seu currículo"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Você está off-line. Tente novamente quando você se reconectar."
 msgid "You're up to date"
 msgstr "Tudo em dia"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Prijave za izvoz: {0}."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "Uporabljena urejanja: {0}"
@@ -1167,7 +1168,6 @@ msgstr "Povezava AI"
 msgid "AI connections are unavailable."
 msgstr "Povezave AI niso na voljo."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI povezav ni bilo mogoče naložiti."
@@ -1451,10 +1451,6 @@ msgstr "Prijava posodobljena"
 msgid "Application views"
 msgstr "Pogledi prijav"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Zavihki delovnega prostora prijave"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Naraščajoče"
 msgid "Ask"
 msgstr "Vprašajte"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Vprašajte o tej prijavi…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Vprašajte o naslednjem koraku v karieri…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Vprašajte o svojem iskanju ali prinesite dosežek, ki ga želite bolje razložiti. Odgovori uporabljajo, kar je vklopljeno spodaj, in povedo, na kaj so se oprli."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Vprašajte karkoli o tej službi"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Vprašajte karkoli o tem delovnem mestu. Svetovalec prebere oglas, vaše opombe in to, kar ste poslali, ter ve, da ste na zavihku {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Vprašajte ali opišite spremembo ..."
 msgid "Aspect Ratio"
 msgstr "Razmerje stranic"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Pomočnik"
@@ -2373,7 +2374,6 @@ msgstr "Povežite ponudnika AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Ime pogovora"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Pogovori"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Pogovori o posameznem delovnem mestu so v njegovem delovnem prostoru."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Pogovorov ni bilo mogoče naložiti."
 
@@ -2979,6 +2981,7 @@ msgstr "Spremno pismo"
 msgid "Cover letter — {0}"
 msgstr "Spremno pismo — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Izbrišem »{0}«?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Izbriši {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Uredi"
 msgid "Edit {0}: {1}"
 msgstr "Uredi {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Urejanje je uporabljeno"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Delitev besed"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Vidim to pismo in zaposlitveni oglas podjetja {company}. Predlogi so prikazani kot spremembe, ki jih lahko sprejmete posamično."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Vidim to pismo. Predlogi so prikazani kot spremembe, ki jih lahko sprejmete posamično."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Vidim ta življenjepis in objavo delovnega mesta {company}. Predlogi se vrnejo kot popravki, ki jih lahko sprejmete enega za drugim."
 
@@ -4808,6 +4821,10 @@ msgstr "Uporabite le dve ali tri družine pisav. Vsaka dodatna pisava je nova pr
 msgid "Keep together"
 msgstr "Ostanite skupaj"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Ohranja najbolj specifične dele"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Ohranjeno tako kot je"
@@ -4901,6 +4918,10 @@ msgstr "Besedilo razporedite vodoravno. Zasukani odseki se pogosto izgubijo ali 
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Postavitev"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Vodi s tem, zakaj ste primerni"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Glavna"
 msgid "Make default"
 msgstr "Nastavi kot privzeto"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Naj bo bolj natančno"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Naj bo krajši"
@@ -5288,6 +5314,10 @@ msgstr "Naj bo krajši"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Naredite prostor za naslednji korak."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Naredite odprtino močnejšo"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Nova prijava"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Nov pogovor"
 
@@ -6335,6 +6366,10 @@ msgstr "Odprite urejevalnik"
 msgid "Open in Offers"
 msgstr "Odpri v Ponudbah"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Odpri pismo"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Odprite javno stran"
@@ -6381,13 +6416,13 @@ msgstr "Odpri delovni prostor"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Odpiranje pogovora …"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Odpiranje datoteke"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Odpiranje pisma…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Pridobljeno {0} z uporabo {1}. Čas pridobivanja ne določa svežine izv
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Shrani zgodbo"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Shranite spremno pismo, preden ga izvozite."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Pred pošiljanjem shranite dokument."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Pošlje ta PDF vašemu konfiguriranemu ponudniku AI, namesto da bi prebral njegovo besedilno plast."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Pošlje vaše sporočilo, to prijavo (oglas, opombe, poslane dokumente) in vklopljeno Znanje povezavi {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Pošlje vaše sporočilo, prejšnja sporočila, to prijavo za delo (oglas, zapiske in poslane dokumente) ter vklopljene informacije iz razdelka Znanje v {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Čeki so mehanski. To vpraša jezikovni model, kako bi se lahko bralec o
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Svetovalec si iz vaših sporočil ne zapomni ničesar."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Svetovalec na tem strežniku ni nastavljen. Skrbnik strežnika mora nastaviti ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Svetovalec na tem strežniku ni nastavljen. Kdor ga upravlja, mora nastaviti ENCRYPTION_SECRET. Znanje, Ponudbe in vaše prijave delujejo tudi brez tega."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Trener potrebuje povezavo AI. Nič ni poslano, dokler ne vprašate."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Svetovalec vsako dejstvo predlaga v klepetu. Dokler se ne strinjate, se nič ne shrani."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Trener prebere objavo delovnega mesta, vaše opombe in tisto, kar ste poslali, in ve, da ste na {tabName}. Klepet prispe s Pomočnikom."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Poskusite {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Podčrtaj povezave"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Uporabi različico strežnika"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Uporabite šest števk Hex, na primer #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Za prejšnje spremembe uporabite Razveljavi v urejevalniku."
@@ -10188,6 +10226,10 @@ msgstr "Uporablja se, ko {connected} ne more brati strani. Račun ni potreben."
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Uporabniško ime"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Uporablja dejstva iz vašega življenjepisa"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Brez povezave ste. Poskusite znova, ko se znova povežete."
 msgid "You're up to date"
 msgstr "Na tekočem ste"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"
