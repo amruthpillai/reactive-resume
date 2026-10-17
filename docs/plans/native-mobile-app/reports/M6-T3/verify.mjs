@@ -461,4 +461,7 @@ for (const [name, run] of Object.entries(scenarios)) {
 	}
 }
 console.log(`\n${Object.keys(scenarios).length - failed}/${Object.keys(scenarios).length} scenarios passed`);
+// Completion integration: document and workspace entry points against the shipped handlers.
+await import("./completion.mjs");
+
 process.exit(failed ? 1 : 0);

@@ -174,9 +174,13 @@ export function CoachScreen({ offerIds }: CoachScreenProps) {
 				<ChatView
 					key={draftKey}
 					threadId={threadId}
-					createThread={async () =>
-						(await client.agent.threads.start({ scope: "career", ...(provider ? { aiProviderId: provider.id } : {}) }))
-							.id
+					createThread={async (scope) =>
+						(
+							await client.agent.threads.start(
+								{ scope: "career", ...(provider ? { aiProviderId: provider.id } : {}) },
+								{ context: { scope } },
+							)
+						).id
 					}
 					onThreadCreated={(id) => {
 						setThreadId(id);

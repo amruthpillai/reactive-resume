@@ -4,12 +4,14 @@ import type { AgentMessagesApi } from "./transport";
 import type { RouterOutput } from "@/api/client";
 import type { FileUIPart, UIMessage } from "ai";
 import { Chat, useChat } from "@ai-sdk/react";
+import { t } from "@lingui/core/macro";
+import { ORPCError } from "@orpc/client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { resumeAgentStream, sendAgentMessage } from "./transport";
 import { client, orpc, streamClient } from "@/api/client";
-import { useSession } from "@/auth/session";
+import { getAccountScope, useSession } from "@/auth/session";
 
 export type { MessageContext } from "./transport";
 export type ChatAttachment = { id: string; filename: string; mediaType: string };
@@ -92,10 +94,11 @@ export function transcriptOf(messages: readonly UIMessage[], labels: TranscriptL
 /** Conversations for the signed-in server, newest first. */
 export function useThreads() {
 	const session = useSession();
-	const options = orpc.agent.threads.list.queryOptions({ input: {} });
+	const scope = getAccountScope();
+	const options = orpc.agent.threads.list.queryOptions({ input: {}, context: { scope: scope ?? "" } });
 	return useQuery({
 		...options,
-		queryKey: [...options.queryKey, session.server],
+		queryKey: [...options.queryKey, scope],
 		enabled: session.status === "signed-in",
 	});
 }
@@ -103,18 +106,14 @@ export function useThreads() {
 export const refreshThreads = (queryClient: ReturnType<typeof useQueryClient>) =>
 	void queryClient.invalidateQueries({ queryKey: orpc.agent.threads.key() });
 
-const agentMessages: AgentMessagesApi = {
-	// The server validates the message against its own UI message schema.
-	send: (input, options) => streamClient.agent.messages.send(input as never, options),
-	resume: (input, options) => streamClient.agent.messages.resume(input, options),
-};
-
 type UseAssistantChatInput = {
 	threadId: string;
 	initialMessages: UIMessage[];
 	/** Read when a message is sent, so the chips always apply to the next message. */
 	context: MessageContext;
 	onFinish: () => void;
+	scope: string;
+	beforeSend?: (() => Promise<boolean>) | undefined;
 };
 
 /**
@@ -122,23 +121,42 @@ type UseAssistantChatInput = {
  * and only the newest message is sent (the server keeps the transcript).
  */
 /** Running replies are picked up by the caller (chat-view.tsx `recoverRun`), not on mount. */
-export function useAssistantChat({ threadId, initialMessages, context, onFinish }: UseAssistantChatInput) {
+export function useAssistantChat({
+	threadId,
+	initialMessages,
+	context,
+	onFinish,
+	scope,
+	beforeSend,
+}: UseAssistantChatInput) {
 	const contextRef = useRef(context);
 	const onFinishRef = useRef(onFinish);
+	const beforeSendRef = useRef(beforeSend);
 	useLayoutEffect(() => {
 		contextRef.current = context;
 		onFinishRef.current = onFinish;
+		beforeSendRef.current = beforeSend;
 	});
 
 	// One Chat per conversation (the caller keys it by thread), so callers can hold it outside render (chat-view.tsx).
 	const instance = useMemo(() => {
+		const agentMessages: AgentMessagesApi = {
+			// The server validates the UI message; bind every request to this conversation's account.
+			send: (input, options) => streamClient.agent.messages.send(input as never, { ...options, context: { scope } }),
+			resume: (input, options) => streamClient.agent.messages.resume(input, { ...options, context: { scope } }),
+		};
 		const chat: Chat<UIMessage> = new Chat<UIMessage>({
 			id: threadId,
 			messages: initialMessages,
 			transport: {
 				// The server's resumable stream replays the reply from its start, so the client starts the message over.
 				resumeStreamIsReplay: true,
-				sendMessages: (options) => sendAgentMessage(agentMessages, threadId, contextRef.current, options),
+				sendMessages: async (options) => {
+					if (beforeSendRef.current && !(await beforeSendRef.current()))
+						throw new ORPCError("PRECONDITION_FAILED", { message: t`Save the document before sending.` });
+					options.abortSignal?.throwIfAborted();
+					return sendAgentMessage(agentMessages, threadId, contextRef.current, options);
+				},
 				// A resumed run keeps the parts of the message from before it, as the chat shows them now.
 				reconnectToStream: ({ abortSignal }) =>
 					resumeAgentStream(agentMessages, threadId, {
@@ -152,7 +170,7 @@ export function useAssistantChat({ threadId, initialMessages, context, onFinish 
 		return chat;
 		// The initial messages are read once, when the chat is created.
 		// oxlint-disable-next-line react-hooks/exhaustive-deps -- the chat takes its messages once; it's keyed by thread
-	}, [threadId]);
+	}, [threadId, scope]);
 
 	return { ...useChat<UIMessage>({ chat: instance, throttle: 50 }), instance };
 }
@@ -168,11 +186,12 @@ export function useConversationConnection(
 	const queryClient = useQueryClient();
 	const staleId = summary && provider && summary.aiProviderId !== provider.id ? summary.id : null;
 	const providerId = provider?.id;
+	const scope = getAccountScope();
 	useEffect(() => {
-		if (!staleId || !providerId) return;
+		if (!staleId || !providerId || !scope) return;
 		void client.agent.threads
-			.update({ id: staleId, aiProviderId: providerId })
+			.update({ id: staleId, aiProviderId: providerId }, { context: { scope } })
 			.then(() => refreshThreads(queryClient))
 			.catch(() => undefined);
-	}, [staleId, providerId, queryClient]);
+	}, [staleId, providerId, queryClient, scope]);
 }

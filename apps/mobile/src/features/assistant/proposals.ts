@@ -15,8 +15,9 @@ import {
 	splitBlocks,
 	writeTarget,
 } from "@reactive-resume/resume/proposals";
+import { getAccountScope } from "@/auth/session";
 import { useResumeStore } from "@/draft";
-import { showToast } from "@/ui";
+import { dismissToast, showToast } from "@/ui";
 
 type ProposeEditsOutput = {
 	edits?: Array<Omit<Proposal, "source" | "target"> & { target: Record<string, string | undefined> }>;
@@ -56,16 +57,47 @@ export function toProposals(part: ToolPart, statuses: ReadonlyMap<string, Propos
 /** Applies proposals to the open resume as one undo step; the toast's Undo takes them back. */
 export function acceptResumeProposals(proposals: readonly Proposal[]) {
 	const store = useResumeStore.getState();
+	const scope = getAccountScope();
+	const id = store.document?.id;
+	if (!id || !store.data || store.locked) return;
 	store.update(
 		(draft) => {
 			for (const proposal of proposals) applyProposal(draft as ResumeData, proposal);
 		},
 		{ newStep: true },
 	);
-	showToast({
+	const accepted = useResumeStore.getState().data;
+	if (accepted === store.data) return;
+	let eligible = true;
+	const toastId = showToast({
 		message: proposals.length === 1 ? t`Edit applied` : t`${proposals.length} edits applied`,
-		action: { label: t`Undo`, onPress: () => useResumeStore.getState().undo() },
+		action: {
+			label: t`Undo`,
+			onPress: () => {
+				const current = useResumeStore.getState();
+				if (
+					eligible &&
+					getAccountScope() === scope &&
+					current.document?.id === id &&
+					current.data === accepted &&
+					!current.locked
+				)
+					current.undo();
+				else showToast({ message: t`Use the builder's Undo to undo earlier changes.` });
+			},
+		},
 	});
+	const unsubscribe = useResumeStore.subscribe((current) => {
+		if (getAccountScope() === scope && current.document?.id === id && current.data === accepted) return;
+		eligible = false;
+		dismissToast(toastId);
+		unsubscribe();
+	});
+	// Action toasts last up to 12 seconds with a screen reader; eligibility ends with monitoring.
+	setTimeout(() => {
+		eligible = false;
+		unsubscribe();
+	}, 12000);
 }
 
 // ---- Page markings ----
