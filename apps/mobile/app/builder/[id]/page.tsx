@@ -5,6 +5,8 @@ import { useSession } from "@/auth/session";
 import { useResumeStore } from "@/draft";
 import { nativeEnvironment } from "@/draft/native";
 import { ProposedEditsCaption, useMarkedResumeData } from "@/features/assistant/page-marks";
+import { usePreviewedDraft } from "@/features/design/draft";
+import { TemplatePreviewCaption } from "@/features/design/preview-caption";
 import { ResumePage } from "@/preview/page";
 import { Banner } from "@/ui";
 
@@ -21,8 +23,10 @@ export default function PageScreen() {
 	const draft = useResumeStore();
 	const session = useSession();
 	const current = draft.document?.id === id;
+	// On tablet this page sits beside Design: a template held there shows here.
+	const shown = usePreviewedDraft(current ? draft : { ...draft, data: null });
 	// The Assistant's pending edits, marked on the page (never saved).
-	const marked = useMarkedResumeData(id, current ? draft.data : null);
+	const marked = useMarkedResumeData(id, shown.data);
 	return (
 		<View style={{ flex: 1 }}>
 			<Stack.Screen options={{ title: t`Page`, headerTransparent: false }} />
@@ -39,12 +43,8 @@ export default function PageScreen() {
 				/>
 			) : null}
 			<ProposedEditsCaption resumeId={id} pending={marked.pending} />
-			<ResumePage
-				id={id}
-				draft={current ? draft : { ...draft, data: null }}
-				previewData={marked.data}
-				focused={nativeEnvironment.focused()}
-			/>
+			<ResumePage id={id} draft={shown} previewData={marked.data} focused={nativeEnvironment.focused()} />
+			<TemplatePreviewCaption />
 		</View>
 	);
 }
