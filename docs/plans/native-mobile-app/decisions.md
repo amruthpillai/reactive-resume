@@ -24,6 +24,8 @@ This freezes README §1 with the spike results. Agents must not re-open these de
 
 ## Constraints carried into the build
 
+- **Download-size budget (owner, 2026-10-17):** at most **50 MB** download per platform: the App Store download for one device, or the Play download for one ABI. Track it per wave from M1 with `npx expo export` plus a release build. If a wave adds more than 3 MB, explain why in its report. The known costs are the Forme engine (about 3.2 MB) and the JS bundle with the PDF pipeline (about 2.4 MB gzipped). Fonts download at runtime and are never bundled, except the two UI families.
+
 - **`packages/pdf`:** apply S2's `./native` adapter without the `arrayBuffer()` image fallback. Mobile streams images through `expo/fetch`.
 - **Polyfills:**
   - `crypto.getRandomValues`, through `expo-crypto`. This is approved as an addition to the §1.4 dependency list.
