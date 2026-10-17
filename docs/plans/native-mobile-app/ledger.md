@@ -31,8 +31,8 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | FIXING  | briefs/W5.md; JS-only                                                               |
-| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | REVIEW  | briefs/W5.md; JS-only                                                               |
+| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | MERGED  | briefs/W5.md; JS-only                                                               |
+| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | MERGED  | briefs/W5.md; JS-only                                                               |
 | M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | FIXING  | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | FIXING  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
