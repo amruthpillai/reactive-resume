@@ -15,6 +15,7 @@ let events = [],
 	picked,
 	uploadUrl,
 	shareFails,
+	exportFails,
 	signOutFails;
 const exported = { user: { name: "Fictional fixture" }, resumes: [], applications: [] };
 const reset = () => {
@@ -23,6 +24,7 @@ const reset = () => {
 	uploadUrl = "https://fixture.test/uploads/avatar.jpg";
 	picked = { canceled: false, assets: [{ uri: "file:///fixture.jpg" }] };
 	shareFails = false;
+	exportFails = false;
 	signOutFails = false;
 };
 class NativeFile {
@@ -33,6 +35,9 @@ class NativeFile {
 	get exists() {
 		return stored.has(this.uri);
 	}
+	get name() {
+		return this.uri.slice(this.uri.lastIndexOf("/") + 1);
+	}
 	async write(value) {
 		stored.set(this.uri, value);
 	}
@@ -42,13 +47,17 @@ class NativeFile {
 }
 globalThis.__m7 = {
 	File: NativeFile,
+	list: () => [...stored.keys()].map((uri) => new NativeFile(uri)),
 	mutation: (options) => {
 		callbacks.set(options.mutationKey.join("/"), options);
 		return {};
 	},
 	client: {
 		auth: {
-			exportData: async () => exported,
+			exportData: async () => {
+				if (exportFails) throw new Error("Fixture failure");
+				return exported;
+			},
 			updateProfile: async (input) => {
 				events.push(["profile", input]);
 				return { status: true };
@@ -78,30 +87,38 @@ globalThis.__m7 = {
 	pick: async () => picked,
 	toast: () => events.push("toast"),
 	route: (path) => events.push(["route", path]),
+	browse: async (url) => {
+		events.push(["browser", url]);
+	},
 };
 const modules = {
 	"@lingui/react/macro": 'export const useLingui=()=>({t:(s,...v)=>s.reduce((a,p,i)=>a+p+(v[i]??""),"")});',
 	"@tanstack/react-query":
-		"export const useMutation=globalThis.__m7.mutation;export const useQueryClient=()=>globalThis.__m7.queryClient;export const useIsMutating=()=>0;",
+		"export const useMutation=globalThis.__m7.mutation;export const useQueryClient=()=>globalThis.__m7.queryClient;export const useIsMutating=()=>0;export const useQuery=()=>({data:{apiKeys:[]},refetch:async()=>{}});",
 	react: 'export const useState=x=>[typeof x==="function"?x():x,()=>{}];',
 	"react/jsx-runtime":
 		'export const jsx=(type,props)=>({type,props});export const jsxs=jsx;export const Fragment="Fragment";',
 	"react-native": 'export const View="View";',
 	"expo-router": "export const router={replace:globalThis.__m7.route};",
-	"expo-file-system": 'export const File=globalThis.__m7.File;export const Paths={cache:"cache"};',
+	"expo-file-system":
+		'export const File=globalThis.__m7.File;export const Paths={cache:{list:globalThis.__m7.list,toString:()=>"cache"}};',
+	"expo-web-browser": "export const openBrowserAsync=globalThis.__m7.browse;",
 	"expo-sharing": "export const isAvailableAsync=async()=>true;export const shareAsync=globalThis.__m7.share;",
 	"expo-image-picker":
 		"export const requestCameraPermissionsAsync=async()=>({granted:true});export const launchCameraAsync=globalThis.__m7.pick;export const launchImageLibraryAsync=globalThis.__m7.pick;",
 	"@/api/client":
-		'export const client=globalThis.__m7.client;export const rest=globalThis.__m7.rest;export const orpc={auth:{getProfile:{key:()=>["profile"]}}};',
+		'export const client=globalThis.__m7.client;export const rest=globalThis.__m7.rest;export const orpc={auth:{getProfile:{key:()=>["profile"]},apiKeys:{list:{key:()=>["keys"],queryOptions:()=>({})}}}};',
 	"@/auth/session":
-		'export const signOut=globalThis.__m7.signOut;export const useSession=()=>({server:"https://fixture.test",status:"signed-in"});',
+		'export const signOut=globalThis.__m7.signOut;export const getServer=()=>"https://fixture.test";export const useSession=()=>({server:"https://fixture.test",status:"signed-in"});',
 	"@/ui":
-		'export const Avatar="Avatar",Button="Button",ListRow="ListRow",Sheet="Sheet",TextField="TextField",ConfirmDialog="ConfirmDialog";export const showToast=globalThis.__m7.toast;export const useTheme=()=>({space:{s2:8,s3:12,s4:16,s10:40}});',
+		'export const Avatar="Avatar",Button="Button",ListRow="ListRow",Sheet="Sheet",TextField="TextField",ConfirmDialog="ConfirmDialog",Banner="Banner",EmptyState="EmptyState",Text="Text";export const showToast=globalThis.__m7.toast;export const useTheme=()=>({space:{s2:8,s3:12,s4:16,s10:40}});',
+	"./layout": 'export const SettingsGroup="SettingsGroup";',
 };
 const hook = registerHooks({
 	resolve(specifier, context, next) {
 		if (specifier in modules) return { url: `m7:${specifier}`, shortCircuit: true };
+		if (specifier === "./browser")
+			return { url: new URL("apps/mobile/src/features/settings/browser.ts", root).href, shortCircuit: true };
 		if (specifier === "@/routes") return { url: new URL("apps/mobile/src/routes.ts", root).href, shortCircuit: true };
 		return next(specifier, context);
 	},
@@ -130,14 +147,33 @@ try {
 	const { ExportDataRow } = await import(new URL("apps/mobile/src/features/settings/export.tsx", root));
 	const { ProfileEditor } = await import(new URL("apps/mobile/src/features/settings/profile.tsx", root));
 	const { SignOutRow } = await import(new URL("apps/mobile/src/features/settings/sign-out.tsx", root));
+	const { ApiKeys } = await import(new URL("apps/mobile/src/features/settings/api-keys.tsx", root));
+	const { openAccountSettings } = await import(new URL("apps/mobile/src/features/settings/browser.ts", root));
+	const drain = async () => {
+		for (let i = 0; i < 15; i++) await Promise.resolve();
+	};
+	reset();
+	ApiKeys({ userId: "fixture" }).props.children[0].props.onPress();
+	await drain();
+	assert.deepEqual(events, [["browser", "https://fixture.test/dashboard/settings/ai"]]);
+	await openAccountSettings();
+	assert.deepEqual(events.at(-1), ["browser", "https://fixture.test/dashboard/settings/account"]);
 	reset();
 	ExportDataRow();
+	stored.set("cache/reactive-resume-1.json", "old personal data");
+	stored.set("cache/keep.json", "unrelated cache");
 	await callbacks.get("settings/export").mutationFn();
-	assert.equal(stored.size, 0, "export must remove temporary personal data after sharing");
-	reset();
+	assert.equal(stored.has("cache/reactive-resume-1.json"), false, "next export must sweep old account exports");
+	assert.equal(stored.get("cache/keep.json"), "unrelated cache");
+	assert.equal(stored.size, 2, "current export must remain readable after shareAsync resolves");
 	shareFails = true;
+	stored.set("cache/reactive-resume-2.json", "old personal data");
 	await assert.rejects(callbacks.get("settings/export").mutationFn());
-	assert.equal(stored.size, 0, "failed share must also remove temporary personal data");
+	assert.equal(stored.has("cache/reactive-resume-2.json"), false);
+	assert.equal(stored.size, 2, "share rejection also retains the current file until next export");
+	exportFails = true;
+	await assert.rejects(callbacks.get("settings/export").mutationFn());
+	assert.deepEqual([...stored.keys()], ["cache/keep.json"], "next export cleans up even when its network read fails");
 	reset();
 	ProfileEditor({ profile: { id: "fixture", name: "Fixture", username: "fixture", image: null } });
 	const photo = callbacks.get("settings/photo").mutationFn;
@@ -161,9 +197,6 @@ try {
 	reset();
 	await photo("remove");
 	assert.deepEqual(events, [["profile", { image: null }]]);
-	const drain = async () => {
-		for (let i = 0; i < 15; i++) await Promise.resolve();
-	};
 	for (const switchServer of [false, true]) {
 		reset();
 		const tree = SignOutRow({ switchServer });
@@ -179,7 +212,7 @@ try {
 	await drain();
 	assert.deepEqual(events, ["cancel", "signOut", "toast"]);
 	console.log(
-		"PASS: export cleanup (success/failure), avatar cancel/URL boundary/upload/remove, sign-out/server-switch ordering and failure recovery",
+		"PASS: browser destinations, retained share file and next-export sweep, avatar cancel/URL boundary/upload/remove, sign-out/server-switch ordering and failure recovery",
 	);
 } finally {
 	globalThis.FormData = originalFormData;

@@ -4,10 +4,8 @@ import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
 import { accountAuth, auth } from "@reactive-resume/auth/config";
 import * as schema from "@reactive-resume/db/schema";
-import { env } from "@reactive-resume/env/server";
 import { careerProfileDataSchema, careerWorkspaceSchema } from "@reactive-resume/schema/career";
 import { coverLetterSchema } from "@reactive-resume/schema/cover-letter/data";
-import { rateLimitConfig } from "@reactive-resume/utils/rate-limit";
 import { timezoneSchema } from "@reactive-resume/utils/timezone";
 import { protectedProcedure, publicProcedure } from "../../context";
 import { applicationDto } from "../../dto/application";
@@ -19,25 +17,10 @@ import {
 	careerStorySchema,
 } from "../../dto/career";
 import { resumeDto } from "../../dto/resume";
-import { createRateLimiter } from "../../redis";
+import { accountRateLimit } from "../../middleware/rate-limit";
 import { authService } from "./service";
 
-const accountLimiter = createRateLimiter("accountLimiter", {
-	maxRequests: rateLimitConfig.betterAuth.global.max,
-	window: rateLimitConfig.betterAuth.global.window * 1000,
-});
-
-const accountProcedure = protectedProcedure.use(async ({ context, next }) => {
-	if (process.env.NODE_ENV === "production" && !env.FLAG_DISABLE_API_RATE_LIMIT) {
-		const result = await accountLimiter.limit(`account:${context.user.id}`);
-		const reset = result.reset ?? Date.now() + 60_000;
-		context.resHeaders?.set("ratelimit-remaining", String(result.remaining));
-		context.resHeaders?.set("ratelimit-reset", String(reset));
-		if (!result.success) {
-			context.resHeaders?.set("retry-after", String(Math.max(1, Math.ceil((reset - Date.now()) / 1000))));
-			throw new ORPCError("TOO_MANY_REQUESTS", { data: { reset } });
-		}
-	}
+const accountProcedure = protectedProcedure.use(accountRateLimit).use(async ({ next }) => {
 	try {
 		return await next();
 	} catch (error) {
@@ -213,6 +196,7 @@ export const authRouter = {
 		}),
 
 	exportData: protectedProcedure
+		.use(accountRateLimit)
 		.route({
 			method: "GET",
 			path: "/auth/account/export",

@@ -10,19 +10,19 @@ export function ExportDataRow() {
 	const exportData = useMutation({
 		mutationKey: ["settings", "export"],
 		mutationFn: async () => {
+			for (const file of Paths.cache.list()) {
+				if (file instanceof File && /^reactive-resume-\d+\.json$/.test(file.name)) file.delete();
+			}
 			if (!(await Sharing.isAvailableAsync())) throw new Error("Sharing unavailable");
 			const data = await client.auth.exportData();
 			const file = new File(Paths.cache, `reactive-resume-${Date.now()}.json`);
-			try {
-				await file.write(`${JSON.stringify(data, null, 2)}\n`);
-				await Sharing.shareAsync(file.uri, {
-					mimeType: "application/json",
-					UTI: "public.json",
-					dialogTitle: t`Export everything`,
-				});
-			} finally {
-				if (file.exists) file.delete();
-			}
+			await file.write(`${JSON.stringify(data, null, 2)}\n`);
+			// Android recipients may still read this file after shareAsync resolves; sweep it on the next export.
+			await Sharing.shareAsync(file.uri, {
+				mimeType: "application/json",
+				UTI: "public.json",
+				dialogTitle: t`Export everything`,
+			});
 		},
 		onError: () => showToast({ message: t`Couldn't export. Try again.` }),
 	});

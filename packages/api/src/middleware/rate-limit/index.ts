@@ -50,6 +50,10 @@ const aiLimiter = createRateLimiter("aiLimiter", rateLimitConfig.orpc.aiRequest)
 const storageUploadLimiter = createRateLimiter("storageUploadLimiter", rateLimitConfig.orpc.storageUpload);
 const storageDeleteLimiter = createRateLimiter("storageDeleteLimiter", rateLimitConfig.orpc.storageDelete);
 const resumeMutationLimiter = createRateLimiter("resumeMutationLimiter", rateLimitConfig.orpc.resumeMutations);
+const accountLimiter = createRateLimiter("accountLimiter", {
+	maxRequests: rateLimitConfig.betterAuth.global.max,
+	window: rateLimitConfig.betterAuth.global.window * 1000,
+});
 const disabledLimiter = {
 	// oxlint-disable-next-line require-await -- The limiter contract returns a Promise even when rate limiting is disabled.
 	limit: async () => ({
@@ -60,6 +64,11 @@ const disabledLimiter = {
 };
 
 const productionLimiter = (limiter: Ratelimiter) => (isRateLimitEnabled ? limiter : disabledLimiter);
+
+export const accountRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
+	limiter: productionLimiter(accountLimiter),
+	key: ({ context }) => `account:${getUserKey(context)}`,
+});
 
 export const resumePasswordRateLimit = createRatelimitMiddleware<
 	ContextWithHeaders,

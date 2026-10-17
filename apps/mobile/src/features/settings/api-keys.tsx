@@ -42,7 +42,7 @@ export function ApiKeys({ userId }: ApiKeysProps) {
 				title={t`New API key`}
 				leading="arrow-square-out"
 				onPress={() => {
-					void openAccountSettings()
+					void openAccountSettings("/dashboard/settings/ai")
 						.then(() => keys.refetch())
 						.catch(() => showToast({ message: t`Couldn't open the browser. Try again.` }));
 				}}

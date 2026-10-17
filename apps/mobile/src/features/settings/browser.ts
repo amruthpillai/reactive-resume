@@ -1,6 +1,8 @@
 import { openBrowserAsync } from "expo-web-browser";
 import { getServer } from "@/auth/session";
 
-export function openAccountSettings(section = "") {
-	return openBrowserAsync(`${getServer()}/dashboard/settings/account${section ? `#${section}` : ""}`);
+export function openAccountSettings(
+	path: "/dashboard/settings/account" | "/dashboard/settings/ai" = "/dashboard/settings/account",
+) {
+	return openBrowserAsync(`${getServer()}${path}`);
 }
