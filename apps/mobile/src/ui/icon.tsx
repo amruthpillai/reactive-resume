@@ -84,6 +84,7 @@ import { KanbanIcon } from "phosphor-react-native/src/icons/Kanban";
 import { KeyIcon } from "phosphor-react-native/src/icons/Key";
 import { KeyboardIcon } from "phosphor-react-native/src/icons/Keyboard";
 import { LightningIcon } from "phosphor-react-native/src/icons/Lightning";
+import { LinkBreakIcon } from "phosphor-react-native/src/icons/LinkBreak";
 import { LinkSimpleHorizontalIcon } from "phosphor-react-native/src/icons/LinkSimpleHorizontal";
 import { LinkSimpleHorizontalBreakIcon } from "phosphor-react-native/src/icons/LinkSimpleHorizontalBreak";
 import { ListBulletsIcon } from "phosphor-react-native/src/icons/ListBullets";
@@ -259,6 +260,7 @@ const icons = {
 	key: KeyIcon,
 	keyboard: KeyboardIcon,
 	lightning: LightningIcon,
+	"link-break": LinkBreakIcon,
 	"link-simple-horizontal": LinkSimpleHorizontalIcon,
 	"link-simple-horizontal-break": LinkSimpleHorizontalBreakIcon,
 	"list-bullets": ListBulletsIcon,
@@ -304,6 +306,7 @@ const icons = {
 	"sign-out": SignOutIcon,
 	"sliders-horizontal": SlidersHorizontalIcon,
 	sparkle: SparkleIcon,
+	"terminal-window": TerminalWindowIcon,
 	"speaker-high": SpeakerHighIcon,
 	square: SquareIcon,
 	"square-split-horizontal": SquareSplitHorizontalIcon,
@@ -313,7 +316,6 @@ const icons = {
 	"stop-circle": StopCircleIcon,
 	sun: SunIcon,
 	tag: TagIcon,
-	"terminal-window": TerminalWindowIcon,
 	"text-aa": TextAaIcon,
 	"text-align-center": TextAlignCenterIcon,
 	"text-align-justify": TextAlignJustifyIcon,

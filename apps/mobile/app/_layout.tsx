@@ -18,7 +18,6 @@ import { Toaster, useTheme } from "@/ui";
 import { fontAssets } from "@/ui/fonts";
 import { initTheme } from "@/ui/theme";
 
-initTheme();
 void SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
@@ -74,6 +73,7 @@ export default function RootLayout() {
 	const [ready, setReady] = useState(false);
 
 	useEffect(() => {
+		initTheme();
 		void Promise.all([initI18n(), restoreSession()]).finally(() => setReady(true));
 	}, []);
 
