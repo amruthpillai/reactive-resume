@@ -193,7 +193,7 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 									))}
 								</Stack>
 							</View>
-							{tablet && page ? <View style={{ flex: 1 }}>{page}</View> : null}
+							{tablet && page ? <View style={{ flex: 1, paddingBottom: insets.bottom }}>{page}</View> : null}
 						</View>
 					</SafeAreaInsetsContext>
 					{!tablet && barPane ? <PaneBar panes={panes} active={barPane.pane} onSwitch={switchPane} /> : null}

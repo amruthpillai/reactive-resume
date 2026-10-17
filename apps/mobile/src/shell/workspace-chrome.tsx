@@ -29,6 +29,10 @@ export type WorkspaceChromeSlots = {
 
 const slot = createSlot<WorkspaceChromeSlots>();
 
+/** True for the workspace tabs; other `[tab]` values (`details`) get no workspace chrome. */
+export const isWorkspaceTab = (tab: string | undefined): tab is ApplicationTab =>
+	(WORKSPACE_TABS as readonly string[]).includes(tab ?? "");
+
 /** Fills the application workspace chrome from a screen inside `app/applications/[id]`. */
 export const useWorkspaceChrome = slot.useFill;
 
@@ -56,6 +60,8 @@ function Frame({ children }: { children: ReactNode }) {
 	// The tab is the child route's param, so the layout reads it globally.
 	const { tab } = useGlobalSearchParams<{ tab?: string }>();
 	const { colors, size, space } = useTheme();
+
+	if (!isWorkspaceTab(tab)) return <View style={{ flex: 1 }}>{children}</View>;
 
 	const labels: Record<ApplicationTab, string> = {
 		fit: t({ message: "Fit", context: "Application workspace tab: how well a job fits your experience" }),
