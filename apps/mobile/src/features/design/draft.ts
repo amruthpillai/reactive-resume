@@ -4,7 +4,7 @@ import { t } from "@lingui/core/macro";
 import { useEffect, useMemo } from "react";
 import { create } from "zustand";
 import { templateName } from "./presets";
-import { writeTo } from "./write";
+import { readOnlyDraft, writeTo } from "./write";
 import { useResumeStore } from "@/draft";
 import { showToast } from "@/ui";
 
@@ -45,7 +45,7 @@ export function applyTemplate(template: Template) {
 
 type PageDraft = Pick<ResumeDraftStore, "data" | "update" | "locked" | "undo">;
 
-/** What a page renders: the draft with the held template swapped in, read-only while it shows (no Fit). */
+/** What a page renders: the draft with the held template swapped in, read-only while it shows (no Fit, no Undo). */
 export function usePreviewedDraft<T extends PageDraft>(draft: T): T {
 	const template = usePreviewTemplate();
 	const { data } = draft;
@@ -53,5 +53,5 @@ export function usePreviewedDraft<T extends PageDraft>(draft: T): T {
 		() => (data && template ? { ...data, metadata: { ...data.metadata, template } } : data),
 		[data, template],
 	);
-	return template ? { ...draft, data: previewed, locked: true } : draft;
+	return template ? { ...readOnlyDraft(draft), data: previewed, locked: true } : draft;
 }

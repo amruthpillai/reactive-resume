@@ -16,3 +16,13 @@ export const writeTo =
 	(update: Update): DesignWrite =>
 	(key, mutate, discrete = false) =>
 		update(mutate, discrete ? { newStep: true } : { coalesceKey: `design.${key}` });
+
+/**
+ * A template preview is read-only: every action the draft exposes (update, undo, redo, Fit's write…) becomes a
+ * no-op that resolves, so neither a page control nor its Undo can change the saved draft while it shows.
+ */
+export function readOnlyDraft<T extends object>(draft: T): T {
+	return Object.fromEntries(
+		Object.entries(draft).map(([key, value]) => [key, typeof value === "function" ? () => Promise.resolve() : value]),
+	) as T;
+}

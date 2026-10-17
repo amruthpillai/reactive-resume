@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { produce } from "immer";
 import { createDraftStore } from "./src/draft/store.ts";
-import { writeTo } from "./src/features/design/write.ts";
+import { readOnlyDraft, writeTo } from "./src/features/design/write.ts";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { ACCENTS, contrastOver, darkenForWhite, MIN_CONTRAST, hexToRgba, rgbaToHex, parseColorInput, resetDesign, applyTextSize, matchDensity, applyDensity, TEMPLATES, matchesFilter } from "./src/features/design/presets.ts";
 import { dropAt, moveSection, moveToEnd, moveToNewPage, setFullWidth, deletePage, isVisibleSection } from "./src/features/design/layout.ts";
@@ -166,5 +166,20 @@ assert.equal(size(), 11);
 store.getState().undo();
 assert.equal(size(), before);
 ok("two stepper taps undo one at a time; a four-move slider drag undoes in one step");
+
+// Final review: a template preview cannot change the saved draft (Fit's Undo, update, redo)
+write("fit", (d) => void (d.metadata.page.marginY = start + 5), true); // Fit applied, its Undo shows
+const saved = JSON.stringify(store.getState().data);
+const previewing = readOnlyDraft(store.getState());
+previewing.undo();
+previewing.redo();
+previewing.update((d) => void (d.metadata.page.marginY = 0), { newStep: true });
+await previewing.flush();
+assert.equal(JSON.stringify(store.getState().data), saved);
+assert.equal(typeof previewing.undo, "function");
+assert.equal(previewing.data, store.getState().data);
+store.getState().undo(); // after the preview ends, Undo works again
+assert.equal(marginY(), start);
+ok("preview draft: undo/redo/update are no-ops; the real Undo still works afterwards");
 
 console.log(`all ${n} scenarios passed`);
