@@ -22,6 +22,8 @@ type ActiveEditor = {
 	selection: { start: number; end: number; text: string };
 	canImprove: boolean;
 	improve: () => void;
+	/** Marks the next report as the result of a toolbar command or link, so it's saved even after focus moved. */
+	command: () => void;
 };
 
 let active: ActiveEditor | null = null;
@@ -83,8 +85,9 @@ export function RichTextField({ label, value, onChange, hint, disabled = false, 
 
 	// Undo, Page's Fit and remote updates change the text from outside; load them while the field isn't focused.
 	useEffect(() => {
-		if (!session.external(value)) return;
-		ref.current?.setValue(value);
+		const markup = session.external(value);
+		if (markup === null) return;
+		ref.current?.setValue(markup);
 		readBaseline();
 	});
 
@@ -117,7 +120,8 @@ export function RichTextField({ label, value, onChange, hint, disabled = false, 
 			<EnrichedTextInput
 				ref={ref}
 				accessibilityLabel={label}
-				defaultValue={value}
+				// The initial markup only: changing defaultValue reloads the editor and moves the caret.
+				defaultValue={session.markup}
 				editable={editable}
 				autoFocus={autoFocus ?? false}
 				placeholderTextColor={colors.ink3}
@@ -155,6 +159,7 @@ export function RichTextField({ label, value, onChange, hint, disabled = false, 
 						selection: editor.current?.selection ?? { start: 0, end: 0, text: "" },
 						canImprove: false,
 						improve: startImprove,
+						command: session.command,
 					};
 					setActive(editor.current);
 				}}
@@ -204,8 +209,7 @@ export function RichTextField({ label, value, onChange, hint, disabled = false, 
 						const next = replaceLine(html, improving.index, improving.text, replacement);
 						if (next === null) return false;
 						onChange(next);
-						session.wrote(next);
-						ref.current?.setValue(next);
+						ref.current?.setValue(session.wrote(next));
 						setImproving(null);
 						return true;
 					}}
@@ -228,7 +232,10 @@ export function RichTextToolbar() {
 	const [linkOpen, setLinkOpen] = useState(false);
 	const [styleOpen, setStyleOpen] = useState(false);
 	// The last focused editor stays active after blur, so sheets keep working on it after taking focus.
-	const target = () => editor?.ref.current;
+	const target = () => {
+		editor?.command();
+		return editor?.ref.current;
+	};
 	const state = editor?.state;
 
 	const heading = state?.h1.isActive ? 1 : state?.h2.isActive ? 2 : state?.h3.isActive ? 3 : 0;
@@ -337,7 +344,7 @@ export function RichTextToolbar() {
 								/>
 							</View>
 						</ScrollView>
-						<Button variant="link" label={t`Done`} onPress={() => target()?.blur()} />
+						<Button variant="link" label={t`Done`} onPress={() => editor?.ref.current?.blur()} />
 						<View style={{ width: space.s3 }} />
 					</View>
 				</KeyboardStickyView>

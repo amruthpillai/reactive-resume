@@ -2,7 +2,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { View } from "react-native";
 import { useSession } from "@/auth/session";
-import { ResumeConflictSheet, useResumeDraft } from "@/draft";
+import { useResumeStore } from "@/draft";
 import { Outline } from "@/features/write/outline";
 import { Banner, EmptyState, useTheme } from "@/ui";
 
@@ -10,7 +10,8 @@ export default function WriteScreen() {
 	const { t } = useLingui();
 	const { colors } = useTheme();
 	const { id, imported } = useLocalSearchParams<{ id: string; imported?: string }>();
-	const draft = useResumeDraft(id);
+	// The builder layout owns the draft (and its conflict sheet); Write only reads it.
+	const draft = useResumeStore();
 	const session = useSession();
 	const current = draft.document?.id === id;
 
@@ -27,7 +28,6 @@ export default function WriteScreen() {
 				/>
 			) : null}
 			{current ? <Outline resumeId={id} imported={imported} /> : <EmptyState icon="hourglass" title={t`Loading…`} />}
-			<ResumeConflictSheet />
 		</View>
 	);
 }

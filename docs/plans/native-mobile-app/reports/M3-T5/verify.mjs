@@ -17,6 +17,11 @@ import {
 import {
 	applySectionDrop,
 	findEntry,
+	findPlacement,
+	getSectionObject,
+	NO_PAGES,
+	readData,
+	selectPages,
 	flattenOutline,
 	getOutlineRows,
 	moveItem,
@@ -29,6 +34,7 @@ import {
 	getLines,
 	lineAtCaret,
 	replaceLine,
+	toEnrichedHtml,
 } from "../../../../../apps/mobile/src/features/write/rich-text.ts";
 
 // immer resolves from the mobile app, as in the app bundle.
@@ -201,10 +207,10 @@ await check("an edit before the baseline arrives is held, then written once it's
 await check("undo and remote updates reload an unfocused editor without writing; focused editors keep typing", () => {
 	const session = createRichTextSession(RICH.project);
 	session.change(enriched(RICH.project));
-	assert.equal(session.external("<p>From another device</p>"), true);
+	assert.equal(session.external("<p>From another device</p>"), "<html>\n<p>From another device</p>\n</html>");
 	assert.equal(session.change(enriched("<p>From another device</p>")), null, "reload report is the new baseline");
 	session.focus();
-	assert.equal(session.external("<p>Remote while typing</p>"), false, "remote waits for blur (M3-T3 defers it)");
+	assert.equal(session.external("<p>Remote while typing</p>"), null, "remote waits for blur (M3-T3 defers it)");
 	assert.equal(session.change(enriched("<p>From another device</p>")), null);
 });
 
@@ -299,6 +305,79 @@ await check("Move to…: an entry moved out of a custom section removes the empt
 	assert.equal(next.customSections.some((custom) => custom.id === "custom"), false);
 	assert.equal(next.metadata.layout.pages.length, pages - 1, "its now-empty page goes too");
 	assert.ok(next.sections.projects.items.some((item) => item.id === "only"));
+});
+
+// Review round (Codex bf75f9a3). Component events are replayed in the order RichTextField receives them.
+
+await check("review 1: sheet selectors return stored values, so useSyncExternalStore snapshots are stable", async () => {
+	const f = fixture();
+	const getSnapshot = (selector) => selector(f.draft.store.getState());
+	const experience = { id: "experience", kind: "builtin", type: "experience" };
+	const selectors = [
+		readData(selectPages, NO_PAGES),
+		readData((data) => getSectionObject(data, experience) ?? null, null),
+	];
+	// Closed store: the fallbacks are constants.
+	for (const selector of selectors) assert.ok(Object.is(getSnapshot(selector), getSnapshot(selector)));
+	await f.draft.store.getState().open("resume");
+	for (const selector of selectors) assert.ok(Object.is(getSnapshot(selector), getSnapshot(selector)));
+	// The old selector built a new placement object per read, which React treats as a change every render.
+	const old = readData((data) => findPlacement(selectPages(data), "experience"), null);
+	assert.ok(!Object.is(getSnapshot(old), getSnapshot(old)), "fresh objects can't be selected");
+	assert.deepEqual(findPlacement(getSnapshot(selectors[0]), "experience"), { page: 0, column: "main" });
+});
+
+await check("review 2: typing never changes the editor's initial markup; reloads happen only while not focused", () => {
+	const session = createRichTextSession(RICH.project);
+	const mounted = session.markup;
+	session.change(enriched(RICH.project));
+	session.focus();
+	const edited = session.change("<html>\n<p>Open source dialogue editor, v2</p>\n</html>");
+	assert.equal(edited, "<p>Open source dialogue editor, v2</p>");
+	// The parent re-renders with the edited value: no reload while typing, and the mount markup is unchanged.
+	assert.equal(session.external(edited), null);
+	assert.equal(session.markup, mounted);
+	// Undo after leaving the field: one imperative, wrapped reload.
+	session.blur();
+	assert.equal(session.external(RICH.project), toEnrichedHtml(RICH.project));
+	assert.equal(session.external(RICH.project), null, "same value doesn't reload twice");
+});
+
+await check("review 3: editor markup is always the internal <html> form, in the editor's tag set", () => {
+	assert.equal(toEnrichedHtml("<p>Hi</p>"), "<html>\n<p>Hi</p>\n</html>");
+	assert.ok(toEnrichedHtml("<p>Hi</p>").length >= 13);
+	assert.equal(toEnrichedHtml(""), "<html>\n<p></p>\n</html>");
+	assert.equal(toEnrichedHtml("Plain & simple"), "<html>\n<p>Plain &amp; simple</p>\n</html>");
+	assert.equal(
+		toEnrichedHtml(RICH.experience),
+		"<html>\n<ul><li>Shipped three titles</li>\n<li>Cut load time by 35%</li>\n</ul>\n</html>",
+	);
+	assert.equal(
+		toEnrichedHtml('<p style="text-align: center"><strong>Lead</strong> <em>eng</em> <a href="https://x.dev" target="_blank">site</a><br/></p>'),
+		'<html>\n<p><b>Lead</b> <i>eng</i> <a href="https://x.dev">site</a><br></p>\n</html>',
+	);
+	// Canonical HTML survives the trip into the editor and back unchanged.
+	for (const html of ["<p>Hi</p>", "<p><b>A</b> <i>b</i></p><ul><li>One</li><li>Two</li></ul>", "<h2>Title</h2><p>x</p>"])
+		assert.equal(fromEnrichedHtml(toEnrichedHtml(html)), html);
+	assert.equal(createRichTextSession("<p>Hi</p>").markup, "<html>\n<p>Hi</p>\n</html>");
+});
+
+await check("review 4: a link set while its prompt has focus is saved; init echoes still aren't", () => {
+	const session = createRichTextSession(RICH.project);
+	// A command before the editor reported its load can't turn the load echo into a write.
+	session.command();
+	assert.equal(session.change(enriched(RICH.project)), null);
+	session.focus();
+	session.blur(); // The link prompt's text field takes focus.
+	session.command(); // Prompt submitted: setLink on the blurred editor.
+	const linked = '<html>\n<p><i>Open source</i> <a href="https://x.dev">dialogue editor</a>.</p>\n</html>';
+	assert.equal(session.change(linked), '<p><i>Open source</i> <a href="https://x.dev">dialogue editor</a>.</p>');
+	// A reload clears the command: its echo is a new baseline, not an edit.
+	assert.notEqual(session.external("<p>Remote</p>"), null);
+	assert.equal(session.change(enriched("<p>Remote</p>")), null);
+	// Toolbar marks while focused write as before.
+	session.focus();
+	assert.equal(session.change("<html>\n<p><b>Remote</b></p>\n</html>"), "<p><b>Remote</b></p>");
 });
 
 await drain();

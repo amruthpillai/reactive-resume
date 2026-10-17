@@ -4,7 +4,16 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { SECTION_TITLES } from "./fields";
 import { edit, useDeleteEntry, useEntry, useWriteData } from "./hooks";
-import { createEntry, getCompatibleMoveTargets, getEntries, getSectionObject, moveItem, resolveSection } from "./model";
+import {
+	createEntry,
+	getCompatibleMoveTargets,
+	getEntries,
+	getSectionObject,
+	moveItem,
+	NO_PAGES,
+	resolveSection,
+	selectPages,
+} from "./model";
 import { routes } from "@/routes";
 import { ListRow, Sheet } from "@/ui";
 
@@ -24,7 +33,7 @@ export function EntrySheet({ resumeId, section, entryId, open, onClose, onGone }
 	const entry = useEntry(section.id, entryId);
 	const deleteEntry = useDeleteEntry();
 	const [moving, setMoving] = useState(false);
-	const pages = useWriteData((data) => data.metadata.layout.pages, []);
+	const pages = useWriteData(selectPages, NO_PAGES);
 	const data = useWriteData((data) => data, null);
 	if (!entry || !data) return null;
 

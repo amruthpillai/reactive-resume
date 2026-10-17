@@ -4,7 +4,7 @@ import { useLingui } from "@lingui/react/macro";
 import { router } from "expo-router";
 import { useState } from "react";
 import { addEntry, edit, requestFocus, useSectionTitle, useSortByDate, useUndoToast, useWriteData } from "./hooks";
-import { deleteCustomSection, findPlacement, getSectionObject, placeSection } from "./model";
+import { deleteCustomSection, findPlacement, getSectionObject, NO_PAGES, placeSection, selectPages } from "./model";
 import { IconPickerSheet, PromptSheet } from "./pickers";
 import { routes } from "@/routes";
 import { Icon, ListRow, Sheet, Switch, Text, useTheme } from "@/ui";
@@ -26,9 +26,9 @@ export function SectionSheet({ resumeId, section, open, onClose, onMove }: Secti
 	const { colors, space } = useTheme();
 	const title = useSectionTitle(section);
 	const settings = useWriteData((data) => getSectionObject(data, section) ?? null, null);
-	const placement = useWriteData((data) => findPlacement(data, section.id), null);
-	const pageCount = useWriteData((data) => data.metadata.layout.pages.length, 0);
-	const fullWidth = useWriteData((data) => data.metadata.layout.pages.map((page) => page.fullWidth).join(), "");
+	// Select the stored pages and derive from them: a fresh object from a selector re-renders forever.
+	const layoutPages = useWriteData(selectPages, NO_PAGES);
+	const placement = findPlacement(layoutPages, section.id);
 	const sortByDate = useSortByDate();
 	const undoToast = useUndoToast();
 	const [page, setPage] = useState<Page>("menu");
@@ -75,7 +75,6 @@ export function SectionSheet({ resumeId, section, open, onClose, onMove }: Secti
 		/>
 	);
 	const back = <ListRow title={title} leading="caret-left" onPress={() => setPage("menu")} />;
-	const pages = fullWidth.split(",");
 
 	return (
 		<>
@@ -138,9 +137,9 @@ export function SectionSheet({ resumeId, section, open, onClose, onMove }: Secti
 				) : page === "move" ? (
 					<>
 						{back}
-						{Array.from({ length: pageCount }, (_, index) =>
+						{layoutPages.map((layout, index) =>
 							(["main", "sidebar"] as LayoutColumn[])
-								.filter((column) => column === "main" || pages[index] !== "true")
+								.filter((column) => column === "main" || !layout.fullWidth)
 								.map((column) =>
 									radio(
 										`${index}:${column}`,

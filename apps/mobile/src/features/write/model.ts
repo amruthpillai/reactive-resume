@@ -4,6 +4,7 @@ import type {
 	CustomSection,
 	CustomSectionItem,
 	CustomSectionType,
+	LayoutPage,
 	ResumeData,
 	SectionItem,
 	SectionType,
@@ -22,6 +23,18 @@ export type Entry = CustomSectionItem;
 export type WriteSection = { id: string; kind: "summary" | "builtin" | "custom"; type: CustomSectionType };
 
 export type LayoutColumn = "main" | "sidebar";
+
+/**
+ * A store selector over the open resume's data. Zustand re-renders when the selected value changes by `Object.is`,
+ * so `select` must return stored objects or primitives (never a fresh object) and `fallback` must be a constant.
+ */
+export const readData =
+	<T>(select: (data: ResumeData) => T, fallback: T) =>
+	(state: { data: ResumeData | null }) =>
+		state.data ? select(state.data) : fallback;
+
+export const NO_PAGES: readonly LayoutPage[] = [];
+export const selectPages = (data: ResumeData): readonly LayoutPage[] => data.metadata.layout.pages;
 
 export const BUILTIN_SECTION_TYPES: readonly SectionType[] = sectionTypeSchema.options.filter(
 	(type) => type !== "summary" && type !== "cover-letter",
@@ -294,8 +307,8 @@ export function placeSection(
 }
 
 /** Where a section sits in the layout, for Move to…'s checked choice. */
-export function findPlacement(data: Data, id: string): { page: number; column: LayoutColumn } | null {
-	for (const [page, layout] of data.metadata.layout.pages.entries()) {
+export function findPlacement(pages: readonly LayoutPage[], id: string): { page: number; column: LayoutColumn } | null {
+	for (const [page, layout] of pages.entries()) {
 		if (layout.main.includes(id)) return { page, column: "main" };
 		if (layout.sidebar.includes(id)) return { page, column: "sidebar" };
 	}

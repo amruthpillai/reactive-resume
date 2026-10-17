@@ -20,22 +20,81 @@ export function fromEnrichedHtml(html: string): string {
 	);
 }
 
+// The editor's own tag set. Anything else is unwrapped to its text when the editor loads it.
+const ENRICHED_TAGS = new Set([
+	"p",
+	"br",
+	"b",
+	"i",
+	"u",
+	"s",
+	"code",
+	"a",
+	"ul",
+	"ol",
+	"li",
+	"blockquote",
+	"h1",
+	"h2",
+	"h3",
+	"h4",
+	"h5",
+	"h6",
+]);
+const RENAMED: Record<string, string> = { strong: "b", em: "i", del: "s", strike: "s" };
+
+/**
+ * Converts resume HTML into the editor's internal `<html>…</html>` form. The wrapper makes both platforms use their
+ * own parser: iOS treats short unwrapped fragments (under 13 characters, like `<p>Hi</p>`) as literal text, and the
+ * fallback normaliser rewrites markup. Marks it can't represent are dropped here; that only reaches the resume if
+ * the field is edited (README §0).
+ */
+export function toEnrichedHtml(html: string): string {
+	let body = html.trim();
+	if (!body) return "<html>\n<p></p>\n</html>";
+	if (!body.includes("<")) body = `<p>${encode(body)}</p>`;
+	body = body
+		// TipTap wraps list items in paragraphs; the editor's items hold text directly.
+		.replaceAll(/<li(\s[^>]*)?>\s*<p(\s[^>]*)?>([\s\S]*?)<\/p>\s*<\/li>/gi, "<li>$3</li>")
+		.replaceAll(/<(\/?)([a-z][a-z0-9]*)(\s[^>]*)?(\/?)>/gi, (_match, close: string, name: string, attributes = "") => {
+			const tag = RENAMED[name.toLowerCase()] ?? name.toLowerCase();
+			if (!ENRICHED_TAGS.has(tag)) return "";
+			if (tag === "br") return "<br>";
+			if (tag === "a" && !close) {
+				const href = /\shref\s*=\s*("([^"]*)"|'([^']*)')/i.exec(attributes);
+				return href ? `<a href="${href[2] ?? href[3] ?? ""}">` : "<a>";
+			}
+			return `<${close}${tag}>`;
+		})
+		.replaceAll(/(<\/(?:p|li|ul|ol|blockquote|h[1-6])>)(?!\n)/g, "$1\n")
+		.trim();
+	return `<html>\n${body}\n</html>`;
+}
+
 export type RichTextSession = {
+	/** What the editor mounts with (its `defaultValue`), computed once: editing never reloads it. */
+	markup: string;
 	focus: () => void;
 	blur: () => void;
+	/**
+	 * An explicit user command (toolbar mark, link) is about to change the text. Its report is written even if a
+	 * prompt took focus from the field, until the field is focused again or reloaded.
+	 */
+	command: () => void;
 	/** The editor's serialisation of the stored value (`getHTML()` after it loaded it). May release a held edit. */
 	baseline: (enrichedHtml: string) => string | null;
-	/** The editor's HTML changed. Returns the HTML to write, or null: not focused, or no change from the stored value. */
+	/** The editor's HTML changed. Returns the HTML to write, or null: not an edit, or no change from the stored value. */
 	change: (enrichedHtml: string) => string | null;
-	/** The stored value changed from outside (undo, remote update). True when the editor must load it again. */
-	external: (value: string) => boolean;
-	/** The caller wrote `value` itself (Improve's Replace). */
-	wrote: (value: string) => void;
+	/** The stored value changed from outside (undo, remote update). Returns the markup to load, or null to keep typing. */
+	external: (value: string) => string | null;
+	/** The caller wrote `value` itself (Improve's Replace). Returns the markup to load. */
+	wrote: (value: string) => string;
 };
 
 /** One field's gate between the editor's reports and the draft store. Returned HTML is what the caller writes. */
 export function createRichTextSession(initial: string): RichTextSession {
 	let focused = false;
+	let commanded = false;
 	/** The stored value the editor loaded, kept verbatim. */
 	let original = initial;
 	/** The value last written or loaded. */
@@ -51,11 +110,16 @@ export function createRichTextSession(initial: string): RichTextSession {
 	};
 
 	return {
+		markup: toEnrichedHtml(initial),
 		focus: () => {
 			focused = true;
+			commanded = false;
 		},
 		blur: () => {
 			focused = false;
+		},
+		command: () => {
+			commanded = true;
 		},
 		baseline: (enrichedHtml) => {
 			if (baseline !== undefined) return null;
@@ -66,21 +130,24 @@ export function createRichTextSession(initial: string): RichTextSession {
 			return apply(next);
 		},
 		change: (enrichedHtml) => {
-			// Unfocused reports are the editor parsing the stored value: they are its baseline, not an edit.
-			if (!focused) baseline ??= enrichedHtml;
+			const editing = focused || (commanded && baseline !== undefined);
+			// Other reports are the editor parsing the stored value: they are its baseline, not an edit.
+			if (!editing) baseline ??= enrichedHtml;
 			// Until the baseline is known an edit is held, unless the field was empty (nothing to preserve).
 			else if (baseline === undefined && original) pending = enrichedHtml;
 			else return apply(enrichedHtml);
 			return null;
 		},
 		external: (value) => {
-			if (focused || value === last) return false;
+			if (focused || value === last) return null;
 			original = last = value;
 			baseline = pending = undefined;
-			return true;
+			commanded = false;
+			return toEnrichedHtml(value);
 		},
 		wrote: (value) => {
 			last = value;
+			return toEnrichedHtml(value);
 		},
 	};
 }

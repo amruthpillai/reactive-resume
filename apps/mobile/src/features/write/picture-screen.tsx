@@ -12,6 +12,7 @@ import { ColorPickerSheet, ColorRow, NumberField } from "./pickers";
 import { client, rest } from "@/api/client";
 import { useSession } from "@/auth/session";
 import { useIsResumeLocked, useResumeStore } from "@/draft";
+import { nativeEnvironment } from "@/draft/native";
 import { Button, ConfirmDialog, Segmented, Switch, Text, TextField, showToast, useTheme } from "@/ui";
 
 const MAX_UPLOAD = 10 * 1024 * 1024;
@@ -51,7 +52,10 @@ export function PictureScreen() {
 	const upload = useMutation({
 		mutationKey: ["write", "picture"],
 		mutationFn: async () => {
-			if (!picture) return;
+			// The upload belongs to the resume and account it started in.
+			const resumeId = useResumeStore.getState().document?.id;
+			const scope = await nativeEnvironment.scope();
+			if (!picture || !resumeId || !scope) return;
 			// Contain shows the whole photo, so it isn't cropped (as on web).
 			const crop = picture.fit === "cover";
 			const result = await ImagePicker.launchImageLibraryAsync({
@@ -73,6 +77,8 @@ export function PictureScreen() {
 			if (!uploaded || typeof uploaded !== "object" || !("url" in uploaded) || typeof uploaded.url !== "string")
 				throw new Error("Upload failed");
 			if (!resolvePictureUrl(uploaded.url, server)) throw new Error("Upload failed");
+			// Leaving for another resume, or switching account, while it uploaded: drop the result.
+			if (useResumeStore.getState().document?.id !== resumeId || (await nativeEnvironment.scope()) !== scope) return;
 			set("url", uploaded.url, true);
 		},
 		// The previous photo stays until an upload succeeds.

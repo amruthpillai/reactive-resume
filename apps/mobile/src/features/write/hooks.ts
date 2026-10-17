@@ -5,13 +5,13 @@ import { useLingui } from "@lingui/react/macro";
 import { useCallback } from "react";
 import { sortSectionItemsByPeriod } from "@reactive-resume/resume/section-sort";
 import { SECTION_TITLES } from "./fields";
-import { createEntry, findEntry, getEntries, getSectionObject } from "./model";
+import { createEntry, findEntry, getEntries, getSectionObject, readData } from "./model";
 import { useResumeStore } from "@/draft";
 import { showToast } from "@/ui";
 
 /** Reads from the open resume's data. Return stable values (data sub-objects or primitives). */
 export function useWriteData<T>(select: (data: ResumeData) => T, fallback: T): T {
-	return useResumeStore((state) => (state.data ? select(state.data) : fallback));
+	return useResumeStore(readData(select, fallback));
 }
 
 /** One entry, re-rendering only when it changes; null once it's deleted. */
