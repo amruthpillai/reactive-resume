@@ -1,7 +1,7 @@
 import type { WriteSection } from "./model";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { router, Stack } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import { useMemo, useState } from "react";
 import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -52,6 +52,7 @@ type EntryScreenProps = { resumeId: string; sectionId: string; entryId: string; 
 
 /** One entry, full screen: its fields, saved as you type. Deleting is immediate, with Undo in the toast. */
 export function EntryScreen({ resumeId, sectionId, entryId, focusField }: EntryScreenProps) {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const type = useWriteData((data) => getSectionType(data, sectionId) ?? null, null);
 	const section = useMemo<WriteSection | null>(

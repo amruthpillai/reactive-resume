@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} درخواست‌های شغلی برای خروجی."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} ویرایش اعمال شد"
@@ -1167,7 +1168,6 @@ msgstr "اتصال هوش مصنوعی"
 msgid "AI connections are unavailable."
 msgstr "اتصال‌های هوش مصنوعی در دسترس نیستند."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "اتصالات AI بارگیری نشدند."
@@ -1451,10 +1451,6 @@ msgstr "درخواست به‌روز شد"
 msgid "Application views"
 msgstr "نماهای درخواست‌ها"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "زبانه‌های فضای کاری درخواست"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "صعودی"
 msgid "Ask"
 msgstr "بپرسید"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "دربارهٔ این درخواست بپرسید…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "دربارهٔ گام بعدی شغلی خود بپرسید…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "دربارهٔ جستجوی کار خود بپرسید یا دستاوردی را بیاورید که می‌خواهید بهتر توضیحش دهید. پاسخ‌ها از مواردی که پایین‌تر روشن است استفاده می‌کنند و می‌گویند بر چه چیزی تکیه کرده‌اند."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "هر چیزی در مورد این شغل بپرسید"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "هر چیزی دربارهٔ این شغل بپرسید. مربی آگهی، یادداشت‌های شما و آنچه فرستاده‌اید را می‌خواند و می‌داند که در {tabName} هستید."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "بپرسید یا تغییری را توضیح دهید…"
 msgid "Aspect Ratio"
 msgstr "نسبت تصویر"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "دستیار"
@@ -2373,7 +2374,6 @@ msgstr "ارائه دهنده AI را وصل کنید"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "نام گفتگو"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "گفتگوها"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "گفتگوهای مربوط به یک شغل در فضای کاری همان شغل قرار دارند."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "مکالمات بارگیری نشد."
 
@@ -2979,6 +2981,7 @@ msgstr "نامه پوششی"
 msgid "Cover letter — {0}"
 msgstr "جلد نامه - {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "«{0}» حذف شود؟"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0} را حذف کنید"
 
@@ -3618,6 +3622,7 @@ msgstr "ویرایش"
 msgid "Edit {0}: {1}"
 msgstr "ویرایش {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "ویرایش اعمال شد"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "خط‌فاصله"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "می‌توانم این نامه و آگهی استخدام {company} را ببینم. پیشنهادها به‌صورت ویرایش‌هایی نمایش داده می‌شوند که می‌توانید آن‌ها را یکی‌یکی بپذیرید."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "می‌توانم این نامه را ببینم. پیشنهادها به‌صورت ویرایش‌هایی نمایش داده می‌شوند که می‌توانید آن‌ها را یکی‌یکی بپذیرید."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "من می توانم این رزومه و آگهی شغلی {company} را ببینم. پیشنهادها به عنوان ویرایش‌هایی که می‌توانید یکی یکی بپذیرید بازمی‌گردند."
 
@@ -4808,6 +4821,10 @@ msgstr "به دو یا سه خانوادهٔ فونت اکتفا کنید. هر 
 msgid "Keep together"
 msgstr "با هم باشید"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "خاص ترین قسمت ها را نگه می دارد"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "همانطور که هست نگهداری می شود"
@@ -4901,6 +4918,10 @@ msgstr "متن را به‌صورت افقی بچینید. بخش‌های چر�
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "چیدمان"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "منجر به دلیل مناسب بودن شما می شود"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "اصلی"
 msgid "Make default"
 msgstr "تنظیم به‌عنوان پیش‌فرض"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "آن را مشخص تر کنید"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "کوتاه ترش کن"
@@ -5288,6 +5314,10 @@ msgstr "کوتاه ترش کن"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "برای قدم بعدی جا باز کنید."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "دهانه را قوی تر کنید"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "درخواست جدید"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "گفتگوی جدید"
 
@@ -6335,6 +6366,10 @@ msgstr "ویرایشگر را باز کنید"
 msgid "Open in Offers"
 msgstr "باز کردن در «پیشنهادها»"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "باز کردن نامه"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "صفحه عمومی را باز کنید"
@@ -6381,13 +6416,13 @@ msgstr "باز کردن فضای کاری"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "باز کردن گفتگو…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "باز کردن فایل"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "در حال باز کردن نامه…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{0} با استفاده از {1} بازیابی شد. زمان بازی�
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "ذخیرهٔ داستان"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "قبل از صدور نامه، آن را ذخیره کنید."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "پیش از ارسال، سند را ذخیره کنید."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "این PDF را به جای خواندن لایه متنی آن به ارائه دهنده پیکربندی شده AI شما ارسال می کند."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "پیام شما، این درخواست (آگهی، یادداشت‌ها، اسناد ارسال‌شده) و دانسته‌های روشن را به {connection} می‌فرستد."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "پیام شما، پیام‌های قبلی، این درخواست شغلی (آگهی، یادداشت‌ها و مدارک ارسال‌شده) و اطلاعات فعال بخش دانش را به {label} می‌فرستد."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "چک ها مکانیکی هستند. این از یک مدل زبان م
 msgid "The coach doesn't remember anything from your messages."
 msgstr "مربی چیزی از پیام‌های شما به خاطر نمی‌سپارد."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "مربی در این سرور راه‌اندازی نشده است. مدیر سرور باید ENCRYPTION_SECRET را تنظیم کند."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "مربی در این سرور راه‌اندازی نشده است. کسی که آن را اداره می‌کند باید ENCRYPTION_SECRET را تنظیم کند. دانسته‌ها، پیشنهادها و درخواست‌های شما بدون آن کار می‌کنند."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "مربی به اتصال AI نیاز دارد. تا شما نپرسید چیزی ارسال نمی شود."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "مربی هر واقعیت را در گفتگو پیشنهاد می‌دهد. تا موافقت نکنید چیزی ذخیره نمی‌شود."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "مربی آگهی استخدام، یادداشت‌های شما و آنچه ارسال کرده‌اید را می‌خواند و می‌داند که در {tabName} هستید. چت با دستیار وارد می‌شود."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "{suggestion} را امتحان کنید"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "زیر لینک ها خط بکشید"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "از نسخه سرور استفاده کنید"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "از شش رقم در مبنای شانزده، مانند #3E6B4F، استفاده کنید."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "از لغو سازنده برای لغو تغییرات قبلی استفاده کنید."
@@ -10188,6 +10226,10 @@ msgstr "زمانی استفاده می‌شود که {connected} نمی‌توا
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "نام کاربری"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "از حقایق رزومه شما استفاده می کند"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "شما آفلاین هستید. وقتی دوباره وصل شدید د
 msgid "You're up to date"
 msgstr "همه‌چیز به‌روز است"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

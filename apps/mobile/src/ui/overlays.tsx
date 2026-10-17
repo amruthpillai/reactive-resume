@@ -3,7 +3,7 @@ import type { BottomSheetFooterProps } from "@gorhom/bottom-sheet";
 import type { ReactNode } from "react";
 import { BottomSheetBackdrop, BottomSheetFooter, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useLingui } from "@lingui/react/macro";
-import { createContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { createContext, use, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
 	AccessibilityInfo,
 	KeyboardAvoidingView,
@@ -88,6 +88,7 @@ function BottomSheet({
 	headerEnd,
 	padded = true,
 }: SheetProps) {
+	const nested = use(InSheetContext);
 	const { colors, radius, shadows, size, space } = useTheme();
 	const insets = useSafeAreaInsets();
 	const { height } = useWindowDimensions();
@@ -157,6 +158,8 @@ function BottomSheet({
 	return (
 		<BottomSheetModal
 			ref={ref}
+			// Nested setup/picker sheets must keep their parent mounted and presented.
+			stackBehavior={nested ? "push" : "switch"}
 			// Keep the sheet's controls individually reachable by VoiceOver instead of one adjustable group.
 			accessible={false}
 			onDismiss={onDismiss}

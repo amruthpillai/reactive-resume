@@ -2,7 +2,7 @@ import type { MessageContext, ThreadSummary } from "./chat";
 import type { AssistantDocument } from "./document";
 import type { IconName } from "@/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -32,7 +32,7 @@ export type AssistantScreenProps = {
 };
 
 /** Another document's conversation opens that document, with the Assistant on it. */
-function openElsewhere(thread: ThreadSummary) {
+function openElsewhere(router: ReturnType<typeof useRouter>, thread: ThreadSummary) {
 	if (thread.workingResumeId && !thread.coverLetterId) {
 		router.replace(routes.builder(thread.workingResumeId));
 		router.push({ pathname: routes.assistant(thread.workingResumeId), params: { thread: thread.id } });
@@ -93,6 +93,7 @@ type DocumentAssistantScreenProps = Omit<AssistantScreenProps, "resumeId"> & {
 };
 
 function DocumentAssistantScreen(props: DocumentAssistantScreenProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
 	const session = useSession();
@@ -125,7 +126,7 @@ function DocumentAssistantScreen(props: DocumentAssistantScreenProps) {
 	};
 
 	const openThread = (thread: ThreadSummary) => {
-		if (!document || !belongsTo(thread, document)) return openElsewhere(thread);
+		if (!document || !belongsTo(thread, document)) return openElsewhere(router, thread);
 		setDraftKey((key) => key + 1);
 		setContext({ document: true, posting: true });
 		setSelected(thread.id);
@@ -222,7 +223,7 @@ function DocumentAssistantScreen(props: DocumentAssistantScreenProps) {
 				privacy={disclosure(t, document, context, label)}
 				placeholder={t`Ask, or describe a change…`}
 				assistantName={t`Assistant`}
-				disabled={document.locked}
+				disabled={document.locked || !providers.hasAIProvider}
 				prompt={ask}
 				onPromptSent={() => setAsk(null)}
 				onSwitchModel={() => setModelOpen(true)}
@@ -253,6 +254,7 @@ function DocumentAssistantScreen(props: DocumentAssistantScreenProps) {
 	const gate = (
 		<ProviderGate
 			providers={providers}
+			readOnly={view === "history" || threadId !== null}
 			threadsError={threads.error}
 			loading={threads.isPending}
 			onRetry={() => {

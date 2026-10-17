@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getDocumentAsync } from "expo-document-picker";
 import { File } from "expo-file-system";
 import { getNetworkStateAsync } from "expo-network";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { forEachDatedEntry } from "@reactive-resume/schema/resume/dates";
@@ -22,6 +22,7 @@ import { Banner, Button, Card, ListRow, Screen, SelectSheet, Switch, Text, TextF
 type Step = "choose" | "copy" | "import";
 
 export function NewDocument() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
 	const params = useLocalSearchParams<{ step?: string; sourceResumeId?: string; applicationId?: string }>();

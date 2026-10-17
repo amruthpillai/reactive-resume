@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "ರಫ್ತು ಮಾಡಲು {0} ಅರ್ಜಿಗಳು."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} ಸಂಪಾದನೆಗಳನ್ನು ಅನ್ವಯಿಸಲಾಗಿದೆ"
@@ -1167,7 +1168,6 @@ msgstr "AI ಸಂಪರ್ಕ"
 msgid "AI connections are unavailable."
 msgstr "AI ಸಂಪರ್ಕಗಳು ಲಭ್ಯವಿಲ್ಲ."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI ಸಂಪರ್ಕಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗಲಿಲ್ಲ."
@@ -1451,10 +1451,6 @@ msgstr "ಅರ್ಜಿಯನ್ನು ನವೀಕರಿಸಲಾಗಿದೆ"
 msgid "Application views"
 msgstr "ಅರ್ಜಿ ವೀಕ್ಷಣೆಗಳು"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "ಅರ್ಜಿ ಕಾರ್ಯಸ್ಥಳದ ಟ್ಯಾಬ್‌ಗಳು"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "ಆರೋಹಣ"
 msgid "Ask"
 msgstr "ಕೇಳು"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "ಈ ಅರ್ಜಿಯ ಬಗ್ಗೆ ಕೇಳಿ…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "ನಿಮ್ಮ ಮುಂದಿನ ವೃತ್ತಿಜೀವನದ ಹೆಜ್ಜೆಯ ಬಗ್ಗೆ ಕೇಳಿ…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "ನಿಮ್ಮ ಉದ್ಯೋಗ ಹುಡುಕಾಟದ ಬಗ್ಗೆ ಕೇಳಿ, ಅಥವಾ ನೀವು ಇನ್ನೂ ಚೆನ್ನಾಗಿ ವಿವರಿಸಲು ಬಯಸುವ ಸಾಧನೆಯನ್ನು ತನ್ನಿ. ಉತ್ತರಗಳು ಕೆಳಗೆ ಆನ್ ಮಾಡಿರುವುದನ್ನು ಬಳಸುತ್ತವೆ ಮತ್ತು ಅವು ಯಾವುದನ್ನು ಆಧರಿಸಿವೆ ಎಂದು ಹೇಳುತ್ತವೆ."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "ಈ ಕೆಲಸದ ಬಗ್ಗೆ ಏನು ಬೇಕಾದರೂ ಕೇಳಿ"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "ಈ ಉದ್ಯೋಗದ ಬಗ್ಗೆ ಏನನ್ನಾದರೂ ಕೇಳಿ. ಕೋಚ್ ಉದ್ಯೋಗ ಜಾಹೀರಾತು, ನಿಮ್ಮ ಟಿಪ್ಪಣಿಗಳು ಮತ್ತು ನೀವು ಕಳುಹಿಸಿದ್ದನ್ನು ಓದುತ್ತದೆ, ಮತ್ತು ನೀವು {tabName} ನಲ್ಲಿದ್ದೀರಿ ಎಂದು ಅದಕ್ಕೆ ತಿಳಿದಿದೆ."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "ಬದಲಾವಣೆಯನ್ನು ಕೇಳಿ ಅಥವಾ ವಿವ
 msgid "Aspect Ratio"
 msgstr "ಆಕಾರ ಅನುಪಾತ"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "ಸಹಾಯಕ"
@@ -2373,7 +2374,6 @@ msgstr "AI ಪೂರೈಕೆದಾರರನ್ನು ಸಂಪರ್ಕಿಸ�
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "ಸಂಭಾಷಣೆಯ ಹೆಸರು"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "ಸಂಭಾಷಣೆಗಳು"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "ಒಂದು ಉದ್ಯೋಗದ ಕುರಿತ ಸಂಭಾಷಣೆಗಳು ಅದರ ಕಾರ್ಯಕ್ಷೇತ್ರದಲ್ಲಿ ಇರುತ್ತವೆ."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "ಸಂಭಾಷಣೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ."
 
@@ -2979,6 +2981,7 @@ msgstr "ಕವರ್ ಲೆಟರ್"
 msgid "Cover letter — {0}"
 msgstr "ಕವರ್ ಲೆಟರ್ - {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "“{0}” ಅಳಿಸುವುದೇ?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0} ಅಳಿಸಿ"
 
@@ -3618,6 +3622,7 @@ msgstr "ಸಂಪಾದಿಸಿ"
 msgid "Edit {0}: {1}"
 msgstr "ಎಡಿಟ್ ಮಾಡಿ {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "ಸಂಪಾದನೆ ಅನ್ವಯಿಸಲಾಗಿದೆ"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "ಹೈಫನೇಶನ್"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "ಈ ಪತ್ರ ಮತ್ತು {company} ಸಂಸ್ಥೆಯ ಉದ್ಯೋಗ ಪ್ರಕಟಣೆಯನ್ನು ನಾನು ನೋಡಬಹುದು. ಸಲಹೆಗಳು ಬದಲಾವಣೆಗಳಾಗಿ ಕಾಣಿಸುತ್ತವೆ; ಅವುಗಳನ್ನು ನೀವು ಒಂದೊಂದಾಗಿ ಸ್ವೀಕರಿಸಬಹುದು."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "ಈ ಪತ್ರವನ್ನು ನಾನು ನೋಡಬಹುದು. ಸಲಹೆಗಳು ಬದಲಾವಣೆಗಳಾಗಿ ಕಾಣಿಸುತ್ತವೆ; ಅವುಗಳನ್ನು ನೀವು ಒಂದೊಂದಾಗಿ ಸ್ವೀಕರಿಸಬಹುದು."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "ನಾನು ಈ ರೆಸ್ಯೂಮ್ ಮತ್ತು {company} ಉದ್ಯೋಗ ಜಾಹೀರಾತನ್ನು ನೋಡಬಹುದು. ನೀವು ಒಂದೊಂದಾಗಿ ಸ್ವೀಕರಿಸಬಹುದಾದ ಸಂಪಾದನೆಗಳಂತೆ ಸಲಹೆಗಳು ಹಿಂತಿರುಗುತ್ತವೆ."
 
@@ -4808,6 +4821,10 @@ msgstr "ಎರಡು ಅಥವಾ ಮೂರು ಫಾಂಟ್ ಕುಟುಂ�
 msgid "Keep together"
 msgstr "ಒಟ್ಟಿಗೆ ಇರಿಸಿ"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "ಅತ್ಯಂತ ನಿರ್ದಿಷ್ಟವಾದ ಭಾಗಗಳನ್ನು ಇಡುತ್ತದೆ"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "ಹಾಗೆಯೇ ಇಡಲಾಗಿದೆ"
@@ -4901,6 +4918,10 @@ msgstr "ಪಠ್ಯವನ್ನು ಅಡ್ಡಡ್ಡಲಾಗಿ ಜೋಡ�
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "ಲೇಔಟ್‌"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "ನೀವು ಏಕೆ ಹೊಂದಿಕೊಳ್ಳುತ್ತೀರಿ ಎಂಬುದಕ್ಕೆ ಕಾರಣವಾಗುತ್ತದೆ"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "ಮುಖ್ಯ"
 msgid "Make default"
 msgstr "ಡೀಫಾಲ್ಟ್ ಮಾಡಿ"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "ಅದನ್ನು ಹೆಚ್ಚು ನಿರ್ದಿಷ್ಟವಾಗಿ ಮಾಡಿ"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "ಅದನ್ನು ಚಿಕ್ಕದಾಗಿಸಿ"
@@ -5288,6 +5314,10 @@ msgstr "ಅದನ್ನು ಚಿಕ್ಕದಾಗಿಸಿ"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "ಮುಂದಿನ ಹಂತಕ್ಕೆ ಸ್ಥಳಾವಕಾಶ ಮಾಡಿ."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "ತೆರೆಯುವಿಕೆಯನ್ನು ಬಲಗೊಳಿಸಿ"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "ಹೊಸ ಅರ್ಜಿ"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "ಹೊಸ ಸಂಭಾಷಣೆ"
 
@@ -6335,6 +6366,10 @@ msgstr "ಇನ್ ಎಡಿಟರ್ ತೆರೆಯಿರಿ"
 msgid "Open in Offers"
 msgstr "“ಆಫರ್‌ಗಳು” ನಲ್ಲಿ ತೆರೆಯಿರಿ"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "ಪತ್ರ ತೆರೆಯಿರಿ"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "ಸಾರ್ವಜನಿಕ ಪುಟವನ್ನು ತೆರೆಯಿರಿ"
@@ -6381,13 +6416,13 @@ msgstr "ಕಾರ್ಯಕ್ಷೇತ್ರವನ್ನು ತೆರೆಯಿ�
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "ಸಂವಾದವನ್ನು ತೆರೆಯಲಾಗುತ್ತಿದೆ..."
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "ಫೈಲ್ ತೆರೆಯಲಾಗುತ್ತಿದೆ"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "ಪತ್ರವನ್ನು ತೆರೆಯಲಾಗುತ್ತಿದೆ…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{1} ಬಳಸಿಕೊಂಡು {0} ಅನ್ನು ಮರುಪಡೆ�
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "ಕಥೆಯನ್ನು ಉಳಿಸಿ"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "ಕವರ್ ಲೆಟರ್ ಅನ್ನು ರಫ್ತು ಮಾಡುವ ಮೊದಲು ಅದನ್ನು ಉಳಿಸಿ."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "ಕಳುಹಿಸುವ ಮೊದಲು ದಾಖಲೆಯನ್ನು ಉಳಿಸಿ."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "ಈ PDF ಅನ್ನು ಅದರ ಪಠ್ಯ ಪದರವನ್ನು ಓದುವ ಬದಲು ನಿಮ್ಮ ಕಾನ್ಫಿಗರ್ ಮಾಡಿದ AI ಪೂರೈಕೆದಾರರಿಗೆ ಕಳುಹಿಸುತ್ತದೆ."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "ನಿಮ್ಮ ಸಂದೇಶ, ಈ ಅರ್ಜಿ (ಉದ್ಯೋಗ ಜಾಹೀರಾತು, ಟಿಪ್ಪಣಿಗಳು, ಕಳುಹಿಸಿದ ಡಾಕ್ಯುಮೆಂಟ್‌ಗಳು) ಮತ್ತು ಆನ್ ಮಾಡಿರುವ ಜ್ಞಾನವನ್ನು {connection} ಗೆ ಕಳುಹಿಸುತ್ತದೆ."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "ನಿಮ್ಮ ಸಂದೇಶ, ಹಿಂದಿನ ಸಂದೇಶಗಳು, ಈ ಉದ್ಯೋಗ ಅರ್ಜಿ (ಪ್ರಕಟಣೆ, ಟಿಪ್ಪಣಿಗಳು ಮತ್ತು ಕಳುಹಿಸಿದ ದಾಖಲೆಗಳು) ಹಾಗೂ ಜ್ಞಾನ ವಿಭಾಗದಲ್ಲಿ ಸಕ್ರಿಯಗೊಳಿಸಿದ ಮಾಹಿತಿಯನ್ನು {label} ಗೆ ಕಳುಹಿಸುತ್ತದೆ."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "ಚೆಕ್‌ಗಳು ಯಾಂತ್ರಿಕವಾಗಿವೆ. ನ
 msgid "The coach doesn't remember anything from your messages."
 msgstr "ಕೋಚ್ ನಿಮ್ಮ ಸಂದೇಶಗಳಿಂದ ಏನನ್ನೂ ನೆನಪಿಟ್ಟುಕೊಳ್ಳುವುದಿಲ್ಲ."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "ಈ ಸರ್ವರ್‌ನಲ್ಲಿ ಕೋಚ್ ಅನ್ನು ಹೊಂದಿಸಲಾಗಿಲ್ಲ. ಸರ್ವರ್ ನಿರ್ವಾಹಕರು ENCRYPTION_SECRET ಅನ್ನು ಹೊಂದಿಸಬೇಕು."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "ಈ ಸರ್ವರ್‌ನಲ್ಲಿ ಕೋಚ್ ಅನ್ನು ಹೊಂದಿಸಲಾಗಿಲ್ಲ. ಇದನ್ನು ನಡೆಸುವವರು ENCRYPTION_SECRET ಅನ್ನು ಹೊಂದಿಸಬೇಕು. ಜ್ಞಾನ, ಆಫರ್‌ಗಳು ಮತ್ತು ನಿಮ್ಮ ಅರ್ಜಿಗಳು ಅದಿಲ್ಲದೆಯೂ ಕೆಲಸ ಮಾಡುತ್ತವೆ."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "ವೃತ್ತಿಜೀವನದ ಕೋಚ್‌ಗೆ AI ಸಂಪರ್ಕ ಬೇಕು. ನೀವು ಕೇಳುವವರೆಗೆ ಏನನ್ನೂ ಕಳುಹಿಸುವುದಿಲ್ಲ."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "ಕೋಚ್ ಪ್ರತಿಯೊಂದು ಸಂಗತಿಯನ್ನು ಚಾಟ್‌ನಲ್ಲಿ ಪ್ರಸ್ತಾಪಿಸುತ್ತದೆ. ನೀವು ಒಪ್ಪುವವರೆಗೆ ಏನನ್ನೂ ಉಳಿಸಲಾಗುವುದಿಲ್ಲ."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "ಕೋಚ್ ಜಾಹೀರಾತು, ನಿಮ್ಮ ಟಿಪ್ಪಣಿಗಳು ಮತ್ತು ನೀವು ಕಳುಹಿಸಿದ್ದನ್ನು ಓದುತ್ತಾರೆ; ನೀವು {tabName} ನಲ್ಲಿರುವುದು ಅವರಿಗೆ ತಿಳಿದಿರುತ್ತದೆ. ಚಾಟ್ ಸಹಾಯಕದಲ್ಲಿ ಕಾಣುತ್ತದೆ."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "{suggestion} ಪ್ರಯತ್ನಿಸಿ"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "ಲಿಂಕ್‌ಗಳನ್ನು ಅಂಡರ್‌ಲೈನ್ ಮ�
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "ಸರ್ವರ್ ಆವೃತ್ತಿಯನ್ನು ಬಳಸಿ"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "#3E6B4F ನಂತಹ ಆರು ಹೆಕ್ಸಾಡೆಸಿಮಲ್ ಅಂಕೆಗಳನ್ನು ಬಳಸಿ."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "ಹಿಂದಿನ ಬದಲಾವಣೆಗಳನ್ನು ಹಿಂತೆಗೆದುಕೊಳ್ಳಲು ಬಿಲ್ಡರ್‌ನ ರದ್ದುಮಾಡು ಬಳಸಿ."
@@ -10188,6 +10226,10 @@ msgstr "{connected} ಪುಟವನ್ನು ಓದಲು ಸಾಧ್ಯವಾ�
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "ಬಳಕೆದಾರರ ಹೆಸರು"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "ನಿಮ್ಮ ರೆಸ್ಯೂಮೆಯಿಂದ ಸತ್ಯಗಳನ್ನು ಬಳಸುತ್ತದೆ"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "ನೀವು ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿರುವಿರ�
 msgid "You're up to date"
 msgstr "ನೀವು ಎಲ್ಲವನ್ನೂ ನೋಡಿದ್ದೀರಿ"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

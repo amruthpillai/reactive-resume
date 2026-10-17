@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} αιτήσεις προς εξαγωγή."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "Εφαρμόστηκαν {0} τροποποιήσεις"
@@ -1167,7 +1168,6 @@ msgstr "Σύνδεση AI"
 msgid "AI connections are unavailable."
 msgstr "Οι συνδέσεις AI δεν είναι διαθέσιμες."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "Δεν ήταν δυνατή η φόρτωση των συνδέσεων AI."
@@ -1451,10 +1451,6 @@ msgstr "Η αίτηση ενημερώθηκε"
 msgid "Application views"
 msgstr "Προβολές αιτήσεων"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Καρτέλες χώρου εργασίας αίτησης"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Αύξουσα"
 msgid "Ask"
 msgstr "Παρακαλώ"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Ρωτήστε για αυτή την αίτηση…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Ρωτήστε για το επόμενο βήμα της καριέρας σας…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Ρωτήστε για την αναζήτησή σας ή φέρτε ένα επίτευγμα που θέλετε να εξηγήσετε καλύτερα. Οι απαντήσεις χρησιμοποιούν ό,τι είναι ενεργό παρακάτω και αναφέρουν σε τι βασίστηκαν."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Ρωτήστε οτιδήποτε για αυτή τη δουλειά"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Ρωτήστε οτιδήποτε για αυτή τη θέση. Ο σύμβουλος διαβάζει την αγγελία, τις σημειώσεις σας και ό,τι στείλατε, και ξέρει ότι βρίσκεστε στην καρτέλα {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Ρωτήστε ή περιγράψτε μια αλλαγή…"
 msgid "Aspect Ratio"
 msgstr "Αναλογία διαστάσεων"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Βοηθός"
@@ -2373,7 +2374,6 @@ msgstr "Συνδέστε τον πάροχο AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Όνομα συνομιλίας"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "συνομιλίες"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Οι συνομιλίες για μια συγκεκριμένη θέση βρίσκονται στον χώρο εργασίας της."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Δεν ήταν δυνατή η φόρτωση των συνομιλιών."
 
@@ -2979,6 +2981,7 @@ msgstr "Συνοδευτική επιστολή"
 msgid "Cover letter — {0}"
 msgstr "Συνοδευτική επιστολή — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Διαγραφή του «{0}»;"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Διαγραφή {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Εκδίδω"
 msgid "Edit {0}: {1}"
 msgstr "Επεξεργασία {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Εφαρμόστηκε η επεξεργασία"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Διαχωρισμός λέξεων με παύλα"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Μπορώ να δω αυτή την επιστολή και την αγγελία εργασίας της {company}. Οι προτάσεις εμφανίζονται ως αλλαγές που μπορείς να αποδεχτείς μία προς μία."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Μπορώ να δω αυτή την επιστολή. Οι προτάσεις εμφανίζονται ως αλλαγές που μπορείς να αποδεχτείς μία προς μία."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Μπορώ να δω αυτό το βιογραφικό και την αγγελία εργασίας {company}. Οι προτάσεις επιστρέφουν ως τροποποιήσεις που μπορείτε να αποδεχτείτε μία προς μία."
 
@@ -4808,6 +4821,10 @@ msgstr "Περιοριστείτε σε δύο ή τρεις οικογένει�
 msgid "Keep together"
 msgstr "Μείνετε μαζί"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Διατηρεί τα πιο συγκεκριμένα μέρη"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Διατηρήθηκε όπως είναι"
@@ -4901,6 +4918,10 @@ msgstr "Διατάξτε το κείμενο οριζόντια. Τα περισ
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Διάταξη"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Οδηγεί με το γιατί ταιριάζεις"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Κύρια"
 msgid "Make default"
 msgstr "Ορισμός ως προεπιλογή"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Κάντε το πιο συγκεκριμένο"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Κάντε το πιο σύντομο"
@@ -5288,6 +5314,10 @@ msgstr "Κάντε το πιο σύντομο"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Κάντε χώρο για το επόμενο βήμα."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Κάντε το άνοιγμα πιο δυνατό"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Νέα αίτηση"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Νέα συνομιλία"
 
@@ -6335,6 +6366,10 @@ msgstr "Ανοίξτε το in editor"
 msgid "Open in Offers"
 msgstr "Άνοιγμα στις Προσφορές"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Άνοιγμα επιστολής"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Ανοίξτε τη δημόσια σελίδα"
@@ -6381,13 +6416,13 @@ msgstr "Άνοιγμα χώρου εργασίας"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Άνοιγμα της συνομιλίας…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Άνοιγμα του αρχείου"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Άνοιγμα της επιστολής…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Ανακτήθηκε το {0} χρησιμοποιώντας το {1}. �
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Αποθήκευση ιστορίας"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Αποθηκεύστε τη συνοδευτική επιστολή πριν την εξαγάγετε."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Αποθήκευσε το έγγραφο πριν από την αποστολή."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Στέλνει αυτό το PDF στον διαμορφωμένο πάροχο AI αντί να διαβάζει το επίπεδο κειμένου του."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Στέλνει το μήνυμά σας, αυτή την αίτηση (αγγελία, σημειώσεις, έγγραφα που στάλθηκαν) και την ενεργή Γνώση στη {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Στέλνει το μήνυμά σου, τα προηγούμενα μηνύματα, αυτή την αίτηση εργασίας (αγγελία, σημειώσεις και απεσταλμένα έγγραφα) και τις ενεργοποιημένες πληροφορίες Γνώσεων στο {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Οι έλεγχοι είναι μηχανικοί. Αυτό ρωτά έ�
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Ο σύμβουλος δεν θυμάται τίποτα από τα μηνύματά σας."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Ο σύμβουλος δεν έχει ρυθμιστεί σε αυτόν τον διακομιστή. Ο διαχειριστής του πρέπει να ορίσει το ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Ο σύμβουλος δεν έχει ρυθμιστεί σε αυτόν τον διακομιστή. Όποιος τον διαχειρίζεται πρέπει να ορίσει το ENCRYPTION_SECRET. Η Γνώση, οι Προσφορές και οι αιτήσεις σας λειτουργούν χωρίς αυτό."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Ο σύμβουλος καριέρας απαιτεί σύνδεση AI. Τίποτα δεν αποστέλλεται μέχρι να το ζητήσετε."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Ο σύμβουλος προτείνει κάθε γεγονός στη συνομιλία. Δεν αποθηκεύεται τίποτα μέχρι να συμφωνήσετε."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Ο σύμβουλος καριέρας διαβάζει την αγγελία εργασίας, τις σημειώσεις σας και αυτά που στείλατε και γνωρίζει ότι βρίσκεστε στο {tabName}. Η συνομιλία φτάνει με τον Βοηθό."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Δοκιμάστε το {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Υπογράμμισε συνδέσμους"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Χρησιμοποιήστε την έκδοση διακομιστή"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Χρησιμοποιήστε έξι δεκαεξαδικά ψηφία, όπως #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Χρησιμοποιήστε την Αναίρεση του επεξεργαστή για παλαιότερες αλλαγές."
@@ -10188,6 +10226,10 @@ msgstr "Χρησιμοποιείται όταν το {connected} δεν μπορ
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Όνομα χρήστη"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Χρησιμοποιεί στοιχεία από το βιογραφικό σας"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Είστε εκτός σύνδεσης. Δοκιμάστε ξανά ότ
 msgid "You're up to date"
 msgstr "Είστε ενημερωμένοι"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

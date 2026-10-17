@@ -3,7 +3,7 @@ import type { WritingReview } from "./writing";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useNetworkState } from "expo-network";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useDeferredValue, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import Animated, { FadeOut, LinearTransition, ReduceMotion } from "react-native-reanimated";
@@ -22,6 +22,7 @@ import { Banner, Button, Card, EmptyState, ListRow, Segmented, Skeleton, Text, u
 
 type CheckScreenProps = { id: string };
 export function CheckScreen({ id }: CheckScreenProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, space, motion } = useTheme();
 	// Subscribe only. Builder layout owns open/close, save/conflict state and undo history.
@@ -150,7 +151,7 @@ export function CheckScreen({ id }: CheckScreenProps) {
 								</Text>
 								<Text variant="title">{issue.title}</Text>
 								<Text color="ink2">{issue.body}</Text>
-								<Button label={issue.fix.label} disabled={locked} onPress={() => fixIssue(id, issue)} />
+								<Button label={issue.fix.label} disabled={locked} onPress={() => fixIssue(id, issue, router)} />
 								<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
 									<Button variant="ghost" label={t`Show on page`} onPress={() => onPage(issue)} />
 									<Button

@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Vietäviä hakemuksia: {0}."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} muokkausta otettu käyttöön"
@@ -1167,7 +1168,6 @@ msgstr "Tekoälyyhteys"
 msgid "AI connections are unavailable."
 msgstr "Tekoälyyhteydet eivät ole käytettävissä."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI-yhteyksiä ei voitu ladata."
@@ -1451,10 +1451,6 @@ msgstr "Hakemus päivitetty"
 msgid "Application views"
 msgstr "Hakemusnäkymät"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Hakemuksen työtilan välilehdet"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Nouseva"
 msgid "Ask"
 msgstr "Kysyä"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Kysy tästä hakemuksesta…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Kysy seuraavasta urasiirrostasi…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Kysy työnhaustasi tai tuo saavutus, jonka haluat selittää paremmin. Vastaukset käyttävät alla käyttöön otettuja tietoja ja kertovat, mihin ne perustuvat."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Kysy mitä tahansa tästä työstä"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Kysy mitä tahansa tästä työpaikasta. Valmentaja lukee ilmoituksen, muistiinpanosi ja lähettämäsi materiaalit ja tietää, että olet välilehdellä {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Kysy tai kuvaile muutosta…"
 msgid "Aspect Ratio"
 msgstr "Kuvasuhde"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Avustaja"
@@ -2373,7 +2374,6 @@ msgstr "Yhdistä tekoälypalveluntarjoaja"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Keskustelun nimi"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Keskustelut"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Yhtä työpaikkaa koskevat keskustelut ovat sen työtilassa."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Keskusteluja ei voitu ladata."
 
@@ -2979,6 +2981,7 @@ msgstr "Saatekirje"
 msgid "Cover letter — {0}"
 msgstr "Saatekirje — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Poistetaanko ”{0}”?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Poista {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Muokata"
 msgid "Edit {0}: {1}"
 msgstr "Muokkaa {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Muokkaus otettu käyttöön"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Tavutus"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Näen tämän kirjeen ja yrityksen {company} työpaikkailmoituksen. Ehdotukset näkyvät muokkauksina, jotka voit hyväksyä yksitellen."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Näen tämän kirjeen. Ehdotukset näkyvät muokkauksina, jotka voit hyväksyä yksitellen."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Näen tämän ansioluettelon ja {company} työpaikkailmoituksen. Ehdotukset tulevat takaisin muokkauksina, jotka voit hyväksyä yksitellen."
 
@@ -4808,6 +4821,10 @@ msgstr "Käytä vain kahta tai kolmea fonttiperhettä. Jokainen ylimääräinen 
 msgid "Keep together"
 msgstr "Pysykää yhdessä"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Säilyttää tarkimmat osat"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Pidetty sellaisenaan"
@@ -4901,6 +4918,10 @@ msgstr "Aseta teksti vaakasuoraan. Käännetyt tekstijaksot jäävät usein pois
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Asettelu"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Johtaa miksi sovit"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Pääosa"
 msgid "Make default"
 msgstr "Aseta oletukseksi"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Tee siitä tarkempi"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Tee siitä lyhyempi"
@@ -5288,6 +5314,10 @@ msgstr "Tee siitä lyhyempi"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Tee tilaa seuraavalle vaiheelle."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Tee aukosta vahvempi"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Uusi hakemus"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Uusi keskustelu"
 
@@ -6335,6 +6366,10 @@ msgstr "Avaa editori"
 msgid "Open in Offers"
 msgstr "Avaa Tarjoukset-näkymässä"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Avaa kirje"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Avaa julkinen sivu"
@@ -6381,13 +6416,13 @@ msgstr "Avaa työtila"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Avataan keskustelua…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Tiedoston avaaminen"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Avataan kirjettä…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Haettu {0} käyttämällä {1}:ta. Hakuaika ei vahvista alkuperän tuore
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Tallenna tarina"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Tallenna saatekirje ennen sen vientiä."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Tallenna asiakirja ennen lähettämistä."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Lähettää tämän PDF:n määritetylle tekoälypalveluntarjoajalle sen tekstikerroksen lukemisen sijaan."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Lähettää viestisi, tämän hakemuksen (ilmoitus, muistiinpanot, lähetetyt asiakirjat) ja käyttöön otetun tietopankin sisällön kohteeseen {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Lähettää viestisi, aiemmat viestit, tämän työhakemuksen (ilmoituksen, muistiinpanot ja lähetetyt asiakirjat) sekä käyttöön otetut tiedot Tietopankista palvelulle {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Tarkastukset ovat mekaanisia. Tämä kysyy kielimallilta, kuinka lukija 
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Valmentaja ei muista mitään viesteistäsi."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Valmentajaa ei ole määritetty tällä palvelimella. Palvelimen ylläpitäjän on asetettava ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Valmentajaa ei ole otettu käyttöön tällä palvelimella. Palvelimen ylläpitäjän on asetettava ENCRYPTION_SECRET. Tietopankki, Tarjoukset ja hakemuksesi toimivat ilman sitä."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Linja-auto tarvitsee AI-liitännän. Mitään ei lähetetä ennen kuin pyydät."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Valmentaja ehdottaa jokaista faktaa keskustelussa. Mitään ei tallenneta ennen kuin hyväksyt."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Valmentaja lukee ilmoituksen, muistiinpanosi ja lähettämäsi tiedot sekä tietää sinun olevan välilehdellä {tabName}. Keskustelu näkyy Avustajassa."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Kokeile {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Alleviivaa linkit"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Käytä palvelinversiota"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Käytä kuutta heksadesimaalimerkkiä, kuten #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Kumoa aikaisemmat muutokset käyttämällä ansioluetteloeditorin Kumoa-toimintoa."
@@ -10188,6 +10226,10 @@ msgstr "Käytetään, kun {connected} ei pysty lukemaan sivua. Tiliä ei tarvita
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Käyttäjätunnus"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Käyttää tosiasioita ansioluettelostasi"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Olet offline-tilassa. Yritä uudelleen, kun muodostat yhteyden uudelleen
 msgid "You're up to date"
 msgstr "Olet ajan tasalla"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

@@ -77,7 +77,7 @@ const mocks = {
 	"@/features/ai/providers": "exports.useHasAIProvider=()=>globalThis.__m3t2.ai;exports.AIProviderSetupSheet='AIProviderSetupSheet';",
 	"@/ui": uiNames.map((name) => `exports.${name}='${name}';`).join("") + expose(["showToast"]) + "exports.useTheme=()=>({space:{s1:4,s2:8,s3:12,s4:16},colors:{accent:'green'},radius:{},size:{hit:44,row:52,icon:{row:20}}});",
 	"react-native": "exports.View='View';exports.ActivityIndicator='ActivityIndicator';exports.FlatList='FlatList';exports.Pressable='Pressable';exports.ScrollView='ScrollView';exports.PixelRatio={get:()=>2};exports.Platform={OS:'android'};exports.I18nManager={isRTL:false};exports.useWindowDimensions=()=>({width:400});",
-	"expo-router": "exports.router={replace:(href)=>globalThis.__m3t2.client.navigate(href),back:()=>{}};exports.Stack={Screen:'Stack.Screen'};exports.useLocalSearchParams=()=>globalThis.__m3t2.params;exports.useFocusEffect=()=>{};",
+	"expo-router": "exports.useRouter=()=>({replace:(href)=>globalThis.__m3t2.client.navigate(href),back:()=>{}});exports.Stack={Screen:'Stack.Screen'};exports.useLocalSearchParams=()=>globalThis.__m3t2.params;exports.useFocusEffect=()=>{};",
 	"expo-haptics": "exports.impactAsync=async()=>{};exports.ImpactFeedbackStyle={Light:'light'};",
 	"react-native-gesture-handler/ReanimatedSwipeable": "module.exports='Swipeable';",
 	"@/components/forme-check": "exports.FormeCheck='FormeCheck';",

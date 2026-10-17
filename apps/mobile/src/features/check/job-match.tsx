@@ -1,7 +1,7 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { View } from "react-native";
 import { editWithUndo } from "./actions";
@@ -23,6 +23,7 @@ type JobMatchProps = {
 };
 
 export function JobMatch({ id, data, applicationId, locked, offline, onTerm }: JobMatchProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const applications = useApplications();

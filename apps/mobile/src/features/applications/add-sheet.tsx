@@ -2,7 +2,7 @@ import type { RouterOutput } from "@/api/client";
 import { useLingui } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { parseDateOnly } from "./csv";
@@ -44,6 +44,7 @@ const today = () => {
 
 /** Mounted only while open: cancel reads and discard transient input when dismissed. */
 export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const session = useSession();

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { refreshThreads, useConversationConnection } from "./chat";
@@ -57,6 +57,7 @@ type ModelSheetProps = {
 
 /** The connections this conversation can switch to, and Connect another… in Settings. */
 export function ModelSheet({ open, onClose, providers, currentId, onChoose }: ModelSheetProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors } = useTheme();
 	return (
@@ -115,6 +116,8 @@ type ProviderGateProps = {
 	onRetry: () => void;
 	/** "The coach isn't set up on this server…" */
 	notSetUp: string;
+	/** History may load without a provider; its caller disables sending. */
+	readOnly?: boolean;
 	/** The chat, once it can run. */
 	children: ReactNode;
 };
@@ -123,7 +126,16 @@ type ProviderGateProps = {
  * What stands in for the chat until it can run: the server isn't set up, connections didn't load, still loading,
  * or no provider yet (connect one in place, M6-T4's setup sheet). `children` once the chat can run.
  */
-export function ProviderGate({ providers, threadsError, loading, onRetry, notSetUp, children }: ProviderGateProps) {
+export function ProviderGate({
+	providers,
+	threadsError,
+	loading,
+	onRetry,
+	notSetUp,
+	readOnly = false,
+	children,
+}: ProviderGateProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const [setupOpen, setSetupOpen] = useState(false);
@@ -134,7 +146,7 @@ export function ProviderGate({ providers, threadsError, loading, onRetry, notSet
 				<Banner tone="info" message={notSetUp} />
 			</View>
 		);
-	if (providers.error)
+	if (providers.error && !readOnly)
 		return (
 			<View style={{ padding: space.s4 }}>
 				<Banner
@@ -144,13 +156,13 @@ export function ProviderGate({ providers, threadsError, loading, onRetry, notSet
 				/>
 			</View>
 		);
-	if (providers.isLoading || loading)
+	if ((providers.isLoading && !readOnly) || loading)
 		return (
 			<View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
 				<ActivityIndicator />
 			</View>
 		);
-	if (providers.hasAIProvider) return children;
+	if (providers.hasAIProvider || readOnly) return children;
 
 	return (
 		<View style={{ gap: space.s3, padding: space.s4 }}>

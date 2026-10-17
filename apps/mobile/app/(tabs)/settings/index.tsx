@@ -1,5 +1,5 @@
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { openBrowserAsync } from "expo-web-browser";
 import { SettingsGroup, SettingsPage } from "@/features/settings/layout";
 import { useProfile } from "@/features/settings/queries";
@@ -8,6 +8,7 @@ import { routes } from "@/routes";
 import { Avatar, ListRow, Text, showToast, useThemePreference } from "@/ui";
 
 export default function SettingsScreen() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const profile = useProfile();
 	const theme = useThemePreference();

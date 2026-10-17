@@ -1,7 +1,7 @@
 import type { Basics, CustomField } from "@reactive-resume/schema/resume/data";
 import { useLingui } from "@lingui/react/macro";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 import { generateId } from "@reactive-resume/utils/string";
@@ -85,6 +85,7 @@ export function BasicsScreen({ resumeId, focusField }: BasicsScreenProps) {
 }
 
 function PhotoRow({ resumeId, locked }: { resumeId: string; locked: boolean }) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
 	const { server } = useSession();

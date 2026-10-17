@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { routes } from "@/routes";
 
@@ -7,10 +7,11 @@ import { routes } from "@/routes";
  * router while the sign-in session reads the code from it, so this screen only steps back to where the user was.
  */
 export default function NativeCallback() {
+	const router = useRouter();
 	useEffect(() => {
 		if (router.canGoBack()) router.back();
 		else router.replace(routes.server());
-	}, []);
+	}, [router]);
 
 	return null;
 }

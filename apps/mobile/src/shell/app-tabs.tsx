@@ -2,7 +2,7 @@ import type { IconName } from "@/ui";
 import type { BottomTabBarProps } from "expo-router/tabs";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { router, usePathname } from "expo-router";
+import { useRouter, usePathname } from "expo-router";
 import { Platform, Pressable, View } from "react-native";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -275,6 +275,7 @@ function SidebarItem({ icon, label, active, onPress, badge, quiet = true }: Side
  * account row at the bottom. Section counts come from each tab's `tabBarBadge` option.
  */
 export function AppSidebar(props: BottomTabBarProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { state, insets } = props;
 	const pathname = usePathname();

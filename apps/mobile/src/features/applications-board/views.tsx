@@ -1,7 +1,7 @@
 import type { ApplicationsView } from "@/routes";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { router, Stack } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { routes } from "@/routes";
@@ -11,6 +11,7 @@ type ApplicationsViewFrameProps = { current: ApplicationsView; children: ReactNo
 
 /** The List / Board / Calendar / Insights switch above each Applications view (mockup `viewTabs`). */
 export function ApplicationsViewFrame({ current, children }: ApplicationsViewFrameProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
 	return (

@@ -1,6 +1,6 @@
 import type { EnrichedTextInputInstance } from "react-native-enriched-html";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { EnrichedTextInput } from "react-native-enriched-html";
@@ -23,6 +23,7 @@ type DocumentMenuProps = {
 };
 /** BuilderChrome can mount this trigger; it owns no draft lifecycle. */
 export function DocumentMenu({ id, inChrome = false }: DocumentMenuProps) {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const { space } = useTheme();
 	const draft = useResumeStore();
