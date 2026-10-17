@@ -497,5 +497,22 @@ await check("review 7: block-level CSS marks on p and li wrap the block's conten
 	assert.equal(session.change("<html>\n<p><b>Bold lines</b></p>\n</html>"), "<p><b>Bold lines</b></p>");
 });
 
+await check("review 8: list-item and paragraph decorations unite instead of one hiding the other", () => {
+	const stored = '<ul><li style="text-decoration:underline"><p style="text-decoration:line-through">Item</p></li></ul>';
+	assert.equal(toEnrichedHtml(stored), "<html>\n<ul><li><u><s>Item</s></u></li>\n</ul>\n</html>");
+	assert.equal(
+		toEnrichedHtml('<ul><li style="font-weight:700; text-decoration: underline"><p style="font-style:italic; text-decoration: line-through">X</p></li></ul>'),
+		"<html>\n<ul><li><b><i><u><s>X</s></u></i></b></li>\n</ul>\n</html>",
+	);
+	// After an edit, both decorations are in what's written.
+	const session = createRichTextSession(stored);
+	session.change(session.markup);
+	session.focus();
+	assert.equal(
+		session.change("<html>\n<ul>\n<li><u><s>Items</s></u></li>\n</ul>\n</html>"),
+		"<ul><li><u><s>Items</s></u></li></ul>",
+	);
+});
+
 await drain();
 console.log(`${passed} scenarios passed`);

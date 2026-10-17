@@ -74,13 +74,19 @@ const styleOf = (attributes: string) => {
 	return style ? (style[2] ?? style[3] ?? "") : "";
 };
 
-/** TipTap wraps list items in paragraphs; the editor's items hold text directly. Both styles move to the item. */
+/** TipTap wraps list items in paragraphs; the editor's items hold text directly. Both elements' marks move to the item. */
 const collapseListParagraphs = (html: string) =>
 	html.replaceAll(
 		/<li(\s[^>]*)?>\s*<p(\s[^>]*)?>([\s\S]*?)<\/p>\s*<\/li>/gi,
 		(_match, item: string | undefined, paragraph: string | undefined, content: string) => {
-			const style = [styleOf(item ?? ""), styleOf(paragraph ?? "")].filter(Boolean).join(";");
-			return style ? `<li style="${style.replaceAll('"', "'")}">${content}</li>` : `<li>${content}</li>`;
+			// Each element's marks are read on their own, then united: joined styles would let one element's
+			// text-decoration hide the other's.
+			const marks = new Set([...styleMarks(styleOf(item ?? "")), ...styleMarks(styleOf(paragraph ?? ""))]);
+			const order = ["b", "i", "u", "s"].filter((mark) => marks.has(mark));
+			return `<li>${order.map((mark) => `<${mark}>`).join("")}${content}${order
+				.map((mark) => `</${mark}>`)
+				.reverse()
+				.join("")}</li>`;
 		},
 	);
 
