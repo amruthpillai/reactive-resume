@@ -140,6 +140,7 @@ export function CoachScreen({ offerIds }: CoachScreenProps) {
 			/>
 			<ProviderGate
 				providers={providers}
+				readOnly={threadId !== null}
 				threadsError={threads.error}
 				loading={threads.isPending}
 				onRetry={() => {
@@ -192,7 +193,7 @@ export function CoachScreen({ offerIds }: CoachScreenProps) {
 					privacy={privacy}
 					placeholder={t`Ask about your next career step…`}
 					assistantName={t`Coach`}
-					disabled={knowledgeBlocks}
+					disabled={knowledgeBlocks || !providers.hasAIProvider}
 					onSwitchModel={() => setModelOpen(true)}
 					onFinish={() => {
 						// The coach may have remembered a fact or saved a story.
@@ -229,7 +230,7 @@ export function CoachScreen({ offerIds }: CoachScreenProps) {
 							) : null}
 						</>
 					}
-					empty={(send) => <Starters disabled={knowledgeBlocks} onPick={send} />}
+					empty={(send) => <Starters disabled={knowledgeBlocks || !providers.hasAIProvider} onPick={send} />}
 				/>
 			</ProviderGate>
 
