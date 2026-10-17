@@ -17,6 +17,8 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | SVa SV1+SV2 app links, callback page, Apple   | Codex       | 10498568 | mobile/SVa        | RUNNING |                                                                                     |
 | SVb SV4 offline_access unbinding              | Codex       | 4441e7ce | mobile/SVb        | RUNNING |                                                                                     |
 | SVc SV3+SV5 update conflict, account wrappers | Codex       | 3d077e9f | mobile/SVc        | RUNNING |                                                                                     |
+| M1-T1 apps/mobile skeleton                    | Claude Code |          | mobile/M1-T1      | RUNNING | briefs/M1.md                                                                        |
+| M1-T2 pdf ./native, forme-native hardening    | Codex       |          | mobile/M1-T2      | RUNNING | briefs/M1.md                                                                        |
 
 ## Gates
 
@@ -130,3 +132,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: The owner asked to clean up Paseo. All 11 task workspaces and 22 `plan=native-mobile` agents are archived. Archiving deleted the worktrees and kept the branches.
   - The S2/S3 reports, the S2 `packages-pdf.patch` and the S3 `protocol-run.txt` were copied onto `mobile/native-app` first.
   - Kept on branches only: `mobile/S1` (about 40 MB of fixtures plus `apps/spike-s1`), `mobile/S2` (`apps/spike-s2`), `mobile/S3` (`apps/spike-s3`, screenshots).
+- 2026-10-17: Owner released M1 and asked for continuous parallel work to completion. Coordinator split M1 into M1-T1 (app scaffold, Claude Code) and M1-T2 (`packages/pdf` `./native` + `forme-native` hardening, Codex) with disjoint ownership. Brief: `briefs/M1.md`.
