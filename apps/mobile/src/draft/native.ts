@@ -1,0 +1,74 @@
+import type { DraftEnvironment } from "./store";
+import type { NetworkState } from "expo-network";
+import * as Network from "expo-network";
+import Storage from "expo-sqlite/kv-store";
+import { AppState, Keyboard, TextInput } from "react-native";
+import { getAccessToken, getServer } from "@/auth/session";
+
+let online = true;
+
+/** Partition local documents by OAuth subject as well as server; signing in as another user never replays them. */
+async function scope() {
+	const server = getServer();
+	const token = await getAccessToken();
+	if (!token || server !== getServer()) return null;
+	try {
+		const encoded = token.split(".")[1];
+		if (!encoded) return null;
+		const payload = JSON.parse(atob(encoded.replaceAll("-", "+").replaceAll("_", "/"))) as { sub?: unknown };
+		return typeof payload.sub === "string" ? JSON.stringify([server, payload.sub]) : null;
+	} catch {
+		return null;
+	}
+}
+
+export const nativeEnvironment: DraftEnvironment = {
+	storage: Storage,
+	scope,
+	online: () => online,
+	focused: () => TextInput.State.currentlyFocusedInput() !== null || Keyboard.isVisible(),
+};
+
+type SyncTarget = {
+	flush: () => Promise<void>;
+	refresh: () => Promise<void>;
+	replay: () => Promise<void>;
+	blur: () => Promise<void>;
+};
+
+/** Started on first open. The queue outlives the editor; suspending the session removes its listeners. */
+export function watchDraft(target: SyncTarget) {
+	let active = true;
+	let lastOnline = online;
+	const reconnect = (state: NetworkState) => {
+		if (!active) return;
+		const wasOnline = lastOnline;
+		online = state.isConnected !== false && state.isInternetReachable !== false;
+		lastOnline = online;
+		if (!online) void target.flush();
+		if (!wasOnline && online)
+			void target
+				.replay()
+				.then(target.refresh)
+				.catch(() => {});
+	};
+	const network = Network.addNetworkStateListener(reconnect);
+	void Network.getNetworkStateAsync()
+		.then(reconnect)
+		.catch(() => {});
+	const app = AppState.addEventListener("change", (state) => {
+		if (state !== "active") void target.flush();
+		else
+			void target
+				.replay()
+				.then(target.refresh)
+				.catch(() => {});
+	});
+	const keyboard = Keyboard.addListener("keyboardDidHide", () => void target.blur());
+	return () => {
+		active = false;
+		network.remove();
+		app.remove();
+		keyboard.remove();
+	};
+}
