@@ -1,0 +1,517 @@
+import type { DocumentSheet } from "./document-sheets";
+import type { DocumentSort, DocumentSummary, DocumentTypeFilter } from "./filter";
+import { useLingui } from "@lingui/react/macro";
+import { useQuery } from "@tanstack/react-query";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { router, Stack, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { FlatList, I18nManager, Platform, Pressable, ScrollView, View, useWindowDimensions } from "react-native";
+import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
+import { DocumentSheets } from "./document-sheets";
+import { collectTags, daysLeftInTrash, documentKey, documentRef, filterDocuments } from "./filter";
+import { isNewDocument, useNewDocuments } from "./new-documents";
+import { useDocumentOperations, useDocuments } from "./queries";
+import { Thumbnail } from "./thumbnail";
+import { client, orpc } from "@/api/client";
+import { useSession } from "@/auth/session";
+import { FormeCheck } from "@/components/forme-check";
+import { routes } from "@/routes";
+import {
+	Banner,
+	Button,
+	Card,
+	Chip,
+	ConfirmDialog,
+	EmptyState,
+	Icon,
+	IconButton,
+	ListRow,
+	Screen,
+	Segmented,
+	SelectSheet,
+	Sheet,
+	Skeleton,
+	Text,
+	TextField,
+	useTheme,
+} from "@/ui";
+
+type DocumentItemProps = {
+	document: DocumentSummary;
+	grid: boolean;
+	selected: boolean;
+	selecting: boolean;
+	busy: boolean;
+	onOpen: () => void;
+	onSelect: () => void;
+	onMenu: () => void;
+	onTrash: () => void;
+	onDuplicate: () => void;
+};
+
+function DocumentItem({
+	document,
+	grid,
+	selected,
+	selecting,
+	busy,
+	onOpen,
+	onSelect,
+	onMenu,
+	onTrash,
+	onDuplicate,
+}: DocumentItemProps) {
+	const { t, i18n } = useLingui();
+	const { colors, space, radius, size } = useTheme();
+	const ids = useNewDocuments((state) => state.ids);
+	const trashed = document.trashedAt;
+	const meta = trashed ? t`${daysLeftInTrash(trashed)} days left` : document.updatedAt.toLocaleDateString(i18n.locale);
+	const body = (
+		<View
+			style={{
+				flexDirection: grid ? "column" : "row",
+				gap: space.s2,
+				padding: space.s3,
+				backgroundColor: selected ? colors.selectedFill : colors.surface,
+				borderRadius: radius.rXl,
+				borderWidth: 1,
+				borderColor: selected ? colors.accent : colors.line,
+			}}
+		>
+			<Pressable
+				accessibilityRole={selecting ? "checkbox" : "button"}
+				accessibilityLabel={selecting ? t`Select ${document.name}` : document.name}
+				accessibilityState={{ checked: selecting ? selected : undefined }}
+				onPress={selecting ? onSelect : onOpen}
+				onLongPress={trashed ? onMenu : onSelect}
+				style={{ flex: 1, flexDirection: grid ? "column" : "row", gap: space.s3, minHeight: size.hit }}
+			>
+				<Thumbnail document={document} compact={!grid} />
+				<View style={{ flex: 1, gap: space.s1 }}>
+					<Text variant="label" numberOfLines={2}>
+						{document.name}
+					</Text>
+					<Text variant="caption" color="ink3">
+						{document.type === "letter" ? t`Letter` : t`Resume`}
+						{" · "}
+						{meta}
+					</Text>
+					<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s1 }}>
+						{!trashed && isNewDocument(ids, document) && <Text variant="caption" color="accentText">{t`New`}</Text>}
+						{selecting && (
+							<Icon name={selected ? "check-square" : "square"} color={colors.accent} size={size.icon.row} />
+						)}
+						{document.isPublic && <Text variant="caption" color="accentText">{t`Public`}</Text>}
+						{document.isLocked && <Text variant="caption" color="ink2">{t`Locked`}</Text>}
+						{document.application && (
+							<Text variant="caption" color="ink2">
+								{document.application.company}
+							</Text>
+						)}
+						{document.tags.map((tag) => (
+							<Text key={tag} variant="caption" color="ink3">
+								{tag}
+							</Text>
+						))}
+					</View>
+				</View>
+			</Pressable>
+			{!selecting && (
+				<IconButton icon="dots-three" label={t`Options for ${document.name}`} onPress={onMenu} disabled={busy} />
+			)}
+		</View>
+	);
+	if (Platform.OS !== "ios" || grid || selecting || trashed) return body;
+	const actions = () => (
+		<View style={{ flexDirection: "row", alignItems: "center", gap: space.s1 }}>
+			<Button label={t`Duplicate`} variant="secondary" disabled={busy} onPress={onDuplicate} />
+			<Button label={t`Move to Trash`} variant="danger" disabled={busy || document.isLocked} onPress={onTrash} />
+		</View>
+	);
+	return (
+		<ReanimatedSwipeable {...(I18nManager.isRTL ? { renderLeftActions: actions } : { renderRightActions: actions })}>
+			{body}
+		</ReanimatedSwipeable>
+	);
+}
+
+type DocumentsLibraryProps = { trashed?: boolean };
+
+export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
+	const { t } = useLingui();
+	const { space, size } = useTheme();
+	const { width } = useWindowDimensions();
+	const session = useSession();
+	const documents = useDocuments(trashed);
+	const countsOptions = orpc.documents.counts.queryOptions();
+	const counts = useQuery({
+		...countsOptions,
+		queryKey: [...countsOptions.queryKey, session.server],
+		enabled: session.status === "signed-in",
+	});
+	const operations = useDocumentOperations();
+	const [q, setQ] = useState("");
+	const [type, setType] = useState<DocumentTypeFilter>("all");
+	const [sort, setSort] = useState<DocumentSort>("edited");
+	const [tags, setTags] = useState<string[]>([]);
+	const [publicOnly, setPublicOnly] = useState(false);
+	const [view, setView] = useState<"list" | "grid" | null>(null);
+	const [selecting, setSelecting] = useState(false);
+	const [selection, setSelection] = useState<string[]>([]);
+	const [sheet, setSheet] = useState<DocumentSheet | null>(null);
+	const [purge, setPurge] = useState<DocumentSummary[] | null>(null);
+	const grid = !trashed && (view ?? (width >= 768 ? "grid" : "list")) === "grid";
+	const columns = grid ? (width >= 1000 ? 3 : 2) : 1;
+	const all = session.status === "signed-in" ? (documents.data ?? []) : [];
+	const filtered = filterDocuments(all, { q, type, tags, sort, public: publicOnly });
+	const selected = filtered.filter((document) => selection.includes(documentKey(document)));
+	const { refetch: refetchDocuments } = documents;
+	const { refetch: refetchCounts } = counts;
+	useFocusEffect(
+		useCallback(() => {
+			if (session.status === "signed-in") {
+				void refetchDocuments();
+				void refetchCounts();
+			}
+		}, [session.status, refetchDocuments, refetchCounts]),
+	);
+	const toggle = (document: DocumentSummary) => {
+		if (!selecting) {
+			setSelecting(true);
+			void impactAsync(ImpactFeedbackStyle.Light).catch(() => {});
+		}
+		const key = documentKey(document);
+		setSelection((previous) =>
+			previous.includes(key) ? previous.filter((entry) => entry !== key) : [...previous, key],
+		);
+	};
+	const open = (document: DocumentSummary) => {
+		if (trashed) {
+			setPurge(null);
+			setSheet({ kind: "menu", documents: [document] });
+			return;
+		}
+		useNewDocuments.getState().markOpened(document);
+		router.push(document.type === "resume" ? routes.builder(document.id) : routes.letter(document.id));
+	};
+	const duplicate = (document: DocumentSummary) =>
+		operations.run(async () => {
+			const id =
+				document.type === "resume"
+					? await client.resume.duplicate({
+							id: document.id,
+							name: t`${document.name} (copy)`.slice(0, 100),
+							tags: document.tags,
+						})
+					: (await client.coverLetters.duplicate({ id: document.id })).id;
+			useNewDocuments.getState().markNew({ type: document.type, id });
+		});
+	const clearFilters = () => {
+		setQ("");
+		setType("all");
+		setTags([]);
+		setPublicOnly(false);
+	};
+	return (
+		<Screen scroll={false} edges={["top"]}>
+			<Stack.Screen options={{ title: trashed ? t`Trash` : t`Documents`, headerShown: false }} />
+			<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.s2 }}>
+				{trashed && (
+					<IconButton
+						icon="arrow-left"
+						label={t`Back to documents`}
+						onPress={() => router.replace(routes.documents())}
+					/>
+				)}
+				<Text variant="display" style={{ flex: 1 }}>
+					{trashed ? t`Trash` : t`Documents`}
+				</Text>
+				{!trashed && (
+					<Button
+						variant="ghost"
+						label={selecting ? t`Done` : t`Select`}
+						onPress={() => {
+							setSelecting(!selecting);
+							setSelection([]);
+						}}
+					/>
+				)}
+				{!trashed && <IconButton icon="plus" label={t`New document`} onPress={() => router.push(routes.new())} />}
+			</View>
+			{session.status !== "signed-in" ? (
+				<EmptyState
+					icon="file-text"
+					title={t`Sign in to see your documents`}
+					action={{ label: t`Sign in`, onPress: () => router.push(routes.signIn()) }}
+				/>
+			) : (
+				<>
+					{trashed && <Text color="ink2">{t`Items are deleted permanently after 30 days.`}</Text>}
+					{(documents.isError || counts.isError) && (
+						<Banner
+							tone="danger"
+							message={t`Couldn't refresh your documents.`}
+							action={{
+								label: t`Retry`,
+								onPress: () => {
+									void documents.refetch();
+									void counts.refetch();
+								},
+							}}
+						/>
+					)}
+					{operations.error && <Banner tone="danger" message={operations.error} />}
+					<TextField
+						label={t`Search`}
+						placeholder={t`Names, tags or applications`}
+						value={q}
+						onChangeText={setQ}
+						autoCorrect={false}
+						returnKeyType="search"
+					/>
+					{!trashed && (
+						<>
+							<Segmented
+								value={type}
+								label={t`Document type`}
+								onChange={setType}
+								options={[
+									{ value: "all", label: t`All (${all.length})` },
+									{
+										value: "resume",
+										label: t`Resumes (${all.filter((document) => document.type === "resume").length})`,
+									},
+									{
+										value: "letter",
+										label: t`Letters (${all.filter((document) => document.type === "letter").length})`,
+									},
+								]}
+							/>
+							<ScrollView
+								horizontal
+								showsHorizontalScrollIndicator={false}
+								contentContainerStyle={{ alignItems: "center", gap: space.s2 }}
+								style={{ flexGrow: 0 }}
+							>
+								<Chip label={t`Public`} selected={publicOnly} onPress={() => setPublicOnly(!publicOnly)} />
+								{collectTags(all).map((tag) => (
+									<Chip
+										key={tag}
+										label={tag}
+										selected={tags.includes(tag)}
+										onPress={() => setTags(tags.includes(tag) ? tags.filter((entry) => entry !== tag) : [...tags, tag])}
+									/>
+								))}
+								<IconButton
+									icon={grid ? "rows" : "squares-four"}
+									label={grid ? t`List view` : t`Grid view`}
+									onPress={() => setView(grid ? "list" : "grid")}
+								/>
+							</ScrollView>
+						</>
+					)}
+					<SelectSheet
+						label={t`Sort`}
+						value={sort}
+						options={[
+							{ value: "edited", label: t`Last edited` },
+							{ value: "name", label: t`Name` },
+							{ value: "created", label: t`Date created` },
+						]}
+						onChange={setSort}
+					/>
+					{selecting && (
+						<View style={{ gap: space.s2 }}>
+							<Text variant="label">{t`${selected.length} selected`}</Text>
+							<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
+								<Button label={t`Select all`} variant="ghost" onPress={() => setSelection(filtered.map(documentKey))} />
+								{(["tags", "sharing", "lock"] as const).map((kind) => (
+									<Button
+										key={kind}
+										label={{ tags: t`Tags`, sharing: t`Sharing`, lock: t`Lock` }[kind]}
+										variant="secondary"
+										disabled={!selected.length || operations.busy}
+										onPress={() => setSheet({ kind, documents: selected })}
+									/>
+								))}
+								<Button
+									label={t`Move to Trash`}
+									variant="danger"
+									disabled={!selected.length}
+									loading={operations.busy}
+									onPress={() => void operations.trash(selected)}
+								/>
+							</View>
+						</View>
+					)}
+					{trashed && all.length > 0 && (
+						<Button label={t`Empty Trash`} variant="danger" disabled={operations.busy} onPress={() => setPurge(all)} />
+					)}
+					<FlatList
+						key={columns}
+						data={filtered}
+						numColumns={columns}
+						keyExtractor={documentKey}
+						refreshing={documents.isFetching && !documents.isPending}
+						onRefresh={() => {
+							void documents.refetch();
+							void counts.refetch();
+						}}
+						contentContainerStyle={{ gap: space.s3, paddingBottom: space.s4 }}
+						columnWrapperStyle={columns > 1 ? { gap: space.s3 } : undefined}
+						renderItem={({ item }) => (
+							<View style={{ flex: 1, maxWidth: `${100 / columns}%` }}>
+								<DocumentItem
+									document={item}
+									grid={grid}
+									selected={selection.includes(documentKey(item))}
+									selecting={selecting}
+									busy={operations.busy}
+									onOpen={() => open(item)}
+									onSelect={() => toggle(item)}
+									onMenu={() => setSheet({ kind: "menu", documents: [item] })}
+									onTrash={() => void operations.trash([item])}
+									onDuplicate={() => void duplicate(item)}
+								/>
+							</View>
+						)}
+						ListEmptyComponent={
+							documents.isPending ? (
+								<View style={{ gap: space.s3 }}>
+									<Skeleton height={size.row * 2} />
+									<Skeleton height={size.row * 2} />
+									<Skeleton height={size.row * 2} />
+								</View>
+							) : documents.isError && !documents.data ? undefined : (
+								<EmptyState
+									icon={trashed ? "trash" : "file-text"}
+									title={all.length ? t`No matches` : trashed ? t`Trash is empty` : t`Let's start with what you have`}
+									message={
+										all.length
+											? t`Try another search or clear your filters.`
+											: trashed
+												? t`Items you move here stay for 30 days.`
+												: t`Import your current resume, or start fresh with your name.`
+									}
+									action={
+										all.length
+											? { label: t`Clear filters`, onPress: clearFilters }
+											: trashed
+												? undefined
+												: { label: t`New document`, onPress: () => router.push(routes.new()) }
+									}
+								/>
+							)
+						}
+						ListFooterComponent={
+							!trashed ? (
+								<View style={{ marginTop: space.s4 }}>
+									<Card>
+										<ListRow
+											title={t`Trash`}
+											subtitle={counts.data ? t`${counts.data.trash} documents` : undefined}
+											leading="trash"
+											chevron
+											onPress={() => router.push(routes.trash())}
+										/>
+									</Card>
+									{__DEV__ && <FormeCheck />}
+								</View>
+							) : undefined
+						}
+					/>
+				</>
+			)}
+			{session.status === "signed-in" &&
+				sheet &&
+				(trashed ? (
+					<SheetForTrash
+						document={sheet.documents[0]}
+						busy={operations.busy}
+						onClose={() => setSheet(null)}
+						onRestore={(document) =>
+							void operations
+								.run(() => client.documents.restore(documentRef(document)))
+								.then((success) => {
+									if (success) setSheet(null);
+								})
+						}
+						onDelete={(document) => {
+							setSheet(null);
+							setPurge([document]);
+						}}
+					/>
+				) : (
+					<DocumentSheets
+						key={`${sheet.kind}:${sheet.documents.map(documentKey).join(",")}`}
+						value={sheet}
+						onClose={() => setSheet(null)}
+						onChange={setSheet}
+						onSelect={toggle}
+					/>
+				))}
+			<ConfirmDialog
+				open={session.status === "signed-in" && purge !== null}
+				title={t`Delete forever?`}
+				message={
+					purge?.length === 1
+						? t`“${purge[0]?.name}” will be deleted for good and can't be restored.`
+						: t`${purge?.length ?? 0} documents will be deleted for good and can't be restored.`
+				}
+				confirmLabel={t`Delete forever`}
+				destructive
+				onCancel={() => {
+					if (!operations.busy) setPurge(null);
+				}}
+				onConfirm={() => {
+					if (purge)
+						void operations.run(async () => {
+							const done = await operations.batch(purge, (document) => client.documents.purge(documentRef(document)));
+							setPurge((previous) => {
+								const remaining = previous?.filter(
+									(document) => !done.some((entry) => documentKey(entry) === documentKey(document)),
+								);
+								return remaining?.length ? remaining : null;
+							});
+						});
+				}}
+			/>
+		</Screen>
+	);
+}
+
+type SheetForTrashProps = {
+	document: DocumentSummary | undefined;
+	busy: boolean;
+	onClose: () => void;
+	onRestore: (document: DocumentSummary) => void;
+	onDelete: (document: DocumentSummary) => void;
+};
+
+function SheetForTrash({ document, busy, onClose, onRestore, onDelete }: SheetForTrashProps) {
+	const { t } = useLingui();
+	if (!document) return null;
+	return (
+		<Sheet
+			open
+			onClose={() => {
+				if (!busy) onClose();
+			}}
+			title={document.name}
+		>
+			<ListRow
+				title={t`Restore`}
+				leading="arrow-counter-clockwise"
+				disabled={busy}
+				onPress={() => onRestore(document)}
+			/>
+			<ListRow
+				title={t`Delete forever…`}
+				leading="trash"
+				destructive
+				disabled={busy}
+				onPress={() => onDelete(document)}
+			/>
+		</Sheet>
+	);
+}
