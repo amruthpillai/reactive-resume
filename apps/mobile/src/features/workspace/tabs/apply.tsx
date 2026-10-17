@@ -233,13 +233,13 @@ function AnswerCard({
 		disabled || readOnly ? answer.answer : text,
 		answer.answer,
 		(value) => onSave({ answer: value }),
-		answerDraft.clear,
+		answerDraft,
 	);
 	const questionSave = useAutosave(
 		disabled || readOnly ? answer.question : question,
 		answer.question,
 		(value) => onSave({ question: value }),
-		questionDraft.clear,
+		questionDraft,
 	);
 	const empty = !text.trim();
 	const aiLabel = useWorking(

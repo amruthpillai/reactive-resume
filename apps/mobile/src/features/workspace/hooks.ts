@@ -195,27 +195,34 @@ export function useGenerate(applicationId: string) {
 	};
 }
 
+type TextDraft = ReturnType<typeof useDraft<string>>;
+
 /**
  * Saves text a moment after typing stops (2 s), on blur (`flush`) and when leaving. Transient failures retry up to 3
- * times (5, 10, 20 s); a permanent one (4xx, conflict) stops and sets `error` until the user's `retry` or new typing.
- * `onSaved` runs only when the server confirmed that exact value (clear its device draft there).
+ * times (5, 10, 20 s). A permanent one (4xx, conflict) stops and sets `error`; with a `draft`, it is kept on the device
+ * with the text, so reopening the screen (or the app) shows it again and still waits for `retry` or `discard`
+ * ("Use server version"). The draft clears only when the server confirmed that exact value.
  */
 export function useAutosave(
 	value: string,
 	saved: string,
 	save: (value: string) => Promise<SaveResult>,
-	onSaved?: (value: string) => void,
+	draft?: TextDraft,
 ) {
-	const latestCallbacks = useRef({ save, onSaved });
+	const latest = useRef({ save, draft, saved });
 	useLayoutEffect(() => {
-		latestCallbacks.current = { save, onSaved };
+		latest.current = { save, draft, saved };
 	});
 	const [error, setError] = useState<string | null>(null);
 	const [autosave] = useState(() =>
 		createAutosave({
-			save: (next) => latestCallbacks.current.save(next),
-			onSaved: (next) => latestCallbacks.current.onSaved?.(next),
-			onError: setError,
+			save: (next) => latest.current.save(next),
+			onSaved: (next) => latest.current.draft?.clear(next),
+			onError: (block) => {
+				setError(block?.code ?? null);
+				if (!block) latest.current.draft?.setBlocked(null);
+				else if (block.permanent) latest.current.draft?.setBlocked({ value: block.value, code: block.code });
+			},
 			delay: 2000,
 			retryDelay: 5000,
 			maxRetries: 3,
@@ -225,12 +232,32 @@ export function useAutosave(
 			},
 		}),
 	);
+	// Before `update`: a conflict kept on the device must be in place before the restored draft could be sent.
+	const blocked = draft?.blocked ?? null;
+	const blockedValue = blocked?.value;
+	const blockedCode = blocked?.code;
+	useEffect(() => {
+		if (blockedValue !== undefined && blockedCode !== undefined)
+			autosave.block({ value: blockedValue, code: blockedCode });
+	}, [autosave, blockedValue, blockedCode]);
 	useEffect(() => autosave.update(value, saved), [autosave, value, saved]);
 	useEffect(() => () => autosave.dispose(), [autosave]);
-	return { flush: autosave.flush, retry: autosave.retry, error };
+	return {
+		flush: autosave.flush,
+		retry: autosave.retry,
+		/** Drops the draft for the server's copy. */
+		discard: () => {
+			autosave.discard();
+			latest.current.draft?.reset(latest.current.saved);
+		},
+		error,
+	};
 }
 
 const draftStore = createDraftStore(Storage);
+/** Suffix of the key that keeps a draft's permanent save failure (conflict) next to it. */
+const BLOCKED = "#save-error";
+type Blocked = { value: string; code: string };
 /** The key prefix of every workspace draft for one account; sign-out cleanup can sweep it. */
 export const draftPrefix = (scope: string) => `reactive-resume:career-draft:${scope}:`;
 
@@ -250,7 +277,10 @@ function clearDraftAt(scope: string, key: string, sent: unknown) {
 	const turn = writeTurns.get(key) ?? 0;
 	void getDraftScope().then((now) => {
 		// A write queued after this clear was asked for is newer than `sent`: leave it.
-		if (now === scope && (writeTurns.get(key) ?? 0) === turn) draftStore.clear(key, sent);
+		if (now !== scope || (writeTurns.get(key) ?? 0) !== turn) return;
+		draftStore.clear(key, sent);
+		// No draft left, so no conflict to wait on.
+		if (draftStore.read(key) === undefined) draftStore.clear(`${key}${BLOCKED}`);
 	});
 }
 
@@ -297,6 +327,13 @@ export function useDraft<T>(name: string | null, initial: T) {
 	useEffect(() => {
 		if (state.key !== null && scope !== null && state.touched) writeDraft(scope, state.key, state.value);
 	}, [state, scope]);
+	// A permanent save failure kept with the draft (see useAutosave), per account key like the draft itself.
+	const [blocked, setBlockedState] = useState<{ key: string | null; value: Blocked | null }>({ key, value: null });
+	if (blocked.key !== key)
+		setBlockedState({
+			key,
+			value: key === null ? blocked.value : (draftStore.read<Blocked>(`${key}${BLOCKED}`) ?? null),
+		});
 	const current = useRef(state);
 	useLayoutEffect(() => {
 		current.current = state;
@@ -313,6 +350,20 @@ export function useDraft<T>(name: string | null, initial: T) {
 		/** Drops the device copy once the server confirmed `sent`; a newer edit stays. */
 		clear: (sent: T) => {
 			if (key !== null && scope !== null) clearDraftAt(scope, key, sent);
+		},
+		blocked: blocked.value,
+		setBlocked: (next: Blocked | null) => {
+			setBlockedState({ key, value: next });
+			if (key === null || scope === null) return;
+			if (next) writeDraft(scope, `${key}${BLOCKED}`, next);
+			else clearDraftAt(scope, `${key}${BLOCKED}`, undefined);
+		},
+		/** Replaces the draft with `value` (the server copy) and forgets it and its kept failure. */
+		reset: (value: T) => {
+			current.current = { ...current.current, value, touched: false };
+			setState(current.current);
+			setBlockedState({ key, value: null });
+			if (key !== null && scope !== null) clearDraftAt(scope, key, undefined);
 		},
 	};
 }

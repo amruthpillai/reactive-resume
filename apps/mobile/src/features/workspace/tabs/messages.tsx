@@ -83,7 +83,7 @@ function PasteBox({ application, initial, readOnly, onSave }: PasteBoxProps) {
 	const message = draft.value;
 	const generate = useGenerate(application.id);
 	const provider = useHasAIProvider().defaultProvider;
-	const autosave = useAutosave(readOnly ? initial : message, initial, onSave, draft.clear);
+	const autosave = useAutosave(readOnly ? initial : message, initial, onSave, draft);
 	const label = useWorking(generate.isPending, workingSteps("reply"), t`Read it for me`);
 	const company = application.company;
 

@@ -61,13 +61,19 @@ export function saveFailure(error: unknown): Extract<SaveResult, { ok: false }> 
 	return { ok: false, transient, code: typeof code === "string" ? code : http === null ? "NETWORK" : String(http) };
 }
 
+/**
+ * Why automatic saving stopped. `permanent` failures (4xx, a conflict with a concurrent edit) are kept with the draft
+ * on the device, so reopening the screen still waits for the user instead of overwriting the newer server copy.
+ */
+export type SaveBlock = { value: string; code: string; permanent: boolean };
+
 type AutosaveOptions = {
 	/** Never rejects. */
 	save: (value: string) => Promise<SaveResult>;
 	/** The server confirmed this exact value (clear its device draft). Never called for an optimistic or refetched copy. */
 	onSaved?: (value: string) => void;
-	/** A failure that stopped automatic saving (its code), or null once it's cleared. */
-	onError?: (code: string | null) => void;
+	/** Automatic saving stopped (show it; persist it when permanent), or null once a save succeeded or was discarded. */
+	onError?: (block: SaveBlock | null) => void;
 	delay: number;
 	/** The first wait before retrying a transient failure; it doubles each time. */
 	retryDelay: number;
@@ -78,14 +84,15 @@ type AutosaveOptions = {
 
 /**
  * Saves text a moment after typing stops, on `flush` (blur) and on `dispose` (leaving). A transient failure is retried
- * with exponential backoff up to `maxRetries` times; a permanent one (4xx, conflict) stops at once. Either way the value
- * is kept for the user's `retry`, and new typing starts afresh. A value already on its way is not sent twice.
+ * with exponential backoff up to `maxRetries` times, and new typing afterwards starts afresh. A permanent failure (4xx,
+ * conflict) stops all automatic saving, new typing and leaving included, until the user's `retry` succeeds or `discard`
+ * drops the draft; `block` restores that state from the device on reopen. A value already on its way is not sent twice.
  */
 export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxRetries, timers }: AutosaveOptions) {
 	let value = "";
 	let saved = "";
 	let inFlight: string | null = null;
-	let failed: { value: string; attempts: number; stopped: boolean } | null = null;
+	let failed: { value: string; attempts: number; stopped: boolean; permanent: boolean } | null = null;
 	let timer: unknown = null;
 	let disposed = false;
 	const cancel = () => {
@@ -103,20 +110,22 @@ export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxR
 	function send(manual: boolean) {
 		cancel();
 		if (value === saved || value === inFlight) return;
-		if (!manual && failed?.value === value && failed.stopped) return;
+		if (!manual && (failed?.permanent || (failed?.value === value && failed.stopped))) return;
 		const sending = value;
 		inFlight = sending;
 		void save(sending).then((result) => {
 			if (inFlight === sending) inFlight = null;
 			if (result.ok) {
-				if (failed?.value === sending) clearError();
+				// A confirmed write resolves a conflict: the user chose to save over the other copy.
+				if (failed && (failed.value === sending || failed.permanent)) clearError();
 				onSaved?.(sending);
 				return;
 			}
 			const attempts = failed?.value === sending && !manual ? failed.attempts + 1 : 1;
-			const stopped = !result.transient || attempts > maxRetries;
-			failed = { value: sending, attempts, stopped };
-			if (stopped) onError?.(result.code);
+			const permanent = !result.transient;
+			const stopped = permanent || attempts > maxRetries;
+			failed = { value: sending, attempts, stopped, permanent };
+			if (stopped) onError?.({ value: sending, code: result.code, permanent });
 			else if (value === sending) schedule(retryDelay * 2 ** (attempts - 1));
 		});
 	}
@@ -126,16 +135,24 @@ export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxR
 			saved = nextSaved;
 			// An equal copy (optimistic or refetched) needs no write; it doesn't confirm a draft either.
 			if (value === saved || value === inFlight) return cancel();
-			// A failed value waits for its retry timer, or for the user.
-			if (failed?.value === value) return;
+			// A conflict waits for the user whatever is typed; a failed value waits for its retry timer, or the user.
+			if (failed?.permanent || failed?.value === value) return;
 			clearError();
 			schedule(delay);
 		},
+		/** Restores a permanent failure kept on the device: nothing is sent until `retry` or `discard`. */
+		block(blocked: { value: string; code: string }) {
+			cancel();
+			failed = { value: blocked.value, attempts: maxRetries + 1, stopped: true, permanent: true };
+			onError?.({ ...blocked, permanent: true });
+		},
 		flush: () => send(false),
-		/** The user's Retry: sends the current value now and restarts the retry budget. */
-		retry: () => {
+		/** The user's Retry: sends the current value now; the error stays until the server confirms it. */
+		retry: () => send(true),
+		/** "Use server version": stop waiting; the caller replaces the draft with the server copy. */
+		discard: () => {
+			cancel();
 			clearError();
-			send(true);
 		},
 		dispose() {
 			send(false);

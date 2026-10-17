@@ -205,7 +205,7 @@ const autosaveWith = (results, extra = {}) => {
 			return results.shift() ?? OK;
 		},
 		onSaved: (value) => acknowledged.push(value),
-		onError: (code) => errors.push(code),
+		onError: (block) => errors.push(block?.code ?? null),
 		delay: 2000,
 		retryDelay: 5000,
 		maxRetries: 3,
@@ -347,6 +347,79 @@ scenario("round 2, 4: errors keep their code; 4xx and conflicts stop at once, tr
 	await offline.timers.advance(2000);
 	assert.equal(offline.sent.length, 5, "new typing starts afresh");
 	assert.deepEqual(offline.errors, ["NETWORK", null]);
+});
+
+scenario("round 3: a conflict kept with the draft survives reopening; nothing overwrites until Retry or Use server version", async () => {
+	// The device: one kv-store shared by every mount, as useDraft/useAutosave use it.
+	const storage = memoryStorage();
+	const drafts = createDraftStore(storage);
+	const key = 'reactive-resume:career-draft:["https://rxresu.me","alice"]:message:app';
+	const blockedKey = `${key}#save-error`;
+	const mount = (results) => {
+		const timers = fakeTimers();
+		const sent = [];
+		const shown = [];
+		const autosave = createAutosave({
+			save: async (value) => {
+				sent.push(value);
+				return results.shift() ?? OK;
+			},
+			onSaved: (value) => drafts.clear(key, value),
+			onError: (block) => {
+				shown.push(block?.code ?? null);
+				if (!block) drafts.clear(blockedKey);
+				else if (block.permanent) drafts.write(blockedKey, { value: block.value, code: block.code });
+			},
+			delay: 2000,
+			retryDelay: 5000,
+			maxRetries: 3,
+			timers,
+		});
+		// What useAutosave does on (re)open: restore a kept failure before the restored draft could be sent.
+		const kept = drafts.read(blockedKey);
+		if (kept) autosave.block(kept);
+		return { timers, sent, shown, autosave };
+	};
+
+	const first = mount([CONFLICT]);
+	drafts.write(key, "mine");
+	first.autosave.update("mine", "theirs");
+	await first.timers.advance(2000);
+	assert.deepEqual(first.shown, ["CONFLICT"]);
+	assert.deepEqual(drafts.read(blockedKey), { value: "mine", code: "CONFLICT" }, "kept with the draft");
+	first.autosave.dispose(); // leave the tab (or the app restarts)
+
+	const reopened = mount([]);
+	assert.deepEqual(reopened.shown, ["CONFLICT"], "the banner is back on reopen");
+	reopened.autosave.update(drafts.read(key), "their newer edit"); // restored draft vs the refetched remote edit
+	await reopened.timers.advance(60_000);
+	reopened.autosave.update("mine, edited", "their newer edit"); // typing more doesn't send either
+	await reopened.timers.advance(60_000);
+	reopened.autosave.flush();
+	reopened.autosave.dispose();
+	assert.deepEqual(reopened.sent, [], "the remote edit is never overwritten on its own");
+
+	const retried = mount([OK]);
+	retried.autosave.update("mine, edited", "their newer edit");
+	retried.autosave.retry();
+	await retried.timers.advance(0);
+	assert.deepEqual(retried.sent, ["mine, edited"], "explicit Retry saves over it");
+	assert.deepEqual(retried.shown, ["CONFLICT", null]);
+	assert.equal(drafts.read(blockedKey), undefined, "the kept conflict is gone once the server confirmed");
+
+	drafts.write(key, "other text");
+	drafts.write(blockedKey, { value: "other text", code: "CONFLICT" });
+	const discarded = mount([]);
+	discarded.autosave.update("other text", "server text");
+	discarded.autosave.discard(); // Use server version (the hook then resets the draft to the server copy)
+	drafts.clear(key);
+	discarded.autosave.update("server text", "server text");
+	await discarded.timers.advance(60_000);
+	assert.deepEqual(discarded.sent, []);
+	assert.deepEqual(discarded.shown, ["CONFLICT", null]);
+	assert.equal(drafts.read(blockedKey), undefined);
+	assert.equal(drafts.read(key), undefined);
+	assert.equal(mount([]).shown.length, 0, "a later reopen shows nothing");
 });
 
 scenario("fix 2 + 3: device drafts persist; finishing a review clears only the submitted revision", () => {

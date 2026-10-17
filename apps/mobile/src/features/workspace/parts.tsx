@@ -281,21 +281,31 @@ export function Progress({ value, label }: { value: number; label: string }) {
 	);
 }
 
-type SaveErrorProps = { autosave: { error: string | null; retry: () => void } };
+type SaveErrorProps = { autosave: { error: string | null; retry: () => void; discard: () => void } };
 
-/** Shown when autosave stopped (a permanent error, or retries ran out): the text is kept and the user retries. */
+/**
+ * Shown when autosave stopped (a permanent error, or retries ran out): the text is kept and the user decides. After a
+ * conflict this comes back on reopen until they retry or take the server version.
+ */
 export function SaveError({ autosave }: SaveErrorProps) {
 	const { t } = useLingui();
+	const { space } = useTheme();
 	if (!autosave.error) return null;
+	const conflict = autosave.error === "CONFLICT";
 	return (
-		<Banner
-			tone="danger"
-			message={
-				autosave.error === "CONFLICT"
-					? t`This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy.`
-					: t`This wasn't saved. Your text is kept on this device.`
-			}
-			action={{ label: t`Retry`, onPress: autosave.retry }}
-		/>
+		<View style={{ gap: space.s2 }}>
+			<Banner
+				tone="danger"
+				message={
+					conflict
+						? t`This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy.`
+						: t`This wasn't saved. Your text is kept on this device.`
+				}
+				action={{ label: t`Retry`, onPress: autosave.retry }}
+			/>
+			{conflict ? (
+				<Button variant="secondary" size="sm" label={t`Use server version`} onPress={autosave.discard} />
+			) : null}
+		</View>
 	);
 }
