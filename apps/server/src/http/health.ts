@@ -3,6 +3,7 @@ import { withTimeout } from "es-toolkit";
 import { getStorageService } from "@reactive-resume/api/features/storage";
 import { db } from "@reactive-resume/db/client";
 import { getRedis } from "@reactive-resume/db/redis";
+import { env } from "@reactive-resume/env/server";
 import { appVersion } from "../app-version";
 
 const HEALTHCHECK_TIMEOUT_MS = 1_500;
@@ -15,11 +16,11 @@ type CheckResult = {
 };
 
 // ponytail: es-toolkit withTimeout takes a fn, not a promise — call site passes check (not check())
-async function runCheck(check: () => Promise<object>): Promise<CheckResult> {
+async function runCheck(check: () => Promise<object>, timeoutMs = HEALTHCHECK_TIMEOUT_MS): Promise<CheckResult> {
 	const startedAt = performance.now();
 
 	try {
-		const data = await withTimeout(check, HEALTHCHECK_TIMEOUT_MS);
+		const data = await withTimeout(check, timeoutMs);
 		const latencyMs = Math.round(performance.now() - startedAt);
 		const result = data as { status?: string };
 		if (result.status === "unhealthy") return { ...(data as object), status: "unhealthy", latencyMs };
@@ -57,7 +58,7 @@ export async function handleHealth() {
 	const redisClient = getRedis();
 	const [database, storage, redis] = await Promise.all([
 		runCheck(checkDatabase),
-		runCheck(checkStorage),
+		runCheck(checkStorage, env.STORAGE_HEALTHCHECK_TIMEOUT_MS),
 		redisClient
 			? runCheck(async () => {
 					await redisClient.ping();

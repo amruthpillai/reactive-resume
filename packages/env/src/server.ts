@@ -133,6 +133,7 @@ export const env = createEnv({
 
 		// Storage (Optional)
 		STORAGE_BACKEND: z.enum(["local", "s3", "blob", "r2"]),
+		STORAGE_HEALTHCHECK_TIMEOUT_MS: z.coerce.number().int().positive().max(2_147_483_647).default(5_000),
 		BLOB_READ_WRITE_TOKEN: z.string().min(1).optional(),
 		BLOB_STORE_ID: z.string().min(1).optional(),
 		DEPLOYMENT_NAMESPACE: z.string().regex(/^[a-zA-Z0-9._-]+$/),

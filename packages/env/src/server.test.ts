@@ -13,6 +13,7 @@ beforeEach(() => {
 		"AI_API_KEY",
 		"AI_BASE_URL",
 		"REDIS_URL",
+		"STORAGE_HEALTHCHECK_TIMEOUT_MS",
 	])
 		vi.stubEnv(name, undefined);
 });
@@ -42,6 +43,24 @@ describe("server web access configuration", () => {
 		vi.stubEnv("WEB_ACCESS_PROVIDER", "firecrawl");
 		vi.stubEnv("WEB_ACCESS_API_URL", "http://firecrawl:3002");
 		expect((await import("./server")).env.WEB_ACCESS_API_KEY).toBeUndefined();
+	});
+});
+
+describe("storage health check timeout", () => {
+	it.each([undefined, ""])("defaults to 5000 ms when unset or blank (%s)", async (value) => {
+		vi.stubEnv("STORAGE_HEALTHCHECK_TIMEOUT_MS", value);
+		expect((await import("./server")).env.STORAGE_HEALTHCHECK_TIMEOUT_MS).toBe(5_000);
+	});
+
+	it("accepts a custom timeout in milliseconds", async () => {
+		vi.stubEnv("STORAGE_HEALTHCHECK_TIMEOUT_MS", "7000");
+		expect((await import("./server")).env.STORAGE_HEALTHCHECK_TIMEOUT_MS).toBe(7_000);
+	});
+
+	it.each(["0", "-1", "1.5", "not-a-number", "2147483648"])("rejects invalid timer duration %s", async (value) => {
+		vi.stubEnv("STORAGE_HEALTHCHECK_TIMEOUT_MS", value);
+		vi.spyOn(console, "error").mockImplementation(() => {});
+		await expect(import("./server")).rejects.toThrow("Invalid environment variables");
 	});
 });
 
