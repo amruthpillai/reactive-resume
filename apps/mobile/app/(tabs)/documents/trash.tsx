@@ -1,7 +1,5 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { DocumentsLibrary } from "@/features/documents/library";
 
 export default function TrashScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`Trash`} />;
+	return <DocumentsLibrary trashed />;
 }

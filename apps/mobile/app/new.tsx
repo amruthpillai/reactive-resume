@@ -1,7 +1,5 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { NewDocument } from "@/features/documents/new-document";
 
 export default function NewScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`New`} />;
+	return <NewDocument />;
 }
