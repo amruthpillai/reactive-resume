@@ -1,7 +1,3 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { AtsChecker } from "@/features/ats-checker/checker";
 
-export default function AtsCheckerScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`ATS checker`} />;
-}
+export default AtsChecker;
