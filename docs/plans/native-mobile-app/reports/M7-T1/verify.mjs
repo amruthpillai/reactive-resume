@@ -76,6 +76,7 @@ globalThis.__m7 = {
 	},
 	signOut: async () => {
 		events.push("signOut");
+		if (signOutFails === "partial") throw new globalThis.__m7.SignOutCleanupError([new Error("Fixture cleanup")]);
 		if (signOutFails) throw new Error("Fixture failure");
 	},
 	share: async (uri) => {
@@ -109,7 +110,7 @@ const modules = {
 	"@/api/client":
 		'export const client=globalThis.__m7.client;export const rest=globalThis.__m7.rest;export const orpc={auth:{getProfile:{key:()=>["profile"]},apiKeys:{list:{key:()=>["keys"],queryOptions:()=>({})}}}};',
 	"@/auth/session":
-		'export const signOut=globalThis.__m7.signOut;export const getServer=()=>"https://fixture.test";export const useSession=()=>({server:"https://fixture.test",status:"signed-in"});',
+		'export class SignOutCleanupError extends AggregateError{};globalThis.__m7.SignOutCleanupError=SignOutCleanupError;export const signOut=globalThis.__m7.signOut;export const getServer=()=>"https://fixture.test";export const useSession=()=>({server:"https://fixture.test",status:"signed-in"});',
 	"@/ui":
 		'export const Avatar="Avatar",Button="Button",ListRow="ListRow",Sheet="Sheet",TextField="TextField",ConfirmDialog="ConfirmDialog",Banner="Banner",EmptyState="EmptyState",Text="Text";export const showToast=globalThis.__m7.toast;export const useTheme=()=>({space:{s2:8,s3:12,s4:16,s10:40}});',
 	"./layout": 'export const SettingsGroup="SettingsGroup";',
@@ -211,6 +212,14 @@ try {
 		.props.onConfirm();
 	await drain();
 	assert.deepEqual(events, ["cancel", "signOut", "toast"]);
+	// M3-T1: a partial cleanup still signs out; switching server continues to the picker, then says what was left.
+	reset();
+	signOutFails = "partial";
+	SignOutRow({ switchServer: true })
+		.props.children.find((child) => child.type === "ConfirmDialog")
+		.props.onConfirm();
+	await drain();
+	assert.deepEqual(events, ["cancel", "signOut", "clear", ["route", "/server"], "toast"]);
 	console.log(
 		"PASS: browser destinations, retained share file and next-export sweep, avatar cancel/URL boundary/upload/remove, sign-out/server-switch ordering and failure recovery",
 	);
