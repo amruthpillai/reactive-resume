@@ -30,6 +30,7 @@ import { CalendarBlankIcon } from "phosphor-react-native/src/icons/CalendarBlank
 import { CalendarDotIcon } from "phosphor-react-native/src/icons/CalendarDot";
 import { CalendarDotsIcon } from "phosphor-react-native/src/icons/CalendarDots";
 import { CalendarPlusIcon } from "phosphor-react-native/src/icons/CalendarPlus";
+import { CameraIcon } from "phosphor-react-native/src/icons/Camera";
 import { CameraPlusIcon } from "phosphor-react-native/src/icons/CameraPlus";
 import { CaretDownIcon } from "phosphor-react-native/src/icons/CaretDown";
 import { CaretLeftIcon } from "phosphor-react-native/src/icons/CaretLeft";
@@ -77,11 +78,13 @@ import { HandHeartIcon } from "phosphor-react-native/src/icons/HandHeart";
 import { HighlighterIcon } from "phosphor-react-native/src/icons/Highlighter";
 import { HourglassIcon } from "phosphor-react-native/src/icons/Hourglass";
 import { HouseIcon } from "phosphor-react-native/src/icons/House";
+import { ImageIcon } from "phosphor-react-native/src/icons/Image";
 import { InfoIcon } from "phosphor-react-native/src/icons/Info";
 import { KanbanIcon } from "phosphor-react-native/src/icons/Kanban";
 import { KeyIcon } from "phosphor-react-native/src/icons/Key";
 import { KeyboardIcon } from "phosphor-react-native/src/icons/Keyboard";
 import { LightningIcon } from "phosphor-react-native/src/icons/Lightning";
+import { LinkBreakIcon } from "phosphor-react-native/src/icons/LinkBreak";
 import { LinkSimpleHorizontalIcon } from "phosphor-react-native/src/icons/LinkSimpleHorizontal";
 import { LinkSimpleHorizontalBreakIcon } from "phosphor-react-native/src/icons/LinkSimpleHorizontalBreak";
 import { ListBulletsIcon } from "phosphor-react-native/src/icons/ListBullets";
@@ -110,16 +113,19 @@ import { PencilLineIcon } from "phosphor-react-native/src/icons/PencilLine";
 import { PencilSimpleIcon } from "phosphor-react-native/src/icons/PencilSimple";
 import { PhoneIcon } from "phosphor-react-native/src/icons/Phone";
 import { PlayIcon } from "phosphor-react-native/src/icons/Play";
+import { PlugsConnectedIcon } from "phosphor-react-native/src/icons/PlugsConnected";
 import { PlusIcon } from "phosphor-react-native/src/icons/Plus";
 import { PlusCircleIcon } from "phosphor-react-native/src/icons/PlusCircle";
 import { PrinterIcon } from "phosphor-react-native/src/icons/Printer";
 import { QrCodeIcon } from "phosphor-react-native/src/icons/QrCode";
 import { QuestionIcon } from "phosphor-react-native/src/icons/Question";
+import { RobotIcon } from "phosphor-react-native/src/icons/Robot";
 import { RowsIcon } from "phosphor-react-native/src/icons/Rows";
 import { ScalesIcon } from "phosphor-react-native/src/icons/Scales";
 import { ScissorsIcon } from "phosphor-react-native/src/icons/Scissors";
 import { SealCheckIcon } from "phosphor-react-native/src/icons/SealCheck";
 import { ShareNetworkIcon } from "phosphor-react-native/src/icons/ShareNetwork";
+import { ShieldCheckIcon } from "phosphor-react-native/src/icons/ShieldCheck";
 import { SidebarSimpleIcon } from "phosphor-react-native/src/icons/SidebarSimple";
 import { SignOutIcon } from "phosphor-react-native/src/icons/SignOut";
 import { SlidersHorizontalIcon } from "phosphor-react-native/src/icons/SlidersHorizontal";
@@ -133,6 +139,7 @@ import { StopIcon } from "phosphor-react-native/src/icons/Stop";
 import { StopCircleIcon } from "phosphor-react-native/src/icons/StopCircle";
 import { SunIcon } from "phosphor-react-native/src/icons/Sun";
 import { TagIcon } from "phosphor-react-native/src/icons/Tag";
+import { TerminalWindowIcon } from "phosphor-react-native/src/icons/TerminalWindow";
 import { TextAaIcon } from "phosphor-react-native/src/icons/TextAa";
 import { TextAlignCenterIcon } from "phosphor-react-native/src/icons/TextAlignCenter";
 import { TextAlignJustifyIcon } from "phosphor-react-native/src/icons/TextAlignJustify";
@@ -200,6 +207,7 @@ const icons = {
 	"calendar-dots": CalendarDotsIcon,
 	"calendar-plus": CalendarPlusIcon,
 	"camera-plus": CameraPlusIcon,
+	camera: CameraIcon,
 	"caret-down": CaretDownIcon,
 	"caret-left": CaretLeftIcon,
 	"caret-right": CaretRightIcon,
@@ -246,11 +254,13 @@ const icons = {
 	highlighter: HighlighterIcon,
 	hourglass: HourglassIcon,
 	house: HouseIcon,
+	image: ImageIcon,
 	info: InfoIcon,
 	kanban: KanbanIcon,
 	key: KeyIcon,
 	keyboard: KeyboardIcon,
 	lightning: LightningIcon,
+	"link-break": LinkBreakIcon,
 	"link-simple-horizontal": LinkSimpleHorizontalIcon,
 	"link-simple-horizontal-break": LinkSimpleHorizontalBreakIcon,
 	"list-bullets": ListBulletsIcon,
@@ -280,19 +290,23 @@ const icons = {
 	phone: PhoneIcon,
 	play: PlayIcon,
 	plus: PlusIcon,
+	"plugs-connected": PlugsConnectedIcon,
 	"plus-circle": PlusCircleIcon,
 	printer: PrinterIcon,
 	"qr-code": QrCodeIcon,
 	question: QuestionIcon,
+	robot: RobotIcon,
 	rows: RowsIcon,
 	scales: ScalesIcon,
 	scissors: ScissorsIcon,
 	"seal-check": SealCheckIcon,
 	"share-network": ShareNetworkIcon,
+	"shield-check": ShieldCheckIcon,
 	"sidebar-simple": SidebarSimpleIcon,
 	"sign-out": SignOutIcon,
 	"sliders-horizontal": SlidersHorizontalIcon,
 	sparkle: SparkleIcon,
+	"terminal-window": TerminalWindowIcon,
 	"speaker-high": SpeakerHighIcon,
 	square: SquareIcon,
 	"square-split-horizontal": SquareSplitHorizontalIcon,
