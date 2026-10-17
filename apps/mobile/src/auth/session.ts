@@ -220,11 +220,21 @@ export function hasChosenServer(): boolean {
 	return serverChosen;
 }
 
+let restoring: Promise<void> | null = null;
+
 /**
  * Reads the last server and its tokens from SecureStore. Call once at launch. An unreadable store signs out. A refresh
  * that was still out when the app last stopped leaves the session `expired`: its token may already be rotated.
+ *
+ * The root layout and the cold-start link handler both call it; they share one restore, queued as a session
+ * transition, so a sign-in that follows can never be overwritten by a slow read of the previous server.
  */
-export async function restoreSession(): Promise<void> {
+export function restoreSession(): Promise<void> {
+	restoring ??= transition(readStoredSession);
+	return restoring;
+}
+
+async function readStoredSession(): Promise<void> {
 	try {
 		const storedServer = await SecureStore.getItemAsync(serverKey);
 		const server = storedServer && isAllowedServer(storedServer) ? storedServer : DEFAULT_SERVER;
