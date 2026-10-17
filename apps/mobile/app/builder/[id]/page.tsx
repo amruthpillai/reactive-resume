@@ -1,49 +1,41 @@
-import type { ResumeDraftStore } from "@/draft/types";
 import { useLingui } from "@lingui/react/macro";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { produce } from "immer";
-import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
+import { useSession } from "@/auth/session";
+import { ResumeConflictSheet, useResumeDraft } from "@/draft";
+import { nativeEnvironment } from "@/draft/native";
 import { ResumePage } from "@/preview/page";
 import { Banner } from "@/ui";
 
+// Metro removes this branch and its require before collecting release dependencies.
+const DevelopmentTools: typeof import("../../../scripts/parity/development").DevelopmentTools | null = __DEV__
+	? require("../../../scripts/parity/development").DevelopmentTools
+	: null;
+
 export default function PageScreen() {
 	const { t } = useLingui();
-	const { id, parity } = useLocalSearchParams<{ id: string; parity?: string }>();
-	// shortcut: M3-T3 is a parallel branch; coordinator replaces this sample binding with useResumeStore on merge.
-	const [data, setData] = useState(sampleResumeData);
-	const [history, setHistory] = useState(data);
-	const [parityStatus, setParityStatus] = useState<string | null>(null);
-	useEffect(() => {
-		if (!__DEV__ || !parity) return;
-		let active = true;
-		void import("../../../scripts/parity/device")
-			.then(({ runParity }) => runParity(parity))
-			.then(() => {
-				if (active) setParityStatus(t`Renderer parity passed`);
-			})
-			.catch(() => {
-				if (active) setParityStatus(t`Renderer parity failed`);
-			});
-		return () => {
-			active = false;
-		};
-	}, [parity, t]);
-	const update: ResumeDraftStore["update"] = (recipe) => {
-		setHistory(data);
-		setData((value) => produce(value, recipe));
-	};
+	const { id, parity, smoke } = useLocalSearchParams<{ id: string; parity?: string; smoke?: string }>();
+	const developmentOrigin = parity ?? smoke;
+	const draft = useResumeDraft(id);
+	const session = useSession();
+	const current = draft.document?.id === id;
 	return (
 		<View style={{ flex: 1 }}>
 			<Stack.Screen options={{ title: t`Page`, headerTransparent: false }} />
-			<Banner
-				tone="info"
-				message={parityStatus ?? (__DEV__ && parity ? t`Checking renderer parity…` : t`Sample resume preview`)}
-			/>
-			{!(__DEV__ && parity && parityStatus === null) ? (
-				<ResumePage id={id} draft={{ data, update, locked: false, undo: () => setData(history) }} />
+			{DevelopmentTools && developmentOrigin ? (
+				<DevelopmentTools id={id} origin={developmentOrigin} fullParity={!!parity} />
 			) : null}
+			{session.status === "signed-out" || session.status === "expired" ? (
+				<Banner tone="warn" message={t`Sign in to view this resume.`} />
+			) : draft.status === "error" && !current ? (
+				<Banner
+					tone="danger"
+					message={t`Resume could not be loaded.`}
+					action={{ label: t`Retry`, onPress: () => void draft.open(id).catch(() => undefined) }}
+				/>
+			) : null}
+			<ResumePage id={id} draft={current ? draft : { ...draft, data: null }} focused={nativeEnvironment.focused()} />
+			<ResumeConflictSheet />
 		</View>
 	);
 }

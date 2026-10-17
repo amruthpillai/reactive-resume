@@ -5,36 +5,71 @@ import { configureFontReader, configureImageFetch, downloadFont } from "@reactiv
 import { getServer } from "@/auth/session";
 
 const MAX_IMAGE_BYTES = 12_000_000;
+const MAX_FONT_CACHE_BYTES = 200_000_000;
 let configured = false;
+let cacheQueue: Promise<unknown> = Promise.resolve();
+
+function inFontCache<T>(operation: () => Promise<T>): Promise<T> {
+	const result = cacheQueue.then(operation);
+	cacheQueue = result.catch(() => undefined);
+	return result;
+}
+
+function isFont(bytes: Uint8Array): boolean {
+	if (bytes.length < 4) return false;
+	if (bytes[0] === 0 && bytes[1] === 1 && bytes[2] === 0 && bytes[3] === 0) return true;
+	return ["OTTO", "true", "ttcf", "wOFF", "wOF2"].includes(String.fromCharCode(...bytes.subarray(0, 4)));
+}
+
+/** FIFO by last write, including interrupted writes. Called only inside the serialized disk queue. */
+function trimFonts(directory: Directory, incoming: number) {
+	const files = directory.list().filter((entry): entry is File => entry instanceof File);
+	for (const file of files.filter((entry) => entry.name.endsWith(".tmp"))) file.delete();
+	const fonts = files.filter((entry) => !entry.name.endsWith(".tmp"));
+	let total = fonts.reduce((sum, file) => sum + file.size, 0);
+	for (const file of fonts.sort((left, right) => (left.lastModified ?? 0) - (right.lastModified ?? 0))) {
+		if (total + incoming <= MAX_FONT_CACHE_BYTES) break;
+		const size = file.size;
+		file.delete();
+		total -= size;
+	}
+}
 
 /** Disk failures never prevent a network font download. Store raw bytes; pdf owns WOFF conversion. */
 export async function readCachedFont(source: string): Promise<Uint8Array> {
+	const directory = new Directory(Paths.cache, "pdf-fonts-v1");
 	let file: File | undefined;
 	try {
-		const directory = new Directory(Paths.document, "pdf-fonts-v1");
-		directory.create({ intermediates: true, idempotent: true });
 		file = new File(directory, await digestStringAsync(CryptoDigestAlgorithm.SHA256, source));
-		if (file.exists) {
-			const bytes = await file.bytes();
-			if (bytes.length > 0) return bytes;
-		}
+		const target = file;
+		const cached = await inFontCache(async () => {
+			directory.create({ intermediates: true, idempotent: true });
+			trimFonts(directory, 0);
+			if (!target.exists) return null;
+			const bytes = await target.bytes();
+			if (isFont(bytes)) return bytes;
+			target.delete();
+			return null;
+		});
+		if (cached) return cached;
 	} catch {
 		file = undefined;
 	}
 	const bytes = await downloadFont(source);
-	if (file) {
-		const temporary = new File(`${file.uri}.tmp`);
-		try {
-			await temporary.write(bytes);
-			await temporary.move(file, { overwrite: true });
-		} catch {
-			// Disk full, permissions, or interrupted writes: keep the successfully downloaded font in memory.
+	if (!isFont(bytes)) throw new Error("Invalid font signature");
+	if (file && bytes.length <= MAX_FONT_CACHE_BYTES) {
+		const target = file;
+		await inFontCache(async () => {
+			const temporary = new File(`${target.uri}.tmp`);
 			try {
-				if (temporary.exists) temporary.delete();
-			} catch {
-				/* Cache cleanup is best effort. */
+				directory.create({ intermediates: true, idempotent: true });
+				trimFonts(directory, bytes.length);
+				await temporary.write(bytes);
+				await temporary.move(target, { overwrite: true });
+			} finally {
+				if (temporary.uri !== target.uri && temporary.exists) temporary.delete();
 			}
-		}
+		}).catch(() => undefined); // Disk errors keep the validated network bytes usable in memory.
 	}
 	return bytes;
 }
@@ -42,6 +77,12 @@ export async function readCachedFont(source: string): Promise<Uint8Array> {
 export function configurePreviewResources() {
 	if (configured) return;
 	configured = true;
+	try {
+		const legacy = new Directory(Paths.document, "pdf-fonts-v1");
+		if (legacy.exists) legacy.delete();
+	} catch {
+		/* Removing the former backed-up cache is best effort. New files only use Paths.cache. */
+	}
 	configureFontReader(readCachedFont);
 	configureImageFetch(expoFetch as unknown as typeof fetch);
 }

@@ -66,6 +66,11 @@ const server = createServer(async (request, response) => {
 			response.end(font);
 			return;
 		}
+		if (request.method === "GET" && url.pathname === "/invalid-font") {
+			response.writeHead(200, { "Content-Type": "text/html" });
+			response.end("<html>HTTP 200 font error</html>");
+			return;
+		}
 		if (request.method === "GET" && url.pathname === "/font-reads") {
 			response.end(JSON.stringify(fontReads[url.searchParams.get("platform") ?? "unknown"] ?? 0));
 			return;
@@ -125,4 +130,4 @@ const server = createServer(async (request, response) => {
 		response.end("Parity failure");
 	}
 });
-server.listen(18086, "0.0.0.0", () => console.log("Parity host ready on 18086"));
+server.listen(18086, "127.0.0.1", () => console.log("Parity host ready on 127.0.0.1:18086"));

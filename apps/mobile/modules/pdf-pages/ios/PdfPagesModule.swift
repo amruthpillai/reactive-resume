@@ -9,6 +9,15 @@ public class PdfPagesModule: Module {
 
   public func definition() -> ModuleDefinition {
     Name("PdfPages")
+    OnCreate {
+      self.queue.async {
+        let root = FileManager.default.temporaryDirectory
+        let stale = (try? FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil)) ?? []
+        for directory in stale where directory.lastPathComponent.hasPrefix("rr-pdf-") {
+          try? FileManager.default.removeItem(at: directory)
+        }
+      }
+    }
     AsyncFunction("open") { (bytes: Data) -> [String: Any] in
       guard let document = PDFDocument(data: bytes), document.pageCount > 0 else {
         throw PdfPagesError("Invalid PDF")
@@ -31,33 +40,41 @@ public class PdfPagesModule: Module {
         throw PdfPagesError("Closed PDF")
       }
       guard scale.isFinite, scale >= 0.1, scale <= 6 else { throw PdfPagesError("Invalid scale") }
-      return try indices.map { index in
-        guard index >= 0, index < document.pageCount, let page = document.page(at: index) else {
-          throw PdfPagesError("Invalid page")
-        }
-        let box = page.bounds(for: .mediaBox)
-        let width = ceil(box.width * scale), height = ceil(box.height * scale)
-        guard width > 0, height > 0, width * height <= 25_000_000 else {
-          throw PdfPagesError("Page exceeds bitmap limit")
-        }
-        let file = directory.appendingPathComponent("\(index)-\(scale).png")
-        if !FileManager.default.fileExists(atPath: file.path) {
-          let format = UIGraphicsImageRendererFormat()
-          format.scale = 1
-          format.opaque = true
-          let image = UIGraphicsImageRenderer(size: CGSize(width: width, height: height), format: format).image { context in
-            UIColor.white.setFill()
-            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
-            let cg = context.cgContext
-            cg.translateBy(x: 0, y: height)
-            cg.scaleBy(x: scale, y: -scale)
-            cg.translateBy(x: -box.minX, y: -box.minY)
-            page.draw(with: .mediaBox, to: cg)
+      return try indices.map { index -> [String: Any] in
+        try autoreleasepool {
+          guard index >= 0, index < document.pageCount, let page = document.page(at: index) else {
+            throw PdfPagesError("Invalid page")
           }
-          guard let png = image.pngData() else { throw PdfPagesError("PNG encoding failed") }
-          try png.write(to: file, options: .atomic)
+          let box = page.bounds(for: .mediaBox)
+          guard box.width.isFinite, box.height.isFinite, box.width > 0, box.height > 0 else {
+            throw PdfPagesError("Invalid page dimensions")
+          }
+          let limit = 25_000_000.0
+          let pageScale = min(scale, sqrt(limit / box.width / box.height), limit / box.width, limit / box.height)
+          let width = max(1, floor(box.width * pageScale)), height = max(1, floor(box.height * pageScale))
+          let file = directory.appendingPathComponent("\(index)-\(pageScale).png")
+          if !FileManager.default.fileExists(atPath: file.path) {
+            let format = UIGraphicsImageRendererFormat()
+            format.scale = 1
+            format.opaque = true
+            let image = UIGraphicsImageRenderer(size: CGSize(width: width, height: height), format: format).image { context in
+              UIColor.white.setFill()
+              context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+              let cg = context.cgContext
+              cg.translateBy(x: 0, y: height)
+              cg.scaleBy(x: pageScale, y: -pageScale)
+              cg.translateBy(x: -box.minX, y: -box.minY)
+              page.draw(with: .mediaBox, to: cg)
+            }
+            guard let png = image.pngData() else { throw PdfPagesError("PNG encoding failed") }
+            try png.write(to: file, options: .atomic)
+          }
+          for old in try FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+            where old.lastPathComponent.hasPrefix("\(index)-") && old.pathExtension == "png" && old != file {
+            try? FileManager.default.removeItem(at: old)
+          }
+          return ["index": index, "uri": file.absoluteString, "width": box.width, "height": box.height]
         }
-        return ["index": index, "uri": file.absoluteString, "width": box.width, "height": box.height]
       }
     }.runOnQueue(queue)
 

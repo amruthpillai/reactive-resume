@@ -22,6 +22,12 @@ class PdfPagesModule : Module() {
 
   override fun definition() = ModuleDefinition {
     Name("PdfPages")
+    OnCreate {
+      dispatcher.executor.execute {
+        appContext.reactContext?.cacheDir?.listFiles()?.filter { it.isDirectory && it.name.startsWith("rr-pdf-") }
+          ?.forEach { it.deleteRecursively() }
+      }
+    }
     AsyncFunction("open") { bytes: ByteArray ->
       val cache = requireNotNull(appContext.reactContext).cacheDir
       val id = UUID.randomUUID().toString()
@@ -53,15 +59,17 @@ class PdfPagesModule : Module() {
       indices.map { index ->
         require(index >= 0 && index < document.renderer.pageCount) { "Invalid page" }
         document.renderer.openPage(index).use { page ->
-          val width = kotlin.math.ceil(page.width * scale).toInt()
-          val height = kotlin.math.ceil(page.height * scale).toInt()
-          require(width > 0 && height > 0 && width.toLong() * height <= 25_000_000) { "Page exceeds bitmap limit" }
-          val file = File(document.directory, "$index-$scale.png")
+          require(page.width > 0 && page.height > 0) { "Invalid page dimensions" }
+          val limit = 25_000_000.0
+          val pageScale = minOf(scale, kotlin.math.sqrt(limit / page.width / page.height), limit / page.width, limit / page.height)
+          val width = maxOf(1, kotlin.math.floor(page.width * pageScale).toInt())
+          val height = maxOf(1, kotlin.math.floor(page.height * pageScale).toInt())
+          val file = File(document.directory, "$index-$pageScale.png")
           if (!file.exists()) {
             val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             try {
               bitmap.eraseColor(Color.WHITE)
-              val matrix = Matrix().apply { setScale(scale.toFloat(), scale.toFloat()) }
+              val matrix = Matrix().apply { setScale(pageScale.toFloat(), pageScale.toFloat()) }
               page.render(bitmap, null, matrix, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
               file.outputStream().use { check(bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)) { "PNG encoding failed" } }
             } catch (error: Throwable) {
@@ -69,6 +77,8 @@ class PdfPagesModule : Module() {
               throw error
             } finally { bitmap.recycle() }
           }
+          document.directory.listFiles()?.filter { it.name.startsWith("$index-") && it.extension == "png" && it != file }
+            ?.forEach { it.delete() }
           mapOf("index" to index, "uri" to android.net.Uri.fromFile(file).toString(), "width" to page.width, "height" to page.height)
         }
       }

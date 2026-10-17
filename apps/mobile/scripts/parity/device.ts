@@ -21,8 +21,8 @@ export function runParity(origin: string): Promise<void> {
 	}));
 }
 
-async function checkParity(origin: string): Promise<void> {
-	if (!__DEV__) return;
+export async function checkPreviewResources(origin: string): Promise<ResumeData> {
+	check(__DEV__, "Development build required");
 	const url = new URL(origin);
 	check(
 		["localhost", "127.0.0.1", "10.0.2.2"].includes(url.hostname) && url.port === "18086",
@@ -62,9 +62,9 @@ async function checkParity(origin: string): Promise<void> {
 		"Warm font hit the network",
 	);
 	// Real filesystem failure, inside this disposable simulator's sandbox: a file blocks directory creation.
-	const directory = new Directory(Paths.document, "pdf-fonts-v1");
+	const directory = new Directory(Paths.cache, "pdf-fonts-v1");
 	const originalUri = directory.uri;
-	await directory.move(new Directory(Paths.document, "pdf-fonts-v1-backup"));
+	await directory.move(new Directory(Paths.cache, "pdf-fonts-v1-backup"));
 	const blocker = new File(originalUri.replace(/\/$/, ""));
 	try {
 		await blocker.write("cache unavailable");
@@ -84,7 +84,11 @@ async function checkParity(origin: string): Promise<void> {
 		`[parity] ${Platform.OS} image streaming/data/relative, persistent fonts, disk fallback and fit floor PASS`,
 	);
 	await preloadResumePdf(fixture);
+	return fixture;
+}
 
+async function checkParity(origin: string): Promise<void> {
+	const fixture = await checkPreviewResources(origin);
 	for (const name of [...templateSchema.options, "free-form"]) {
 		const data = structuredClone(fixture);
 		if (name === "free-form") data.metadata.page.format = "free-form";

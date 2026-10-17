@@ -139,7 +139,7 @@ export function ResumePage({ id, draft, focused }: ResumePageProps) {
 			{preview.error ? (
 				<Banner
 					tone="danger"
-					message={t`Preview could not be rendered. Check your connection and retry.`}
+					message={t`Preview could not be rendered. Retry, or try another template or font in Design.`}
 					action={{ label: t`Retry`, onPress: preview.retry }}
 				/>
 			) : null}
