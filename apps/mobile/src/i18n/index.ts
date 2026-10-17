@@ -5,7 +5,7 @@ import type { Locale } from "@reactive-resume/utils/locale";
 import { i18n } from "@lingui/core";
 import { getLocales } from "expo-localization";
 import Storage from "expo-sqlite/kv-store";
-import { I18nManager } from "react-native";
+import { I18nManager, Platform, Settings } from "react-native";
 import { defaultLocale, isLocale, isRTL, localeSchema } from "@reactive-resume/utils/locale";
 
 const storageKey = "locale";
@@ -103,6 +103,10 @@ export async function activateLocale(locale: Locale) {
 	i18n.loadAndActivate({ locale, messages });
 
 	const rtl = isRTL(locale);
+	if (Platform.OS === "ios") {
+		// expo-localization resets forceRTL at launch; UIKit's persisted direction survives that reset.
+		Settings.set({ AppleTextDirection: rtl, NSForceRightToLeftWritingDirection: rtl });
+	}
 	if (I18nManager.isRTL === rtl) return false;
 	I18nManager.allowRTL(rtl);
 	I18nManager.forceRTL(rtl);

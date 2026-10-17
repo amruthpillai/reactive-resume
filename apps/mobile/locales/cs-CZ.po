@@ -145,7 +145,7 @@ msgstr "{0, plural, one {# den v kanceláři týdně} few {# dny v kanceláři t
 #. placeholder {0}: result?.pageCount ?? 1
 #: src/features/letters/page.tsx
 msgid "{0, plural, one {# page} other {# pages}}"
-msgstr ""
+msgstr "{0, plural, one {# stránka} few {# stránky} many {# stránky} other {# stránek}}"
 
 #. placeholder {0}: proposals.length
 #: src/features/assistant/messages.tsx
@@ -594,7 +594,7 @@ msgstr "{sections, plural, one {Sekce #} other {Sekce #}}"
 
 #: src/features/letters/share.tsx
 msgid "{sender}-Cover-Letter"
-msgstr ""
+msgstr "{sender}-Motivační-dopis"
 
 #: src/features/assistant/messages.tsx
 msgid "{skipped, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -618,7 +618,7 @@ msgstr "{supported} podporováno, {partial} částečně podporováno, {missing}
 
 #: src/features/letters/design.tsx
 msgid "{textSize} pt"
-msgstr ""
+msgstr "{textSize} pt"
 
 #: src/features/write/section-sheet.tsx
 msgid "{title} cleared"
@@ -1993,7 +1993,7 @@ msgstr "Zkontrolujte PDF"
 
 #: src/features/documents/new-document.tsx
 msgid "Check a PDF with the ATS checker"
-msgstr ""
+msgstr "Zkontrolovat PDF nástrojem pro kontrolu ATS"
 
 #: src/features/ats-checker/checker.tsx
 msgid "Check a sample file"
@@ -2591,7 +2591,7 @@ msgstr "Tuto adresu nelze zkontrolovat ani uložit. Zkuste to znovu."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't check your AI providers."
-msgstr ""
+msgstr "Nepodařilo se ověřit vaše poskytovatele AI."
 
 #: src/features/documents/queries.ts
 msgid "Couldn't complete this action. Try again."
@@ -2716,7 +2716,7 @@ msgstr "Nepodařilo se načíst vaši veřejnou adresu."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't load your resumes."
-msgstr ""
+msgstr "Nepodařilo se načíst vaše životopisy."
 
 #: app/(tabs)/settings/preferences.tsx
 msgid "Couldn't load your timezone."
@@ -2830,7 +2830,7 @@ msgstr "Časové pásmo se nepodařilo uložit."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
-msgstr ""
+msgstr "Změny se nepodařilo uložit, proto se nezačal vytvářet návrh. Na stránce se nic nezměnilo."
 
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
@@ -2982,7 +2982,7 @@ msgstr "Průvodní dopis — {0}"
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
-msgstr ""
+msgstr "Motivační dopis se nepodařilo načíst."
 
 #: src/features/application-detail/sections.tsx
 msgid "Cover letter file"
@@ -3188,7 +3188,7 @@ msgstr "Odstranit"
 #. placeholder {0}: menu ? versionTitle(menu) : ""
 #: src/features/letters/share.tsx
 msgid "Delete “{0}”?"
-msgstr ""
+msgstr "Smazat „{0}“?"
 
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
@@ -3308,7 +3308,7 @@ msgstr "Hustota"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Dependency type"
-msgstr ""
+msgstr "Typ závislosti"
 
 #: src/features/applications/list-screen.tsx
 msgid "Descending"
@@ -3456,7 +3456,7 @@ msgstr "Stáhnout {0}"
 
 #: src/features/letters/share.tsx
 msgid "Download both PDFs"
-msgstr ""
+msgstr "Stáhnout oba soubory PDF"
 
 #: src/features/letters/share.tsx
 msgid "Download failed."
@@ -3464,7 +3464,7 @@ msgstr "Stahování se nezdařilo."
 
 #: src/features/letters/share.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file."
-msgstr ""
+msgstr "Stažení otevře systémovou nabídku sdílení. Vyberte poskytovatele úložiště pro uložení souboru."
 
 #: src/features/share/download.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file. A linked letter opens as a second file."
@@ -3818,7 +3818,7 @@ msgstr "Každý den"
 
 #: src/features/letters/share.tsx
 msgid "Every editing session adds a version automatically. Named versions are kept until you delete them. Restoring saves the current state first."
-msgstr ""
+msgstr "Každá relace úprav automaticky přidá verzi. Pojmenované verze se uchovávají, dokud je nesmažete. Při obnovení se nejprve uloží aktuální stav."
 
 #: src/features/check/issues.ts
 msgid "Every entry has dates in a form systems read, in order, and none in the future."
@@ -4287,7 +4287,7 @@ msgstr "Pomozte mi zapracovat „{0}“ do mého životopisu, pouze pokud to mé
 
 #: src/features/letters/design.tsx
 msgid "Hex"
-msgstr ""
+msgstr "Hex"
 
 #: src/features/design/advanced.tsx
 #: src/features/write/entry-fields.tsx
@@ -4329,7 +4329,7 @@ msgstr "Skrýt klíč"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Hide licence"
-msgstr ""
+msgstr "Skrýt licenci"
 
 #: src/features/design/advanced.tsx
 msgid "Hide Link Underline"
@@ -4693,7 +4693,7 @@ msgstr "Japonština"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "JavaScript"
-msgstr ""
+msgstr "JavaScript"
 
 #: src/features/search/search-screen.tsx
 msgid "Job"
@@ -4876,7 +4876,7 @@ msgstr "Jazyky"
 
 #: src/features/letters/design.tsx
 msgid "Larger text"
-msgstr ""
+msgstr "Větší text"
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -4993,7 +4993,7 @@ msgstr "Dopisová stránka"
 #. placeholder {0}: page.index + 1
 #: src/features/letters/page.tsx
 msgid "Letter page {0}"
-msgstr ""
+msgstr "Stránka dopisu {0}"
 
 #: src/features/search/search-screen.tsx
 msgid "Letters"
@@ -5012,7 +5012,7 @@ msgstr "Úroveň"
 #: app/(tabs)/settings/index.tsx
 #: app/(tabs)/settings/licences.tsx
 msgid "Licences"
-msgstr ""
+msgstr "Licence"
 
 #: src/features/ats-checker/messages.ts
 msgid "Ligatures can drop letters out of words such as \"workflow\"."
@@ -5160,7 +5160,7 @@ msgstr "Načítání konverzací…"
 
 #: src/features/letters/page.tsx
 msgid "Loading cover letter…"
-msgstr ""
+msgstr "Načítání motivačního dopisu…"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Loading Knowledge before you send…"
@@ -5392,7 +5392,7 @@ msgstr "Označeno jako přečtené"
 
 #: src/features/letters/design.tsx
 msgid "Match “{resumeName}”"
-msgstr ""
+msgstr "Sladit s „{resumeName}“"
 
 #: src/features/applications/csv-sheet.tsx
 msgid "Match columns"
@@ -5686,7 +5686,7 @@ msgstr "Úzký"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Native & fonts"
-msgstr ""
+msgstr "Nativní kód a písma"
 
 #: src/features/ai/provider-list.tsx
 msgid "Needs attention"
@@ -5842,7 +5842,7 @@ msgstr "O tomto dokumentu zatím žádné konverzace."
 
 #: src/features/letters/write.tsx
 msgid "No date"
-msgstr ""
+msgstr "Bez data"
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -6510,7 +6510,7 @@ msgstr "Stránka {currentPage} z {0}"
 
 #: src/features/letters/design.tsx
 msgid "Page format"
-msgstr ""
+msgstr "Formát stránky"
 
 #: src/features/assistant/messages.tsx
 msgid "Page reading didn't finish."
@@ -7069,7 +7069,7 @@ msgstr "Přečti to za mě"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Read licence"
-msgstr ""
+msgstr "Přečíst licenci"
 
 #: src/features/applications/add-sheet.tsx
 #: src/features/career/today.tsx
@@ -7229,7 +7229,7 @@ msgstr "Obdélník (plná šířka)"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 msgid "Redo"
-msgstr ""
+msgstr "Znovu"
 
 #: src/features/write/fields.ts
 msgid "References"
@@ -8566,7 +8566,7 @@ msgstr "Malá čísla, ale stojí za povšimnutí."
 
 #: src/features/letters/design.tsx
 msgid "Smaller text"
-msgstr ""
+msgstr "Menší text"
 
 #: src/features/check/issues.ts
 msgid "Some application systems ask for one before you can apply."
@@ -9388,7 +9388,7 @@ msgstr "Myslící…"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Third-party software notices. Select a dependency to read its licence."
-msgstr ""
+msgstr "Oznámení o softwaru třetích stran. Vyberte závislost a přečtěte si její licenci."
 
 #: src/features/application-detail/detail-screen.tsx
 #: src/features/workspace/shell.tsx
@@ -9534,7 +9534,7 @@ msgstr "Tento motivační dopis se změnil jinde"
 
 #: src/features/letters/write.tsx
 msgid "This letter is locked. Unlock it in Documents to edit."
-msgstr ""
+msgstr "Tento dopis je uzamčený. Pro úpravy ho odemkněte v Dokumentech."
 
 #: src/features/letters/write.tsx
 msgid "This letter keeps its recipient as written."
@@ -10109,7 +10109,7 @@ msgstr "Použít výchozí"
 
 #: src/features/letters/write.tsx
 msgid "Use details from “{resumeName}”"
-msgstr ""
+msgstr "Použít údaje z „{resumeName}“"
 
 #: src/features/career/facts.tsx
 msgid "Use for all applications"
@@ -10138,7 +10138,7 @@ msgstr "Použít verzi serveru"
 
 #: src/features/letters/design.tsx
 msgid "Use six hex digits, like #3E6B4F."
-msgstr ""
+msgstr "Použijte šest šestnáctkových číslic, například #3E6B4F."
 
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
@@ -10219,7 +10219,7 @@ msgstr "Ověřování hesla…"
 
 #: src/features/letters/share.tsx
 msgid "Version"
-msgstr ""
+msgstr "Verze"
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx
@@ -10665,7 +10665,7 @@ msgstr "Jste offline. Stáhnout PDF používá toto zařízení. Jiné formáty 
 
 #: src/features/letters/share.tsx
 msgid "You're offline. Download PDF uses this device. Other formats need a connection. Fonts and images must already be cached."
-msgstr ""
+msgstr "Jste offline. Stažení PDF probíhá na tomto zařízení. Ostatní formáty vyžadují připojení. Písma a obrázky už musí být v mezipaměti."
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx

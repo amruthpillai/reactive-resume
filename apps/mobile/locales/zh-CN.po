@@ -145,7 +145,7 @@ msgstr "{0, plural, one {每周到岗#天} other {每周到岗#天}}"
 #. placeholder {0}: result?.pageCount ?? 1
 #: src/features/letters/page.tsx
 msgid "{0, plural, one {# page} other {# pages}}"
-msgstr ""
+msgstr "{0, plural, other {# 页}}"
 
 #. placeholder {0}: proposals.length
 #: src/features/assistant/messages.tsx
@@ -594,7 +594,7 @@ msgstr "{sections, plural, one {#款} other {#款}}"
 
 #: src/features/letters/share.tsx
 msgid "{sender}-Cover-Letter"
-msgstr ""
+msgstr "{sender}-求职信"
 
 #: src/features/assistant/messages.tsx
 msgid "{skipped, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -618,7 +618,7 @@ msgstr "{supported}项有依据，{partial}项有部分依据，{missing}项尚�
 
 #: src/features/letters/design.tsx
 msgid "{textSize} pt"
-msgstr ""
+msgstr "{textSize} pt"
 
 #: src/features/write/section-sheet.tsx
 msgid "{title} cleared"
@@ -1993,7 +1993,7 @@ msgstr "检查 PDF"
 
 #: src/features/documents/new-document.tsx
 msgid "Check a PDF with the ATS checker"
-msgstr ""
+msgstr "使用 ATS 检查器检查 PDF"
 
 #: src/features/ats-checker/checker.tsx
 msgid "Check a sample file"
@@ -2591,7 +2591,7 @@ msgstr "无法检查或保存该地址。再试一次。"
 
 #: src/features/letters/write.tsx
 msgid "Couldn't check your AI providers."
-msgstr ""
+msgstr "无法检查您的 AI 提供商。"
 
 #: src/features/documents/queries.ts
 msgid "Couldn't complete this action. Try again."
@@ -2716,7 +2716,7 @@ msgstr "无法加载您的公共地址。"
 
 #: src/features/letters/write.tsx
 msgid "Couldn't load your resumes."
-msgstr ""
+msgstr "无法加载您的简历。"
 
 #: app/(tabs)/settings/preferences.tsx
 msgid "Couldn't load your timezone."
@@ -2830,7 +2830,7 @@ msgstr "无法保存时区。"
 
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
-msgstr ""
+msgstr "无法保存您的更改，因此未开始起草。页面上的内容未发生变化。"
 
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
@@ -2982,7 +2982,7 @@ msgstr "求职信 — {0}"
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
-msgstr ""
+msgstr "无法加载求职信。"
 
 #: src/features/application-detail/sections.tsx
 msgid "Cover letter file"
@@ -3188,7 +3188,7 @@ msgstr "删除"
 #. placeholder {0}: menu ? versionTitle(menu) : ""
 #: src/features/letters/share.tsx
 msgid "Delete “{0}”?"
-msgstr ""
+msgstr "删除“{0}”？"
 
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
@@ -3308,7 +3308,7 @@ msgstr "密度"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Dependency type"
-msgstr ""
+msgstr "依赖类型"
 
 #: src/features/applications/list-screen.tsx
 msgid "Descending"
@@ -3456,7 +3456,7 @@ msgstr "下载{0}"
 
 #: src/features/letters/share.tsx
 msgid "Download both PDFs"
-msgstr ""
+msgstr "下载两个 PDF"
 
 #: src/features/letters/share.tsx
 msgid "Download failed."
@@ -3464,7 +3464,7 @@ msgstr "下载失败。"
 
 #: src/features/letters/share.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file."
-msgstr ""
+msgstr "下载会打开系统分享面板。请选择存储服务商以保存文件。"
 
 #: src/features/share/download.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file. A linked letter opens as a second file."
@@ -3818,7 +3818,7 @@ msgstr "每天"
 
 #: src/features/letters/share.tsx
 msgid "Every editing session adds a version automatically. Named versions are kept until you delete them. Restoring saves the current state first."
-msgstr ""
+msgstr "每次编辑会话都会自动添加一个版本。命名版本会一直保留，直到您将其删除。恢复前会先保存当前状态。"
 
 #: src/features/check/issues.ts
 msgid "Every entry has dates in a form systems read, in order, and none in the future."
@@ -4287,7 +4287,7 @@ msgstr "仅在我的经验支持的情况下，帮助我将“{0}”添加到我
 
 #: src/features/letters/design.tsx
 msgid "Hex"
-msgstr ""
+msgstr "Hex"
 
 #: src/features/design/advanced.tsx
 #: src/features/write/entry-fields.tsx
@@ -4329,7 +4329,7 @@ msgstr "隐藏密钥"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Hide licence"
-msgstr ""
+msgstr "隐藏许可证"
 
 #: src/features/design/advanced.tsx
 msgid "Hide Link Underline"
@@ -4693,7 +4693,7 @@ msgstr "日语"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "JavaScript"
-msgstr ""
+msgstr "JavaScript"
 
 #: src/features/search/search-screen.tsx
 msgid "Job"
@@ -4876,7 +4876,7 @@ msgstr "语言"
 
 #: src/features/letters/design.tsx
 msgid "Larger text"
-msgstr ""
+msgstr "增大文字"
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -4993,7 +4993,7 @@ msgstr "信页"
 #. placeholder {0}: page.index + 1
 #: src/features/letters/page.tsx
 msgid "Letter page {0}"
-msgstr ""
+msgstr "求职信第 {0} 页"
 
 #: src/features/search/search-screen.tsx
 msgid "Letters"
@@ -5012,7 +5012,7 @@ msgstr "等级"
 #: app/(tabs)/settings/index.tsx
 #: app/(tabs)/settings/licences.tsx
 msgid "Licences"
-msgstr ""
+msgstr "许可证"
 
 #: src/features/ats-checker/messages.ts
 msgid "Ligatures can drop letters out of words such as \"workflow\"."
@@ -5160,7 +5160,7 @@ msgstr "正在加载对话..."
 
 #: src/features/letters/page.tsx
 msgid "Loading cover letter…"
-msgstr ""
+msgstr "正在加载求职信…"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Loading Knowledge before you send…"
@@ -5392,7 +5392,7 @@ msgstr "已标记为已读"
 
 #: src/features/letters/design.tsx
 msgid "Match “{resumeName}”"
-msgstr ""
+msgstr "匹配“{resumeName}”"
 
 #: src/features/applications/csv-sheet.tsx
 msgid "Match columns"
@@ -5686,7 +5686,7 @@ msgstr "狭窄的"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Native & fonts"
-msgstr ""
+msgstr "原生组件和字体"
 
 #: src/features/ai/provider-list.tsx
 msgid "Needs attention"
@@ -5842,7 +5842,7 @@ msgstr "还没有关于此文档的对话。"
 
 #: src/features/letters/write.tsx
 msgid "No date"
-msgstr ""
+msgstr "无日期"
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -6510,7 +6510,7 @@ msgstr "第 {currentPage} 页（共 {0}）"
 
 #: src/features/letters/design.tsx
 msgid "Page format"
-msgstr ""
+msgstr "页面格式"
 
 #: src/features/assistant/messages.tsx
 msgid "Page reading didn't finish."
@@ -7069,7 +7069,7 @@ msgstr "帮我读一下"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Read licence"
-msgstr ""
+msgstr "阅读许可证"
 
 #: src/features/applications/add-sheet.tsx
 #: src/features/career/today.tsx
@@ -7229,7 +7229,7 @@ msgstr "矩形（全宽）"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 msgid "Redo"
-msgstr ""
+msgstr "重做"
 
 #: src/features/write/fields.ts
 msgid "References"
@@ -8566,7 +8566,7 @@ msgstr "数字虽小，但值得注意。"
 
 #: src/features/letters/design.tsx
 msgid "Smaller text"
-msgstr ""
+msgstr "缩小文字"
 
 #: src/features/check/issues.ts
 msgid "Some application systems ask for one before you can apply."
@@ -9388,7 +9388,7 @@ msgstr "思维…"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Third-party software notices. Select a dependency to read its licence."
-msgstr ""
+msgstr "第三方软件声明。选择依赖项以阅读其许可证。"
 
 #: src/features/application-detail/detail-screen.tsx
 #: src/features/workspace/shell.tsx
@@ -9534,7 +9534,7 @@ msgstr "这封求职信在其他地方发生了变化"
 
 #: src/features/letters/write.tsx
 msgid "This letter is locked. Unlock it in Documents to edit."
-msgstr ""
+msgstr "此求职信已锁定。请在“文档”中解锁后再编辑。"
 
 #: src/features/letters/write.tsx
 msgid "This letter keeps its recipient as written."
@@ -10109,7 +10109,7 @@ msgstr "使用默认值"
 
 #: src/features/letters/write.tsx
 msgid "Use details from “{resumeName}”"
-msgstr ""
+msgstr "使用“{resumeName}”中的信息"
 
 #: src/features/career/facts.tsx
 msgid "Use for all applications"
@@ -10138,7 +10138,7 @@ msgstr "使用服务器版本"
 
 #: src/features/letters/design.tsx
 msgid "Use six hex digits, like #3E6B4F."
-msgstr ""
+msgstr "请输入六位 Hex 数字，例如 #3E6B4F。"
 
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
@@ -10219,7 +10219,7 @@ msgstr "正在验证密码…"
 
 #: src/features/letters/share.tsx
 msgid "Version"
-msgstr ""
+msgstr "版本"
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx
@@ -10665,7 +10665,7 @@ msgstr "您已离线。下载PDF使用此设备。其他格式和链接的求职
 
 #: src/features/letters/share.tsx
 msgid "You're offline. Download PDF uses this device. Other formats need a connection. Fonts and images must already be cached."
-msgstr ""
+msgstr "您已离线。下载 PDF 使用此设备完成。其他格式需要联网。字体和图片必须已缓存。"
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx

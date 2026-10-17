@@ -145,7 +145,7 @@ msgstr "{0, plural, one {주 #일 사무실 출근} other {주 #일 사무실 �
 #. placeholder {0}: result?.pageCount ?? 1
 #: src/features/letters/page.tsx
 msgid "{0, plural, one {# page} other {# pages}}"
-msgstr ""
+msgstr "{0, plural, other {#페이지}}"
 
 #. placeholder {0}: proposals.length
 #: src/features/assistant/messages.tsx
@@ -594,7 +594,7 @@ msgstr "{sections, plural, one {# 섹션} other {# 섹션}}"
 
 #: src/features/letters/share.tsx
 msgid "{sender}-Cover-Letter"
-msgstr ""
+msgstr "{sender}-커버레터"
 
 #: src/features/assistant/messages.tsx
 msgid "{skipped, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -618,7 +618,7 @@ msgstr "{supported}개 근거 있음, {partial}개 일부 근거 있음, {missin
 
 #: src/features/letters/design.tsx
 msgid "{textSize} pt"
-msgstr ""
+msgstr "{textSize} pt"
 
 #: src/features/write/section-sheet.tsx
 msgid "{title} cleared"
@@ -1993,7 +1993,7 @@ msgstr "PDF 확인"
 
 #: src/features/documents/new-document.tsx
 msgid "Check a PDF with the ATS checker"
-msgstr ""
+msgstr "ATS 검사기로 PDF 검사"
 
 #: src/features/ats-checker/checker.tsx
 msgid "Check a sample file"
@@ -2591,7 +2591,7 @@ msgstr "이 주소를 확인하거나 저장할 수 없습니다. 다시 시도�
 
 #: src/features/letters/write.tsx
 msgid "Couldn't check your AI providers."
-msgstr ""
+msgstr "AI 제공업체를 확인할 수 없습니다."
 
 #: src/features/documents/queries.ts
 msgid "Couldn't complete this action. Try again."
@@ -2716,7 +2716,7 @@ msgstr "공개 주소를 로드할 수 없습니다."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't load your resumes."
-msgstr ""
+msgstr "이력서를 불러올 수 없습니다."
 
 #: app/(tabs)/settings/preferences.tsx
 msgid "Couldn't load your timezone."
@@ -2830,7 +2830,7 @@ msgstr "시간대를 저장할 수 없습니다."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
-msgstr ""
+msgstr "변경 사항을 저장할 수 없어 초안 작성을 시작하지 않았습니다. 페이지 내용은 변경되지 않았습니다."
 
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
@@ -2982,7 +2982,7 @@ msgstr "자기 소개서 — {0}"
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
-msgstr ""
+msgstr "커버레터를 불러올 수 없습니다."
 
 #: src/features/application-detail/sections.tsx
 msgid "Cover letter file"
@@ -3188,7 +3188,7 @@ msgstr "삭제"
 #. placeholder {0}: menu ? versionTitle(menu) : ""
 #: src/features/letters/share.tsx
 msgid "Delete “{0}”?"
-msgstr ""
+msgstr "“{0}”을(를) 삭제할까요?"
 
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
@@ -3308,7 +3308,7 @@ msgstr "밀도"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Dependency type"
-msgstr ""
+msgstr "종속성 유형"
 
 #: src/features/applications/list-screen.tsx
 msgid "Descending"
@@ -3456,7 +3456,7 @@ msgstr "{0} 다운로드"
 
 #: src/features/letters/share.tsx
 msgid "Download both PDFs"
-msgstr ""
+msgstr "두 PDF 모두 다운로드"
 
 #: src/features/letters/share.tsx
 msgid "Download failed."
@@ -3464,7 +3464,7 @@ msgstr "다운로드에 실패했습니다."
 
 #: src/features/letters/share.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file."
-msgstr ""
+msgstr "다운로드하면 시스템 공유 메뉴가 열립니다. 파일을 저장할 스토리지 제공업체를 선택하세요."
 
 #: src/features/share/download.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file. A linked letter opens as a second file."
@@ -3818,7 +3818,7 @@ msgstr "매일"
 
 #: src/features/letters/share.tsx
 msgid "Every editing session adds a version automatically. Named versions are kept until you delete them. Restoring saves the current state first."
-msgstr ""
+msgstr "편집 세션마다 버전이 자동으로 추가됩니다. 이름을 지정한 버전은 삭제할 때까지 보관됩니다. 복원 시 현재 상태를 먼저 저장합니다."
 
 #: src/features/check/issues.ts
 msgid "Every entry has dates in a form systems read, in order, and none in the future."
@@ -4287,7 +4287,7 @@ msgstr "내 경험이 뒷받침하는 경우에만 이력서에 “{0}”를 넣
 
 #: src/features/letters/design.tsx
 msgid "Hex"
-msgstr ""
+msgstr "Hex"
 
 #: src/features/design/advanced.tsx
 #: src/features/write/entry-fields.tsx
@@ -4329,7 +4329,7 @@ msgstr "키 숨기기"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Hide licence"
-msgstr ""
+msgstr "라이선스 숨기기"
 
 #: src/features/design/advanced.tsx
 msgid "Hide Link Underline"
@@ -4693,7 +4693,7 @@ msgstr "일본어"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "JavaScript"
-msgstr ""
+msgstr "JavaScript"
 
 #: src/features/search/search-screen.tsx
 msgid "Job"
@@ -4876,7 +4876,7 @@ msgstr "언어"
 
 #: src/features/letters/design.tsx
 msgid "Larger text"
-msgstr ""
+msgstr "글자 크게"
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -4993,7 +4993,7 @@ msgstr "편지 페이지"
 #. placeholder {0}: page.index + 1
 #: src/features/letters/page.tsx
 msgid "Letter page {0}"
-msgstr ""
+msgstr "커버레터 {0}페이지"
 
 #: src/features/search/search-screen.tsx
 msgid "Letters"
@@ -5012,7 +5012,7 @@ msgstr "레벨"
 #: app/(tabs)/settings/index.tsx
 #: app/(tabs)/settings/licences.tsx
 msgid "Licences"
-msgstr ""
+msgstr "라이선스"
 
 #: src/features/ats-checker/messages.ts
 msgid "Ligatures can drop letters out of words such as \"workflow\"."
@@ -5160,7 +5160,7 @@ msgstr "대화 로드 중…"
 
 #: src/features/letters/page.tsx
 msgid "Loading cover letter…"
-msgstr ""
+msgstr "커버레터 불러오는 중…"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Loading Knowledge before you send…"
@@ -5392,7 +5392,7 @@ msgstr "읽음으로 표시됨"
 
 #: src/features/letters/design.tsx
 msgid "Match “{resumeName}”"
-msgstr ""
+msgstr "“{resumeName}”에 맞추기"
 
 #: src/features/applications/csv-sheet.tsx
 msgid "Match columns"
@@ -5686,7 +5686,7 @@ msgstr "좁은"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Native & fonts"
-msgstr ""
+msgstr "네이티브 코드 및 글꼴"
 
 #: src/features/ai/provider-list.tsx
 msgid "Needs attention"
@@ -5842,7 +5842,7 @@ msgstr "아직 이 문서에 관한 대화가 없습니다."
 
 #: src/features/letters/write.tsx
 msgid "No date"
-msgstr ""
+msgstr "날짜 없음"
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -6510,7 +6510,7 @@ msgstr "{0}의 페이지 {currentPage}"
 
 #: src/features/letters/design.tsx
 msgid "Page format"
-msgstr ""
+msgstr "페이지 형식"
 
 #: src/features/assistant/messages.tsx
 msgid "Page reading didn't finish."
@@ -7069,7 +7069,7 @@ msgstr "대신 읽어 주세요"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Read licence"
-msgstr ""
+msgstr "라이선스 읽기"
 
 #: src/features/applications/add-sheet.tsx
 #: src/features/career/today.tsx
@@ -7229,7 +7229,7 @@ msgstr "사각형(전체 너비)"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 msgid "Redo"
-msgstr ""
+msgstr "다시 실행"
 
 #: src/features/write/fields.ts
 msgid "References"
@@ -8566,7 +8566,7 @@ msgstr "숫자는 적지만 주목할 가치가 있습니다."
 
 #: src/features/letters/design.tsx
 msgid "Smaller text"
-msgstr ""
+msgstr "글자 작게"
 
 #: src/features/check/issues.ts
 msgid "Some application systems ask for one before you can apply."
@@ -9388,7 +9388,7 @@ msgstr "생각…"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Third-party software notices. Select a dependency to read its licence."
-msgstr ""
+msgstr "타사 소프트웨어 고지 사항입니다. 종속성을 선택하면 해당 라이선스를 읽을 수 있습니다."
 
 #: src/features/application-detail/detail-screen.tsx
 #: src/features/workspace/shell.tsx
@@ -9534,7 +9534,7 @@ msgstr "이 커버레터는 다른 곳에서 변경되었습니다"
 
 #: src/features/letters/write.tsx
 msgid "This letter is locked. Unlock it in Documents to edit."
-msgstr ""
+msgstr "이 커버레터는 잠겨 있습니다. 편집하려면 서류에서 잠금을 해제하세요."
 
 #: src/features/letters/write.tsx
 msgid "This letter keeps its recipient as written."
@@ -10109,7 +10109,7 @@ msgstr "기본값 사용"
 
 #: src/features/letters/write.tsx
 msgid "Use details from “{resumeName}”"
-msgstr ""
+msgstr "“{resumeName}”의 정보 사용"
 
 #: src/features/career/facts.tsx
 msgid "Use for all applications"
@@ -10138,7 +10138,7 @@ msgstr "서버 버전 사용"
 
 #: src/features/letters/design.tsx
 msgid "Use six hex digits, like #3E6B4F."
-msgstr ""
+msgstr "#3E6B4F처럼 16진수 여섯 자리를 사용하세요."
 
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
@@ -10219,7 +10219,7 @@ msgstr "비밀번호를 확인하는 중입니다..."
 
 #: src/features/letters/share.tsx
 msgid "Version"
-msgstr ""
+msgstr "버전"
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx
@@ -10665,7 +10665,7 @@ msgstr "오프라인 상태입니다. PDF 다운로드가 이 장치를 사용�
 
 #: src/features/letters/share.tsx
 msgid "You're offline. Download PDF uses this device. Other formats need a connection. Fonts and images must already be cached."
-msgstr ""
+msgstr "오프라인 상태입니다. PDF 다운로드는 이 기기에서 처리됩니다. 다른 형식은 연결이 필요합니다. 글꼴과 이미지는 미리 캐시되어 있어야 합니다."
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx

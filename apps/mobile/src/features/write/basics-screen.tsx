@@ -23,8 +23,10 @@ function useBasicsWriter() {
 		update((draft) => mutate(draft.basics), { coalesceKey: `basics.${key}` });
 }
 
+type BasicsScreenProps = { resumeId: string; focusField?: string | undefined };
+
 /** Basics: the photo row, contact fields, website and custom fields. */
-export function BasicsScreen({ resumeId }: { resumeId: string }) {
+export function BasicsScreen({ resumeId, focusField }: BasicsScreenProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const basics = useWriteData((data) => data.basics, null);
@@ -36,6 +38,7 @@ export function BasicsScreen({ resumeId }: { resumeId: string }) {
 	const text = (key: TextKey) => ({
 		value: basics[key],
 		disabled: locked,
+		autoFocus: !locked && focusField === key,
 		onChange: (value: string) =>
 			write(key, (target) => {
 				target[key] = value;
@@ -50,8 +53,8 @@ export function BasicsScreen({ resumeId }: { resumeId: string }) {
 					label={t`Full name`}
 					autoComplete="name"
 					// A blank resume opens straight into the name field.
-					autoFocus={!locked && !basics.name}
 					{...text("name")}
+					autoFocus={!locked && (focusField === "name" || (!focusField && !basics.name))}
 				/>
 				<BoundText label={t`Headline`} {...text("headline")} />
 				<BoundText
@@ -67,6 +70,7 @@ export function BasicsScreen({ resumeId }: { resumeId: string }) {
 					label={t`Website`}
 					value={basics.website}
 					allowInlineLink={false}
+					autoFocus={!locked && focusField?.startsWith("website")}
 					disabled={locked}
 					onChange={(website) =>
 						write("website", (target) => {
@@ -75,7 +79,7 @@ export function BasicsScreen({ resumeId }: { resumeId: string }) {
 					}
 				/>
 			</View>
-			<CustomFields fields={basics.customFields} locked={locked} />
+			<CustomFields fields={basics.customFields} locked={locked} focusField={focusField} />
 		</EditorScreen>
 	);
 }
@@ -135,13 +139,19 @@ function PhotoRow({ resumeId, locked }: { resumeId: string; locked: boolean }) {
 }
 
 /** Extra contact details: icon, text and an optional link; move up and remove (with Undo). */
-function CustomFields({ fields, locked }: { fields: CustomField[]; locked: boolean }) {
+type CustomFieldsProps = { fields: CustomField[]; locked: boolean; focusField?: string | undefined };
+
+function CustomFields({ fields, locked, focusField }: CustomFieldsProps) {
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
 	const update = useResumeStore((state) => state.update);
 	const undoToast = useUndoToast();
 	const [iconFor, setIconFor] = useState<string | null>(null);
-	const [linkFor, setLinkFor] = useState<string | null>(null);
+	const [group, index, part] = focusField?.split("/") ?? [];
+	const targeted = group === "customFields" ? fields[Number(index)] : undefined;
+	const [linkFor, setLinkFor] = useState<string | null>(() =>
+		!locked && part === "link" ? (targeted?.id ?? null) : null,
+	);
 
 	const edit = (key: string, mutate: (list: CustomField[]) => void) =>
 		update((draft) => mutate(draft.basics.customFields), { coalesceKey: `basics.customFields.${key}` });
@@ -170,6 +180,7 @@ function CustomFields({ fields, locked }: { fields: CustomField[]; locked: boole
 						label={t`Field ${index + 1}`}
 						value={field.text}
 						editable={!locked}
+						autoFocus={!locked && targeted?.id === field.id && part === "text"}
 						onChangeText={(text) =>
 							editField(field.id, "text", (target) => {
 								target.text = text;

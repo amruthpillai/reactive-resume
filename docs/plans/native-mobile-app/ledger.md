@@ -2,57 +2,59 @@
 
 Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, BLOCKED, MERGED, DROPPED.
 
-| Task                                          | Harness     | Agent    | Branch            | Status  | Notes                                                                               |
-| --------------------------------------------- | ----------- | -------- | ----------------- | ------- | ----------------------------------------------------------------------------------- |
-| S1 Forme native module                        | Codex       | 3777064e | mobile/S1         | MERGED  |                                                                                     |
-| S2 PDF pipeline on Hermes                     | Claude Code | 30d200d5 | mobile/S2         | MERGED  |                                                                                     |
-| S3 Native auth spike                          | Claude Code | ccae31ab | mobile/S3         | MERGED  |                                                                                     |
-| DS1 Design directions                         | Claude Code | e6048448 | mobile/DS1        | MERGED  | Started alongside M0 because it is independent of the spikes (coordinator decision) |
-| DS2 Review DS1                                | Codex       | 61b41c19 | (in DS1 worktree) | MERGED  | 67 gaps, reports/DS2.md                                                             |
-| DS3a Shell, documents, account, utilities     | Claude Code | 53e27e1f | mobile/DS3a       | MERGED  | app.html, tokens.md, index hub                                                      |
-| DS3b Builder Write and Page, letters          | Claude Code | 43127d18 | mobile/DS3b       | MERGED  | builder.html                                                                        |
-| DS3c Design, Check, Share, History, Assistant | Claude Code | eac233e3 | mobile/DS3c       | MERGED  | design.html                                                                         |
-| DS3d Applications and Career                  | Codex       | 8cd42ec8 | mobile/DS3d       | MERGED  | career.html                                                                         |
-| DS3b fix round                                | Claude Code | 43127d18 | mobile/DS3b       | MERGED  | 29 DS4b findings                                                                    |
-| SVa SV1+SV2 app links, callback page, Apple   | Codex       | 10498568 | mobile/SVa        | MERGED  |                                                                                     |
-| SVb SV4 offline_access unbinding              | Codex       | 4441e7ce | mobile/SVb        | MERGED  |                                                                                     |
-| SVc SV3+SV5 update conflict, account wrappers | Codex       | 3d077e9f | mobile/SVc        | MERGED  |                                                                                     |
-| M1-T1 apps/mobile skeleton                    | Claude Code | a735cf80 | mobile/M1-T1      | MERGED  | briefs/M1.md                                                                        |
-| M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2      | MERGED  | briefs/M1.md                                                                        |
-| M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
-| M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | MERGED  | briefs/W2.md                                                                        |
-| M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | MERGED  | briefs/W2.md                                                                        |
-| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | MERGED  | briefs/W2.md                                                                        |
-| M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
-| M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | MERGED  | briefs/W2.md                                                                        |
-| M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
-| M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
-| M5-T1 Applications list and add flow          | Codex       | 18332b0c | mobile/M5-T1      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
-| M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
-| M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
-| M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | MERGED  | briefs/W3.md; JS-only                                                               |
-| M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
-| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | MERGED  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
-| M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | MERGED  | briefs/W4.md; JS-only                                                               |
-| M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
-| M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | MERGED  | briefs/W4.md; JS-only; adds letter Page pane                                        |
-| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | MERGED  | briefs/W6.md; JS-only                                                               |
-| M8-T1 A11y, RTL, tablet, keyboard             | Claude Code | e2da8526 | mobile/M8-T1      | MERGED  | briefs/W6.md; static audit, device pass by coordinator                              |
-| M8-T2 Store readiness                         | Codex       | 8b80adcc | mobile/M8-T2      | MERGED  | briefs/W6.md; permissions re-audit after base merge                                 |
-| Smoke iOS integrated pass                     | Claude Code | e63bec3f | mobile/smoke-ios  | RUNNING | dev client, local server, parity script                                             |
+| Task                                          | Harness     | Agent    | Branch               | Status  | Notes                                                                               |
+| --------------------------------------------- | ----------- | -------- | -------------------- | ------- | ----------------------------------------------------------------------------------- |
+| S1 Forme native module                        | Codex       | 3777064e | mobile/S1            | MERGED  |                                                                                     |
+| S2 PDF pipeline on Hermes                     | Claude Code | 30d200d5 | mobile/S2            | MERGED  |                                                                                     |
+| S3 Native auth spike                          | Claude Code | ccae31ab | mobile/S3            | MERGED  |                                                                                     |
+| DS1 Design directions                         | Claude Code | e6048448 | mobile/DS1           | MERGED  | Started alongside M0 because it is independent of the spikes (coordinator decision) |
+| DS2 Review DS1                                | Codex       | 61b41c19 | (in DS1 worktree)    | MERGED  | 67 gaps, reports/DS2.md                                                             |
+| DS3a Shell, documents, account, utilities     | Claude Code | 53e27e1f | mobile/DS3a          | MERGED  | app.html, tokens.md, index hub                                                      |
+| DS3b Builder Write and Page, letters          | Claude Code | 43127d18 | mobile/DS3b          | MERGED  | builder.html                                                                        |
+| DS3c Design, Check, Share, History, Assistant | Claude Code | eac233e3 | mobile/DS3c          | MERGED  | design.html                                                                         |
+| DS3d Applications and Career                  | Codex       | 8cd42ec8 | mobile/DS3d          | MERGED  | career.html                                                                         |
+| DS3b fix round                                | Claude Code | 43127d18 | mobile/DS3b          | MERGED  | 29 DS4b findings                                                                    |
+| SVa SV1+SV2 app links, callback page, Apple   | Codex       | 10498568 | mobile/SVa           | MERGED  |                                                                                     |
+| SVb SV4 offline_access unbinding              | Codex       | 4441e7ce | mobile/SVb           | MERGED  |                                                                                     |
+| SVc SV3+SV5 update conflict, account wrappers | Codex       | 3d077e9f | mobile/SVc           | MERGED  |                                                                                     |
+| M1-T1 apps/mobile skeleton                    | Claude Code | a735cf80 | mobile/M1-T1         | MERGED  | briefs/M1.md                                                                        |
+| M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2         | MERGED  | briefs/M1.md                                                                        |
+| M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a        | MERGED  | Pulled forward; briefs/W6.md                                                        |
+| M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1         | MERGED  | briefs/W2.md                                                                        |
+| M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2         | MERGED  | briefs/W2.md                                                                        |
+| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1         | MERGED  | briefs/W2.md                                                                        |
+| M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3         | MERGED  | briefs/W2.md                                                                        |
+| M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4         | MERGED  | briefs/W2.md                                                                        |
+| M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4         | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
+| M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1         | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
+| M5-T1 Applications list and add flow          | Codex       | 18332b0c | mobile/M5-T1         | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
+| M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2         | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
+| M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2         | MERGED  | briefs/W4.md; JS-only                                                               |
+| M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1         | MERGED  | briefs/W5.md; JS-only                                                               |
+| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3         | MERGED  | briefs/W5.md; JS-only                                                               |
+| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2         | MERGED  | briefs/W5.md; JS-only                                                               |
+| M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5         | MERGED  | briefs/W3.md; JS-only                                                               |
+| M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3         | MERGED  | briefs/W4.md; JS-only                                                               |
+| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2         | MERGED  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
+| M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1         | MERGED  | briefs/W4.md; JS-only                                                               |
+| M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2         | MERGED  | briefs/W4.md; JS-only                                                               |
+| M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3         | MERGED  | briefs/W5.md; JS-only                                                               |
+| M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4         | MERGED  | briefs/W4.md; JS-only; adds letter Page pane                                        |
+| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3         | MERGED  | briefs/W6.md; JS-only                                                               |
+| M8-T1 A11y, RTL, tablet, keyboard             | Claude Code | e2da8526 | mobile/M8-T1         | MERGED  | briefs/W6.md; static audit, device pass by coordinator                              |
+| M8-T2 Store readiness                         | Codex       | 8b80adcc | mobile/M8-T2         | MERGED  | briefs/W6.md; permissions re-audit after base merge                                 |
+| Smoke iOS integrated pass                     | Codex       | c97a09d7 | mobile/smoke-ios     | RUNNING | Resumed e63bec3f after usage limit; RTL, parity and iPad checks                     |
+| Smoke Android integrated pass                 | Codex       | a3f01913 | mobile/smoke-android | RUNNING | Resumed ddb43303; icons, keyboard toolbar, parity and tablet checks                 |
+| Completion audit                              | Codex       | e6efb014 | (read-only)          | MERGED  | Four unfinished integrations identified; follow-ups recorded below                  |
 
 ## Gates
 
 | Gate                        | Status                                               |
 | --------------------------- | ---------------------------------------------------- |
 | G0 spikes reviewed by owner | DONE 2026-10-17: accepted on-device native rendering |
-| G1 decisions.md frozen      | pending                                              |
-| G2a direction picked        | pending                                              |
-| G2b mockups approved        | pending                                              |
+| G1 decisions.md frozen      | DONE 2026-10-17; recorded in the log below           |
+| G2a direction picked        | DONE 2026-10-17: Direction B                         |
+| G2b mockups approved        | DONE 2026-10-17; recorded in the log below           |
 | G-store owner inputs        | pending                                              |
 
 ## Owner design answers (G2a, 2026-10-17)
@@ -218,3 +220,6 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M4-T4 merged (review `35b943fb` NO BLOCKERS after 3 rounds; 26 scenarios, plain `node`). Letters reuse `features/write/rich-text`. Catalogs extracted + seeded from web (2419 msgids; 729 mobile-only strings untranslated, to fill after the last merges). Launched M8-T1 (`e2da8526`, static a11y/RTL/tablet/keyboard audit) and iOS smoke pass (`e63bec3f`, wks_192e530b79720619). M8-T2 built (`45971cf04`); sent back to re-audit permissions after merging base (voice uses mic).
 - 2026-10-17: M8-T2 merged (Claude review `0b57bebe` NO BLOCKERS after 2 rounds): eas.json (dev/preview/production, Submit placeholders outside repo), forme-native prebuilt fetch in `eas-build-pre-install` (needs a published, pinned artifact before any EAS build), licences screen (115 KB deduped notices; regenerate on dep changes, README in src/features/licences), permissions audited against merged code (mic kept, READ_EXTERNAL_STORAGE/SYSTEM_ALERT_WINDOW/WAKE_LOCK blocked, no aps-environment), privacy manifest, icons/splash, Maestro flows authored. Hermes bundle ~14 MB per platform. Store items: `ascAppId` placeholder, dev-client NSLocalNetworkUsageDescription. M8-T1 merging base + letter shortcuts.
 - 2026-10-17: M8-T1 merged (Codex review `c537d175` NO BLOCKERS after 2 rounds). Android banner header offset, iPad search form sheet, ATS checker entry in New sheet, a11y state/clipping fixes, local `modules/key-commands` (⌘1/2/3, ⌘Z/⇧⌘Z scoped to focused editor, ⌘P, ⌘K, ⌘N; not compiled yet). All 16 scenario harnesses pass on the merged branch. Translation fill running (6 Codex agents, 53 locales × 729).
+- 2026-10-17: Mobile catalogs complete: 2518 msgids, every locale except the pseudo-locale zu-ZA fully translated (web seed + 762 app-only strings by 8 Codex translators; placeholder/ICU/tag validator and compileMessage over 136k msgstr: 0 errors). Android smoke pass launched (`ddb43303`, wks_6d1b8a92bea4823b; compiles modules/key-commands).
+- 2026-10-17: Resumed after the chief and smoke workers reached the Claude usage limit. Existing integration worktree and both smoke worktrees were preserved. Codex workers continue iOS (`c97a09d7`) and Android (`a3f01913`); read-only completion audit `e6efb014` checks the approved plan. iOS owns the native build slot; both devices may share the platform-keyed parity host on loopback port 18086. No push, publication, EAS build or store submission authorized. Baseline on `918008c86`: mobile/forme-native typechecks, all 16 scenario harnesses, 11 session probes, preview scheduler assertions, PDF tests (361 across 63 files), package boundaries (1457 files/23 packages), repository lint and formatting pass. These checks precede the pending smoke fixes and do not establish final device or store readiness.
+- 2026-10-17: Completion audit found four unfinished integrations: application Coach placeholder, letter conversation routing/Assistant, Check-to-Write field targeting, and library resume thumbnails. Coordinator closed thumbnails (`121e112`) and Check targets (`3f19476`); regression checks failed on the previous implementation and pass after the fixes (M3-T2 now 23 scenarios; M4-T2 now 17). Mobile typecheck, repository lint/format and boundaries pass. Codex `b59e468c` on `mobile/completion-chat` owns application Coach, letter Assistant and the duplicate workspace tab strip confirmed by Android. Device workers will verify these integrations after merge.

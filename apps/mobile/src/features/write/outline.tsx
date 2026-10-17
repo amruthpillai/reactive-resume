@@ -41,19 +41,19 @@ import { resume } from "@/draft/runtime";
 import { routes } from "@/routes";
 import { Banner, Button, Chip, Icon, IconButton, ListRow, Sheet, SortableList, Text, showToast, useTheme } from "@/ui";
 
-type OutlineProps = { resumeId: string; imported?: string | undefined };
+type OutlineProps = { resumeId: string; imported?: string | undefined; initialSection?: string | undefined };
 
 /**
  * Write: the Basics card, then the sections in print order with their entries, then Add section. Hold ⋮⋮ to move a
  * section or an entry. Every field saves as you type; a locked resume shows the same outline read-only.
  */
-export function Outline({ resumeId, imported }: OutlineProps) {
+export function Outline({ resumeId, imported, initialSection }: OutlineProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const data = useWriteData((data) => data, null);
 	const locked = useIsResumeLocked();
-	const [open, setOpen] = useState<ReadonlySet<string>>(new Set());
-	const [added, setAdded] = useState<ReadonlySet<string>>(new Set());
+	const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set(initialSection ? [initialSection] : []));
+	const [added, setAdded] = useState<ReadonlySet<string>>(() => new Set(initialSection ? [initialSection] : []));
 	const [sheet, setSheet] = useState<
 		{ kind: "section"; id: string } | { kind: "entry"; sectionId: string; entryId: string } | { kind: "add" } | null
 	>(null);
@@ -124,7 +124,7 @@ export function Outline({ resumeId, imported }: OutlineProps) {
 							<ImportedBanner data={data} source={imported} onDismiss={() => setDismissedImport(true)} />
 						) : null}
 						<BasicsCard resumeId={resumeId} data={data} />
-						<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+						<View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: space.s2 }}>
 							<Text variant="micro" color="ink3">
 								{t`Sections · print order`}
 							</Text>
