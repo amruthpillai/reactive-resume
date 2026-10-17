@@ -3,18 +3,18 @@ import type { AssistantDocument } from "./document";
 import type { IconName } from "@/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { router } from "expo-router";
-import { useEffect, useEffectEvent, useState } from "react";
+import { useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useThreads } from "./chat";
 import { ChatView, ContextChip } from "./chat-view";
-import { useResumeAssistantDocument } from "./document";
+import { useLetterAssistantDocument, useResumeAssistantDocument } from "./document";
 import { publishProposals } from "./proposals";
 import { ModelButton, ModelSheet, ProviderGate, useConversationProvider } from "./provider";
 import { PastConversations } from "./threads";
 import { client } from "@/api/client";
-import { useSession } from "@/auth/session";
-import { useResumeStore } from "@/draft";
+import { getAccountScope, useSession } from "@/auth/session";
+import { useLetterStore, useResumeStore } from "@/draft";
 import { useHasAIProvider } from "@/features/ai/providers";
 import { routes } from "@/routes";
 import { Banner, Button, Icon, IconButton, Text, useTheme } from "@/ui";
@@ -36,9 +36,10 @@ function openElsewhere(thread: ThreadSummary) {
 	if (thread.workingResumeId && !thread.coverLetterId) {
 		router.replace(routes.builder(thread.workingResumeId));
 		router.push({ pathname: routes.assistant(thread.workingResumeId), params: { thread: thread.id } });
+	} else if (thread.coverLetterId) {
+		router.replace(routes.letter(thread.coverLetterId));
+		router.push({ pathname: routes.letterAssistant(thread.coverLetterId), params: { thread: thread.id } });
 	}
-	// Letters have no assistant on mobile yet: open the letter itself.
-	else if (thread.coverLetterId) router.replace(routes.letter(thread.coverLetterId));
 }
 
 const belongsTo = (thread: ThreadSummary, document: AssistantDocument) =>
@@ -51,11 +52,52 @@ const belongsTo = (thread: ThreadSummary, document: AssistantDocument) =>
  * edits as cards (marked on Page), and asks before writing anything the resume doesn't say.
  */
 export function AssistantScreen(props: AssistantScreenProps) {
+	useSession();
+	const document = useResumeAssistantDocument(props.resumeId, props.applicationId);
+	const loadFailed = useResumeStore((state) => state.document === null && state.status === "error");
+	return (
+		<DocumentAssistantScreen
+			{...props}
+			key={`${getAccountScope()}:${props.resumeId}:${props.threadId}:${props.ask}:${props.prepare}`}
+			kind="resume"
+			documentId={props.resumeId}
+			document={document}
+			loadFailed={loadFailed}
+		/>
+	);
+}
+
+export type LetterAssistantScreenProps = Omit<AssistantScreenProps, "resumeId"> & { letterId: string };
+
+export function LetterAssistantScreen(props: LetterAssistantScreenProps) {
+	useSession();
+	const document = useLetterAssistantDocument(props.letterId, props.applicationId);
+	const loadFailed = useLetterStore((state) => state.document === null && state.status === "error");
+	return (
+		<DocumentAssistantScreen
+			{...props}
+			key={`${getAccountScope()}:${props.letterId}:${props.threadId}:${props.ask}`}
+			kind="letter"
+			documentId={props.letterId}
+			document={document}
+			loadFailed={loadFailed}
+		/>
+	);
+}
+
+type DocumentAssistantScreenProps = Omit<AssistantScreenProps, "resumeId"> & {
+	kind: "resume" | "letter";
+	documentId: string;
+	document: AssistantDocument | null;
+	loadFailed: boolean;
+};
+
+function DocumentAssistantScreen(props: DocumentAssistantScreenProps) {
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
 	const session = useSession();
-	const loadFailed = useResumeStore((state) => state.document === null && state.status === "error");
-	const document = useResumeAssistantDocument(props.resumeId, props.applicationId);
+	const { document, loadFailed } = props;
+	const store = props.kind === "letter" ? useLetterStore : useResumeStore;
 	const providers = useHasAIProvider();
 	const threads = useThreads();
 	// null: the document's latest conversation; "new": a new one.
@@ -71,11 +113,11 @@ export function AssistantScreen(props: AssistantScreenProps) {
 
 	const mine = document ? (threads.data ?? []).filter((thread) => belongsTo(thread, document)) : [];
 	const threadId = selected === "new" ? null : (selected ?? mine[0]?.id ?? null);
-	const summary = threads.data?.find((thread) => thread.id === threadId);
+	const summary = mine.find((thread) => thread.id === threadId);
 	const { provider, label, choose } = useConversationProvider(providers, summary, threadId);
 
 	const newConversation = () => {
-		publishProposals(props.resumeId, []);
+		if (props.kind === "resume") publishProposals(props.documentId, []);
 		setDraftKey((key) => key + 1);
 		setContext({ document: true, posting: true });
 		setSelected("new");
@@ -84,26 +126,15 @@ export function AssistantScreen(props: AssistantScreenProps) {
 
 	const openThread = (thread: ThreadSummary) => {
 		if (!document || !belongsTo(thread, document)) return openElsewhere(thread);
+		setDraftKey((key) => key + 1);
+		setContext({ document: true, posting: true });
 		setSelected(thread.id);
 		setView("thread");
 	};
 
-	// A `?thread=` link shows its chat (and Accept) only once the list positively confirms it is about this resume;
-	// one about another document opens that document, and an unknown one is refused.
+	// Explicit links must belong to this document. Never silently replace a missing or mismatched selection.
 	const linked = selected !== null && selected === props.threadId ? selected : null;
-	const linkedThread = linked ? threads.data?.find((thread) => thread.id === linked) : undefined;
-	const link =
-		!linked || !threads.data || !document
-			? "ok"
-			: !linkedThread
-				? "missing"
-				: belongsTo(linkedThread, document)
-					? "ok"
-					: "elsewhere";
-	const openLinked = useEffectEvent((thread: ThreadSummary) => openElsewhere(thread));
-	useEffect(() => {
-		if (link === "elsewhere" && linkedThread) openLinked(linkedThread);
-	}, [link, linkedThread]);
+	const linkInvalid = linked && threads.data && document && !mine.some((thread) => thread.id === linked);
 
 	const waiting = (message: string, action?: { label: string; onPress: () => void }) => (
 		<View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: space.s2, padding: space.s4 }}>
@@ -128,26 +159,29 @@ export function AssistantScreen(props: AssistantScreenProps) {
 				onPress: () => router.push(routes.signIn()),
 			})
 		) : loadFailed ? (
-			notice("danger", t`Resume could not be loaded.`, {
-				label: t`Retry`,
-				onPress: () =>
-					void useResumeStore
-						.getState()
-						.open(props.resumeId)
-						.catch(() => undefined),
-			})
+			notice(
+				"danger",
+				props.kind === "letter" ? t`Cover letter could not be loaded.` : t`Resume could not be loaded.`,
+				{
+					label: t`Retry`,
+					onPress: () =>
+						void store
+							.getState()
+							.open(props.documentId)
+							.catch(() => undefined),
+				},
+			)
 		) : !document ? (
-			waiting(t`Opening the resume…`, {
-				label: t`Open resume`,
-				onPress: () => router.replace(routes.builder(props.resumeId)),
+			waiting(props.kind === "letter" ? t`Opening the letter…` : t`Opening the resume…`, {
+				label: props.kind === "letter" ? t`Open letter` : t`Open resume`,
+				onPress: () =>
+					router.replace(props.kind === "letter" ? routes.letter(props.documentId) : routes.builder(props.documentId)),
 			})
 		) : threads.isError ? (
 			notice("danger", t`Conversations couldn't load.`, { label: t`Retry`, onPress: () => void threads.refetch() })
 		) : !threads.data ? (
 			waiting(t`Loading conversations…`)
-		) : link === "elsewhere" ? (
-			waiting(t`Opening the conversation…`)
-		) : link === "missing" && view !== "history" ? (
+		) : linkInvalid && view !== "history" ? (
 			notice("warn", t`This conversation couldn't be opened.`, {
 				label: t`New conversation`,
 				onPress: () => setSelected("new"),
@@ -166,12 +200,15 @@ export function AssistantScreen(props: AssistantScreenProps) {
 			<ChatView
 				key={draftKey}
 				threadId={threadId}
-				createThread={async () =>
+				createThread={async (scope) =>
 					(
-						await client.agent.threads.start({
-							resumeId: document.id,
-							...(provider ? { aiProviderId: provider.id } : {}),
-						})
+						await client.agent.threads.start(
+							{
+								...(document.kind === "letter" ? { coverLetterId: document.id } : { resumeId: document.id }),
+								...(provider ? { aiProviderId: provider.id } : {}),
+							},
+							{ context: { scope } },
+						)
 					).id
 				}
 				onThreadCreated={(id) => {
@@ -279,9 +316,13 @@ type Translate = ReturnType<typeof useLingui>["t"];
 function disclosure(t: Translate, document: AssistantDocument, context: MessageContext, provider: string) {
 	const posting = context.posting && document.posting;
 	const sends = context.document
-		? posting
-			? t`Sends this resume and the posting to ${provider} with your key, only when you press send.`
-			: t`Sends this resume to ${provider} with your key, only when you press send.`
+		? document.kind === "letter"
+			? posting
+				? t`Sends this letter and the posting to ${provider} with your key, only when you press send.`
+				: t`Sends this letter to ${provider} with your key, only when you press send.`
+			: posting
+				? t`Sends this resume and the posting to ${provider} with your key, only when you press send.`
+				: t`Sends this resume to ${provider} with your key, only when you press send.`
 		: posting
 			? t`Sends your message and the posting to ${provider} with your key, only when you press send.`
 			: t`Sends your message to ${provider} with your key, only when you press send.`;
@@ -304,7 +345,7 @@ function Suggestions({ document, prepare, onPick }: SuggestionsProps) {
 	const tailor: Suggestion[] = company
 		? [{ icon: "briefcase", label: t`Tailor to the ${company} posting`, hint: t`Uses the linked application` }]
 		: [];
-	const suggestions: Suggestion[] =
+	let suggestions: Suggestion[] =
 		prepare && company
 			? [
 					{ icon: "briefcase", label: t`How well do I fit this role?`, hint: t`Compares your resume with the posting` },
@@ -326,6 +367,13 @@ function Suggestions({ document, prepare, onPick }: SuggestionsProps) {
 					},
 					{ icon: "text-align-left", label: t`Draft a summary`, hint: t`From your experience entries` },
 				];
+	if (document.kind === "letter")
+		suggestions = [
+			...tailor,
+			{ icon: "lightning", label: t`Make the opening stronger`, hint: t`Leads with why you fit` },
+			{ icon: "arrows-in-line-vertical", label: t`Make it shorter`, hint: t`Keeps the most specific parts` },
+			{ icon: "text-align-left", label: t`Make it more specific`, hint: t`Uses facts from your resume` },
+		];
 
 	return (
 		<View style={{ gap: space.s4, paddingTop: space.s4 }}>
@@ -334,7 +382,16 @@ function Suggestions({ document, prepare, onPick }: SuggestionsProps) {
 					<Trans>What should we work on?</Trans>
 				</Text>
 				<Text color="ink2">
-					{company ? (
+					{document.kind === "letter" ? (
+						company ? (
+							<Trans>
+								I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by
+								one.
+							</Trans>
+						) : (
+							<Trans>I can see this letter. Suggestions come back as edits you can accept one by one.</Trans>
+						)
+					) : company ? (
 						<Trans>
 							I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one.
 						</Trans>

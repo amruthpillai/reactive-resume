@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { refreshThreads } from "./chat";
 import { client } from "@/api/client";
+import { getAccountScope } from "@/auth/session";
 import { ConfirmDialog, IconButton, ListRow, Text, showToast, useTheme } from "@/ui";
 
 /** "Find weak bullets" — the server titles new conversations in English until their first message. */
@@ -26,6 +27,7 @@ export function useThreadTime() {
 export function useDeleteThread(onDeleted?: (id: string) => void) {
 	const { t } = useLingui();
 	const queryClient = useQueryClient();
+	const scope = getAccountScope();
 	const [target, setTarget] = useState<ThreadSummary | null>(null);
 	const dialog = (
 		<ConfirmDialog
@@ -38,9 +40,9 @@ export function useDeleteThread(onDeleted?: (id: string) => void) {
 			onConfirm={() => {
 				const thread = target;
 				setTarget(null);
-				if (!thread) return;
+				if (!thread || !scope) return;
 				client.agent.threads
-					.delete({ id: thread.id })
+					.delete({ id: thread.id }, { context: { scope } })
 					.then(() => {
 						refreshThreads(queryClient);
 						onDeleted?.(thread.id);

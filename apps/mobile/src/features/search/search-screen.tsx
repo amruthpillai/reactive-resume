@@ -94,8 +94,9 @@ export function SearchScreen() {
 		title: thread.title,
 		subtitle: thread.coverLetterName ?? thread.resumeName ?? undefined,
 		onPress: () => {
-			// M6-T3's assistant route: `?thread=` opens the conversation. Letter threads open the letter, as there.
-			if (thread.coverLetterId) go(routes.letter(thread.coverLetterId));
+			// Preserve the selected conversation and its owning document.
+			if (thread.coverLetterId)
+				go({ pathname: routes.letterAssistant(thread.coverLetterId), params: { thread: thread.id } });
 			else if (thread.workingResumeId)
 				go({ pathname: routes.assistant(thread.workingResumeId), params: { thread: thread.id } });
 		},

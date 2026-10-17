@@ -15,6 +15,7 @@ import {
 	splitBlocks,
 	writeTarget,
 } from "@reactive-resume/resume/proposals";
+import { getAccountScope } from "@/auth/session";
 import { useResumeStore } from "@/draft";
 import { showToast } from "@/ui";
 
@@ -56,6 +57,8 @@ export function toProposals(part: ToolPart, statuses: ReadonlyMap<string, Propos
 /** Applies proposals to the open resume as one undo step; the toast's Undo takes them back. */
 export function acceptResumeProposals(proposals: readonly Proposal[]) {
 	const store = useResumeStore.getState();
+	const scope = getAccountScope();
+	const id = store.document?.id;
 	store.update(
 		(draft) => {
 			for (const proposal of proposals) applyProposal(draft as ResumeData, proposal);
@@ -64,7 +67,13 @@ export function acceptResumeProposals(proposals: readonly Proposal[]) {
 	);
 	showToast({
 		message: proposals.length === 1 ? t`Edit applied` : t`${proposals.length} edits applied`,
-		action: { label: t`Undo`, onPress: () => useResumeStore.getState().undo() },
+		action: {
+			label: t`Undo`,
+			onPress: () => {
+				if (getAccountScope() === scope && useResumeStore.getState().document?.id === id)
+					useResumeStore.getState().undo();
+			},
+		},
 	});
 }
 

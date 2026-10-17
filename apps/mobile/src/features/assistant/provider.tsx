@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { refreshThreads, useConversationConnection } from "./chat";
 import { client } from "@/api/client";
+import { getAccountScope } from "@/auth/session";
 import { AIProviderSetupSheet } from "@/features/ai/providers";
 import { Banner, Button, Icon, ListRow, Sheet, Text, showToast, useTheme } from "@/ui";
 
@@ -31,11 +32,12 @@ export function useConversationProvider(
 	const provider = usable.find((item) => item.id === (threadId ? summary?.aiProviderId : picked)) ?? usable[0];
 	useConversationConnection(threadId ? summary : undefined, provider);
 
+	const scope = getAccountScope();
 	const choose = async (id: string) => {
 		setPicked(id);
-		if (!threadId) return;
+		if (!threadId || !scope) return;
 		try {
-			await client.agent.threads.update({ id: threadId, aiProviderId: id });
+			await client.agent.threads.update({ id: threadId, aiProviderId: id }, { context: { scope } });
 			refreshThreads(queryClient);
 		} catch {
 			showToast({ message: t`Couldn't switch models.` });
