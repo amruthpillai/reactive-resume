@@ -1,7 +1,28 @@
 import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { router, Stack } from "expo-router";
+import { Card, ListRow, Screen, Text } from "@/ui";
 
 export default function AiScreen() {
 	const { t } = useLingui();
-	return <RouteStub title={t`AI providers`} />;
+	return (
+		<Screen>
+			<Stack.Screen options={{ title: t`AI & developer` }} />
+			<Text color="ink2">{t`Connect the tools you use for writing, job search and working with your resumes.`}</Text>
+			<Card>
+				<ListRow
+					title={t`AI providers`}
+					leading="sparkle"
+					chevron
+					onPress={() => router.push("/settings/ai-providers")}
+				/>
+				<ListRow title={t`Web access`} leading="globe" chevron onPress={() => router.push("/settings/ai-web-access")} />
+				<ListRow
+					title={t`MCP server`}
+					leading="terminal-window"
+					chevron
+					onPress={() => router.push("/settings/ai-mcp")}
+				/>
+			</Card>
+		</Screen>
+	);
 }
