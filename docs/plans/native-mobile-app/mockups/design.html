@@ -1505,11 +1505,16 @@
 				--info-soft: oklch(0.95 0.03 250);
 				--info-text: oklch(0.46 0.11 250);
 				--font-mono: ui-monospace, "SF Mono", Menlo, monospace;
-				/* Paper never inverts: ink and accent on paper keep their light values in both themes (requested tint names for tokens.md). */
-				--paper-ink: oklch(0.22 0.01 95);
-				--paper-accent: oklch(0.42 0.1 150);
-				--paper-warn: oklch(0.48 0.1 70);
-				--paper-warn-soft: oklch(0.95 0.045 85);
+				/* tokens.md: paper tokens and page overlays keep their light values in both themes (paper never inverts). */
+				--paper-ink: #1c1b15; /* paperInk */
+				--paper-line: #dfdeda; /* paperLine */
+				--paper-accent: #195c2e; /* paperAccent */
+				--paper-warn: #81520a; /* paperWarn */
+				--paper-warn-soft: #fcedcd; /* paperWarnSoft */
+				--page-select-fill: #3373441f; /* pageSelectFill */
+				--page-select-line: #337344; /* pageSelectLine */
+				--page-issue-fill: #d2992238; /* pageIssueFill */
+				--page-proposal-fill: #3373441f; /* pageProposalFill */
 			}
 			.dark {
 				--accent-hover: oklch(0.8 0.12 150);
@@ -2080,7 +2085,7 @@
 				width: 52px;
 				height: 32px;
 				background: var(--sunken);
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--ink-3);
 			}
 			.and .sw::after {
 				top: 6px;
@@ -2110,7 +2115,7 @@
 				width: 24px;
 				height: 24px;
 				border-radius: 6px;
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--ink-3);
 				display: grid;
 				place-items: center;
 				color: var(--on-accent);
@@ -2396,21 +2401,21 @@
 				height: 24px;
 				margin: -12px 0 0 -12px;
 				border-radius: 50%;
-				background: var(--warn);
-				color: var(--paper-ink);
+				background: var(--paper-warn-soft);
+				color: var(--paper-warn);
 				font-size: 12px;
 				font-weight: 700;
 				display: grid;
 				place-items: center;
 				box-shadow: var(--shadow-2);
-				border: 2px solid var(--paper);
-			}
+				border: 2px solid var(--paper-warn);
+			} /* paperWarn boundary: 6.6:1 on paper */
 			.pin.blocker {
 				background: var(--danger);
 				color: var(--paper);
 			}
 			.pin.cur {
-				outline: 3px solid var(--ink);
+				outline: 3px solid var(--paper-ink);
 				outline-offset: 1px;
 			}
 			.pin::after {
@@ -2423,11 +2428,16 @@
 				left: 2%;
 				right: 2%;
 				border-radius: 4px;
-				outline: 2px solid var(--accent);
+				outline: 2px solid var(--page-select-line);
 				outline-offset: 2px;
+				background: var(--page-proposal-fill);
 			}
 			.mark.warn {
-				outline-color: var(--warn);
+				outline-color: var(--paper-warn);
+				background: var(--page-issue-fill);
+			}
+			.mark.found {
+				background: var(--page-select-fill);
 			}
 			.mark.dash {
 				outline-style: dashed;
@@ -2440,13 +2450,13 @@
 				font-weight: 700;
 				padding: 2px 6px;
 				border-radius: 4px;
-				background: var(--accent);
-				color: var(--on-accent);
+				background: var(--page-select-line);
+				color: var(--paper);
 				white-space: nowrap;
 			}
 			.mark.warn .tag {
-				background: var(--warn);
-				color: var(--paper-ink);
+				background: var(--paper-warn);
+				color: var(--paper);
 			}
 			.caption {
 				position: absolute;
@@ -2910,7 +2920,22 @@
 			}
 			.lp-item .handle {
 				width: 28px;
+				position: relative;
 			}
+			.lp-item .handle::after {
+				content: "";
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: -8px;
+				right: -8px;
+			} /* 44 pt hit area */
+			.lp-fw {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				min-height: 44px;
+			} /* the whole row toggles Full Width */
 			.lp-item.lift {
 				box-shadow: var(--shadow-3);
 				border-color: var(--accent);
@@ -3010,7 +3035,7 @@
 				width: 22px;
 				height: 22px;
 				border-radius: 50%;
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--ink-3);
 				flex: none;
 				margin-top: 1px;
 			}
@@ -3334,7 +3359,7 @@
 				display: flex;
 				align-items: flex-end;
 				gap: 4px;
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--ink-3);
 				border-radius: 22px;
 				background: var(--raised);
 				padding: 0 4px 0 4px;
@@ -3478,6 +3503,13 @@
 			}
 			.input.err.focus {
 				border-color: var(--danger);
+			}
+			.composer.off .box,
+			.composer.off .ctx {
+				opacity: 0.5;
+			}
+			.kw.found-on {
+				outline: 2px solid var(--accent);
 			}
 		</style>
 	</head>
@@ -3657,6 +3689,26 @@
 					'<path d="M53.92,34.62A8,8,0,1,0,42.08,45.38L81.32,88.55l-.06.12A65,65,0,0,0,72,88a64,64,0,0,0,0,128h88a87.34,87.34,0,0,0,31.8-5.93l10.28,11.31a8,8,0,1,0,11.84-10.76ZM160,200H72a48,48,0,0,1,0-96c1.1,0,2.2,0,3.3.12A88.4,88.4,0,0,0,72,128a8,8,0,0,0,16,0,72.25,72.25,0,0,1,5.06-26.54l87,95.7A71.66,71.66,0,0,1,160,200Zm88-72a87.89,87.89,0,0,1-22.35,58.61A8,8,0,0,1,213.71,176,72,72,0,0,0,117.37,70a8,8,0,0,1-9.48-12.89A88,88,0,0,1,248,128Z"/>',
 				columns:
 					'<path d="M104,32H64A16,16,0,0,0,48,48V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,104,32Zm0,176H64V48h40ZM192,32H152a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,192,32Zm0,176H152V48h40Z"/>',
+				highlighter:
+					'<path d="M253.66,106.34a8,8,0,0,0-11.32,0L192,156.69,107.31,72l50.35-50.34a8,8,0,1,0-11.32-11.32L96,60.69A16,16,0,0,0,93.18,79.5L72,100.69a16,16,0,0,0,0,22.62L76.69,128,18.34,186.34a8,8,0,0,0,3.13,13.25l72,24A7.88,7.88,0,0,0,96,224a8,8,0,0,0,5.66-2.34L136,187.31l4.69,4.69a16,16,0,0,0,22.62,0l21.19-21.18A16,16,0,0,0,203.31,168l50.35-50.34A8,8,0,0,0,253.66,106.34ZM93.84,206.85l-55-18.35L88,139.31,124.69,176ZM152,180.69,83.31,112,104,91.31,172.69,160Z"/>',
+				"book-open":
+					'<path d="M232,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H24a8,8,0,0,0-8,8V200a8,8,0,0,0,8,8H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a8,8,0,0,0,8-8V56A8,8,0,0,0,232,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z"/>',
+				"magnifying-glass":
+					'<path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/>',
+				"arrows-in-simple":
+					'<path d="M213.66,53.66,163.31,104H192a8,8,0,0,1,0,16H144a8,8,0,0,1-8-8V64a8,8,0,0,1,16,0V92.69l50.34-50.35a8,8,0,0,1,11.32,11.32ZM112,136H64a8,8,0,0,0,0,16H92.69L42.34,202.34a8,8,0,0,0,11.32,11.32L104,163.31V192a8,8,0,0,0,16,0V144A8,8,0,0,0,112,136Z"/>',
+				heart:
+					'<path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/>',
+				circle:
+					'<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Z"/>',
+				square:
+					'<path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32Zm0,176H48V48H208V208Z"/>',
+				diamond:
+					'<path d="M235.33,116.72,139.28,20.66a16,16,0,0,0-22.56,0l-96,96.06a16,16,0,0,0,0,22.56l96.05,96.06h0a16,16,0,0,0,22.56,0l96.05-96.06a16,16,0,0,0,0-22.56ZM128,224h0L32,128,128,32,224,128Z"/>',
+				hexagon:
+					'<path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM216,175.82,128,224,40,175.82V80.18L128,32h0l88,48.17Z"/>',
+				triangle:
+					'<path d="M236.8,188.09,149.35,36.22a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.34,24.34,0,0,0,40.55,224h174.9a24.34,24.34,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8Z"/>',
 			};
 			const ic = (n, s = 20, f = false) =>
 				`<svg class="i${["caret-left", "caret-right", "arrow-left", "arrow-square-out"].includes(n) ? " dir" : ""}" width="${s}" height="${s}" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">${(f && ICONS[n + ":fill"]) || ICONS[n] || ""}</svg>`;
@@ -3974,6 +4026,7 @@
 				keyboardUp = false,
 				disabled = false,
 				posting = true,
+				fresh = false,
 			} = {}) {
 				const chipsHTML = chips
 					? `<div class="ctx" aria-label="Context">${files.map((f) => `<span class="ctxchip">${f.busy ? '<span class="spinner" style="width:14px;height:14px"></span>' : ic("paperclip", 14)}${f.name}<button class="x" aria-label="Remove ${f.name}">${ic("x", 12)}</button></span>`).join("")}
@@ -3985,9 +4038,9 @@
 				const send = streaming
 					? `<button class="send stop" aria-label="Stop"><span>${ic("stop", 16, true)}</span></button>`
 					: `<button class="send${text && !disabled ? "" : " dis"}" aria-label="Send"><span>${ic("arrow-up", 18)}</span></button>`;
-				return `<div class="composer"${disabled ? ' style="opacity:.55"' : ""}>${chipsHTML}
+				return `<div class="composer${disabled ? " off" : ""}">${chipsHTML}
 		<div class="box"><button class="ib" aria-label="Attach a file">${ic("paperclip", 22)}</button><div class="txt">${text || '<span class="ph">Ask, or describe a change…</span>'}${keyboardUp && text ? '<span class="caret"></span>' : ""}</div>${send}</div>
-		${keyboardUp ? "" : `<p class="xs muted" style="padding:0 6px">Sends this resume${posting ? " and the posting" : ""} to OpenAI with your key, only when you press send. Previous messages, including document details, are also sent.</p>`}
+		${keyboardUp ? "" : `<p class="xs muted" style="padding:0 6px">Sends this resume${posting ? " and the posting" : ""} to OpenAI with your key, only when you press send. ${fresh ? "Each send starts fresh with this message and selected files. Previous conversation history stays here." : "Previous messages, including document details, are also sent."}</p>`}
 	</div>`;
 			}
 			function assistantPhone({
@@ -4168,18 +4221,19 @@
 			}
 			function layoutBody(drag = true) {
 				return `${subHead("Layout")}
-	<div class="lp-page"><div style="display:flex;align-items:center;gap:8px"><b style="flex:1">Page 1</b><span class="small muted">Full Width</span><span class="sw"></span></div>
+	<div class="lp-page"><div class="lp-fw" role="switch" aria-checked="false" aria-label="Full Width, page 1"><b style="flex:1">Page 1</b><span class="small muted">Full Width</span><span class="sw"></span></div>
 		<div class="lp-cols">
 			<div class="lp-col"><span class="h">Main</span>${["Summary", "Experience", "Education"].map((t) => lpItem(t)).join("")}${drag ? "" : lpItem("Projects")}</div>
 			<div class="lp-col"><span class="h">Sidebar</span>${["Profiles", "Skills"].map((t) => lpItem(t)).join("")}${drag ? `<div class="lp-drop" aria-hidden="true" style="position:relative"><div style="position:absolute;left:-10px;right:14px;top:-14px;z-index:3">${lpItem("Languages", true)}</div></div>` : lpItem("Languages")}</div>
 		</div>
 	</div>
-	<div class="lp-page"><div style="display:flex;align-items:center;gap:8px"><b style="flex:1">Page 2</b><span class="small muted">Full Width</span><span class="sw on"></span></div>
+	<div class="lp-page"><div class="lp-fw" role="switch" aria-checked="true" aria-label="Full Width, page 2"><b style="flex:1">Page 2</b><span class="small muted">Full Width</span><span class="sw on"></span></div>
 		<div class="lp-col"><span class="h">Main</span>${lpItem("Projects")}${lpItem("Interests")}</div>
 		<button class="btn ghost" style="justify-self:start;color:var(--danger-text)">${ic("trash", 18)}Delete Page</button>
 	</div>
 	<button class="btn secondary">${ic("plus", 18)}Add Page</button>
-	${slider({ label: "Sidebar Width", value: "35%", pct: 62.5, min: "10%", max: "50%" })}`;
+	<div style="display:flex;gap:12px;align-items:flex-end"><div style="flex:1">${slider({ label: "Sidebar Width", value: "", pct: 62.5, min: "10%", max: "50%" })}</div><div class="input mono" style="width:104px;flex:none;margin-bottom:14px" aria-label="Sidebar Width (%)"><span class="grow">35.0</span><span class="suf">%</span></div></div>
+	<p class="help" style="margin-top:-10px">Slider steps 0.01; type in the field for exact values (10–50, step 0.1).</p>`;
 			}
 			function layoutMenu() {
 				return `<div class="scrim light"></div><div class="menu" role="menu" aria-label="Move section to another column or page" style="left:auto;right:18px;top:250px;width:250px">
@@ -4203,7 +4257,9 @@
   transform: rotate(2deg)<span class="caret"></span>
 }</div>
 	${errors ? `<div class="banner danger" role="alert" style="border-radius:10px;display:grid;gap:4px"><span>Custom styles aren't applied. Fix these errors to apply them:</span><ul style="padding-left:18px"><li class="mono xs">line 5: missing “;” after a declaration</li></ul></div>` : ""}
-	<p class="help">PDF styles support a subset of CSS. Rotation, dashed and dotted borders, and some layout properties are ignored.</p>`;
+	<p class="help">PDF styles support a subset of CSS. Rotation, dashed and dotted borders, and some layout properties are ignored.</p>
+	<p class="help" style="display:flex;gap:6px">${ic("highlighter", 16)}<span>Tap anything on the page to style it. The rule you're in is outlined on the page. <button class="link" style="color:var(--accent-text);text-decoration:underline" data-go="design-adv-css-pick">Pick on the page</button></span></p>
+	<p class="help" style="display:flex;gap:6px">${ic("book-open", 16)}<span>Not sure what to write? <a href="#" style="color:var(--accent-text)">Read the Applying Custom Styles guide.</a></span></p>`;
 			}
 			function designSkeleton() {
 				return `<div style="display:flex;gap:6px">${[60, 90, 100, 76].map((w) => `<span class="sk" style="width:${w}px;height:32px;border-radius:16px"></span>`).join("")}</div>
@@ -4234,7 +4290,7 @@
 				return `<li class="issue" style="${sel ? "border:1px solid var(--warn);border-radius:12px;padding:12px;box-shadow:var(--shadow-2);margin:4px 0" : ""}">
 		<span class="pin" style="position:static;margin:0;width:22px;height:22px;font-size:11px;box-shadow:none;border:0" aria-hidden="true">${i.n}</span>
 		<span style="display:grid;gap:3px"><span class="mono xs muted" style="text-transform:uppercase;letter-spacing:.04em">${i.cat}</span><b>${i.title}</b><span class="small" style="color:var(--ink-2)">${i.body}</span></span>
-		<span class="acts">${fixBtn}<button class="btn ghost" data-go="check-stepper">Show on page</button><button class="btn ghost">Ignore</button></span>
+		<span class="acts">${fixBtn}<button class="btn ghost" data-go="check-stepper">Show on page</button><button class="btn ghost${lockedFix ? " dis" : ""}" ${lockedFix ? "disabled" : ""}>Ignore</button></span>
 	</li>`;
 			}
 			function issuesBody({ lockedFix = false, list = ISSUES } = {}) {
@@ -4297,7 +4353,7 @@
 				const f = (k, v, warn = "") =>
 					`<div style="display:grid;grid-template-columns:84px 1fr;gap:6px"><span style="opacity:.6">${k}</span><span${warn ? ' style="color:var(--paper-warn)"' : ""}>${v}${warn ? ` <span style="background:var(--paper-warn-soft);color:var(--paper-warn);border-radius:999px;padding:0 6px">${warn}</span>` : ""}</span></div>`;
 				return `<div style="display:flex;justify-content:space-between;gap:8px;text-transform:uppercase;opacity:.6;font-size:10px;margin-bottom:8px"><span>Extracted from the PDF on the page · reading order</span><span>text layer ✓ · 1 column</span></div>${f("Name", "Marcus Chen")}${f("Email", "sarah.martinez@email.com")}${f("Phone", "+1 (555) 291-4756")}${f("Location", "London, UK")}${f("Links", "marcuschen.dev", "issue 1")}${f("Sections", "Online Presence, Professional Summary, Technical Skills, Professional Experience", "issue 3")}${f("Dates", "4 found")}
-<hr style="border:0;border-top:1px solid currentColor;opacity:.2;margin:10px 0"/><div style="color:var(--paper-accent)">▸ EXPERIENCE</div><div style="padding-left:14px;opacity:.75">Cascade Studios  Seattle, WA
+<hr style="border:0;border-top:1px solid var(--paper-line);margin:10px 0"/><div style="color:var(--paper-accent)">▸ EXPERIENCE</div><div style="padding-left:14px;opacity:.75">Cascade Studios  Seattle, WA
 Senior Game Developer  March 2022 - Present
 • Lead gameplay programmer on an unannounced AAA action-adventure title…
 Pixel Forge Interactive  Bellevue, WA
@@ -4311,7 +4367,8 @@ C#, Editor Tools, Performance Profiling</div>`;
 				return `${jobSource()}
 	<div style="display:grid;gap:6px"><div style="display:flex;justify-content:space-between"><b>7 of 12 posting terms appear</b><span class="small muted">not scored</span></div><div style="height:6px;border-radius:3px;background:var(--line)"><div style="width:58%;height:100%;border-radius:3px;background:var(--accent)"></div></div></div>
 	<div style="display:grid;gap:8px"><span class="group-label" style="margin:0">Not in your resume · add only if true</span><div class="kws">${MISSING.map((t) => `<button class="chip sm" data-go="check-job-term"><span style="border-style:dashed">${ic("plus", 14)}${t}</span></button>`).join("")}</div></div>
-	<div style="display:grid;gap:8px"><span class="group-label" style="margin:0">Already covered · pick one to find it on the page</span><div class="kws">${FOUND.map((t) => `<button class="chip sm"><span style="background:var(--accent-soft);color:var(--accent-text);border-color:transparent">${ic("check", 14)}${t}</span></button>`).join("")}</div></div>`;
+	<div style="display:grid;gap:8px"><span class="group-label" style="margin:0">Already covered · pick one to find it on the page</span><div class="kws">${FOUND.map((t) => `<button class="chip sm" data-go="check-job-found"><span style="background:var(--accent-soft);color:var(--accent-text);border-color:transparent">${ic("check", 14)}${t}</span></button>`).join("")}</div></div>
+	<p class="small muted">Hidden: Perforce · <button class="link" style="color:var(--accent-text);font-weight:600;text-decoration:underline">Show again</button></p>`;
 			}
 			function termSheet() {
 				return `<div class="scrim" style="z-index:20"></div><section class="dsheet" aria-label="Netcode" style="top:auto;z-index:21;padding-bottom:16px">
@@ -4496,8 +4553,9 @@ C#, Editor Tools, Performance Profiling</div>`;
 			const toolLine = (t, busy = false) =>
 				`<span class="toolline">${busy ? '<span class="spinner" style="width:14px;height:14px;border-width:2px"></span>' : `<span style="color:var(--accent)">${ic("check", 14)}</span>`}${t}</span>`;
 			function emptyAssistant({ locked = false } = {}) {
+				const dis = locked ? ' disabled style="opacity:.45"' : "";
 				const s = (icon, l, h) =>
-					`<button><span style="display:flex;gap:10px;align-items:flex-start">${ic(icon, 20)}<span class="kv"><span style="font-weight:500">${l}</span><span class="xs muted">${h}</span></span></span></button>`;
+					`<button${dis}><span style="display:flex;gap:10px;align-items:flex-start">${ic(icon, 20)}<span class="kv"><span style="font-weight:500">${l}</span><span class="xs muted">${h}</span></span></span></button>`;
 				return `<div class="empty" style="padding:24px 4px 8px;justify-items:start;text-align:start">
 		<h5>What should we work on?</h5>
 		<p class="small">I can see this resume and the Northwind Labs posting. Suggestions come back as edits you can accept one by one.</p>
@@ -4531,7 +4589,8 @@ C#, Editor Tools, Performance Profiling</div>`;
 		${changeSet(states)}
 		<p class="xs muted">1 edit couldn't be placed: its text changed. Ask again to redo it.</p>
 		<div class="sources"><span class="xs muted">Sources</span><a href="#">Northwind Labs · Senior Gameplay Engineer</a></div>
-	</div>`;
+	</div>
+	<button class="btn ghost" style="justify-self:start" data-go="assistant-transcript">${ic("copy", 18)}Copy transcript</button>`;
 			}
 			function questionBody(answered = false) {
 				return `${userMsg("Tailor to the Northwind Labs posting")}
@@ -4556,7 +4615,7 @@ C#, Editor Tools, Performance Profiling</div>`;
 		<button style="border-top:1px solid var(--line)"><span class="grow">Anthropic</span>${ic("caret-down", 18)}</button>
 		<button style="border-top:1px solid var(--line)"><span class="grow">Other · OpenAI-compatible</span>${ic("caret-down", 18)}</button>
 	</div>
-	<p class="help">More providers and options are in <a href="#" style="color:var(--accent-text)">Settings</a>. The rest of the app works fully without AI.</p></div>`;
+	<p class="help">More providers and options are in <a href="#" style="color:var(--accent-text)">Settings</a>. Editing, design, Check issues and downloads work without AI.</p></div>`;
 			}
 			/* ================= Tablet compositions ================= */
 			function tabletShare(tabSel, body, pageOpts = {}, pageOverlay = "") {
@@ -4849,7 +4908,8 @@ C#, Editor Tools, Performance Profiling</div>`;
 						"Lift scales to 1.02 with shadow e3 over d1; neighbours slide over d2. Reduced motion: no scale, items swap without sliding.",
 					"iOS / Android":
 						"Medium impact haptic on lift and a selection tick on each column change, on both platforms.",
-					Targets: "Section rows are 44 pt; the handle is 28 × 44 pt; ⋮ is 36 × 44 pt.",
+					Targets:
+						"Section rows are 44 pt tall; the ⋮⋮ handle is 28 × 44 pt drawn with a hit extension to 44 × 44 pt; ⋮ is 44 × 44 pt. Each Full Width row is 44 pt tall and the whole row toggles. The numeric Sidebar Width field takes exact values (step 0.1).",
 				},
 				() => tabletBuilder({ panel: designTabletPanel({ group: "advanced" }) }),
 			);
@@ -5026,7 +5086,7 @@ C#, Editor Tools, Performance Profiling</div>`;
 					checkPhone({
 						tabSel: "writing",
 						head: false,
-						body: `<p class="small" style="color:var(--ink-2)">Your bullets are concrete and most lead with a verb. Two describe your role rather than what you did.</p>${changeSet(["pending", "applied", "stale"])}<b>What's working</b><ul class="small" style="padding-left:18px;color:var(--ink-2)"><li>Numbers in most bullets</li><li>Consistent tense</li></ul><p class="help">A model's opinion, not a verdict. It can be wrong. <button class="link" style="text-decoration:underline;color:var(--accent-text)">Run again</button></p>`,
+						body: `<p class="small" style="color:var(--ink-2)">Your bullets are concrete and most lead with a verb. Two describe your role rather than what you did.</p>${changeSet(["pending", "applied", "stale"])}${writingNotes()}<b>What's working</b><ul class="small" style="padding-left:18px;color:var(--ink-2)"><li>Numbers in most bullets</li><li>Consistent tense</li></ul><p class="help">A model's opinion, not a verdict. It can be wrong. <button class="link" style="text-decoration:underline;color:var(--accent-text)">Run again</button></p>`,
 						overlay: toast("Edit applied", "Undo", 70),
 					}),
 				{
@@ -5433,18 +5493,658 @@ C#, Editor Tools, Performance Profiling</div>`;
 				assistantPhone({
 					head: assistantHead({ model: false }),
 					comp: "",
-					body: `<div class="banner plain" style="border-radius:12px">${ic("warning-circle", 18)}<span class="grow">The assistant isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Everything else works without it.</span></div>`,
+					body: `<div class="banner plain" style="border-radius:12px">${ic("warning-circle", 18)}<span class="grow">The assistant isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Editing, design, Check issues and downloads work without it.</span></div>`,
 				}),
 			);
 			add(
 				"assistant",
 				"assistant-locked",
 				"Locked document",
-				() => assistantPhone({ body: emptyAssistant({ locked: true }) }),
+				() => assistantPhone({ body: emptyAssistant({ locked: true }), comp: composer({ disabled: true }) }),
 				{
-					Gestures: "Suggestions still send, but Accept is disabled on any change set until the document is unlocked.",
+					Gestures:
+						"Locked documents can't be sent: suggestions, the composer, Send and Accept are disabled until the document is unlocked (web blocks sending). Past conversations stay readable.",
 				},
 			);
+			/* ================= DS4 fix round: added states ================= */
+			function addAfter(after, g, id, t, p, n = {}, tb = null) {
+				const i = F.findIndex((f) => f.id === after);
+				F.splice(i + 1, 0, { g, id, t, p, n, tb });
+			}
+			const kbdSheet = (inner, kb = "text", top = "10px") =>
+				phone(
+					`${editorBar()}<div style="flex:1;position:relative;display:flex;min-height:0">${canvas({ width: 200 }, "8px 0 0")}<div class="scrim" style="z-index:9"></div><section class="dsheet" style="top:${top}"><button class="grabber" aria-label="Resize sheet"><span></span></button>${inner}</section></div>${keyboard(kb)}`,
+				);
+			const searchField = (text, ph = "Search...") =>
+				`<div class="input focus" style="gap:8px">${ic("magnifying-glass", 18)}<span class="grow">${text || `<span class="ph">${ph}</span>`}${text ? '<span class="caret"></span>' : ""}</span>${text ? `<button class="ib" style="margin-right:-10px" aria-label="Clear selection">${ic("x", 16)}</button>` : ""}</div>`;
+			const pickRow = (main, sub = "", on = false, style = "") =>
+				`<button class="lrow" role="option" aria-selected="${on}"><span class="grow"><b style="font-weight:500;${style}">${main}</b>${sub ? `<span class="small muted">${sub}</span>` : ""}</span>${on ? `<span style="color:var(--accent-text)">${ic("check", 20)}</span>` : ""}</button>`;
+			const menuAt = (top, items, right = 16, width = 230) =>
+				`<div class="scrim light" style="z-index:25"></div><div class="menu" role="menu" style="right:${right}px;top:${top}px;width:${width}px;z-index:26">${items
+					.map(
+						([l, on, sub]) =>
+							`<button role="menuitemradio" aria-checked="${!!on}"><span style="width:18px">${on ? ic("check", 18) : ""}</span><span class="grow">${l}${sub ? `<span class="xs muted" style="display:block">${sub}</span>` : ""}</span></button>`,
+					)
+					.join("")}</div>`;
+
+			/* ---- Design ---- */
+			addAfter(
+				"design-page",
+				"design",
+				"design-page-language",
+				"Page · Language search",
+				() =>
+					kbdSheet(
+						`<div class="sheet-title"><h4>Language</h4><button class="tb">Done</button></div><div class="sbody" style="gap:8px">${searchField("port")}
+				<div class="group" role="listbox" aria-label="Language">${pickRow('<span class="mono small muted">pt-BR</span>&nbsp; Portuguese (Brazil)')}${pickRow('<span class="mono small muted">pt-PT</span>&nbsp; Portuguese (Portugal)')}</div>
+				<p class="help">No match shows “No results found.” Clearing the field shows every language, with the current one (en-US) ticked.</p></div>`,
+					),
+				{
+					"Sheet detents": "One detent at Full; the list rises with the keyboard. Done or swipe down closes it.",
+					Keyboard: "Search field takes focus on open; filters by code and name as you type.",
+				},
+			);
+			addAfter(
+				"design-advanced",
+				"design",
+				"design-date-format",
+				"Advanced · Date format menu",
+				() =>
+					designPhone({
+						tabSel: "page",
+						detent: "full",
+						body: advRows(true),
+						overlay: menuAt(196, [["Mar 2022", true], ["March 2022"], ["03/2022"], ["2022-03"]], 30, 240),
+					}),
+				{
+					"iOS / Android":
+						"iOS: pull-down menu anchored to the field. Android: exposed dropdown menu. Choosing applies at once.",
+				},
+			);
+			addAfter(
+				"design-adv-typography",
+				"design",
+				"design-adv-font-family",
+				"Typography · Font Family search",
+				() =>
+					kbdSheet(
+						`<div class="sbody" style="gap:8px">${subHead("Font Family", "Typography")}${searchField("")}
+				<div class="group" role="listbox" aria-label="Font Family">${[
+					["IBM Plex Serif", "Georgia, serif", true],
+					["EB Garamond", "Georgia, serif"],
+					["Inter", "var(--font-ui)"],
+					["Lato", "var(--font-ui)"],
+					["Merriweather", "Georgia, serif"],
+					["Noto Sans Arabic", "var(--font-ui)"],
+					["Source Sans 3", "var(--font-ui)"],
+				]
+					.map(([n, f, on]) => pickRow(n, "", on, `font-family:${f};font-size:17px`))
+					.join("")}</div></div>`,
+					),
+				{
+					Gestures:
+						"Each row is previewed in its own font (downloaded on first view, then cached). Choosing returns to Typography; weights reset to what the font offers.",
+					Keyboard: "Search focuses on open; results filter as you type. “No results found.” when nothing matches.",
+				},
+			);
+			addAfter(
+				"design-adv-font-family",
+				"design",
+				"design-adv-heading-weight",
+				"Typography · Heading Font Weight",
+				() =>
+					designPhone({
+						tabSel: "page",
+						detent: "full",
+						body: typographyBody(),
+						overlay: menuAt(250, [["100"], ["200"], ["300"], ["400"], ["500"], ["600", true], ["700"]], 24, 160),
+					}),
+				{ Gestures: "Single choice from the weights the heading font has; 100–900 when the font reports none." },
+			);
+			addAfter(
+				"design-adv-picker",
+				"design",
+				"design-adv-icon",
+				"Design · Level icon picker",
+				() =>
+					designPhone({
+						tabSel: "page",
+						detent: "full",
+						body: coloursBody(),
+						overlay: `<div class="scrim" style="z-index:20;background:var(--scrim)"></div><section class="dsheet" aria-label="Pick an icon" style="top:22%;z-index:21"><button class="grabber"><span></span></button><div class="sheet-title"><h4>Icon</h4><button class="tb">Done</button></div><div class="sbody">${searchField("", "Search for an icon")}<div style="display:grid;grid-template-columns:repeat(8,1fr)">${["star", "heart", "circle", "square", "diamond", "hexagon", "triangle", "lightning", "sparkle", "check-circle", "code", "globe", "briefcase", "palette", "bookmark-simple", "text-aa"].map((n) => `<button class="ib" aria-label="${n}" aria-pressed="${n === "star"}" style="${n === "star" ? "background:var(--accent-soft);color:var(--accent-text)" : ""}">${ic(n, 22)}</button>`).join("")}</div></div></section>`,
+					}),
+				{
+					"Sheet detents":
+						"Half and Full; the search field raises it to Full. Tapping an icon applies it and closes the sheet.",
+				},
+			);
+			addAfter(
+				"design-adv-icon",
+				"design",
+				"design-adv-level-type",
+				"Design · Level Type menu",
+				() =>
+					designPhone({
+						tabSel: "page",
+						detent: "full",
+						body: coloursBody(),
+						overlay: menuAt(
+							380,
+							[
+								["Hidden"],
+								["Circle", true],
+								["Square"],
+								["Rectangle"],
+								["Rectangle (Full Width)"],
+								["Progress Bar"],
+								["Icon"],
+							],
+							24,
+							240,
+						),
+					}),
+				{ Gestures: "Choosing Icon uses the Level icon above; the preview box updates live." },
+			);
+			addAfter(
+				"design-adv-css",
+				"design",
+				"design-adv-css-focus",
+				"Custom Styles · focus mode, inline colour",
+				() =>
+					phone(`<header class="ahead"><button class="ib" aria-label="Exit focus mode">${ic("arrows-in-simple", 22)}</button><div class="title"><b>Semantic CSS stylesheet</b></div><button class="ib" aria-label="Copy stylesheet">${ic("copy", 22)}</button><button class="ib" aria-label="Format stylesheet">${ic("text-indent", 22)}</button></header>
+		<div class="code" style="flex:1;border:0;border-radius:0;min-height:0;font-size:14px"><span class="c">/* Headings in small caps */</span>
+<span class="k">section-heading</span> {
+  font-variant: small-caps;
+  color: <button class="swatch hitx" style="width:44px;height:28px;vertical-align:middle;display:inline-grid" aria-label="Edit colour #3E6B4F" data-go="design-adv-picker"><span style="background:#3E6B4F;width:14px;height:14px;border-radius:3px"></span></button>#3E6B4F;<span class="caret"></span>
+}
+
+<span class="k">entry-title</span> {
+  font-weight: 600;
+}</div>${keyboard()}`),
+				{
+					Gestures:
+						"Open focus mode pushes the editor full screen. A swatch appears before every colour value; tap it to edit the colour in the picker sheet, which rewrites the value.",
+					Keyboard:
+						"Monospace, autocorrect and smart punctuation off. Exit focus mode returns to the sheet with the same cursor.",
+				},
+			);
+			addAfter(
+				"design-adv-css-focus",
+				"design",
+				"design-adv-css-pick",
+				"Custom Styles · pick on the page",
+				() =>
+					designPhone({
+						tabSel: "page",
+						page: {
+							overlays: `<span class="mark" style="top:16%;height:2.4%;right:72%;outline-style:dashed"><span class="tag">section-heading</span></span>`,
+						},
+						pageOverlay: `<div class="caption" style="top:10px">${ic("highlighter", 16)}<span>Tap anything on the page to style it</span><button>Done</button></div>`,
+						body: `${subHead("Custom Styles")}<div class="code" style="min-height:0"><span class="c">/* added from the page */</span>
+<span class="k" style="outline:2px solid var(--accent);outline-offset:1px;border-radius:2px">section-heading</span> {
+  <span class="caret"></span>
+}</div>`,
+					}),
+				{
+					Gestures:
+						"Pick on the page puts the page in pick mode: a tap outlines the element and inserts (or jumps to) its rule. The rule under the cursor is outlined on the page while editing.",
+					Motion: "Outline draws over d1. Reduced motion: appears at once.",
+				},
+			);
+
+			/* ---- Check ---- */
+			const pdfCats = (state) =>
+				categoriesBody().replace(
+					/<button class="btn ghost" style="justify-self:start">.*?Also check the exported PDF<\/button>/,
+					state === "busy"
+						? `<p class="small" style="display:flex;gap:8px;align-items:center;color:var(--ink-2);min-height:44px"><span class="spinner"></span>Checking the exported PDF…</p>`
+						: `<button class="btn ghost" style="justify-self:start">${ic("file-pdf", 18)}Also check the exported PDF</button>`,
+				);
+			addAfter(
+				"check-categories",
+				"check",
+				"check-pdf-checking",
+				"Exported PDF check · running",
+				() => checkPhone({ head: false, body: pdfCats("busy") }),
+				{
+					Gestures:
+						"The PDF renders and is checked on the device. Clean result: toast “Exported PDF checked: it reads cleanly too.”",
+				},
+			);
+			addAfter(
+				"check-pdf-checking",
+				"check",
+				"check-pdf-report",
+				"Exported PDF check · report",
+				() =>
+					checkPhone({
+						head: false,
+						body: pdfCats(),
+						overlay: `<div class="scrim" style="z-index:20"></div><section class="dsheet" aria-label="The exported PDF" style="top:30%;z-index:21"><button class="grabber"><span></span></button><div class="sheet-title"><h4>The exported PDF</h4><button class="ib" aria-label="Close">${ic("x", 22)}</button></div><div class="sbody"><p class="small" style="color:var(--ink-2)">What the file-level check found in the PDF you'd send. It ran on this device; nothing was uploaded.</p>
+				<div class="group">${[
+					["Warning", "Ligatures can drop letters out of words such as “workflow”."],
+					["Tip", "This file has no accessibility tags."],
+				]
+					.map(
+						([sv, t]) =>
+							`<div class="lrow" style="align-items:flex-start"><span class="dot ${sv === "Warning" ? "warning" : "tip"}" style="margin-top:7px"></span><span class="grow"><span class="xs muted">${sv}</span><b style="font-weight:500">${t}</b></span></div>`,
+					)
+					.join("")}</div></div></section>${toast("Exported PDF checked: 2 more to look at.", "Show", 70)}`,
+					}),
+				{
+					"Sheet detents":
+						"Show in the toast opens this sheet at Half; drag to Full. Pins for these findings show on Page with a dashed box while the resume is unchanged.",
+				},
+			);
+			addAfter(
+				"check-pdf-report",
+				"check",
+				"check-pdf-failed",
+				"Exported PDF check · failed",
+				() =>
+					checkPhone({
+						head: false,
+						body: pdfCats(),
+						overlay: toast("The exported PDF couldn't be checked. Try again.", "", 70),
+					}),
+				{ Gestures: "The button returns to its idle label so it can be tried again." },
+			);
+			const parserState = (msg, spin = false) =>
+				phone(
+					`${editorBar()}<div style="flex:1;position:relative;display:flex;min-height:0"><div class="canvas" style="padding:64px 12px 24px"><div class="parser" style="border-radius:6px;box-shadow:var(--shadow-page);min-height:220px;display:grid;place-items:center;text-align:center;gap:8px">${spin ? '<span class="spinner"></span>' : ""}<span>${msg}</span></div></div>${pageViewToggle(true)}</div>${editorTabs("page")}`,
+				);
+			addAfter("check-parser", "check", "check-parser-loading", "Parser view · reading", () =>
+				parserState("Reading the PDF…", true),
+			);
+			addAfter("check-parser-loading", "check", "check-parser-error", "Parser view · unreadable PDF", () =>
+				parserState("The page's PDF couldn't be read. Edit anything to render it again."),
+			);
+			addAfter("check-parser-error", "check", "check-parser-notext", "Parser view · no text layer", () =>
+				parserState("This PDF has no text layer, so a parser reads nothing from it."),
+			);
+			addAfter(
+				"check-job-term",
+				"check",
+				"check-job-change",
+				"Job match · Change application, Unlink",
+				() =>
+					checkPhone({
+						tabSel: "job",
+						head: false,
+						body: jobBody(),
+						overlay: `<div class="scrim" style="z-index:20"></div><section class="dsheet" aria-label="Link an application…" style="top:auto;z-index:21;padding-bottom:16px"><button class="grabber"><span></span></button><div class="sheet-title"><h4>Link an application…</h4></div><div class="sbody" style="gap:8px"><div class="group" role="listbox">${pickRow("Senior Gameplay Engineer · Northwind Labs", "", true)}${pickRow("Tools Programmer · Fieldnote")}${pickRow("Gameplay Programmer · Parcel &amp; Co.")}${pickRow("Technical Designer · Lumen")}</div><button class="btn ghost full" style="color:var(--danger-text)">Unlink this application</button></div></section>`,
+					}),
+				{
+					"Sheet detents":
+						"Fits content. Choosing shows “Linking…” on the row; failure toast “Couldn't link the application.” Closed applications are not listed.",
+				},
+			);
+			addAfter(
+				"check-job-none",
+				"check",
+				"check-job-pasted",
+				"Job match · pasted posting",
+				() =>
+					checkPhone({
+						tabSel: "job",
+						head: false,
+						body: jobBody()
+							.replace(
+								jobSource(),
+								`<div class="group" style="padding:10px 12px;display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;border-radius:8px;background:var(--sunken);display:grid;place-items:center">${ic("copy", 18)}</span><span class="kv" style="flex:1"><b style="font-size:14px">Pasted posting</b><span class="xs muted">For this visit only</span></span><button class="btn ghost" style="padding:0 8px">Clear</button></div><button class="btn ghost" style="justify-self:start;margin-top:-10px" data-go="check-job-save-app">${ic("briefcase", 18)}Save as application…</button>`,
+							)
+							.replace(/<p class="small muted">Hidden:.*?<\/p>/, ""),
+					}),
+				{
+					Gestures:
+						"A pasted posting is matched for this visit only. Clear removes it; Save as application… keeps it and links the resume.",
+				},
+			);
+			addAfter(
+				"check-job-pasted",
+				"check",
+				"check-job-save-app",
+				"Job match · Save as application",
+				() =>
+					kbdSheet(
+						`<div class="sheet-title"><h4>Save as application…</h4></div><div class="sbody" style="gap:12px"><div class="field"><span class="lbl">Company</span><div class="input">Northwind Labs</div></div><div class="field"><span class="lbl">Role</span><div class="input focus">Senior Gameplay Engineer<span class="caret"></span></div></div><div class="btnrow" style="justify-content:flex-end"><button class="btn ghost">Cancel</button><button class="btn primary">Save and link</button></div></div>`,
+						"text",
+						"30%",
+					),
+				{
+					Keyboard:
+						"Company then Role; Return moves on, then saves. Success toast “Saved as an application and linked”; failure “Couldn't save the application.”",
+				},
+			);
+			addAfter(
+				"check-job-save-app",
+				"check",
+				"check-job-noposting",
+				"Job match · linked, no posting saved",
+				() =>
+					checkPhone({
+						tabSel: "job",
+						head: false,
+						body: `<b style="font-size:17px">Senior Gameplay Engineer · Northwind Labs</b><p class="small" style="color:var(--ink-2)">This application has no posting saved yet. Paste it to match against it.</p><div class="input" style="min-height:140px;align-items:flex-start;padding-top:12px"><span class="ph">Paste a job posting…</span></div><button class="btn primary dis" disabled>Save to the application</button>`,
+					}),
+				{
+					Gestures:
+						"Save to the application stores the posting on the linked application, then shows the match. Failure toast “Couldn't save the posting.”",
+				},
+			);
+			addAfter(
+				"check-job-noposting",
+				"check",
+				"check-job-found",
+				"Job match · found term on the page",
+				() =>
+					phone(
+						`${editorBar()}<div style="flex:1;position:relative;display:flex;min-height:0">${canvas({ width: 330, label: "Page 1 · A4", overlays: `<span class="mark found" style="top:35.6%;height:2.4%;right:52%"></span><span class="mark found" style="top:56.2%;height:2.6%"></span>` }, "60px 0 120px")}<div class="caption" style="top:10px;background:var(--accent-soft);color:var(--accent-text);box-shadow:var(--shadow-2)">${ic("check", 16)}<span>“Unreal Engine” · found in 2 places</span><button aria-label="Back to Job match" data-go="check-job-match">Done</button></div></div>${editorTabs("page")}`,
+					),
+				{
+					Gestures:
+						"Picking a found term switches to Page and outlines every entry that mentions it (pageSelectLine outline, pageSelectFill). Done returns to Job match; picking another term moves the highlight.",
+				},
+			);
+			addAfter(
+				"check-writing-optin",
+				"check",
+				"check-writing-provider",
+				"Writing · choose provider",
+				() =>
+					checkPhone({
+						tabSel: "writing",
+						head: false,
+						body: writingIntro(),
+						overlay: `<div class="scrim" style="z-index:20"></div><section class="dsheet" aria-label="AI provider" style="top:auto;z-index:21;padding-bottom:16px"><button class="grabber"><span></span></button><div class="sheet-title"><h4>AI provider</h4></div><div class="sbody" style="gap:8px"><div class="group" role="listbox">${pickRow("OpenAI", "gpt-4.1", true)}${pickRow("Anthropic", "claude-3-5-sonnet-latest")}</div><button class="btn ghost full">Open AI settings</button></div></section>`,
+					}),
+				{
+					"Sheet detents":
+						"Fits content. Lists the connected providers that can run a review; choosing one updates the “Sends your resume's text only to …” line.",
+				},
+			);
+			addAfter("check-writing-provider", "check", "check-writing-empty", "Writing · nothing to review yet", () =>
+				checkPhone({
+					tabSel: "writing",
+					head: false,
+					body:
+						writingIntro()
+							.replace('data-go="check-writing-results"', 'disabled data-go="check-writing-results"')
+							.replace('class="btn secondary"', 'class="btn secondary dis"') +
+						`<p class="help">Add a summary or describe a role first; there's nothing to review yet.</p>`,
+				}),
+			);
+			addAfter(
+				"check-writing-results",
+				"check",
+				"check-writing-notes",
+				"Writing · notes (no rewrite)",
+				() =>
+					checkPhone({
+						tabSel: "writing",
+						head: false,
+						body: `${writingNotes()}<b>What's working</b><ul class="small" style="padding-left:18px;color:var(--ink-2)"><li>Numbers in most bullets</li><li>Consistent tense</li></ul><p class="help">A model's opinion, not a verdict. It can be wrong. <button class="link" style="text-decoration:underline;color:var(--accent-text)">Run again</button></p>`,
+					}),
+				{ Gestures: "Show on page switches to Page and outlines the quoted passage." },
+			);
+
+			/* ---- Share ---- */
+			function addressStates() {
+				const pre = "rxresu.me/marcus/";
+				const f = (cap, slug, hint, cls = "", icon = "") =>
+					`<div class="field"><span class="lbl">Address · <span class="muted" style="font-weight:400">${cap}</span></span><div class="input ${cls}" style="gap:0"><span class="pre">${pre}</span><span class="grow mono small trunc">${slug}</span>${icon}</div><p class="help${cls === "err" ? " err" : ""}">${hint}</p></div>`;
+				return `${f("empty", "", "Add an address.", "err", `<span style="color:var(--danger-text)">${ic("warning-circle", 20)}</span>`)}
+	${f("malformed", "Senior--dev", "Use lowercase letters, numbers and single dashes.", "err", `<span style="color:var(--danger-text)">${ic("warning-circle", 20)}</span>`)}
+	${f("checking", "gameplay-dev", "Checking… Copy is available after saving.", "", '<span class="spinner" style="color:var(--ink-3)"></span>')}
+	${f("saving", "gameplay-dev", `Saving ${pre}gameplay-dev… Copy is available after saving.`, "", `<span style="color:var(--accent-text)">${ic("check-circle", 20)}</span>`)}
+	<div class="btnrow"><button class="btn secondary dis" disabled>${ic("copy", 18)}Copy</button></div>`;
+			}
+			addAfter(
+				"share-link-taken",
+				"share",
+				"share-link-address-states",
+				"Link · address states, save failed",
+				() => sharePhone({ body: addressStates(), overlay: toast("Something went wrong. Please try again.", "", 70) }),
+				{
+					Gestures:
+						"One field drawn in four states (labels after “Address ·” are for this mockup only). Copy stays disabled until the address is saved. A save failure keeps the typed address and shows the toast.",
+				},
+			);
+			addAfter(
+				"share-history",
+				"share",
+				"share-history-saving",
+				"History · saving a version",
+				() =>
+					sharePhone({
+						tabSel: "history",
+						body: historyBody().replace(
+							'<div class="hexrow"><div class="input" style="flex:1"><span class="ph">Name this version, e.g. Sent to Lumen</span></div><button class="btn secondary dis" disabled>Save</button></div>',
+							'<div class="hexrow"><div class="input" style="flex:1">Sent to Lumen</div><button class="btn secondary dis" disabled><span class="spinner"></span>Save</button></div>',
+						),
+					}),
+				{
+					Gestures:
+						"While a save, restore, rename or delete runs, the buttons that start another one are disabled and the busy button shows a spinner. Success toasts: “Saved “{name}””, “Deleted “{title}””.",
+				},
+			);
+			addAfter(
+				"share-history-saving",
+				"share",
+				"share-history-error",
+				"History · action failed",
+				() =>
+					sharePhone({
+						tabSel: "history",
+						body: historyBody()
+							.replace('<span class="ph">Name this version, e.g. Sent to Lumen</span>', "Sent to Lumen")
+							.replace(
+								'<button class="btn secondary dis" disabled>Save</button>',
+								'<button class="btn secondary">Save</button>',
+							),
+						overlay: toast("Couldn't save your changes. Try again before continuing.", "", 70),
+					}),
+				{
+					Gestures:
+						"Save and restore failures keep the typed name and show this toast. Rename and delete failures show “Something went wrong. Please try again.” or “This resume is locked. Unlock it first to make changes.”",
+				},
+			);
+
+			/* ---- Assistant ---- */
+			addAfter(
+				"assistant-empty",
+				"assistant",
+				"assistant-model-menu",
+				"Model menu, Connect another…",
+				() =>
+					assistantPhone({
+						body: emptyAssistant(),
+						overlay: `<div class="scrim light" style="z-index:25"></div><div class="menu" role="menu" aria-label="Model" style="left:40px;top:${ios() ? 104 : 86}px;width:260px;z-index:26">
+					<p class="xs muted" style="padding:6px 12px 0">OpenAI</p><button role="menuitemradio" aria-checked="true"><span class="grow mono small">gpt-4.1</span>${ic("check", 18)}</button>
+					<p class="xs muted" style="padding:6px 12px 0">Anthropic</p><button role="menuitemradio" aria-checked="false"><span class="grow mono small">claude-3-5-sonnet-latest</span></button>
+					<hr/><button><span class="grow">Connect another…</span>${ic("caret-right", 16)}</button></div>`,
+					}),
+				{
+					Gestures:
+						"Tap the model name under Assistant. Choosing switches the thread's model (failure toast “Couldn't switch models.”). Connect another… opens Settings → AI & developer.",
+				},
+			);
+			addAfter(
+				"assistant-threads-empty",
+				"assistant",
+				"assistant-thread-loading",
+				"Opening a conversation",
+				() =>
+					assistantPhone({
+						body: `<div class="empty" style="padding-top:120px"><span class="spinner" style="color:var(--ink-3)"></span></div>`,
+						comp: composer({ disabled: true }),
+					}),
+				{ Motion: "Spinner appears only after 150 ms, so fast loads show nothing. Reduced motion: static indicator." },
+			);
+			addAfter(
+				"assistant-thread-loading",
+				"assistant",
+				"assistant-thread-error",
+				"Conversation failed to open",
+				() =>
+					assistantPhone({
+						body: `<div class="banner plain" style="border-radius:12px;display:grid;gap:8px"><span>This conversation couldn't be opened.</span><button class="btn secondary" style="justify-self:start" data-go="assistant-threads">${ic("clock-counter-clockwise", 18)}Past conversations</button></div>`,
+						comp: composer({ disabled: true }),
+					}),
+				{ Gestures: "Past conversations returns to the list; New conversation starts fresh." },
+			);
+			addAfter("assistant-streaming", "assistant", "assistant-thinking", "Thinking (before first token)", () =>
+				assistantPhone({
+					body: `${userMsg("Draft a summary")}<span class="toolline" style="font-size:14px"><span class="spinner" style="width:16px;height:16px"></span>Thinking…</span>`,
+					comp: composer({ streaming: true }),
+				}),
+			);
+			addAfter(
+				"assistant-thinking",
+				"assistant",
+				"assistant-tool-states",
+				"Tool status, warnings and failures",
+				() =>
+					assistantPhone({
+						body: `${userMsg("Tailor to the Northwind Labs posting")}<div class="msg ai">${toolLine("Read the resume")}${toolLine("Reading page…", true)}${toolLine("Read the page")}
+				<span class="toolline" style="color:var(--warn-text)">${ic("warning", 14)}This page is clipped or incomplete. Check the original before using it.</span>
+				<span class="toolline">${ic("warning-circle", 14)}Enhanced reading unavailable; used the built-in reader.</span>
+				<span class="toolline">${ic("x", 14)}Web search didn't finish.</span>
+				<span class="toolline" style="color:var(--danger-text)">${ic("warning", 14)}Web search failed: request timed out</span>
+				<span class="toolline" style="color:var(--danger-text)">${ic("warning", 14)}Couldn't read this page: 403 Forbidden</span>
+				${toolLine("Preparing edits…", true)}
+				<span class="toolline" style="color:var(--danger-text)">${ic("warning", 14)}Couldn't propose these edits: the resume changed while they were prepared</span></div>`,
+						comp: composer({ streaming: true }),
+					}),
+				{
+					Gestures:
+						"A gallery of every status line one run can show (a real run shows only the ones that happen). Error details after the colon come from the tool.",
+				},
+			);
+			addAfter(
+				"assistant-changeset",
+				"assistant",
+				"assistant-transcript",
+				"Copy transcript",
+				() =>
+					assistantPhone({
+						body: `${userMsg("Is my summary too long?")}<div class="msg ai">${toolLine("Read the resume")}<p>It's 58 words, which fits a one-page resume. The first sentence carries most of it; the last two repeat what your experience already shows.</p></div><button class="btn ghost" style="justify-self:start">${ic("copy", 18)}Copy transcript</button>`,
+						overlay: toast("Transcript copied", "", 190),
+					}),
+				{
+					Gestures:
+						"Copy transcript appears at the end once the run is idle. Failure toast “Couldn't copy the transcript.”",
+				},
+			);
+			addAfter("assistant-question", "assistant", "assistant-question-answered", "Clarifying question · answered", () =>
+				assistantPhone({ body: questionBody(true) + streamingBody().replace(userMsg("Find weak bullets"), "") }),
+			);
+			addAfter(
+				"assistant-attach",
+				"assistant",
+				"assistant-attach-failed",
+				"Attachment failed",
+				() =>
+					assistantPhone({
+						body: userMsg(
+							"Tailor this to the posting I attached",
+							`<span class="filechip">${ic("paperclip", 14)}posting.pdf</span>`,
+						),
+						comp: composer({ text: "Use my portfolio notes", files: [{ name: "portfolio-notes.md" }] }),
+						overlay: toast("Couldn't attach the file.", "", 230),
+					}),
+				{
+					Gestures:
+						"The failed file gets no chip; files that uploaded stay. Attach again to retry. Over 25 MB or over 10 files fails the same way.",
+				},
+			);
+			addAfter(
+				"assistant-attach-failed",
+				"assistant",
+				"assistant-context-removed",
+				"Context removed · fresh sends",
+				() =>
+					assistantPhone({
+						body: changesetBody(["applied", "pending", "stale"]),
+						comp: composer({ posting: false, fresh: true }),
+					}),
+				{
+					Gestures:
+						"After × on the posting chip it can't be added back in this conversation; New conversation turns both back on. The disclosure changes to say each send starts fresh.",
+				},
+			);
+			addAfter(
+				"assistant-noprovider-error",
+				"assistant",
+				"assistant-noprovider-compatible",
+				"No provider · OpenAI-compatible form",
+				() =>
+					assistantPhone({
+						head: assistantHead({ model: false }),
+						comp: "",
+						body: providerBody()
+							.replace(
+								/<button aria-expanded="true"><span class="grow">OpenAI<\/span>.*?<\/div>\s*<button style="border-top:1px solid var\(--line\)"><span class="grow">Anthropic/s,
+								'<button aria-expanded="false"><span class="grow">OpenAI</span>' +
+									ic("caret-down", 18) +
+									'</button><button style="border-top:1px solid var(--line)"><span class="grow">Anthropic',
+							)
+							.replace(
+								`<button style="border-top:1px solid var(--line)"><span class="grow">Other · OpenAI-compatible</span>${ic("caret-down", 18)}</button>`,
+								`<button style="border-top:1px solid var(--line)" aria-expanded="true"><span class="grow">Other · OpenAI-compatible</span>${ic("caret-up", 18)}</button><div class="inner"><div class="field"><span class="lbl">Base URL</span><div class="input focus mono"><span class="ph">https://…/v1</span><span class="caret"></span></div></div><div class="field"><span class="lbl">API key</span><div class="input mono"></div></div><div class="field"><span class="lbl">Model</span><div class="input mono"></div></div><button class="btn primary dis" disabled>Connect</button></div>`,
+							),
+					}),
+				{
+					Keyboard:
+						"URL keyboard for Base URL (required for this kind), secure entry for the key. Connect enables once Base URL, key and model are filled.",
+				},
+			);
+			addAfter(
+				"assistant-noprovider-compatible",
+				"assistant",
+				"assistant-noprovider-testing",
+				"No provider · Anthropic, testing",
+				() =>
+					assistantPhone({
+						head: assistantHead({ model: false }),
+						comp: "",
+						body: providerBody({ testing: true })
+							.replace(
+								'<span class="grow">OpenAI</span>' + ic("caret-up", 18),
+								'<span class="grow">Anthropic</span>' + ic("caret-up", 18),
+							)
+							.replace("gpt-4.1</div>", "claude-3-5-sonnet-latest</div>")
+							.replace(
+								`<span class="grow">Anthropic</span>${ic("caret-down", 18)}`,
+								`<span class="grow">OpenAI</span>${ic("caret-down", 18)}`,
+							),
+					}),
+				{
+					Gestures:
+						"Connect saves the provider, then tests it; fields lock while “Testing the connection…” shows. Success switches straight to the empty state.",
+				},
+			);
+			function writingNotes() {
+				return `<b>Notes</b><div class="group" style="padding:4px 12px">${[
+					[
+						"Summary · paragraph 1",
+						"High",
+						"“Mid-level Frontend Engineer”",
+						"Your title says frontend; every role below is games. A reader may wonder which you're applying as.",
+					],
+					[
+						"Experience · Pixel Forge · bullet 2",
+						"Low",
+						"“Implemented procedural generation systems”",
+						"Says what, not how big. A number would help.",
+					],
+				]
+					.map(
+						([where, impact, q, note]) =>
+							`<div class="lrow" style="align-items:flex-start;flex-direction:column;gap:6px;padding:10px 0"><span style="display:flex;gap:8px;align-items:center"><span class="mono xs muted" style="text-transform:uppercase">${where}</span><span class="badge ${impact === "High" ? "warn" : "plain"}" style="height:20px;padding:0 7px">${impact}</span></span><span class="small"><i>${q}</i> ${note}</span><button class="btn secondary" style="min-height:44px">Show on page</button></div>`,
+					)
+					.join("")}</div>`;
+			}
 			function checkRTL() {
 				const AR = [
 					[

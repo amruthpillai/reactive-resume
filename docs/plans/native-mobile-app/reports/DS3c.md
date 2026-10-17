@@ -6,7 +6,7 @@ Deliverable: `docs/plans/native-mobile-app/mockups/design.html`. It is one self-
 
 - **Controls:** Light / Dark, and iPhone 393×852 / Android 412×915 / Tablet 1180×820.
 - **Left index:** every frame with its id, grouped as Design, Check, Share & export and Assistant. ▭ marks a frame that has a tablet variant.
-- **Frames:** 76 phone frames in total, 10 of them with tablet variants.
+- **Frames:** 112 phone frames in total after the DS4 round (76 at first), 10 of them with tablet variants.
   - Every frame has interaction notes: gestures, sheet detents, motion with `d1`/`d2`/`d3` and reduced-motion behaviour, keyboard, iOS / Android, and 44 pt targets.
   - In Tablet mode, a phone-only frame shows a note that names the tablet frame hosting the same content.
 - **Jumps:** controls that lead to another state jump to that frame. Examples: a template card, Show on page, Share, ✦, ⋯ on a version.
@@ -110,15 +110,12 @@ These are new strings, which need Lingui entries when built:
 
 ## Tokens
 
-- **Colours.** Only `globals.css` tokens are used. That includes `--info-soft` / `--info-text`, `--danger` and `--accent-hover`, which DS1 had not copied. There is no `color-mix`.
-- **Named tints requested for DS3a's `tokens.md`.** The paper never inverts, so ink and status colours drawn on the page keep their light values in both themes:
-  - `--paper-ink` = light `--ink`, `oklch(0.22 0.01 95)`
-  - `--paper-accent` = light `--accent-text`
-  - `--paper-warn` = light `--warn-text`
-  - `--paper-warn-soft` = light `--warn-soft`
-
-  They are used for pin numbers, the parser view, the QR code and the page skeleton. DS1 had hard-coded the first.
-- **Resume colours are resume data, not interface colours.** This covers the accent swatches, the 22 quick swatches, the picker gradients and the level preview. The footer of the file says so.
+- **Names follow DS3a's `tokens.md`** (camelCase in the table, kebab-case CSS variables in the HTML, as `app.html` does). The tokens are:
+  - `paperInk` (`--paper-ink`) and `paperLine` (`--paper-line`).
+  - The page overlays `pageSelectLine`, `pageSelectFill`, `pageIssueFill` and `pageProposalFill`.
+  - `paperAccent`, `paperWarn` and `paperWarnSoft`, which DS3a adds in the DS4 round with light values.
+- **Page overlays never use theme colours.** Proposal and found-term outlines use `pageSelectLine` (5.71:1 on paper). Issue pins and outlines use `paperWarn` (6.68:1 on paper), and the selected pin uses `paperInk`.
+- **Resume colours are resume data, not interface colours.** This covers the accent swatches, the 22 quick swatches, the picker gradients and the level preview.
 
 ## Checks
 
@@ -134,3 +131,49 @@ These are new strings, which need Lingui entries when built:
   - error border overridden by the focus border
   - DS1's `.tab` class leaking onto the tablet frame
 - **Formatting.** `oxfmt` 0.73.0, the main checkout's binary, was run on `design.html`. `oxfmt --check` passes. The worktree has no `node_modules`.
+
+## DS4 fix round
+
+| # | Finding | Result |
+|---|---|---|
+| 1 | GAP design-page: Language search | FIXED: `design-page-language` |
+| 2 | GAP design-advanced: Date format menu | FIXED: `design-date-format` |
+| 3 | GAP design-adv-typography: font-family search, heading weight | FIXED: `design-adv-font-family`, `design-adv-heading-weight` |
+| 4 | GAP design-adv-colours: icon picker, level type | FIXED: `design-adv-icon`, `design-adv-level-type` |
+| 5 | GAP design-adv-layout: precise Sidebar Width | FIXED: numeric field (10–50, step 0.1) beside the slider in `design-adv-layout` |
+| 6 | GAP design-adv-css: focus mode, inline colour, page-to-rule picking, guide | FIXED: `design-adv-css-focus` (focus mode plus inline colour swatch that opens the picker), `design-adv-css-pick`, and helper lines with the guide link in `design-adv-css` |
+| 7 | GAP check-categories: exported-PDF check states | FIXED: `check-pdf-checking`, `check-pdf-report` (report sheet plus result toast), `check-pdf-failed`. The clean toast is in the notes |
+| 8 | GAP check-parser: loading, unreadable, no text layer | FIXED: `check-parser-loading`, `check-parser-error`, `check-parser-notext` |
+| 9 | GAP check-job-match: Change picker, Unlink | FIXED: `check-job-change` |
+| 10 | GAP check-job-none: pasted results, Clear, Save as application | FIXED: `check-job-pasted`, `check-job-save-app` |
+| 11 | GAP check-job-none: linked application without posting | FIXED: `check-job-noposting` |
+| 12 | GAP check-job-match: found-term highlight, hidden recovery | FIXED: `check-job-found` (page highlight with `pageSelectFill`/`pageSelectLine`); “Hidden: … · Show again” added to `check-job-match` |
+| 13 | GAP check-writing-optin: provider selection, empty-resume guidance | FIXED: `check-writing-provider`, `check-writing-empty` |
+| 14 | GAP check-writing-results: notes without rewrite | FIXED: Notes (impact, quote, Show on page) added to `check-writing-results`, and drawn in full in `check-writing-notes` |
+| 15 | GAP share-link-taken: empty, malformed, checking, saving, save failure | FIXED: `share-link-address-states` |
+| 16 | GAP share-history: pending and failures | FIXED: `share-history-saving`, `share-history-error`. Rename and delete failure copy is in the notes |
+| 17 | GAP assistant-empty: model menu, Connect another… | FIXED: `assistant-model-menu` |
+| 18 | GAP assistant-noprovider: Base URL form, Anthropic form, testing | FIXED: `assistant-noprovider-compatible`, `assistant-noprovider-testing` |
+| 19 | GAP assistant-threads: conversation loading and failure | FIXED: `assistant-thread-loading`, `assistant-thread-error` |
+| 20 | GAP assistant-changeset: Copy transcript | FIXED: the button at the end of `assistant-changeset`, plus `assistant-transcript` (button and toast) |
+| 21 | GAP assistant-attach: upload failure | FIXED: `assistant-attach-failed` |
+| 22 | GAP assistant-attach: fresh-send disclosure after removing context | FIXED: `assistant-context-removed` |
+| 23 | GAP assistant-streaming: Thinking, preparing edits, failures, page warnings | FIXED: `assistant-thinking`, `assistant-tool-states` |
+| 24 | GAP assistant-question: answered state | FIXED: `assistant-question-answered` |
+| 25 | FIX check-locked: Ignore enabled | FIXED: Ignore is disabled when locked |
+| 26 | FIX assistant-locked: composer enabled, notes wrong | FIXED: suggestions and composer are disabled; the notes now say sending is blocked |
+| 27 | FIX layout handles and Full Width rows under 44 pt | FIXED: the handle has a hit extension to 44 × 44. Each Full Width row is 44 pt tall and toggles as a whole (`role="switch"`). The notes are updated |
+| 28 | FIX proposal outlines use theme `accent` on paper | FIXED: they use `pageSelectLine` (5.71:1) with `pageProposalFill`; the tags use `pageSelectLine` and `paper` |
+| 29 | FIX warning pins and outlines below 3:1; ink outline inverts | FIXED: pins are `paperWarnSoft` with a 2 pt `paperWarn` border and `paperWarn` number (6.68:1). Issue outlines use `paperWarn` with `pageIssueFill`. The selected pin's outline is `paperInk` |
+| 30 | FIX radio and composer boundaries below 3:1 | FIXED: the unselected radio, the unchecked checkbox, the Android switch track and the composer border use `ink3` (5.27:1 light, 5.57:1 dark on `raised`) |
+| 31 | FIX assistant-offline: disclosure dimmed | FIXED: only the input box and chips dim. The disclosure keeps `ink3` at full opacity |
+| 32 | FIX paper tints missing from tokens.md | FIXED: the names map to `paperAccent`, `paperWarn` and `paperWarnSoft` (DS3a adds them this round). `paperLine` replaces the parser divider. Resume colours stay as resume data |
+| 33 | FIX “works without AI” overpromise | FIXED: provider footer “… Editing, design, Check issues and downloads work without AI.” Unconfigured server: “… Editing, design, Check issues and downloads work without it.” |
+
+**Checks this round:**
+
+- **Browser check.** The same Playwright script ran light/dark × iPhone/Android/Tablet: 112 frames each, 0 page errors.
+- **Target audit.** It now also measures ⋮⋮ handles. 0 targets under 44 pt in every combination.
+- **Visual review.** The new frames were reviewed in light iPhone. The overlay and contrast fixes were reviewed in dark iPhone.
+- **Contrast** was computed from `tokens.md` hex values.
+- **Formatting.** `oxfmt` (0.73.0, main checkout binary) was run on `design.html`.
