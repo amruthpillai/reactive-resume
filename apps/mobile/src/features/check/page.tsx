@@ -3,6 +3,7 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ScrollViewInstance } from "react-native";
 import { useLingui } from "@lingui/react/macro";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AccessibilityInfo, I18nManager, Pressable, ScrollView, View } from "react-native";
 import { fixIssue } from "./actions";
@@ -37,6 +38,7 @@ export function CheckPage({
 	initialLens,
 	refreshVersion,
 }: CheckPageProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, radius, size, space, motion } = useTheme();
 	const [width, setWidth] = useState<number>(size.panel);
@@ -220,7 +222,7 @@ export function CheckPage({
 						label={issue.fix.label}
 						disabled={locked}
 						onPress={() => {
-							fixIssue(id, issue);
+							fixIssue(id, issue, router);
 							if (issue.fix.kind !== "apply") return;
 							const current = useResumeStore.getState();
 							const next = current.document?.id === id && current.data ? computeCheck(current.data).issues : [];

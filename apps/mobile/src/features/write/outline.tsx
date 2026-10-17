@@ -4,7 +4,7 @@ import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useMutation } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { getInitials } from "@reactive-resume/utils/string";
@@ -48,6 +48,7 @@ type OutlineProps = { resumeId: string; imported?: string | undefined; initialSe
  * section or an entry. Every field saves as you type; a locked resume shows the same outline read-only.
  */
 export function Outline({ resumeId, imported, initialSection }: OutlineProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const data = useWriteData((data) => data, null);
@@ -461,6 +462,7 @@ function AddRow({ type, onPress }: { type: CustomSectionType; onPress: () => voi
 
 /** Basics: photo or initials, name and "headline · location"; opens its screen. */
 function BasicsCard({ resumeId, data }: { resumeId: string; data: ResumeData }) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
 	const { server } = useSession();
@@ -557,6 +559,7 @@ const SUGGESTED: ("summary" | SectionType)[] = ["experience", "education", "skil
 
 /** A blank resume: the first sections to add, as + chips, and an offer to import instead. */
 function StartSuggestions({ onAdd }: { onAdd: (type: "summary" | SectionType) => void }) {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const { colors, radius, space } = useTheme();
 	return (

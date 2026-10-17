@@ -43,7 +43,7 @@ const mocks = {
  "@lingui/core/macro": "export const t = globalThis.__check.tag;export const plural=globalThis.__check.plural;",
  "@/draft": "export function useResumeStore(selector){return selector(globalThis.__check.store.getState());}useResumeStore.getState=()=>globalThis.__check.store.getState();useResumeStore.subscribe=(fn)=>globalThis.__check.store.subscribe(fn);",
  "@/ui": "export const showToast=(value)=>{globalThis.__check.toasts.push(value);return globalThis.__check.toasts.length;};export const dismissToast=(id)=>globalThis.__check.calls.push(['dismiss',id]);",
- "expo-router": "export const router=globalThis.__check.router;",
+ "expo-router": "export const useRouter=()=>globalThis.__check.router;",
  "react-native": "export const Platform={OS:'ios'};export const View='View';export const ScrollView='ScrollView';export const RefreshControl='RefreshControl';export const Pressable='Pressable';export const I18nManager={isRTL:false};export const AccessibilityInfo={};export const Animated={createAnimatedComponent:(value)=>value};",
  "react": "export const useState=globalThis.__check.useState;export const useDeferredValue=(value)=>value;export const useRef=globalThis.__check.useRef;export const useEffect=globalThis.__check.useEffect;export const useMemo=globalThis.__check.useMemo;export const useCallback=(fn)=>fn;export const useDebugValue=()=>{};export const useSyncExternalStore=()=>{};export default {useCallback,useDebugValue,useSyncExternalStore};",
  "react/jsx-runtime": "export const Fragment='Fragment';export const jsx=(type,props)=>({type,props});export const jsxs=jsx;",
@@ -189,19 +189,19 @@ try {
   data.sections.experience.items[0].description = "";
   draft.store.setState({ ...previous, data });
   const email = code.computeCheck(data).issues.find((entry) => entry.finding.code === "MISSING_EMAIL"); assert(email);
-  code.fixIssue("resume", email);
+  code.fixIssue("resume", email, env.router);
   assert.deepEqual(calls.at(-1), ["route", { pathname: "/builder/resume/entry/basics/basics", params: { section: "basics", field: "email" } }], "contact fix must open Basics rather than the outline");
   const description = code.computeCheck(data).issues.find((entry) => entry.finding.code === "MISSING_EXPERIENCE_DESCRIPTION"); assert(description);
-  code.fixIssue("resume", description);
+  code.fixIssue("resume", description, env.router);
   assert.deepEqual(calls.at(-1), ["route", { pathname: `/builder/resume/entry/experience/${data.sections.experience.items[0].id}`, params: { section: "experience", field: "description" } }]);
   draft.store.setState(previous);
  });
  await scenario("actual draft action: one fix one undo; stale toast cannot undo later edit", () => {
   const before = draft.store.getState().data;
   const issue = code.computeCheck(before).issues.find((entry) => entry.finding.code === "PICTURE_PRESENT"); assert(issue);
-  code.fixIssue("resume", issue); assert.equal(draft.store.getState().data.picture.hidden, true);
+  code.fixIssue("resume", issue, env.router); assert.equal(draft.store.getState().data.picture.hidden, true);
   toasts.at(-1).action.onPress(); assert.deepEqual(draft.store.getState().data, before);
-  code.fixIssue("resume", issue);
+  code.fixIssue("resume", issue, env.router);
   const staleToast = toasts.at(-1); draft.store.getState().update((data) => { data.basics.name = "Later edit"; }, { newStep: true });
   staleToast.action.onPress(); assert.equal(draft.store.getState().data.basics.name, "Later edit");
  });
@@ -213,7 +213,7 @@ try {
   const issue = code.computeCheck(draft.store.getState().data).issues.find((entry) => entry.finding.code === "MALFORMED_URL" && entry.target?.kind === "item"); assert(issue);
   const itemId = issue.target.itemId;
   draft.store.getState().update((data) => { data.sections.experience.items.reverse(); }, { newStep: true });
-  code.fixIssue("resume", issue); assert.equal(draft.store.getState().data.sections.experience.items.find((entry) => entry.id === itemId).website.url, "https://entry.test");
+  code.fixIssue("resume", issue, env.router); assert.equal(draft.store.getState().data.sections.experience.items.find((entry) => entry.id === itemId).website.url, "https://entry.test");
  });
  await draft.store.getState().close(); draft.suspend();
  await scenario("PDF adapter: flat report response, multipart, offline/error/size/password guards", async () => {

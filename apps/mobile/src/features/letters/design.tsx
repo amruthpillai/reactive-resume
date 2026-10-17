@@ -3,7 +3,7 @@ import type { LetterDocument } from "@/draft/types";
 import type { WritableDraft } from "immer";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { templateSchema } from "@reactive-resume/schema/templates";
@@ -58,6 +58,7 @@ function Group({ title, children }: { title: string; children: ReactNode }) {
  * `design-panel.tsx`.
  */
 export function LetterDesign({ id }: { id: string }) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const letter = useLetterStore((state) => (state.document?.id === id ? state.document : null));
 	const resumes = useResumes();

@@ -1,7 +1,7 @@
 import type { DocumentSummary } from "./filter";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";
 import { changedTags, documentRef, sharedTags } from "./filter";
@@ -24,6 +24,7 @@ type DocumentSheetsProps = {
 };
 
 export function DocumentSheets({ value, onClose, onChange, onSelect }: DocumentSheetsProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const session = useSession();

@@ -1,7 +1,7 @@
 import type { ApplicationTab } from "@/routes";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { router, useGlobalSearchParams, useLocalSearchParams, useNavigation } from "expo-router";
+import { useRouter, useGlobalSearchParams, useLocalSearchParams, useNavigation } from "expo-router";
 import { Pressable, ScrollView, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { WORKSPACE_TABS } from "@reactive-resume/schema/career";
@@ -52,6 +52,7 @@ export function WorkspaceChrome({ children }: { children: ReactNode }) {
 }
 
 function Frame({ children }: { children: ReactNode }) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const tablet = useIsTablet();
 	const navigation = useNavigation();

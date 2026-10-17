@@ -100,7 +100,7 @@ const modules = {
 	"react/jsx-runtime":
 		'export const jsx=(type,props)=>({type,props});export const jsxs=jsx;export const Fragment="Fragment";',
 	"react-native": 'export const View="View";',
-	"expo-router": "export const router={replace:globalThis.__m7.route};",
+	"expo-router": "export const useRouter=()=>({replace:globalThis.__m7.route});",
 	"expo-file-system":
 		'export const File=globalThis.__m7.File;export const Paths={cache:{list:globalThis.__m7.list,toString:()=>"cache"}};',
 	"expo-web-browser": "export const openBrowserAsync=globalThis.__m7.browse;",

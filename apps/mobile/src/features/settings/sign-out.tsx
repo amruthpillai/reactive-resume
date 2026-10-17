@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { useIsMutating, useQueryClient } from "@tanstack/react-query";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { SignOutCleanupError, signOut, useSession } from "@/auth/session";
 import { routes } from "@/routes";
@@ -8,6 +8,7 @@ import { ConfirmDialog, ListRow, showToast } from "@/ui";
 
 type SignOutRowProps = { switchServer?: boolean };
 export function SignOutRow({ switchServer = false }: SignOutRowProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { server } = useSession();
 	const queryClient = useQueryClient();
