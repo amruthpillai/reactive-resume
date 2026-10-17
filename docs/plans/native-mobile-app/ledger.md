@@ -26,8 +26,9 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | RUNNING | briefs/W2.md                                                                        |
 | M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
-| M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1      | RUNNING | briefs/W3.md; pulled forward, JS-only                                               |
-| M5-T1 Applications list and add flow          | Codex       | 18332b0c | mobile/M5-T1      | RUNNING | briefs/W3.md; pulled forward, JS-only                                               |
+| M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1      | FIXING  | briefs/W3.md; pulled forward, JS-only                                               |
+| M5-T1 Applications list and add flow          | Codex       | 18332b0c | mobile/M5-T1      | REVIEW  | briefs/W3.md; pulled forward, JS-only                                               |
+| M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | RUNNING | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 
 ## Gates
 
