@@ -14,7 +14,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { restoreSession } from "@/auth/session";
 import { SessionGate } from "@/auth/session-gate";
 import { i18n, initI18n } from "@/i18n";
-import { Toaster, useTheme } from "@/ui";
+import { Toaster, useReducedMotion, useTheme } from "@/ui";
 import { fontAssets } from "@/ui/fonts";
 import { initTheme } from "@/ui/theme";
 
@@ -46,11 +46,17 @@ function useNavigationTheme() {
 function RootStack() {
 	const { t } = useLingui();
 	const navigationTheme = useNavigationTheme();
+	const reduced = useReducedMotion();
 
 	return (
 		<ThemeProvider value={navigationTheme}>
 			<StatusBar style="auto" />
-			<Stack screenOptions={{ headerTitleStyle: { fontFamily: navigationTheme.fonts.bold.fontFamily } }}>
+			<Stack
+				screenOptions={{
+					animation: reduced ? "fade" : "default",
+					headerTitleStyle: { fontFamily: navigationTheme.fonts.bold.fontFamily },
+				}}
+			>
 				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 				<Stack.Screen name="(auth)" options={{ headerShown: false }} />
 				<Stack.Screen name="builder/[id]" options={{ headerShown: false, title: t`Resume` }} />

@@ -7,6 +7,8 @@ import { Image } from "expo-image";
 import { Children, cloneElement, isValidElement, useEffect, useState } from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import Animated, {
+	cancelAnimation,
+	Easing,
 	FadeIn,
 	FadeInUp,
 	FadeOut,
@@ -19,6 +21,7 @@ import Animated, {
 import { Button, IconButton } from "./button";
 import { Icon } from "./icon";
 import { haptics, useReducedMotion } from "./motion";
+import { FeedbackPressable } from "./pressable";
 import { Text } from "./text";
 import { useTheme } from "./theme";
 
@@ -209,7 +212,7 @@ export function Card({ children, onPress, onLongPress, selected, accessibilityLa
 	if (!onPress && !onLongPress) return <View style={[cardStyle, style]}>{children}</View>;
 
 	return (
-		<Pressable
+		<FeedbackPressable
 			accessibilityRole="button"
 			accessibilityLabel={accessibilityLabel}
 			accessibilityState={{ selected: !!selected }}
@@ -231,7 +234,7 @@ export function Card({ children, onPress, onLongPress, selected, accessibilityLa
 			]}
 		>
 			{children}
-		</Pressable>
+		</FeedbackPressable>
 	);
 }
 
@@ -454,10 +457,12 @@ export function Skeleton({ width = "100%", height, radius }: SkeletonProps) {
 	useEffect(() => {
 		if (reduced || measured === 0) return;
 		// One sweep is about the mockups' 1.4 s.
-		progress.set(withRepeat(withTiming(1, { duration: motion.d3 * 4 }), -1));
+		progress.set(0);
+		progress.set(withRepeat(withTiming(1, { duration: motion.d3 * 4, easing: Easing.linear }), -1));
+		return () => cancelAnimation(progress);
 	}, [reduced, measured, motion.d3, progress]);
 
-	const sweep = useAnimatedStyle(() => ({ transform: [{ translateX: (progress.value * 2 - 1) * measured }] }));
+	const sweep = useAnimatedStyle(() => ({ transform: [{ translateX: (progress.get() * 2 - 1) * measured }] }));
 
 	return (
 		<View

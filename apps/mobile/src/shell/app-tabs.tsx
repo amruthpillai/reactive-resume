@@ -7,7 +7,7 @@ import { Platform, Pressable, View } from "react-native";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { routes } from "@/routes";
-import { Button, Icon, Text, useTheme } from "@/ui";
+import { Button, Icon, Text, haptics, useTheme } from "@/ui";
 
 /** The tab routes of `app/(tabs)`, in tab-bar order. `create` is the raised "+" that opens New. */
 const appTabIcons: Record<string, IconName> = {
@@ -102,7 +102,10 @@ export function BarItem({ label, icon, focused, onPress, badge, badgeTone = "acc
 			accessibilityRole={icon ? "tab" : "button"}
 			accessibilityState={icon ? { selected: focused } : {}}
 			accessibilityLabel={badge === undefined ? label : `${label}, ${badge}`}
-			onPress={onPress}
+			onPress={() => {
+				if (icon && !focused) haptics.selection();
+				onPress();
+			}}
 			android_ripple={{ color: colors.press, borderless: true }}
 			style={({ pressed }) => ({
 				flex: 1,
@@ -232,7 +235,10 @@ function SidebarItem({ icon, label, active, onPress, badge, quiet = true }: Side
 			accessibilityRole="tab"
 			accessibilityState={{ selected: active }}
 			accessibilityLabel={badge === undefined ? label : `${label}, ${badge}`}
-			onPress={onPress}
+			onPress={() => {
+				if (!active) haptics.selection();
+				onPress();
+			}}
 			style={({ pressed }) => ({
 				flexDirection: "row",
 				alignItems: "center",

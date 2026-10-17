@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { I18nManager, TextInput, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { IconButton, Switch, Text, useTheme } from "@/ui";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
+import { IconButton, Switch, Text, haptics, useTheme } from "@/ui";
 
 type FieldProps = { label: string; value?: string | undefined; helper?: string | undefined; children: ReactNode };
 
@@ -32,8 +34,10 @@ export function Field({ label, value, helper, children }: FieldProps) {
 	);
 }
 
-const snap = (value: number, min: number, max: number, step: number) =>
-	Math.min(max, Math.max(min, Math.round((value - min) / step) * step + min));
+function snap(value: number, min: number, max: number, step: number) {
+	"worklet";
+	return Math.min(max, Math.max(min, Math.round((value - min) / step) * step + min));
+}
 
 type SliderProps = {
 	label: string;
@@ -48,35 +52,54 @@ type SliderProps = {
 };
 
 /**
- * A horizontal slider. Each move calls `onChange`; callers coalesce the drag into one undo step. Screen readers
- * adjust it by one step with swipe up/down.
+ * A horizontal slider. The thumb tracks on the UI thread; release commits one edit instead of rerendering the
+ * resume for every pointer move. Screen readers adjust it by one step with swipe up/down.
  */
 export function Slider({ label, value, min, max, step, format, onChange, disabled }: SliderProps) {
 	const { colors, radius, size, space, shadows } = useTheme();
 	const [width, setWidth] = useState(0);
 	const clamped = Math.min(max, Math.max(min, value));
-	const fraction = (clamped - min) / (max - min);
+	const current = useSharedValue(clamped);
 	const thumb = space.s6;
-	const at = (x: number) => {
-		if (width <= 0) return;
-		const ratio = (I18nManager.isRTL ? width - x : x) / width;
-		const next = snap(min + ratio * (max - min), min, max, step);
-		if (next !== clamped) onChange(next);
-	};
-	const pan = Gesture.Pan()
-		.enabled(!disabled)
-		.runOnJS(true)
-		.activeOffsetX([-4, 4])
-		.failOffsetY([-12, 12])
-		.onBegin((event) => at(event.x))
-		.onUpdate((event) => at(event.x));
-	const tap = Gesture.Tap()
-		.enabled(!disabled)
-		.runOnJS(true)
-		.onEnd((event) => at(event.x));
+	const rtl = I18nManager.isRTL;
+	useEffect(() => current.set(clamped), [clamped, current]);
+	const gesture = useMemo(() => {
+		const at = (x: number) => {
+			"worklet";
+			const ratio = (rtl ? width - x : x) / width;
+			current.set(snap(min + ratio * (max - min), min, max, step));
+		};
+		const commit = (next: number) => {
+			if (next === clamped) return;
+			haptics.selection();
+			onChange(next);
+		};
+		const pan = Gesture.Pan()
+			.enabled(!disabled && width > 0)
+			.activeOffsetX([-4, 4])
+			.failOffsetY([-12, 12])
+			.onStart((event) => at(event.x))
+			.onUpdate((event) => at(event.x))
+			.onFinalize((_event, success) => {
+				if (success) scheduleOnRN(commit, current.get());
+				else current.set(clamped);
+			});
+		const tap = Gesture.Tap()
+			.enabled(!disabled && width > 0)
+			.onEnd((event, success) => {
+				if (!success) return;
+				at(event.x);
+				scheduleOnRN(commit, current.get());
+			});
+		return Gesture.Race(pan, tap);
+	}, [clamped, current, disabled, max, min, onChange, rtl, step, width]);
+	const fillStyle = useAnimatedStyle(() => ({ width: `${((current.get() - min) / (max - min)) * 100}%` }));
+	const thumbStyle = useAnimatedStyle(() => ({
+		transform: [{ translateX: ((current.get() - min) / (max - min)) * Math.max(0, width - thumb) * (rtl ? -1 : 1) }],
+	}));
 
 	return (
-		<GestureDetector gesture={Gesture.Race(pan, tap)}>
+		<GestureDetector gesture={gesture}>
 			<View
 				accessible
 				accessibilityRole="adjustable"
@@ -85,35 +108,46 @@ export function Slider({ label, value, min, max, step, format, onChange, disable
 				accessibilityState={{ disabled: !!disabled }}
 				accessibilityActions={[{ name: "increment" }, { name: "decrement" }]}
 				onAccessibilityAction={(event) => {
+					if (disabled) return;
 					const next = snap(clamped + (event.nativeEvent.actionName === "increment" ? step : -step), min, max, step);
-					if (next !== clamped) onChange(next);
+					if (next !== clamped) {
+						haptics.selection();
+						onChange(next);
+					}
 				}}
 				onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
 				style={{ height: size.hit, justifyContent: "center", opacity: disabled ? 0.45 : 1 }}
 			>
 				<View style={{ height: space.s1, borderRadius: radius.rPill, backgroundColor: colors.line }}>
-					<View
-						style={{
-							width: `${fraction * 100}%`,
-							height: space.s1,
-							borderRadius: radius.rPill,
-							backgroundColor: colors.accent,
-						}}
+					<Animated.View
+						style={[
+							{
+								position: "absolute",
+								start: 0,
+								height: space.s1,
+								borderRadius: radius.rPill,
+								backgroundColor: colors.accent,
+							},
+							fillStyle,
+						]}
 					/>
 				</View>
-				<View
+				<Animated.View
 					pointerEvents="none"
-					style={{
-						position: "absolute",
-						start: fraction * Math.max(0, width - thumb),
-						width: thumb,
-						height: thumb,
-						borderRadius: thumb / 2,
-						backgroundColor: colors.raised,
-						borderWidth: 1,
-						borderColor: colors.line2,
-						boxShadow: shadows.e1.boxShadow,
-					}}
+					style={[
+						{
+							position: "absolute",
+							start: 0,
+							width: thumb,
+							height: thumb,
+							borderRadius: thumb / 2,
+							backgroundColor: colors.raised,
+							borderWidth: 1,
+							borderColor: colors.line2,
+							boxShadow: shadows.e1.boxShadow,
+						},
+						thumbStyle,
+					]}
 				/>
 			</View>
 		</GestureDetector>

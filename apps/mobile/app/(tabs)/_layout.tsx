@@ -61,7 +61,7 @@ export default function TabsLayout() {
 					<KeyboardAvoidingView behavior="padding" automaticOffset style={{ flex: 1 }}>
 						<Tabs
 							tabBar={(props) => (tablet ? <AppSidebar {...props} /> : <PhoneTabBar {...props} />)}
-							screenOptions={{ headerShown: false, tabBarPosition: tablet ? "left" : "bottom" }}
+							screenOptions={{ animation: "none", headerShown: false, tabBarPosition: tablet ? "left" : "bottom" }}
 						>
 							<Tabs.Screen name="documents" options={{ title: t`Documents` }} />
 							<Tabs.Screen name="applications" options={{ title: t`Applications` }} />

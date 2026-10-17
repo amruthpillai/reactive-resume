@@ -3,13 +3,15 @@ import type { PageMapNode } from "@reactive-resume/pdf/page-map";
 import { useLingui } from "@lingui/react/macro";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { AccessibilityInfo, ActivityIndicator, Pressable, ScrollView, View, useWindowDimensions } from "react-native";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { ActivityIndicator, Pressable, ScrollView, View, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { fitResume } from "./fit";
 import { usePreview } from "./usePreview";
 import { routes } from "@/routes";
-import { Banner, Button, IconButton, Text, useTheme } from "@/ui";
+import { Banner, Button, IconButton, Text, useReducedMotion, useTheme } from "@/ui";
 
 export type ResumePageProps = {
 	id: string;
@@ -35,13 +37,19 @@ export function ResumePage({ id, draft, focused, previewData }: ResumePageProps)
 	const [fitting, setFitting] = useState(false);
 	const [fitFailed, setFitFailed] = useState(false);
 	const [fitApplied, setFitApplied] = useState(false);
-	const [reducedMotion, setReducedMotion] = useState(false);
+	const reducedMotion = useReducedMotion();
 	const latestData = useRef(draft.data);
 	useLayoutEffect(() => {
 		latestData.current = draft.data;
 	}, [draft.data]);
 	const mounted = useRef(true);
-	const [pinchStart, setPinchStart] = useState(1);
+	const liveZoom = useSharedValue(1);
+	const pinchStart = useSharedValue(1);
+	const committedZoom = zoom ?? 1;
+	useLayoutEffect(() => {
+		liveZoom.set(committedZoom);
+	}, [committedZoom, liveZoom]);
+	const zoomStyle = useAnimatedStyle(() => ({ transform: [{ scale: liveZoom.get() / committedZoom }] }));
 	const { data } = draft;
 	const fitWidth = Math.max(size.hit, viewport.width - space.s8);
 	const measured = Object.entries(rows)
@@ -58,11 +66,8 @@ export function ResumePage({ id, draft, focused, previewData }: ResumePageProps)
 
 	useEffect(() => {
 		mounted.current = true;
-		void AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion);
-		const listener = AccessibilityInfo.addEventListener("reduceMotionChanged", setReducedMotion);
 		return () => {
 			mounted.current = false;
-			listener.remove();
 		};
 	}, []);
 
@@ -99,20 +104,22 @@ export function ResumePage({ id, draft, focused, previewData }: ResumePageProps)
 		result?.pageCount ?? 1,
 		Number(Object.entries(rows).find(([, row]) => row.y + row.height > offset)?.[0] ?? 0) + 1,
 	);
-	const pinch = Gesture.Pinch()
-		.runOnJS(true)
-		.onBegin(() => {
-			setPinchStart(zoom ?? 1);
-		})
-		.onUpdate((event) => {
-			setZoom(Math.min(1.5, Math.max(0.6, pinchStart * event.scale)));
-		});
-	const doubleTap = Gesture.Tap()
-		.numberOfTaps(2)
-		.runOnJS(true)
-		.onEnd(() => {
-			setZoom(zoom === 1.5 ? null : 1.5);
-		});
+	// Scale the existing raster under the fingers; relayout and request sharper pages only after release.
+	const pageGesture = useMemo(() => {
+		const pinch = Gesture.Pinch()
+			.onStart(() => pinchStart.set(liveZoom.get()))
+			.onUpdate((event) => liveZoom.set(Math.min(1.5, Math.max(0.6, pinchStart.get() * event.scale))))
+			.onFinalize((_event, success) => {
+				if (success) scheduleOnRN(setZoom, liveZoom.get());
+				else liveZoom.set(committedZoom);
+			});
+		const doubleTap = Gesture.Tap()
+			.numberOfTaps(2)
+			.onEnd((_event, success) => {
+				if (success) scheduleOnRN(setZoom, committedZoom === 1.5 ? null : 1.5);
+			});
+		return Gesture.Simultaneous(pinch, doubleTap);
+	}, [committedZoom, liveZoom, pinchStart]);
 
 	const selectAt = (page: number, x: number, y: number) => {
 		// Nearest header/item wins within a 44 pt target; section boxes never steal their entries' taps.
@@ -177,89 +184,92 @@ export function ResumePage({ id, draft, focused, previewData }: ResumePageProps)
 					<Text color="ink3">{data ? t`Rendering preview…` : t`Loading resume…`}</Text>
 				</View>
 			) : null}
-			<GestureDetector gesture={Gesture.Simultaneous(pinch, doubleTap)}>
+			<GestureDetector gesture={pageGesture}>
 				<ScrollView horizontal contentContainerStyle={{ minWidth: viewport.width }}>
 					<ScrollView
 						onScroll={(event) => setOffset(event.nativeEvent.contentOffset.y)}
 						scrollEventThrottle={100}
 						contentContainerStyle={{ padding: space.s4, gap: space.s8, alignItems: "center", minWidth: viewport.width }}
 					>
-						{pageSizes.map((page, index) => {
-							const image = result?.pages.find((entry) => entry.index === index);
-							const width = page.width * displayScale;
-							const height = page.height * displayScale;
-							return (
-								<View
-									key={index}
-									style={{ gap: space.s2 }}
-									onLayout={(event) => {
-										const { y, height } = event.nativeEvent.layout;
-										setRows((previous) =>
-											previous[index]?.y === y && previous[index]?.height === height
-												? previous
-												: { ...previous, [index]: { y, height } },
-										);
-									}}
-								>
-									<Text variant="caption" color="ink3" align="center">{t`Page ${index + 1}`}</Text>
-									{index === 0 && overflow ? (
-										<View style={{ maxWidth: width, gap: space.s1 }}>
-											<Text variant="callout" color="warnText">{t`Runs onto page ${authored + 1}`}</Text>
-											<Button
-												variant="secondary"
-												label={authored === 1 ? t`Fit to one page` : t`Fit to ${authored} pages`}
-												disabled={draft.locked || preview.rendering}
-												loading={fitting}
-												onPress={() => {
-													void fit();
-												}}
-											/>
-										</View>
-									) : null}
-									<Pressable
-										accessibilityRole="button"
-										accessibilityLabel={t`Select an entry on page ${index + 1}`}
-										accessibilityActions={(result?.pageMap.nodes ?? [])
-											.filter((node) => node.page === index && node.kind !== "section")
-											.map((node, entry) => ({ name: node.key, label: t`Select entry ${entry + 1}` }))}
-										onAccessibilityAction={(event) => {
-											const node = result?.pageMap.nodes.find(
-												(value) => value.key === event.nativeEvent.actionName && value.page === index,
+						<Animated.View style={[{ gap: space.s8, alignItems: "center", transformOrigin: "center top" }, zoomStyle]}>
+							{pageSizes.map((page, index) => {
+								const image = result?.pages.find((entry) => entry.index === index);
+								const width = page.width * displayScale;
+								const height = page.height * displayScale;
+								return (
+									<View
+										key={index}
+										style={{ gap: space.s2 }}
+										onLayout={(event) => {
+											const { y: rowY, height } = event.nativeEvent.layout;
+											const y = rowY + space.s4;
+											setRows((previous) =>
+												previous[index]?.y === y && previous[index]?.height === height
+													? previous
+													: { ...previous, [index]: { y, height } },
 											);
-											if (node) setSelected({ node, data });
 										}}
-										onPress={(event) => selectAt(index, event.nativeEvent.locationX, event.nativeEvent.locationY)}
-										style={{ width, height, backgroundColor: colors.paper, boxShadow: shadows.ePage.boxShadow }}
 									>
-										{image ? (
-											<Image
-												source={{ uri: image.uri }}
-												style={{ width, height }}
-												contentFit="fill"
-												transition={reducedMotion ? 0 : motion.d2}
-												cachePolicy="none"
-												accessible={false}
-											/>
+										<Text variant="caption" color="ink3" align="center">{t`Page ${index + 1}`}</Text>
+										{index === 0 && overflow ? (
+											<View style={{ maxWidth: width, gap: space.s1 }}>
+												<Text variant="callout" color="warnText">{t`Runs onto page ${authored + 1}`}</Text>
+												<Button
+													variant="secondary"
+													label={authored === 1 ? t`Fit to one page` : t`Fit to ${authored} pages`}
+													disabled={draft.locked || preview.rendering}
+													loading={fitting}
+													onPress={() => {
+														void fit();
+													}}
+												/>
+											</View>
 										) : null}
-										{selection?.page === index ? (
-											<View
-												pointerEvents="none"
-												style={{
-													position: "absolute",
-													left: selection.x * displayScale,
-													top: selection.y * displayScale,
-													width: selection.width * displayScale,
-													height: selection.height * displayScale,
-													borderWidth: 1,
-													borderColor: colors.pageSelectLine,
-													backgroundColor: colors.pageSelectFill,
-												}}
-											/>
-										) : null}
-									</Pressable>
-								</View>
-							);
-						})}
+										<Pressable
+											accessibilityRole="button"
+											accessibilityLabel={t`Select an entry on page ${index + 1}`}
+											accessibilityActions={(result?.pageMap.nodes ?? [])
+												.filter((node) => node.page === index && node.kind !== "section")
+												.map((node, entry) => ({ name: node.key, label: t`Select entry ${entry + 1}` }))}
+											onAccessibilityAction={(event) => {
+												const node = result?.pageMap.nodes.find(
+													(value) => value.key === event.nativeEvent.actionName && value.page === index,
+												);
+												if (node) setSelected({ node, data });
+											}}
+											onPress={(event) => selectAt(index, event.nativeEvent.locationX, event.nativeEvent.locationY)}
+											style={{ width, height, backgroundColor: colors.paper, boxShadow: shadows.ePage.boxShadow }}
+										>
+											{image ? (
+												<Image
+													source={{ uri: image.uri }}
+													style={{ width, height }}
+													contentFit="fill"
+													transition={reducedMotion ? 0 : motion.d2}
+													cachePolicy="none"
+													accessible={false}
+												/>
+											) : null}
+											{selection?.page === index ? (
+												<View
+													pointerEvents="none"
+													style={{
+														position: "absolute",
+														left: selection.x * displayScale,
+														top: selection.y * displayScale,
+														width: selection.width * displayScale,
+														height: selection.height * displayScale,
+														borderWidth: 1,
+														borderColor: colors.pageSelectLine,
+														backgroundColor: colors.pageSelectFill,
+													}}
+												/>
+											) : null}
+										</Pressable>
+									</View>
+								);
+							})}
+						</Animated.View>
 					</ScrollView>
 				</ScrollView>
 			</GestureDetector>

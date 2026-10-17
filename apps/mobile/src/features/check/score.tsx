@@ -1,36 +1,35 @@
 import type { AtsReport } from "@reactive-resume/resume/ats";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { useEffect, useState } from "react";
-import { AccessibilityInfo, Animated, View } from "react-native";
+import { useEffect } from "react";
+import { View } from "react-native";
+import Animated, {
+	cancelAnimation,
+	Easing,
+	useAnimatedProps,
+	useSharedValue,
+	withTiming,
+} from "react-native-reanimated";
 import Svg, { Circle } from "react-native-svg";
-import { Card, Text, useTheme } from "@/ui";
+import { Card, Text, useReducedMotion, useTheme } from "@/ui";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 type ScoreProps = { report: AtsReport };
 export function Score({ report }: ScoreProps) {
 	const { t } = useLingui();
 	const { colors, space, motion } = useTheme();
-	const [progress] = useState(() => new Animated.Value(report.score));
-	const [reduced, setReduced] = useState(true);
+	const progress = useSharedValue(report.score);
+	const reduced = useReducedMotion();
 	useEffect(() => {
-		void AccessibilityInfo.isReduceMotionEnabled().then(setReduced);
-		const listener = AccessibilityInfo.addEventListener("reduceMotionChanged", setReduced);
-		return () => listener.remove();
-	}, []);
-	useEffect(() => {
-		const animation = Animated.timing(progress, {
-			toValue: report.score,
-			duration: reduced ? 0 : motion.d3,
-			easing: motion.ease,
-			useNativeDriver: false,
-		});
-		animation.start();
-		return () => animation.stop();
-	}, [progress, report.score, reduced, motion]);
+		progress.set(
+			withTiming(report.score, { duration: reduced ? 0 : motion.d2, easing: Easing.bezier(0.23, 1, 0.32, 1) }),
+		);
+		return () => cancelAnimation(progress);
+	}, [progress, report.score, reduced, motion.d2]);
 	const diameter = space.s12 + space.s10;
 	const ringRadius = (diameter - space.s2) / 2;
 	const circumference = 2 * Math.PI * ringRadius;
+	const animatedProps = useAnimatedProps(() => ({ strokeDashoffset: circumference * (1 - progress.get() / 100) }));
 	return (
 		<Card style={{ flexDirection: "row", alignItems: "center", gap: space.s4 }}>
 			<View
@@ -56,7 +55,7 @@ export function Score({ report }: ScoreProps) {
 						strokeWidth={space.s1}
 						fill="none"
 						strokeDasharray={`${circumference} ${circumference}`}
-						strokeDashoffset={progress.interpolate({ inputRange: [0, 100], outputRange: [circumference, 0] })}
+						animatedProps={animatedProps}
 						rotation={-90}
 						origin={`${diameter / 2}, ${diameter / 2}`}
 					/>

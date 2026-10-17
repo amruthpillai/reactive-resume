@@ -124,7 +124,7 @@ export function TypeGroup({ data, write, disabled, onCustomFonts }: TypeGroupPro
 					step={TEXT_SIZE.step}
 					format={(value) => `${value} pt`}
 					disabled={disabled}
-					onChange={(value) => write("size", (draft) => applyTextSize(draft.metadata, value))}
+					onChange={(value) => write("size", (draft) => applyTextSize(draft.metadata, value), true)}
 				/>
 			</Field>
 

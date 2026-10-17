@@ -2,7 +2,7 @@ import type { IconName } from "@/ui";
 import type { ReactNode } from "react";
 import { createContext, use, useSyncExternalStore } from "react";
 import { View } from "react-native";
-import { Icon, Text, useTheme } from "@/ui";
+import { Icon, Text, useReducedMotion, useTheme } from "@/ui";
 
 const BannerAboveContext = createContext(false);
 
@@ -15,8 +15,10 @@ export const BannerAbove = BannerAboveContext;
  */
 export function useTabStackOptions(cleared = false) {
 	const { colors, type } = useTheme();
+	const reduced = useReducedMotion();
 	const disableTopInsetApplication = use(BannerAboveContext) || cleared;
 	return {
+		animation: reduced ? ("fade" as const) : ("default" as const),
 		headerLargeTitle: true,
 		headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
 		unstable_nativeProps: { headerConfig: { disableTopInsetApplication } },

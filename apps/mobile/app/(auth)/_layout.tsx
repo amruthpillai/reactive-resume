@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
+import { useReducedMotion } from "@/ui";
 
 export default function AuthLayout() {
-	return <Stack screenOptions={{ headerShown: false }} />;
+	const reduced = useReducedMotion();
+	return <Stack screenOptions={{ headerShown: false, animation: reduced ? "fade" : "default" }} />;
 }

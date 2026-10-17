@@ -256,9 +256,13 @@ function SidebarCard({ data, write, disabled }: TemplateGroupProps) {
 					format={(value) => `${value}%`}
 					disabled={disabled}
 					onChange={(value) =>
-						write("sidebarWidth", (draft) => {
-							draft.metadata.layout.sidebarWidth = value;
-						})
+						write(
+							"sidebarWidth",
+							(draft) => {
+								draft.metadata.layout.sidebarWidth = value;
+							},
+							true,
+						)
 					}
 				/>
 			</Field>

@@ -7,8 +7,8 @@ type Update = (recipe: (draft: WritableDraft<ResumeData>) => void, options?: Upd
 
 /**
  * Edits the resume data. `key` names the control. `discrete` changes (taps: segments, swatches, picks, switches,
- * stepper −/+ and committed stepper values) are always a step of their own. Continuous ones (slider drags, typing
- * hex or CSS) with the same key within a second are one undo step.
+ * stepper −/+, committed slider and stepper values) are always a step of their own. Continuous ones (typing hex
+ * or CSS) with the same key within a second are one undo step.
  */
 export type DesignWrite = (key: string, mutate: (data: WritableDraft<ResumeData>) => void, discrete?: boolean) => void;
 

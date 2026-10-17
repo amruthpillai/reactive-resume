@@ -53,13 +53,13 @@ const mocks = {
  "expo-image": "export const Image='Image';",
  "expo-file-system": "export const File=globalThis.__check.File;export const Paths={cache:'cache'};",
  "expo-network": "export const getNetworkStateAsync=async()=>globalThis.__check.network;export const useNetworkState=()=>globalThis.__check.network;",
- "react-native-reanimated": "const animation={duration:()=>animation,reduceMotion:()=>animation};export const FadeOut=animation;export const LinearTransition=animation;export const ReduceMotion={System:'system'};export default {View:'Animated.View'};",
+ "react-native-reanimated": "const animation={duration:()=>animation,reduceMotion:()=>animation};export const FadeOut=animation;export const LinearTransition=animation;export const ReduceMotion={System:'system'};export const cancelAnimation=()=>{};export const Easing={bezier:()=>{}};export const useAnimatedProps=(fn)=>fn();export const useSharedValue=(initial)=>({get:()=>initial,set:()=>{}});export const withTiming=(value)=>value;export default {View:'Animated.View',createAnimatedComponent:(value)=>value};",
  "react-native-svg": "export default 'Svg';export const Circle='Circle';",
  "@/preview/usePreview": "export const usePreview=()=>({result:null});",
  "@/auth/session": "export const useSession=()=>globalThis.__check.session;",
  "@/api/client": "export const rest=(...args)=>globalThis.__check.rest(...args);export const client=globalThis.__check.client;",
 };
-mocks["@/ui"] += ["Banner", "Button", "Card", "SelectSheet", "Skeleton", "Text", "Chip", "Sheet", "TextArea", "EmptyState", "Segmented", "IconButton", "ListRow"].map((name) => `export const ${name}='${name}';`).join("") + "export const useTheme=()=>({space:{s1:4,s2:8,s3:12,s12:48},colors:{},motion:{d2:200}});";
+mocks["@/ui"] += ["Banner", "Button", "Card", "SelectSheet", "Skeleton", "Text", "Chip", "Sheet", "TextArea", "EmptyState", "Segmented", "IconButton", "ListRow"].map((name) => `export const ${name}='${name}';`).join("") + "export const useReducedMotion=()=>false;export const useTheme=()=>({space:{s1:4,s2:8,s3:12,s12:48},colors:{},motion:{d2:200}});";
 env.calls = calls; env.toasts = toasts;
 const path = (relative) => JSON.stringify(join(root, relative));
 let checks = 0;

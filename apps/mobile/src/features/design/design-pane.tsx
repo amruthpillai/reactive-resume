@@ -4,7 +4,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import { I18nManager, Pressable, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import Animated, { LinearTransition, SlideInLeft, SlideInRight } from "react-native-reanimated";
+import Animated, { FadeIn, LinearTransition, ReduceMotion, SlideInLeft, SlideInRight } from "react-native-reanimated";
 import { AdvancedGroup, AdvancedPageScreen, ColoursScreen, StylesScreen, TypographyScreen } from "./advanced";
 import {
 	applyTemplate,
@@ -26,7 +26,7 @@ import { useResumeStore } from "@/draft";
 import { nativeEnvironment } from "@/draft/native";
 import { ResumePage } from "@/preview/page";
 import { useIsTablet } from "@/shell/use-is-tablet";
-import { Banner, IconButton, Skeleton, Text, showToast, useTheme } from "@/ui";
+import { Banner, IconButton, Skeleton, Text, haptics, showToast, useReducedMotion, useTheme } from "@/ui";
 
 type Tab = "template" | "type" | "color" | "page";
 type Entry = { kind: "advanced"; id: AdvancedId } | { kind: "picker"; spec: PickerSpec };
@@ -41,6 +41,7 @@ export function DesignPane({ id }: { id: string }) {
 	const { colors, fonts, radius, space, size, motion, shadows } = useTheme();
 	const window = useWindowDimensions();
 	const tablet = useIsTablet();
+	const reduced = useReducedMotion();
 	const draft = useDesignDraft(id);
 	const session = useSession();
 	const [tab, setTab] = useState<Tab>("template");
@@ -202,7 +203,10 @@ export function DesignPane({ id }: { id: string }) {
 								key={item.id}
 								accessibilityRole="tab"
 								accessibilityState={{ selected: active }}
-								onPress={() => setTab(item.id)}
+								onPress={() => {
+									if (!active) haptics.selection();
+									setTab(item.id);
+								}}
 								style={{
 									flex: 1,
 									minHeight: size.hit,
@@ -224,7 +228,9 @@ export function DesignPane({ id }: { id: string }) {
 			{top?.kind === "picker" ? (
 				<Animated.View
 					key={`picker-${stack.length}`}
-					entering={(I18nManager.isRTL ? SlideInLeft : SlideInRight).duration(motion.d3)}
+					entering={
+						reduced ? FadeIn.duration(motion.d1) : (I18nManager.isRTL ? SlideInLeft : SlideInRight).duration(motion.d2)
+					}
 					style={{ flex: 1, paddingTop: space.s2 }}
 				>
 					<Picker {...top.spec} onDone={pop} />
@@ -232,7 +238,13 @@ export function DesignPane({ id }: { id: string }) {
 			) : (
 				<Animated.View
 					key={top ? `advanced-${stack.length}` : "root"}
-					{...(top ? { entering: (I18nManager.isRTL ? SlideInLeft : SlideInRight).duration(motion.d3) } : {})}
+					{...(top
+						? {
+								entering: reduced
+									? FadeIn.duration(motion.d1)
+									: (I18nManager.isRTL ? SlideInLeft : SlideInRight).duration(motion.d2),
+							}
+						: {})}
 					style={{ flex: 1 }}
 				>
 					<KeyboardAwareScrollView
@@ -270,7 +282,7 @@ export function DesignPane({ id }: { id: string }) {
 				/>
 			) : null}
 			<Animated.View
-				layout={LinearTransition.duration(motion.d3)}
+				layout={LinearTransition.duration(motion.d2).reduceMotion(ReduceMotion.System)}
 				accessibilityLabel={t`Design`}
 				style={{
 					position: "absolute",

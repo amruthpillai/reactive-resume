@@ -3,13 +3,20 @@ import type { Application } from "@/features/applications/types";
 import type { ApplicationStatus } from "@reactive-resume/schema/applications/data";
 import type { ComponentRef } from "react";
 import type { ScrollView } from "react-native";
+import type { SharedValue } from "react-native-reanimated";
 import { useLingui } from "@lingui/react/macro";
-import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector, LegacyScrollView } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue } from "react-native-reanimated";
+import Animated, {
+	useAnimatedReaction,
+	useAnimatedScrollHandler,
+	useAnimatedStyle,
+	useFrameCallback,
+	useSharedValue,
+} from "react-native-reanimated";
+import { scheduleOnRN } from "react-native-worklets";
 import { keepPending, pendingAfterError, stageAt } from "./board";
 import { ApplicationsViewFrame } from "./views";
 import { CloseSheet, MarkAppliedSheet } from "@/features/application-detail/sheets";
@@ -19,7 +26,21 @@ import { useApplicationMutations, useApplications } from "@/features/application
 import { getStageColor, getStageLabel } from "@/features/applications/stages";
 import { routes } from "@/routes";
 import { useIsTablet } from "@/shell/use-is-tablet";
-import { Banner, Button, Card, EmptyState, ListRow, Sheet, Skeleton, Switch, Text, showToast, useTheme } from "@/ui";
+import {
+	Banner,
+	Button,
+	Card,
+	EmptyState,
+	ListRow,
+	Sheet,
+	Skeleton,
+	Switch,
+	Text,
+	haptics,
+	showToast,
+	useReducedMotion,
+	useTheme,
+} from "@/ui";
 
 const STAGES: readonly ApplicationStatus[] = ["saved", "applied", "screening", "interview", "offer", "closed"];
 // Column widths from the mockup (career.html `.column`): phone 268 pt, tablet 250 pt.
@@ -30,13 +51,15 @@ const COLUMN_PAGE_SIZE = 50;
 const LONG_PRESS_MS = 400;
 // While a card is held this close to the board's edge, the board scrolls one column, at most this often.
 const AUTO_SCROLL_EVERY_MS = 500;
+const AnimatedScrollView = Animated.createAnimatedComponent(LegacyScrollView);
 
 type Drag = { application: Application; left: number; top: number; width: number };
 type DragEvent = { absoluteX: number; absoluteY: number; x: number; y: number };
 type DragHandlers = {
 	start: (application: Application, event: DragEvent, width: number) => void;
-	move: (absoluteX: number, translationX: number, translationY: number) => void;
-	end: (drop: boolean) => void;
+	move: (absoluteX: number) => void;
+	end: (drop: boolean, absoluteX: number) => void;
+	motion: { x: SharedValue<number>; y: SharedValue<number>; finger: SharedValue<number>; active: SharedValue<boolean> };
 };
 
 export function BoardScreen() {
@@ -75,16 +98,20 @@ function Board() {
 	const [pending, setPending] = useState<PendingMove | null>(null);
 	const translateX = useSharedValue(0);
 	const translateY = useSharedValue(0);
+	const finger = useSharedValue(0);
+	const dragActive = useSharedValue(false);
+	const columnRects = useSharedValue<{ stage: ApplicationStatus; x: number; width: number }[]>([]);
+	const bounds = useSharedValue({ x: 0, width: 0 });
+	const lastEdgeScroll = useSharedValue(0);
 	const scrollRef = useRef<ComponentRef<typeof ScrollView>>(null);
 	const board = useRef<ComponentRef<typeof View>>(null);
 	const boardRect = useRef({ x: 0, y: 0, width: 0 });
 	const columns = useRef(new Map<ApplicationStatus, ComponentRef<typeof View>>());
 	const rects = useRef(new Map<ApplicationStatus, ColumnRect>());
-	const scrollX = useRef(0);
+	const scrollX = useSharedValue(0);
 	const autoScrolled = useRef(false);
 	const hovered = useRef<ApplicationStatus | null>(null);
 	const dragged = useRef<Application | null>(null);
-	const fingerX = useRef(0);
 
 	const applications = query.data ?? [];
 	if (pending && !keepPending(pending, applications)) setPending(null);
@@ -122,8 +149,8 @@ function Board() {
 	};
 
 	// Column positions in the window, re-read whenever the board scrolls during a drag (also right for RTL).
-	const measureColumns = () =>
-		Promise.all(
+	const measureColumns = async () => {
+		await Promise.all(
 			[...columns.current].map(
 				([stage, view]) =>
 					new Promise<void>((resolve) =>
@@ -134,8 +161,10 @@ function Board() {
 					),
 			),
 		);
+		columnRects.set([...rects.current].map(([stage, rect]) => ({ stage, ...rect })));
+	};
 	const hoverAt = (x: number) => {
-		const stage = stageAt(x, rects.current);
+		const stage = columnRects.get().find((column) => x >= column.x && x <= column.x + column.width)?.stage ?? null;
 		if (stage !== hovered.current) {
 			hovered.current = stage;
 			setHover(stage);
@@ -143,12 +172,10 @@ function Board() {
 	};
 
 	const handlers: DragHandlers = {
+		motion: { x: translateX, y: translateY, finger, active: dragActive },
 		start: (application, event, width) => {
 			rects.current.clear();
-			fingerX.current = event.absoluteX;
 			void measureColumns();
-			translateX.set(0);
-			translateY.set(0);
 			hovered.current = null;
 			dragged.current = application;
 			setHover(null);
@@ -158,14 +185,13 @@ function Board() {
 			setDrag({ application, left: originX - boardRect.current.x, top: originY - boardRect.current.y, width });
 			board.current?.measureInWindow((x, y, boardWidth) => {
 				boardRect.current = { x, y, width: boardWidth };
+				bounds.set({ x, width: boardWidth });
 				setDrag((current) => current && { ...current, left: originX - x, top: originY - y });
 			});
-			void Haptics.selectionAsync();
+			haptics.selection();
 		},
-		move: (absoluteX, translationX, translationY) => {
-			translateX.set(translationX);
-			translateY.set(translationY);
-			fingerX.current = absoluteX;
+		move: (absoluteX) => {
+			if (!dragged.current) return;
 			hoverAt(absoluteX);
 			const { x, width } = boardRect.current;
 			const edge = absoluteX < x + space.s10 ? -1 : absoluteX > x + width - space.s10 ? 1 : 0;
@@ -174,11 +200,11 @@ function Board() {
 				setTimeout(() => {
 					autoScrolled.current = false;
 				}, AUTO_SCROLL_EVERY_MS);
-				const target = Math.max(0, scrollX.current + edge * (columnWidth + space.s3));
+				const target = Math.max(0, scrollX.get() + edge * (columnWidth + space.s3));
 				scrollRef.current?.scrollTo({ x: target, animated: !reduceMotion });
 			}
 		},
-		end: (drop) => {
+		end: (drop, x) => {
 			const application = dragged.current;
 			// Every tap finalizes the pan too; only a started drag has anything to undo.
 			if (!application) return;
@@ -188,11 +214,10 @@ function Board() {
 			setDrag(null);
 			if (!drop) return;
 			// Auto-scroll may still be moving the columns: resolve the target from fresh positions at the release point.
-			const x = fingerX.current;
 			void measureColumns().then(() => {
 				const target = stageAt(x, rects.current);
 				if (!target) return;
-				void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+				haptics.light();
 				moveTo(application, target);
 			});
 		},
@@ -203,10 +228,45 @@ function Board() {
 		latest.current = handlers;
 	});
 	const [stableHandlers] = useState<DragHandlers>(() => ({
+		motion: handlers.motion,
 		start: (...args) => latest.current.start(...args),
 		move: (...args) => latest.current.move(...args),
 		end: (...args) => latest.current.end(...args),
 	}));
+	useAnimatedReaction(
+		() => {
+			if (!dragActive.get()) return null;
+			const x = finger.get();
+			const rect = bounds.get();
+			const stage = columnRects.get().find((column) => x >= column.x && x <= column.x + column.width)?.stage;
+			const edge = x < rect.x + space.s10 ? -1 : x > rect.x + rect.width - space.s10 ? 1 : 0;
+			return { stage, edge };
+		},
+		(current, previous) => {
+			// Only column/edge crossings notify React; the card's position never waits for JS.
+			if (current && (current.stage !== previous?.stage || current.edge !== previous?.edge)) {
+				scheduleOnRN(stableHandlers.move, finger.get());
+			}
+		},
+	);
+	const edgeScroll = useFrameCallback((frame) => {
+		if (!dragActive.get()) return;
+		const x = finger.get();
+		const rect = bounds.get();
+		if (x >= rect.x + space.s10 && x <= rect.x + rect.width - space.s10) return;
+		if (frame.timestamp - lastEdgeScroll.get() < AUTO_SCROLL_EVERY_MS) return;
+		lastEdgeScroll.set(frame.timestamp);
+		scheduleOnRN(stableHandlers.move, x);
+	}, false);
+	useEffect(() => {
+		edgeScroll.setActive(drag !== null);
+		return () => edgeScroll.setActive(false);
+	}, [drag, edgeScroll]);
+	const onBoardScroll = useAnimatedScrollHandler((event) => {
+		const delta = event.contentOffset.x - scrollX.get();
+		scrollX.set(event.contentOffset.x);
+		if (dragActive.get()) columnRects.set((rects) => rects.map((rect) => ({ ...rect, x: rect.x - delta })));
+	});
 
 	// The lifted card follows the finger, slightly raised unless Reduce Motion is on.
 	const lift = reduceMotion ? 1 : 1.02;
@@ -263,10 +323,11 @@ function Board() {
 				onLayout={() =>
 					board.current?.measureInWindow((x, y, width) => {
 						boardRect.current = { x, y, width };
+						bounds.set({ x, width });
 					})
 				}
 			>
-				<LegacyScrollView
+				<AnimatedScrollView
 					ref={scrollRef}
 					horizontal
 					showsHorizontalScrollIndicator={false}
@@ -274,11 +335,7 @@ function Board() {
 					snapToInterval={tablet ? undefined : columnWidth + space.s3}
 					decelerationRate={tablet ? "normal" : "fast"}
 					scrollEventThrottle={16}
-					onScroll={(event) => {
-						scrollX.current = event.nativeEvent.contentOffset.x;
-						// Columns slide under a still finger while auto-scrolling: re-measure, then re-pick the hovered column.
-						if (drag) void measureColumns().then(() => hoverAt(fingerX.current));
-					}}
+					onScroll={onBoardScroll}
 					contentContainerStyle={{ padding: space.s4, gap: space.s3 }}
 				>
 					{stages.map((stage) => (
@@ -301,7 +358,7 @@ function Board() {
 							}}
 						/>
 					))}
-				</LegacyScrollView>
+				</AnimatedScrollView>
 				{drag ? (
 					<Animated.View
 						pointerEvents="none"
@@ -441,18 +498,31 @@ type DraggableCardProps = {
 };
 
 function DraggableCard({ application, width, dragging, handlers, onMove }: DraggableCardProps) {
-	// JS-thread callbacks: the drag drives React state (hovered column, drop) and the overlay's shared values.
-	const pan = useMemo(
-		() =>
+	const { start, end, motion } = handlers;
+	const pan = useMemo(() => {
+		const liftCard = (event: DragEvent) => start(application, event, width);
+		return (
 			Gesture.Pan()
 				.activateAfterLongPress(LONG_PRESS_MS)
-				.runOnJS(true)
-				.onStart((event) => handlers.start(application, event, width))
-				.onUpdate((event) => handlers.move(event.absoluteX, event.translationX, event.translationY))
+				.onStart((event) => {
+					motion.x.set(0);
+					motion.y.set(0);
+					motion.finger.set(event.absoluteX);
+					motion.active.set(true);
+					scheduleOnRN(liftCard, { absoluteX: event.absoluteX, absoluteY: event.absoluteY, x: event.x, y: event.y });
+				})
+				.onUpdate((event) => {
+					motion.x.set(event.translationX);
+					motion.y.set(event.translationY);
+					motion.finger.set(event.absoluteX);
+				})
 				// `success` is true only for a drag that was active and ended normally (not cancelled).
-				.onFinalize((_event, success) => handlers.end(success)),
-		[application, width, handlers],
-	);
+				.onFinalize((event, success) => {
+					motion.active.set(false);
+					scheduleOnRN(end, success, event.absoluteX);
+				})
+		);
+	}, [application, width, start, end, motion]);
 
 	return (
 		<GestureDetector gesture={pan}>

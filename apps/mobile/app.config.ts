@@ -18,6 +18,7 @@ const config: ExpoConfig = {
 		appleTeamId: "654ASRW868",
 		deploymentTarget: "17.4",
 		supportsTablet: true,
+		infoPlist: { CADisableMinimumFrameDurationOnPhone: true },
 		config: { usesNonExemptEncryption: false },
 		privacyManifests: {
 			NSPrivacyTracking: false,

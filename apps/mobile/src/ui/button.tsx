@@ -1,7 +1,8 @@
 import type { IconName } from "./icon";
 import type { ColorToken } from "./tokens";
-import { ActivityIndicator, Platform, Pressable, View } from "react-native";
+import { ActivityIndicator, Platform, View } from "react-native";
 import { Icon } from "./icon";
+import { FeedbackPressable } from "./pressable";
 import { Text } from "./text";
 import { useTheme } from "./theme";
 
@@ -71,7 +72,7 @@ export function Button({
 	const height = size === "lg" ? sizes.button : size === "sm" ? sizes.hit - space.s2 : sizes.hit;
 
 	return (
-		<Pressable
+		<FeedbackPressable
 			accessibilityRole="button"
 			accessibilityLabel={label}
 			accessibilityHint={accessibilityHint}
@@ -102,7 +103,7 @@ export function Button({
 					{label}
 				</Text>
 			</View>
-		</Pressable>
+		</FeedbackPressable>
 	);
 }
 
@@ -143,7 +144,7 @@ export function IconButton({
 	const background = primary ? colors.accent : selected ? colors.selectedFill : "transparent";
 
 	return (
-		<Pressable
+		<FeedbackPressable
 			accessibilityRole="button"
 			accessibilityLabel={label}
 			accessibilityHint={accessibilityHint}
@@ -165,6 +166,6 @@ export function IconButton({
 			})}
 		>
 			<Icon name={icon} filled={selected} size={size ?? sizes.icon.toolbar} color={glyph} />
-		</Pressable>
+		</FeedbackPressable>
 	);
 }
