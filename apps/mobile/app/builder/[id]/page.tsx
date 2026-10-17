@@ -2,7 +2,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { View } from "react-native";
 import { useSession } from "@/auth/session";
-import { ResumeConflictSheet, useResumeDraft } from "@/draft";
+import { useResumeStore } from "@/draft";
 import { nativeEnvironment } from "@/draft/native";
 import { ResumePage } from "@/preview/page";
 import { Banner } from "@/ui";
@@ -16,7 +16,8 @@ export default function PageScreen() {
 	const { t } = useLingui();
 	const { id, parity, smoke } = useLocalSearchParams<{ id: string; parity?: string; smoke?: string }>();
 	const developmentOrigin = parity ?? smoke;
-	const draft = useResumeDraft(id);
+	// The builder layout owns the draft; the page only reads it.
+	const draft = useResumeStore();
 	const session = useSession();
 	const current = draft.document?.id === id;
 	return (
@@ -35,7 +36,6 @@ export default function PageScreen() {
 				/>
 			) : null}
 			<ResumePage id={id} draft={current ? draft : { ...draft, data: null }} focused={nativeEnvironment.focused()} />
-			<ResumeConflictSheet />
 		</View>
 	);
 }

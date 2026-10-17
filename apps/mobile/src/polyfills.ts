@@ -1,6 +1,65 @@
 // Runs before any other module (see index.ts). Hermes with Expo 58 already has structuredClone, AbortSignal.timeout,
-// TextDecoder({ fatal }), streaming fetch, URL and btoa/atob (reports/S2.md); only these two gaps remain.
+// TextDecoder({ fatal }), streaming fetch, URL and btoa/atob (reports/S2.md); these are the remaining gaps.
 import { getRandomValues } from "expo-crypto";
+// Hermes has no Intl.PluralRules, and every Lingui plural needs it (reports/M2-T1.md has the Intl matrix). Its polyfill
+// resolves region-tagged locales such as `en-US` through Intl.Locale, which Hermes lacks too, so that one loads first.
+// Both install only when the engine lacks them. Plural rules depend on the language alone, so one data file per
+// language of apps/mobile/locales covers every catalog; Portuguese is the exception (pt-PT has its own rules).
+import "@formatjs/intl-locale/polyfill.js";
+import "@formatjs/intl-pluralrules/polyfill.js";
+import "@formatjs/intl-pluralrules/locale-data/af.js";
+import "@formatjs/intl-pluralrules/locale-data/am.js";
+import "@formatjs/intl-pluralrules/locale-data/ar.js";
+import "@formatjs/intl-pluralrules/locale-data/az.js";
+import "@formatjs/intl-pluralrules/locale-data/bg.js";
+import "@formatjs/intl-pluralrules/locale-data/bn.js";
+import "@formatjs/intl-pluralrules/locale-data/ca.js";
+import "@formatjs/intl-pluralrules/locale-data/cs.js";
+import "@formatjs/intl-pluralrules/locale-data/da.js";
+import "@formatjs/intl-pluralrules/locale-data/de.js";
+import "@formatjs/intl-pluralrules/locale-data/el.js";
+import "@formatjs/intl-pluralrules/locale-data/en.js";
+import "@formatjs/intl-pluralrules/locale-data/es.js";
+import "@formatjs/intl-pluralrules/locale-data/fa.js";
+import "@formatjs/intl-pluralrules/locale-data/fi.js";
+import "@formatjs/intl-pluralrules/locale-data/fr.js";
+import "@formatjs/intl-pluralrules/locale-data/he.js";
+import "@formatjs/intl-pluralrules/locale-data/hi.js";
+import "@formatjs/intl-pluralrules/locale-data/hu.js";
+import "@formatjs/intl-pluralrules/locale-data/id.js";
+import "@formatjs/intl-pluralrules/locale-data/it.js";
+import "@formatjs/intl-pluralrules/locale-data/ja.js";
+import "@formatjs/intl-pluralrules/locale-data/km.js";
+import "@formatjs/intl-pluralrules/locale-data/kn.js";
+import "@formatjs/intl-pluralrules/locale-data/ko.js";
+import "@formatjs/intl-pluralrules/locale-data/lt.js";
+import "@formatjs/intl-pluralrules/locale-data/lv.js";
+import "@formatjs/intl-pluralrules/locale-data/ml.js";
+import "@formatjs/intl-pluralrules/locale-data/mr.js";
+import "@formatjs/intl-pluralrules/locale-data/ms.js";
+import "@formatjs/intl-pluralrules/locale-data/ne.js";
+import "@formatjs/intl-pluralrules/locale-data/nl.js";
+import "@formatjs/intl-pluralrules/locale-data/no.js";
+import "@formatjs/intl-pluralrules/locale-data/or.js";
+import "@formatjs/intl-pluralrules/locale-data/pl.js";
+import "@formatjs/intl-pluralrules/locale-data/pt.js";
+import "@formatjs/intl-pluralrules/locale-data/pt-PT.js";
+import "@formatjs/intl-pluralrules/locale-data/ro.js";
+import "@formatjs/intl-pluralrules/locale-data/ru.js";
+import "@formatjs/intl-pluralrules/locale-data/sk.js";
+import "@formatjs/intl-pluralrules/locale-data/sl.js";
+import "@formatjs/intl-pluralrules/locale-data/sq.js";
+import "@formatjs/intl-pluralrules/locale-data/sr.js";
+import "@formatjs/intl-pluralrules/locale-data/sv.js";
+import "@formatjs/intl-pluralrules/locale-data/ta.js";
+import "@formatjs/intl-pluralrules/locale-data/te.js";
+import "@formatjs/intl-pluralrules/locale-data/th.js";
+import "@formatjs/intl-pluralrules/locale-data/tr.js";
+import "@formatjs/intl-pluralrules/locale-data/uk.js";
+import "@formatjs/intl-pluralrules/locale-data/uz.js";
+import "@formatjs/intl-pluralrules/locale-data/vi.js";
+import "@formatjs/intl-pluralrules/locale-data/zh.js";
+import "@formatjs/intl-pluralrules/locale-data/zu.js";
 
 // `uuid` (v7 ids in @reactive-resume/utils/string) needs a CSPRNG.
 if (typeof globalThis.crypto?.getRandomValues !== "function") {
