@@ -1,7 +1,7 @@
 > [!IMPORTANT]
-> **Repository moved:** Reactive Resume now lives at **[`reactive-resume/reactive-resume`](https://github.com/reactive-resume/reactive-resume)** on GitHub.
-> **Docker Hub stays at `amruthpillai/reactive-resume`.** GHCR images publish to `ghcr.io/reactive-resume/reactive-resume`.
-> GitHub Sponsors and Open Collective funding links remain unchanged.
+> Reactive Resume now lives at **[`reactive-resume/reactive-resume`](https://github.com/reactive-resume/reactive-resume)** on GitHub.  
+> GHCR images publish to `ghcr.io/reactive-resume/reactive-resume`.  
+> Docker Hub stays at `amruthpillai/reactive-resume`.
 
 <div align="center">
   <a href="https://rxresu.me">
@@ -30,18 +30,32 @@
   </p>
 
   <p><sub>Sponsored by</sub></p>
-  <a href="https://www.hostg.xyz/aff_c?offer_id=48&amp;aff_id=232413&amp;url_id=6857">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/hostinger-dark.svg" />
-      <img src="docs/images/sponsors/hostinger-light.svg" alt="Hostinger" width="118" height="24" />
-    </picture>
-  </a>
 
-  <br />
-  <br />
-  <a href="https://vercel.com/open-source-program">
-    <img alt="Vercel OSS Program" src="https://vercel.com/oss/program-badge-2026.svg" />
-  </a>
+  <table align="center">
+    <tr>
+      <td align="center" valign="middle">
+        <a href="https://www.vultr.com/?ref=9929207">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/e023617e-563e-4423-817b-2e2d4e70fc84" />
+            <img src="https://github.com/user-attachments/assets/2e47d6a3-75ac-4f62-a50c-eef1b7d1930a" alt="Vultr" height="24" />
+          </picture>
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://www.hostg.xyz/aff_c?offer_id=48&amp;aff_id=232413&amp;url_id=6857">
+          <picture>
+            <source media="(prefers-color-scheme: dark)" srcset="docs/images/sponsors/hostinger-dark.svg" />
+            <img src="docs/images/sponsors/hostinger-light.svg" alt="Hostinger" height="24" />
+          </picture>
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://vercel.com/open-source-program">
+          <img src="https://vercel.com/oss/program-badge-2026.svg" alt="Vercel OSS Program" height="24" />
+        </a>
+      </td>
+    </tr>
+  </table>
 </div>
 
 ---
@@ -64,7 +78,7 @@ You own your data. The codebase is open source under the MIT license, with no tr
 
 **Templates and Customization**
 
-- 17 templates, including the new Porygon and Smeargle, previewed with your own content
+- 18 templates, including the new Porygon and Smeargle, previewed with your own content
 - One-column, two-column, and ATS-safe template filters
 - Font presets, custom fonts, colors, spacing, A4 and Letter paper, and left or right sidebars
 - Fit overflowing content by adjusting density, margins, and text size
@@ -163,6 +177,10 @@ You own your data. The codebase is open source under the MIT license, with no tr
     <td align="center">
       <img src="apps/web/public/templates/jpg/onyx.jpg" alt="Onyx" width="150" />
       <br /><sub><b>Onyx</b></sub>
+    </td>
+    <td align="center">
+      <img src="apps/web/public/templates/jpg/persian.jpg" alt="Persian" width="150" />
+      <br /><sub><b>Persian</b></sub>
     </td>
     <td align="center">
       <img src="apps/web/public/templates/jpg/pikachu.jpg" alt="Pikachu" width="150" />

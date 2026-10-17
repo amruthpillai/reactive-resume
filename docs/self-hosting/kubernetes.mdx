@@ -198,13 +198,14 @@ spec:
               path: /api/health
               port: http
             periodSeconds: 5
+            timeoutSeconds: 6
             failureThreshold: 60
           readinessProbe:
             httpGet:
               path: /api/health
               port: http
             periodSeconds: 10
-            timeoutSeconds: 5
+            timeoutSeconds: 6
           resources:
             requests:
               cpu: 250m
@@ -316,6 +317,11 @@ rate limits.
   answers `503` if any of them fails, and Kubernetes stops sending traffic to that Pod until it recovers.
 - There is deliberately no liveness probe on `/api/health`. Restarting the app doesn't fix a database or storage
   outage. If the server process itself exits, Kubernetes restarts the container anyway.
+
+Storage checks have a 5-second deadline by default, including both S3 PUT and DELETE requests. For slower storage,
+set `STORAGE_HEALTHCHECK_TIMEOUT_MS` (milliseconds) in the app Secret. Set both probes' `timeoutSeconds` (seconds)
+above that duration (for example, `STORAGE_HEALTHCHECK_TIMEOUT_MS=10000` and `timeoutSeconds: 11`). Database and
+Redis checks keep their 1.5-second deadlines.
 
 See [Check the health endpoint](/self-hosting/docker#check-the-health-endpoint) for the response format. To call it
 yourself:

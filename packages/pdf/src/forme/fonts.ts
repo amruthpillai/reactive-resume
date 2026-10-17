@@ -4,8 +4,9 @@ import { prepareFontBytes } from "./font-bytes";
 
 // One download per font file for the life of the page or server process.
 const cache = new Map<string, Promise<Uint8Array>>();
-// A stalled download fails the render instead of holding the preview on its loader. CJK faces are 10–15 MB.
-const DOWNLOAD_TIMEOUT_MS = 120_000;
+// A download that stops sending fails the render instead of holding the preview on its loader. One that is slow but
+// still sending finishes: CJK faces are 10–15 MB, and a resume can need five at once (#3627).
+const STALL_TIMEOUT_MS = 30_000;
 
 // Google serves the same files from fonts.gstatic.cn, which loads where fonts.gstatic.com is blocked or slow
 // (mainland China). Each download starts on the host that last answered; when that host fails, or sends nothing
@@ -14,13 +15,13 @@ const GSTATIC_HOSTS = ["fonts.gstatic.com", "fonts.gstatic.cn"];
 const FALLBACK_AFTER_MS = 3000;
 let preferredHost = GSTATIC_HOSTS[0] ?? "";
 
-function fetchFont(src: string, signal: AbortSignal): Promise<Response> {
+function fetchFont(src: string, signal: AbortSignal, fetcher: typeof fetch): Promise<Response> {
 	const url = new URL(src);
 	const check = (response: Response) => {
 		if (!response.ok) throw new Error(`Font ${src}: HTTP ${response.status}`);
 		return response;
 	};
-	if (!GSTATIC_HOSTS.includes(url.hostname)) return fetch(src, { signal }).then(check);
+	if (!GSTATIC_HOSTS.includes(url.hostname)) return fetcher(src, { signal }).then(check);
 
 	const hosts = [preferredHost, ...GSTATIC_HOSTS.filter((host) => host !== preferredHost)];
 	const attempts = hosts.map(() => new AbortController());
@@ -38,7 +39,7 @@ function fetchFont(src: string, signal: AbortSignal): Promise<Response> {
 			const fallback = setTimeout(() => start(index + 1), FALLBACK_AFTER_MS);
 			const target = new URL(url);
 			target.hostname = host;
-			fetch(target, { signal: attempt.signal })
+			fetcher(target, { signal: attempt.signal })
 				.then(check)
 				.then((response) => {
 					clearTimeout(fallback);
@@ -63,10 +64,43 @@ function fetchFont(src: string, signal: AbortSignal): Promise<Response> {
 }
 
 /** Downloads a font file's bytes from its source, trying the gstatic mirror when Google's host fails. */
-export const downloadFont = (src: string): Promise<Uint8Array> =>
-	fetchFont(src, AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS))
-		.then((response) => response.arrayBuffer())
-		.then((buffer) => new Uint8Array(buffer));
+export async function downloadFont(src: string, fetcher: typeof fetch = fetch): Promise<Uint8Array> {
+	const controller = new AbortController();
+	let stall: ReturnType<typeof setTimeout> | undefined;
+	const progress = () => {
+		clearTimeout(stall);
+		stall = setTimeout(() => controller.abort(new Error(`Font ${src}: download stalled`)), STALL_TIMEOUT_MS);
+	};
+	progress();
+	try {
+		const response = await fetchFont(src, controller.signal, fetcher);
+		progress();
+		const reader = response.body?.getReader();
+		if (!reader) throw new Error(`Font ${src}: download has no streaming body`);
+		const chunks: Uint8Array[] = [];
+		let size = 0;
+		try {
+			for (;;) {
+				const { value, done } = await reader.read();
+				if (done) break;
+				progress();
+				chunks.push(value);
+				size += value.byteLength;
+			}
+		} finally {
+			await reader.cancel();
+		}
+		const bytes = new Uint8Array(size);
+		let offset = 0;
+		for (const chunk of chunks) {
+			bytes.set(chunk, offset);
+			offset += chunk.byteLength;
+		}
+		return bytes;
+	} finally {
+		clearTimeout(stall);
+	}
+}
 
 let readFont = downloadFont;
 

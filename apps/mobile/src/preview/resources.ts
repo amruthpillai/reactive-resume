@@ -55,7 +55,7 @@ export async function readCachedFont(source: string): Promise<Uint8Array> {
 	} catch {
 		file = undefined;
 	}
-	const bytes = await downloadFont(source);
+	const bytes = await downloadFont(source, expoFetch as unknown as typeof fetch);
 	if (!isFont(bytes)) throw new Error("Invalid font signature");
 	if (file && bytes.length <= MAX_FONT_CACHE_BYTES) {
 		const target = file;

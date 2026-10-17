@@ -77,8 +77,9 @@ const result = await renderSerializedDocWithLayout(document);
 const subset: Uint8Array = await subsetFont(fontBytes, documentText);
 
 // Configure once at startup. A disk-cache wrapper must use downloadFont on disk errors.
-configureFontReader(downloadFont);
-configureImageFetch((source, init) => fetch(String(source), init));
+const streamingFetch = fetch as unknown as typeof globalThis.fetch;
+configureFontReader((source) => downloadFont(source, streamingFetch));
+configureImageFetch(streamingFetch);
 const pdf = await renderResumePdf(nativeEngine, { data, onPageMap, onLostCharacters });
 ```
 
@@ -86,7 +87,7 @@ Both expensive operations execute on dedicated serial native workers: a Swift di
 
 `nativeEngine` is structurally compatible with `FormeEngine` from `@reactive-resume/pdf/native`. Its async font preparer adds generated digits, hyphens and fallback punctuation, caches the last prepared data URI per font/character set, and embeds the full font if subsetting fails, matching the browser policy. `subsetFont` remains available for direct use; do not pass it into the synchronous browser `createFontPreparer`.
 
-`configureImageFetch` requires a streaming response body. Images stop downloading at 12 MB; there is no whole-body fallback. The app owns persistent font caching through `configureFontReader`; `downloadFont` retains the Google-host fallback and shared font conversion stays inside `packages/pdf`.
+Font downloads and `configureImageFetch` require a streaming response body; pass `expo/fetch` on mobile as above. Images stop downloading at 12 MB; there is no whole-body fallback. The app owns persistent font caching through `configureFontReader`; `downloadFont` retains the Google-host fallback and fails after 30 seconds without download progress. Shared font conversion stays inside `packages/pdf`.
 
 HarfBuzz 8.4.0 is bundled through `harfbuzz-sys 0.8.0`. Its subsetter preserves Unicode mapping and all layout features, matching the browser policy. Typst `subsetter` was rejected because it removes the Unicode cmap and targets already-shaped PDF glyph embedding.
 

@@ -41,7 +41,7 @@ const fixture = (): ResumeData => {
 };
 
 const renderText = async (data: ResumeData) => {
-	const element = createElement(ResumeDocument, { data, template: "onyx" }) as unknown as Parameters<
+	const element = createElement(ResumeDocument, { data, template: data.metadata.template }) as unknown as Parameters<
 		typeof renderToBuffer
 	>[0];
 	let bytes: Uint8Array = new Uint8Array();
@@ -80,5 +80,29 @@ describe("optional experience and education header fields (#3338)", () => {
 		data.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 1, text: "@version 1;" } };
 		const items = await renderText(data);
 		expectTrailingAlignment(items);
+	});
+});
+
+describe.each(["persian", "onyx"] as const)("%s section heading direction", (template) => {
+	it.each(["en-US", "ar-SA"])("keeps headings at the reading edge with and without icons in %s", async (locale) => {
+		for (const hideSectionIcons of [false, true]) {
+			const data = fixture();
+			data.metadata.template = template;
+			data.metadata.page.locale = locale;
+			data.metadata.page.hideSectionIcons = hideSectionIcons;
+			data.sections.experience.title = "Experience";
+			data.sections.education.title = "Education";
+			const items = await renderText(data);
+			for (const title of ["Experience", "Education"]) {
+				const heading = findText(items, title);
+				if (locale === "ar-SA") {
+					expect(heading.transform[4] + heading.width, `${title}, icons hidden: ${hideSectionIcons}`).toBeGreaterThan(
+						530,
+					);
+				} else {
+					expect(heading.transform[4], `${title}, icons hidden: ${hideSectionIcons}`).toBeLessThan(60);
+				}
+			}
+		}
 	});
 });

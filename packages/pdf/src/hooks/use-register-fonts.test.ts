@@ -70,6 +70,23 @@ describe("resolvePdfFonts", () => {
 		expect([...cjkWeights].sort()).toEqual([400, 700]);
 	});
 
+	it("downloads only Regular and Bold of a CJK body or heading font (#3627)", () => {
+		const { registered, registerFonts } = withRegistry();
+		const cjkTypography = {
+			...typography,
+			body: { ...typography.body, fontFamily: "Noto Serif SC", fontWeights: ["400", "600"] },
+			heading: { ...typography.heading, fontFamily: "Noto Sans SC", fontWeights: ["600"] },
+		} satisfies Typography;
+
+		registerFonts(cjkTypography, "zh-CN", true, new Set(["han-simplified"]), false);
+
+		const cjkFaces = registered
+			.filter((font) => font.family.endsWith(" SC"))
+			.map((font) => `${font.family} ${font.weight}`)
+			.sort();
+		expect(cjkFaces).toEqual(["Noto Sans SC 700", "Noto Serif SC 400", "Noto Serif SC 700"]);
+	});
+
 	it("registers the family's true Bold face when the stored weights stop below it (#3310)", () => {
 		const { registered, registerFonts } = withRegistry();
 
