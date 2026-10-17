@@ -17,8 +17,8 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | SVa SV1+SV2 app links, callback page, Apple   | Codex       | 10498568 | mobile/SVa        | RUNNING |                                                                                     |
 | SVb SV4 offline_access unbinding              | Codex       | 4441e7ce | mobile/SVb        | RUNNING |                                                                                     |
 | SVc SV3+SV5 update conflict, account wrappers | Codex       | 3d077e9f | mobile/SVc        | RUNNING |                                                                                     |
-| M1-T1 apps/mobile skeleton                    | Claude Code |          | mobile/M1-T1      | RUNNING | briefs/M1.md                                                                        |
-| M1-T2 pdf ./native, forme-native hardening    | Codex       |          | mobile/M1-T2      | RUNNING | briefs/M1.md                                                                        |
+| M1-T1 apps/mobile skeleton                    | Claude Code | a735cf80 | mobile/M1-T1      | RUNNING | briefs/M1.md                                                                        |
+| M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2      | RUNNING | briefs/M1.md                                                                        |
 
 ## Gates
 
@@ -133,3 +133,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
   - The S2/S3 reports, the S2 `packages-pdf.patch` and the S3 `protocol-run.txt` were copied onto `mobile/native-app` first.
   - Kept on branches only: `mobile/S1` (about 40 MB of fixtures plus `apps/spike-s1`), `mobile/S2` (`apps/spike-s2`), `mobile/S3` (`apps/spike-s3`, screenshots).
 - 2026-10-17: Owner released M1 and asked for continuous parallel work to completion. Coordinator split M1 into M1-T1 (app scaffold, Claude Code) and M1-T2 (`packages/pdf` `./native` + `forme-native` hardening, Codex) with disjoint ownership. Brief: `briefs/M1.md`.
+- 2026-10-17: Coordinator wave plan to keep up to five builders busy (briefs `W2.md`–`W6.md`): W2 = M2-T1, M2-T2, M3-T1, M3-T3, M3-T4 (logic-first M3 tasks only consume M1 contracts); W3 = M3-T2, M3-T5, M5-T1, M6-T4, M7-T1; W4 = M4-T1..T4, M5-T2; W5 = M5-T3, M6-T1..T3, M7-T2; W6 = M7-T3, M8-T1, M8-T2. Ownership stays disjoint inside each wave.
