@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Mobile app mockups</title>
+		<link
+			rel="stylesheet"
+			href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500&display=swap"
+		/>
+		<style>
+			:root {
+				--bg: #f8f7f3;
+				--surface: #fefdfc;
+				--line: #dfdeda;
+				--ink: #1c1b15;
+				--ink-2: #4f4d47;
+				--accent: #337344;
+				--accent-soft: #dcf2df;
+			}
+			@media (prefers-color-scheme: dark) {
+				:root {
+					--bg: #100f0c;
+					--surface: #171613;
+					--line: #2e2d29;
+					--ink: #efeeeb;
+					--ink-2: #b5b3ad;
+					--accent: #6fc082;
+					--accent-soft: #1d3324;
+				}
+			}
+			* {
+				box-sizing: border-box;
+			}
+			html,
+			body {
+				height: 100%;
+				margin: 0;
+			}
+			body {
+				display: flex;
+				flex-direction: column;
+				background: var(--bg);
+				color: var(--ink);
+				font-family: "Hanken Grotesk", system-ui, sans-serif;
+			}
+			header {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px 16px;
+				align-items: center;
+				padding: 10px 16px;
+				border-bottom: 1px solid var(--line);
+				background: var(--surface);
+			}
+			h1 {
+				margin: 0 8px 0 0;
+				font-family: "Newsreader", serif;
+				font-weight: 500;
+				font-size: 20px;
+			}
+			nav {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+			nav button {
+				min-height: 36px;
+				padding: 0 14px;
+				border: 1px solid var(--line);
+				border-radius: 999px;
+				background: transparent;
+				color: var(--ink-2);
+				font: inherit;
+				font-size: 14px;
+				cursor: pointer;
+			}
+			nav button[aria-selected="true"] {
+				border-color: var(--accent);
+				background: var(--accent-soft);
+				color: var(--ink);
+				font-weight: 600;
+			}
+			.note {
+				margin-left: auto;
+				color: var(--ink-2);
+				font-size: 13px;
+			}
+			iframe {
+				flex: 1;
+				width: 100%;
+				border: 0;
+				background: var(--bg);
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Reactive Resume mobile</h1>
+			<nav role="tablist" aria-label="Mockup sections">
+				<button role="tab" data-src="app.html">App, documents and settings</button>
+				<button role="tab" data-src="builder.html">Builder: Write, Page and letters</button>
+				<button role="tab" data-src="design.html">Design, Check, Share and Assistant</button>
+				<button role="tab" data-src="career.html">Applications and Career</button>
+				<button role="tab" data-src="index.html">Direction study (DS1)</button>
+			</nav>
+			<span class="note">Use each section's own index and its light/dark and device toggles.</span>
+		</header>
+		<iframe title="Mockup section"></iframe>
+		<script>
+			const frame = document.querySelector("iframe");
+			const tabs = [...document.querySelectorAll("nav button")];
+			const show = (src) => {
+				for (const tab of tabs) tab.setAttribute("aria-selected", String(tab.dataset.src === src));
+				frame.src = src;
+				history.replaceState(null, "", `#${src}`);
+			};
+			for (const tab of tabs) tab.addEventListener("click", () => show(tab.dataset.src));
+			const initial = location.hash.slice(1);
+			show(tabs.some((tab) => tab.dataset.src === initial) ? initial : "app.html");
+		</script>
+	</body>
+</html>

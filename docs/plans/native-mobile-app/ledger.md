@@ -16,13 +16,13 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 
 ## Gates
 
-| Gate                        | Status  |
-| --------------------------- | ------- |
-| G0 spikes reviewed by owner | pending |
-| G1 decisions.md frozen      | pending |
-| G2a direction picked        | pending |
-| G2b mockups approved        | pending |
-| G-store owner inputs        | pending |
+| Gate                        | Status                                               |
+| --------------------------- | ---------------------------------------------------- |
+| G0 spikes reviewed by owner | DONE 2026-10-17: accepted on-device native rendering |
+| G1 decisions.md frozen      | pending                                              |
+| G2a direction picked        | pending                                              |
+| G2b mockups approved        | pending                                              |
+| G-store owner inputs        | pending                                              |
 
 ## Owner design answers (G2a, 2026-10-17)
 
@@ -87,3 +87,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
   - `application_type: native` is not a trust signal; this is moot since SV5 stays browser-only
 - Correction to the S3 report: the code exchange and refresh inherit the stored resource when `resource` is omitted. M3-T1 still sends `resource` on authorize. The refresh reuse interval is 0.
 - 2026-10-17: DS3c merged (all 33 DS4c findings fixed, 112 frames). DS3b's first pass is done; Codex review DS4b `7d431744` is running.
+- 2026-10-17: G0 accepted by the owner. DS3b merged with its review still pending; the fix round will merge on top. Added `mockups/all.html`, one page that links the four parts plus DS1, for G2b.
