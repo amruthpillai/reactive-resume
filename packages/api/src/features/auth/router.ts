@@ -1,7 +1,8 @@
 import { ORPCError } from "@orpc/server";
+import { APIError } from "better-auth";
 import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
-import { auth } from "@reactive-resume/auth/config";
+import { accountAuth, auth } from "@reactive-resume/auth/config";
 import * as schema from "@reactive-resume/db/schema";
 import { careerProfileDataSchema, careerWorkspaceSchema } from "@reactive-resume/schema/career";
 import { coverLetterSchema } from "@reactive-resume/schema/cover-letter/data";
@@ -17,7 +18,100 @@ import {
 import { resumeDto } from "../../dto/resume";
 import { authService } from "./service";
 
+const accountProcedure = protectedProcedure.use(async ({ next }) => {
+	try {
+		return await next();
+	} catch (error) {
+		if (error instanceof APIError && error.statusCode < 500) {
+			throw new ORPCError(error.body?.code ?? "BAD_REQUEST", {
+				status: error.statusCode,
+				message: error.message,
+				cause: error,
+			});
+		}
+		throw error;
+	}
+});
+
 export const authRouter = {
+	updateProfile: accountProcedure
+		.route({
+			method: "PATCH",
+			path: "/auth/profile",
+			tags: ["Authentication"],
+			operationId: "updateProfile",
+			summary: "Update your profile",
+			description: "Updates only the authenticated user's name, username, or image. Usernames must be unique.",
+		})
+		.input(
+			z.object({
+				name: z.string().trim().min(1).max(64).optional(),
+				username: z
+					.string()
+					.trim()
+					.min(3)
+					.max(64)
+					.regex(/^[a-z0-9._-]+$/)
+					.optional(),
+				image: z.url().nullable().optional(),
+			}),
+		)
+		.output(z.object({ status: z.boolean() }))
+		.handler(({ context, input }) =>
+			accountAuth.updateProfile(context.user, {
+				...(input.name !== undefined ? { name: input.name } : {}),
+				...(input.username !== undefined ? { username: input.username } : {}),
+				...(input.image !== undefined ? { image: input.image } : {}),
+			}),
+		),
+
+	apiKeys: {
+		list: accountProcedure
+			.route({
+				method: "GET",
+				path: "/auth/api-keys",
+				tags: ["Authentication"],
+				operationId: "listApiKeys",
+				summary: "List your API keys",
+				description: "Lists only the authenticated user's API-key metadata. Key secrets are never returned.",
+			})
+			.input(z.object({}).optional())
+			.output(
+				z.object({
+					apiKeys: z.array(
+						createSelectSchema(schema.apikey)
+							.pick({
+								id: true,
+								name: true,
+								start: true,
+								prefix: true,
+								enabled: true,
+								createdAt: true,
+								updatedAt: true,
+								expiresAt: true,
+								lastRequest: true,
+							})
+							.extend({ permissions: z.record(z.string(), z.array(z.string())).nullable() }),
+					),
+					total: z.number(),
+				}),
+			)
+			.handler(({ context }) => accountAuth.listApiKeys(context.user)),
+
+		delete: accountProcedure
+			.route({
+				method: "DELETE",
+				path: "/auth/api-keys/{keyId}",
+				tags: ["Authentication"],
+				operationId: "deleteApiKey",
+				summary: "Delete your API key",
+				description: "Revokes an API key belonging to the authenticated user.",
+			})
+			.input(z.object({ keyId: z.string().min(1) }))
+			.output(z.object({ success: z.boolean() }))
+			.handler(({ context, input }) => accountAuth.deleteApiKey(context.user, input.keyId)),
+	},
+
 	providers: {
 		list: publicProcedure
 			.route({

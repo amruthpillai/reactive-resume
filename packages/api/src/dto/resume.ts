@@ -96,6 +96,10 @@ export const resumeDto = {
 			.extend({
 				id: z.string(),
 				data: writableResumeDataSchema.optional(),
+				expectedUpdatedAt: z.coerce
+					.date()
+					.optional()
+					.describe("If provided, the update only applies when the resume version still matches this timestamp."),
 				sessionId: z
 					.string()
 					.max(64)

@@ -39,6 +39,12 @@ function resumeVersionConflict(updatedAt: Date) {
 	});
 }
 
+function assertResumeVersion(updatedAt: Date, expectedUpdatedAt?: Date) {
+	if (expectedUpdatedAt && updatedAt.getTime() !== expectedUpdatedAt.getTime()) {
+		throw resumeVersionConflict(updatedAt);
+	}
+}
+
 function invalidPatchOperation(message: string, index: number, operation: JsonPatchOperation) {
 	return new ORPCError("INVALID_PATCH_OPERATIONS", { status: 400, message, data: { index, operation } });
 }
@@ -92,9 +98,7 @@ async function applyResumePatchTx(
 
 	if (!existing) throw new ORPCError("NOT_FOUND");
 	if (existing.isLocked) throw new ORPCError("RESUME_LOCKED", { status: 403 });
-	if (input.expectedUpdatedAt && existing.updatedAt.getTime() !== input.expectedUpdatedAt.getTime()) {
-		throw resumeVersionConflict(existing.updatedAt);
-	}
+	assertResumeVersion(existing.updatedAt, input.expectedUpdatedAt);
 
 	input.operations.forEach(assertValidPatchPointers);
 
@@ -624,6 +628,7 @@ export const resumeService = {
 		data?: ResumeData;
 		isPublic?: boolean;
 		showDownloadButtons?: boolean;
+		expectedUpdatedAt?: Date;
 		skipAutoSnapshot?: boolean;
 		/** The editor visit this save belongs to; its autosaves share one version. */
 		sessionId?: string;
@@ -637,6 +642,7 @@ export const resumeService = {
 						slug: schema.resume.slug,
 						isLocked: schema.resume.isLocked,
 						autoName: schema.resume.autoName,
+						updatedAt: schema.resume.updatedAt,
 					})
 					.from(schema.resume)
 					.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
@@ -644,6 +650,7 @@ export const resumeService = {
 
 				if (!existing) throw new ORPCError("NOT_FOUND");
 				if (existing.isLocked) throw new ORPCError("RESUME_LOCKED", { status: 403 });
+				assertResumeVersion(existing.updatedAt, input.expectedUpdatedAt);
 
 				// A new address must follow the pattern; existing ones that don't keep working until changed.
 				const renamed = input.slug !== undefined && input.slug !== existing.slug;

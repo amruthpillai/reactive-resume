@@ -1,5 +1,7 @@
+import type { User } from "better-auth";
 import type { GenericOAuthConfig, GenericOAuthUserInfo } from "better-auth/plugins";
 import type { JWTPayload } from "jose";
+import { AsyncLocalStorage } from "node:async_hooks";
 import { apiKey } from "@better-auth/api-key";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { dash } from "@better-auth/infra";
@@ -105,6 +107,7 @@ export function isCustomOAuthProviderEnabled() {
 }
 
 const TRUSTED_ORIGINS = getTrustedOrigins(env.APP_URL);
+const accountUser = new AsyncLocalStorage<User>();
 const oauthProviderRateLimit = isRateLimitEnabled
 	? rateLimitConfig.betterAuth.oauthProvider
 	: ({
@@ -205,6 +208,27 @@ const getAuthConfig = () => {
 
 		hooks: {
 			before: createAuthMiddleware(async (ctx) => {
+				const user = accountUser.getStore();
+				if (user && !ctx.request && ["/update-user", "/api-key/list", "/api-key/delete"].includes(ctx.path)) {
+					// Internal account calls reuse session-only hooks without creating a browser credential.
+					return {
+						context: {
+							context: {
+								session: {
+									user,
+									session: {
+										id: "",
+										token: "",
+										userId: user.id,
+										createdAt: new Date(0),
+										updatedAt: new Date(0),
+										expiresAt: new Date(0),
+									},
+								},
+							},
+						},
+					};
+				}
 				if (ctx.path === "/sign-in/anonymous" && (!env.FLAG_ENABLE_GUEST_LOGIN || env.FLAG_DISABLE_SIGNUPS)) {
 					throw new APIError("FORBIDDEN", { message: "Guest login is disabled." });
 				}
@@ -506,6 +530,20 @@ export const auth: Auth = new Proxy({} as Auth, {
 		return Reflect.get(instance, property, instance);
 	},
 });
+
+type ProfileUpdate = { name?: string; username?: string; image?: string | null };
+
+// Only these server calls can install the identity; their cookie headers never leave this module.
+export const accountAuth = {
+	updateProfile: (user: User, body: ProfileUpdate) =>
+		accountUser.run(user, () =>
+			auth.api.updateUser({
+				body: { ...body, ...(body.username !== undefined ? { displayUsername: body.username } : {}) },
+			}),
+		),
+	listApiKeys: (user: User) => accountUser.run(user, () => auth.api.listApiKeys({})),
+	deleteApiKey: (user: User, keyId: string) => accountUser.run(user, () => auth.api.deleteApiKey({ body: { keyId } })),
+};
 
 export async function initializeAuth(): Promise<void> {
 	await auth.$context;

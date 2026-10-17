@@ -204,14 +204,43 @@ describe("versions.restore", () => {
 });
 
 describe("update", () => {
-	const updateHarness = (existing: { slug: string }) => {
-		const row = { ...createResumeRow(defaultResumeData), slug: existing.slug };
-		const select = createLockedSelectChain([{ data: defaultResumeData, isLocked: false, slug: existing.slug }]);
+	const updateHarness = (existing: { slug: string; updatedAt?: Date }) => {
+		const row = { ...createResumeRow(defaultResumeData, existing.updatedAt), slug: existing.slug };
+		const select = createLockedSelectChain([row]);
 		const update = createUpdateChain([row]);
 		const tx = { select: () => select.chain, update: () => update.chain };
 		dbMock.transaction.mockImplementationOnce(async (callback: (tx: unknown) => Promise<unknown>) => callback(tx));
 		return { tx, update };
 	};
+
+	it.each(["stale", "current", "omitted"] as const)(
+		"guards full saves against overwriting a newer version: %s timestamp",
+		async (version) => {
+			const updatedAt = new Date("2026-10-17T10:00:00.123Z");
+			const { update } = updateHarness({ slug: "resume", updatedAt });
+			const input = {
+				id: "r1",
+				userId: "u1",
+				name: "Saved",
+				...(version === "omitted"
+					? {}
+					: { expectedUpdatedAt: version === "stale" ? new Date(updatedAt.getTime() - 1) : updatedAt }),
+			};
+
+			if (version === "stale") {
+				await expect(resumeService.update(input)).rejects.toMatchObject({
+					code: "RESUME_VERSION_CONFLICT",
+					status: 409,
+					data: { updatedAt: "2026-10-17T10:00:00.123Z" },
+				});
+				expect(update.set).not.toHaveBeenCalled();
+				expect(publishResumeUpdatedMock).not.toHaveBeenCalled();
+			} else {
+				await expect(resumeService.update(input)).resolves.toMatchObject({ id: "r1" });
+				expect(update.set).toHaveBeenCalledWith({ name: "Saved", autoName: false });
+			}
+		},
+	);
 
 	it("keeps the old address as a redirect when the slug changes", async () => {
 		const { tx, update } = updateHarness({ slug: "old-address" });
