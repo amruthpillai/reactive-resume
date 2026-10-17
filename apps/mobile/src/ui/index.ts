@@ -1,4 +1,4 @@
-// The Desk & Paper primitives. M1 ships plain working stubs with their final props; M2-T1 designs them.
+// The Desk & Paper primitives (M2-T1). `app/dev/ui.tsx` shows every one of them in a dev build.
 export { Button, IconButton, type ButtonProps, type ButtonVariant, type IconButtonProps } from "./button";
 export {
 	Chip,
@@ -23,13 +23,16 @@ export {
 	Banner,
 	Card,
 	EmptyState,
+	ListGroup,
 	ListRow,
 	Skeleton,
 	type AvatarProps,
 	type BannerProps,
 	type BannerTone,
+	type BannerVariant,
 	type CardProps,
 	type EmptyStateProps,
+	type ListGroupProps,
 	type ListRowProps,
 	type SkeletonProps,
 } from "./layout";
@@ -39,10 +42,12 @@ export {
 	Toaster,
 	dismissToast,
 	showToast,
+	toast,
 	type ConfirmDialogProps,
 	type SheetProps,
 	type ToastOptions,
 } from "./overlays";
 export { SortableList, type SortableItemInfo, type SortableListProps } from "./sortable";
+export { haptics, useIsWide, useReducedMotion } from "./motion";
 export { Screen, Text, type ScreenProps, type TextProps, type TextVariant } from "./text";
 export { setThemePreference, useTheme, useThemePreference, type Theme, type ThemePreference } from "./theme";
