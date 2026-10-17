@@ -3,6 +3,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { produce } from "immer";
 import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { ResumePage } from "@/preview/page";
 import { Banner } from "@/ui";
@@ -34,8 +35,8 @@ export default function PageScreen() {
 		setData((value) => produce(value, recipe));
 	};
 	return (
-		<>
-			<Stack.Screen options={{ title: t`Page` }} />
+		<View style={{ flex: 1 }}>
+			<Stack.Screen options={{ title: t`Page`, headerTransparent: false }} />
 			<Banner
 				tone="info"
 				message={parityStatus ?? (__DEV__ && parity ? t`Checking renderer parity…` : t`Sample resume preview`)}
@@ -43,6 +44,6 @@ export default function PageScreen() {
 			{!(__DEV__ && parity && parityStatus === null) ? (
 				<ResumePage id={id} draft={{ data, update, locked: false, undo: () => setData(history) }} />
 			) : null}
-		</>
+		</View>
 	);
 }
