@@ -1,7 +1,7 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { useLocalSearchParams } from "expo-router";
+import { ShareScreen } from "@/features/share/screen";
 
-export default function ShareScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`Share`} />;
+export default function ShareRoute() {
+	const { id } = useLocalSearchParams<{ id: string }>();
+	return <ShareScreen id={id} />;
 }
