@@ -47,11 +47,21 @@ function useDraftOwner(id: string, draft: typeof resume | typeof letter) {
 	);
 }
 
+/**
+ * Owns the resume draft lifecycle (open, suspend on sign-out, close on leave). Only `app/builder/[id]/_layout.tsx`
+ * calls it, so the draft opens once per builder visit; screens read it with `useResumeStore` and never own it.
+ */
+export const useResumeDraftOwner = (id: string) => useDraftOwner(id, resume);
+/** The letter equivalent of `useResumeDraftOwner`, called only by `app/letter/[id]/_layout.tsx`. */
+export const useLetterDraftOwner = (id: string) => useDraftOwner(id, letter);
+
+/** Owner and store in one, for screens outside the builder layouts. Inside them, use `useResumeStore()`. */
 export function useResumeDraft(id: string) {
 	useDraftOwner(id, resume);
 	return useResumeStore();
 }
 
+/** Owner and store in one, for screens outside the letter layout. Inside it, use `useLetterStore()`. */
 export function useLetterDraft(id: string) {
 	useDraftOwner(id, letter);
 	return useLetterStore();

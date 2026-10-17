@@ -1,11 +1,12 @@
 import type { IconName } from "./icon";
 import type { ColorToken } from "./tokens";
-import { ActivityIndicator, Pressable, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, View } from "react-native";
 import { Icon } from "./icon";
 import { Text } from "./text";
 import { useTheme } from "./theme";
 
-export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "link";
+/** `dangerOutline` is the quieter destructive button (an outline in `dangerText`), for example Delete account. */
+export type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "dangerOutline" | "link";
 
 export type ButtonProps = {
 	label: string;
@@ -27,9 +28,12 @@ const foregrounds = {
 	primary: "onAccent",
 	danger: "onAccent",
 	secondary: "ink",
-	ghost: "ink",
+	ghost: "accentText",
+	dangerOutline: "dangerText",
 	link: "accentText",
 } as const satisfies Record<ButtonVariant, ColorToken>;
+
+const android = Platform.OS === "android";
 
 export function Button({
 	label,
@@ -45,15 +49,26 @@ export function Button({
 }: ButtonProps) {
 	const { colors, radius, size: sizes, space } = useTheme();
 	const inactive = disabled || loading;
-	const filled = variant === "primary" || variant === "danger";
+	const foreground = colors[foregrounds[variant]];
 	const background = {
 		primary: colors.accent,
 		danger: colors.danger,
-		secondary: colors.surface,
+		secondary: colors.raised,
 		ghost: "transparent",
+		dangerOutline: "transparent",
 		link: "transparent",
 	}[variant];
-	const foreground = inactive ? "ink3" : foregrounds[variant];
+	// iOS highlights in place; Android draws a ripple in `press` instead (tokens.md §7).
+	const pressedBackground = {
+		primary: colors.accentHover,
+		danger: colors.dangerText,
+		secondary: colors.sunken,
+		ghost: colors.press,
+		dangerOutline: colors.press,
+		link: "transparent",
+	}[variant];
+	// `sm` is 36 pt to look compact; `hitSlop` brings its target to 44.
+	const height = size === "lg" ? sizes.button : size === "sm" ? sizes.hit - space.s2 : sizes.hit;
 
 	return (
 		<Pressable
@@ -64,23 +79,26 @@ export function Button({
 			disabled={inactive}
 			onPress={onPress}
 			testID={testID}
+			hitSlop={size === "sm" ? { top: space.s1, bottom: space.s1 } : undefined}
+			android_ripple={variant === "link" ? undefined : { color: colors.press }}
 			style={({ pressed }) => ({
-				minHeight: size === "lg" ? sizes.button : size === "sm" ? 32 : sizes.hit,
-				paddingHorizontal: variant === "link" ? 0 : space.s4,
-				borderRadius: size === "lg" ? radius.rLg : radius.rMd,
-				borderWidth: variant === "secondary" ? 1 : 0,
-				borderColor: colors.line2,
-				backgroundColor: inactive && filled ? colors.sunken : background,
+				minHeight: height,
+				paddingHorizontal: variant === "link" ? 0 : size === "sm" ? space.s3 : space.s4,
+				borderRadius: android ? radius.rPill : size === "sm" ? radius.rMd : radius.rXl,
+				borderWidth: variant === "secondary" || variant === "dangerOutline" ? 1 : 0,
+				borderColor: variant === "dangerOutline" ? colors.dangerText : colors.line2,
+				backgroundColor: pressed && !android ? pressedBackground : background,
 				alignSelf: fullWidth ? "stretch" : "flex-start",
 				alignItems: "center",
 				justifyContent: "center",
-				opacity: pressed ? 0.85 : 1,
+				overflow: "hidden",
+				opacity: (pressed && variant === "link") || disabled ? 0.45 : 1,
 			})}
 		>
 			<View style={{ flexDirection: "row", alignItems: "center", gap: space.s2 }}>
-				{loading ? <ActivityIndicator color={colors[foreground]} /> : null}
-				{icon && !loading ? <Icon name={icon} size={sizes.icon.row} color={colors[foreground]} /> : null}
-				<Text variant="label" color={foreground}>
+				{loading ? <ActivityIndicator color={foreground} /> : null}
+				{icon && !loading ? <Icon name={icon} size={sizes.icon.row} color={foreground} /> : null}
+				<Text variant="label" color={foregrounds[variant]} align="center" style={{ flexShrink: 1 }}>
 					{label}
 				</Text>
 			</View>
@@ -93,11 +111,16 @@ export type IconButtonProps = {
 	/** The accessible name; icons are decorative. */
 	label: string;
 	onPress: () => void;
+	/** For example to lift a row in a SortableList (`drag`). */
+	onLongPress?: (() => void) | undefined;
 	variant?: "ghost" | "secondary" | "primary" | undefined;
 	/** Glyph size. Defaults to 22 (toolbars). The hit area is always at least 44 pt. */
 	size?: number | undefined;
+	/** A colour token for the glyph of a ghost or secondary button, for example `dangerText`. Defaults to `ink`. */
+	color?: ColorToken | undefined;
 	selected?: boolean | undefined;
 	disabled?: boolean | undefined;
+	accessibilityHint?: string | undefined;
 	testID?: string | undefined;
 };
 
@@ -105,39 +128,43 @@ export function IconButton({
 	icon,
 	label,
 	onPress,
+	onLongPress,
 	variant = "ghost",
 	size,
+	color = "ink",
 	selected,
 	disabled,
+	accessibilityHint,
 	testID,
 }: IconButtonProps) {
 	const { colors, radius, size: sizes } = useTheme();
+	const primary = variant === "primary";
+	const glyph = disabled ? colors.ink3 : primary ? colors.onAccent : selected ? colors.accentText : colors[color];
+	const background = primary ? colors.accent : selected ? colors.selectedFill : "transparent";
 
 	return (
 		<Pressable
 			accessibilityRole="button"
 			accessibilityLabel={label}
+			accessibilityHint={accessibilityHint}
 			accessibilityState={{ disabled: !!disabled, selected: !!selected }}
 			disabled={disabled}
 			onPress={onPress}
+			onLongPress={onLongPress}
 			testID={testID}
+			android_ripple={{ color: colors.press, borderless: variant === "ghost" && !selected }}
 			style={({ pressed }) => ({
 				width: sizes.hit,
 				height: sizes.hit,
-				borderRadius: radius.rMd,
+				borderRadius: android ? radius.rPill : radius.rMd,
 				alignItems: "center",
 				justifyContent: "center",
 				borderWidth: variant === "secondary" ? 1 : 0,
 				borderColor: colors.line2,
-				backgroundColor: variant === "primary" ? colors.accent : selected ? colors.selectedFill : "transparent",
-				opacity: pressed ? 0.7 : 1,
+				backgroundColor: pressed && !android ? (primary ? colors.accentHover : colors.press) : background,
 			})}
 		>
-			<Icon
-				name={icon}
-				size={size ?? sizes.icon.toolbar}
-				color={disabled ? colors.ink3 : variant === "primary" ? colors.onAccent : colors.ink}
-			/>
+			<Icon name={icon} filled={selected} size={size ?? sizes.icon.toolbar} color={glyph} />
 		</Pressable>
 	);
 }
