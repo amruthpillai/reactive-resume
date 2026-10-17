@@ -17,8 +17,9 @@ export type DraftAdapter<D extends Document, T> = {
 	matches: (left: D, right: D) => boolean;
 	version: (document: D) => string | number;
 	parse: (value: unknown) => D;
-	save: (document: D, baseline: D, sessionId: string, force: boolean) => Promise<D>;
-	copy: (document: D, copyId: string | undefined, remember: (id: string) => void) => Promise<void>;
+	/** `scope` binds the write to the account that owns the draft (the API client refuses it after an account switch). */
+	save: (document: D, baseline: D, sessionId: string, force: boolean, scope: string) => Promise<D>;
+	copy: (document: D, copyId: string | undefined, remember: (id: string) => void, scope: string) => Promise<void>;
 	isConflict: (error: unknown) => boolean;
 };
 
@@ -313,7 +314,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 				store.setState({ status: "saving" });
 				while (dirty && record === active && !state().conflict && !state().locked) {
 					const submitted = active.document;
-					const saved = await adapter.save(submitted, active.baseline, active.sessionId, force);
+					const saved = await adapter.save(submitted, active.baseline, active.sessionId, force, scope ?? "");
 					if (!(await currentOwner()) || visit !== generation) return;
 					force = false;
 					active.baseline = saved;
@@ -371,10 +372,15 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 				await flush();
 			} else {
 				if (choice === "keep-both")
-					await adapter.copy(active.document, active.copyId, (id) => {
-						active.copyId = id;
-						persist();
-					});
+					await adapter.copy(
+						active.document,
+						active.copyId,
+						(id) => {
+							active.copyId = id;
+							persist();
+						},
+						scope ?? "",
+					);
 				if (!(await currentOwner()) || record !== active) return;
 				env.storage.removeItemSync(key());
 				pending.delete(key());
@@ -438,7 +444,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 				const queued = readStored(storageKey);
 				if (!queued) continue;
 				if ((await env.scope()) !== owner || visit !== queueGeneration) return;
-				await adapter.save(queued.document, queued.baseline, queued.sessionId, false);
+				await adapter.save(queued.document, queued.baseline, queued.sessionId, false, owner);
 				if (visit !== queueGeneration) return;
 				env.storage.removeItemSync(storageKey);
 				pending.delete(storageKey);

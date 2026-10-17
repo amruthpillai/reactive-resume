@@ -88,20 +88,23 @@ export const resumeAdapter: DraftAdapter<ResumeDocument, ResumeDocument["data"]>
 			throw new Error("Invalid stored resume.");
 		return { ...document, data: resumeDataSchema.parse(document.data) };
 	},
-	save: async (document, baseline, sessionId, force) => ({
+	save: async (document, baseline, sessionId, force, scope) => ({
 		...document,
-		...(await client.resume.update({
-			id: document.id,
-			...changedFields(resumeFields(document), resumeFields(baseline)),
-			sessionId,
-			...(!force ? { expectedUpdatedAt: baseline.updatedAt } : {}),
-		})),
+		...(await client.resume.update(
+			{
+				id: document.id,
+				...changedFields(resumeFields(document), resumeFields(baseline)),
+				sessionId,
+				...(!force ? { expectedUpdatedAt: baseline.updatedAt } : {}),
+			},
+			{ context: { scope } },
+		)),
 	}),
-	copy: async (document, copyId, remember) => {
+	copy: async (document, copyId, remember, scope) => {
 		const name = t`${document.name} (mine)`.slice(0, 100);
-		const id = copyId ?? (await client.resume.import({ data: document.data }));
+		const id = copyId ?? (await client.resume.import({ data: document.data }, { context: { scope } }));
 		remember(id);
-		await client.resume.update({ id, name, tags: document.tags, data: document.data });
+		await client.resume.update({ id, name, tags: document.tags, data: document.data }, { context: { scope } });
 	},
 	isConflict: (error) => error instanceof ORPCError && error.code === "RESUME_VERSION_CONFLICT",
 };
@@ -119,7 +122,7 @@ export const letterAdapter: DraftAdapter<LetterDocument, LetterDocument> = {
 		...changedFields(letterFields(current), letterFields(submitted)),
 	}),
 	parse: (value) => coverLetterSchema.parse(dates(value)),
-	save: (document, baseline, sessionId) => {
+	save: (document, baseline, sessionId, _force, scope) => {
 		const changes = changedFields(letterFields(document), letterFields(baseline));
 		const input: RouterInput["coverLetters"]["update"] = {
 			id: document.id,
@@ -146,26 +149,29 @@ export const letterAdapter: DraftAdapter<LetterDocument, LetterDocument> = {
 				...("design" in metadata ? { design: document.style.metadata.design } : {}),
 				...("page" in metadata ? { page: document.style.metadata.page } : {}),
 			};
-		return client.coverLetters.update(input);
+		return client.coverLetters.update(input, { context: { scope } });
 	},
-	copy: async (document, copyId, remember) => {
+	copy: async (document, copyId, remember, scope) => {
 		if (copyId) return;
-		const copy = await client.coverLetters.import({
-			document: {
-				format: "reactive-resume-cover-letter",
-				version: 1,
-				name: t`${document.name} (mine)`.slice(0, 100),
-				recipient: document.recipient,
-				content: document.content,
-				greeting: document.greeting,
-				signOff: document.signOff,
-				style: document.style,
-				layout: document.layout,
-				recipientName: document.recipientName,
-				recipientCompany: document.recipientCompany,
-				letterDate: document.letterDate,
+		const copy = await client.coverLetters.import(
+			{
+				document: {
+					format: "reactive-resume-cover-letter",
+					version: 1,
+					name: t`${document.name} (mine)`.slice(0, 100),
+					recipient: document.recipient,
+					content: document.content,
+					greeting: document.greeting,
+					signOff: document.signOff,
+					style: document.style,
+					layout: document.layout,
+					recipientName: document.recipientName,
+					recipientCompany: document.recipientCompany,
+					letterDate: document.letterDate,
+				},
 			},
-		});
+			{ context: { scope } },
+		);
 		remember(copy.id);
 	},
 	isConflict: (error) => error instanceof ORPCError && error.code === "CONFLICT",

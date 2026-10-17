@@ -12,6 +12,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { restoreSession } from "@/auth/session";
+import { SessionGate } from "@/auth/session-gate";
 import { i18n, initI18n } from "@/i18n";
 import { Toaster, useTheme } from "@/ui";
 import { fontAssets } from "@/ui/fonts";
@@ -89,6 +90,7 @@ export default function RootLayout() {
 						<I18nProvider i18n={i18n}>
 							<BottomSheetModalProvider>
 								<RootStack />
+								<SessionGate />
 								<Toaster />
 							</BottomSheetModalProvider>
 						</I18nProvider>
