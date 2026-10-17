@@ -31,11 +31,11 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | REVIEW  | briefs/W5.md; JS-only                                                               |
+| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | FIXING  | briefs/W5.md; JS-only                                                               |
 | M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | REVIEW  | briefs/W5.md; JS-only                                                               |
-| M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | RUNNING | briefs/W3.md; JS-only                                                               |
+| M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | REVIEW  | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
-| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | REVIEW  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
+| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | FIXING  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
 | M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | RUNNING | briefs/W4.md; JS-only                                                               |
 | M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
 | M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
@@ -191,3 +191,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M6-T2 done (review `195d8e34`; voice transcription via REST multipart). M6-T3 FIXED 6; second review by `cce125a4`. M4-T2 told not to merge M7-T2; temporary copy of the pdf-check adapter to dedupe at merge.
 - 2026-10-17: M3-T1 review `9fae76e4`: 5 security blockers (issuer mix-up, cross-account 401 retry, unserialized session transitions, refresh-token replay after a lost response, cached data across accounts).
 - 2026-10-17: M2-T1 merged (FIXED 5 + Intl polyfills). Hermes Intl matrix in `reports/M2-T1.md`: no `PluralRules`/`Locale` (polyfilled, +246 KB gzipped), no `supportedValuesOf`, no `NumberFormat#formatToParts` on iOS; `DateTimeFormat` with `timeZone` works on both. Bundle trim (hand-written plural rules) left as an M8 size item.
+- 2026-10-17: M6-T3 second review: 6 more blockers (slow-reply recovery, pre-run boundary, lifecycle tokens, draft reclaim, unverified thread association, marked data breaking Fit); second fix round. M6-T2 review `195d8e34`: 6 data-loss blockers; fix round. M3-T5 done; review `bf75f9a3`.
