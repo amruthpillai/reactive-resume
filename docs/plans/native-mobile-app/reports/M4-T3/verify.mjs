@@ -4,6 +4,7 @@ import {
 	normalizeSlug,
 	summarizeViews,
 	safeFileName,
+	formatTimeSince,
 } from "../../../../../apps/mobile/src/features/share/model.ts";
 
 let scenarios = 0;
@@ -76,4 +77,19 @@ assert.equal(safeFileName("../Marcus/Resume?.pdf"), "MarcusResume.pdf");
 assert.equal(safeFileName("\u0000resume\u001f"), "resume");
 assert.equal(safeFileName("..."), "");
 scenarios++;
-console.log(`${scenarios} scenarios passed (slug grammar/normalization, anonymous daily stats, native file names).`);
+const now = Date.UTC(2026, 9, 17, 12);
+for (const [elapsed, expected] of [
+	[0, "0m"],
+	[120000, "2m"],
+	[7200000, "2h"],
+	[259200000, "3d"],
+	[3628800000, "6w"],
+	[31968000000, "1y"],
+	[-60000, "0m"],
+]) {
+	assert.equal(formatTimeSince(new Date(now - elapsed), "en-US", now), expected);
+	scenarios++;
+}
+console.log(
+	`${scenarios} scenarios passed (slug grammar/normalization, anonymous daily stats, relative time, native file names).`,
+);

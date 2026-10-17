@@ -4,9 +4,12 @@ import { Directory, File, Paths } from "expo-file-system";
 import * as Print from "expo-print";
 import * as Sharing from "expo-sharing";
 import { getResumeExportData } from "@reactive-resume/resume/export-sections";
+import { letterWords } from "./letter";
+import { getLostCharactersMessage } from "./messages";
 import { safeFileName } from "./model";
-import { rest } from "@/api/client";
+import { client, rest } from "@/api/client";
 import { createPreviewPipeline } from "@/preview/pipeline";
+import { showToast } from "@/ui";
 
 export type ExportFormat = "pdf" | "docx" | "odt" | "md" | "json";
 const mime = {
@@ -46,12 +49,15 @@ export async function localPdf(data: ResumeData, letter = false) {
 			pages: [],
 			renderOptions: { includeCoverLetterHeader: letter },
 		});
-		if (result.hasTextLoss || result.lostCharacters.length) {
-			throw new Error(t`Some text couldn't be rendered. Review the Page before downloading.`);
-		}
-		return result.pdf;
+		return { pdf: result.pdf, lostCharacters: result.lostCharacters, hasTextLoss: result.hasTextLoss };
 	} finally {
 		await pipeline.dispose();
+	}
+}
+
+function warnTextLoss(result: Awaited<ReturnType<typeof localPdf>>) {
+	if (result.hasTextLoss || result.lostCharacters.length) {
+		showToast({ message: getLostCharactersMessage(result.lostCharacters), duration: 10000 });
 	}
 }
 
@@ -66,9 +72,27 @@ type ExportFileOptions = {
 
 export async function exportFile({ directory, id, name, format, data, letter }: ExportFileOptions) {
 	let bytes: Uint8Array;
-	if (format === "pdf" && data) bytes = await localPdf(data, letter);
-	else {
-		const response = await rest(`/${letter ? "cover-letters" : "resumes"}/${encodeURIComponent(id)}/exports/${format}`);
+	if (format === "pdf" && data) {
+		const result = await localPdf(data, letter);
+		bytes = result.pdf;
+		warnTextLoss(result);
+	} else {
+		let query = "";
+		if (letter && format !== "json") {
+			const document = await client.coverLetters.getById({ id });
+			const words = await letterWords(document.style.metadata.page.locale);
+			query = `?words=${encodeURIComponent(
+				JSON.stringify({
+					greeting: words.greeting("{name}"),
+					teamGreeting: words.teamGreeting,
+					hiringTeam: words.hiringTeam,
+					signOff: words.signOff,
+				}),
+			)}`;
+		}
+		const response = await rest(
+			`/${letter ? "cover-letters" : "resumes"}/${encodeURIComponent(id)}/exports/${format}${query}`,
+		);
 		if (!response.ok) throw new Error(t`Couldn't generate this file. Try again, or download PDF instead.`);
 		bytes = new Uint8Array(await response.arrayBuffer());
 	}
@@ -84,6 +108,8 @@ export async function shareExport(file: File, format: ExportFormat) {
 
 export async function printResume(data: ResumeData, name: string) {
 	const file = new File(exportDirectory(), `${safeFileName(name) || "resume"}.pdf`);
-	await file.write(await localPdf(data));
+	const result = await localPdf(data);
+	warnTextLoss(result);
+	await file.write(result.pdf);
 	await Print.printAsync({ uri: file.uri });
 }

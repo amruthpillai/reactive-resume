@@ -7,7 +7,7 @@ import { Linking, Share, View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import Svg, { Rect } from "react-native-svg";
 import { flushResume } from "./document";
-import { normalizeSlug, summarizeViews, validSlug } from "./model";
+import { formatTimeSince, normalizeSlug, summarizeViews, validSlug } from "./model";
 import { client, orpc } from "@/api/client";
 import { getServer } from "@/auth/session";
 import { useResumeStore } from "@/draft";
@@ -40,6 +40,7 @@ export function LinkTab({ resume, offline }: LinkProps) {
 	const [retry, setRetry] = useState(0);
 	const [dialog, setDialog] = useState<"qr" | "password" | "remove-password" | null>(null);
 	const [password, setPassword] = useState("");
+	const [confirmation, setConfirmation] = useState("");
 	const profile = useQuery({ ...orpc.auth.getProfile.queryOptions(), enabled: !offline });
 	const username = profile.data?.username;
 	const url = username ? `${getServer()}/${encodeURIComponent(username)}/${encodeURIComponent(resume.slug)}` : "";
@@ -103,6 +104,7 @@ export function LinkTab({ resume, offline }: LinkProps) {
 		});
 	};
 	const savePassword = async (remove = false) => {
+		if (!remove && (password.length < 6 || password.length > 64 || password !== confirmation)) return;
 		const success = await operations.run(async () => {
 			await flushResume(resume.id);
 			if (remove) await client.resume.removePassword({ id: resume.id });
@@ -112,6 +114,7 @@ export function LinkTab({ resume, offline }: LinkProps) {
 		if (success) {
 			setDialog(null);
 			setPassword("");
+			setConfirmation("");
 		}
 	};
 	const addressError = !validSlug(slug)
@@ -230,6 +233,7 @@ export function LinkTab({ resume, offline }: LinkProps) {
 								disabled={disabled}
 								onValueChange={(value) => {
 									setPassword("");
+									setConfirmation("");
 									setDialog(value ? "password" : "remove-password");
 								}}
 							/>
@@ -270,6 +274,7 @@ export function LinkTab({ resume, offline }: LinkProps) {
 					if (!operations.busy) {
 						setDialog(null);
 						setPassword("");
+						setConfirmation("");
 					}
 				}}
 				detents={[0.5, 0.9]}
@@ -287,11 +292,23 @@ export function LinkTab({ resume, offline }: LinkProps) {
 						helper={t`Use 6–64 characters.`}
 						editable={!operations.busy}
 					/>
+					<TextField
+						label={t`Confirm Password`}
+						value={confirmation}
+						onChangeText={setConfirmation}
+						secureTextEntry
+						autoComplete="off"
+						autoCorrect={false}
+						autoCapitalize="none"
+						maxLength={64}
+						editable={!operations.busy}
+						error={confirmation && confirmation !== password ? t`Passwords do not match.` : undefined}
+					/>
 					{operations.error && <Banner tone="danger" message={operations.error} />}
 					<Button
 						label={t`Set password`}
 						loading={operations.busy}
-						disabled={password.length < 6 || disabled}
+						disabled={password.length < 6 || password !== confirmation || disabled}
 						onPress={() => void savePassword()}
 					/>
 				</View>
@@ -356,8 +373,10 @@ function Statistics({ id, isPublic, offline }: StatisticsProps) {
 							<Text variant="caption">{t`downloads`}</Text>
 						</View>
 						<View>
-							<Text variant="label">{total.data?.lastViewedAt?.toLocaleString(i18n.locale) ?? "—"}</Text>
-							<Text variant="caption">{t`Last viewed`}</Text>
+							<Text variant="title">
+								{total.data?.lastViewedAt ? formatTimeSince(total.data.lastViewedAt, i18n.locale) : "—"}
+							</Text>
+							<Text variant="caption">{t`since last view`}</Text>
 						</View>
 					</View>
 					<View

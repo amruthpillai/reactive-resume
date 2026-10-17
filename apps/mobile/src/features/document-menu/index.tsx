@@ -10,6 +10,7 @@ import { useNewDocuments } from "@/features/documents/new-documents";
 import { useDocumentOperations } from "@/features/documents/queries";
 import { flushResume } from "@/features/share/document";
 import { printResume } from "@/features/share/files";
+import { normalizeSlug, validSlug } from "@/features/share/model";
 import { routes } from "@/routes";
 import { Banner, Button, IconButton, ListRow, Sheet, Text, TextField, showToast, useTheme } from "@/ui";
 
@@ -21,8 +22,9 @@ export function DocumentMenu({ id }: DocumentMenuProps) {
 	const draft = useResumeStore();
 	const resume = draft.document?.id === id ? draft.document : null;
 	const operations = useDocumentOperations();
-	const [panel, setPanel] = useState<"menu" | "rename" | "notes" | "details" | null>(null);
+	const [panel, setPanel] = useState<"menu" | "rename" | "duplicate" | "notes" | "details" | null>(null);
 	const [name, setName] = useState("");
+	const [slug, setSlug] = useState("");
 	const pending = useRef(Promise.resolve(false));
 	const [printing, setPrinting] = useState(false);
 	const printingRef = useRef(false);
@@ -37,7 +39,13 @@ export function DocumentMenu({ id }: DocumentMenuProps) {
 	const sync = async () => {
 		await useResumeStore.getState().open(id);
 	};
-	const titles = { menu: t`Document options`, rename: t`Rename`, notes: t`Notes`, details: t`Resume details` };
+	const titles = {
+		menu: t`Document options`,
+		rename: t`Rename`,
+		duplicate: t`Duplicate Resume`,
+		notes: t`Notes`,
+		details: t`Resume details`,
+	};
 	return (
 		<>
 			<IconButton
@@ -66,18 +74,11 @@ export function DocumentMenu({ id }: DocumentMenuProps) {
 									title={t`Duplicate`}
 									leading="copy"
 									disabled={operations.busy || printing}
-									onPress={() =>
-										void run(async () => {
-											const current = await flushResume(id);
-											const copy = await client.resume.duplicate({
-												id,
-												name: t`${current.name} (copy)`.slice(0, 100),
-												tags: current.tags,
-											});
-											useNewDocuments.getState().markNew({ id: copy, type: "resume" });
-											showToast({ message: t`Copy created` });
-										})
-									}
+									onPress={() => {
+										setName(t`${resume.name} (copy)`.slice(0, 100));
+										setSlug("");
+										setPanel("duplicate");
+									}}
 								/>
 								<ListRow
 									title={resume.isLocked ? t`Unlock editing` : t`Lock editing`}
@@ -180,6 +181,47 @@ export function DocumentMenu({ id }: DocumentMenuProps) {
 								/>
 							</>
 						)}
+						{panel === "duplicate" && (
+							<>
+								<TextField
+									label={t`Name`}
+									value={name}
+									onChangeText={setName}
+									maxLength={100}
+									editable={!operations.busy}
+								/>
+								<TextField
+									label={t`Slug`}
+									value={slug}
+									onChangeText={(value) => setSlug(normalizeSlug(value))}
+									maxLength={64}
+									editable={!operations.busy}
+									autoCapitalize="none"
+									autoCorrect={false}
+									helper={t`Leave empty to generate an available address from the name.`}
+									error={slug && !validSlug(slug) ? t`Use lowercase letters, numbers and single dashes.` : undefined}
+								/>
+								<Button
+									label={t`Duplicate`}
+									loading={operations.busy}
+									disabled={!name.trim() || (!!slug && !validSlug(slug))}
+									onPress={() =>
+										void run(async () => {
+											const current = await flushResume(id);
+											const copy = await client.resume.duplicate({
+												id,
+												name: name.trim(),
+												tags: current.tags,
+												...(slug ? { slug } : {}),
+											});
+											useNewDocuments.getState().markNew({ id: copy, type: "resume" });
+											showToast({ message: t`Copy created` });
+											router.replace(routes.builder(copy));
+										})
+									}
+								/>
+							</>
+						)}
 						{panel === "notes" && (
 							<>
 								<Text color="ink2">{t`Keep private notes about this resume here. Nobody else can see them.`}</Text>
@@ -224,6 +266,15 @@ function NotesEditor({ id, value, locked }: NotesEditorProps) {
 	const editor = useRef<EnrichedTextInputInstance>(null);
 	const last = useRef(value);
 	const focused = useRef(false);
+	useEffect(
+		() => () => {
+			if (focused.current) {
+				focused.current = false;
+				resumeFieldFocus.onBlur();
+			}
+		},
+		[],
+	);
 	useEffect(() => {
 		if (!focused.current && value !== last.current) {
 			last.current = value;

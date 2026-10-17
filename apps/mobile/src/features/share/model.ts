@@ -2,6 +2,20 @@
 export const validSlug = (slug: string) => /^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug);
 export const normalizeSlug = (slug: string) => slug.toLowerCase().replace(/\s+/g, "-");
 
+const timeUnits = [
+	{ unit: "minute", ms: 60_000, below: 60 },
+	{ unit: "hour", ms: 3_600_000, below: 24 },
+	{ unit: "day", ms: 86_400_000, below: 7 },
+	{ unit: "week", ms: 604_800_000, below: 52 },
+	{ unit: "year", ms: 31_536_000_000, below: Number.POSITIVE_INFINITY },
+] as const;
+
+export function formatTimeSince(date: Date, locale: string, now = Date.now()) {
+	const elapsed = Math.max(0, now - date.getTime());
+	const { unit, ms } = timeUnits.find(({ ms, below }) => elapsed / ms < below) ?? timeUnits[4];
+	return new Intl.NumberFormat(locale, { style: "unit", unit, unitDisplay: "narrow" }).format(Math.floor(elapsed / ms));
+}
+
 type DailyStat = { date: string; views: number; downloads: number };
 
 export function summarizeViews(daily: readonly DailyStat[]) {

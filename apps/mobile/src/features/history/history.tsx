@@ -95,6 +95,7 @@ export function HistoryPanel({ resume, offline }: HistoryProps) {
 	const mutateVersion = async (remove: boolean) => {
 		if (!menu) return;
 		const target = menu;
+		if (remove) setMenu(null);
 		if (
 			await operations.run(async () => {
 				if (remove) await client.resume.deleteVersion({ resumeId: resume.id, versionId: target.id });
@@ -216,7 +217,7 @@ export function HistoryPanel({ resume, offline }: HistoryProps) {
 				open={!!menu && mode !== "delete"}
 				title={mode === "rename" ? t`Rename version` : t`Version options`}
 				onClose={() => {
-					if (!operations.busy) setMenu(null);
+					if (!operations.busy && mode !== "delete") setMenu(null);
 				}}
 				detents={[0.5, 0.9]}
 			>
@@ -248,7 +249,6 @@ export function HistoryPanel({ resume, offline }: HistoryProps) {
 				confirmLabel={t`Delete`}
 				onCancel={() => setMenu(null)}
 				onConfirm={() => {
-					setMode("menu");
 					void mutateVersion(true);
 				}}
 			/>

@@ -1,9 +1,11 @@
 import type { ExportFormat } from "./files";
 import type { ResumeDocument } from "@/draft/types";
+import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { View } from "react-native";
+import { lintResumeForAts } from "@reactive-resume/resume/ats";
 import { composeCoverLetter, createCoverLetterResumeData } from "@reactive-resume/resume/cover-letter";
 import { flushResume } from "./document";
 import { exportDirectory, exportFile, printResume, shareExport } from "./files";
@@ -19,6 +21,7 @@ type DownloadProps = { resume: ResumeDocument; offline: boolean };
 export function DownloadTab({ resume, offline }: DownloadProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
+	const issues = lintResumeForAts(resume.data).findings.length;
 	const applications = useApplications();
 	const linked = applications.data?.find(
 		(item) => item.coverLetterId && (item.id === resume.applicationId || item.resumeId === resume.id),
@@ -148,6 +151,14 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 				/>
 			)}
 			{error && <Banner tone="danger" message={error} />}
+			{issues > 0 && (
+				<Text color="ink2">
+					{plural(issues, {
+						one: "Check has # thing to review. You can still download.",
+						other: "Check has # things to review. You can still download.",
+					})}
+				</Text>
+			)}
 			<Button
 				label={busy ? t`Preparing file…` : t`Download ${format.toUpperCase()}`}
 				icon="download-simple"
