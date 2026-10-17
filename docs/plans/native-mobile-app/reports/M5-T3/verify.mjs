@@ -12,7 +12,6 @@ import {
 import {
 	collectEvents,
 	dayKeyOf,
-	editableFollowUp,
 	followUpDay,
 	groupByDay,
 	monthGrid,
@@ -26,6 +25,7 @@ import {
 	computeTimeline,
 	countSources,
 } from "../../../../../apps/mobile/src/features/applications-board/insights.ts";
+import { followUpStart } from "../../../../../apps/mobile/src/features/reminders/schedule.ts";
 
 const app = (id, overrides = {}) => ({
 	id,
@@ -246,18 +246,23 @@ scenario("sources: counted per source, most first, empty sources left out (serve
 	]);
 });
 
-scenario("follow-up editor opens on the calendar's day; saving it keeps that day (review fix 4)", () => {
+scenario("follow-up editor (detail sheet) opens on the calendar's day; saving it keeps that day", () => {
+	// The editor initialises from followUpDay and saves followUpStart(date) (application-detail/sheets.tsx).
+	const roundTrip = (followUpAt, timeZone) => {
+		const date = followUpDay(followUpAt, timeZone);
+		return { date, saved: followUpStart(date, timeZone).toISOString() };
+	};
 	// Web stored 21 Oct as UTC midnight: the calendar shows 21 Oct in Los Angeles, so the editor must too.
-	const web = { id: "a", followUpAt: new Date("2026-10-21T00:00:00Z") };
-	const la = editableFollowUp(web, "America/Los_Angeles");
-	assert.equal(dayKeyOf(la.followUpAt, "America/Los_Angeles"), "2026-10-21");
-	assert.equal(la.followUpAt.toISOString(), "2026-10-21T16:00:00.000Z"); // 09:00 PDT, what a save writes
-	assert.equal(followUpDay(la.followUpAt, "America/Los_Angeles"), "2026-10-21");
-	// East of UTC and on the app's own 09:00 values nothing moves.
-	assert.equal(dayKeyOf(editableFollowUp(web, "Pacific/Auckland").followUpAt, "Pacific/Auckland"), "2026-10-21");
-	const app09 = { id: "b", followUpAt: new Date("2026-10-21T16:00:00Z") };
-	assert.equal(editableFollowUp(app09, "America/Los_Angeles").followUpAt.toISOString(), "2026-10-21T16:00:00.000Z");
-	assert.equal(editableFollowUp({ id: "c", followUpAt: null }, "UTC").followUpAt, null);
+	assert.deepEqual(roundTrip("2026-10-21T00:00:00Z", "America/Los_Angeles"), {
+		date: "2026-10-21",
+		saved: "2026-10-21T16:00:00.000Z", // 09:00 PDT
+	});
+	assert.equal(roundTrip("2026-10-21T00:00:00Z", "Pacific/Auckland").date, "2026-10-21");
+	// The app's own 09:00-local values save back unchanged.
+	assert.deepEqual(roundTrip("2026-10-21T16:00:00Z", "America/Los_Angeles"), {
+		date: "2026-10-21",
+		saved: "2026-10-21T16:00:00.000Z",
+	});
 });
 
 scenario("board: a failed move clears its own override even before the optimistic render (review fix 2)", () => {
