@@ -12,11 +12,16 @@ import { flushResume } from "@/features/share/document";
 import { printResume } from "@/features/share/files";
 import { normalizeSlug, validSlug } from "@/features/share/model";
 import { routes } from "@/routes";
+import { useBuilderChrome } from "@/shell/builder-chrome";
 import { Banner, Button, IconButton, ListRow, Sheet, Text, TextField, showToast, useTheme } from "@/ui";
 
-type DocumentMenuProps = { id: string };
+type DocumentMenuProps = {
+	id: string;
+	/** Opens from the document name in the builder top bar instead of its own ⋯ button. */
+	inChrome?: boolean;
+};
 /** BuilderChrome can mount this trigger; it owns no draft lifecycle. */
-export function DocumentMenu({ id }: DocumentMenuProps) {
+export function DocumentMenu({ id, inChrome = false }: DocumentMenuProps) {
 	const { t, i18n } = useLingui();
 	const { space } = useTheme();
 	const draft = useResumeStore();
@@ -39,6 +44,11 @@ export function DocumentMenu({ id }: DocumentMenuProps) {
 	const sync = async () => {
 		await useResumeStore.getState().open(id);
 	};
+	const openMenu = () => {
+		setName(resume?.name ?? "");
+		setPanel("menu");
+	};
+	useBuilderChrome(inChrome ? { onMenu: resume ? openMenu : undefined } : {});
 	const titles = {
 		menu: t`Document options`,
 		rename: t`Rename`,
@@ -48,15 +58,7 @@ export function DocumentMenu({ id }: DocumentMenuProps) {
 	};
 	return (
 		<>
-			<IconButton
-				icon="dots-three"
-				label={t`Document options`}
-				disabled={!resume}
-				onPress={() => {
-					setName(resume?.name ?? "");
-					setPanel("menu");
-				}}
-			/>
+			{!inChrome && <IconButton icon="dots-three" label={t`Document options`} disabled={!resume} onPress={openMenu} />}
 			<Sheet open={!!panel} title={panel ? titles[panel] : undefined} onClose={close} detents={[0.5, 0.9]}>
 				{resume && (
 					<View style={{ padding: space.s4, gap: space.s3 }}>
