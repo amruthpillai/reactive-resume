@@ -37,10 +37,13 @@ export default function TabsLayout() {
 		]);
 	}
 	const hasBanners = banners.length > 0;
-	useKeyCommands([
-		{ id: "search", input: "k", title: t`Search`, run: () => router.push(routes.search()) },
-		{ id: "new", input: "n", title: t`New`, run: () => router.push(routes.new()) },
-	]);
+	useKeyCommands(
+		[
+			{ id: "search", input: "k", title: t`Search`, run: () => router.push(routes.search()) },
+			{ id: "new", input: "n", title: t`New`, run: () => router.push(routes.new()) },
+		],
+		"global",
+	);
 
 	return (
 		<View style={{ flex: 1, backgroundColor: colors.bg }}>

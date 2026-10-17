@@ -84,8 +84,10 @@ extension UIViewController {
     if sender.input == "z" {
       firstResponder = nil
       UIApplication.shared.sendAction(#selector(UIResponder.rr_reportFirstResponder(_:)), to: nil, from: nil, for: nil)
-      if let editor = firstResponder, editor is UITextInput, let undo = editor.undoManager {
-        sender.modifierFlags.contains(.shift) ? undo.redo() : undo.undo()
+      if let editor = firstResponder, editor is UITextInput {
+        if let undo = editor.undoManager {
+          sender.modifierFlags.contains(.shift) ? undo.redo() : undo.undo()
+        }
         return
       }
     }
