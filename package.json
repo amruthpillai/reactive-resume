@@ -36,6 +36,7 @@
 		"lingui:extract": "turbo run lingui:extract --filter=web && pnpm pdf:translations",
 		"dev": "dotenvx run --ignore=MISSING_ENV_FILE -f .env.local -- turbo run dev",
 		"dev:web": "dotenvx run --ignore=MISSING_ENV_FILE -f .env.local -- turbo run dev --filter=web",
+		"dev:mobile": "pnpm --filter mobile start",
 		"knip": "knip",
 		"start": "node apps/server/dist/index.mjs",
 		"typecheck": "turbo run typecheck",

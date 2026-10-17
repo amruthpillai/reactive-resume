@@ -1,0 +1,90 @@
+{
+	"name": "mobile",
+	"version": "0.0.0",
+	"private": true,
+	"main": "index.ts",
+	"scripts": {
+		"start": "expo start",
+		"ios": "expo run:ios",
+		"android": "expo run:android",
+		"export": "expo export",
+		"typecheck": "tsgo --noEmit",
+		"lingui:extract": "lingui extract --clean && node scripts/seed-locales.mjs"
+	},
+	"dependencies": {
+		"@ai-sdk/react": "^4.0.142",
+		"@gorhom/bottom-sheet": "^5.2.14",
+		"@lingui/core": "6.9.1",
+		"@lingui/react": "6.9.1",
+		"@orpc/client": "catalog:",
+		"@orpc/tanstack-query": "^1.15.6",
+		"@reactive-resume/fonts": "workspace:*",
+		"@reactive-resume/forme-native": "workspace:*",
+		"@reactive-resume/pdf": "workspace:*",
+		"@reactive-resume/resume": "workspace:*",
+		"@reactive-resume/schema": "workspace:*",
+		"@reactive-resume/utils": "workspace:*",
+		"@tanstack/react-query": "^5.104.2",
+		"ai": "catalog:",
+		"expo": "~58.0.14",
+		"expo-audio": "~58.0.9",
+		"expo-auth-session": "~58.0.13",
+		"expo-clipboard": "~58.0.3",
+		"expo-constants": "~58.0.12",
+		"expo-crypto": "~58.0.7",
+		"expo-dev-client": "~58.0.14",
+		"expo-document-picker": "~58.0.4",
+		"expo-file-system": "~58.0.9",
+		"expo-font": "~58.0.8",
+		"expo-image": "~58.0.15",
+		"expo-image-picker": "~58.0.10",
+		"expo-linking": "~58.0.13",
+		"expo-localization": "~58.0.4",
+		"expo-notifications": "~58.1.5",
+		"expo-print": "~58.0.6",
+		"expo-router": "~58.0.23",
+		"expo-secure-store": "~58.0.2",
+		"expo-sharing": "~58.0.19",
+		"expo-splash-screen": "~58.0.10",
+		"expo-sqlite": "~58.0.13",
+		"expo-status-bar": "~58.0.3",
+		"expo-system-ui": "~58.0.6",
+		"expo-web-browser": "~58.0.6",
+		"immer": "^11.1.21",
+		"phosphor-react-native": "^3.0.6",
+		"react": "catalog:",
+		"react-native": "0.88.0",
+		"react-native-enriched-html": "^1.1.1",
+		"react-native-gesture-handler": "~3.3.0",
+		"react-native-qrcode-svg": "^6.3.26",
+		"react-native-reanimated": "4.7.1",
+		"react-native-reorderable-list": "^0.18.1",
+		"react-native-safe-area-context": "~5.10.1",
+		"react-native-screens": "~4.30.0",
+		"react-native-svg": "15.16.0",
+		"react-native-worklets": "0.13.0",
+		"zustand": "^5.0.15"
+	},
+	"devDependencies": {
+		"@lingui/babel-plugin-lingui-macro": "6.9.1",
+		"@lingui/cli": "6.9.1",
+		"@lingui/format-po": "6.9.1",
+		"@lingui/metro-transformer": "6.9.1",
+		"@orpc/server": "catalog:",
+		"@reactive-resume/config": "workspace:*",
+		"@types/react": "catalog:",
+		"@typescript/native-preview": "catalog:",
+		"babel-preset-expo": "~58.0.17",
+		"typescript": "catalog:"
+	},
+	"peerDependencies": {
+		"@reactive-resume/api": "workspace:*"
+	},
+	"expo": {
+		"install": {
+			"exclude": [
+				"typescript"
+			]
+		}
+	}
+}

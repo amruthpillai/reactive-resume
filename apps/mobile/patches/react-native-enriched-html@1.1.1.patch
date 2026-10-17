@@ -1,0 +1,63 @@
+diff --git a/ios/EnrichedTextInputView.mm b/ios/EnrichedTextInputView.mm
+index a899aa6296e2308bc63cf542fdaa48cb5844a52f..9b6240e6a80a5778df07b52aac079f35f2bd403c 100644
+--- a/ios/EnrichedTextInputView.mm
++++ b/ios/EnrichedTextInputView.mm
+@@ -15,7 +15,7 @@
+ #import "StyleUtils.h"
+ #import "TextBlockTapGestureRecognizer.h"
+ #import "TextInsertionUtils.h"
+-#import "UIView+React.h"
++#import <React/UIView+React.h>
+ #import "WordsUtils.h"
+ #import "ZeroWidthSpaceUtils.h"
+ #import <React/RCTConversions.h>
+diff --git a/ios/styles/LinkStyle.mm b/ios/styles/LinkStyle.mm
+index 1eae1a1d1870ce8bd4a39aa625ea7b946c3f6295..7edac7ba04350465976430c976c6a45805f7031b 100644
+--- a/ios/styles/LinkStyle.mm
++++ b/ios/styles/LinkStyle.mm
+@@ -4,7 +4,7 @@
+ #import "OccurenceUtils.h"
+ #import "StyleHeaders.h"
+ #import "TextInsertionUtils.h"
+-#import "UIView+React.h"
++#import <React/UIView+React.h>
+ #import "WordsUtils.h"
+ 
+ static NSString *const ManualLinkAttributeName = @"EnrichedManualLink";
+diff --git a/ios/styles/MentionStyle.mm b/ios/styles/MentionStyle.mm
+index e852cb4e3b0efb1f0a68ae5836474b90e3e9b68e..1153bb452534c83b353fc7cd6efb3279a3de0f23 100644
+--- a/ios/styles/MentionStyle.mm
++++ b/ios/styles/MentionStyle.mm
+@@ -3,7 +3,7 @@
+ #import "EnrichedTextInputView.h"
+ #import "StyleHeaders.h"
+ #import "TextInsertionUtils.h"
+-#import "UIView+React.h"
++#import <React/UIView+React.h>
+ #import "WordsUtils.h"
+ 
+ // custom NSAttributedStringKey to differentiate from links
+diff --git a/ios/utils/TextInsertionUtils.mm b/ios/utils/TextInsertionUtils.mm
+index a6911cd5dcdec8d07c134d240defcc5305d773b1..541926171258cc0ecce8b356200c19bccb10d0a0 100644
+--- a/ios/utils/TextInsertionUtils.mm
++++ b/ios/utils/TextInsertionUtils.mm
+@@ -1,5 +1,5 @@
+ #import "TextInsertionUtils.h"
+-#import "UIView+React.h"
++#import <React/UIView+React.h>
+ 
+ @implementation TextInsertionUtils
+ + (void)insertText:(NSString *)text
+diff --git a/ios/utils/ZeroWidthSpaceUtils.mm b/ios/utils/ZeroWidthSpaceUtils.mm
+index 4bc2e258073fd70919ce56187e37fabb55640306..efa534273b1e351ffe5ba7ff202a7214dd3d11f7 100644
+--- a/ios/utils/ZeroWidthSpaceUtils.mm
++++ b/ios/utils/ZeroWidthSpaceUtils.mm
+@@ -2,7 +2,7 @@
+ #import "EnrichedTextInputView.h"
+ #import "StyleHeaders.h"
+ #import "TextInsertionUtils.h"
+-#import "UIView+React.h"
++#import <React/UIView+React.h>
+ 
+ @implementation ZeroWidthSpaceUtils
+ + (void)handleZeroWidthSpacesInHost:(id<EnrichedViewHost>)host {

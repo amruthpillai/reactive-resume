@@ -1,0 +1,26 @@
+{
+	"$schema": "../../node_modules/oxlint/configuration_schema.json",
+	"extends": ["../../.oxlintrc.json"],
+	"rules": {
+		"no-restricted-imports": [
+			"error",
+			{
+				"patterns": [
+					{
+						"regex": "@reactive-resume/[^/]+/src(?:/|$)|(?:^|/)(?:apps|packages)/[^/]+/src(?:/|$)",
+						"message": "Use the workspace package export map instead of private src paths, including re-exports and dynamic imports."
+					},
+					{
+						"group": ["apps/**", "packages/**"],
+						"message": "Do not import another workspace by repository path; use an explicit package export."
+					},
+					{
+						"group": ["@reactive-resume/api", "@reactive-resume/api/*"],
+						"allowTypeImports": true,
+						"message": "The app may only import types from the server API (it is a type-only peer dependency); call it through src/api/client.ts."
+					}
+				]
+			}
+		]
+	}
+}
