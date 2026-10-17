@@ -3,7 +3,7 @@ title: "Mirror Computer Modern fonts"
 description: "Serve Computer Modern font files from your own host for server-generated PDFs, and understand which font requests remain external."
 ---
 
-Set `NEXT_PUBLIC_WEB_FONT_BASE_URL` when you want the Node.js server to fetch Computer Modern font files from a
+Set `WEB_FONT_BASE_URL` when you want the Node.js server to fetch Computer Modern font files from a
 mirror you control. You need a running Reactive Resume instance and an HTTP(S) server that can serve static files.
 
 <Warning>
@@ -50,7 +50,7 @@ Docker, `localhost` refers to the app container itself. The mirror must serve fo
 ## 2. Configure the deployment
 
 ```dotenv
-NEXT_PUBLIC_WEB_FONT_BASE_URL="https://fonts.example.com/cm"
+WEB_FONT_BASE_URL="https://fonts.example.com/cm"
 ```
 
 | Deployment      | Where to set it                                                              | Apply the change                                                                      |
@@ -63,8 +63,8 @@ NEXT_PUBLIC_WEB_FONT_BASE_URL="https://fonts.example.com/cm"
 The server validates the URL at startup. An unset or empty value preserves the original URLs. Remove the variable
 and restart or redeploy to return to the default CDN.
 
-The resolver reads this value when its module loads. Set it before starting the server. The `NEXT_PUBLIC_` prefix
-does not expose it to this app's Vite browser build; rebuilding the web app does not enable browser mirroring.
+The resolver reads this value when its module loads. Set it before starting the server. This server-only variable
+is not exposed to the Vite browser app; rebuilding the web app does not enable browser mirroring.
 The Cloudflare Workers deployment is not covered by this Node.js server setup.
 
 ## 3. Check delivery

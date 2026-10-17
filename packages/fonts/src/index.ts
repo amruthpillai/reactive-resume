@@ -102,11 +102,11 @@ const punctuationFallbackFonts = {
 
 // Server-only mirror for the five Computer Modern families. Preserve the upstream
 // font/<family>/<file>.woff layout. Google URLs and font-picker previews stay unchanged.
-// NEXT_PUBLIC_ does not expose this value to Vite's browser bundles.
 const WEB_FONT_CDN_PREFIX = "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest";
-const WEB_FONT_BASE_URL = (
-	typeof process !== "undefined" ? process.env.NEXT_PUBLIC_WEB_FONT_BASE_URL : undefined
-)?.replace(/\/+$/, "");
+const WEB_FONT_BASE_URL = (typeof process !== "undefined" ? process.env.WEB_FONT_BASE_URL : undefined)?.replace(
+	/\/+$/,
+	"",
+);
 
 /** Repoints Computer Modern files to the mirror, preserving other font hosts. */
 const rewriteWebFontUrl = (url: string): string => {
