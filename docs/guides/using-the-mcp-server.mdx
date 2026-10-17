@@ -302,7 +302,8 @@ This section is for client developers and self-hosters.
 - A request with neither gets `401` and a `WWW-Authenticate: Bearer resource_metadata="<instance>/.well-known/oauth-protected-resource"` header. OAuth clients use it to discover the authorization server.
 - Authorization server metadata is at `/.well-known/oauth-authorization-server`. The authorization server supports dynamic client registration and PKCE with `S256`.
 - New OAuth clients can request `api:read`, `api:write` and `api:delete`. The consent screen describes these permissions alongside identity scopes. Existing identity-only grants and legacy keys without permission statements retain account-wide access for compatibility.
-- The server checks the user, client, login session and consent grant on every authenticated request. Disabled clients, banned accounts, ended sessions and revoked grants cannot continue using signed tokens. Proof-bound DPoP tokens are rejected: this endpoint supports ordinary bearer access tokens.
+- The server checks the user, client and consent grant on every authenticated request. Tokens with `offline_access` outlive the browser session that approved them; other tokens remain bound to their login session. Disabled clients, banned accounts and revoked grants cannot continue using signed tokens. Proof-bound DPoP tokens are rejected: this endpoint supports ordinary bearer access tokens.
+- Revoking a refresh token or signing out in the app leaves already-issued JWT access tokens valid for up to 1 hour. Revoking consent under Connected applications blocks them immediately.
 - Revoke a connection under Settings → AI & developer → Connected applications. Revoking the application grant invalidates existing access and refresh tokens. The authorization provider does not support revoking one self-contained JWT independently of its grant.
 
 ## Troubleshooting
