@@ -22,7 +22,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
 | M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | FIXING  | briefs/W2.md                                                                        |
 | M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | FIXING  | briefs/W2.md                                                                        |
-| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | FIXING  | briefs/W2.md                                                                        |
+| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | REVIEW  | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | MERGED  | briefs/W2.md                                                                        |
 | M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
@@ -36,6 +36,9 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | RUNNING | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | RUNNING | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
+| M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | RUNNING | briefs/W4.md; JS-only                                                               |
+| M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
+| M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
 
 ## Gates
 
@@ -184,3 +187,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M6-T3 review `cce125a4`: 6 blockers (replay drops earlier parts, resume ignores abort, background/foreground reconcile, draft never opened from direct links, thread/document mismatch, attachment memory). Fix round also wires the Page proposal seam and `onCopiedForJob`. M2-T2 review `b952f6f3`: 4 blockers (Details button hidden, two draft owners on tablet, tablet bottom inset, pane-bar deletion — approved). **Draft ownership moves to the builder layout** (one owner; panes subscribe); M3-T5 must adopt the subscriber hook when it merges after M2-T2.
 - 2026-10-17: M7-T2 FIXED 5 (+ ATS Original page view via pdf-pages). Its branch merged `mobile/M6-T3` commits 06157e9d9/2a4e878cf; merge order: M6-T3 (after its fix round) then M7-T2.
 - 2026-10-17: M4-T3 merged (FIXED 5, 38 scenarios).
+- 2026-10-17: M3-T1 session hardening done (Codex review `9fae76e4`). Launched M4-T1, M4-T2, M5-T3. Pending coordinator items: session-based redirect in `app/index.tsx` (no Documents flash when signed out); confirm before discarding unsynced edits from the session-expired sheet.
