@@ -79,6 +79,7 @@ function ProviderRow({ provider, isDefault, onEdit }: ProviderRowProps) {
 	const [pending, setPending] = useState(false);
 	const [result, setResult] = useState<string | null>(null);
 	const [failure, setFailure] = useState<string | null>(null);
+	const testError = failure ?? (result ? null : provider.testStatus === "failure" ? provider.testError : null);
 	const run = async (action: "test" | "default") => {
 		if (busy.current) return;
 		busy.current = true;
@@ -95,7 +96,7 @@ function ProviderRow({ provider, isDefault, onEdit }: ProviderRowProps) {
 				else setFailure(tested.testError || t`The provider didn't answer.`);
 			}
 		} catch (error) {
-			setFailure(aiSettingsError(error));
+			setFailure(aiSettingsError(error, action === "test"));
 		} finally {
 			void queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.key() });
 			busy.current = false;
@@ -143,9 +144,9 @@ function ProviderRow({ provider, isDefault, onEdit }: ProviderRowProps) {
 							{result}
 						</Text>
 					)}
-					{(failure || provider.testError) && (
+					{testError && (
 						<Text accessibilityRole="alert" color="dangerText">
-							{t`Failed`} · {failure || provider.testError}
+							{t`Failed`} · {testError}
 						</Text>
 					)}
 				</>

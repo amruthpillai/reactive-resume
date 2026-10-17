@@ -207,6 +207,8 @@ export function WebAccessSettings() {
 							autoCapitalize="none"
 							autoCorrect={false}
 							autoComplete="off"
+							textContentType="none"
+							importantForAutofill="no"
 							maxLength={2000}
 							placeholder={t`Paste your key`}
 							editable={!pending}

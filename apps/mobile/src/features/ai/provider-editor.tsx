@@ -11,7 +11,7 @@ import {
 	providerOptions,
 } from "./catalog";
 import { aiSettingsError } from "./error";
-import { useHasAIProvider } from "./providers";
+import { useHasAIProvider } from "./provider-state";
 import { client, orpc } from "@/api/client";
 import { getServer } from "@/auth/session";
 import {
@@ -110,7 +110,21 @@ function ProviderForm({ saved, onClose, onReady }: ProviderFormProps) {
 	const models = catalogId ? (suggestions.data?.[catalogId] ?? []) : [];
 	const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.key() });
 	const set = (patch: Partial<typeof fields>) => setFields((previous) => ({ ...previous, ...patch }));
-	const ready = !!(fields.model.trim() && (current || provider === "ollama" || fields.apiKey.trim()));
+	const baseline = saved ?? current;
+	const changes = {
+		...(fields.label.trim() && fields.label.trim() !== baseline?.label ? { label: fields.label.trim() } : {}),
+		...(fields.model.trim() && fields.model.trim() !== baseline?.model ? { model: fields.model.trim() } : {}),
+		...(fields.baseURL.trim() !== (baseline?.baseURL ?? providerDefaults(provider).baseURL)
+			? { baseURL: fields.baseURL.trim() }
+			: {}),
+		...(fields.apiKey.trim() ? { apiKey: fields.apiKey.trim() } : {}),
+	};
+	const changed = Object.keys(changes).length > 0;
+	const ready = !!(
+		fields.model.trim() &&
+		(current || provider === "ollama" || fields.apiKey.trim()) &&
+		(!saved || changed)
+	);
 
 	const save = async () => {
 		const server = getServer();
@@ -118,6 +132,7 @@ function ProviderForm({ saved, onClose, onReady }: ProviderFormProps) {
 		busy.current = true;
 		setPending(true);
 		setFailure(null);
+		let testing = false;
 		try {
 			const common = {
 				provider,
@@ -126,17 +141,18 @@ function ProviderForm({ saved, onClose, onReady }: ProviderFormProps) {
 				baseURL: fields.baseURL.trim(),
 			};
 			// Direct calls keep submitted keys out of TanStack's mutation cache.
-			const connection = savedId.current
-				? await client.aiProviders.update({
-						id: savedId.current,
-						...common,
-						...(fields.apiKey.trim() ? { apiKey: fields.apiKey.trim() } : {}),
-					})
-				: await client.aiProviders.create({ ...common, apiKey: fields.apiKey.trim() });
-			savedId.current = connection.id;
+			let id = savedId.current;
+			if (id) {
+				if (changed) setCurrent(await client.aiProviders.update({ id, ...changes }));
+			} else {
+				const created = await client.aiProviders.create({ ...common, apiKey: fields.apiKey.trim() });
+				id = created.id;
+				savedId.current = id;
+				setCurrent(created);
+			}
 			if (!mounted.current || getServer() !== server) return;
-			setCurrent(connection);
-			const tested = await client.aiProviders.test({ id: connection.id });
+			testing = true;
+			const tested = await client.aiProviders.test({ id });
 			if (!mounted.current || getServer() !== server) return;
 			setCurrent(tested);
 			await invalidate();
@@ -147,7 +163,7 @@ function ProviderForm({ saved, onClose, onReady }: ProviderFormProps) {
 				onClose();
 			} else setFailure(tested.testError || t`The provider didn't answer. Check the key, the model and the base URL.`);
 		} catch (error) {
-			setFailure(aiSettingsError(error));
+			setFailure(aiSettingsError(error, testing));
 		} finally {
 			void invalidate();
 			busy.current = false;
@@ -213,6 +229,8 @@ function ProviderForm({ saved, onClose, onReady }: ProviderFormProps) {
 				autoCapitalize="none"
 				autoCorrect={false}
 				autoComplete="off"
+				textContentType="none"
+				importantForAutofill="no"
 				editable={!pending}
 				placeholder={
 					current

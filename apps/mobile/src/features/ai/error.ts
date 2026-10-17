@@ -1,8 +1,9 @@
 import { t } from "@lingui/core/macro";
 import { ORPCError } from "@orpc/client";
 
-export function aiSettingsError(error: unknown) {
+export function aiSettingsError(error: unknown, testing = false) {
 	if (error instanceof ORPCError) {
+		if (testing && (error.code === "BAD_GATEWAY" || error.code === "NOT_FOUND")) return t`The test didn't run.`;
 		if (error.code === "PRECONDITION_FAILED")
 			return t`Ask your server administrator to enable credential encryption or configure a shared connection.`;
 		if (error.code === "BAD_REQUEST") return t`That provider setup isn't valid. Check the key, model and base URL.`;

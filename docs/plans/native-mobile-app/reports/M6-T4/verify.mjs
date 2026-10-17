@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 // Exercise shipped UI handlers without loading React Native or starting Metro/native builds.
 const mobile = new URL("../../../../../apps/mobile/", import.meta.url);
 const requireMobile = createRequire(new URL("package.json", mobile));
+const { ORPCError } = requireMobile("@orpc/client");
 const requireServer = createRequire(new URL("../../../../../apps/server/package.json", import.meta.url));
 const requireTsx = createRequire(requireServer.resolve("tsx"));
 const { transformSync } = requireTsx("esbuild");
@@ -23,6 +24,7 @@ let fetchResponse = null;
 let active;
 let calls = [];
 let tested = { testStatus: "failure", testError: "Synthetic provider rejection", enabled: false };
+let testFailure = null;
 let createHold = null;
 let invalidations = 0;
 const saved = (patch = {}) => ({
@@ -64,7 +66,7 @@ const env = {
 		aiProviders: {
 			create: async (input) => { calls.push(["create", input]); if (createHold) await createHold; return saved({ enabled: false, testStatus: "untested" }); },
 			update: async (input) => { calls.push(["update", input]); return saved(input); },
-			test: async (input) => { calls.push(["test", input]); return saved(tested); },
+			test: async (input) => { calls.push(["test", input]); if (testFailure) throw testFailure; return saved(tested); },
 			delete: async (input) => { calls.push(["delete", input]); },
 			setDefault: async (input) => { calls.push(["default", input]); return saved(); },
 		},
@@ -140,6 +142,7 @@ function formFrom(sheet) {
 const drain = async () => { for (let i = 0; i < 30; i++) await Promise.resolve(); };
 let passed = 0;
 async function check(name, run) {
+	if (process.env.M6T4_SCENARIO && !name.includes(process.env.M6T4_SCENARIO)) return;
 	calls = []; invalidations = 0;
 	await run();
 	console.log(`PASS ${name}`); passed++;
@@ -155,8 +158,10 @@ await check("readiness distinguishes enabled/tested, stale errors, pending and s
 	assert.equal(useHasAIProvider().isUnavailable, true);
 	queryError = null; queryPending = true;
 	assert.equal(useHasAIProvider().hasAIProvider, false);
-	queryPending = false; session = { ...session, status: "signed-out" };
+	session = { ...session, status: "signed-out" };
 	assert.equal(useHasAIProvider().hasAIProvider, false);
+	assert.equal(useHasAIProvider().isLoading, false);
+	queryPending = false;
 	session = { ...session, status: "signed-in" }; providers = [];
 });
 await check("failed create/test retains fields and retries same saved ID; callback waits for success", async () => {
@@ -181,6 +186,9 @@ await check("failed create/test retains fields and retries same saved ID; callba
 await check("edit leaves stored key untouched; disabling and deleting require explicit actions", async () => {
 	const sheet = mount(ProviderEditorSheet, { open: true, provider: saved(), onClose() {} });
 	const form = formFrom(sheet);
+	assert.equal(control(form, "Button", "Save and test").disabled, true);
+	control(form, "Button", "Save and test").onPress(); await drain();
+	assert.deepEqual(calls, []);
 	control(form, "TextField", "Model").onChangeText("different-model"); form.render();
 	control(form, "Button", "Save and test").onPress(); await drain(); form.render();
 	assert.equal(calls[0][0], "update"); assert.equal(calls[0][1].model, "different-model");
@@ -191,6 +199,63 @@ await check("edit leaves stored key untouched; disabling and deleting require ex
 	assert.equal(calls.some(([name]) => name === "delete"), false);
 	control(form, "ConfirmDialog").onConfirm(); await drain();
 	assert.deepEqual(calls.at(-1), ["delete", { id: "connection-1" }]);
+});
+await check("edit diff sends only changed name/model/base URL or replacement key", async () => {
+	for (const [label, value, expected] of [
+		["Name", "New name", { label: "New name" }],
+		["Model", "new-model", { model: "new-model" }],
+		["Base URL", "https://example.invalid/v1", { baseURL: "https://example.invalid/v1" }],
+		["API key", "replacement-key", { apiKey: "replacement-key" }],
+	]) {
+		calls = [];
+		const form = formFrom(mount(ProviderEditorSheet, { open: true, provider: saved(), onClose() {} }));
+		control(form, "TextField", label).onChangeText(value); form.render();
+		control(form, "Button", "Save and test").onPress(); await drain();
+		assert.deepEqual(calls[0], ["update", { id: "connection-1", ...expected }]);
+	}
+});
+await check("key fields explicitly disable platform autofill", () => {
+	const form = formFrom(mount(ProviderEditorSheet, { open: true, provider: saved(), onClose() {} }));
+	const web = mount(WebAccessSettings);
+	control(web, "Button", "Connect a service").onPress(); web.render();
+	for (const owner of [form, web]) {
+		const field = control(owner, "TextField", "API key");
+		assert.equal(field.autoComplete, "off");
+		assert.equal(field.textContentType, "none");
+		assert.equal(field.importantForAutofill, "no");
+	}
+});
+await check("fresh tests replace stale row failures and ignore non-failure testError", async () => {
+	const row = (provider) => {
+		providers = [provider];
+		const list = mount(ProviderList);
+		const element = elements(list.tree).find((item) => typeof item.type === "function" && item.props.provider);
+		return mount(element.type, element.props);
+	};
+	const staleError = "obsolete rejection";
+	const success = row(saved({ testError: staleError }));
+	assert.equal(elements(success.tree).some((item) => item.props?.accessibilityRole === "alert"), false);
+	const failed = row(saved({ testStatus: "failure", enabled: false, testError: staleError }));
+	tested = { testStatus: "success", enabled: true, testError: null };
+	control(failed, "Button", "Test").onPress(); await drain(); failed.render();
+	assert.equal(elements(failed.tree).some((item) => item.props?.accessibilityRole === "alert"), false);
+	providers = [];
+});
+await check("test endpoint errors use test-specific fallback in row and editor", async () => {
+	for (const code of ["BAD_GATEWAY", "NOT_FOUND"]) {
+		testFailure = new ORPCError(code);
+		providers = [saved()];
+		const list = mount(ProviderList);
+		const row = elements(list.tree).find((item) => typeof item.type === "function" && item.props.provider);
+		const owner = mount(row.type, row.props);
+		control(owner, "Button", "Test").onPress(); await drain(); owner.render();
+		assert.ok(elements(owner.tree).some((item) => item.props?.accessibilityRole === "alert" && item.props.children.includes("The test didn't run.")));
+		const form = formFrom(mount(ProviderEditorSheet, { open: true, provider: saved(), onClose() {} }));
+		control(form, "TextField", "Name").onChangeText("Edited"); form.render();
+		control(form, "Button", "Save and test").onPress(); await drain(); form.render();
+		assert.ok(elements(form.tree).some((item) => item.props?.accessibilityRole === "alert" && item.props.children === "The test didn't run."));
+	}
+	testFailure = null; providers = [];
 });
 await check("dismissing setup during create prevents late tests/callbacks", async () => {
 	let release, closed = false;
