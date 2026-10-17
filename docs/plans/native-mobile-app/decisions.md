@@ -24,8 +24,7 @@ This freezes README §1 with the spike results. Agents must not re-open these de
 
 ## Constraints carried into the build
 
-- **Download-size budget (owner, 2026-10-17):** at most **50 MB** download per platform: the App Store download for one device, or the Play download for one ABI. Track it per wave from M1 with `npx expo export` plus a release build. If a wave adds more than 3 MB, explain why in its report. The known costs are the Forme engine (about 3.2 MB) and the JS bundle with the PDF pipeline (about 2.4 MB gzipped). Fonts download at runtime and are never bundled, except the two UI families.
-
+- **Download size (owner, 2026-10-17):** aim for **≤ 50 MB** per platform. This is a target, **not a hard limit**: do not block or fail work on it. Report the measured size at M8.
 - **`packages/pdf`:** apply S2's `./native` adapter without the `arrayBuffer()` image fallback. Mobile streams images through `expo/fetch`.
 - **Polyfills:**
   - `crypto.getRandomValues`, through `expo-crypto`. This is approved as an addition to the §1.4 dependency list.
@@ -33,3 +32,13 @@ This freezes README §1 with the spike results. Agents must not re-open these de
 - **forme-native:** add `rust-toolchain.toml`, pin cbindgen, and add the turbo tags `runtime:native` and `role:rendering`.
 - **EAS:** decide before M8 how EAS gets the native binaries; today `build.sh` runs only on macOS and the binaries are gitignored.
 - **ATS:** the copy "checked on the server and not stored" depends on `/pdf-checks` staying storage-free.
+
+## Distribution (owner, 2026-10-17)
+
+- **App identity:** "Reactive Resume", iOS bundle ID and Android package `me.rxresu.app`, Apple Team ID `654ASRW868`.
+- **EAS project:** ID `5830280e-e1ba-45b7-b9c9-ba048fa3bd4d`, Expo account `amruthpillai`. M1 sets `owner: "amruthpillai"` and `extra.eas.projectId` in `apps/mobile/app.config.ts`. The owner's `eas init` wrote a root `app.json` in the coordinator worktree; that file was removed after this was recorded.
+- **Credentials:**
+  - Credentials never enter the repo, briefs, reports or logs.
+  - Agents never read `.p8` or `.p12` files.
+  - EAS Submit uses an App Store Connect **Team** API key (`.p8` plus Key ID plus Issuer ID). The owner registers it with `eas credentials` or provides it through `eas.json` `ascApiKeyPath`, kept outside the repo.
+  - The iOS distribution certificate and provisioning profile are managed by EAS.

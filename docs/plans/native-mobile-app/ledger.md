@@ -115,3 +115,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
   - The bridge is an AsyncLocalStorage identity, only for internal calls (`!ctx.request`) on `/update-user`, `/api-key/list` and `/api-key/delete`.
   - Follow-ups: it depends on Better Auth 1.7.7 internals, so keep its test running on upgrades. The new auth procedures are not rate-limited.
 - 2026-10-17: SVa done (916 tests passed); Claude review `d37bc6ee` running.
+- 2026-10-17: The size budget is a soft target, not enforced (owner). EAS project linked by the owner (`5830280e-…`, account `amruthpillai`). Recorded in `decisions.md`; the stray root `app.json` was removed.
