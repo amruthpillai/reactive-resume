@@ -89,4 +89,25 @@ scenario("line breaks are kept and whitespace collapses; empty paragraphs vanish
 	assert.deepEqual(text(blocks), ["paragraph:one\ntwo three"]);
 });
 
+scenario("malformed HTML parses in linear time and stays bounded", () => {
+	const hostile = [
+		"<a".repeat(40_000),
+		"<!--".repeat(40_000),
+		`<a href="${"x".repeat(80_000)}`,
+		"<p>".repeat(40_000),
+		"<strong>".repeat(40_000) + "deep",
+		"&#".repeat(40_000),
+		"<ul><li>".repeat(20_000) + "x",
+	];
+	for (const html of hostile) {
+		const started = performance.now();
+		const blocks = parseRichText(html);
+		const elapsed = performance.now() - started;
+		assert.ok(elapsed < 500, `${html.slice(0, 12)}… took ${Math.round(elapsed)} ms`);
+		assert.ok(blocks.every((block) => block.depth <= 16));
+	}
+	// Text after a broken tag still reads; a stray "<" stays text.
+	assert.deepEqual(text(parseRichText("<p>a < b <a href='https://x.dev' oops <b>bold</b></p>")), ["paragraph:a < b <a href='https://x.dev' oops bold"]);
+});
+
 console.log(`${passed} scenarios passed`);

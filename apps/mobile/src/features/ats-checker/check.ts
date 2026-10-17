@@ -48,5 +48,7 @@ export async function runAtsCheck(uri: string, name: string, posting: string, si
 		if (response.status === 400) throw new AtsCheckError(t`That file couldn't be read as a PDF.`);
 		throw new AtsCheckError(t`Something went wrong while reading that file. Try again.`);
 	}
-	return (await response.json()) as AtsResult;
+	// The server sends the report itself with `fullText` beside its fields (`checkPdf` output), not nested.
+	const { fullText, ...report } = (await response.json()) as PdfAtsReport & { fullText: string };
+	return { report, fullText };
 }

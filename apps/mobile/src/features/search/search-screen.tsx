@@ -92,16 +92,17 @@ export function SearchScreen() {
 		title: thread.title,
 		subtitle: thread.coverLetterName ?? thread.resumeName ?? undefined,
 		onPress: () => {
-			// CONTRACT (M6-T3): the assistant screen opens the thread named by `?thread=`.
-			if (thread.workingResumeId) go(`${routes.assistant(thread.workingResumeId)}?thread=${thread.id}`);
-			else if (thread.coverLetterId) go(routes.letter(thread.coverLetterId));
+			// M6-T3's assistant route: `?thread=` opens the conversation. Letter threads open the letter, as there.
+			if (thread.coverLetterId) go(routes.letter(thread.coverLetterId));
+			else if (thread.workingResumeId)
+				go({ pathname: routes.assistant(thread.workingResumeId), params: { thread: thread.id } });
 		},
 	});
 
 	const live = (documents.data ?? []).map((document) => ({
 		...document,
 		title: document.name,
-		keywords: [...document.tags, document.application?.company, document.application?.role],
+		keywords: [document.slug, ...document.tags, document.application?.company, document.application?.role],
 		time: document.updatedAt.getTime(),
 	}));
 	const resumes = live.filter((document) => document.type === "resume");
@@ -232,8 +233,8 @@ export function SearchScreen() {
 			showToast({ message: t`Create a resume first, then ask about it.` });
 			return;
 		}
-		// CONTRACT (M6-T3): the assistant screen sends the question in `?ask=` once it is ready.
-		go(`${routes.assistant(latest.id)}?ask=${encodeURIComponent(question)}`);
+		// M6-T3's assistant route: `?ask=` sends the question in a new conversation.
+		go({ pathname: routes.assistant(latest.id), params: { ask: question } });
 	};
 
 	const setTheme = (value: ThemePreference) => {

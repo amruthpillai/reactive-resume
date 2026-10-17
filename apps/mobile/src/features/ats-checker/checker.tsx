@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Circle } from "react-native-svg";
 import { AtsCheckError, MAX_IMPORT_BYTES, runAtsCheck } from "./check";
 import { getPdfCategoryLabel, getPdfFindingMessage } from "./messages";
+import { OriginalPage } from "./original-page";
 import { getServer, useSession } from "@/auth/session";
 import { ImportError, importDocument } from "@/features/documents/import-file";
 import { routes } from "@/routes";
@@ -30,6 +31,8 @@ type State =
 const MAX_POSTING = 20_000;
 // The server sends no progress, so the last step starts once the upload has had a moment.
 const ANALYSING_AFTER_MS = 1500;
+// How long a "Fix these in the editor" press waits for sign-in before the file is forgotten.
+const PENDING_IMPORT_MS = 10 * 60 * 1000;
 
 /**
  * The public checker on a phone: pick a PDF, the server reads it (and keeps nothing), then the score, what could cost
@@ -43,12 +46,17 @@ export function AtsChecker() {
 	const [state, setState] = useState<State>({ name: "idle" });
 	const [posting, setPosting] = useState("");
 	const abort = useRef<AbortController | null>(null);
-	// Fix pressed while signed out: the import continues once sign-in returns to this screen.
-	const pendingImport = useRef<PickedFile | null>(null);
+	// Fix pressed while signed out: the import continues once sign-in returns here, on the same server, soon after.
+	const pendingImport = useRef<{ file: PickedFile; server: string; at: number } | null>(null);
+	const reset = () => {
+		pendingImport.current = null;
+		setState({ name: "idle" });
+	};
 
 	useEffect(() => () => abort.current?.abort(), []);
 
 	const check = async (file: PickedFile) => {
+		pendingImport.current = null;
 		abort.current?.abort();
 		const controller = new AbortController();
 		abort.current = controller;
@@ -89,7 +97,7 @@ export function AtsChecker() {
 
 	const cancel = () => {
 		abort.current?.abort();
-		setState({ name: "idle" });
+		reset();
 	};
 
 	const importAndOpen = async (file: PickedFile) => {
@@ -111,18 +119,22 @@ export function AtsChecker() {
 
 	const fix = (file: PickedFile) => {
 		if (signedIn) return void importAndOpen(file);
-		pendingImport.current = file;
+		pendingImport.current = { file, server: getServer(), at: Date.now() };
 		router.push(routes.signIn());
 	};
 
+	// Runs on sign-in and on a server switch: a stale, expired or other-server file is dropped, never imported.
 	const resumeImport = useEffectEvent(() => {
-		const file = pendingImport.current;
+		const pending = pendingImport.current;
+		if (!pending) return;
+		const valid = pending.server === getServer() && Date.now() - pending.at < PENDING_IMPORT_MS;
+		if (valid && !signedIn) return;
 		pendingImport.current = null;
-		if (file) void importAndOpen(file);
+		if (valid) void importAndOpen(pending.file);
 	});
 	useEffect(() => {
-		if (signedIn) resumeImport();
-	}, [signedIn]);
+		resumeImport();
+	}, [signedIn, session.server]);
 
 	return (
 		<SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
@@ -134,9 +146,10 @@ export function AtsChecker() {
 			) : state.name === "done" ? (
 				<Result
 					result={state.result}
+					uri={state.file.uri}
 					size={state.file.size ?? new File(state.file.uri).size}
 					onFix={() => fix(state.file)}
-					onReset={() => setState({ name: "idle" })}
+					onReset={reset}
 					onBlank={() => router.replace(routes.new())}
 				/>
 			) : (
@@ -302,15 +315,22 @@ function issueRows(report: PdfAtsReport): Row[] {
 		.sort((a, b) => rank[a.tone] - rank[b.tone]);
 }
 
-type ResultProps = { result: AtsResult; size: number; onFix: () => void; onReset: () => void; onBlank: () => void };
+type ResultProps = {
+	result: AtsResult;
+	uri: string;
+	size: number;
+	onFix: () => void;
+	onReset: () => void;
+	onBlank: () => void;
+};
 
-function Result({ result, size, onFix, onReset, onBlank }: ResultProps) {
+function Result({ result, uri, size, onFix, onReset, onBlank }: ResultProps) {
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
 	const { report } = result;
 	const rows = issueRows(report);
 	const [open, setOpen] = useState<string | null>(report.jd ? "posting" : (rows[0]?.key ?? null));
-	const [lens, setLens] = useState<"report" | "text">("report");
+	const [lens, setLens] = useState<"report" | "page" | "text">("report");
 	const issues = report.findings.length;
 	const toneColor = { danger: colors.dangerText, warn: colors.warnText, accent: colors.accentText };
 	const verdict =
@@ -387,6 +407,7 @@ function Result({ result, size, onFix, onReset, onBlank }: ResultProps) {
 					onChange={setLens}
 					options={[
 						{ value: "report", label: t`Report` },
+						{ value: "page", label: t`Original page` },
 						{ value: "text", label: t`As software reads it` },
 					]}
 				/>
@@ -468,6 +489,8 @@ function Result({ result, size, onFix, onReset, onBlank }: ResultProps) {
 						</Text>
 						<Button variant="ghost" label={t`Check another file`} onPress={onReset} fullWidth />
 					</>
+				) : lens === "page" ? (
+					<OriginalPage uri={uri} />
 				) : (
 					<ScrollView
 						horizontal

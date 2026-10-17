@@ -38,11 +38,17 @@ const BLOCKS = new Set(["p", "div", "h1", "h2", "h3", "h4", "h5", "h6"]);
 // Their contents are code or markup, not text anyone wrote for the page.
 const DROPPED = new Set(["script", "style", "template", "noscript", "iframe", "object"]);
 const SAFE_HREF = /^(https?:|mailto:|tel:)/i;
-const TOKEN = /<!--[\s\S]*?-->|<(\/?)([a-zA-Z][a-zA-Z0-9]*)([^>]*)>|([^<]+)|</g;
+// Linear on malformed input: a tag stops at the next "<" and its name must end at whitespace, "/" or ">", so a failed
+// match never rescans the rest of the string; an unterminated comment swallows the rest, as browsers do.
+const TOKEN = /<!--[\s\S]*?(?:-->|$)|<(\/?)([a-zA-Z][a-zA-Z0-9]*)(?=[\s/>])([^<>]*)>|([^<]+)|</g;
+// Rich text fields are a few KB; anything past this is not resume text.
+const MAX_LENGTH = 200_000;
+// Deeper nesting adds nothing readable and would make every run copy a long mark stack.
+const MAX_DEPTH = 16;
 const NAMED: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " " };
 
 const decode = (text: string) =>
-	text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (entity, body: string) => {
+	text.replace(/&(#x[0-9a-f]{1,6}|#\d{1,7}|[a-z]{1,8});/gi, (entity, body: string) => {
 		if (body[0] !== "#") return NAMED[body.toLowerCase()] ?? entity;
 		const code = body[1] === "x" || body[1] === "X" ? Number.parseInt(body.slice(2), 16) : Number(body.slice(1));
 		return Number.isFinite(code) && code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : entity;
@@ -62,11 +68,13 @@ export function parseRichText(html: string): Block[] {
 	let current = null as Block | null;
 	let quote = 0;
 	let dropped: string | null = null;
+	// Marks opened past MAX_DEPTH, so their closing tags pop nothing real.
+	let overflow = 0;
 
 	const start = (kind: Block["kind"], marker?: string) => {
 		current = {
 			kind,
-			depth: Math.max(0, lists.length - (kind === "item" ? 1 : 0)),
+			depth: Math.min(MAX_DEPTH, Math.max(0, lists.length - (kind === "item" ? 1 : 0))),
 			runs: [],
 			...(marker ? { marker } : {}),
 		};
@@ -84,7 +92,7 @@ export function parseRichText(html: string): Block[] {
 		block().runs.push(run);
 	};
 
-	for (const [token, closing, rawTag, attributes = "", text] of html.matchAll(TOKEN)) {
+	for (const [token, closing, rawTag, attributes = "", text] of html.slice(0, MAX_LENGTH).matchAll(TOKEN)) {
 		const tag = rawTag?.toLowerCase();
 		if (token.startsWith("<!--")) continue;
 		if (dropped) {
@@ -101,7 +109,10 @@ export function parseRichText(html: string): Block[] {
 		} else if (tag === "br") {
 			push("\n");
 		} else if (tag in MARKS || tag === "a" || tag === "mark") {
-			if (closing) marks.pop();
+			if (closing) {
+				if (overflow > 0) overflow -= 1;
+				else marks.pop();
+			} else if (marks.length >= MAX_DEPTH) overflow += 1;
 			else if (tag === "a") {
 				const href = attribute(attributes, "href")?.trim() ?? "";
 				marks.push(SAFE_HREF.test(href) ? { href } : null);
