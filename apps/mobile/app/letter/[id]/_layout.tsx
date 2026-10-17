@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import PageScreen from "./page";
 import { LetterConflictSheet, useLetterDraftOwner, useLetterStore } from "@/draft";
 import { discardLetterDraft } from "@/features/letters/drafting";
+import { nextLetterVisit } from "@/features/letters/save";
 import { LetterShareSheet } from "@/features/letters/share";
 import { routes } from "@/routes";
 import { BuilderChrome, useBuilderChrome } from "@/shell/builder-chrome";
@@ -30,8 +31,15 @@ export default function LetterLayout() {
 	const [sharing, setSharing] = useState(false);
 	// The one owner of the letter draft; panes and the tablet page subscribe with `useLetterStore()`.
 	useLetterDraftOwner(id);
-	// An AI draft belongs to this visit: leaving or switching letters stops it.
-	useEffect(() => () => discardLetterDraft(), [id]);
+	// One editor visit: late server work from another visit never touches this draft, and leaving or switching letters
+	// stops an AI draft.
+	useEffect(() => {
+		nextLetterVisit();
+		return () => {
+			nextLetterVisit();
+			discardLetterDraft();
+		};
+	}, [id]);
 
 	const panes: PaneTab<LetterPane>[] = [
 		{ pane: "write", label: t`Write`, icon: "pencil-simple", href: routes.letter(id, "write") },

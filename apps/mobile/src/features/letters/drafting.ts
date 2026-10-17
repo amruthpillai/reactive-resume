@@ -1,6 +1,7 @@
 // AI draft of the letter body, streamed over SSE. Ported from startLetterDraft in apps/web/src/features/letters/store.ts.
 import { ORPCError } from "@orpc/client";
 import { create } from "zustand";
+import { saveLetter } from "./save";
 import { streamClient } from "@/api/client";
 import { useLetterStore } from "@/draft";
 
@@ -13,7 +14,9 @@ export type DraftVariant = "draft" | "shorter" | "personal";
 export type LetterDraft =
 	| { phase: "idle" }
 	| { phase: "streaming" | "ready"; text: string }
-	| { phase: "failed"; provider: string | null; error: unknown };
+	| { phase: "failed"; provider: string | null; error: unknown }
+	/** What's typed couldn't be saved (offline, error, conflict), so the server would draft from stale links. */
+	| { phase: "unsaved" };
 
 type DraftingState = { draft: LetterDraft; last: { variant: DraftVariant; previous?: string | undefined } };
 
@@ -38,9 +41,10 @@ export async function startLetterDraft(variant: DraftVariant = "draft", previous
 
 	try {
 		// The server drafts from the saved letter's links, so links chosen a moment ago must reach it first.
-		await useLetterStore.getState().flush();
+		const saved = await saveLetter(letter.id);
 		if (controller.signal.aborted) return;
 		if (useLetterStore.getState().document?.id !== letter.id) return set(idle);
+		if (!saved) return set({ phase: "unsaved" });
 		const stream = await streamClient.coverLetters.draft(
 			{ id: letter.id, variant, ...(previous ? { previous } : {}) },
 			{ signal: controller.signal },

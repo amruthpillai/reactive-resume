@@ -1,18 +1,20 @@
 // The design presets a letter shares with the resume, ported from apps/web/src/features/resume/editor/design/presets.ts.
 // ponytail: M4-T1 ports the same table for resume Design in parallel; keep one copy once both have merged.
 import type { LetterDocument } from "@/draft/types";
+import type { I18n } from "@lingui/core";
 import type { Template } from "@reactive-resume/schema/templates";
 import type { WritableDraft } from "immer";
+import { msg } from "@lingui/core/macro";
 
 type Metadata = LetterDocument["style"]["metadata"];
 
 /** Five traditional resume faces. Families that aren't a pairing leave the control with no selection. */
 export const FONT_PAIRINGS = [
-	{ id: "classic", label: "Classic", heading: "EB Garamond", body: "EB Garamond", headingWeight: "600" },
-	{ id: "traditional", label: "Traditional", heading: "Tinos", body: "Tinos", headingWeight: "700" },
-	{ id: "balanced", label: "Balanced", heading: "Source Serif 4", body: "Source Sans 3", headingWeight: "600" },
-	{ id: "professional", label: "Professional", heading: "Carlito", body: "Carlito", headingWeight: "700" },
-	{ id: "clean", label: "Clean", heading: "Lato", body: "Lato", headingWeight: "700" },
+	{ id: "classic", label: msg`Classic`, heading: "EB Garamond", body: "EB Garamond", headingWeight: "600" },
+	{ id: "traditional", label: msg`Traditional`, heading: "Tinos", body: "Tinos", headingWeight: "700" },
+	{ id: "balanced", label: msg`Balanced`, heading: "Source Serif 4", body: "Source Sans 3", headingWeight: "600" },
+	{ id: "professional", label: msg`Professional`, heading: "Carlito", body: "Carlito", headingWeight: "700" },
+	{ id: "clean", label: msg`Clean`, heading: "Lato", body: "Lato", headingWeight: "700" },
 ] as const;
 
 export type FontPairingId = (typeof FONT_PAIRINGS)[number]["id"];
@@ -57,14 +59,14 @@ export const matchMargins = ({ page }: Metadata) =>
 
 /** Eight accents, all readable on white. Document colours, not app colours, so not tokens. */
 export const ACCENTS = [
-	{ label: "Moss", hex: "#3E6B4F" },
-	{ label: "Ink blue", hex: "#2F5A8A" },
-	{ label: "Teal", hex: "#1F6E73" },
-	{ label: "Plum", hex: "#6B3E6E" },
-	{ label: "Rust", hex: "#A0442A" },
-	{ label: "Burgundy", hex: "#8A2C3F" },
-	{ label: "Ochre", hex: "#7A5A12" },
-	{ label: "Graphite", hex: "#3B3F45" },
+	{ label: msg`Moss`, hex: "#3E6B4F" },
+	{ label: msg`Ink blue`, hex: "#2F5A8A" },
+	{ label: msg`Teal`, hex: "#1F6E73" },
+	{ label: msg`Plum`, hex: "#6B3E6E" },
+	{ label: msg`Rust`, hex: "#A0442A" },
+	{ label: msg`Burgundy`, hex: "#8A2C3F" },
+	{ label: msg`Ochre`, hex: "#7A5A12" },
+	{ label: msg`Graphite`, hex: "#3B3F45" },
 ] as const;
 
 const HEX = /^#?([0-9a-f]{6})$/i;
@@ -91,8 +93,10 @@ export function rgbaToHex(color: string): string | null {
 export const templateName = (id: Template) => id.charAt(0).toUpperCase() + id.slice(1);
 
 /** "Onyx, Balanced type, Moss" for the Write pane's design note; `typeLabel` words the pairing ("Balanced type"). */
-export function designSummary(metadata: Metadata, typeLabel: (pairing: string) => string) {
+export function designSummary(metadata: Metadata, i18n: I18n, typeLabel: (pairing: string) => string) {
 	const pairing = matchFontPairing(metadata)?.label;
 	const accent = ACCENTS.find((option) => option.hex === rgbaToHex(metadata.design.colors.primary))?.label;
-	return [templateName(metadata.template), pairing && typeLabel(pairing), accent].filter(Boolean).join(", ");
+	return [templateName(metadata.template), pairing && typeLabel(i18n._(pairing)), accent && i18n._(accent)]
+		.filter(Boolean)
+		.join(", ");
 }

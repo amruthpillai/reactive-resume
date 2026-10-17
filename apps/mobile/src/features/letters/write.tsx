@@ -15,6 +15,7 @@ import { discardLetterDraft, startLetterDraft, useLetterDrafting } from "./draft
 import { LETTER_LENGTH, countWords, letterLength } from "./length";
 import { useResumes } from "./queries";
 import { LetterRichText, LetterRichTextToolbar } from "./rich-text-field";
+import { relinkLetter } from "./save";
 import { letterFieldFocus, useLetterStore } from "@/draft";
 import { AIProviderSetupSheet, useHasAIProvider } from "@/features/ai/providers";
 import { WallClockField } from "@/features/application-detail/date-field";
@@ -41,13 +42,6 @@ type Recipe = (letter: WritableDraft<LetterDocument>) => void;
 
 /** Typing: one undo step per field while typing pauses under a second. */
 const edit = (key: string, recipe: Recipe) => useLetterStore.getState().update(recipe, { coalesceKey: key });
-
-/** Links (application, resume, live details): outside undo, like web's server-side changes, and saved at once. */
-const relink = (recipe: Recipe) => {
-	const store = useLetterStore.getState();
-	store.updateDocument(recipe);
-	void store.flush();
-};
 
 type SectionProps = { title: string; aside?: ReactNode; children: ReactNode };
 
@@ -151,7 +145,7 @@ function ForSection({ application, applications, disabled }: ForSectionProps) {
 
 	const choose = (next: Application | null) => {
 		setOpen(false);
-		relink((draft) => {
+		void relinkLetter((draft) => {
 			draft.sourceApplicationId = next?.id ?? null;
 			// The recipient comes from the application: its company, and its first contact when it has one.
 			if (next && draft.layout === "structured") {
@@ -340,7 +334,7 @@ function FromSection({ letter, disabled }: { letter: LetterDocument; disabled: b
 	const resumeName = resume?.name ?? t`the resume`;
 
 	const setResume = (resumeId: string) =>
-		relink((draft) => {
+		void relinkLetter((draft) => {
 			// A letter taking a resume for the first time takes its details and design with it.
 			if (resumeId && !draft.sourceResumeId) {
 				draft.senderLinked = true;
@@ -354,7 +348,7 @@ function FromSection({ letter, disabled }: { letter: LetterDocument; disabled: b
 		});
 
 	const setLinked = (senderLinked: boolean) => {
-		relink((draft) => void (draft.senderLinked = senderLinked));
+		void relinkLetter((draft) => void (draft.senderLinked = senderLinked));
 		showToast({ message: senderLinked ? t`Linked to the resume again` : t`Sender details copied into the letter` });
 	};
 
@@ -586,6 +580,25 @@ function DraftBox({ letter, application, onKeep }: DraftBoxProps) {
 	const last = useLetterDrafting((state) => state.last);
 
 	if (draft.phase === "idle") return null;
+	if (draft.phase === "unsaved") {
+		return (
+			<View style={{ gap: space.s2 }}>
+				<Banner
+					tone="danger"
+					message={t`Couldn't save your changes, so drafting didn't start. Nothing on the page changed.`}
+				/>
+				<View style={{ flexDirection: "row", gap: space.s2 }}>
+					<Button
+						size="sm"
+						variant="secondary"
+						label={t`Try again`}
+						onPress={() => void startLetterDraft(last.variant, last.previous)}
+					/>
+					<Button size="sm" variant="ghost" label={t`Dismiss`} onPress={discardLetterDraft} />
+				</View>
+			</View>
+		);
+	}
 	if (draft.phase === "failed") {
 		const gateway = draft.error instanceof ORPCError && draft.error.code === "BAD_GATEWAY";
 		return (
@@ -726,8 +739,8 @@ function LengthSection({ words }: { words: number }) {
 
 /** DESIGN: what the letter looks like, and where to change it. */
 function DesignNote({ letter }: { letter: LetterDocument }) {
-	const { t } = useLingui();
-	const summary = designSummary(letter.style.metadata, (pairing) => t`${pairing} type`);
+	const { t, i18n } = useLingui();
+	const summary = designSummary(letter.style.metadata, i18n, (pairing) => t`${pairing} type`);
 	return (
 		<Section title={t`Design`}>
 			<Text color="ink2">

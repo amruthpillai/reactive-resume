@@ -11,6 +11,7 @@ import { View } from "react-native";
 import { letterPageData, useLetterWords } from "./compose";
 import { LetterPages } from "./page";
 import { useResumes } from "./queries";
+import { restoreLetterVersion, saveLetter } from "./save";
 import { client, orpc } from "@/api/client";
 import { useLetterStore } from "@/draft";
 import { useDocumentOperations } from "@/features/documents/queries";
@@ -34,15 +35,12 @@ import {
 
 type LetterFormat = ExportFormat | "both";
 
-/** Saves what's typed before a server export or version; flush resolves on failures too, so check the status. */
+/** Saves what's typed before a server export or version; throws when the server doesn't have it. */
 async function flushLetter(id: string) {
-	const store = useLetterStore.getState();
-	if (store.document?.id !== id) throw new Error(t`Cover letter could not be loaded.`);
-	await store.flush();
-	const state = useLetterStore.getState();
-	if (state.document?.id !== id || state.conflict || !["idle", "saved"].includes(state.status))
-		throw new Error(t`Couldn't save your changes. Try again before continuing.`);
-	return state.document;
+	if (!(await saveLetter(id))) throw new Error(t`Couldn't save your changes. Try again before continuing.`);
+	const document = useLetterStore.getState().document;
+	if (document?.id !== id) throw new Error(t`Cover letter could not be loaded.`);
+	return document;
 }
 
 /**
@@ -300,14 +298,18 @@ function LetterHistory({ letter, offline }: { letter: LetterDocument; offline: b
 	const restore = async () => {
 		setRestoring(false);
 		if (!selected || letter.isLocked) return;
+		let current = false;
 		if (
 			await operations.run(async () => {
-				await flushLetter(letter.id);
-				// The server saves "Before restore" first. Reopening resets the draft's baseline and undo.
-				await client.coverLetters.restoreVersion({ id: letter.id, versionId: selected.id });
-				await useLetterStore.getState().open(letter.id);
+				current = await restoreLetterVersion(
+					letter.id,
+					selected.id,
+					() => new Error(t`Couldn't save your changes. Try again before continuing.`),
+				);
 			})
 		) {
+			// Finished after the user left or switched letters: the server has it; this editor is gone.
+			if (!current) return;
 			setSelected(null);
 			void list.refetch();
 			showToast({ message: t`Version restored. Your previous state is saved as “Before restore”.` });

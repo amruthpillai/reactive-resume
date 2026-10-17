@@ -22,6 +22,7 @@ import {
 	templateName,
 } from "./design-presets";
 import { useResumes } from "./queries";
+import { relinkLetter } from "./save";
 import { useLetterStore } from "@/draft";
 import { routes } from "@/routes";
 import {
@@ -77,9 +78,7 @@ export function LetterDesign({ id }: { id: string }) {
 	const disabled = letter.isLocked;
 
 	const setLinked = (designLinked: boolean) => {
-		const store = useLetterStore.getState();
-		store.updateDocument((draft) => void (draft.designLinked = designLinked));
-		void store.flush();
+		void relinkLetter((draft) => void (draft.designLinked = designLinked));
 		showToast({
 			message: designLinked
 				? t`The letter matches the resume's design again`
@@ -127,7 +126,7 @@ export function LetterDesign({ id }: { id: string }) {
 }
 
 function OwnDesign({ letter, disabled }: { letter: LetterDocument; disabled: boolean }) {
-	const { t } = useLingui();
+	const { t, i18n } = useLingui();
 	const { colors, radius, size, space } = useTheme();
 	const metadata = letter.style.metadata;
 	const primary = rgbaToHex(metadata.design.colors.primary);
@@ -164,7 +163,7 @@ function OwnDesign({ letter, disabled }: { letter: LetterDocument; disabled: boo
 					placeholder={t`Custom`}
 					options={FONT_PAIRINGS.map((pairing) => ({
 						value: pairing.id,
-						label: pairing.label,
+						label: i18n._(pairing.label),
 						description: pairing.heading === pairing.body ? pairing.body : `${pairing.heading} · ${pairing.body}`,
 					}))}
 					onChange={(id) => design("pairing", (value) => applyFontPairing(value, id))}
@@ -196,7 +195,7 @@ function OwnDesign({ letter, disabled }: { letter: LetterDocument; disabled: boo
 							<Pressable
 								key={accent.hex}
 								accessibilityRole="radio"
-								accessibilityLabel={accent.label}
+								accessibilityLabel={i18n._(accent.label)}
 								accessibilityState={{ selected }}
 								onPress={() => {
 									setHex(accent.hex);

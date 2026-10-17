@@ -1,13 +1,30 @@
 // Run from the repository root: node docs/plans/native-mobile-app/reports/M4-T4/verify.mjs
-// Executes the shipped length guide and AI draft streamer. The RPC stream and the letter draft store are simulated;
-// zustand, ORPCError and the streaming/abort logic are the production code.
+// Executes the shipped length guide, AI draft streamer, link/restore helpers and M3-T5's rich-text session. The RPC
+// client and the account scope are simulated; zustand, immer, ORPCError, the real draft store (src/draft/store.ts)
+// and the streaming/abort logic are production code.
 import assert from "node:assert/strict";
 import { registerHooks } from "node:module";
 
-const letters = "../../../../../apps/mobile/src/features/letters";
+const mobile = "../../../../../apps/mobile/src";
+const letters = `${mobile}/features/letters`;
 const events = [];
 let stream = null;
+
+/** A stand-in letter store: `flush` leaves `status`/`conflict` as a real save would. */
+function simpleStore({ id = "letter-1", status = "saved", conflict = null } = {}) {
+	const state = {
+		document: { id },
+		status,
+		conflict,
+		flush: async () => void events.push({ kind: "flush" }),
+		open: async (opened) => void events.push({ kind: "open", id: opened }),
+	};
+	return { getState: () => state, state };
+}
+
 const fixture = {
+	store: simpleStore(),
+	scope: "server/user-a",
 	streamClient: {
 		coverLetters: {
 			draft: async (input, options) => {
@@ -16,18 +33,15 @@ const fixture = {
 			},
 		},
 	},
-	useLetterStore: {
-		document: { id: "letter-1" },
-		getState() {
-			return {
-				document: fixture.useLetterStore.document,
-				flush: async () => void events.push({ kind: "flush" }),
-			};
-		},
-	},
+	client: { coverLetters: {} },
+	useLetterStore: { getState: () => fixture.store.getState() },
+	getDraftScope: async () => fixture.scope,
 };
 globalThis.__m4t4 = fixture;
-const mocks = { "@/api/client": ["streamClient"], "@/draft": ["useLetterStore"] };
+const mocks = {
+	"@/api/client": ["streamClient", "client"],
+	"@/draft": ["useLetterStore", "getDraftScope"],
+};
 let draftingUrl;
 registerHooks({
 	resolve(specifier, context, next) {
@@ -38,6 +52,9 @@ registerHooks({
 			};
 		// The harness's ORPCError is the one drafting.ts imports.
 		if (specifier === "harness:orpc") return next("@orpc/client", { ...context, parentURL: draftingUrl });
+		// Metro resolves extensionless relative imports; Node needs the file name.
+		if (specifier.startsWith(".") && context.parentURL?.includes("/apps/mobile/src/") && !/\.\w+$/.test(specifier))
+			return next(`${specifier}.ts`, context);
 		return next(specifier, context);
 	},
 });
@@ -45,11 +62,15 @@ registerHooks({
 const { LETTER_LENGTH, countWords, letterLength } = await import(`${letters}/length.ts`);
 draftingUrl = new URL(`${letters}/drafting.ts`, import.meta.url).href;
 const { startLetterDraft, discardLetterDraft, useLetterDrafting } = await import(draftingUrl);
+const { nextLetterVisit, relinkLetter, restoreLetterVersion } = await import(`${letters}/save.ts`);
+const { createDraftStore } = await import(`${mobile}/draft/store.ts`);
 const { ORPCError } = await import("harness:orpc");
 
 let passed = 0;
 async function check(name, run) {
 	events.length = 0;
+	fixture.store = simpleStore();
+	fixture.scope = "server/user-a";
 	discardLetterDraft();
 	await run();
 	passed++;
@@ -179,13 +200,9 @@ await check("a newer draft supersedes an older one still streaming", async () =>
 	assert.deepEqual(draft(), { phase: "ready", text: "Personal." });
 });
 await check("switching letters while saving never streams into the new one", async () => {
-	let switched = false;
-	fixture.useLetterStore.getState = () => ({
-		document: switched ? { id: "letter-2" } : { id: "letter-1" },
-		flush: async () => {
-			switched = true;
-		},
-	});
+	fixture.store.state.flush = async () => {
+		fixture.store.state.document = { id: "letter-2" };
+	};
 	stream = async function* () {
 		yield "wrong letter";
 	};
@@ -198,7 +215,7 @@ await check("switching letters while saving never streams into the new one", asy
 });
 
 // Rich text: only an edited field is re-serialised (README §0).
-const { createRichTextSession, toEnrichedHtml } = await import(`${letters}/rich-text.ts`);
+const { createRichTextSession, toEnrichedHtml } = await import(`${mobile}/features/write/rich-text.ts`);
 await check("the body keeps its HTML byte for byte until the user edits it", () => {
 	const stored = '<p>Hi <strong class="x">there</strong></p><table><tr><td>kept</td></tr></table>';
 	const session = createRichTextSession(stored);
@@ -221,6 +238,153 @@ await check("a kept draft loads into an unfocused body; typing is never overwrit
 	assert.equal(session.external("<p>Kept draft.</p>"), "<html>\n<p>Kept draft.</p>\n</html>");
 	session.focus();
 	assert.equal(session.external("<p>Remote.</p>"), null);
+});
+
+// Review blocker 1: drafting starts only after a confirmed save.
+for (const [label, saved] of [
+	["a failed save", { status: "error" }],
+	["an offline save", { status: "offline" }],
+	["a conflict", { status: "error", conflict: { remote: {} } }],
+])
+	await check(`${label} stops drafting before it streams against stale links`, async () => {
+		fixture.store = simpleStore(saved);
+		stream = async function* () {
+			yield "from stale links";
+		};
+		await startLetterDraft();
+		assert.deepEqual(events.map((event) => event.kind), ["flush"]);
+		assert.deepEqual(draft(), { phase: "unsaved" });
+	});
+
+// Review blocker 2: linking the design keeps the server-resolved style in undo history.
+/** The letter adapter's shape (src/draft/adapters.ts) over a server that resolves linked designs from the resume. */
+function letterServer() {
+	const own = { metadata: { template: "onyx", design: { colors: { primary: "rgba(160, 68, 42, 1)" } } } };
+	const resume = { metadata: { template: "pikachu", design: { colors: { primary: "rgba(62, 107, 79, 1)" } } } };
+	const editable = ["content", "sourceResumeId", "senderLinked", "designLinked", "style"];
+	const fields = (letter) => Object.fromEntries(editable.map((key) => [key, letter[key]]));
+	const changed = (current, base) =>
+		Object.fromEntries(
+			Object.entries(fields(current)).filter(([key, value]) => JSON.stringify(value) !== JSON.stringify(base[key])),
+		);
+	let remote = {
+		id: "letter-1",
+		isLocked: false,
+		revision: 1,
+		content: "<p>Hello</p>",
+		sourceResumeId: "resume-1",
+		senderLinked: true,
+		designLinked: false,
+		style: own,
+	};
+	const saves = [];
+	const adapter = {
+		kind: "letter",
+		delay: 800,
+		read: async () => structuredClone(remote),
+		data: (letter) => letter,
+		withData: (letter, data) => ({ ...letter, ...fields(data) }),
+		version: (letter) => letter.revision,
+		matches: (left, right) => Object.keys(changed(left, right)).length === 0,
+		merge: (saved, submitted, current) => ({ ...saved, ...changed(current, submitted) }),
+		parse: (value) => value,
+		isConflict: () => false,
+		copy: async () => {},
+		save: async (letter, baseline) => {
+			const input = changed(letter, baseline);
+			saves.push(input);
+			// As coverLetterService.update: sending a design ends the link; a link reads the resume's design.
+			const ownDesign = "style" in input && JSON.stringify(letter.style.metadata) !== JSON.stringify(baseline.style.metadata);
+			const designLinked = !ownDesign && (input.designLinked ?? remote.designLinked);
+			remote = {
+				...remote,
+				...input,
+				revision: remote.revision + 1,
+				designLinked,
+				style: designLinked ? resume : ownDesign ? letter.style : remote.style,
+			};
+			return structuredClone(remote);
+		},
+	};
+	const disk = new Map();
+	const draftStore = createDraftStore(adapter, {
+		storage: {
+			getItemSync: (key) => disk.get(key) ?? null,
+			setItemSync: (key, value) => disk.set(key, value),
+			removeItemSync: (key) => disk.delete(key),
+			getAllKeysSync: () => [...disk.keys()],
+		},
+		scope: async () => "server/user-a",
+		online: () => true,
+		focused: () => false,
+	});
+	return { store: draftStore.store, saves, resume, remote: () => remote };
+}
+
+await check("undoing typing after Match the resume keeps the resume's design and the link", async () => {
+	const server = letterServer();
+	fixture.store = server.store;
+	const state = server.store.getState;
+	await state().open("letter-1");
+	state().update((letter) => void (letter.content = "<p>Hello there</p>"), { coalesceKey: "content" });
+	await state().flush();
+	assert.equal(await relinkLetter((letter) => void (letter.designLinked = true)), true);
+	assert.deepEqual(state().document.style, server.resume);
+	state().undo();
+	assert.equal(state().document.content, "<p>Hello</p>");
+	assert.equal(state().document.designLinked, true);
+	assert.deepEqual(state().document.style, server.resume);
+	await state().flush();
+	assert.equal(server.remote().designLinked, true);
+	assert.equal(server.remote().content, "<p>Hello</p>");
+	assert.ok(server.saves.every((input) => !("style" in input) || input.designLinked !== false));
+	state().redo();
+	assert.equal(state().document.designLinked, true);
+	assert.deepEqual(state().document.style, server.resume);
+	await state().close();
+});
+await check("a link that fails to save leaves history alone and reports failure", async () => {
+	fixture.store = simpleStore({ status: "error" });
+	fixture.store.state.updateDocument = () => void events.push({ kind: "updateDocument" });
+	assert.equal(await relinkLetter(() => {}), false);
+	assert.deepEqual(events.map((event) => event.kind), ["updateDocument", "flush"]);
+});
+
+// Review blocker 3: a restore that finishes after the user moved on never replaces their draft.
+async function restoreWhile(change) {
+	let finish;
+	fixture.client.coverLetters.restoreVersion = (input) =>
+		new Promise((resolve) => {
+			events.push({ kind: "restore", input });
+			finish = resolve;
+		});
+	const running = restoreLetterVersion("letter-1", "version-1", () => new Error("unsaved"));
+	while (!finish) await new Promise((resolve) => setImmediate(resolve));
+	change();
+	finish();
+	return running;
+}
+await check("restore reopens the letter when the same visit is still open", async () => {
+	assert.equal(await restoreWhile(() => {}), true);
+	assert.deepEqual(events.map((event) => event.kind), ["flush", "restore", "open"]);
+});
+for (const [label, change] of [
+	["the user left the editor", () => nextLetterVisit()],
+	["another letter is open", () => void (fixture.store.state.document = { id: "letter-2" })],
+	["another account signed in", () => void (fixture.scope = "server/user-b")],
+])
+	await check(`restore finishing after ${label} leaves the open draft alone`, async () => {
+		assert.equal(await restoreWhile(change), false);
+		assert.equal(
+			events.some((event) => event.kind === "open"),
+			false,
+		);
+	});
+await check("restore refuses to run on unsaved changes", async () => {
+	fixture.store = simpleStore({ status: "offline" });
+	fixture.client.coverLetters.restoreVersion = async () => void events.push({ kind: "restore" });
+	await assert.rejects(restoreLetterVersion("letter-1", "version-1", () => new Error("unsaved")), /unsaved/);
+	assert.deepEqual(events.map((event) => event.kind), ["flush"]);
 });
 
 console.log(`${passed} scenarios passed`);
