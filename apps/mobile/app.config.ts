@@ -1,5 +1,4 @@
 import type { ExpoConfig } from "expo/config";
-import { AndroidConfig, withAndroidManifest } from "expo/config-plugins";
 
 // The official host. Universal Links, App Links and the OAuth callback (`/auth/native-callback`) verify against it.
 const host = "rxresu.me";
@@ -143,12 +142,4 @@ const config: ExpoConfig = {
 	},
 };
 
-export default withAndroidManifest(config, (config) => {
-	const activity = AndroidConfig.Manifest.getMainActivityOrThrow(config.modResults);
-	const changes = new Set(activity.$["android:configChanges"]?.split("|") ?? []);
-	// RN updates layout in place; recreating the activity discards the active screen and unsent form state.
-	changes.add("fontScale");
-	changes.add("density");
-	activity.$["android:configChanges"] = [...changes].join("|");
-	return config;
-});
+export default config;
