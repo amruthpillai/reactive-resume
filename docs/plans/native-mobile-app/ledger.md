@@ -4,21 +4,29 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 
 | Task                                          | Harness     | Agent    | Branch            | Status  | Notes                                                                               |
 | --------------------------------------------- | ----------- | -------- | ----------------- | ------- | ----------------------------------------------------------------------------------- |
-| S1 Forme native module                        | Codex       | 3777064e | mobile/S1         | RUNNING |                                                                                     |
-| S2 PDF pipeline on Hermes                     | Claude Code | 30d200d5 | mobile/S2         | RUNNING |                                                                                     |
-| S3 Native auth spike                          | Claude Code | ccae31ab | mobile/S3         | RUNNING |                                                                                     |
+| S1 Forme native module                        | Codex       | 3777064e | mobile/S1         | MERGED  |                                                                                     |
+| S2 PDF pipeline on Hermes                     | Claude Code | 30d200d5 | mobile/S2         | MERGED  |                                                                                     |
+| S3 Native auth spike                          | Claude Code | ccae31ab | mobile/S3         | MERGED  |                                                                                     |
 | DS1 Design directions                         | Claude Code | e6048448 | mobile/DS1        | MERGED  | Started alongside M0 because it is independent of the spikes (coordinator decision) |
 | DS2 Review DS1                                | Codex       | 61b41c19 | (in DS1 worktree) | MERGED  | 67 gaps, reports/DS2.md                                                             |
-| DS3a Shell, documents, account, utilities     | Claude Code | 53e27e1f | mobile/DS3a       | RUNNING | app.html, tokens.md, index hub                                                      |
-| DS3b Builder Write and Page, letters          | Claude Code | 43127d18 | mobile/DS3b       | RUNNING | builder.html                                                                        |
-| DS3c Design, Check, Share, History, Assistant | Claude Code | eac233e3 | mobile/DS3c       | RUNNING | design.html                                                                         |
-| DS3d Applications and Career                  | Codex       | 8cd42ec8 | mobile/DS3d       | RUNNING | career.html                                                                         |
-| DS3b fix round                                | Claude Code | 43127d18 | mobile/DS3b       | FIXING  | 29 DS4b findings                                                                    |
-| SVa SV1+SV2 app links, callback page, Apple   | Codex       | 10498568 | mobile/SVa        | RUNNING |                                                                                     |
-| SVb SV4 offline_access unbinding              | Codex       | 4441e7ce | mobile/SVb        | RUNNING |                                                                                     |
-| SVc SV3+SV5 update conflict, account wrappers | Codex       | 3d077e9f | mobile/SVc        | RUNNING |                                                                                     |
+| DS3a Shell, documents, account, utilities     | Claude Code | 53e27e1f | mobile/DS3a       | MERGED  | app.html, tokens.md, index hub                                                      |
+| DS3b Builder Write and Page, letters          | Claude Code | 43127d18 | mobile/DS3b       | MERGED  | builder.html                                                                        |
+| DS3c Design, Check, Share, History, Assistant | Claude Code | eac233e3 | mobile/DS3c       | MERGED  | design.html                                                                         |
+| DS3d Applications and Career                  | Codex       | 8cd42ec8 | mobile/DS3d       | MERGED  | career.html                                                                         |
+| DS3b fix round                                | Claude Code | 43127d18 | mobile/DS3b       | MERGED  | 29 DS4b findings                                                                    |
+| SVa SV1+SV2 app links, callback page, Apple   | Codex       | 10498568 | mobile/SVa        | MERGED  |                                                                                     |
+| SVb SV4 offline_access unbinding              | Codex       | 4441e7ce | mobile/SVb        | MERGED  |                                                                                     |
+| SVc SV3+SV5 update conflict, account wrappers | Codex       | 3d077e9f | mobile/SVc        | MERGED  |                                                                                     |
 | M1-T1 apps/mobile skeleton                    | Claude Code | a735cf80 | mobile/M1-T1      | MERGED  | briefs/M1.md                                                                        |
 | M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2      | MERGED  | briefs/M1.md                                                                        |
+| M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
+| M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | RUNNING | briefs/W2.md                                                                        |
+| M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | RUNNING | briefs/W2.md                                                                        |
+| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | RUNNING | briefs/W2.md                                                                        |
+| M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
+| M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | RUNNING | briefs/W2.md                                                                        |
+| M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | REVIEW  | briefs/W3.md; pulled forward, JS-only                                               |
+| M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1      | RUNNING | briefs/W3.md; pulled forward, JS-only                                               |
 
 ## Gates
 
@@ -142,3 +150,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M3-T3 done; Claude review `f10f0aab`: 1 blocker (stale refresh overwrites newer local saves) plus false-conflict/corrupt-draft/persist-cost notes; fix round running. **Pending for M3-T1 (send when idle):** `api/client.ts` must read server URL and token as one atomic session snapshot (a server switch between the two reads could send a token or a queued draft to the wrong server); offline cold start needs the account ID from the stored session without a network refresh; sign-out calls the draft store's `clearDraftsFor(scope)`.
 - 2026-10-17: Host load reached ~460 with five builders each compiling native dev clients. From wave 3 on, builders reuse one shared dev client per platform built by the coordinator after each merge, and only rebuild native code when their task changes native modules.
 - 2026-10-17: M3-T3 merged (FIXED 4, 24 Node scenarios). Device save path still unverified; covered by the wave-2 smoke test.
+- 2026-10-17: M6-T4 and M7-T1 pulled forward into free slots, JS-only (no native builds; coordinator screenshots after merge). M7-T1 asked for a bearer profile/timezone contract; coordinator approved a narrow ownership extension: `auth.getProfile()` and `timezone` on `auth.updateProfile` (through the SVc `accountAuth` bridge), with focused tests.
