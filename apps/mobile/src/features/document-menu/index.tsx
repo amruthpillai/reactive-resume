@@ -13,6 +13,7 @@ import { printResume } from "@/features/share/files";
 import { normalizeSlug, validSlug } from "@/features/share/model";
 import { routes } from "@/routes";
 import { useBuilderChrome } from "@/shell/builder-chrome";
+import { useKeyCommands } from "@/shell/key-commands";
 import { Banner, Button, IconButton, ListRow, Sheet, Text, TextField, showToast, useTheme } from "@/ui";
 
 type DocumentMenuProps = {
@@ -48,7 +49,19 @@ export function DocumentMenu({ id, inChrome = false }: DocumentMenuProps) {
 		setName(resume?.name ?? "");
 		setPanel("menu");
 	};
+	const print = () => {
+		if (!resume || printingRef.current) return;
+		printingRef.current = true;
+		setPrinting(true);
+		void printResume(resume.data, resume.name)
+			.catch(() => showToast({ message: t`Couldn't print. Try again.` }))
+			.finally(() => {
+				printingRef.current = false;
+				setPrinting(false);
+			});
+	};
 	useBuilderChrome(inChrome ? { onMenu: resume ? openMenu : undefined } : {});
+	useKeyCommands(inChrome ? [{ id: "print", input: "p", title: t`Print`, run: print }] : []);
 	const titles = {
 		menu: t`Document options`,
 		rename: t`Rename`,
@@ -115,22 +128,7 @@ export function DocumentMenu({ id, inChrome = false }: DocumentMenuProps) {
 										router.push(routes.history(id));
 									}}
 								/>
-								<ListRow
-									title={t`Print`}
-									leading="printer"
-									disabled={operations.busy || printing}
-									onPress={() => {
-										if (printingRef.current) return;
-										printingRef.current = true;
-										setPrinting(true);
-										void printResume(resume.data, resume.name)
-											.catch(() => showToast({ message: t`Couldn't print. Try again.` }))
-											.finally(() => {
-												printingRef.current = false;
-												setPrinting(false);
-											});
-									}}
-								/>
+								<ListRow title={t`Print`} leading="printer" disabled={operations.busy || printing} onPress={print} />
 								<ListRow
 									title={t`Move to Trash`}
 									leading="trash"

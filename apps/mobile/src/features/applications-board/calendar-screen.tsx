@@ -250,7 +250,7 @@ function ApplicationCalendar() {
 										style={{
 											alignSelf: tablet ? "flex-end" : "center",
 											minWidth: space.s6,
-											height: space.s6,
+											minHeight: space.s6,
 											borderRadius: radius.rPill,
 											alignItems: "center",
 											justifyContent: "center",

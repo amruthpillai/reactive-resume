@@ -178,8 +178,8 @@ function ForSection({ application, applications, disabled }: ForSectionProps) {
 				>
 					<View
 						style={{
-							width: size.hit - space.s2,
-							height: size.hit - space.s2,
+							minWidth: size.hit - space.s2,
+							minHeight: size.hit - space.s2,
 							borderRadius: radius.rLg,
 							backgroundColor: colors.sunken,
 							alignItems: "center",

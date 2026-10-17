@@ -7,15 +7,21 @@ import { ResumeConflictSheet, useResumeDraftOwner, useResumeStore } from "@/draf
 import { DocumentMenu } from "@/features/document-menu";
 import { routes } from "@/routes";
 import { BuilderChrome, useBuilderChrome } from "@/shell/builder-chrome";
+import { useKeyCommands } from "@/shell/key-commands";
 
-/** Fills the chrome from the draft once for every pane: name, save status, Public badge. */
+/** Fills the chrome from the draft once for every pane: name, save status, Public badge. ⌘Z / ⇧⌘Z undo and redo. */
 function DraftChrome() {
+	const { t } = useLingui();
 	const name = useResumeStore((state) => state.document?.name);
 	const shared = useResumeStore((state) => state.document?.isPublic);
 	const status = useResumeStore((state) => state.status);
 	const locked = useResumeStore((state) => state.locked);
 	const retry = useResumeStore((state) => state.retry);
 	useBuilderChrome({ title: name, save: name ? { status, locked, onRetry: retry } : undefined, shared });
+	useKeyCommands([
+		{ id: "undo", input: "z", title: t`Undo`, run: () => useResumeStore.getState().undo() },
+		{ id: "redo", input: "z", shift: true, title: t`Redo`, run: () => useResumeStore.getState().redo() },
+	]);
 	return null;
 }
 

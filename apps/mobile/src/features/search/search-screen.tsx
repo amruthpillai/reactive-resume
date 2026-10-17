@@ -6,13 +6,14 @@ import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, BackHandler, Pressable, ScrollView, TextInput, View } from "react-native";
+import { ActivityIndicator, BackHandler, Platform, Pressable, ScrollView, TextInput, View } from "react-native";
 import { rank } from "./rank";
 import { orpc } from "@/api/client";
 import { useSession } from "@/auth/session";
 import { useApplications } from "@/features/applications/queries";
 import { useDocuments } from "@/features/documents/queries";
 import { routes } from "@/routes";
+import { useIsTablet } from "@/shell/use-is-tablet";
 import { EmptyState, Icon, IconButton, ListRow, Text, setThemePreference, showToast, useTheme } from "@/ui";
 
 type Page = "root" | "resumes" | "applications" | "threads" | "theme";
@@ -41,6 +42,7 @@ export function SearchScreen() {
 	const { t } = useLingui();
 	const router = useRouter();
 	const { colors, radius, size, space, type } = useTheme();
+	const tablet = useIsTablet();
 	const session = useSession();
 	const signedIn = session.status === "signed-in";
 	const [query, setQuery] = useState("");
@@ -326,7 +328,10 @@ export function SearchScreen() {
 
 	return (
 		<View style={{ flex: 1, backgroundColor: colors.bg }}>
-			<Stack.Screen options={{ headerShown: false }} />
+			{/* Tablet: a centred form sheet over the library (app.html Q1). Android keeps the full-screen modal. */}
+			<Stack.Screen
+				options={{ headerShown: false, presentation: Platform.OS === "ios" && tablet ? "formSheet" : "modal" }}
+			/>
 			<View
 				style={{
 					flexDirection: "row",

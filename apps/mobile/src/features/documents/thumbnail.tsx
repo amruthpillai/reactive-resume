@@ -34,7 +34,8 @@ export function Thumbnail({ document, visible, compact = false }: ThumbnailProps
 			}}
 		>
 			{document.type === "letter" ? (
-				<Text variant="callout" color="paperInk" numberOfLines={compact ? 2 : 12}>
+				// A miniature of the page: it scales with the card, not with the text-size setting (tokens.md `pageThumb`).
+				<Text variant="callout" color="paperInk" numberOfLines={compact ? 2 : 12} maxFontSizeMultiplier={1}>
 					{stripHtml((draftText ?? letter.data?.content ?? "").replace(/<\/p>|<br\s*\/?>/gi, "\n")) ||
 						(letter.isError ? t`Couldn't load letter` : letter.isPending ? t`Loading letter…` : t`Empty letter`)}
 				</Text>
