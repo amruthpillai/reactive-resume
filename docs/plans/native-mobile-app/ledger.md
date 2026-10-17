@@ -21,7 +21,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2      | MERGED  | briefs/M1.md                                                                        |
 | M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
 | M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | MERGED  | briefs/W2.md                                                                        |
-| M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | FIXING  | briefs/W2.md                                                                        |
+| M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | MERGED  | briefs/W2.md                                                                        |
 | M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | FIXING  | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | MERGED  | briefs/W2.md                                                                        |
@@ -194,3 +194,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M6-T3 second review: 6 more blockers (slow-reply recovery, pre-run boundary, lifecycle tokens, draft reclaim, unverified thread association, marked data breaking Fit); second fix round. M6-T2 review `195d8e34`: 6 data-loss blockers; fix round. M3-T5 done; review `bf75f9a3`.
 - 2026-10-17: M3-T5 review `bf75f9a3`: 5 blockers (selector render loop, rich text reload/caret, iOS short-fragment parse, link edits dropped, cross-resume picture upload). M2-T2 FIXED 4 (draft owner hooks in layouts; panes subscribe) — second review by `b952f6f3`.
 - 2026-10-17: M3-T1 FIXED 5 (`ac8c2ddad`; session probes 4/4); second review by `9fae76e4`. M2-T2 second review: 1 blocker (duplicate conflict sheet in Share screen); fixing.
+- 2026-10-17: M2-T2 merged (FIXED 4 + FIXED 1). The builder and letter layouts own the draft (`useResumeDraftOwner`/`useLetterDraftOwner`); panes subscribe via `useResumeStore()`; one conflict sheet per editor.
