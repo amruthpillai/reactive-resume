@@ -88,6 +88,18 @@ export function parseDeepLink(input: string, currentServer: string): DeepLink | 
 	if (!first || !second) return null;
 	const target = (href: AppHref): DeepLink => ({ kind: "target", server, href });
 
+	if (__DEV__ && native && pathname === "/builder/preview-sample/page") {
+		const query = new URLSearchParams(path.split("#", 1)[0]?.split("?", 2)[1]);
+		for (const key of ["parity", "smoke"] as const) {
+			const origin = query.get(key);
+			const match = origin?.match(/^http:\/\/127\.0\.0\.1:([1-9]\d{0,4})\/?$/);
+			if (origin && match && Number(match[1]) <= 65535)
+				return target(
+					`${routes.builder("preview-sample", "page")}?${key}=${encodeURIComponent(origin.replace(/\/$/, ""))}` as AppHref,
+				);
+		}
+	}
+
 	if (first === "builder") {
 		// Web editor mode is a query parameter. Never forward arbitrary queries (e.g. assistant auto-send prompts).
 		let mode: BuilderPane = "write";
