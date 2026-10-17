@@ -185,7 +185,7 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 											? tablet
 												? { headerShown: false, animation: "none" }
 												: { header: () => <ChromeTopBar />, animation: "none" }
-											: {}
+											: { headerTransparent: false }
 									}
 								>
 									{modals.map((name) => (
