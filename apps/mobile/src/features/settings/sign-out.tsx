@@ -2,7 +2,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useState } from "react";
-import { signOut, useSession } from "@/auth/session";
+import { SignOutCleanupError, signOut, useSession } from "@/auth/session";
 import { routes } from "@/routes";
 import { ConfirmDialog, ListRow, showToast } from "@/ui";
 
@@ -19,9 +19,17 @@ export function SignOutRow({ switchServer = false }: SignOutRowProps) {
 		setBusy(true);
 		try {
 			await queryClient.cancelQueries();
-			await signOut();
+			let partial = false;
+			try {
+				await signOut();
+			} catch (error) {
+				// Signed out all the same: only some of this account's data on the device could not be removed.
+				if (!(error instanceof SignOutCleanupError)) throw error;
+				partial = true;
+			}
 			queryClient.clear();
 			router.replace(switchServer ? routes.server() : routes.signIn());
+			if (partial) showToast({ message: t`Signed out, but some data on this device couldn't be removed.` });
 		} catch {
 			showToast({ message: t`Couldn't sign out. Try again.` });
 		} finally {

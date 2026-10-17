@@ -22,7 +22,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
 | M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | MERGED  | briefs/W2.md                                                                        |
 | M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | MERGED  | briefs/W2.md                                                                        |
-| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | FIXING  | briefs/W2.md                                                                        |
+| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | MERGED  | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | MERGED  | briefs/W2.md                                                                        |
 | M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
@@ -31,14 +31,16 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | FIXING  | briefs/W5.md; JS-only                                                               |
-| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | REVIEW  | briefs/W5.md; JS-only                                                               |
-| M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | FIXING  | briefs/W3.md; JS-only                                                               |
+| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | MERGED  | briefs/W5.md; JS-only                                                               |
+| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | MERGED  | briefs/W5.md; JS-only                                                               |
+| M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | MERGED  | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | FIXING  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
-| M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | RUNNING | briefs/W4.md; JS-only                                                               |
-| M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
-| M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
+| M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | FIXING  | briefs/W4.md; JS-only                                                               |
+| M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | REVIEW  | briefs/W4.md; JS-only                                                               |
+| M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | MERGED  | briefs/W5.md; JS-only                                                               |
+| M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | RUNNING | briefs/W4.md; JS-only; adds letter Page pane                                        |
+| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | REVIEW  | briefs/W6.md; JS-only                                                               |
 
 ## Gates
 
@@ -195,3 +197,14 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M3-T5 review `bf75f9a3`: 5 blockers (selector render loop, rich text reload/caret, iOS short-fragment parse, link edits dropped, cross-resume picture upload). M2-T2 FIXED 4 (draft owner hooks in layouts; panes subscribe) — second review by `b952f6f3`.
 - 2026-10-17: M3-T1 FIXED 5 (`ac8c2ddad`; session probes 4/4); second review by `9fae76e4`. M2-T2 second review: 1 blocker (duplicate conflict sheet in Share screen); fixing.
 - 2026-10-17: M2-T2 merged (FIXED 4 + FIXED 1). The builder and letter layouts own the draft (`useResumeDraftOwner`/`useLetterDraftOwner`); panes subscribe via `useResumeStore()`; one conflict sheet per editor.
+- 2026-10-17: M6-T2 FIXED 6; second review `195d8e34`. Launched M4-T4 and M7-T3. Sign-out cleanup must also clear `reactive-resume:career-draft:<scope>:` (M6-T2) and application notes (M5-T2) — assign to M8-T1 integration if M3-T1's fix round doesn't cover it.
+- 2026-10-17: M6-T3 third check: 3 blockers (unrendered validation states, spinner when another resume is open, recovery overlapping an in-flight send). Third fix round; Assistant becomes a draft subscriber under the builder layout.
+- 2026-10-17: M3-T1 second review: 4 more blockers (fragment iss override, refresh replay after persistence failure, marker cleared before token delete, pending sign-in committing after sign-out). Round 3 also adds `registerSignOutCleanup` for feature kv prefixes.
+- 2026-10-17: M6-T2 second review: 4 more blockers (drafts cleared on optimistic values, scope cached across accounts, delayed Apply not identity-bound, unbounded/conflicting retries). Round 3.
+- 2026-10-17: M4-T1 done (review `895bc4ca`); M5-T3 done (review `ad729a91`). M3-T5 second review: 2 blockers (CSS-encoded marks lost, picture scope race); round 3.
+- 2026-10-17: Reviews: M4-T1 (`895bc4ca`) 6 blockers; M5-T3 (`ad729a91`) 4 blockers; M7-T3 done (review `5e7fbf24`). M3-T5, M6-T2 final checks running. Coordinator fixed the M5-T1 scenario harness routes mock (`bfaea3847`).
+- 2026-10-17: M6-T3 merged (four review rounds; 17 transport scenarios) and M7-T2 merged after it. Pending: M3-T1 final check; M3-T5/M6-T2 one blocker each; M4-T2 2 blockers (link → version conflict, plurals); coordinator approves Check running all 22 rules locally.
+- 2026-10-17: M3-T1 merged after six rounds (Codex security review NO BLOCKERS; 11 session probes). Includes `registerSignOutCleanup`, kv sweep for notes/career drafts, SignOutCleanupError handling in Settings, launch redirect in `app/index.tsx`. Coordinator accepts fail-closed refresh (server_error/dropped connection mid-refresh → sign in again).
+- 2026-10-17: Note: scenario/probe scripts with `.ts` imports run with `node --import ./apps/server/node_modules/tsx/dist/loader.mjs <script>` (plain node rejects TS parameter properties). M5-T3 FIXED 4 (final check `ad729a91`), plus M5-T2 follow-up sheet day fix assigned to M5-T3.
+- 2026-10-17: M5-T3 merged (review `ad729a91` NO BLOCKERS; follow-up sheet day fix `7bb62d9ef`; 15/15 scenarios, typecheck, boundaries pass). M4-T4 built (`084d21e1c`), review `35b943fb`. M7-T3 2 blockers (any-host HTTPS links, Android pathPattern catches /api/auth email links): coordinator decision drop the Android public-resume pattern for v1 (keep /builder/ + callback), rejected HTTPS links reopen in browser. M3-T5 round 4 (li/p decoration merge). M4-T1, M6-T2 final checks running.
+- 2026-10-17: M3-T5 merged (review `bf75f9a3` NO BLOCKERS after 4 rounds; 18 scenarios). M8-T2 launched (Codex `8b80adcc`, wks_6a7e811c4814c8be) with coordinator additions: EAS prebuilt hook, licences screen, permissions audit, plural polyfill trim, Maestro flows authored only. M4-T2 FIXED 2 to review.

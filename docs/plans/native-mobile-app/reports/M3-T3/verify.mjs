@@ -874,7 +874,13 @@ globalThis.__m3t3native = {
 		},
 		TextInput: { State: { currentlyFocusedInput: () => null } },
 	},
-	session: { getServer: () => server, getAccessToken: async () => token },
+	// M3-T1 moved scope derivation into the session (getAccountScope); this stand-in mirrors it.
+	session: {
+		getAccountScope: () => {
+			const sub = token && JSON.parse(Buffer.from(token.split(".")[1], "base64url").toString()).sub;
+			return typeof sub === "string" ? JSON.stringify([server, sub]) : null;
+		},
+	},
 };
 const nativeHook = registerHooks({
 	resolve(s, c, next) {

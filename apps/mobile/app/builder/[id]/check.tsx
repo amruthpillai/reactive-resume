@@ -1,7 +1,9 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { useLocalSearchParams } from "expo-router";
+import { useSession } from "@/auth/session";
+import { CheckScreen } from "@/features/check/screen";
 
-export default function CheckScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`Check`} />;
+export default function CheckRoute() {
+	const { id } = useLocalSearchParams<{ id: string }>();
+	const session = useSession();
+	return <CheckScreen key={`${id}:${session.server}:${session.status}`} id={id} />;
 }
