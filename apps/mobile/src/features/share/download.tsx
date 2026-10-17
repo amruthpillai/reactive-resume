@@ -1,0 +1,188 @@
+import type { ExportFormat } from "./files";
+import type { ResumeDocument } from "@/draft/types";
+import { useLingui } from "@lingui/react/macro";
+import { router } from "expo-router";
+import { useRef, useState } from "react";
+import { View } from "react-native";
+import { composeCoverLetter, createCoverLetterResumeData } from "@reactive-resume/resume/cover-letter";
+import { flushResume } from "./document";
+import { exportDirectory, exportFile, printResume, shareExport } from "./files";
+import { letterWords } from "./letter";
+import { safeFileName } from "./model";
+import { client } from "@/api/client";
+import { useLetterStore, useResumeStore } from "@/draft";
+import { useApplications } from "@/features/applications/queries";
+import { routes } from "@/routes";
+import { Banner, Button, ListRow, Switch, Text, TextField, useTheme } from "@/ui";
+
+type DownloadProps = { resume: ResumeDocument; offline: boolean };
+export function DownloadTab({ resume, offline }: DownloadProps) {
+	const { t } = useLingui();
+	const { space } = useTheme();
+	const applications = useApplications();
+	const linked = applications.data?.find(
+		(item) => item.coverLetterId && (item.id === resume.applicationId || item.resumeId === resume.id),
+	);
+	const [withLetter, setWithLetter] = useState(false);
+	const [format, setFormat] = useState<ExportFormat>("pdf");
+	const [name, setName] = useState(safeFileName(t`${resume.data.basics.name || resume.name}-Resume`));
+	const [busy, setBusy] = useState(false);
+	const active = useRef(false);
+	const [error, setError] = useState<string | null>(null);
+	const formats: { id: ExportFormat; label: string; description: string }[] = [
+		{
+			id: "pdf",
+			label: t`PDF · Best for applying`,
+			description: t`Looks exactly like the page. Use it for applications and email.`,
+		},
+		{ id: "docx", label: t`Word`, description: t`For portals or recruiters who ask for Word. Layout is simplified.` },
+		{
+			id: "odt",
+			label: t`OpenDocument`,
+			description: t`For LibreOffice and other open-source editors. Layout is simplified.`,
+		},
+		{ id: "md", label: t`Markdown`, description: t`Plain text with headings. Paste into application forms and notes.` },
+		{
+			id: "json",
+			label: t`JSON`,
+			description: t`Complete data backup. Imports back into Reactive Resume or JSON Resume tools.`,
+		},
+	];
+	const download = async (chosen: ExportFormat, print = false, includeLetter = withLetter) => {
+		if (active.current) return;
+		active.current = true;
+		setBusy(true);
+		setError(null);
+		try {
+			if (chosen !== "pdf" || !offline) await flushResume(resume.id);
+			const current = useResumeStore.getState().document;
+			if (current?.id !== resume.id) throw new Error(t`Resume could not be loaded.`);
+			if (print) {
+				await printResume(current.data, name);
+				return;
+			}
+			const directory = exportDirectory();
+			const file = await exportFile({ directory, id: resume.id, name, format: chosen, data: current.data });
+			// Generate both files before handing either to another app, so failures leave a clear retry path.
+			let letterFile;
+			if (includeLetter && linked?.coverLetterId) {
+				const letter = useLetterStore.getState();
+				if (letter.document?.id === linked.coverLetterId) {
+					await letter.flush();
+					const latest = useLetterStore.getState();
+					if (latest.conflict || !["saved", "idle"].includes(latest.status))
+						throw new Error(t`Save the cover letter before exporting it.`);
+				}
+				const savedLetter = chosen === "pdf" ? await client.coverLetters.getById({ id: linked.coverLetterId }) : null;
+				const composed = savedLetter
+					? composeCoverLetter(savedLetter, await letterWords(savedLetter.style.metadata.page.locale))
+					: null;
+
+				letterFile = await exportFile({
+					directory,
+					id: linked.coverLetterId,
+					name: t`${name}-Cover-Letter`,
+					format: chosen,
+					letter: true,
+					...(savedLetter && composed ? { data: createCoverLetterResumeData({ ...savedLetter, ...composed }) } : {}),
+				});
+			}
+			await shareExport(file, chosen);
+			if (letterFile) await shareExport(letterFile, chosen);
+		} catch (cause) {
+			setError(cause instanceof Error ? cause.message : t`Couldn't export. Try again.`);
+		} finally {
+			active.current = false;
+			setBusy(false);
+		}
+	};
+	return (
+		<View style={{ gap: space.s3 }}>
+			{offline && (
+				<Banner
+					tone="info"
+					message={t`You're offline. Download PDF uses this device. Other formats and linked letters need a connection. Fonts and images must already be cached.`}
+				/>
+			)}
+			{formats.map((item) => (
+				<ListRow
+					key={item.id}
+					title={item.label}
+					subtitle={`${item.description} (.${item.id})`}
+					selected={format === item.id}
+					leading={item.id === "pdf" ? "file-pdf" : "file-text"}
+					disabled={busy || (offline && item.id !== "pdf")}
+					onPress={() => {
+						setFormat(item.id);
+						setError(null);
+					}}
+				/>
+			))}
+			<TextField
+				label={t`File name`}
+				value={name}
+				onChangeText={(value) => setName(safeFileName(value))}
+				maxLength={100}
+				editable={!busy}
+				trailing={<Text color="ink3">.{format}</Text>}
+				helper={t`Recruiters see this name. Your name plus “Resume” works well.`}
+			/>
+			{linked?.coverLetterId && (
+				<ListRow
+					title={t`Also download the ${linked.company} cover letter`}
+					trailing={
+						<Switch
+							label={t`Also download the cover letter`}
+							value={withLetter}
+							onValueChange={setWithLetter}
+							disabled={busy || (offline && !withLetter)}
+						/>
+					}
+				/>
+			)}
+			{applications.isError && (
+				<Banner
+					tone="warn"
+					message={t`Couldn't check for a linked cover letter.`}
+					action={{ label: t`Retry`, onPress: () => void applications.refetch() }}
+				/>
+			)}
+			{error && <Banner tone="danger" message={error} />}
+			<Button
+				label={busy ? t`Preparing file…` : t`Download ${format.toUpperCase()}`}
+				icon="download-simple"
+				loading={busy}
+				disabled={!name.trim() || (offline && format !== "pdf") || (offline && withLetter)}
+				onPress={() => void download(format)}
+			/>
+			{error && format !== "pdf" && (
+				<Button
+					label={t`Download PDF instead`}
+					variant="secondary"
+					disabled={busy}
+					onPress={() => {
+						setWithLetter(false);
+						void download("pdf", false, false);
+					}}
+				/>
+			)}
+			<Button
+				label={t`Print`}
+				icon="printer"
+				variant="secondary"
+				disabled={busy}
+				onPress={() => void download("pdf", true)}
+			/>
+			<Button
+				label={t`Review Check`}
+				variant="link"
+				disabled={busy}
+				onPress={() => router.push(routes.builder(resume.id, "check"))}
+			/>
+			<Text
+				color="ink3"
+				variant="caption"
+			>{t`Download opens the system share sheet. Choose a storage provider to save the file. A linked letter opens as a second file.`}</Text>
+		</View>
+	);
+}
