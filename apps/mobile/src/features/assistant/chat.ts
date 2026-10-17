@@ -112,8 +112,6 @@ const agentMessages: AgentMessagesApi = {
 type UseAssistantChatInput = {
 	threadId: string;
 	initialMessages: UIMessage[];
-	/** A reply was streaming when the conversation opened: pick it up again (needs Redis on the server). */
-	resume: boolean;
 	/** Read when a message is sent, so the chips always apply to the next message. */
 	context: MessageContext;
 	onFinish: () => void;
@@ -123,7 +121,8 @@ type UseAssistantChatInput = {
  * The conversation's chat: messages stream in over oRPC, answers to the assistant's questions continue the reply,
  * and only the newest message is sent (the server keeps the transcript).
  */
-export function useAssistantChat({ threadId, initialMessages, resume, context, onFinish }: UseAssistantChatInput) {
+/** Running replies are picked up by the caller (chat-view.tsx `recoverRun`), not on mount. */
+export function useAssistantChat({ threadId, initialMessages, context, onFinish }: UseAssistantChatInput) {
 	const contextRef = useRef(context);
 	// What the chat shows now: a resumed run keeps the parts of the message from before it.
 	const messagesRef = useRef(initialMessages);
@@ -145,7 +144,6 @@ export function useAssistantChat({ threadId, initialMessages, resume, context, o
 	const chat = useChat<UIMessage>({
 		id: threadId,
 		messages: initialMessages,
-		resume,
 		transport,
 		throttle: 50,
 		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,

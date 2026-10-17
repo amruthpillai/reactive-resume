@@ -1,6 +1,6 @@
 import type { Proposal, ProposalState } from "@reactive-resume/resume/proposals";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { getProposalState } from "@reactive-resume/resume/proposals";
 import { acceptResumeProposals } from "./proposals";
 import { useSession } from "@/auth/session";
@@ -56,18 +56,23 @@ const openDraft = (resumeId: string) =>
 		.catch(() => undefined);
 
 /**
- * Opens `resumeId` in the M3-T3 draft store when no builder pane has (a direct link to the Assistant), and again when
- * the id or account changes. Opening one resume twice is safe: the store drops the older open. The draft stays open
- * on leaving: a pane below keeps using it, and the next open replaces it.
+ * The builder layout owns the draft; the Assistant subscribes to it. Only when nothing is open at all (no owner, as
+ * after a direct link) does it open `resumeId`, once, when it mounts. It never reopens when another pane changes the
+ * draft, so it can't close that pane's document. Another resume being open is reported, not reclaimed.
  */
 export function useOpenResumeDraft(resumeId: string) {
 	const session = useSession();
+	const signedIn = session.status === "signed-in";
 	const loaded = useResumeStore((state) => state.document?.id === resumeId);
+	const otherOpen = useResumeStore((state) => state.document !== null && state.document.id !== resumeId);
 	const failed = useResumeStore((state) => state.document === null && state.status === "error");
+	const tried = useRef<string | null>(null);
 
 	useEffect(() => {
-		if (session.status === "signed-in" && !loaded) openDraft(resumeId);
-	}, [resumeId, session, loaded]);
+		if (!signedIn || tried.current === resumeId) return;
+		tried.current = resumeId;
+		if (useResumeStore.getState().document === null) openDraft(resumeId);
+	}, [resumeId, signedIn]);
 
-	return { failed, retry: () => openDraft(resumeId) };
+	return { loaded, otherOpen, failed, retry: () => openDraft(resumeId) };
 }

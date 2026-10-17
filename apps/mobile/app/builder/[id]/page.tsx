@@ -38,7 +38,12 @@ export default function PageScreen() {
 				/>
 			) : null}
 			<ProposedEditsCaption resumeId={id} pending={marked.pending} />
-			<ResumePage id={id} draft={{ ...draft, data: marked.data }} focused={nativeEnvironment.focused()} />
+			<ResumePage
+				id={id}
+				draft={current ? draft : { ...draft, data: null }}
+				previewData={marked.data}
+				focused={nativeEnvironment.focused()}
+			/>
 			<ResumeConflictSheet />
 		</View>
 	);

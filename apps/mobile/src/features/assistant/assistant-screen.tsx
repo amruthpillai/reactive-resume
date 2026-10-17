@@ -89,14 +89,18 @@ export function AssistantScreen(props: AssistantScreenProps) {
 	// document opens that document, and an unknown one is refused.
 	const linked = selected !== null && selected === props.threadId ? selected : null;
 	const linkedThread = linked ? threads.data?.find((thread) => thread.id === linked) : undefined;
-	const link =
-		!linked || !document || !threads.data
-			? "ok"
-			: !linkedThread
-				? "missing"
-				: belongsTo(linkedThread, document)
-					? "ok"
-					: "elsewhere";
+	// Only a positively verified link counts: a list that is loading or failed keeps the chat away.
+	const link = !linked
+		? "ok"
+		: threads.error && !threads.data
+			? "failed"
+			: !threads.data || !document
+				? "pending"
+				: !linkedThread
+					? "missing"
+					: belongsTo(linkedThread, document)
+						? "ok"
+						: "elsewhere";
 	const openLinked = useEffectEvent((thread: ThreadSummary) => openElsewhere(thread));
 	useEffect(() => {
 		if (link === "elsewhere" && linkedThread) openLinked(linkedThread);

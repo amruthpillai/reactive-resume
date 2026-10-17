@@ -76,14 +76,18 @@ type UIPart = UIMessage["parts"][number];
 
 /**
  * The parts of an assistant message that came before the run now streaming. A run continues the message after the
- * user answers the assistant's question (the only client tool), so the current run starts after the last answer.
+ * user answers the assistant's question (the only client tool); the answer keeps the question's place, so parts the
+ * earlier run wrote after the question stay before the boundary. Every run begins a step (`step-start`, in the SDK's
+ * message and in the server's saved draft alike), so the current run starts at the first step after the last answer.
+ * With no step of it there yet, the whole message came before it.
  */
 export function partsBeforeRun(message: UIMessage | undefined): UIPart[] {
 	if (message?.role !== "assistant") return [];
 	const answered = message.parts.findLastIndex(
 		(part) => part.type === "tool-ask_user_question" && (part as { state?: string }).state === "output-available",
 	);
-	return message.parts.slice(0, answered + 1);
+	const runStart = message.parts.findIndex((part, index) => index > answered && part.type === "step-start");
+	return runStart === -1 ? message.parts : message.parts.slice(0, runStart);
 }
 
 /** Chunks that rebuild completed parts, so a replay that restarts the message keeps what came before the run. */

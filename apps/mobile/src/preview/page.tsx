@@ -15,10 +15,12 @@ export type ResumePageProps = {
 	id: string;
 	draft: Pick<ResumeDraftStore, "data" | "update" | "locked" | "undo">;
 	focused?: boolean | undefined;
+	/** What the page renders, when it differs from the draft (the Assistant's pending edits marked). Fit and editing use the draft. */
+	previewData?: ResumeDraftStore["data"] | undefined;
 };
 
 /** The Page body consumes M1's DraftStore contract; shells and draft persistence stay with their owners. */
-export function ResumePage({ id, draft, focused }: ResumePageProps) {
+export function ResumePage({ id, draft, focused, previewData }: ResumePageProps) {
 	const { t } = useLingui();
 	const theme = useTheme();
 	const { colors, space, size, motion, shadows } = theme;
@@ -44,7 +46,8 @@ export function ResumePage({ id, draft, focused }: ResumePageProps) {
 	const measured = Object.entries(rows)
 		.filter(([, row]) => row.y + row.height >= offset && row.y <= offset + viewport.height)
 		.map(([index]) => Number(index));
-	const preview = usePreview(data, data?.metadata.template, {
+	const shown = previewData ?? data;
+	const preview = usePreview(shown, shown?.metadata.template, {
 		focused,
 		pages: Object.keys(rows).length > 0 ? measured : [0],
 		viewport: { width: fitWidth, height: viewport.height, offset, zoom: zoom ?? 1 },

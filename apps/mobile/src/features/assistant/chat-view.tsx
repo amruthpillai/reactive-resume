@@ -23,6 +23,7 @@ import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { attachmentPart, refreshThreads, transcriptOf, useAssistantChat } from "./chat";
 import { FileChip, MessageView } from "./messages";
 import { isProposeEdits, publishProposals, toProposals } from "./proposals";
+import { recoverRun } from "./recovery";
 import { client, orpc } from "@/api/client";
 import { useSession } from "@/auth/session";
 import { Button, Icon, Text, showToast, useTheme } from "@/ui";
@@ -216,7 +217,6 @@ function Conversation(props: ConversationProps) {
 	const chat = useAssistantChat({
 		threadId,
 		initialMessages: props.initialMessages,
-		resume: props.activeRun,
 		context: props.context,
 		onFinish: refresh,
 	});
@@ -235,6 +235,16 @@ function Conversation(props: ConversationProps) {
 	const streaming = status === "submitted" || status === "streaming";
 	const readOnly = props.readOnly || props.disabled === true;
 
+	// Each follow-up of a running reply belongs to one lifecycle generation. Unmounting, going to the background,
+	// Stop and Send start a new one, and a follow-up checks its generation after every await before touching anything.
+	const generation = useRef(0);
+	const following = useRef(false);
+	const detached = useRef(false);
+	const moveOn = () => {
+		generation.current++;
+		following.current = false;
+	};
+
 	const deliver = (text: string, attachments: ChatAttachment[]) => {
 		const files = attachments.map(attachmentPart);
 		void sendMessage(files.length > 0 ? { text, files } : { text }, {
@@ -246,6 +256,7 @@ function Conversation(props: ConversationProps) {
 
 	const send = (text: string, attachments: ChatAttachment[] = []) => {
 		if (streaming || readOnly) return false;
+		moveOn();
 		clearError();
 		setStopped(false);
 		deliver(text, attachments);
@@ -266,45 +277,68 @@ function Conversation(props: ConversationProps) {
 
 	// A failed continuation (after an answer) is sent again as it was; regenerating would drop the answer.
 	const retry = () => {
+		moveOn();
 		clearError();
 		if (lastAssistantMessageIsCompleteWithToolCalls({ messages })) void sendMessage();
 		else void regenerate();
 	};
 
 	const stopReply = () => {
+		moveOn();
 		setStopped(true);
 		void client.agent.messages.stop({ threadId }).catch(() => undefined);
 		void stop();
 	};
 
-	// In the background the OS may cut the connection, so the stream is detached here; the run goes on on the server.
-	// Back in the foreground the thread is reloaded as the server saved it, and a run still going is picked up again.
-	const detached = useRef(false);
-	const reload = () => {
-		const options = orpc.agent.threads.get.queryOptions({ input: { id: threadId } });
-		return queryClient.fetchQuery({ ...options, staleTime: 0 }).catch(() => null);
-	};
-	const onAppState = useEffectEvent(async (state: string) => {
-		if (state === "background" && streaming) {
+	const recover = useEffectEvent(() => {
+		const token = ++generation.current;
+		const isCurrent = () => token === generation.current;
+		following.current = true;
+		void recoverRun({
+			isCurrent,
+			reload: async () => {
+				const options = orpc.agent.threads.get.queryOptions({ input: { id: threadId } });
+				const latest = await queryClient.fetchQuery({ ...options, staleTime: 0 }).catch(() => null);
+				return latest && { messages: latest.messages as UIMessage[], active: Boolean(latest.thread.activeRunId) };
+			},
+			apply: (saved) => {
+				clearError();
+				setMessages(saved);
+			},
+			resume: () => resumeStream(),
+		}).finally(() => {
+			if (!isCurrent()) return;
+			following.current = false;
+			refreshThreads(queryClient);
+		});
+	});
+
+	// A reply still running when the conversation opens is followed until it finishes (resume needs Redis).
+	useEffect(() => {
+		if (props.activeRun) recover();
+		// The counter object itself, not a node: unmounting moves every follow-up on.
+		const lifecycle = generation;
+		return () => {
+			lifecycle.current++;
+		};
+	}, [props.activeRun]);
+
+	// In the background the OS may cut the connection, so the reply is detached here; the run goes on on the server.
+	// Back in the foreground the thread is reloaded as the server saved it, and a run still going is followed again.
+	const onAppState = useEffectEvent((state: string) => {
+		if (state === "background") {
+			if (!streaming && !following.current) return;
 			detached.current = true;
-			void stop();
+			moveOn();
+			if (streaming) void stop();
 			return;
 		}
 		if (state !== "active" || (!detached.current && status !== "error")) return;
 		detached.current = false;
-		const latest = await reload();
-		if (!latest) return;
-		clearError();
-		setMessages(latest.messages as UIMessage[]);
-		if (!latest.thread.activeRunId) return;
-		// A resumed stream that stays quiet ends on its own (transport.ts RESUME_IDLE_MS); then the saved copy wins.
-		await resumeStream();
-		const settled = await reload();
-		if (settled && !settled.thread.activeRunId) setMessages(settled.messages as UIMessage[]);
-		refreshThreads(queryClient);
+		recover();
 	});
 	useEffect(() => {
-		const subscription = AppState.addEventListener("change", (state) => void onAppState(state));
+		const subscription = AppState.addEventListener("change", onAppState);
 		return () => subscription.remove();
 	}, []);
 

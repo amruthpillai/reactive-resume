@@ -14,6 +14,7 @@ const { lastAssistantMessageIsCompleteWithToolCalls } = await import(pathToFileU
 const { sendAgentMessage, resumeAgentStream } = await import(
 	pathToFileURL(`${mobile}/src/features/assistant/transport.ts`).href
 );
+const { recoverRun } = await import(pathToFileURL(`${mobile}/src/features/assistant/recovery.ts`).href);
 
 const sse = (chunk) => `data: ${JSON.stringify(chunk)}\n\n`;
 const reply = (id, words) => [
@@ -198,6 +199,84 @@ const scenarios = {
 		assert.deepEqual(texts, ["Before the question.", "After the answer."]);
 		const question = message.parts.find((part) => part.type === "tool-ask_user_question");
 		assert.equal(question?.output, "Yes, at Pixel Forge");
+	},
+
+	async "resuming keeps what the earlier run wrote after the question, and a whole message with no new step yet"() {
+		const before = {
+			id: "a1",
+			role: "assistant",
+			parts: [
+				{ type: "step-start" },
+				{ type: "text", text: "Before the question.", state: "done" },
+				answered,
+				// Written by the earlier run in the same step, after the question.
+				{ type: "text", text: "Trailing note.", state: "done" },
+			],
+		};
+		const user = { id: "u1", role: "user", parts: [{ type: "text", text: "Tailor it" }] };
+		for (const shown of [
+			before,
+			{ ...before, parts: [...before.parts, { type: "step-start" }, { type: "text", text: "After", state: "streaming" }] },
+		]) {
+			const { chat } = harness({ messages: [user, shown], resume: () => iterator(reply("a1", ["After", " the answer."]).map(sse)) });
+			await chat.resumeStream();
+			const texts = chat.messages[1].parts.filter((part) => part.type === "text").map((part) => part.text);
+			assert.deepEqual(texts, ["Before the question.", "Trailing note.", "After the answer."]);
+			assert.equal(chat.messages[1].parts.find((part) => part.type === "tool-ask_user_question")?.output, "Yes, at Pixel Forge");
+		}
+	},
+
+	async "after a quiet resume ends, recovery resumes again until the server says the run finished"() {
+		let resumes = 0;
+		const full = reply("a1", ["Slow", " but", " done"]).map(sse);
+		const { chat } = harness({
+			idleMs: 50,
+			// First resume: the server is slow, so it goes quiet; second: the reply arrives and finishes.
+			resume: (options) =>
+				++resumes === 1 ? iterator(full.slice(0, 4), { hang: true, signal: options.signal }) : iterator(full),
+		});
+		const user = { id: "u1", role: "user", parts: [{ type: "text", text: "Go" }] };
+		const saved = [user, { id: "a1", role: "assistant", parts: [{ type: "text", text: "Slow but done" }] }];
+		const reloads = [{ messages: [user], active: true }, { messages: [user], active: true }, { messages: saved, active: false }];
+		const applied = [];
+		await recoverRun({
+			isCurrent: () => true,
+			reload: async () => reloads.shift() ?? null,
+			apply: (messages) => {
+				applied.push(messages);
+				chat.messages = messages;
+			},
+			resume: () => chat.resumeStream(),
+			sleep: () => Promise.resolve(),
+		});
+		assert.equal(resumes, 2);
+		assert.equal(applied.length, 3);
+		assert.equal(textOf(chat.messages.at(-1)), "Slow but done");
+		assert.equal(chat.status, "ready");
+	},
+
+	async "recovery that was moved on (unmount, background) touches nothing after its await"() {
+		for (const at of ["reload", "resume"]) {
+			let generation = 0;
+			const token = ++generation;
+			const calls = { reload: 0, apply: 0, resume: 0 };
+			await recoverRun({
+				isCurrent: () => token === generation,
+				reload: async () => {
+					calls.reload++;
+					if (at === "reload") generation++;
+					return { messages: [], active: true };
+				},
+				apply: () => calls.apply++,
+				resume: async () => {
+					calls.resume++;
+					generation++;
+				},
+				sleep: () => Promise.resolve(),
+			});
+			if (at === "reload") assert.deepEqual(calls, { reload: 1, apply: 0, resume: 0 });
+			else assert.deepEqual(calls, { reload: 1, apply: 1, resume: 1 });
+		}
 	},
 
 	async "stop cancels a resumed stream: the abort signal reaches agent.messages.resume"() {
