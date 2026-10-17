@@ -38,6 +38,8 @@ export default function CareerLayout() {
 				screenOptions={{
 					headerLargeTitle: true,
 					headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
+					// The screens below are plain views, not the header's scroll view: a transparent header covers them.
+					headerTransparent: false,
 				}}
 			/>
 		</SafeAreaView>
