@@ -182,6 +182,7 @@ env.client = {
 			send: async (input, options) => {
 				assert.equal(options.context.scope, env.scope, "requests cannot borrow another account");
 				env.calls.push(["send", input, options]);
+				if (env.sendError) throw env.sendError;
 				return (async function* () {
 					for (const frame of [
 						{ type: "start", messageId: "reply" },
@@ -511,6 +512,7 @@ let passed = 0;
 async function check(name, run, timed = false) {
 	if (process.env.COMPLETION_SCENARIO && !name.includes(process.env.COMPLETION_SCENARIO)) return;
 	env.calls = [];
+	env.sendError = null;
 	env.chrome = [];
 	env.toasts = [];
 	env.resumeStore = null;
@@ -935,6 +937,48 @@ await check(
 		env.providers.hasAIProvider = false;
 		sheet.render();
 		assert.equal(find(sheet, ChatView).disabled, true);
+		sheet.unmount();
+	},
+);
+await check(
+	"Failed reply Retry sends nothing after provider readiness fails, then works when readiness returns",
+	async () => {
+		env.threads = [thread("job", { scope: "application", applicationId: "app-a", coverLetterId: null })];
+		env.saved.set("job", { thread: {}, messages: [], isReadOnly: false });
+		env.sendError = new Error("Provider unavailable");
+		const sheet = mount(CoachSheet, {
+			application: { id: "app-a", company: "Northwind" },
+			tab: "apply",
+			open: true,
+			onClose() {},
+		});
+		find(sheet, "TextInput").onChangeText("Help with this job");
+		sheet.render();
+		find(sheet, "Pressable", (p) => p.accessibilityLabel === "Send").onPress();
+		await settle(sheet);
+		assert.equal(env.calls.filter((c) => c[0] === "send").length, 1);
+		find(sheet, "Button", (p) => p.label === "Retry");
+		env.sendError = null;
+		env.providers.hasAIProvider = false;
+		sheet.render();
+		const retry = find(sheet, "Button", (p) => p.label === "Retry");
+		// Invoke the handler too: a disabled visual control alone must not permit a model request.
+		retry.onPress();
+		await settle(sheet);
+		assert.equal(
+			env.calls.filter((c) => c[0] === "send").length,
+			1,
+			"Retry must not send while provider readiness disables chat",
+		);
+		assert.equal(retry.disabled, true);
+		env.providers.hasAIProvider = true;
+		sheet.render();
+		const ready = find(sheet, "Button", (p) => p.label === "Retry");
+		assert.equal(ready.disabled, false);
+		ready.onPress();
+		await settle(sheet);
+		assert.equal(env.calls.filter((c) => c[0] === "send").length, 2);
+		assert.equal(find(sheet, "MessageView", (p) => p.message.role === "assistant").message.parts[0].text, "Answer");
 		sheet.unmount();
 	},
 );
