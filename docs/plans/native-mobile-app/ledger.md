@@ -20,7 +20,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M1-T1 apps/mobile skeleton                    | Claude Code | a735cf80 | mobile/M1-T1      | MERGED  | briefs/M1.md                                                                        |
 | M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2      | MERGED  | briefs/M1.md                                                                        |
 | M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
-| M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | RUNNING | briefs/W2.md                                                                        |
+| M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | REVIEW  | briefs/W2.md                                                                        |
 | M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | RUNNING | briefs/W2.md                                                                        |
 | M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | RUNNING | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
@@ -30,7 +30,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M5-T1 Applications list and add flow          | Codex       | 18332b0c | mobile/M5-T1      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | RUNNING | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
-| M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | RUNNING | briefs/W5.md; JS-only                                                               |
+| M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | REVIEW  | briefs/W5.md; JS-only                                                               |
 
 ## Gates
 
@@ -161,3 +161,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M5-T1 merged. Claude review `c580fd19`: NO BLOCKERS; four parity notes fixed (posting/search errors, 500-row partial import, export file lifetime, optimistic update with rollback in `queries.ts`).
 - 2026-10-17: M3-T4 done: 17 templates + free-form pass Node/device page-text parity on iOS and Android. Claude review `e5de87ab`: 3 blockers (font cache in backed-up Documents dir and unbounded; unvalidated font bytes persisted; raster scale not capped at the 25 MP bitmap limit). Fix round also wires the real DraftStore. M5-T2 and M6-T1 launched JS-only.
 - 2026-10-17: M3-T2 review `17746a44`: NO BLOCKERS; five parity notes in a fix round. Disk reached 3.9 GB free; coordinator deleted the S1–S3, M1-T1 and M3-T3 simulators/AVDs and `/tmp/m1t1` (18 GB free after). Owner AVDs (`Pixel_10`, `WieBitte_Test_API34`) untouched.
+- 2026-10-17: M2-T1 done (60 screenshots; three Sheet bugs and one dialog bug fixed on device). Notes for later waves: long sheets need fractional detents; Hermes lacks `Intl.DisplayNames` (language pickers need a names table); easing tokens are not yet Reanimated worklets. Codex review `42672668` running. M6-T1 done; Claude review `2d6b4e18` running.
