@@ -198,3 +198,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M3-T1 FIXED 5 (`ac8c2ddad`; session probes 4/4); second review by `9fae76e4`. M2-T2 second review: 1 blocker (duplicate conflict sheet in Share screen); fixing.
 - 2026-10-17: M2-T2 merged (FIXED 4 + FIXED 1). The builder and letter layouts own the draft (`useResumeDraftOwner`/`useLetterDraftOwner`); panes subscribe via `useResumeStore()`; one conflict sheet per editor.
 - 2026-10-17: M6-T2 FIXED 6; second review `195d8e34`. Launched M4-T4 and M7-T3. Sign-out cleanup must also clear `reactive-resume:career-draft:<scope>:` (M6-T2) and application notes (M5-T2) — assign to M8-T1 integration if M3-T1's fix round doesn't cover it.
+- 2026-10-17: M6-T3 third check: 3 blockers (unrendered validation states, spinner when another resume is open, recovery overlapping an in-flight send). Third fix round; Assistant becomes a draft subscriber under the builder layout.
