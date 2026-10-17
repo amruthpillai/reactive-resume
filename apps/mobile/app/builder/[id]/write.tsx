@@ -9,7 +9,7 @@ import { Banner, EmptyState, useTheme } from "@/ui";
 export default function WriteScreen() {
 	const { t } = useLingui();
 	const { colors } = useTheme();
-	const { id, imported } = useLocalSearchParams<{ id: string; imported?: string }>();
+	const { id, imported, section } = useLocalSearchParams<{ id: string; imported?: string; section?: string }>();
 	// The builder layout owns the draft (and its conflict sheet); Write only reads it.
 	const draft = useResumeStore();
 	const session = useSession();
@@ -27,7 +27,11 @@ export default function WriteScreen() {
 					action={{ label: t`Retry`, onPress: () => void draft.open(id).catch(() => undefined) }}
 				/>
 			) : null}
-			{current ? <Outline resumeId={id} imported={imported} /> : <EmptyState icon="hourglass" title={t`Loading…`} />}
+			{current ? (
+				<Outline key={`${id}:${section ?? ""}`} resumeId={id} imported={imported} initialSection={section} />
+			) : (
+				<EmptyState icon="hourglass" title={t`Loading…`} />
+			)}
 		</View>
 	);
 }

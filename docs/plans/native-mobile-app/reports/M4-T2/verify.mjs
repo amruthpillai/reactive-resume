@@ -183,6 +183,19 @@ try {
  const draft = code.createDraftStore({ kind: "resume", delay: 500, read: async () => structuredClone(original), data: (value) => value.data, withData: (document, data) => ({ ...document, data }), merge: (_saved, _submitted, current) => current, matches: (a, b) => JSON.stringify(a) === JSON.stringify(b), version: (value) => value.version, parse: (value) => value, save: async (value) => value, copy: async () => {}, isConflict: () => false }, { storage: { getItemSync: (key) => storage.get(key) ?? null, setItemSync: (key, value) => storage.set(key, value), removeItemSync: (key) => storage.delete(key), getAllKeysSync: () => [...storage.keys()] }, scope: async () => "fixture", online: () => false, focused: () => false });
  env.store = draft.store;
  await draft.store.getState().open("resume");
+ await scenario("Check opens missing contact directly in Basics and preserves entry field targets", () => {
+  const previous = draft.store.getState();
+  const data = sample(); data.basics.email = "";
+  data.sections.experience.items[0].description = "";
+  draft.store.setState({ ...previous, data });
+  const email = code.computeCheck(data).issues.find((entry) => entry.finding.code === "MISSING_EMAIL"); assert(email);
+  code.fixIssue("resume", email);
+  assert.deepEqual(calls.at(-1), ["route", { pathname: "/builder/resume/entry/basics/basics", params: { section: "basics", field: "email" } }], "contact fix must open Basics rather than the outline");
+  const description = code.computeCheck(data).issues.find((entry) => entry.finding.code === "MISSING_EXPERIENCE_DESCRIPTION"); assert(description);
+  code.fixIssue("resume", description);
+  assert.deepEqual(calls.at(-1), ["route", { pathname: `/builder/resume/entry/experience/${data.sections.experience.items[0].id}`, params: { section: "experience", field: "description" } }]);
+  draft.store.setState(previous);
+ });
  await scenario("actual draft action: one fix one undo; stale toast cannot undo later edit", () => {
   const before = draft.store.getState().data;
   const issue = code.computeCheck(before).issues.find((entry) => entry.finding.code === "PICTURE_PRESENT"); assert(issue);
