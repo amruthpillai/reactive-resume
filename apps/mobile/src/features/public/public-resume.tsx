@@ -178,7 +178,7 @@ export function PublicResume({ username, slug }: PublicResumeProps) {
 				</Text>
 			</ScrollView>
 			<SafeAreaView
-				edges={["bottom"]}
+				edges={["bottom", "left", "right"]}
 				style={{
 					flexDirection: "row",
 					gap: space.s2,

@@ -4,7 +4,7 @@ import { plural, t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { View } from "react-native";
 import { useCareerQueries, useCareerTime, useNow, useOffers } from "./hooks";
 import { defaultPair, formatMoney, matchingPlace, meetsMinimum, moneyDifference, sameTerms } from "./offer-compare";
 import { Actions, LoadState } from "./shared";
@@ -17,7 +17,8 @@ const periodLabel = (value: OfferTerms["period"]) =>
 export function OffersScreen() {
 	const { t } = useLingui();
 	const { space, size } = useTheme();
-	const tablet = useWindowDimensions().width >= size.panel * 2;
+	const [width, setWidth] = useState(0);
+	const tablet = width >= size.panel * 2 + space.s4;
 	const router = useRouter();
 	const query = useOffers();
 	const { profile } = useCareerQueries();
@@ -59,7 +60,10 @@ export function OffersScreen() {
 							}
 						/>
 					</Actions>
-					<View style={{ flexDirection: tablet ? "row" : "column", gap: space.s4, alignItems: "stretch" }}>
+					<View
+						onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+						style={{ flexDirection: tablet ? "row" : "column", gap: space.s4, alignItems: "stretch" }}
+					>
 						{[a, b].map((offer, side) => (
 							<View key={side} style={{ flex: tablet ? 1 : 0, gap: space.s3 }}>
 								<SelectSheet

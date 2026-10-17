@@ -4,6 +4,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useRouter, useGlobalSearchParams, useLocalSearchParams, useNavigation } from "expo-router";
 import { Pressable, ScrollView, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
 import { WORKSPACE_TABS } from "@reactive-resume/schema/career";
 import { createSlot } from "./slot";
 import { TopBar } from "./top-bar";
@@ -55,6 +56,7 @@ function Frame({ children }: { children: ReactNode }) {
 	const router = useRouter();
 	const { t } = useLingui();
 	const tablet = useIsTablet();
+	const insets = useSafeAreaInsets();
 	const navigation = useNavigation();
 	const slots = slot.useSlot();
 	const { id } = useLocalSearchParams<{ id: string }>();
@@ -89,7 +91,15 @@ function Frame({ children }: { children: ReactNode }) {
 				}
 				actions={slots.actions}
 			/>
-			<View style={{ backgroundColor: colors.surface, borderBottomWidth: 1, borderBottomColor: colors.line }}>
+			<View
+				style={{
+					paddingLeft: insets.left,
+					paddingRight: insets.right,
+					backgroundColor: colors.surface,
+					borderBottomWidth: 1,
+					borderBottomColor: colors.line,
+				}}
+			>
 				<ScrollView
 					horizontal
 					showsHorizontalScrollIndicator={false}
@@ -125,7 +135,11 @@ function Frame({ children }: { children: ReactNode }) {
 				</ScrollView>
 			</View>
 			{slots.banner}
-			<KeyboardAvoidingView behavior="padding" automaticOffset style={{ flex: 1, flexDirection: "row" }}>
+			<KeyboardAvoidingView
+				behavior="padding"
+				automaticOffset
+				style={{ flex: 1, flexDirection: "row", paddingLeft: insets.left, paddingRight: insets.right }}
+			>
 				{tablet && slots.context ? (
 					<View
 						style={{
@@ -138,7 +152,9 @@ function Frame({ children }: { children: ReactNode }) {
 						{slots.context}
 					</View>
 				) : null}
-				<View style={{ flex: 1 }}>{children}</View>
+				<SafeAreaInsetsContext value={{ ...insets, left: 0, right: 0, top: 0 }}>
+					<View style={{ flex: 1 }}>{children}</View>
+				</SafeAreaInsetsContext>
 			</KeyboardAvoidingView>
 		</View>
 	);

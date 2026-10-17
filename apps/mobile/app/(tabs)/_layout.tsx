@@ -4,7 +4,12 @@ import { useRouter } from "expo-router";
 import { Tabs } from "expo-router/tabs";
 import { View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+	SafeAreaInsetsContext,
+	SafeAreaProvider,
+	SafeAreaView,
+	useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { routes } from "@/routes";
 import { AppStrip, BannerAbove } from "@/shell/app-banner";
 import { AppSidebar, PhoneTabBar } from "@/shell/app-tabs";
@@ -48,25 +53,29 @@ export default function TabsLayout() {
 			<SafeAreaInsetsContext value={offline ? { ...insets, top: 0 } : insets}>
 				<BannerAbove value={offline}>
 					<KeyboardAvoidingView behavior="padding" automaticOffset style={{ flex: 1 }}>
-						<Tabs
-							tabBar={(props) => (tablet ? <AppSidebar {...props} /> : <PhoneTabBar {...props} />)}
-							screenOptions={{ animation: "none", headerShown: false, tabBarPosition: tablet ? "left" : "bottom" }}
-						>
-							<Tabs.Screen name="documents" options={{ title: t`Documents` }} />
-							<Tabs.Screen name="applications" options={{ title: t`Applications` }} />
-							<Tabs.Screen
-								name="create"
-								options={{ title: t`New` }}
-								listeners={{
-									tabPress: (event) => {
-										event.preventDefault();
-										router.push(routes.new());
-									},
-								}}
-							/>
-							<Tabs.Screen name="career" options={{ title: t`Career` }} />
-							<Tabs.Screen name="settings" options={{ title: t`Settings` }} />
-						</Tabs>
+						<SafeAreaView edges={["left", "right"]} style={{ flex: 1 }}>
+							<SafeAreaProvider>
+								<Tabs
+									tabBar={(props) => (tablet ? <AppSidebar {...props} /> : <PhoneTabBar {...props} />)}
+									screenOptions={{ animation: "none", headerShown: false, tabBarPosition: tablet ? "left" : "bottom" }}
+								>
+									<Tabs.Screen name="documents" options={{ title: t`Documents` }} />
+									<Tabs.Screen name="applications" options={{ title: t`Applications` }} />
+									<Tabs.Screen
+										name="create"
+										options={{ title: t`New` }}
+										listeners={{
+											tabPress: (event) => {
+												event.preventDefault();
+												router.push(routes.new());
+											},
+										}}
+									/>
+									<Tabs.Screen name="career" options={{ title: t`Career` }} />
+									<Tabs.Screen name="settings" options={{ title: t`Settings` }} />
+								</Tabs>
+							</SafeAreaProvider>
+						</SafeAreaView>
 					</KeyboardAvoidingView>
 				</BannerAbove>
 			</SafeAreaInsetsContext>

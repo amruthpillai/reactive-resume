@@ -3,7 +3,7 @@ import { useLingui } from "@lingui/react/macro";
 import { File } from "expo-file-system";
 import { Image } from "expo-image";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, PixelRatio, ScrollView, View, useWindowDimensions } from "react-native";
+import { ActivityIndicator, PixelRatio, ScrollView, View } from "react-native";
 import { pdfPages } from "../../../modules/pdf-pages";
 import { Text, useTheme } from "@/ui";
 
@@ -16,11 +16,12 @@ type OriginalPageProps = { uri: string };
 export function OriginalPage({ uri }: OriginalPageProps) {
 	const { t } = useLingui();
 	const { colors, radius, shadows, space } = useTheme();
-	const width = useWindowDimensions().width - space.s4 * 2;
+	const [width, setWidth] = useState(0);
 	const [pages, setPages] = useState<PageImage[] | null>(null);
 	const [failed, setFailed] = useState(false);
 
 	useEffect(() => {
+		if (width <= 0) return;
 		let id: string | undefined;
 		let active = true;
 		void (async () => {
@@ -44,28 +45,33 @@ export function OriginalPage({ uri }: OriginalPageProps) {
 		};
 	}, [uri, width]);
 
-	if (failed)
-		return (
-			<Text variant="callout" color="ink2">
-				{t`This file couldn't be shown as pages. The report above still applies.`}
-			</Text>
-		);
-	if (!pages) return <ActivityIndicator color={colors.accent} style={{ padding: space.s8 }} />;
-
 	return (
-		<ScrollView maximumZoomScale={3} minimumZoomScale={1} contentContainerStyle={{ gap: space.s3 }}>
-			{pages.map((page) => (
-				<View
-					key={page.index}
-					style={{ borderRadius: radius.rSm, backgroundColor: colors.paper, boxShadow: shadows.ePage.boxShadow }}
-				>
-					<Image
-						source={{ uri: page.uri }}
-						accessibilityLabel={t`Page ${page.index + 1} of the uploaded PDF`}
-						style={{ width, aspectRatio: page.width / page.height }}
-					/>
-				</View>
-			))}
+		<ScrollView
+			onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
+			maximumZoomScale={3}
+			minimumZoomScale={1}
+			contentContainerStyle={{ gap: space.s3 }}
+		>
+			{failed ? (
+				<Text variant="callout" color="ink2">
+					{t`This file couldn't be shown as pages. The report above still applies.`}
+				</Text>
+			) : !pages ? (
+				<ActivityIndicator color={colors.accent} style={{ padding: space.s8 }} />
+			) : (
+				pages.map((page) => (
+					<View
+						key={page.index}
+						style={{ borderRadius: radius.rSm, backgroundColor: colors.paper, boxShadow: shadows.ePage.boxShadow }}
+					>
+						<Image
+							source={{ uri: page.uri }}
+							accessibilityLabel={t`Page ${page.index + 1} of the uploaded PDF`}
+							style={{ width, aspectRatio: page.width / page.height }}
+						/>
+					</View>
+				))
+			)}
 		</ScrollView>
 	);
 }

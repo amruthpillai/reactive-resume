@@ -5,7 +5,7 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useThreads } from "./chat";
 import { ChatView, ContextChip } from "./chat-view";
 import { useLetterAssistantDocument, useResumeAssistantDocument } from "./document";
@@ -268,47 +268,49 @@ function DocumentAssistantScreen(props: DocumentAssistantScreenProps) {
 	);
 
 	return (
-		<SafeAreaView edges={["top", "bottom"]} style={{ flex: 1, backgroundColor: colors.surface }}>
-			<View
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					minHeight: 52,
-					paddingStart: space.s3,
-					paddingEnd: space.s1,
-					borderBottomWidth: 1,
-					borderColor: colors.line,
-				}}
-			>
-				<Icon name="sparkle" size={20} color={colors.accent} />
-				<View style={{ flex: 1, paddingStart: space.s2 }}>
-					<Text variant="title" accessibilityRole="header">
-						<Trans>Assistant</Trans>
-					</Text>
-					{providers.hasAIProvider ? (
-						<ModelButton label={provider?.model ?? label} onPress={() => setModelOpen(true)} />
-					) : null}
+		<SafeAreaProvider>
+			<SafeAreaView edges={["top", "bottom", "left", "right"]} style={{ flex: 1, backgroundColor: colors.surface }}>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						minHeight: 52,
+						paddingStart: space.s3,
+						paddingEnd: space.s1,
+						borderBottomWidth: 1,
+						borderColor: colors.line,
+					}}
+				>
+					<Icon name="sparkle" size={20} color={colors.accent} />
+					<View style={{ flex: 1, paddingStart: space.s2 }}>
+						<Text variant="title" accessibilityRole="header">
+							<Trans>Assistant</Trans>
+						</Text>
+						{providers.hasAIProvider ? (
+							<ModelButton label={provider?.model ?? label} onPress={() => setModelOpen(true)} />
+						) : null}
+					</View>
+					<IconButton icon="note-pencil" label={t`New conversation`} onPress={newConversation} />
+					<IconButton
+						icon="clock-counter-clockwise"
+						label={t`Past conversations`}
+						selected={view === "history"}
+						onPress={() => setView(view === "history" ? "thread" : "history")}
+					/>
+					<IconButton icon="x" label={t`Close the assistant`} onPress={() => router.back()} />
 				</View>
-				<IconButton icon="note-pencil" label={t`New conversation`} onPress={newConversation} />
-				<IconButton
-					icon="clock-counter-clockwise"
-					label={t`Past conversations`}
-					selected={view === "history"}
-					onPress={() => setView(view === "history" ? "thread" : "history")}
+
+				{gate}
+
+				<ModelSheet
+					open={modelOpen}
+					onClose={() => setModelOpen(false)}
+					providers={providers.usableProviders}
+					currentId={provider?.id}
+					onChoose={(id) => void choose(id)}
 				/>
-				<IconButton icon="x" label={t`Close the assistant`} onPress={() => router.back()} />
-			</View>
-
-			{gate}
-
-			<ModelSheet
-				open={modelOpen}
-				onClose={() => setModelOpen(false)}
-				providers={providers.usableProviders}
-				currentId={provider?.id}
-				onChoose={(id) => void choose(id)}
-			/>
-		</SafeAreaView>
+			</SafeAreaView>
+		</SafeAreaProvider>
 	);
 }
 

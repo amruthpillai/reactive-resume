@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { useRouter, Stack } from "expo-router";
 import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaInsetsContext, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { CollectionHeader } from "@/components/collection-header";
 import { routes } from "@/routes";
 import { Segmented, Text, useTheme } from "@/ui";
@@ -20,8 +20,9 @@ export function ApplicationsViewFrame({ current, children, search, actions }: Ap
 	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
+	const insets = useSafeAreaInsets();
 	return (
-		<SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.bg }}>
+		<SafeAreaView edges={["top", "left", "right"]} style={{ flex: 1, backgroundColor: colors.bg }}>
 			{/* Views swap in place: no push animation, no back stack between them. Shared title stays above the view tabs. */}
 			<Stack.Screen options={{ title: t`Applications`, animation: "none", headerShown: false }} />
 			<View style={{ paddingHorizontal: space.s4, paddingTop: space.s4, paddingBottom: space.s1, gap: space.s3 }}>
@@ -50,7 +51,9 @@ export function ApplicationsViewFrame({ current, children, search, actions }: Ap
 					}}
 				/>
 			</View>
-			<View style={{ flex: 1 }}>{children}</View>
+			<SafeAreaInsetsContext value={{ ...insets, top: 0, left: 0, right: 0 }}>
+				<View style={{ flex: 1 }}>{children}</View>
+			</SafeAreaInsetsContext>
 		</SafeAreaView>
 	);
 }

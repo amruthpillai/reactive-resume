@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { useRouter, Stack, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { FlatList, I18nManager, Platform, Pressable, ScrollView, View, useWindowDimensions } from "react-native";
+import { FlatList, I18nManager, Platform, Pressable, ScrollView, View } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import { DocumentSheets } from "./document-sheets";
 import { collectTags, daysLeftInTrash, documentKey, documentRef, filterDocuments } from "./filter";
@@ -147,7 +147,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 	const router = useRouter();
 	const { t } = useLingui();
 	const { space, size } = useTheme();
-	const { width } = useWindowDimensions();
+	const [width, setWidth] = useState(0);
 	const session = useSession();
 	const documents = useDocuments(trashed);
 	const countsOptions = orpc.documents.counts.queryOptions();
@@ -234,7 +234,11 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 		/>
 	);
 	return (
-		<Screen scroll={false} edges={["top"]}>
+		<Screen
+			scroll={false}
+			edges={["top"]}
+			onLayout={(event) => setWidth(event.nativeEvent.layout.width - space.s4 * 2)}
+		>
 			<Stack.Screen options={{ title: trashed ? t`Trash` : t`Documents`, headerShown: false }} />
 			<View style={{ flexDirection: "row", alignItems: "center", gap: space.s2 }}>
 				{trashed && (
@@ -386,7 +390,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 						contentContainerStyle={{ gap: space.s3, paddingBottom: space.s4 }}
 						columnWrapperStyle={columns > 1 ? { gap: space.s3 } : undefined}
 						renderItem={({ item }) => (
-							<View style={{ flex: 1, maxWidth: `${100 / columns}%` }}>
+							<View style={{ flex: 1, maxWidth: Math.max(0, (width - space.s3 * (columns - 1)) / columns) }}>
 								<DocumentItem
 									document={item}
 									visible={visible.includes(documentKey(item))}

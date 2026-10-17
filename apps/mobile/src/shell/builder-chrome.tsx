@@ -174,9 +174,13 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 		<FrameContext value={frame}>
 			<View style={{ flex: 1, backgroundColor: colors.bg }}>
 				{tablet ? <ChromeTopBar /> : null}
-				<KeyboardAvoidingView behavior="padding" automaticOffset style={{ flex: 1 }}>
+				<KeyboardAvoidingView
+					behavior="padding"
+					automaticOffset
+					style={{ flex: 1, paddingLeft: insets.left, paddingRight: insets.right }}
+				>
 					{/* On tablet the top bar has cleared the status bar, so headers inside the panel must not pad it again. */}
-					<SafeAreaInsetsContext value={tablet ? { ...insets, top: 0 } : insets}>
+					<SafeAreaInsetsContext value={{ ...insets, left: 0, right: 0, top: tablet ? 0 : insets.top }}>
 						<View style={{ flex: 1, flexDirection: "row" }}>
 							<View
 								style={
@@ -210,8 +214,8 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 							</View>
 							{tablet && page ? <View style={{ flex: 1, paddingBottom: insets.bottom }}>{page}</View> : null}
 						</View>
+						{!tablet && barPane ? <PaneBar panes={panes} active={barPane.pane} onSwitch={switchPane} /> : null}
 					</SafeAreaInsetsContext>
-					{!tablet && barPane ? <PaneBar panes={panes} active={barPane.pane} onSwitch={switchPane} /> : null}
 				</KeyboardAvoidingView>
 			</View>
 		</FrameContext>

@@ -16,8 +16,8 @@ import {
 	View,
 } from "react-native";
 import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { haptics, useIsWide, useReducedMotion } from "./motion";
+import { useWindowSafeAreaInsets } from "./safe-area";
 import { Text } from "./text";
 import { useTheme } from "./theme";
 
@@ -90,7 +90,7 @@ function BottomSheet({
 }: SheetProps) {
 	const nested = use(InSheetContext);
 	const { colors, radius, shadows, size, space } = useTheme();
-	const insets = useSafeAreaInsets();
+	const insets = useWindowSafeAreaInsets();
 	const { height } = useWindowDimensions();
 	const ref = useRef<BottomSheetModal>(null);
 	const detentIndex = useRef(-1);
@@ -176,6 +176,7 @@ function BottomSheet({
 			keyboardBlurBehavior="restore"
 			android_keyboardInputMode="adjustResize"
 			topInset={insets.top}
+			style={{ marginLeft: insets.left, marginRight: insets.right }}
 			backgroundStyle={{
 				backgroundColor: colors.raised,
 				borderTopLeftRadius: android ? radius.rSheetA : radius.r3xl,
@@ -534,7 +535,7 @@ export const toast = showToast;
 export function Toaster() {
 	const { t } = useLingui();
 	const { colors, motion, radius, shadows, size, space } = useTheme();
-	const insets = useSafeAreaInsets();
+	const insets = useWindowSafeAreaInsets();
 	const wide = useIsWide();
 	const reduced = useReducedMotion();
 	const active = useSyncExternalStore(

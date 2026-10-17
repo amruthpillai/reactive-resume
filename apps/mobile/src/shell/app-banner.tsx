@@ -2,6 +2,7 @@ import type { IconName } from "@/ui";
 import type { ReactNode } from "react";
 import { createContext, use } from "react";
 import { View } from "react-native";
+import { useIsTablet } from "./use-is-tablet";
 import { Icon, Text, useReducedMotion, useTheme } from "@/ui";
 
 const BannerAboveContext = createContext(false);
@@ -16,10 +17,11 @@ export const BannerAbove = BannerAboveContext;
 export function useTabStackOptions(cleared = false) {
 	const { colors, type } = useTheme();
 	const reduced = useReducedMotion();
+	const tablet = useIsTablet();
 	const disableTopInsetApplication = use(BannerAboveContext) || cleared;
 	return {
 		animation: reduced ? ("fade" as const) : ("default" as const),
-		headerLargeTitle: true,
+		headerLargeTitle: !tablet,
 		headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
 		unstable_nativeProps: { headerConfig: { disableTopInsetApplication } },
 	};

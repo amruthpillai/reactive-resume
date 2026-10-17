@@ -419,5 +419,16 @@ await check("review job copy with AI reaches the builder through its handoff sea
 	assert.equal(calls.find(([name]) => name === "documents.copyForJob")[1].applicationId, "job");
 	assert.equal(calls.find(([name]) => name === "navigate")[1], "/builder/created-id/write");
 });
+await check("document columns follow content width across folds and keep partial rows aligned", () => {
+	const screen = mount(() => DocumentsLibrary({}));
+	for (const [width, columns] of [[400, 1], [850, 2], [1150, 3], [466, 1]]) {
+		screen.tree.props.onLayout({ nativeEvent: { layout: { width } } });
+		screen.render();
+		const list = elements(screen.tree).find((element) => element.type === "FlatList").props;
+		assert.equal(list.numColumns, columns);
+		const card = list.renderItem({ item: doc("fictional") });
+		assert.equal(card.props.style.maxWidth, (width - 32 - 12 * (columns - 1)) / columns);
+	}
+});
 hooks.deregister(); delete globalThis.__m3t2;
 console.log(`${passed} scenarios passed`);

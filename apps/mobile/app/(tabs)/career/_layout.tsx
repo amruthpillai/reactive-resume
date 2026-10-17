@@ -1,7 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 import { Stack, usePathname, useRouter } from "expo-router";
 import { ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaInsetsContext, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { routes } from "@/routes";
 import { useTabStackOptions } from "@/shell/app-banner";
 import { Button, useTheme } from "@/ui";
@@ -9,6 +9,7 @@ import { Button, useTheme } from "@/ui";
 export default function CareerLayout() {
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
+	const insets = useSafeAreaInsets();
 	const stackOptions = useTabStackOptions(true);
 	const pathname = usePathname();
 	const router = useRouter();
@@ -19,7 +20,7 @@ export default function CareerLayout() {
 		{ value: "offers", label: t`Offers` },
 	] as const;
 	return (
-		<SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.bg }}>
+		<SafeAreaView edges={["top", "left", "right"]} style={{ flex: 1, backgroundColor: colors.bg }}>
 			<View>
 				<ScrollView
 					horizontal
@@ -37,7 +38,9 @@ export default function CareerLayout() {
 				</ScrollView>
 			</View>
 			{/* Plain content needs an opaque header; SafeAreaView already clears the status bar. */}
-			<Stack screenOptions={{ ...stackOptions, headerTransparent: false }} />
+			<SafeAreaInsetsContext value={{ ...insets, top: 0, left: 0, right: 0 }}>
+				<Stack screenOptions={{ ...stackOptions, headerTransparent: false }} />
+			</SafeAreaInsetsContext>
 		</SafeAreaView>
 	);
 }

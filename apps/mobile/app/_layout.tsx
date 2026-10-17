@@ -15,7 +15,7 @@ import { restoreSession } from "@/auth/session";
 import { SessionGate } from "@/auth/session-gate";
 import { useOpenReminder } from "@/features/reminders/open";
 import { i18n, initI18n } from "@/i18n";
-import { Toaster, useReducedMotion, useTheme } from "@/ui";
+import { Toaster, WindowSafeAreaProvider, useReducedMotion, useTheme } from "@/ui";
 import { fontAssets } from "@/ui/fonts";
 import { initTheme } from "@/ui/theme";
 
@@ -67,7 +67,7 @@ function RootStack() {
 					name="new"
 					options={{ presentation: "formSheet", sheetAllowedDetents: [0.5, 0.9], title: t`New` }}
 				/>
-				<Stack.Screen name="search" options={{ presentation: "modal", title: t`Search` }} />
+				<Stack.Screen name="search" options={{ presentation: "modal", headerShown: false, title: t`Search` }} />
 				<Stack.Screen name="ats-checker" options={{ title: t`ATS checker` }} />
 				<Stack.Screen name="applications/[id]" options={{ headerShown: false, title: t`Application` }} />
 				<Stack.Screen name="r/[username]/[slug]" options={{ title: t`Resume` }} />
@@ -96,17 +96,19 @@ export default function RootLayout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
-				<KeyboardProvider>
-					<QueryClientProvider client={queryClient}>
-						<I18nProvider i18n={i18n}>
-							<BottomSheetModalProvider>
-								<RootStack />
-								<SessionGate />
-								<Toaster />
-							</BottomSheetModalProvider>
-						</I18nProvider>
-					</QueryClientProvider>
-				</KeyboardProvider>
+				<WindowSafeAreaProvider>
+					<KeyboardProvider>
+						<QueryClientProvider client={queryClient}>
+							<I18nProvider i18n={i18n}>
+								<BottomSheetModalProvider>
+									<RootStack />
+									<SessionGate />
+									<Toaster />
+								</BottomSheetModalProvider>
+							</I18nProvider>
+						</QueryClientProvider>
+					</KeyboardProvider>
+				</WindowSafeAreaProvider>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>
 	);

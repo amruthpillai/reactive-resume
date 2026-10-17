@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Platform, Pressable, View } from "react-native";
+import { Platform, Pressable, View, useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useIsTablet } from "./use-is-tablet";
 import { Icon, IconButton, Text, useTheme } from "@/ui";
@@ -31,6 +31,8 @@ export function TopBar({ backLabel, onBack, title, onTitlePress, titleLabel, sub
 	const insets = useSafeAreaInsets();
 	const tablet = useIsTablet();
 	const { colors, size, space } = useTheme();
+	const { width, fontScale } = useWindowDimensions();
+	const stackedModes = tablet && !!center && (width - insets.left - insets.right) / fontScale < size.panel * 2;
 
 	const heading = (
 		<View style={{ flexDirection: "row", alignItems: "center", gap: space.s1 }}>
@@ -45,8 +47,8 @@ export function TopBar({ backLabel, onBack, title, onTitlePress, titleLabel, sub
 		<View
 			style={{
 				paddingTop: insets.top,
-				paddingStart: insets.left + (tablet ? space.s3 : space.s1),
-				paddingEnd: insets.right + (tablet ? space.s3 : space.s1),
+				paddingLeft: insets.left + (tablet ? space.s3 : space.s1),
+				paddingRight: insets.right + (tablet ? space.s3 : space.s1),
 				backgroundColor: colors.surface,
 				borderBottomWidth: 1,
 				borderBottomColor: colors.line,
@@ -84,9 +86,10 @@ export function TopBar({ backLabel, onBack, title, onTitlePress, titleLabel, sub
 					)}
 					{subtitle}
 				</View>
-				{tablet ? <View style={{ flex: 1, alignItems: "center" }}>{center}</View> : null}
+				{tablet ? <View style={{ flex: 1, alignItems: "center" }}>{stackedModes ? null : center}</View> : null}
 				<View style={{ flexDirection: "row", alignItems: "center", gap: tablet ? space.s2 : 0 }}>{actions}</View>
 			</View>
+			{stackedModes ? <View style={{ paddingBottom: space.s2 }}>{center}</View> : null}
 		</View>
 	);
 }

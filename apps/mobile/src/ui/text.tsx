@@ -1,8 +1,8 @@
 import type { ColorToken, type as typeScale } from "./tokens";
 import type { ReactNode } from "react";
-import type { TextProps as NativeTextProps, StyleProp, ViewStyle } from "react-native";
+import type { TextProps as NativeTextProps, StyleProp, ViewProps, ViewStyle } from "react-native";
 import { ScrollView, Text as NativeText, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "./theme";
 
 export type TextVariant = keyof typeof typeScale;
@@ -44,25 +44,39 @@ export type ScreenProps = {
 	children?: ReactNode;
 	/** Scrolls its content. Defaults to true; lists that scroll themselves pass false. */
 	scroll?: boolean | undefined;
-	/** Safe-area edges to pad. Screens under a header or tab bar pad none; those handle their own insets. */
+	/** Additional edges to pad. Horizontal safe areas are always protected; headers and tab bars handle vertical ones. */
 	edges?: ("top" | "bottom" | "left" | "right")[] | undefined;
 	contentStyle?: StyleProp<ViewStyle>;
+	/** Measures the viewport after safe areas, before content padding. */
+	onLayout?: ViewProps["onLayout"];
 };
 
 /** A screen on the `bg` desk with phone side padding (`s4`). */
-export function Screen({ children, scroll = true, edges = [], contentStyle }: ScreenProps) {
+export function Screen({ children, scroll = true, edges = [], contentStyle, onLayout }: ScreenProps) {
 	const { colors, space } = useTheme();
+	const insets = useSafeAreaInsets();
 	const padding = [{ padding: space.s4, gap: space.s4 }, contentStyle];
 
 	return (
-		<SafeAreaView edges={edges} style={{ flex: 1, backgroundColor: colors.bg }}>
+		<View
+			style={{
+				flex: 1,
+				backgroundColor: colors.bg,
+				paddingLeft: insets.left,
+				paddingRight: insets.right,
+				paddingTop: edges.includes("top") ? insets.top : 0,
+				paddingBottom: edges.includes("bottom") ? insets.bottom : 0,
+			}}
+		>
 			{scroll ? (
-				<ScrollView contentInsetAdjustmentBehavior="automatic" contentContainerStyle={padding}>
+				<ScrollView onLayout={onLayout} contentInsetAdjustmentBehavior="automatic" contentContainerStyle={padding}>
 					{children}
 				</ScrollView>
 			) : (
-				<View style={[{ flex: 1 }, padding]}>{children}</View>
+				<View onLayout={onLayout} style={[{ flex: 1 }, padding]}>
+					{children}
+				</View>
 			)}
-		</SafeAreaView>
+		</View>
 	);
 }

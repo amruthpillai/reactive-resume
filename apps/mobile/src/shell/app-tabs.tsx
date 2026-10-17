@@ -3,11 +3,11 @@ import type { BottomTabBarProps } from "expo-router/tabs";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { useRouter, usePathname } from "expo-router";
-import { Platform, Pressable, View } from "react-native";
+import { I18nManager, Platform, Pressable, ScrollView, View, useWindowDimensions } from "react-native";
 import { useKeyboardState } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { routes } from "@/routes";
-import { Button, Icon, Text, haptics, useTheme } from "@/ui";
+import { Button, Icon, IconButton, Text, haptics, useTheme } from "@/ui";
 
 /** The tab routes of `app/(tabs)`, in tab-bar order. `create` is the raised "+" that opens New. */
 const appTabIcons: Record<string, IconName> = {
@@ -180,8 +180,8 @@ export function Bar({ children }: BarProps) {
 			style={{
 				flexDirection: "row",
 				paddingBottom: insets.bottom,
-				paddingStart: insets.left,
-				paddingEnd: insets.right,
+				paddingLeft: insets.left,
+				paddingRight: insets.right,
 				backgroundColor: colors.surface,
 				borderTopWidth: 1,
 				borderTopColor: colors.line,
@@ -225,14 +225,25 @@ type SidebarItemProps = {
 	onPress: () => void;
 	badge?: string | number | undefined;
 	quiet?: boolean | undefined;
+	compact?: boolean;
+	role?: "tab" | "button";
 };
 
-function SidebarItem({ icon, label, active, onPress, badge, quiet = true }: SidebarItemProps) {
+function SidebarItem({
+	icon,
+	label,
+	active,
+	onPress,
+	badge,
+	quiet = true,
+	compact = false,
+	role = "tab",
+}: SidebarItemProps) {
 	const { colors, radius, size, space } = useTheme();
 
 	return (
 		<Pressable
-			accessibilityRole="tab"
+			accessibilityRole={role}
 			accessibilityState={{ selected: active }}
 			accessibilityLabel={badge === undefined ? label : `${label}, ${badge}`}
 			onPress={() => {
@@ -240,17 +251,24 @@ function SidebarItem({ icon, label, active, onPress, badge, quiet = true }: Side
 				onPress();
 			}}
 			style={({ pressed }) => ({
-				flexDirection: "row",
+				flexDirection: compact ? "column" : "row",
 				alignItems: "center",
-				gap: space.s3,
+				justifyContent: "center",
+				gap: compact ? space.s0 : space.s3,
 				minHeight: size.hit,
-				paddingHorizontal: space.s3,
+				paddingHorizontal: compact ? space.s1 : space.s3,
+				paddingVertical: compact ? space.s2 : 0,
 				borderRadius: radius.rLg,
 				backgroundColor: active ? colors.selectedFill : pressed ? colors.press : "transparent",
 			})}
 		>
 			<Icon name={icon} filled={active} size={size.icon.toolbar} color={active ? colors.accentText : colors.ink2} />
-			<Text variant={active ? "label" : "body"} color={active ? "accentText" : "ink2"} style={{ flex: 1 }}>
+			<Text
+				variant={compact ? "micro" : active ? "label" : "body"}
+				align={compact ? "center" : undefined}
+				color={active ? "accentText" : "ink2"}
+				style={compact ? undefined : { flex: 1 }}
+			>
 				{label}
 			</Text>
 			{badge === undefined ? null : quiet ? (
@@ -285,7 +303,11 @@ export function AppSidebar(props: BottomTabBarProps) {
 	const { t } = useLingui();
 	const { state, insets } = props;
 	const pathname = usePathname();
-	const { colors, radius, size, space } = useTheme();
+	const { colors, radius, size, space, type } = useTheme();
+	const { width, fontScale } = useWindowDimensions();
+	const compact = width - insets.left - insets.right < 1000;
+	const railWidth = (size.hit + space.s8 * 2) * Math.max(1, Math.min(fontScale, type.micro.maxFontSizeMultiplier));
+	const leadingInset = I18nManager.isRTL ? insets.right : insets.left;
 	const onPress = useTabPress(props);
 	const inTrash = pathname.startsWith(routes.trash());
 
@@ -293,10 +315,10 @@ export function AppSidebar(props: BottomTabBarProps) {
 		<View
 			accessibilityRole="tablist"
 			style={{
-				width: size.sidebar + insets.left,
+				width: (compact ? railWidth : size.sidebar) + leadingInset,
 				paddingTop: insets.top + space.s3,
 				paddingBottom: insets.bottom + space.s3,
-				paddingStart: insets.left + space.s3,
+				paddingStart: leadingInset + space.s3,
 				paddingEnd: space.s3,
 				gap: space.s0,
 				backgroundColor: colors.surface,
@@ -304,75 +326,118 @@ export function AppSidebar(props: BottomTabBarProps) {
 				borderEndColor: colors.line,
 			}}
 		>
-			<Text variant="heading" numberOfLines={1} style={{ paddingHorizontal: space.s3, paddingBottom: space.s3 }}>
-				Reactive Resume
+			<Text
+				variant="heading"
+				accessibilityLabel="Reactive Resume"
+				align={compact ? "center" : undefined}
+				numberOfLines={1}
+				style={{ paddingHorizontal: compact ? 0 : space.s3, paddingBottom: space.s3 }}
+			>
+				{compact ? "Rx" : "Reactive Resume"}
 			</Text>
-			<Pressable
-				accessibilityRole="button"
-				accessibilityLabel={t`Search or run…`}
-				onPress={() => router.push(routes.search())}
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					gap: space.s2,
-					minHeight: size.hit,
-					paddingHorizontal: space.s3,
-					marginBottom: space.s2,
-					borderRadius: radius.rLg,
-					backgroundColor: colors.sunken,
-				}}
-			>
-				<Icon name="magnifying-glass" size={size.icon.meta} color={colors.ink3} />
-				<Text variant="callout" color="ink3" numberOfLines={1} style={{ flex: 1 }}>
-					{t`Search or run…`}
-				</Text>
-				<Text variant="caption" color="ink3">
-					⌘K
-				</Text>
-			</Pressable>
-			{state.routes.map((route, index) => {
-				const icon = appTabIcons[route.name];
-				if (!icon) return null;
-				const badge = tabBadge(props, route);
-				return (
+			{compact ? (
+				<View style={{ alignItems: "center" }}>
+					<IconButton icon="magnifying-glass" label={t`Search or run…`} onPress={() => router.push(routes.search())} />
+				</View>
+			) : (
+				<Pressable
+					accessibilityRole="button"
+					accessibilityLabel={t`Search or run…`}
+					onPress={() => router.push(routes.search())}
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						gap: space.s2,
+						minHeight: size.hit,
+						paddingHorizontal: space.s3,
+						marginBottom: space.s2,
+						borderRadius: radius.rLg,
+						backgroundColor: colors.sunken,
+					}}
+				>
+					<Icon name="magnifying-glass" size={size.icon.meta} color={colors.ink3} />
+					<Text variant="callout" color="ink3" numberOfLines={1} style={{ flex: 1 }}>
+						{t`Search or run…`}
+					</Text>
+					<Text variant="caption" color="ink3">
+						⌘K
+					</Text>
+				</Pressable>
+			)}
+			<ScrollView contentContainerStyle={{ flexGrow: 1, gap: space.s0 }} showsVerticalScrollIndicator={false}>
+				{state.routes.map((route, index) => {
+					const icon = appTabIcons[route.name];
+					if (!icon) return null;
+					const badge = tabBadge(props, route);
+					return (
+						<SidebarItem
+							key={route.key}
+							icon={icon}
+							label={tabLabel(props, route)}
+							active={index === state.index && !inTrash}
+							badge={badge}
+							quiet={quietBadges.has(route.name)}
+							compact={compact}
+							onPress={() =>
+								inTrash && route.name === "documents" ? router.navigate(routes.documents()) : onPress(route)
+							}
+						/>
+					);
+				})}
+				<View style={{ flex: 1 }} />
+				<SidebarItem
+					icon="trash"
+					label={t`Trash`}
+					active={inTrash}
+					compact={compact}
+					onPress={() => router.navigate(routes.trash())}
+				/>
+				<View style={{ paddingVertical: space.s2 }}>
+					{compact ? (
+						<SidebarItem
+							icon="plus"
+							label={t`New`}
+							active={false}
+							compact
+							role="button"
+							onPress={() => router.push(routes.new())}
+						/>
+					) : (
+						<Button icon="plus" label={t`New`} fullWidth onPress={() => router.push(routes.new())} />
+					)}
+				</View>
+				{compact ? (
 					<SidebarItem
-						key={route.key}
-						icon={icon}
-						label={tabLabel(props, route)}
-						active={index === state.index && !inTrash}
-						badge={badge}
-						quiet={quietBadges.has(route.name)}
-						onPress={() =>
-							inTrash && route.name === "documents" ? router.navigate(routes.documents()) : onPress(route)
-						}
+						icon="user-circle"
+						label={t`Account`}
+						active={false}
+						compact
+						role="button"
+						onPress={() => router.navigate(routes.settings("account"))}
 					/>
-				);
-			})}
-			<View style={{ flex: 1 }} />
-			<SidebarItem icon="trash" label={t`Trash`} active={inTrash} onPress={() => router.navigate(routes.trash())} />
-			<View style={{ paddingVertical: space.s2 }}>
-				<Button icon="plus" label={t`New`} fullWidth onPress={() => router.push(routes.new())} />
-			</View>
-			<Pressable
-				accessibilityRole="button"
-				accessibilityLabel={t`Account`}
-				onPress={() => router.navigate(routes.settings("account"))}
-				style={{
-					flexDirection: "row",
-					alignItems: "center",
-					gap: space.s3,
-					minHeight: size.row,
-					paddingHorizontal: space.s3,
-					paddingTop: space.s2,
-					borderTopWidth: 1,
-					borderTopColor: colors.line,
-				}}
-			>
-				<Icon name="user-circle" size={size.icon.bar} color={colors.ink2} />
-				<Text variant="body" color="ink2">
-					{t`Account`}
-				</Text>
-			</Pressable>
+				) : (
+					<Pressable
+						accessibilityRole="button"
+						accessibilityLabel={t`Account`}
+						onPress={() => router.navigate(routes.settings("account"))}
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							gap: space.s3,
+							minHeight: size.row,
+							paddingHorizontal: space.s3,
+							paddingTop: space.s2,
+							borderTopWidth: 1,
+							borderTopColor: colors.line,
+						}}
+					>
+						<Icon name="user-circle" size={size.icon.bar} color={colors.ink2} />
+						<Text variant="body" color="ink2">
+							{t`Account`}
+						</Text>
+					</Pressable>
+				)}
+			</ScrollView>
 		</View>
 	);
 }

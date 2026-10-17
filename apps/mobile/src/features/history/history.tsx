@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { ScrollView, View, useWindowDimensions } from "react-native";
+import { ScrollView, View } from "react-native";
 import { client, orpc } from "@/api/client";
 import { getDraftScope, useResumeStore } from "@/draft";
 import { useDocumentOperations } from "@/features/documents/queries";
@@ -52,7 +52,7 @@ type HistoryProps = { resume: ResumeDocument; offline: boolean };
 export function HistoryPanel({ resume, offline }: HistoryProps) {
 	const { t, i18n } = useLingui();
 	const { space, colors, size } = useTheme();
-	const window = useWindowDimensions();
+	const [width, setWidth] = useState(0);
 	const operations = useDocumentOperations();
 	const list = useQuery({
 		...orpc.resume.listVersions.queryOptions({ input: { resumeId: resume.id } }),
@@ -117,10 +117,11 @@ export function HistoryPanel({ resume, offline }: HistoryProps) {
 	};
 	return (
 		<View
+			onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
 			style={{
 				flex: 1,
 				backgroundColor: colors.bg,
-				flexDirection: selected && window.width >= size.panel * 2 ? "row-reverse" : "column",
+				flexDirection: selected && width >= size.formSheet ? "row-reverse" : "column",
 			}}
 		>
 			{selected && (
@@ -276,15 +277,19 @@ type VersionPageProps = { resumeId: string; versionId: string; offline: boolean 
 function VersionPage({ resumeId, versionId, offline }: VersionPageProps) {
 	const { t } = useLingui();
 	const { space, colors, size } = useTheme();
-	const window = useWindowDimensions();
+	const [viewportWidth, setViewportWidth] = useState(0);
 	const version = useQuery({
 		...orpc.resume.getVersion.queryOptions({ input: { resumeId, versionId } }),
 		enabled: !offline,
 	});
 	const preview = usePreview(version.data?.data ?? null);
-	const width = Math.max(size.hit, window.width - space.s8);
+	const width = Math.max(size.hit, viewportWidth - space.s4 * 2);
 	return (
-		<ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: space.s4, gap: space.s3, alignItems: "center" }}>
+		<ScrollView
+			onLayout={(event) => setViewportWidth(event.nativeEvent.layout.width)}
+			style={{ flex: 1 }}
+			contentContainerStyle={{ padding: space.s4, gap: space.s3, alignItems: "center" }}
+		>
 			{version.isError || preview.error ? (
 				<Banner
 					tone="danger"

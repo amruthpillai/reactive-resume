@@ -866,6 +866,25 @@ await check("schedule interval renders Every day and plural days", () => {
 		owner.unmount();
 	}
 });
+await check("Career columns use measured content width instead of window width", () => {
+	queries.set("career.savedItems", [{
+		id: "offer", applicationId: "job", application: { company: "Fictional", role: "Engineer" },
+		data: { ...offerTermsSchema.parse({ currency: "USD", period: "year", base: null, variable: null }), kind: "offer" },
+	}]);
+	for (const [component, breakpoint] of [[TodayScreen, 824], [OffersScreen, 816]]) {
+		const owner = mount(component);
+		for (const width of [960, 650, breakpoint - 1, breakpoint]) {
+			const group = nodes(owner.tree).find((node) => node.props?.onLayout && node.props.style?.flexDirection);
+			assert.ok(group);
+			group.props.onLayout({ nativeEvent: { layout: { width, y: 0 } } });
+			owner.render();
+			const measured = nodes(owner.tree).find((node) => node.props?.onLayout && node.props.style?.flexDirection);
+			assert.equal(measured.props.style.flexDirection, width >= breakpoint ? "row" : "column");
+		}
+		owner.unmount();
+	}
+	queries.set("career.savedItems", []);
+});
 assert.equal(listeners.size, 0);
 assert.equal(timers.size, 0);
 console.log(

@@ -4,7 +4,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Stack, useRouter } from "expo-router";
 import { openBrowserAsync } from "expo-web-browser";
 import { type ComponentRef, useRef, useState } from "react";
-import { ScrollView, View, useWindowDimensions } from "react-native";
+import { ScrollView, View } from "react-native";
 import { client, useCareerAction, useCareerTime, useNow, useTodayQueries, useUndoRows } from "./hooks";
 import { ScheduleSheet, scheduleTitle } from "./schedule-sheet";
 import { collectInterviews, rollForward } from "./scheduling";
@@ -18,7 +18,8 @@ import { Banner, Button, Card, Chip, EmptyState, Screen, Text, showToast, useThe
 export function TodayScreen() {
 	const { t } = useLingui();
 	const { space, size } = useTheme();
-	const tablet = useWindowDimensions().width >= size.panel * 2;
+	const [width, setWidth] = useState(0);
+	const tablet = width >= size.panel * 2 + space.s6;
 	const router = useRouter();
 	const now = useNow();
 	const time = useCareerTime();
@@ -87,6 +88,7 @@ export function TodayScreen() {
 				<View
 					onLayout={(event) => {
 						groupY.current = event.nativeEvent.layout.y;
+						setWidth(event.nativeEvent.layout.width);
 					}}
 					style={{ flexDirection: tablet ? "row" : "column", gap: space.s6, alignItems: "stretch" }}
 				>

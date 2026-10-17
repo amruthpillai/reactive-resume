@@ -1,13 +1,15 @@
 import type { ReactNode } from "react";
 import { Stack } from "expo-router";
 import { View } from "react-native";
+import { useIsTablet } from "@/shell/use-is-tablet";
 import { Card, Screen, Text, useTheme } from "@/ui";
 
 type SettingsPageProps = { title: string; children: ReactNode; root?: boolean };
 export function SettingsPage({ title, children, root = false }: SettingsPageProps) {
+	const tablet = useIsTablet();
 	return (
 		<Screen>
-			<Stack.Screen options={{ title, headerLargeTitle: root }} />
+			<Stack.Screen options={{ title, headerLargeTitle: root && !tablet }} />
 			{children}
 		</Screen>
 	);

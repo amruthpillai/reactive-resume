@@ -137,7 +137,7 @@ export function AtsChecker() {
 	}, [signedIn, session.server]);
 
 	return (
-		<SafeAreaView edges={["bottom"]} style={{ flex: 1 }}>
+		<SafeAreaView edges={["bottom", "left", "right"]} style={{ flex: 1 }}>
 			<Stack.Screen options={{ title: state.name === "done" ? t`Report` : t`ATS Checker` }} />
 			{state.name === "importing" ? (
 				<Importing />
