@@ -531,7 +531,7 @@ export const auth: Auth = new Proxy({} as Auth, {
 	},
 });
 
-type ProfileUpdate = { name?: string; username?: string; image?: string | null };
+type ProfileUpdate = { name?: string; username?: string; image?: string | null; timezone?: string };
 
 // Only these server calls can install the identity; their cookie headers never leave this module.
 export const accountAuth = {

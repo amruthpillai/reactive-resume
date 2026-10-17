@@ -27,6 +27,23 @@ const providers = {
 
 export const authService = {
 	providers,
+	getProfile: async (userId: string) => {
+		const [user] = await db
+			.select({
+				id: schema.user.id,
+				name: schema.user.name,
+				username: schema.user.username,
+				displayUsername: schema.user.displayUsername,
+				image: schema.user.image,
+				email: schema.user.email,
+				emailVerified: schema.user.emailVerified,
+				timezone: schema.user.timezone,
+			})
+			.from(schema.user)
+			.where(eq(schema.user.id, userId));
+		if (!user) throw new ORPCError("NOT_FOUND");
+		return user;
+	},
 
 	// GDPR-style export of everything the user owns. Selects explicit columns so
 	// secrets (password hashes, tokens, api keys) never leak into the export.

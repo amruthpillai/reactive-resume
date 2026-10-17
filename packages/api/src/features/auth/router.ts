@@ -4,8 +4,11 @@ import { createSelectSchema } from "drizzle-zod";
 import z from "zod";
 import { accountAuth, auth } from "@reactive-resume/auth/config";
 import * as schema from "@reactive-resume/db/schema";
+import { env } from "@reactive-resume/env/server";
 import { careerProfileDataSchema, careerWorkspaceSchema } from "@reactive-resume/schema/career";
 import { coverLetterSchema } from "@reactive-resume/schema/cover-letter/data";
+import { rateLimitConfig } from "@reactive-resume/utils/rate-limit";
+import { timezoneSchema } from "@reactive-resume/utils/timezone";
 import { protectedProcedure, publicProcedure } from "../../context";
 import { applicationDto } from "../../dto/application";
 import {
@@ -16,9 +19,25 @@ import {
 	careerStorySchema,
 } from "../../dto/career";
 import { resumeDto } from "../../dto/resume";
+import { createRateLimiter } from "../../redis";
 import { authService } from "./service";
 
-const accountProcedure = protectedProcedure.use(async ({ next }) => {
+const accountLimiter = createRateLimiter("accountLimiter", {
+	maxRequests: rateLimitConfig.betterAuth.global.max,
+	window: rateLimitConfig.betterAuth.global.window * 1000,
+});
+
+const accountProcedure = protectedProcedure.use(async ({ context, next }) => {
+	if (process.env.NODE_ENV === "production" && !env.FLAG_DISABLE_API_RATE_LIMIT) {
+		const result = await accountLimiter.limit(`account:${context.user.id}`);
+		const reset = result.reset ?? Date.now() + 60_000;
+		context.resHeaders?.set("ratelimit-remaining", String(result.remaining));
+		context.resHeaders?.set("ratelimit-reset", String(reset));
+		if (!result.success) {
+			context.resHeaders?.set("retry-after", String(Math.max(1, Math.ceil((reset - Date.now()) / 1000))));
+			throw new ORPCError("TOO_MANY_REQUESTS", { data: { reset } });
+		}
+	}
 	try {
 		return await next();
 	} catch (error) {
@@ -34,6 +53,30 @@ const accountProcedure = protectedProcedure.use(async ({ next }) => {
 });
 
 export const authRouter = {
+	getProfile: accountProcedure
+		.route({
+			method: "GET",
+			path: "/auth/profile",
+			tags: ["Authentication"],
+			operationId: "getProfile",
+			summary: "Get your profile",
+			description: "Returns only the authenticated user's profile and timezone. No secrets are included.",
+		})
+		.input(z.object({}).optional())
+		.output(
+			createSelectSchema(schema.user).pick({
+				id: true,
+				name: true,
+				username: true,
+				displayUsername: true,
+				image: true,
+				email: true,
+				emailVerified: true,
+				timezone: true,
+			}),
+		)
+		.handler(({ context }) => authService.getProfile(context.user.id)),
+
 	updateProfile: accountProcedure
 		.route({
 			method: "PATCH",
@@ -41,7 +84,8 @@ export const authRouter = {
 			tags: ["Authentication"],
 			operationId: "updateProfile",
 			summary: "Update your profile",
-			description: "Updates only the authenticated user's name, username, or image. Usernames must be unique.",
+			description:
+				"Updates only the authenticated user's name, username, image, or timezone. Usernames must be unique.",
 		})
 		.input(
 			z.object({
@@ -54,6 +98,7 @@ export const authRouter = {
 					.regex(/^[a-z0-9._-]+$/)
 					.optional(),
 				image: z.url().nullable().optional(),
+				timezone: timezoneSchema.optional(),
 			}),
 		)
 		.output(z.object({ status: z.boolean() }))
@@ -62,6 +107,7 @@ export const authRouter = {
 				...(input.name !== undefined ? { name: input.name } : {}),
 				...(input.username !== undefined ? { username: input.username } : {}),
 				...(input.image !== undefined ? { image: input.image } : {}),
+				...(input.timezone !== undefined ? { timezone: input.timezone } : {}),
 			}),
 		),
 
