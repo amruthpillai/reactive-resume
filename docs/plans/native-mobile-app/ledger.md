@@ -93,3 +93,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: DS3c merged (all 33 DS4c findings fixed, 112 frames). DS3b's first pass is done; Codex review DS4b `7d431744` is running.
 - 2026-10-17: G0 accepted by the owner. DS3b merged with its review still pending; the fix round will merge on top. Added `mockups/all.html`, one page that links the four parts plus DS1, for G2b.
 - 2026-10-17: Owner will review all mockups after the DS3b fixes (G2b pending). Server tasks SVa/SVb/SVc launched in parallel, as §4 allows.
+- 2026-10-17: All four DS3 parts are merged with their DS4 fixes. `mockups/all.html` is final for G2b.
