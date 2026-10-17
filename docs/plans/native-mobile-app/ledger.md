@@ -37,7 +37,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | FIXING  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
 | M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | RUNNING | briefs/W4.md; JS-only                                                               |
-| M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
+| M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | REVIEW  | briefs/W4.md; JS-only                                                               |
 | M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
 | M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | RUNNING | briefs/W4.md; JS-only; adds letter Page pane                                        |
 | M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | RUNNING | briefs/W6.md; JS-only                                                               |
