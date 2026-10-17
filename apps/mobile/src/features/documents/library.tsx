@@ -434,7 +434,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 						ListFooterComponent={
 							!trashed ? (
 								<View>
-									<Card>
+									<Card style={{ paddingVertical: space.s3 / 2 }}>
 										<ListRow
 											title={t`Trash`}
 											subtitle={
