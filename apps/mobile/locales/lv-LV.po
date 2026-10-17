@@ -1106,6 +1106,10 @@ msgstr "Pievienots Zināšanas."
 msgid "Added to Prepare"
 msgstr "Pievienots sadaļai “Sagatavošanās”"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Adrese"
@@ -1252,6 +1256,14 @@ msgstr "Atļaujiet kameras piekļuvi ierīces iestatījumos, lai uzņemtu fotoat
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Ierīces iestatījumos atļaujiet piekļuvi mikrofonam vai ierakstiet atbildi."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Mazāk nekā jūsu minimālā pamatalga."
 msgid "Bengali"
 msgstr "Bengāļu"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Tāfele"
@@ -2122,6 +2138,10 @@ msgstr "Izvēlieties fotoattēlu, kas mazāks par 10 MB."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Izvēlieties CV, lai tas atbilstu tā noformējumam. Līdz tam vēstulei ir sava."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Izvēlieties laiku"
@@ -2457,6 +2477,10 @@ msgstr "Saturs ir izkārtots režģī."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Saturs joprojām pārsniedz lapu. Slēpt sadaļu vai saīsināt ierakstus."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Konteksts"
@@ -2729,6 +2753,7 @@ msgstr "Nevarēja atzīmēt kā pieteiktu."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Nevarēja atvērt pārlūkprogrammu. Mēģiniet vēlreiz."
@@ -2762,6 +2787,10 @@ msgstr "Nevarēja nolasīt eksportēto PDF."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Nevarēja izlasīt šo lapu: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Nevarēja saglabāt motīvu. Mēģiniet vēlreiz."
 msgid "Couldn't save the timezone."
 msgstr "Nevarēja saglabāt laika joslu."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "Nevarēja saglabāt jūsu izmaiņas, tāpēc melnraksta veidošana netika sākta. Lapā nekas nemainījās."
@@ -2863,6 +2896,10 @@ msgstr "Nevarēja saglabāt. Jūsu teksts joprojām ir šeit; mēģiniet vēlrei
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Nevarēja ieplānot interviju."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Čehu"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Ikdienas skatījumi 30 dienu laikā, maksimums {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Dāņu"
@@ -3113,6 +3154,10 @@ msgstr "Tumšs"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Tumšā tēma"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "Nesūtiet {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "Nesūtiet {0} darba sludinājumu"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Režģa skats"
 msgid "Hard for software to read"
 msgstr "Programmatūrai grūti lasīt"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Vai jums jau ir CV?"
@@ -4465,6 +4518,11 @@ msgstr "Ja tas radies no skenējuma, tas ir sagaidāms. Citādi noņemiet to; pe
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Ja kāds jums nosūtīja šo saiti, pieprasiet viņam jaunu."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Vienlaikus tiek importētas tikai pirmās 500 rindas, izņemot {overflow
 msgid "Only the first pages were checked."
 msgstr "Pārbaudītas tikai pirmās lapas."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Tikai šī ierīce ieplāno paziņojumu."
@@ -6483,6 +6546,10 @@ msgstr "Cits"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Citi labumi"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Drukāt"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Pirms nosūtīšanas izdrukājiet vai eksportējiet veidlapu kā saplacinātu PDF."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Privātuma politika"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Privāts. Tikai jūs to varat redzēt."
@@ -6990,10 +7062,15 @@ msgstr "Ierosinātās izmaiņas"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Nodrošina jūsu serveris: {connected}. Šeit ikvienam ir iestatīta meklēšana un lasīšana. Jautājiet savam administratoram par izmaiņām."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Pakalpojumu sniedzējs"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Lasa atbalstītās valsts darba lapas. Nav nepieciešams konts."
 msgid "Ready"
 msgstr "Gatavs"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Iemesls"
@@ -7495,6 +7573,20 @@ msgstr "Atbilde nokopēta"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Pārskats"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Semantiskā CSS stila lapa"
 msgid "Send"
 msgstr "Sūtīt"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Nosūtiet pašu CV, nevis portfolio apvalku."
@@ -8181,6 +8277,10 @@ msgstr "Nosūtiet pašu CV, nevis portfolio apvalku."
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Sūtītāja dati ir iekopēti vēstulē"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Serbu"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "serveris"
@@ -8281,6 +8382,10 @@ msgstr "Iestatījumi"
 msgid "Setup guide"
 msgstr "Iestatīšanas rokasgrāmata"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Ēnu krāsa"
@@ -8307,6 +8412,11 @@ msgstr "Kopīgot kalendāra notikumu (.ics)"
 msgid "Share CSV"
 msgstr "Kopīgojiet CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Kopīgojiet PNG"
@@ -8331,6 +8441,10 @@ msgstr "Kopīgojiet izlaistas vai nederīgas rindas"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Kopīgot, izmantojot…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Ieraksts bija tukšs vai lielāks par 2 MB. Mēģiniet atbildēt īsāk.
 msgid "That reminder time has already passed."
 msgstr "Šis atgādinājuma laiks jau ir pagājis."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "Darba pieteikumā tiek saglabāta cita informācija."
@@ -9377,6 +9495,10 @@ msgstr "Pārbaude nedarbojās."
 msgid "The text comes out unreadable."
 msgstr "Teksts kļūst nelasāms."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Pirmās lapas augšdaļa neizskatās pēc vārda."
@@ -9435,6 +9557,10 @@ msgstr "Šo pieteikumu nevarēja atvērt."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Šajā darba pieteikumā vēl nav neviena darba sludinājuma. Pievienojiet vienu Pieteikumi."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Tas mainīts citur, tāpēc netika saglabāts. Jūsu teksts ir paturēts šeit; Mēģināt vēlreiz to saglabās pāri otrai kopijai."
@@ -9479,6 +9605,10 @@ msgstr "Šis dokuments ir bloķēts. Jūs joprojām varat lejupielādēt un nosa
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Šis dokuments vairs nav pieejams. Atsvaidziniet un mēģiniet vēlreiz."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Ukraiņu"
 msgid "Unavailable"
 msgstr "Nav pieejams"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "skatījumi · 30 dienas"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Skatījumi un lejupielādes"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Jūsu publiskās saites sākas ar {server}/"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Pēc pārtraukšanas jūsu ieraksts tiek pārsūtīts uz {transcriberName}, lai tas tiktu pārrakstīts. Jūsu pakalpojumu sniedzējs var iekasēt maksu. Serveris saglabā stenogrammas, nevis ierakstus."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Jūsu prasības"
@@ -10901,6 +11047,10 @@ msgstr "Jūsu CV, motivācijas vēstules un darba pieteikumi vietnē {host}."
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Atlasītais fonts nevar attēlot dažas rakstzīmes. Tās tiek rādītas kā “?”. Sadaļā Dizains izvēlieties fontu, kurā tās ir."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

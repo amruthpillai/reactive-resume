@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate, useRouteContext, useRouter } from "@tanstack/react-router";
+import { useNavigate, useRouteContext, useRouter, useSearch } from "@tanstack/react-router";
 import { Button } from "@reactive-resume/ui/components/button";
 import { Icon } from "@reactive-resume/ui/components/icon";
 import { DataSection } from "./data";
@@ -10,12 +10,13 @@ import { authClient } from "@/libs/auth/client";
 
 export function AccountSettings() {
 	const { session } = useRouteContext({ from: "/dashboard" });
+	const { deleteAccount } = useSearch({ from: "/dashboard/settings/account" });
 
 	return (
 		<>
 			<ProfileSection session={session} />
 			<SecuritySection />
-			<DataSection />
+			<DataSection openDeletion={deleteAccount ?? false} />
 			<div className="border-t border-line pt-6">
 				<SignOutButton />
 			</div>

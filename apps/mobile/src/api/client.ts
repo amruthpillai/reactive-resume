@@ -11,7 +11,8 @@ import { createORPCClient, onError } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import { createTanstackQueryUtils } from "@orpc/tanstack-query";
 import { fetch as expoFetch } from "expo/fetch";
-import { getCredentials, recoverFromUnauthorized, rejectCredentials } from "@/auth/session";
+import { authorizeAiRequest } from "./ai-consent";
+import { getAccountScope, getCredentials, recoverFromUnauthorized, rejectCredentials } from "@/auth/session";
 
 /**
  * Per-call context. `scope` binds a call to one account (the draft store's scope, `JSON.stringify([server, user id])`):
@@ -84,6 +85,12 @@ const createLink = (label: string) =>
 		url: `${placeholder}/api/rpc`,
 		fetch: rpcFetch,
 		interceptors: [
+			async (options) => {
+				const { path, input, context, signal, next } = options;
+				const scope = context.scope ?? getAccountScope();
+				await authorizeAiRequest(path, input, client, scope, signal);
+				return next({ ...options, context: { ...context, ...(scope ? { scope } : {}) } });
+			},
 			// Logs the failure only: errors can carry request data, which must never reach the device log.
 			onError((error) => {
 				if (isAbort(error)) return;
@@ -111,7 +118,18 @@ export type RouterOutput = InferRouterOutputs<typeof router>;
  * Sends the bearer token and returns the raw response; callers check `ok` and read `arrayBuffer()`/`json()`.
  * The body is sent again after a token refresh, so pass a repeatable one (string, `FormData`, bytes), never a stream.
  */
-export function rest(path: `/${string}`, init: RequestInit = {}): Promise<Response> {
+export async function rest(path: `/${string}`, init: RequestInit = {}): Promise<Response> {
+	const scope = getAccountScope();
+	if (path === "/career/voice/transcribe") {
+		if (!(init.body instanceof FormData)) throw new Error("Expected a recording form.");
+		await authorizeAiRequest(
+			["career", "voice", "transcribe"],
+			{ providerId: init.body.get("providerId") },
+			client,
+			scope,
+			init.signal ?? undefined,
+		);
+	}
 	return withCredentials(async (credentials) => {
 		const response = await expoFetch(`${credentials.server}/api/openapi${path}`, {
 			method: init.method ?? "GET",
@@ -120,5 +138,5 @@ export function rest(path: `/${string}`, init: RequestInit = {}): Promise<Respon
 			signal: init.signal ?? null,
 		});
 		return response as unknown as Response;
-	});
+	}, scope ?? undefined);
 }

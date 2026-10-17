@@ -1106,6 +1106,10 @@ msgstr "添加到知识库。"
 msgid "Added to Prepare"
 msgstr "已添加到“准备”"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "地址"
@@ -1252,6 +1256,14 @@ msgstr "在设备设置中允许相机访问以拍照。"
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "在设备设置中允许麦克风访问，或输入您的答案。"
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "低于您的最低基本工资。"
 msgid "Bengali"
 msgstr "孟加拉语"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "看板"
@@ -2122,6 +2138,10 @@ msgstr "选择小于 10 MB 的照片。"
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "在 Write 中选择一份与其设计相匹配的简历。到那时，这封信就有了它自己的。"
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "选择时间"
@@ -2457,6 +2477,10 @@ msgstr "内容以网格形式排列。"
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "内容仍然溢出。隐藏部分或缩短条目。"
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "背景"
@@ -2729,6 +2753,7 @@ msgstr "无法标记为已申请。"
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "无法打开浏览器。再试一次。"
@@ -2762,6 +2787,10 @@ msgstr "无法读取导出的 PDF。"
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "无法阅读此页：{0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "无法保存主题。再试一次。"
 msgid "Couldn't save the timezone."
 msgstr "无法保存时区。"
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "无法保存您的更改，因此未开始起草。页面上的内容未发生变化。"
@@ -2863,6 +2896,10 @@ msgstr "无法保存。您的文字还在这里；再试一次。"
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "无法安排面试。"
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "捷克语"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "30天内每日观看次数，峰值 {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "丹麦语"
@@ -3113,6 +3154,10 @@ msgstr "深色"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "深色主题"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "不要发送 {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "不发送{0}的招聘信息"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "网格视图"
 msgid "Hard for software to read"
 msgstr "软件难以读取"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "已经有简历了吗？"
@@ -4465,6 +4518,11 @@ msgstr "如果是扫描件导致的，这属于正常情况。否则请删除它
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "如果有人向您发送了此链接，请向他们索要一个新链接。"
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "一次仅导入前 500 行，忽略 {overflow}。拆分文件以导入�
 msgid "Only the first pages were checked."
 msgstr "只检查了前几页。"
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "仅此设备安排通知。"
@@ -6483,6 +6546,10 @@ msgstr "其他"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "其他福利"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "打印"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "在发送之前，把表单打印或导出为扁平化的 PDF。"
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "隐私政策"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "私人的。只有你能看到它。"
@@ -6990,10 +7062,15 @@ msgstr "建议的更改"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "由您的服务器提供：{connected}。这里为大家设置了搜索和阅读。询问您的管理员有关更改的信息。"
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "服务提供商"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "读取支持的公共职位页面。无需帐户。"
 msgid "Ready"
 msgstr "准备好"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "原因"
@@ -7495,6 +7573,20 @@ msgstr "回复已复制"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "报告"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "语义化 CSS 样式表"
 msgid "Send"
 msgstr "发送"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "直接发送简历本身，而不是包在作品集外层的文件。"
@@ -8181,6 +8277,10 @@ msgstr "直接发送简历本身，而不是包在作品集外层的文件。"
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "发件人详细信息复制到信件中"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "塞尔维亚语"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "服务器"
@@ -8281,6 +8382,10 @@ msgstr "设置"
 msgid "Setup guide"
 msgstr "设置指南"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "阴影颜色"
@@ -8307,6 +8412,11 @@ msgstr "共享日历事件 (.ics)"
 msgid "Share CSV"
 msgstr "分享CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "分享PNG"
@@ -8331,6 +8441,10 @@ msgstr "共享跳过或无效的行"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "分享通过..."
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "录音为空或超过 2 MB。请尝试更简短的回答。"
 msgid "That reminder time has already passed."
 msgstr "那个提醒时间已经过去了。"
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "申请保留其他详细信息。"
@@ -9377,6 +9495,10 @@ msgstr "测试没有运行。"
 msgid "The text comes out unreadable."
 msgstr "提取出的文字无法阅读。"
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "第一页顶部的内容看起来不像是姓名。"
@@ -9435,6 +9557,10 @@ msgstr "无法打开此申请。"
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "此申请尚无招聘信息。请在申请中添加。"
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "这在其他地方发生了变化，所以没有保存。您的文字保存在这里； 重试 将其保存在另一个副本上。"
@@ -9479,6 +9605,10 @@ msgstr "该文档已被锁定。您仍然可以下载并命名版本。解锁以
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "该文档不再可用。刷新并重试。"
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "乌克兰语"
 msgid "Unavailable"
 msgstr "不可用"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "观看次数 · 30 天"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "浏览量和下载量"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "您的公开链接以 {server}/ 开头"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "停止后，您的录音将转到 {transcriberName} 进行转录。您的提供商可能会收费。服务器保留文字记录，而不是录音。"
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "您的要求"
@@ -10901,6 +11047,10 @@ msgstr "您在{host}上的简历、求职信和申请。"
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "您选择的字体无法显示部分字符，它们会显示为“?”。请在“设计”中选择包含这些字符的字体。"
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

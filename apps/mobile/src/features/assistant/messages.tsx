@@ -12,6 +12,7 @@ import { webSources } from "./chat";
 import { AssistantMarkdown } from "./markdown";
 import { isProposeEdits, skippedCount, toProposals } from "./proposals";
 import { client, orpc } from "@/api/client";
+import { ReportAiContent } from "@/features/ai/report-content";
 import { Button, Icon, Text, showToast, useTheme } from "@/ui";
 
 export type EditStatus = Proposal["status"];
@@ -63,6 +64,7 @@ export function MessageView({ message, streaming, readOnly, proposals, onAnswer 
 	}
 
 	const sources = webSources(message);
+	const reportText = message.parts.flatMap((part) => (part.type === "text" ? [part.text] : [])).join("\n");
 	const lastText = message.parts.findLastIndex((part) => part.type === "text");
 
 	return (
@@ -93,6 +95,7 @@ export function MessageView({ message, streaming, readOnly, proposals, onAnswer 
 					/>
 				);
 			})}
+			{!streaming ? <ReportAiContent source="assistant" text={reportText} /> : null}
 			{sources.length > 0 ? (
 				<View style={{ gap: space.s1 }}>
 					<Text variant="caption" color="ink3">

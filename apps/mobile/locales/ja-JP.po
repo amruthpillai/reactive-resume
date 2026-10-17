@@ -1106,6 +1106,10 @@ msgstr "ナレッジに追加されました。"
 msgid "Added to Prepare"
 msgstr "「準備」に追加しました"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "住所"
@@ -1252,6 +1256,14 @@ msgstr "写真を撮影するには、デバイスの設定でカメラへのア
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "デバイス設定でマイクへのアクセスを許可するか、答えを入力してください。"
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "最低基本給を下回ります。"
 msgid "Bengali"
 msgstr "ベンガル語"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "ボード"
@@ -2122,6 +2138,10 @@ msgstr "10 MB 未満の写真を選択してください。"
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "デザインに合わせて Write で履歴書を選択します。それまでは、手紙には独自のものがあります。"
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "時間を選択してください"
@@ -2457,6 +2477,10 @@ msgstr "コンテンツがグリッドレイアウトになっています。"
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "コンテンツはまだオーバーしています。セクションを非表示にするか、エントリを短縮します。"
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "コンテキスト"
@@ -2729,6 +2753,7 @@ msgstr "応募済みにできませんでした。"
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "ブラウザを開けませんでした。もう一度やり直してください。"
@@ -2762,6 +2787,10 @@ msgstr "エクスポートされた PDF を読み取れませんでした。"
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "このページを読み取れませんでした: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "テーマを保存できませんでした。もう一度やり直して
 msgid "Couldn't save the timezone."
 msgstr "タイムゾーンを保存できませんでした。"
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "変更を保存できなかったため、下書きの作成を開始しませんでした。ページの内容は変更されていません。"
@@ -2863,6 +2896,10 @@ msgstr "保存できませんでした。あなたのテキストはまだここ
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "面接の予定を立てることができませんでした。"
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "チェコ語"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "30 日間にわたる毎日の視聴数、ピーク {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "デンマーク語"
@@ -3113,6 +3154,10 @@ msgstr "ダーク"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "ダークテーマ"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "{0} を送信しないでください"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "{0}の求人情報を送信しない"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "グリッドビュー"
 msgid "Hard for software to read"
 msgstr "ソフトウェアが読みにくい"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "レジュメはもうお持ちですか?"
@@ -4465,6 +4518,11 @@ msgstr "スキャンによるものであれば想定内です。そうでなけ
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "誰かがこのリンクを送ってきた場合は、新しいリンクを送ってもらうように依頼してください。"
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "最初の 500 行のみが一度にインポートされ、{overflow} �
 msgid "Only the first pages were checked."
 msgstr "最初の数ページのみがチェックされました。"
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "このデバイスのみが通知をスケジュールします。"
@@ -6483,6 +6546,10 @@ msgstr "その他"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "その他の福利厚生"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "印刷する"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "送信前に、フォームをフラットなPDFとして印刷またはエクスポートしてください。"
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "プライバシーポリシー"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "プライベート。あなただけがそれを見ることができます。"
@@ -6990,10 +7062,15 @@ msgstr "変更の提案"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "サーバーから提供されます: {connected}。ここでは誰でも検索と閲覧ができるように設定されています。変更については管理者に問い合わせてください。"
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "プロバイダー"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "サポートされている公開ジョブ ページを読み取りま�
 msgid "Ready"
 msgstr "準備ができて"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "理由"
@@ -7495,6 +7573,20 @@ msgstr "返信をコピーしました"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "レポート"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "セマンティックCSSスタイルシート"
 msgid "Send"
 msgstr "送信"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "ポートフォリオの表紙ではなく、履歴書そのものを送付してください。"
@@ -8181,6 +8277,10 @@ msgstr "ポートフォリオの表紙ではなく、履歴書そのものを送
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "送信者の詳細をレターにコピーしました"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "セルビア語"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "サーバー"
@@ -8281,6 +8382,10 @@ msgstr "設定"
 msgid "Setup guide"
 msgstr "セットアップガイド"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "影の色"
@@ -8307,6 +8412,11 @@ msgstr "カレンダーイベントの共有 (.ics)"
 msgid "Share CSV"
 msgstr "CSVを共有する"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "PNGを共有する"
@@ -8331,6 +8441,10 @@ msgstr "スキップされた行または無効な行を共有する"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "共有方法…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "録音が空か、2 MBを超えていました。もっと短い回答�
 msgid "That reminder time has already passed."
 msgstr "その思い出の時間はすでに過ぎています。"
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "応募にはその他の詳細が保持されます。"
@@ -9377,6 +9495,10 @@ msgstr "テストは実行されませんでした。"
 msgid "The text comes out unreadable."
 msgstr "テキストが読み取れない状態で出力されます。"
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "1ページ目の冒頭が氏名のようには見えません。"
@@ -9435,6 +9557,10 @@ msgstr "この応募を開けませんでした。"
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "この応募にはまだ求人説明がありません。応募画面で追加してください。"
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "これは別の場所で変更されたため、保存されませんでした。あなたのテキストはここに保管されます。 リトライ はそれを他のコピーに上書き保存します。"
@@ -9479,6 +9605,10 @@ msgstr "この文書はロックされています。引き続き、バージョ
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "この書類はもう入手できません。更新して再試行してください。"
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "ウクライナ語"
 msgid "Unavailable"
 msgstr "利用不可"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "閲覧回数 · 30 日間"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "閲覧とダウンロード"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "公開リンクは {server}/ で始まります"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "停止後、録音は {transcriberName} に転送され、文字起こしされます。プロバイダーが料金を請求する場合があります。サーバーは記録を保存するのではなく、トランスクリプトを保存します。"
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "あなたの条件"
@@ -10901,6 +11047,10 @@ msgstr "{host}にあるレジュメ、カバーレター、応募。"
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "選択したフォントでは一部の文字を表示できないため、“?” と表示されます。デザインで、これらの文字を含むフォントを選んでください。"
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

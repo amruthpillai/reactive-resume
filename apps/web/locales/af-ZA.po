@@ -1740,6 +1740,17 @@ msgstr "Verskyn op die bladsy sodra dit 'n titel het."
 msgid "Appears on the page once it has an organization."
 msgstr "Verskyn op die bladsy sodra dit 'n organisasie het."
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "Aansoeker-opsporingstelsels verander jou PDF in gewone teks voordat iemand dit lees. Die kontroleerder doen dieselfde, met die PDF.js-biblioteek in jou blaaier, en tel dan hoeveel van jou CV oorleef: 0 tot 100, van hoe betroubaar die teks uitkom, nie van jou kanse om die werk te kry nie."
@@ -5549,6 +5560,14 @@ msgstr "As dit deel van jou ervaring is, voeg dit by waar dit hoort."
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "As iemand vir jou hierdie skakel gestuur het, vra hulle vir 'n nuwe een."
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "Ignoreer"
@@ -7835,6 +7854,10 @@ msgstr "Maak storie oop"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "Maak die uitgevoerde lêer oop en bevestig jy kan elke deel daarvan kies en kopieer."
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "Probeer weer"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "Probeer weer hiermee"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

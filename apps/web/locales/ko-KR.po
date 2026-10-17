@@ -1740,6 +1740,17 @@ msgstr "제목이 있으면 페이지에 표시됩니다."
 msgid "Appears on the page once it has an organization."
 msgstr "조직이 있으면 페이지에 표시됩니다."
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "지원자 추적 시스템은 누군가가 읽기 전에 PDF를 일반 텍스트로 변환합니다. 검사기는 브라우저에 있는 PDF.js 라이브러리를 사용하여 동일한 작업을 수행한 다음 이력서가 얼마나 남아 있는지 점수를 매깁니다. 즉, 취업 가능성이 아니라 텍스트가 얼마나 안정적으로 나오는지에 따라 0에서 100까지 점수를 매깁니다."
@@ -5549,6 +5560,14 @@ msgstr "그것이 당신의 경험의 일부라면, 그것이 속한 곳에 추�
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "누군가가 이 링크를 보낸 경우 새 링크를 요청하세요."
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "무시하다"
@@ -7835,6 +7854,10 @@ msgstr "스토리 열기"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "내보낸 파일을 열어 모든 부분을 선택하고 복사할 수 있는지 확인하세요."
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "다시 시도해 보세요"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "이걸로 다시 시도"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

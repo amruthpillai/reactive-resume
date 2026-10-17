@@ -2,7 +2,7 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { openBrowserAsync } from "expo-web-browser";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { SettingsGroup, SettingsPage } from "@/features/settings/layout";
 import { useProfile } from "@/features/settings/queries";
 import { SignOutRow } from "@/features/settings/sign-out";
@@ -56,11 +56,19 @@ export default function SettingsScreen() {
 				/>
 				<ListRow title={t`Help & docs`} leading="question" onPress={() => openLink("https://docs.rxresu.me")} />
 				<ListRow
-					title={t`Donate`}
-					leading="hand-heart"
+					title={t`Privacy policy`}
+					leading="shield-check"
 					external
-					onPress={() => openLink("https://opencollective.com/reactive-resume/donate")}
+					onPress={() => openLink("https://docs.rxresu.me/legal/privacy-policy")}
 				/>
+				{Platform.OS !== "ios" ? (
+					<ListRow
+						title={t`Donate`}
+						leading="hand-heart"
+						external
+						onPress={() => openLink("https://opencollective.com/reactive-resume/donate")}
+					/>
+				) : null}
 				<ListRow
 					title={t`Source code on GitHub`}
 					leading="code"

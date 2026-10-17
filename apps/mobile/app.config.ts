@@ -8,12 +8,16 @@ const config: ExpoConfig = {
 	name: "Reactive Resume",
 	slug: "reactive-resume",
 	scheme: "me.rxresu",
-	owner: "amruthpillai",
+	owner: "reactive-resume",
 	version: "1.0.0",
 	icon: "./assets/icon.png",
 	orientation: "default",
 	userInterfaceStyle: "automatic",
 	ios: {
+		icon: {
+			light: "./assets/icon.png",
+			dark: "./assets/icon-dark.png",
+		},
 		bundleIdentifier: "me.rxresu",
 		appleTeamId: "654ASRW868",
 		deploymentTarget: "17.4",
@@ -51,7 +55,8 @@ const config: ExpoConfig = {
 		adaptiveIcon: {
 			foregroundImage: "./assets/adaptive-foreground.png",
 			backgroundImage: "./assets/adaptive-background.png",
-			backgroundColor: "#F8F7F3",
+			monochromeImage: "./assets/adaptive-monochrome.png",
+			backgroundColor: "#337344",
 		},
 		// Legacy camera capture needs WRITE_EXTERNAL_STORAGE; dependencies cap it at API 32. Keep read access blocked.
 		blockedPermissions: [
@@ -99,6 +104,7 @@ const config: ExpoConfig = {
 		"expo-router",
 		"expo-dev-client",
 		"expo-font",
+		"expo-asset",
 		"expo-image",
 		"expo-sqlite",
 		["expo-secure-store", { faceIDPermission: false }],

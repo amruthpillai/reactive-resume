@@ -2,6 +2,7 @@ import type { LanguageModel } from "ai";
 import type { z } from "zod";
 import { ORPCError } from "@orpc/client";
 import { generateText } from "ai";
+import { safetySystemPrompt } from "@reactive-resume/ai/prompts";
 
 export type GenerateJsonPrompt = {
 	system?: string;
@@ -24,7 +25,7 @@ export async function generateJson<T>(
 	const { text } = await generateText({
 		model,
 		...(signal ? { abortSignal: signal } : {}),
-		...(system ? { system } : {}),
+		system: `${safetySystemPrompt}\n\n${system ?? ""}`,
 		messages: [{ role: "user", content: prompt }],
 	});
 

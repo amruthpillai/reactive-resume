@@ -8,6 +8,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { AIProviderSetupSheet, useHasAIProvider } from "@/features/ai/providers";
+import { ReportAiContent } from "@/features/ai/report-content";
 import { Banner, Button, Card, Icon, Text, useTheme } from "@/ui";
 
 export const tabLabel = (tab: WorkspaceTab) =>
@@ -196,10 +197,13 @@ export function AiNotice({ sends }: { sends?: string | undefined }) {
 		);
 	const label = provider.label;
 	return (
-		<PrivacyLine>
-			{sends ??
-				t`Sends this application's posting, notes and documents, plus Knowledge that's switched on, to ${label}.`}
-		</PrivacyLine>
+		<>
+			<PrivacyLine>
+				{sends ??
+					t`Sends this application's posting, notes and documents, plus Knowledge that's switched on, to ${label}.`}
+			</PrivacyLine>
+			<ReportAiContent source="career" />
+		</>
 	);
 }
 

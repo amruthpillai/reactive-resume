@@ -1740,6 +1740,17 @@ msgstr "தலைப்பைப் பெற்றவுடன் பக்க�
 msgid "Appears on the page once it has an organization."
 msgstr "அது ஒரு அமைப்பைப் பெற்றவுடன் பக்கத்தில் தோன்றும்."
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "விண்ணப்பதாரர் கண்காணிப்பு அமைப்புகள் உங்கள் PDF ஐ எவரும் படிக்கும் முன் எளிய உரையாக மாற்றும். உங்கள் உலாவியில் உள்ள PDF.js லைப்ரரியில் சரிபார்ப்பவரும் அதையே செய்கிறார், பின்னர் உங்கள் ரெஸ்யூம் எவ்வளவு உயிர்வாழும் என்பதை 0 முதல் 100 வரை மதிப்பெண்கள் எடுக்கும், உரை எவ்வளவு நம்பகத்தன்மையுடன் வெளிவருகிறது, வேலை கிடைப்பதற்கான வாய்ப்புகளிலிருந்து அல்ல."
@@ -5549,6 +5560,14 @@ msgstr "இது உங்கள் அனுபவத்தின் ஒரு
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "யாராவது உங்களுக்கு இந்த இணைப்பை அனுப்பியிருந்தால், அவர்களிடம் புதிய ஒன்றைக் கேட்கவும்."
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "புறக்கணிக்கவும்"
@@ -7835,6 +7854,10 @@ msgstr "கதையைத் திற"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "ஏற்றுமதி செய்யப்பட்ட கோப்பைத் திறந்து அதன் ஒவ்வொரு பகுதியையும் தேர்ந்தெடுத்து நகலெடுக்க முடிகிறதா என்பதை உறுதிப்படுத்தவும்."
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "மீண்டும் முயற்சிக்கவும்"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "இதைக் கொண்டு மீண்டும் முயற்சி செய்"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

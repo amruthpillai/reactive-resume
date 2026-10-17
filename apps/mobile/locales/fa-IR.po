@@ -1106,6 +1106,10 @@ msgstr "به دانسته‌ها اضافه شد."
 msgid "Added to Prepare"
 msgstr "به «آماده‌سازی» اضافه شد"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "آدرس"
@@ -1252,6 +1256,14 @@ msgstr "اجازه دسترسی به دوربین را در تنظیمات دس�
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "به میکروفون در تنظیمات دستگاه اجازه دسترسی دهید یا پاسخ خود را تایپ کنید."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "زیر حداقل حقوق پایه شما."
 msgid "Bengali"
 msgstr "بنگالی"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "برد"
@@ -2122,6 +2138,10 @@ msgstr "یک عکس کوچکتر از 10 مگابایت انتخاب کنید."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "یک رزومه را در Write انتخاب کنید تا با طراحی آن مطابقت داشته باشد. تا آن زمان، نامه خاص خود را دارد."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "زمانی را انتخاب کنید"
@@ -2457,6 +2477,10 @@ msgstr "محتوا به‌صورت شبکه‌ای چیده شده است."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "محتوا هنوز تمام می شود. یک بخش را مخفی کنید یا ورودی ها را کوتاه کنید."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "زمینه"
@@ -2729,6 +2753,7 @@ msgstr "علامت‌گذاری به‌عنوان ارسال‌شده ممکن �
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "مرورگر باز نشد. دوباره امتحان کنید."
@@ -2762,6 +2787,10 @@ msgstr "PDF صادر شده خوانده نشد."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "نمی توان این صفحه را خواند: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "موضوع ذخیره نشد. دوباره امتحان کنید."
 msgid "Couldn't save the timezone."
 msgstr "منطقهٔ زمانی ذخیره نشد."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "تغییرات شما ذخیره نشد، بنابراین تهیهٔ پیش‌نویس شروع نشد. چیزی در صفحه تغییر نکرد."
@@ -2863,6 +2896,10 @@ msgstr "ذخیره نشد. متن شما هنوز اینجاست. دوباره �
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "نمی توان برای مصاحبه برنامه ریزی کرد."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "چکی"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "بازدید روزانه بیش از 30 روز، اوج {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "دانمارکی"
@@ -3113,6 +3154,10 @@ msgstr "تاریک"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "تم تیره"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "{0} نفرستید"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "پست شغلی {0} نفرستید"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "نمای شبکه ای"
 msgid "Hard for software to read"
 msgstr "خواندن برای نرم افزار سخت است"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "قبلا یک رزومه دارید؟"
@@ -4465,6 +4518,11 @@ msgstr "اگر از یک اسکن به دست آمده، این طبیعی اس�
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "اگر کسی این لینک را برای شما فرستاد، از او یک لینک جدید بخواهید."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "فقط 500 ردیف اول را به یکباره وارد می‌کنن
 msgid "Only the first pages were checked."
 msgstr "فقط صفحات اول بررسی شدند."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "فقط این دستگاه اعلان را زمان‌بندی می‌کند."
@@ -6483,6 +6546,10 @@ msgstr "سایر"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "مزایای دیگر"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "چاپ کنید"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "پیش از ارسال، فرم را چاپ یا به یک PDF مسطح خروجی بگیرید."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "سیاست حفظ حریم خصوصی"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "خصوصی. فقط شما می توانید آن را ببینید."
@@ -6990,10 +7062,15 @@ msgstr "تغییرات پیشنهادی"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "ارائه شده توسط سرور شما: {connected}. جستجو و خواندن برای همه در اینجا تنظیم شده است. تغییرات را از سرپرست خود بپرسید."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "ارائه‌دهنده"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "صفحات مشاغل عمومی پشتیبانی شده را می خو�
 msgid "Ready"
 msgstr "آماده است"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "دلیل"
@@ -7495,6 +7573,20 @@ msgstr "پاسخ کپی شد"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "گزارش"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "شیوه‌نامه CSS معنایی"
 msgid "Send"
 msgstr "ارسال کنید"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "خود رزومه را ارسال کنید، نه یک بستهٔ پورتفولیو."
@@ -8181,6 +8277,10 @@ msgstr "خود رزومه را ارسال کنید، نه یک بستهٔ پور
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "جزئیات فرستنده در نامه کپی شده است"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "صربی"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "سرور"
@@ -8281,6 +8382,10 @@ msgstr "تنظیمات"
 msgid "Setup guide"
 msgstr "راهنمای راه اندازی"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "رنگ سایه"
@@ -8307,6 +8412,11 @@ msgstr "اشتراک‌گذاری رویداد تقویم (ics.)"
 msgid "Share CSV"
 msgstr "اشتراک گذاری CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "اشتراک گذاری PNG"
@@ -8331,6 +8441,10 @@ msgstr "ردیف های رد شده یا نامعتبر را به اشتراک �
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "اشتراک گذاری از طریق…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "آن ضبط خالی بود یا از ۲ مگابایت بیشتر بو�
 msgid "That reminder time has already passed."
 msgstr "آن زمان یادآوری قبلاً گذشته است."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "درخواست کار سایر جزئیات خود را حفظ می کند."
@@ -9377,6 +9495,10 @@ msgstr "تست اجرا نشد"
 msgid "The text comes out unreadable."
 msgstr "متن به‌صورت غیرقابل خواندن استخراج می‌شود."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "بالای صفحهٔ اول شبیه یک نام نیست."
@@ -9435,6 +9557,10 @@ msgstr "این درخواست باز نشد."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "این درخواست شغلی هنوز هیچ آگهی شغلی ندارد. یکی را در درخواست‌های شغلی اضافه کنید."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "این در جای دیگری تغییر کرد، بنابراین ذخیره نشد. متن شما در اینجا نگهداری می شود. دوباره امتحان کنید آن را روی نسخه دیگر ذخیره می کند."
@@ -9479,6 +9605,10 @@ msgstr "این سند قفل شده است. همچنان می‌توانید ن�
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "این سند دیگر در دسترس نیست. بازخوانی کنید و دوباره امتحان کنید."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "اوکراینی"
 msgid "Unavailable"
 msgstr "در دسترس نیست"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "بازدید · 30 روز"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "مشاهده و دانلود"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "پیوندهای عمومی شما با {server}/ شروع می شوند
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "ضبط شما پس از توقف به {transcriberName} می رود تا رونویسی شود. ممکن است ارائه‌دهنده شما هزینه کند. سرور رونوشت ها را نگه می دارد، هرگز ضبط نمی کند."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "الزامات شما"
@@ -10901,6 +11047,10 @@ msgstr "رزومه، نامه‌های پوششی و درخواست های شغ�
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "فونت انتخاب‌شدهٔ شما نمی‌تواند برخی نویسه‌ها را نمایش دهد. به‌صورت “?” نشان داده می‌شوند. در طراحی، فونتی را انتخاب کنید که آن‌ها را داشته باشد."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

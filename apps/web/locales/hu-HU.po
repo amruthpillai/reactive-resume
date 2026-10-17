@@ -1740,6 +1740,17 @@ msgstr "Akkor jelenik meg az oldalon, ha van címe."
 msgid "Appears on the page once it has an organization."
 msgstr "Megjelenik az oldalon, ha van szervezete."
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "A kérelmező nyomkövető rendszerek egyszerű szöveggé alakítják a PDF-t, mielőtt bárki elolvasná. Az ellenőrző ugyanezt teszi, a PDF.js könyvtárral a böngészőben, majd azt értékeli, hogy az önéletrajzból mennyi maradt fenn: 0-tól 100-ig, attól függően, hogy mennyire megbízhatóan jelenik meg a szöveg, nem pedig attól, hogy milyen esélyekkel kapja meg az állást."
@@ -5549,6 +5560,14 @@ msgstr "Ha része a tapasztalatainak, adja hozzá a helyére."
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Ha valaki küldte neked ezt a linket, kérj tőle egy újat."
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "Figyelmen kívül hagyni"
@@ -7835,6 +7854,10 @@ msgstr "Történet megnyitása"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "Nyisd meg az exportált fájlt, és győződj meg róla, hogy minden része kijelölhető és másolható."
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "Próbáld újra"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "Próbáld újra ezzel"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

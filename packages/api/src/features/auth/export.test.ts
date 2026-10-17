@@ -14,6 +14,7 @@ vi.mock("@reactive-resume/db/schema", () => ({
 	resume: { userId: "resume.userId" },
 	coverLetter: { userId: "coverLetter.userId" },
 	application: { userId: "application.userId" },
+	aiContentReport: { userId: "aiContentReport.userId" },
 }));
 vi.mock("drizzle-orm", () => ({ eq: (column: unknown, value: unknown) => ({ column, value }) }));
 vi.mock("@reactive-resume/env/server", () => ({ env: {} }));
@@ -81,6 +82,7 @@ describe("account backup", () => {
 				[{ id: "resume", data: defaultResumeData }],
 				[letter],
 				[application],
+				[{ id: "report", userId: "owner", content: "Reported output" }],
 			]) {
 				mocks.select.mockReturnValueOnce({
 					from: () => ({
@@ -98,6 +100,8 @@ describe("account backup", () => {
 			expect(mocks.predicates).toContainEqual({ column: "coverLetter.userId", value: "owner" });
 			expect(mocks.exportCareer).toHaveBeenCalledExactlyOnceWith("owner");
 			expect(exported.career).toEqual(career);
+			expect(exported.aiContentReports).toEqual([{ id: "report", userId: "owner", content: "Reported output" }]);
+			expect(mocks.predicates).toContainEqual({ column: "aiContentReport.userId", value: "owner" });
 		},
 	);
 });

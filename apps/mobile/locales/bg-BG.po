@@ -1106,6 +1106,10 @@ msgstr "Добавено към Знания."
 msgid "Added to Prepare"
 msgstr "Добавено в Подготовка"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Адрес"
@@ -1252,6 +1256,14 @@ msgstr "Разрешете достъп до камерата в настрой�
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Разрешете достъп до микрофона в настройките на устройството или въведете вашия отговор."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Под вашата минимална основна заплата."
 msgid "Bengali"
 msgstr "Бенгалски"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Дъска"
@@ -2122,6 +2138,10 @@ msgstr "Изберете снимка, по-малка от 10 MB."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Изберете резюме в Write, което да съответства на неговия дизайн. Дотогава писмото си има своето."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Изберете час"
@@ -2457,6 +2477,10 @@ msgstr "Съдържанието е оформено в мрежа."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Съдържанието все още не се побира. Скрийте раздел или съкратете записите."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Контекст"
@@ -2729,6 +2753,7 @@ msgstr "Кандидатурата не можа да бъде отбеляза�
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Браузърът не може да се отвори. Опитайте отново."
@@ -2762,6 +2787,10 @@ msgstr "Не може да се прочете експортираният PDF.
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Не можах да прочета тази страница: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Темата не можа да бъде запазена. Опитай�
 msgid "Couldn't save the timezone."
 msgstr "Часовата зона не можа да бъде запазена."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "Промените ви не бяха запазени, затова изготвянето на чернова не започна. Нищо на страницата не се промени."
@@ -2863,6 +2896,10 @@ msgstr "Не може да се запази. Вашият текст е все 
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Неуспешно насрочване на интервюто."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Чешки"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Ежедневни показвания за 30 дни, пик {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Датски"
@@ -3113,6 +3154,10 @@ msgstr "Тъмна"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Тъмна тема"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "Не изпращайте {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "Не изпращайте {0} обява за работа"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Изглед с решетка"
 msgid "Hard for software to read"
 msgstr "Трудно за четене от софтуер"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Вече имате автобиография?"
@@ -4465,6 +4518,11 @@ msgstr "Ако произлиза от скан, това е очаквано. �
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Ако някой ви е изпратил този линк, помолете го за нов."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Само първите 500 реда се импортират наве�
 msgid "Only the first pages were checked."
 msgstr "Проверени бяха само първите страници."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Само това устройство планира известието."
@@ -6483,6 +6546,10 @@ msgstr "Друго"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Други придобивки"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Печат"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Отпечатайте или експортирайте формуляра в плосък PDF, преди да го изпратите."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Политика за поверителност"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Частно. Само вие можете да го видите."
@@ -6990,10 +7062,15 @@ msgstr "Предложени промени"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Предоставено от вашия сървър: {connected}. Търсенето и четенето са настроени за всички тук. Попитайте вашия администратор за промените."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Доставчик"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Чете поддържаните публични страници за
 msgid "Ready"
 msgstr "Готови"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Причина"
@@ -7495,6 +7573,20 @@ msgstr "Отговорът е копиран"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Доклад"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Семантичен CSS стилов лист"
 msgid "Send"
 msgstr "Изпратете"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Изпращайте самата автобиография, а не обвивка с портфолио."
@@ -8181,6 +8277,10 @@ msgstr "Изпращайте самата автобиография, а не о
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Данните за изпращача са копирани в писмото"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Сръбски"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "Сървър"
@@ -8281,6 +8382,10 @@ msgstr "Настройки"
 msgid "Setup guide"
 msgstr "Ръководство за настройка"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Цвят на сянката"
@@ -8307,6 +8412,11 @@ msgstr "Споделяне на събитие в календара (.ics)"
 msgid "Share CSV"
 msgstr "Споделете CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Споделете PNG"
@@ -8331,6 +8441,10 @@ msgstr "Споделяне на пропуснати или невалидни �
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Споделете чрез..."
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Записът беше празен или над 2 MB. Опитайт�
 msgid "That reminder time has already passed."
 msgstr "Това време за напомняне вече е изтекло."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "Заявлението за работа запазва другите си данни."
@@ -9377,6 +9495,10 @@ msgstr "Тестът не се проведе."
 msgid "The text comes out unreadable."
 msgstr "Текстът излиза нечетим."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Горната част на първата страница не прилича на име."
@@ -9435,6 +9557,10 @@ msgstr "Тази кандидатура не можа да бъде отворе
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Тази кандидатура все още няма обява за работа. Добавете такъв в кандидатурите."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Това се промени някъде другаде, така че не беше запазено. Вашият текст се съхранява тук; Повторният опит го записва върху другото копие."
@@ -9479,6 +9605,10 @@ msgstr "Този документ е заключен. Все още может�
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Този документ вече не е наличен. Опреснете и опитайте отново."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Украински"
 msgid "Unavailable"
 msgstr "Недостъпно"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "гледания · 30 дни"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Прегледи и изтегляния"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Вашите публични връзки започват с {server}/
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Вашият запис отива в {transcriberName}, след като спрете, за да бъде транскрибиран. Вашият доставчик може да таксува. Сървърът съхранява преписи, никога записи."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Вашите изисквания"
@@ -10901,6 +11047,10 @@ msgstr "Вашите автобиографии, мотивационни пис
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Избраният от вас шрифт не може да покаже някои знаци. Показват се като “?”. В Дизайн изберете шрифт, който ги съдържа."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

@@ -56,7 +56,7 @@ const mocks = {
  "react-native-reanimated": "const animation={duration:()=>animation,reduceMotion:()=>animation};export const FadeOut=animation;export const LinearTransition=animation;export const ReduceMotion={System:'system'};export const cancelAnimation=()=>{};export const Easing={bezier:()=>{}};export const useAnimatedProps=(fn)=>fn();export const useSharedValue=(initial)=>({get:()=>initial,set:()=>{}});export const withTiming=(value)=>value;export default {View:'Animated.View',createAnimatedComponent:(value)=>value};",
  "react-native-svg": "export default 'Svg';export const Circle='Circle';",
  "@/preview/usePreview": "export const usePreview=()=>({result:null});",
- "@/auth/session": "export const useSession=()=>globalThis.__check.session;",
+ "@/auth/session": "export const useSession=()=>globalThis.__check.session; export const getAccountScope=()=>null; export const getServer=()=>\"https://fixture.test\";",
  "@/api/client": "export const rest=(...args)=>globalThis.__check.rest(...args);export const client=globalThis.__check.client;",
 };
 mocks["@/ui"] += ["Banner", "Button", "Card", "SelectSheet", "Skeleton", "Text", "Chip", "Sheet", "TextArea", "EmptyState", "Segmented", "IconButton", "ListRow"].map((name) => `export const ${name}='${name}';`).join("") + "export const useReducedMotion=()=>false;export const useTheme=()=>({space:{s1:4,s2:8,s3:12,s12:48},colors:{},motion:{d2:200}});";

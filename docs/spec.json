@@ -230,6 +230,134 @@
 				]
 			}
 		},
+		"/ai/content-reports": {
+			"post": {
+				"operationId": "reportAiContent",
+				"summary": "Report unsafe AI-generated or publicly shared resume content to the server operator",
+				"description": "Privately stores only the content and explanation the user submits. Does not send a report to an AI provider. Reports are deleted with the reporting account.",
+				"tags": [
+					"AI"
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"source": {
+										"enum": [
+											"assistant",
+											"writing",
+											"letter",
+											"career",
+											"import",
+											"public-resume",
+											"other"
+										],
+										"type": "string"
+									},
+									"reason": {
+										"enum": [
+											"hate",
+											"sexual",
+											"violence",
+											"dangerous",
+											"other"
+										],
+										"type": "string"
+									},
+									"content": {
+										"type": "string",
+										"minLength": 1,
+										"maxLength": 20000
+									},
+									"note": {
+										"type": "string",
+										"maxLength": 1000,
+										"default": ""
+									}
+								},
+								"required": [
+									"source",
+									"reason",
+									"content"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"id"
+									]
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Structured API error. See status and code; do not branch on message text.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": [
+										"defined",
+										"code",
+										"status",
+										"message"
+									],
+									"properties": {
+										"defined": {
+											"type": "boolean"
+										},
+										"code": {
+											"type": "string"
+										},
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"data": {}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"apiKey": []
+					},
+					{
+						"bearerAuth": []
+					},
+					{
+						"cookieAuth": []
+					}
+				],
+				"x-codeSamples": [
+					{
+						"lang": "bash",
+						"label": "cURL",
+						"source": "curl --request POST \"https://rxresu.me/api/openapi/ai/content-reports\" --header \"x-api-key: <api-key>\" --header \"Content-Type: application/json\" --data '{\n  \"source\": \"assistant\",\n  \"reason\": \"hate\",\n  \"content\": \"<string>\"\n}'"
+					}
+				]
+			}
+		},
 		"/ai/parse-pdf": {
 			"post": {
 				"operationId": "parseResumePdf",
@@ -34446,6 +34574,59 @@
 												]
 											}
 										},
+										"aiContentReports": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "string"
+													},
+													"userId": {
+														"type": "string"
+													},
+													"source": {
+														"type": "string"
+													},
+													"reason": {
+														"type": "string"
+													},
+													"content": {
+														"type": "string"
+													},
+													"note": {
+														"type": "string"
+													},
+													"createdAt": {
+														"type": "string",
+														"format": "date-time",
+														"x-native-type": "date"
+													},
+													"reviewedAt": {
+														"anyOf": [
+															{
+																"type": "string",
+																"format": "date-time",
+																"x-native-type": "date"
+															},
+															{
+																"type": "null"
+															}
+														]
+													}
+												},
+												"required": [
+													"id",
+													"userId",
+													"source",
+													"reason",
+													"content",
+													"note",
+													"createdAt",
+													"reviewedAt"
+												]
+											}
+										},
 										"career": {
 											"type": "object",
 											"properties": {
@@ -36773,6 +36954,7 @@
 										"resumes",
 										"coverLetters",
 										"applications",
+										"aiContentReports",
 										"career"
 									]
 								}

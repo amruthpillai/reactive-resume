@@ -1740,6 +1740,17 @@ msgstr "Xuất hiện trên trang khi nó có tiêu đề."
 msgid "Appears on the page once it has an organization."
 msgstr "Xuất hiện trên trang khi nó có một tổ chức."
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "Hệ thống theo dõi người nộp đơn biến PDF của bạn thành văn bản thuần túy trước khi bất kỳ ai đọc nó. Trình kiểm tra cũng thực hiện tương tự, với thư viện PDF.js trong trình duyệt của bạn, sau đó chấm điểm số lượng hồ sơ của bạn tồn tại: 0 đến 100, dựa trên độ tin cậy của văn bản xuất hiện chứ không phải từ cơ hội nhận được công việc của bạn."
@@ -5549,6 +5560,14 @@ msgstr "Nếu đó là một phần trải nghiệm của bạn, hãy thêm nó 
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Nếu ai đó gửi cho bạn liên kết này, hãy yêu cầu họ cung cấp một liên kết mới."
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "Phớt lờ"
@@ -7835,6 +7854,10 @@ msgstr "Mở câu chuyện"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "Mở tệp đã xuất và xác nhận bạn có thể chọn và sao chép mọi phần của nó."
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "Hãy thử lại"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "Thử lại với bản này"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

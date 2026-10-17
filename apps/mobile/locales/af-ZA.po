@@ -1106,6 +1106,10 @@ msgstr "Bygevoeg by Kennis."
 msgid "Added to Prepare"
 msgstr "By Berei voor gevoeg"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Adres"
@@ -1252,6 +1256,14 @@ msgstr "Laat kameratoegang in jou toestelinstellings toe om 'n foto te neem."
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Laat mikrofoontoegang in toestelinstellings toe, of tik jou antwoord."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Onder jou minimum basissalaris."
 msgid "Bengali"
 msgstr "Bengaals"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Bord"
@@ -2122,6 +2138,10 @@ msgstr "Kies 'n foto kleiner as 10 MB."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Kies 'n CV in Skryf om by die ontwerp te pas. Tot dan het die brief sy eie."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Kies 'n tyd"
@@ -2457,6 +2477,10 @@ msgstr "Inhoud is in 'n rooster uitgelê."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Inhoud loop steeds oor. Versteek 'n afdeling of verkort inskrywings."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Konteks"
@@ -2729,6 +2753,7 @@ msgstr "Kon dit nie as aansoek gedoen merk nie."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Kon nie die blaaier oopmaak nie. Probeer weer."
@@ -2762,6 +2787,10 @@ msgstr "Kon nie die uitgevoerde PDF lees nie."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Kon nie hierdie bladsy lees nie: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Kon nie die tema stoor nie. Probeer weer."
 msgid "Couldn't save the timezone."
 msgstr "Kon nie die tydsone bewaar nie."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "Kon nie jou veranderinge stoor nie, dus het die opstel nie begin nie. Niks op die bladsy het verander nie."
@@ -2863,6 +2896,10 @@ msgstr "Kon nie stoor nie. Jou teks is nog hier; probeer weer."
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Kon nie die onderhoud skeduleer nie."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Tsjeggies"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Daaglikse uitsigte oor 30 dae, hoogtepunt {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Deens"
@@ -3113,6 +3154,10 @@ msgstr "Donker"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Donker tema"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "Moenie {0} stuur nie"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "Moenie {0} posplasing stuur nie"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Roosteraansig"
 msgid "Hard for software to read"
 msgstr "Moeilik vir sagteware om te lees"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Het jy al 'n CV?"
@@ -4465,6 +4518,11 @@ msgstr "As dit van 'n skandering af kom, is dit te wagte. Anders, verwyder dit; 
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "As iemand vir jou hierdie skakel gestuur het, vra hulle vir 'n nuwe een."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Slegs die eerste 500 rye word gelyktydig ingevoer, met die weglating van
 msgid "Only the first pages were checked."
 msgstr "Slegs die eerste bladsye is getoets."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Slegs hierdie toestel skeduleer die kennisgewing."
@@ -6483,6 +6546,10 @@ msgstr "Ander"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Ander voordele"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Druk"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Druk of voer die vorm uit na 'n plat PDF voordat jy dit stuur."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Privaatheidsbeleid"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Privaat. Net jy kan dit sien."
@@ -6990,10 +7062,15 @@ msgstr "Voorgestelde veranderinge"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Verskaf deur jou bediener: {connected}. Soek en lees is opgestel vir almal hier. Vra jou administrateur oor veranderinge."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Verskaffer"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Lees ondersteunde openbare werkbladsye. Geen rekening nodig nie."
 msgid "Ready"
 msgstr "Gereed"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Rede"
@@ -7495,6 +7573,20 @@ msgstr "Antwoord gekopieer"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Rapporteer"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Semantiese CSS-stylblad"
 msgid "Send"
 msgstr "Stuur"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Stuur die CV self eerder as 'n portefeulje-omhulsel."
@@ -8181,6 +8277,10 @@ msgstr "Stuur die CV self eerder as 'n portefeulje-omhulsel."
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Senderbesonderhede in die brief gekopieer"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Serwies"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "Bediener"
@@ -8281,6 +8382,10 @@ msgstr "Instellings"
 msgid "Setup guide"
 msgstr "Opstelgids"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Skadu Kleur"
@@ -8307,6 +8412,11 @@ msgstr "Deel kalendergeleentheid (.ics)"
 msgid "Share CSV"
 msgstr "Deel CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Deel PNG"
@@ -8331,6 +8441,10 @@ msgstr "Deel oorgeslaande of ongeldige rye"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Deel via..."
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Daardie opname was leeg of groter as 2 MB. Probeer 'n korter antwoord."
 msgid "That reminder time has already passed."
 msgstr "Daardie herinnering tyd is reeds verby."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "Die aansoek behou sy ander besonderhede."
@@ -9377,6 +9495,10 @@ msgstr "Die toets het nie geloop nie."
 msgid "The text comes out unreadable."
 msgstr "Die teks kom onleesbaar uit."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Die bopunt van die eerste bladsy lyk nie soos 'n naam nie."
@@ -9435,6 +9557,10 @@ msgstr "Hierdie aansoek kon nie oopgemaak word nie."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Hierdie aansoek het nog geen posplasing nie. Voeg een by aansoeke."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Dit het iewers anders verander, so dit is nie gestoor nie. Jou teks word hier bewaar; Probeer weer stoor dit oor die ander kopie."
@@ -9479,6 +9605,10 @@ msgstr "Hierdie dokument is gesluit. Jy kan steeds weergawes aflaai en benoem. O
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Hierdie dokument is nie meer beskikbaar nie. Herlaai en probeer weer."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Oekraïens"
 msgid "Unavailable"
 msgstr "Onbeskikbaar"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "kyke · 30 dae"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Kyke en aflaaie"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Jou publieke skakels begin met {server}/"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Jou opname gaan na {transcriberName} nadat jy gestop het, om getranskribeer te word. Jou verskaffer kan hef. Die bediener hou transkripsies, nooit opnames nie."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Jou vereistes"
@@ -10901,6 +11047,10 @@ msgstr "Jou CV's, dekbriewe en aansoeke, op {host}."
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Jou gekose lettertipe kan sommige karakters nie wys nie. Hulle verskyn as “?”. Kies in Ontwerp ’n lettertipe wat hulle het."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

@@ -1106,6 +1106,10 @@ msgstr "Tilføjet til Viden."
 msgid "Added to Prepare"
 msgstr "Føjet til Forbered"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Adresse"
@@ -1252,6 +1256,14 @@ msgstr "Tillad kameraadgang i dine enhedsindstillinger for at tage et billede."
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Tillad mikrofonadgang i enhedsindstillinger, eller skriv dit svar."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Under din mindste grundløn."
 msgid "Bengali"
 msgstr "Bengali"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Tavle"
@@ -2122,6 +2138,10 @@ msgstr "Vælg et billede, der er mindre end 10 MB."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Vælg et CV i Write, der matcher dets design. Indtil da har brevet sit eget."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Vælg et tidspunkt"
@@ -2457,6 +2477,10 @@ msgstr "Indhold er opsat i et gitter."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Indholdet fylder stadig for meget. Skjul en sektion, eller forkort poster."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "kontekst"
@@ -2729,6 +2753,7 @@ msgstr "Kunne ikke markere den som ansøgt."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Kunne ikke åbne browseren. Prøv igen."
@@ -2762,6 +2787,10 @@ msgstr "Kunne ikke læse den eksporterede PDF."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Kunne ikke læse denne side: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Kunne ikke gemme temaet. Prøv igen."
 msgid "Couldn't save the timezone."
 msgstr "Kunne ikke gemme tidszonen."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "Kunne ikke gemme dine ændringer, så udarbejdelsen af udkastet startede ikke. Intet på siden blev ændret."
@@ -2863,6 +2896,10 @@ msgstr "Kunne ikke gemme. Din tekst er her stadig; prøv igen."
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Interviewet kunne ikke planlægges."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Tjekkisk"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Daglige visninger over 30 dage, peak {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Dansk"
@@ -3113,6 +3154,10 @@ msgstr "Mørk"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Mørkt tema"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "Send ikke {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "Send ikke {0} jobopslag"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Gittervisning"
 msgid "Hard for software to read"
 msgstr "Svært for software at læse"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Har du allerede et CV?"
@@ -4465,6 +4518,11 @@ msgstr "Hvis det kommer fra en scanning, er det forventet. Ellers bør du fjerne
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Hvis nogen har sendt dig dette link, så bed dem om et nyt."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Kun de første 500 rækker importeres på én gang og udelader {overflow
 msgid "Only the first pages were checked."
 msgstr "Kun de første sider blev tjekket."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Kun denne enhed planlægger underretningen."
@@ -6483,6 +6546,10 @@ msgstr "Andet"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Andre goder"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Trykke"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Udskriv eller eksporter formularen til en flad PDF, før du sender den."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Privatlivspolitik"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Privat. Kun du kan se det."
@@ -6990,10 +7062,15 @@ msgstr "Foreslåede ændringer"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Leveret af din server: {connected}. Søg og læsning er sat op for alle her. Spørg din administrator om ændringer."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Udbyder"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Læser understøttede offentlige jobsider. Ingen konto nødvendig."
 msgid "Ready"
 msgstr "Parat"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Årsag"
@@ -7495,6 +7573,20 @@ msgstr "Svaret er kopieret"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Rapport"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Semantisk CSS-stilark"
 msgid "Send"
 msgstr "Sende"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Send selve CV'et frem for en portfolio-indpakning."
@@ -8181,6 +8277,10 @@ msgstr "Send selve CV'et frem for en portfolio-indpakning."
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Afsenderoplysninger kopieret til brevet"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Serbisk"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "server"
@@ -8281,6 +8382,10 @@ msgstr "Indstillinger"
 msgid "Setup guide"
 msgstr "Opsætningsvejledning"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Skygge farve"
@@ -8307,6 +8412,11 @@ msgstr "Del kalenderbegivenhed (.ics)"
 msgid "Share CSV"
 msgstr "Del CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Del PNG"
@@ -8331,6 +8441,10 @@ msgstr "Deling, der er sprunget over eller ugyldige rækker"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Del via…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Optagelsen var tom eller over 2 MB. Prøv et kortere svar."
 msgid "That reminder time has already passed."
 msgstr "Den påmindelsestid er allerede udløbet."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "Jobansøgningen beholder sine øvrige detaljer."
@@ -9377,6 +9495,10 @@ msgstr "Testen kørte ikke."
 msgid "The text comes out unreadable."
 msgstr "Teksten kommer ud ulæselig."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Toppen af den første side ligner ikke et navn."
@@ -9435,6 +9557,10 @@ msgstr "Ansøgningen kunne ikke åbnes."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Denne jobansøgning har endnu ikke noget jobopslag. Tilføj en i Ansøgninger."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Dette ændrede sig et andet sted, så det blev ikke gemt. Din tekst er gemt her; Prøv igen gemmer den over den anden kopi."
@@ -9479,6 +9605,10 @@ msgstr "Dette dokument er låst. Du kan stadig downloade og navngive versioner. 
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Dette dokument er ikke længere tilgængeligt. Opdater og prøv igen."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Ukrainsk"
 msgid "Unavailable"
 msgstr "Ikke tilgængelig"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "visninger · 30 dage"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Visninger og downloads"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Dine offentlige links begynder med {server}/"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Din optagelse går til {transcriberName}, når du stopper, for at blive transskriberet. Din udbyder kan opkræve betaling. Serveren opbevarer transskriptioner, aldrig optagelser."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Dine krav"
@@ -10901,6 +11047,10 @@ msgstr "Dine CV'er, følgebreve og jobansøgninger på {host}."
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Din valgte skrifttype kan ikke vise nogle tegn. De vises som “?”. Under Design kan du vælge en skrifttype, der har dem."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

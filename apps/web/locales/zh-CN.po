@@ -1740,6 +1740,17 @@ msgstr "一旦有标题就会出现在页面上。"
 msgid "Appears on the page once it has an organization."
 msgstr "一旦有组织就会出现在页面上。"
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "申请人跟踪系统会在任何人阅读之前将您的 PDF 转换为纯文本。检查器也会做同样的事情，使用浏览器中的 PDF.js 库，然后根据文本的可靠程度，而不是根据您获得工作的机会，对您的简历存活率进行评分：0 到 100。"
@@ -5549,6 +5560,14 @@ msgstr "如果它是您体验的一部分，请将其添加到它所属的位置
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "如果有人向您发送了此链接，请向他们索要一个新链接。"
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "忽略"
@@ -7835,6 +7854,10 @@ msgstr "打开故事"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "打开导出的文件，确认你可以选取并复制其中的每一部分。"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "再试一次"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "用这个再试一次"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

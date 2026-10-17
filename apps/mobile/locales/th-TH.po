@@ -1106,6 +1106,10 @@ msgstr "เพิ่มไปยัง คลังความรู้ แล�
 msgid "Added to Prepare"
 msgstr "เพิ่มในแท็บเตรียมตัวแล้ว"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "ที่อยู่"
@@ -1252,6 +1256,14 @@ msgstr "อนุญาตให้เข้าถึงกล้องในก
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "อนุญาตให้เข้าถึงไมโครโฟนในการตั้งค่าอุปกรณ์ หรือพิมพ์คำตอบของคุณ"
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "ต่ำกว่าฐานเงินเดือนขั้นต
 msgid "Bengali"
 msgstr "เบงกาลี"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "บอร์ด"
@@ -2122,6 +2138,10 @@ msgstr "เลือกรูปภาพที่มีขนาดเล็ก
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "เลือกเรซูเม่ใน Write เพื่อให้ตรงกับดีไซน์ จนกระทั่งถึงตอนนั้นจดหมายก็มีเป็นของตัวเอง"
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "เลือกเวลา"
@@ -2457,6 +2477,10 @@ msgstr "เนื้อหาถูกจัดวางแบบกริด"
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "เนื้อหายังล้นหน้าอยู่ ซ่อนบางส่วนหรือย่อรายการ"
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "บริบท"
@@ -2729,6 +2753,7 @@ msgstr "ทำเครื่องหมายว่าสมัครแล้
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "ไม่สามารถเปิดเบราว์เซอร์ได้ ลองอีกครั้ง"
@@ -2762,6 +2787,10 @@ msgstr "ไม่สามารถอ่าน PDF ที่ส่งออก�
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "ไม่สามารถอ่านหน้านี้ได้: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "ไม่สามารถบันทึกธีมได้ ลอ�
 msgid "Couldn't save the timezone."
 msgstr "บันทึกเขตเวลาไม่ได้"
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "ไม่สามารถบันทึกการเปลี่ยนแปลงของคุณได้ จึงไม่ได้เริ่มร่าง ไม่มีสิ่งใดในหน้านี้เปลี่ยนแปลง"
@@ -2863,6 +2896,10 @@ msgstr "ไม่สามารถบันทึกได้ ข้อคว�
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "ไม่สามารถกำหนดเวลาการสัมภาษณ์ได้"
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "เช็ก"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "การดูรายวันในช่วง 30 วัน จุดสูงสุด {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "เดนมาร์ก"
@@ -3113,6 +3154,10 @@ msgstr "มืด"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "ธีมมืด"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "อย่าส่ง {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "อย่าส่งประกาศรับสมัครงาน {0}"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "มุมมองตาราง"
 msgid "Hard for software to read"
 msgstr "ยากสำหรับซอฟต์แวร์ที่จะอ่าน"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "มี ประวัติย่อ แล้วหรือยัง?"
@@ -4465,6 +4518,11 @@ msgstr "หากมาจากการสแกน ถือเป็นเ�
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "หากมีคนส่งลิงก์นี้ให้คุณ โปรดขอลิงก์ใหม่จากพวกเขา"
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "นำเข้าเฉพาะ 500 แถวแรกในครั�
 msgid "Only the first pages were checked."
 msgstr "ตรวจสอบเฉพาะหน้าแรก ๆ เท่านั้น"
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "เฉพาะอุปกรณ์นี้เท่านั้นที่กำหนดเวลาการแจ้งเตือน"
@@ -6483,6 +6546,10 @@ msgstr "อื่นๆ"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "สวัสดิการอื่นๆ"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "พิมพ์"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "พิมพ์หรือส่งออกแบบฟอร์มเป็น PDF แบบแบนก่อนส่ง"
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "นโยบายความเป็นส่วนตัว"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "ส่วนตัว. มีเพียงคุณเท่านั้นที่สามารถเห็นได้"
@@ -6990,10 +7062,15 @@ msgstr "การเปลี่ยนแปลงที่เสนอ"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "จัดทำโดยเซิร์ฟเวอร์ของคุณ: {connected} การค้นหาและการอ่านได้รับการตั้งค่าสำหรับทุกคนที่นี่ สอบถามผู้ดูแลระบบของคุณเกี่ยวกับการเปลี่ยนแปลง"
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "ผู้ให้บริการ"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "อ่านหน้างานสาธารณะที่รอง
 msgid "Ready"
 msgstr "พร้อม"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "เหตุผล"
@@ -7495,6 +7573,20 @@ msgstr "คัดลอกคำตอบกลับแล้ว"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "รายงาน"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "สไตล์ชีต CSS เชิงความหมาย"
 msgid "Send"
 msgstr "ส่ง"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "ส่งเรซูเม่โดยตรงแทนที่จะห่อด้วยพอร์ตโฟลิโอ"
@@ -8181,6 +8277,10 @@ msgstr "ส่งเรซูเม่โดยตรงแทนที่จะ
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "รายละเอียดผู้ส่งคัดลอกลงในจดหมาย"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "เซอร์เบีย"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "เซิร์ฟเวอร์"
@@ -8281,6 +8382,10 @@ msgstr "การตั้งค่า"
 msgid "Setup guide"
 msgstr "คู่มือการตั้งค่า"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "สีเงา"
@@ -8307,6 +8412,11 @@ msgstr "แชร์กิจกรรมในปฏิทิน (.ics)"
 msgid "Share CSV"
 msgstr "แชร์ CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "แชร์ PNG"
@@ -8331,6 +8441,10 @@ msgstr "แชร์แถวที่ข้ามหรือไม่ถูก
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "แบ่งปันผ่าน..."
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "ไฟล์บันทึกเสียงว่างเปล่า
 msgid "That reminder time has already passed."
 msgstr "เวลาเตือนนั้นผ่านไปแล้ว"
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "ใบสมัครเก็บรายละเอียดอื่นๆ ไว้"
@@ -9377,6 +9495,10 @@ msgstr "การทดสอบไม่ทำงาน"
 msgid "The text comes out unreadable."
 msgstr "ข้อความที่ออกมาอ่านไม่ได้"
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "ด้านบนของหน้าแรกไม่เหมือนชื่อ"
@@ -9435,6 +9557,10 @@ msgstr "เปิดใบสมัครนี้ไม่ได้"
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "ใบสมัครนี้ยังไม่มีประกาศรับสมัครงาน เพิ่มหนึ่งรายการในใบสมัคร"
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "สิ่งนี้เปลี่ยนไปที่อื่น ดังนั้นจึงไม่ได้รับการบันทึก ข้อความของคุณถูกเก็บไว้ที่นี่ ลองอีกครั้งเพื่อบันทึกทับสำเนาอื่น"
@@ -9479,6 +9605,10 @@ msgstr "เอกสารนี้ถูกล็อค คุณยังค�
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "เอกสารนี้ไม่สามารถใช้ได้อีกต่อไป รีเฟรชแล้วลองอีกครั้ง"
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "ยูเครน"
 msgid "Unavailable"
 msgstr "ไม่พร้อมใช้งาน"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "จำนวนการดู · 30 วัน"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "การดูและการดาวน์โหลด"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "ลิงก์สาธารณะของคุณขึ้นต้
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "เมื่อหยุดบันทึก เสียงจะถูกส่งไปยัง {transcriberName} เพื่อถอดเสียง ผู้ให้บริการอาจคิดค่าบริการ เซิร์ฟเวอร์เก็บเฉพาะข้อความถอดเสียง ไม่เก็บเสียงบันทึก"
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "ข้อกำหนดของคุณ"
@@ -10901,6 +11047,10 @@ msgstr "ประวัติย่อ จดหมายสมัครงา�
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "ฟอนต์ที่คุณเลือกแสดงอักขระบางตัวไม่ได้ จึงแสดงเป็น “?” ในส่วน การออกแบบ ให้เลือกฟอนต์ที่รองรับอักขระเหล่านี้"
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

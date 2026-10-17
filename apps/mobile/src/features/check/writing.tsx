@@ -20,6 +20,7 @@ import { mapWritingReview } from "./review";
 import { client } from "@/api/client";
 import { useResumeStore } from "@/draft";
 import { AIProviderSetupSheet, useHasAIProvider } from "@/features/ai/providers";
+import { ReportAiContent } from "@/features/ai/report-content";
 import { Banner, Button, Card, SelectSheet, Skeleton, Text, useTheme } from "@/ui";
 
 type WritingProps = {
@@ -174,6 +175,7 @@ export function Writing({ id, data, issues, offline, locked, review, setReview }
 			{review && (
 				<>
 					<Text>{review.summary}</Text>
+					<ReportAiContent source="writing" text={JSON.stringify(review, null, 2)} />
 					{review.proposals.map((proposal) => {
 						const state = getProposalState(data, proposal);
 						const stale = state === "stale";

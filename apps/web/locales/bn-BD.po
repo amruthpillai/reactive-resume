@@ -1740,6 +1740,17 @@ msgstr "এটি একটি শিরোনাম আছে একবার �
 msgid "Appears on the page once it has an organization."
 msgstr "এটি একটি প্রতিষ্ঠান আছে একবার পৃষ্ঠায় প্রদর্শিত হবে."
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "আবেদনকারী ট্র্যাকিং সিস্টেম আপনার PDF কে কেউ পড়ার আগে প্লেইন টেক্সটে পরিণত করে। পরীক্ষক আপনার ব্রাউজারে PDF.js লাইব্রেরির সাথে একই কাজ করে, তারপর আপনার সারসংকলনের কতটুকু টিকে আছে তা স্কোর করে: 0 থেকে 100, পাঠ্যটি কতটা নির্ভরযোগ্যভাবে বের হয়, আপনার চাকরি পাওয়ার সম্ভাবনা থেকে নয়।"
@@ -5549,6 +5560,14 @@ msgstr "এটি আপনার অভিজ্ঞতার অংশ হল�
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "যদি কেউ আপনাকে এই লিঙ্কটি পাঠিয়ে থাকে, তাদের কাছে একটি নতুনের জন্য জিজ্ঞাসা করুন।"
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "উপেক্ষা করুন"
@@ -7835,6 +7854,10 @@ msgstr "গল্প খুলুন"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "এক্সপোর্ট করা ফাইলটি খুলে নিশ্চিত করুন যে আপনি এর প্রতিটি অংশ নির্বাচন ও কপি করতে পারছেন।"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "আবার চেষ্টা করুন"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "এটি দিয়ে আবার চেষ্টা করুন"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

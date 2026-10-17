@@ -1,6 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
+import { openBrowserAsync } from "expo-web-browser";
 import { View } from "react-native";
-import { Icon, Text, useTheme } from "@/ui";
+import { Button, Icon, Text, showToast, useTheme } from "@/ui";
 
 type AuthHeaderProps = {
 	subtitle?: string | undefined;
@@ -29,6 +30,15 @@ export function AuthHeader({ subtitle }: AuthHeaderProps) {
 				{t`Reactive Resume`}
 			</Text>
 			{subtitle ? <Text color="ink2">{subtitle}</Text> : null}
+			<Button
+				label={t`Privacy policy`}
+				variant="link"
+				onPress={() => {
+					void openBrowserAsync("https://docs.rxresu.me/legal/privacy-policy").catch(() =>
+						showToast({ message: t`Couldn't open the browser. Try again.` }),
+					);
+				}}
+			/>
 		</View>
 	);
 }

@@ -666,6 +666,7 @@ function DraftBox({ letter, application, onKeep }: DraftBoxProps) {
 				<Button size="sm" variant="secondary" icon="stop" label={t`Stop`} onPress={discardLetterDraft} />
 			) : (
 				<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
+					<ReportAiContent source="letter" text={draft.text} />
 					<Button size="sm" label={t`Keep`} onPress={() => onKeep(draft.text)} />
 					<Button
 						size="sm"
@@ -764,3 +765,4 @@ function DesignNote({ letter }: { letter: LetterDocument }) {
 		</Section>
 	);
 }
+import { ReportAiContent } from "@/features/ai/report-content";

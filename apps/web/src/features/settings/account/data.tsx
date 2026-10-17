@@ -26,8 +26,10 @@ import { client, orpc } from "@/libs/orpc/client";
 
 const CONFIRMATION = "delete";
 
-export function DataSection() {
-	const [deleting, setDeleting] = useState(false);
+type DataSectionProps = { openDeletion?: boolean };
+
+export function DataSection({ openDeletion = false }: DataSectionProps) {
+	const [deleting, setDeleting] = useState(openDeletion);
 
 	const exportAll = useMutation({
 		mutationFn: async () => {
@@ -116,7 +118,19 @@ function DeleteAccountDialog({ open, onOpenChange }: DeleteAccountDialogProps) {
 						<Plural value={documents} one="# document" other="# documents" />,{" "}
 						<Plural value={applicationCount} one="# application" other="# applications" />,{" "}
 						<Plural value={keyCount} one="# API key" other="# API keys" />{" "}
-						<Trans>and every public link are removed permanently. This can't be undone.</Trans>
+						<Trans>and every public link are removed permanently. This can't be undone.</Trans>{" "}
+						<Trans>
+							If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion,
+							remove its access there too.
+						</Trans>{" "}
+						<a
+							href="https://support.apple.com/en-us/102571"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="underline"
+						>
+							<Trans>Apple revocation instructions</Trans>
+						</a>
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<div className="grid gap-1.5">

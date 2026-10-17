@@ -1,6 +1,7 @@
 import { ORPCError } from "@orpc/client";
 import { APICallError, generateText, RetryError } from "ai";
 import z from "zod";
+import { safetySystemPrompt } from "@reactive-resume/ai/prompts";
 import { coverLetterTextToHtml } from "@reactive-resume/resume/cover-letter";
 import { postingSourceSchema } from "@reactive-resume/schema/applications/data";
 import { generateId, slugify } from "@reactive-resume/utils/string";
@@ -81,7 +82,11 @@ export async function generateJson<T>(
 /** Exported for tests: provider-failure translation shared by every copilot procedure. */
 export async function generatePlainText(model: Awaited<ReturnType<typeof resolveModel>>, prompt: string) {
 	try {
-		const { text } = await generateText({ model, messages: [{ role: "user", content: prompt }] });
+		const { text } = await generateText({
+			model,
+			system: safetySystemPrompt,
+			messages: [{ role: "user", content: prompt }],
+		});
 		return text.trim();
 	} catch (error) {
 		if (isAiProviderGatewayError(error)) throwAiProviderGatewayError(error);

@@ -1106,6 +1106,10 @@ msgstr "Đã thêm vào Kiến thức."
 msgid "Added to Prepare"
 msgstr "Đã thêm vào Chuẩn bị"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Địa chỉ"
@@ -1252,6 +1256,14 @@ msgstr "Cho phép truy cập máy ảnh trong cài đặt thiết bị của b�
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Cho phép truy cập micrô trong cài đặt thiết bị hoặc nhập câu trả lời của bạn."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Ít hơn mức lương cơ bản tối thiểu của bạn."
 msgid "Bengali"
 msgstr "Tiếng Bengal"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Bảng"
@@ -2122,6 +2138,10 @@ msgstr "Chọn ảnh nhỏ hơn 10 MB."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Chọn một bản lý lịch trong Viết để phù hợp với thiết kế của nó. Cho đến lúc đó, bức thư có cái riêng của nó."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Chọn thời gian"
@@ -2457,6 +2477,10 @@ msgstr "Nội dung được trình bày theo dạng lưới."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Nội dung vẫn vượt quá trang. Ẩn một phần hoặc rút ngắn các mục."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Bối cảnh"
@@ -2729,6 +2753,7 @@ msgstr "Không thể đánh dấu là đã ứng tuyển."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Không thể mở trình duyệt. Hãy thử lại."
@@ -2762,6 +2787,10 @@ msgstr "Không thể đọc PDF đã xuất."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Không thể đọc được trang này: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Không thể lưu chủ đề. Hãy thử lại."
 msgid "Couldn't save the timezone."
 msgstr "Không thể lưu múi giờ."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "Không thể lưu thay đổi của bạn nên quá trình soạn thảo chưa bắt đầu. Không có gì trên trang thay đổi."
@@ -2863,6 +2896,10 @@ msgstr "Không thể lưu. Văn bản của bạn vẫn còn ở đây; thử l�
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Không thể lên lịch phỏng vấn."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Tiếng Séc"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Lượt xem hàng ngày trong 30 ngày, đỉnh {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Tiếng Đan Mạch"
@@ -3113,6 +3154,10 @@ msgstr "Tối"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Chủ đề tối"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "Đừng gửi {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "Không gửi tin tuyển dụng {0}"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Chế độ xem lưới"
 msgid "Hard for software to read"
 msgstr "Phần mềm khó đọc"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Bạn đã có sơ yếu lý lịch chưa?"
@@ -4465,6 +4518,11 @@ msgstr "Nếu nó xuất phát từ bản quét, đây là điều bình thườ
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Nếu ai đó gửi cho bạn liên kết này, hãy yêu cầu họ cung cấp một liên kết mới."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Chỉ nhập 500 hàng đầu tiên cùng một lúc, loại bỏ {overf
 msgid "Only the first pages were checked."
 msgstr "Chỉ những trang đầu tiên được kiểm tra."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Chỉ thiết bị này lên lịch thông báo."
@@ -6483,6 +6546,10 @@ msgstr "Khác"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Phúc lợi khác"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "In"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "In hoặc xuất biểu mẫu thành PDF phẳng trước khi gửi."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Chính sách bảo mật"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Riêng tư. Chỉ có bạn mới có thể nhìn thấy nó."
@@ -6990,10 +7062,15 @@ msgstr "Thay đổi được đề xuất"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Được cung cấp bởi máy chủ của bạn: {connected}. Tìm kiếm và đọc được thiết lập cho tất cả mọi người ở đây. Hãy hỏi quản trị viên của bạn về những thay đổi."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Nhà cung cấp"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Đọc các trang việc làm công cộng được hỗ trợ. Không c
 msgid "Ready"
 msgstr "Sẵn sàng"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Lý do"
@@ -7495,6 +7573,20 @@ msgstr "Đã sao chép thư trả lời"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Báo cáo"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Bảng định kiểu CSS ngữ nghĩa"
 msgid "Send"
 msgstr "Gửi"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Gửi trực tiếp sơ yếu lý lịch thay vì bọc nó trong một portfolio."
@@ -8181,6 +8277,10 @@ msgstr "Gửi trực tiếp sơ yếu lý lịch thay vì bọc nó trong một 
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Chi tiết người gửi được sao chép vào thư"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Serbia"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "Máy chủ"
@@ -8281,6 +8382,10 @@ msgstr "Cài đặt"
 msgid "Setup guide"
 msgstr "Hướng dẫn thiết lập"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Màu bóng"
@@ -8307,6 +8412,11 @@ msgstr "Chia sẻ sự kiện lịch (.ics)"
 msgid "Share CSV"
 msgstr "Chia sẻ CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Chia sẻ PNG"
@@ -8331,6 +8441,10 @@ msgstr "Chia sẻ các hàng bị bỏ qua hoặc không hợp lệ"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Chia sẻ qua…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Bản ghi âm trống hoặc lớn hơn 2 MB. Hãy thử câu trả lờ
 msgid "That reminder time has already passed."
 msgstr "Thời gian nhắc nhở đó đã trôi qua."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "Hồ sơ ứng tuyển giữ các chi tiết khác."
@@ -9377,6 +9495,10 @@ msgstr "Bài kiểm tra không chạy."
 msgid "The text comes out unreadable."
 msgstr "Văn bản khi trích xuất ra không thể đọc được."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Phần đầu trang một không trông giống một cái tên."
@@ -9435,6 +9557,10 @@ msgstr "Không thể mở hồ sơ ứng tuyển này."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Hồ sơ ứng tuyển này chưa có tin tuyển dụng nào. Thêm một trong Hồ sơ ứng tuyển."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Điều này đã thay đổi ở một nơi khác nên không được lưu. Văn bản của bạn được lưu giữ ở đây; Thử lại lưu nó trên bản sao khác."
@@ -9479,6 +9605,10 @@ msgstr "Tài liệu này đã bị khóa. Bạn vẫn có thể tải xuống v�
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Tài liệu này không còn nữa. Hãy làm mới và thử lại."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Ukraina"
 msgid "Unavailable"
 msgstr "Không có sẵn"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "lượt xem · 30 ngày"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Lượt xem và lượt tải xuống"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Các liên kết công khai của bạn bắt đầu bằng {server}/"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Bản ghi của bạn sẽ chuyển sang {transcriberName} sau khi bạn dừng để được phiên âm. Nhà cung cấp của bạn có thể tính phí. Máy chủ giữ bản ghi, không bao giờ ghi âm."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Yêu cầu của bạn"
@@ -10901,6 +11047,10 @@ msgstr "Sơ yếu lý lịch, thư xin việc và hồ sơ ứng tuyển của b
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Phông chữ bạn chọn không hiển thị được một số ký tự. Các ký tự này hiện thành “?”. Trong mục Thiết kế, hãy chọn phông chữ có các ký tự này."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

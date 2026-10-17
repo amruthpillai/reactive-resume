@@ -1,11 +1,13 @@
 import { readFileSync } from "node:fs";
 
+export const safetySystemPrompt = readFileSync(new URL("./prompts/safety-system.md", import.meta.url), "utf-8");
+
 const readPrompt = (filename: string) => {
 	return readFileSync(new URL(`./prompts/${filename}`, import.meta.url), "utf-8");
 };
 
 // ponytail: single template with per-source substitutions; produced text is identical per source type
-const parserTemplate = readPrompt("parser-system.md");
+const parserTemplate = `${safetySystemPrompt}\n\n${readPrompt("parser-system.md")}`;
 
 type ParserVars = {
 	FORMAT_HEADER: string;
@@ -41,14 +43,14 @@ const docxParserSystemPrompt = makeParserPrompt({
 	FALLBACK_CLAUSE: "document is malformed or partially unreadable",
 });
 
-const assistantSystemPromptTemplate = readPrompt("assistant-system.md");
-export const careerSystemPromptTemplate = readPrompt("career-system.md");
+const assistantSystemPromptTemplate = `${safetySystemPrompt}\n\n${readPrompt("assistant-system.md")}`;
+export const careerSystemPromptTemplate = `${safetySystemPrompt}\n\n${readPrompt("career-system.md")}`;
 const atsReviewSystemPrompt = readPrompt("ats-review-system.md");
 const atsReviewUserPromptTemplate = readPrompt("ats-review-user.md");
 const docxParserUserPrompt = readPrompt("docx-parser-user.md");
 const improveSystemPrompt = readPrompt("improve-system.md");
 const improveUserPromptTemplate = readPrompt("improve-user.md");
-const letterDraftSystemPrompt = readPrompt("letter-draft-system.md");
+const letterDraftSystemPrompt = `${safetySystemPrompt}\n\n${readPrompt("letter-draft-system.md")}`;
 const pdfParserUserPrompt = readPrompt("pdf-parser-user.md");
 
 export {

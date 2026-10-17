@@ -1106,6 +1106,10 @@ msgstr "S'ha afegit a Coneixements."
 msgid "Added to Prepare"
 msgstr "S'ha afegit a Preparació"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Adreça"
@@ -1252,6 +1256,14 @@ msgstr "Permet l'accés a la càmera a la configuració del dispositiu per fer u
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Permet l'accés al micròfon a la configuració del dispositiu o escriviu la vostra resposta."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Per sota del seu salari base mínim."
 msgid "Bengali"
 msgstr "Bengalí"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Tauler"
@@ -2122,6 +2138,10 @@ msgstr "Trieu una foto de menys de 10 MB."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Trieu un currículum a Write que coincideixi amb el seu disseny. Fins aleshores, la carta té la seva."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Tria un moment"
@@ -2457,6 +2477,10 @@ msgstr "El contingut està disposat en una graella."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "El contingut encara s'esgota. Amaga una secció o escurça les entrades."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Context"
@@ -2729,6 +2753,7 @@ msgstr "No s'ha pogut marcar com a enviada."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "No s'ha pogut obrir el navegador. Torna-ho a provar."
@@ -2762,6 +2787,10 @@ msgstr "No s'ha pogut llegir el PDF exportat."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "No s'ha pogut llegir aquesta pàgina: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "No s'ha pogut desar el tema. Torna-ho a provar."
 msgid "Couldn't save the timezone."
 msgstr "No s'ha pogut desar el fus horari."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "No s'han pogut desar els canvis, per tant no s'ha començat a redactar. No s'ha canviat res de la pàgina."
@@ -2863,6 +2896,10 @@ msgstr "No s'ha pogut desar. El teu text encara és aquí; torna-ho a provar."
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "No s'ha pogut programar l'entrevista."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Txec"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Visualitzacions diàries durant 30 dies, màxim {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Danès"
@@ -3113,6 +3154,10 @@ msgstr "Fosc"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Tema fosc"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "No envieu {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "No envieu {0} anunci de feina"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Vista de quadrícula"
 msgid "Hard for software to read"
 msgstr "És difícil llegir el programari"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Ja tens un currículum vitae?"
@@ -4465,6 +4518,11 @@ msgstr "Si prové d'un escaneig, és normal. Si no, elimina-ho; els reclutadors 
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Si algú us ha enviat aquest enllaç, demaneu-li un de nou."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Només s'importen les primeres 500 files alhora, deixant de banda {overf
 msgid "Only the first pages were checked."
 msgstr "Només s'han comprovat les primeres pàgines."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Només aquest dispositiu programa la notificació."
@@ -6483,6 +6546,10 @@ msgstr "Altres"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Altres beneficis"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Imprimeix"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Imprimeix o exporta el formulari a un PDF pla abans d'enviar-lo."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Política de privadesa"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Privat. Només tu ho pots veure."
@@ -6990,10 +7062,15 @@ msgstr "Canvis proposats"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Proporcionat pel vostre servidor: {connected}. La cerca i la lectura estan configurades per a tothom aquí. Pregunteu al vostre administrador sobre els canvis."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Proveïdor"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Llegeix les pàgines d'ocupació pública admesa. No cal cap compte."
 msgid "Ready"
 msgstr "A punt"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Raó"
@@ -7495,6 +7573,20 @@ msgstr "S'ha copiat la resposta"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Informeu"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Full d'estil CSS semàntic"
 msgid "Send"
 msgstr "Enviar"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Envia el currículum mateix en lloc d'un embolcall de portafoli."
@@ -8181,6 +8277,10 @@ msgstr "Envia el currículum mateix en lloc d'un embolcall de portafoli."
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Les dades del remitent s'han copiat a la carta"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Serbi"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "Servidor"
@@ -8281,6 +8382,10 @@ msgstr "Configuració"
 msgid "Setup guide"
 msgstr "Guia de configuració"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Color de l'ombra"
@@ -8307,6 +8412,11 @@ msgstr "Comparteix l'esdeveniment del calendari (.ics)"
 msgid "Share CSV"
 msgstr "Comparteix CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Comparteix PNG"
@@ -8331,6 +8441,10 @@ msgstr "Comparteix files omeses o no vàlides"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Comparteix a través de…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "La gravació era buida o superava els 2 MB. Proveu una resposta més cur
 msgid "That reminder time has already passed."
 msgstr "Aquest temps de recordatori ja ha passat."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "La candidatura conserva la resta de dades."
@@ -9377,6 +9495,10 @@ msgstr "La prova no es va executar."
 msgid "The text comes out unreadable."
 msgstr "El text surt il·legible."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "La part superior de la primera pàgina no sembla un nom."
@@ -9435,6 +9557,10 @@ msgstr "No s'ha pogut obrir aquesta candidatura."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Aquesta candidatura encara no té cap oferta de feina. Afegiu-ne un a les candidatures."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Això ha canviat en un altre lloc, de manera que no es va desar. El teu text es guarda aquí; Torna-ho a intentar el desa sobre l'altra còpia."
@@ -9479,6 +9605,10 @@ msgstr "Aquest document està bloquejat. Encara podeu baixar i anomenar versions
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Aquest document ja no està disponible. Actualitza i torna-ho a provar."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Ucraïnès"
 msgid "Unavailable"
 msgstr "No disponible"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "visualitzacions · 30 dies"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Visualitzacions i descàrregues"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Els vostres enllaços públics comencen per {server}/"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "La teva gravació s'envia a {transcriberName} després d'aturar-la, per ser transcrita. El vostre proveïdor pot cobrar. El servidor guarda transcripcions, mai enregistraments."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Els vostres requisits"
@@ -10901,6 +11047,10 @@ msgstr "Els vostres currículums vitae, cartes de presentació i candidatures, a
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "La font seleccionada no pot mostrar alguns caràcters. Es mostren com a “?”. A Disseny, trieu una font que els tingui."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

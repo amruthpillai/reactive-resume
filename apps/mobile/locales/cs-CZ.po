@@ -1106,6 +1106,10 @@ msgstr "Přidáno do Znalostí."
 msgid "Added to Prepare"
 msgstr "Přidáno do Přípravy"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Adresa"
@@ -1252,6 +1256,14 @@ msgstr "Chcete-li pořídit fotku, povolte v nastavení zařízení přístup k 
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Povolte přístup k mikrofonu v nastavení zařízení nebo zadejte svou odpověď."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Pod vaší minimální základní mzdou."
 msgid "Bengali"
 msgstr "Bengálština"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Nástěnka"
@@ -2122,6 +2138,10 @@ msgstr "Vyberte fotografii menší než 10 MB."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Vyberte si životopis v Write tak, aby odpovídal jeho designu. Do té doby má dopis vlastní."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Vyberte čas"
@@ -2457,6 +2477,10 @@ msgstr "Obsah je uspořádán do mřížky."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Obsah stále přetéká. Skryjte sekci nebo zkraťte položky."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Kontext"
@@ -2729,6 +2753,7 @@ msgstr "Žádost se nepodařilo označit jako podanou."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Prohlížeč nelze otevřít. Zkuste to znovu."
@@ -2762,6 +2787,10 @@ msgstr "Exportovaný soubor PDF se nepodařilo přečíst."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Tuto stránku nelze přečíst: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Motiv se nepodařilo uložit. Zkuste to znovu."
 msgid "Couldn't save the timezone."
 msgstr "Časové pásmo se nepodařilo uložit."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "Změny se nepodařilo uložit, proto se nezačal vytvářet návrh. Na stránce se nic nezměnilo."
@@ -2863,6 +2896,10 @@ msgstr "Nepodařilo se uložit. Váš text je stále zde; zkuste to znovu."
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Rozhovor se nepodařilo naplánovat."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Čeština"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Denní zhlédnutí za 30 dní, maximální {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Dánština"
@@ -3113,6 +3154,10 @@ msgstr "Tmavý"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Tmavý motiv"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "Neposílejte {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "Neposílejte nabídku práce {0}"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Zobrazení mřížky"
 msgid "Hard for software to read"
 msgstr "Pro software je těžké číst"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Máte již životopis?"
@@ -4465,6 +4518,11 @@ msgstr "Pokud to pochází ze skenu, je to očekávané. Jinak to odstraňte; n�
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Pokud vám někdo poslal tento odkaz, požádejte ho o nový."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Importuje se pouze prvních 500 řádků najednou, vynechá {overflow}. 
 msgid "Only the first pages were checked."
 msgstr "Zkontrolovány byly pouze první stránky."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Pouze toto zařízení naplánuje oznámení."
@@ -6483,6 +6546,10 @@ msgstr "Jiné"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Další benefity"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Vytisknout"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Před odesláním formulář vytiskněte nebo exportujte do plochého PDF."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Zásady ochrany osobních údajů"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Soukromé. Můžete to vidět jen vy."
@@ -6990,10 +7062,15 @@ msgstr "Navrhované změny"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Poskytováno vaším serverem: {connected}. Vyhledávání a čtení jsou zde nastaveny pro všechny. Zeptejte se správce na změny."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Poskytovatel"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Čte podporované stránky veřejných zakázek. Není potřeba žádný
 msgid "Ready"
 msgstr "Připraveno"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Důvod"
@@ -7495,6 +7573,20 @@ msgstr "Odpověď zkopírována"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Zpráva"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Sémantický CSS stylový list"
 msgid "Send"
 msgstr "Poslat"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Odešlete samotný životopis, nikoli obal portfolia."
@@ -8181,6 +8277,10 @@ msgstr "Odešlete samotný životopis, nikoli obal portfolia."
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Údaje o odesílateli zkopírovány do dopisu"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Srbština"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "Server"
@@ -8281,6 +8382,10 @@ msgstr "Nastavení"
 msgid "Setup guide"
 msgstr "Průvodce nastavením"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Barva stínu"
@@ -8307,6 +8412,11 @@ msgstr "Sdílet událost kalendáře (.ics)"
 msgid "Share CSV"
 msgstr "Sdílet CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Sdílet PNG"
@@ -8331,6 +8441,10 @@ msgstr "Sdílet přeskočené nebo neplatné řádky"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Sdílet přes…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Nahrávka byla prázdná nebo větší než 2 MB. Zkuste kratší odpov�
 msgid "That reminder time has already passed."
 msgstr "Tato doba připomenutí již uplynula."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "Žádost o zaměstnání uchovává své další podrobnosti."
@@ -9377,6 +9495,10 @@ msgstr "Test neproběhl."
 msgid "The text comes out unreadable."
 msgstr "Text vychází nečitelný."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Horní část první stránky nevypadá jako jméno."
@@ -9435,6 +9557,10 @@ msgstr "Tuto žádost se nepodařilo otevřít."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Tato žádost o zaměstnání zatím neobsahuje žádnou nabídku práce. Přidejte jeden do žádostí o zaměstnání."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Toto se změnilo někde jinde, takže to nebylo uloženo. Váš text je uložen zde; Zkusit znovu jej uloží přes druhou kopii."
@@ -9479,6 +9605,10 @@ msgstr "Tento dokument je uzamčen. Stále si můžete stáhnout a pojmenovat ve
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Tento dokument již není k dispozici. Obnovte a zkuste to znovu."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Ukrajinština"
 msgid "Unavailable"
 msgstr "Není k dispozici"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "zobrazení · 30 dní"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Zobrazení a stahování"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Vaše veřejné odkazy začínají {server}/"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Vaše nahrávka se po zastavení přesune do {transcriberName}, kde bude přepsána. Váš poskytovatel může účtovat poplatky. Server uchovává přepisy, nikdy záznamy."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Vaše požadavky"
@@ -10901,6 +11047,10 @@ msgstr "Vaše životopisy, motivační dopisy a žádosti o zaměstnání na {ho
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Vybrané písmo nedokáže zobrazit některé znaky. Zobrazují se jako “?”. V části Design zvolte písmo, které je obsahuje."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

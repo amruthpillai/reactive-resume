@@ -1106,6 +1106,10 @@ msgstr "Bilimlarga qoʻshildi."
 msgid "Added to Prepare"
 msgstr "Tayyorgarlikka qo'shildi"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Manzil"
@@ -1252,6 +1256,14 @@ msgstr "Suratga olish uchun qurilmangiz sozlamalarida kameraga ruxsat bering."
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Qurilma sozlamalarida mikrofondan foydalanishga ruxsat bering yoki javobingizni kiriting."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Minimal asosiy ish haqingizdan past."
 msgid "Bengali"
 msgstr "Bengal tili"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Doska"
@@ -2122,6 +2138,10 @@ msgstr "10 MB dan kichikroq rasmni tanlang."
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Dizayniga mos keladigan Write-da rezyumeni tanlang. Ungacha maktubning o'ziga xosligi bor."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Vaqtni tanlang"
@@ -2457,6 +2477,10 @@ msgstr "Kontent panjara koʻrinishida joylashtirilgan."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Kontent hali ham tugaydi. Bo'limni yashiring yoki yozuvlarni qisqartiring."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Kontekst"
@@ -2729,6 +2753,7 @@ msgstr "Topshirildi deb belgilab bo'lmadi."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Brauzerni ochib bo‘lmadi. Qayta urinib ko'ring."
@@ -2762,6 +2787,10 @@ msgstr "Eksport qilingan PDF ni oʻqib boʻlmadi."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Bu sahifani o‘qib bo‘lmadi: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Mavzuni saqlab bo‘lmadi. Qayta urinib ko'ring."
 msgid "Couldn't save the timezone."
 msgstr "Vaqt mintaqasini saqlab bo'lmadi."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "O‘zgarishlaringizni saqlab bo‘lmadi, shuning uchun qoralama yozish boshlanmadi. Sahifada hech narsa o‘zgarmadi."
@@ -2863,6 +2896,10 @@ msgstr "Saqlab bo‘lmadi. Sizning matningiz hali ham shu yerda; qayta urinib ko
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Suhbatni rejalashtirib bo‘lmadi."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Chex tili"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "30 kundan ortiq kunlik tomoshalar, eng yuqori {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Daniya tili"
@@ -3113,6 +3154,10 @@ msgstr "To‘q"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "To‘q mavzu"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "{0} yubormang"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "{0} ish eʼlonini yubormang"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "To‘r ko‘rinishi"
 msgid "Hard for software to read"
 msgstr "Dasturiy ta'minotni o'qish qiyin"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "rezyume allaqachon bormi?"
@@ -4465,6 +4518,11 @@ msgstr "Agar bu skanerdan kelgan boʻlsa, bu kutilgan holat. Aks holda uni olib 
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Agar kimdir sizga ushbu havolani yuborgan bo'lsa, ulardan yangisini so'rang."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "{overflow} qoldirib, birdaniga faqat birinchi 500 ta qator import qilina
 msgid "Only the first pages were checked."
 msgstr "Faqat birinchi sahifalar tekshirildi."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Faqatgina ushbu qurilma bildirishnomani rejalashtiradi."
@@ -6483,6 +6546,10 @@ msgstr "Boshqa"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Boshqa imtiyozlar"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Chop etish"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Yuborishdan oldin shaklni tekis PDF sifatida chop eting yoki eksport qiling."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Maxfiylik siyosati"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Shaxsiy. Uni faqat siz ko'rishingiz mumkin."
@@ -6990,10 +7062,15 @@ msgstr "Taklif qilingan o'zgarishlar"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Serveringiz tomonidan taqdim etilgan: {connected}. Qidiruv va o'qish bu erda hamma uchun sozlangan. O'zgarishlar haqida administratoringizdan so'rang."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Provayder"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Qo'llab-quvvatlanadigan davlat ish sahifalarini o'qiydi. Hisob kerak ema
 msgid "Ready"
 msgstr "Tayyor"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Sabab"
@@ -7495,6 +7573,20 @@ msgstr "Javob nusxalandi"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "Hisobot"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Semantik CSS uslublar jadvali"
 msgid "Send"
 msgstr "Yuborish"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Portfolio qobigʻi oʻrniga rezyumening oʻzini yuboring."
@@ -8181,6 +8277,10 @@ msgstr "Portfolio qobigʻi oʻrniga rezyumening oʻzini yuboring."
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Yuboruvchi ma'lumotlari xatga ko'chirildi"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Serb tili"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "Server"
@@ -8281,6 +8382,10 @@ msgstr "Sozlamalar"
 msgid "Setup guide"
 msgstr "O'rnatish uchun qo'llanma"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Soya rangi"
@@ -8307,6 +8412,11 @@ msgstr "Taqvim tadbirini ulashing (.ics)"
 msgid "Share CSV"
 msgstr "Ulashish CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Ulashish PNG"
@@ -8331,6 +8441,10 @@ msgstr "Oʻtkazib yuborilgan yoki notoʻgʻri qatorlarni ulashing"
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Bu orqali ulashish…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Yozuv bo'sh yoki 2 MB dan katta. Qisqaroq javob berib ko'ring."
 msgid "That reminder time has already passed."
 msgstr "Bu eslatma vaqti allaqachon o'tdi."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "Ishga qabul qilingan arizada boshqa ma'lumotlar saqlanadi."
@@ -9377,6 +9495,10 @@ msgstr "Sinov o'tmadi."
 msgid "The text comes out unreadable."
 msgstr "Matn oʻqib boʻlmaydigan holda chiqadi."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Birinchi sahifaning yuqori qismi ismga oʻxshamaydi."
@@ -9435,6 +9557,10 @@ msgstr "Bu arizani ochib bo'lmadi."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Bu ish uchun arizada hali ish eʼlonlari yoʻq. Ishga oid arizalarga bittasini qo'shing."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Bu boshqa joyda o'zgargan, shuning uchun u saqlanmadi. Sizning matningiz shu yerda saqlanadi; Qayta urinish uni boshqa nusxada saqlaydi."
@@ -9479,6 +9605,10 @@ msgstr "Ushbu hujjat qulflangan. Siz hali ham versiyalarni yuklab olishingiz va 
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Bu hujjat endi mavjud emas. Yangilang va qaytadan urining."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Ukrain tili"
 msgid "Unavailable"
 msgstr "Mavjud emas"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "ko'rishlar · 30 kun"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Ko'rishlar va yuklab olishlar"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Umumiy havolalaringiz {server}/ bilan boshlanadi"
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Yozuvingiz toʻxtatilgandan soʻng transkripsiya qilish uchun {transcriberName} ga oʻtadi. Provayderingiz haq olishi mumkin. Server transkriptlarni saqlaydi, hech qachon yozmaydi."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Talablaringiz"
@@ -10901,6 +11047,10 @@ msgstr "{host} sahifasida rezyumelaringiz, motivatsion xatlaringiz va ishga ariz
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Tanlangan shrift ba’zi belgilarni ko‘rsata olmaydi. Ular “?” bo‘lib ko‘rinadi. Dizayn bo‘limida ularni qo‘llab-quvvatlaydigan shriftni tanlang."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

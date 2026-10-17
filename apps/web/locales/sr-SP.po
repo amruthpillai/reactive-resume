@@ -1740,6 +1740,17 @@ msgstr "Појављује се на страници када има насло
 msgid "Appears on the page once it has an organization."
 msgstr "Појављује се на страници када има организацију."
 
+#. Authentication provider display name in account settings
+#. Brand name label for Apple social sign-in button
+#: src/features/auth/components/social-auth.tsx
+#: src/features/settings/account/auth-hooks.ts
+msgid "Apple"
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "Apple revocation instructions"
+msgstr ""
+
 #: src/features/ats-checker/checker.tsx
 msgid "Applicant tracking systems turn your PDF into plain text before anyone reads it. The checker does the same, with the PDF.js library in your browser, then scores how much of your resume survives: 0 to 100, from how reliably the text comes out, not from your chances of getting the job."
 msgstr "Системи за праћење кандидата претварају ваш PDF у обичан текст пре него што га неко прочита. Проверивач ради исто, са библиотеком PDF.js у вашем претраживачу, а затим оцењује колико је вашег резимеа преживело: 0 до 100, од ​​тога колико поуздано излази текст, а не од ваших шанси да добијете посао."
@@ -5549,6 +5560,14 @@ msgstr "Ако је то део вашег искуства, додајте га
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Ако вам је неко послао овај линк, тражите нови."
 
+#: src/routes/auth/native-callback.tsx
+msgid "If the app did not open, try again on a device where it is installed."
+msgstr ""
+
+#: src/features/settings/account/data.tsx
+msgid "If you used Sign in with Apple and Reactive Resume is still listed in your Apple Account after deletion, remove its access there too."
+msgstr ""
+
 #: src/features/resume/editor/check/check-panel.tsx
 msgid "Ignore"
 msgstr "Игноре"
@@ -7835,6 +7854,10 @@ msgstr "Отвори причу"
 #: src/features/ats-checker/messages.ts
 msgid "Open the exported file and confirm you can select and copy every part of it."
 msgstr "Отворите извезену датотеку и потврдите да можете да означите и копирате сваки њен део."
+
+#: src/routes/auth/native-callback.tsx
+msgid "Open the Reactive Resume app"
+msgstr ""
 
 #: src/features/career/today.tsx
 msgid "Open the schedule"
@@ -11924,6 +11947,10 @@ msgstr "Покушај поново"
 #: src/features/career/workspace/practise.tsx
 msgid "Try again with this"
 msgstr "Покушај поново са овим"
+
+#: src/routes/auth/native-callback.tsx
+msgid "Try opening the app again"
+msgstr ""
 
 #: src/features/homepage/faq.tsx
 msgid "Try the ATS checker"

@@ -32,6 +32,7 @@ describe("buildAccountZip", () => {
 			coverLetters: [],
 			applications: [],
 			career: emptyCareer,
+			aiContentReports: [],
 		} as never);
 		await expect(detectImportKind(new File([new Uint8Array(archive)], "reactive-resume.zip"))).rejects.toThrow(
 			"Extract this account archive",
@@ -44,6 +45,7 @@ describe("buildAccountZip", () => {
 				user: {},
 				applications: [],
 				career: emptyCareer,
+				aiContentReports: [],
 				resumes: [{ id: "r1", name: "Resume", data: defaultResumeData }],
 				coverLetters: [
 					{
@@ -74,6 +76,7 @@ describe("buildAccountZip", () => {
 			],
 			coverLetters: [{ id: "01a0ec71-a410-71da-9156-b347210cf72b", name: "Product Designer" }],
 			applications: [{ id: "app-1", company: "Lumen", role: "Designer" }],
+			aiContentReports: [{ id: "report-1", content: "Unsafe generated content", reason: "dangerous" }],
 			career: {
 				...emptyCareer,
 				facts: [
@@ -108,6 +111,7 @@ describe("buildAccountZip", () => {
 		const files = unzipSync(zip);
 		expect(Object.keys(files).sort()).toEqual([
 			"account.json",
+			"ai-content-reports.json",
 			"applications.json",
 			"career.json",
 			"letters/product-designer-01a0ec71-a410-71da-9156-b347210cf72b.json",
@@ -122,6 +126,9 @@ describe("buildAccountZip", () => {
 			{ id: "app-1", company: "Lumen", role: "Designer" },
 		]);
 		const career = JSON.parse(strFromU8(files["career.json"] as Uint8Array));
+		expect(JSON.parse(strFromU8(files["ai-content-reports.json"] as Uint8Array))).toEqual([
+			{ id: "report-1", content: "Unsafe generated content", reason: "dangerous" },
+		]);
 		expect(career.facts).toEqual([
 			{
 				id: "fact-1",

@@ -83,7 +83,11 @@ export default function AccountScreen() {
 							leading="trash"
 							destructive
 							trailing={<Icon name="arrow-square-out" />}
-							onPress={browse}
+							onPress={() => {
+								void openAccountSettings("/dashboard/settings/account?deleteAccount=true").catch(() =>
+									showToast({ message: t`Couldn't open the browser. Try again.` }),
+								);
+							}}
 						/>
 					</SettingsGroup>
 				</>

@@ -1106,6 +1106,10 @@ msgstr "Додано до Знання."
 msgid "Added to Prepare"
 msgstr "Додано до Підготовки"
 
+#: src/features/ai/report-content.tsx
+msgid "Additional details (optional)"
+msgstr ""
+
 #: src/features/share/link.tsx
 msgid "Address"
 msgstr "Адреса"
@@ -1252,6 +1256,14 @@ msgstr "Щоб зробити фото, надайте доступ до кам�
 #: src/features/workspace/tabs/practise.tsx
 msgid "Allow microphone access in device settings, or type your answer."
 msgstr "Надайте доступ до мікрофона в налаштуваннях пристрою або введіть свою відповідь."
+
+#: src/api/ai-consent.ts
+msgid "Allow scheduled sharing"
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Allow this operation"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Almost none of your bullets carry a number."
@@ -1782,6 +1794,10 @@ msgstr "Нижче вашої мінімальної базової зарпла
 msgid "Bengali"
 msgstr "Бенгальська"
 
+#: src/features/public/public-resume.tsx
+msgid "Block this author"
+msgstr ""
+
 #: src/features/applications-board/views.tsx
 msgid "Board"
 msgstr "Дошка"
@@ -2122,6 +2138,10 @@ msgstr "Виберіть фотографію розміром менше 10 М�
 msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
 msgstr "Виберіть резюме в Write відповідно до його дизайну. До того часу лист має своє."
 
+#: src/api/ai-consent.ts
+msgid "Choose a tested AI provider before sharing data."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr "Виберіть час"
@@ -2457,6 +2477,10 @@ msgstr "Вміст розташований у вигляді сітки."
 msgid "Content still runs over. Hide a section or shorten entries."
 msgstr "Вміст все ще переповнюється. Приховати розділ або скоротити записи."
 
+#: src/features/ai/report-content.tsx
+msgid "Content to report"
+msgstr ""
+
 #: src/features/assistant/chat-view.tsx
 msgid "Context"
 msgstr "Контекст"
@@ -2729,6 +2753,7 @@ msgstr "Не вдалося позначити заявку як подану."
 
 #: app/(tabs)/settings/account.tsx
 #: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
 #: src/features/settings/api-keys.tsx
 msgid "Couldn't open the browser. Try again."
 msgstr "Не вдалося відкрити браузер. Спробуйте знову."
@@ -2762,6 +2787,10 @@ msgstr "Не вдалося прочитати експортований PDF."
 #: src/features/assistant/messages.tsx
 msgid "Couldn't read this page: {0}"
 msgstr "Не вдалося прочитати цю сторінку: {0}"
+
+#: src/features/public/public-resume.tsx
+msgid "Couldn't read your blocked-author settings."
+msgstr ""
 
 #: src/features/application-detail/sheets.tsx
 msgid "Couldn't record submission. Try again."
@@ -2829,6 +2858,10 @@ msgstr "Не вдалося зберегти тему. Спробуйте зно
 msgid "Couldn't save the timezone."
 msgstr "Не вдалося зберегти часовий пояс."
 
+#: src/features/public/public-resume.tsx
+msgid "Couldn't save your blocked-author setting. Try again."
+msgstr ""
+
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
 msgstr "Не вдалося зберегти зміни, тому створення чернетки не почалося. На сторінці нічого не змінилося."
@@ -2863,6 +2896,10 @@ msgstr "Не вдалося зберегти. Ваш текст все ще ту
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Couldn't schedule the interview."
 msgstr "Не вдалося запланувати співбесіду."
+
+#: src/features/ai/report-content.tsx
+msgid "Couldn't send the report. Your text is kept; try again."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Couldn't share the answers."
@@ -3101,6 +3138,10 @@ msgstr "Чеська"
 msgid "Daily views over 30 days, peak {0}"
 msgstr "Щоденні перегляди протягом 30 днів, пік {0}"
 
+#: src/features/ai/report-content.tsx
+msgid "Dangerous or illegal advice"
+msgstr ""
+
 #: src/features/settings/locale-names.ts
 msgid "Danish"
 msgstr "Данська"
@@ -3113,6 +3154,10 @@ msgstr "Темна"
 #: src/features/search/search-screen.tsx
 msgid "Dark theme"
 msgstr "Темна тема"
+
+#: src/api/ai-consent.ts
+msgid "Data sharing cancelled. Nothing was sent to the AI provider."
+msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
@@ -3426,6 +3471,10 @@ msgstr "Не надсилайте {0}"
 #: src/features/assistant/assistant-screen.tsx
 msgid "Don't send {0} posting"
 msgstr "Не надсилайте оголошення про роботу {0}"
+
+#: src/api/ai-consent.ts
+msgid "Don't share"
+msgstr ""
 
 #: app/(tabs)/settings/index.tsx
 msgid "Donate"
@@ -4235,6 +4284,10 @@ msgstr "Вигляд сітки"
 msgid "Hard for software to read"
 msgstr "Програмне забезпечення важко читати"
 
+#: src/features/ai/report-content.tsx
+msgid "Hate or harassment"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Have a resume already?"
 msgstr "Вже маєте резюме?"
@@ -4465,6 +4518,11 @@ msgstr "Якщо це результат сканування, це очікув
 #: src/features/public/public-resume.tsx
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "Якщо хтось надіслав вам це посилання, попросіть у нього нове."
+
+#. placeholder {0}: webStatus?.provider ?? provider.provider
+#: src/api/ai-consent.ts
+msgid "If web access is used, links and search terms also go to {0} and the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -6314,6 +6372,11 @@ msgstr "Лише перші 500 рядків імпортуються одноч
 msgid "Only the first pages were checked."
 msgstr "Перевірено лише перші сторінки."
 
+#. placeholder {0}: getServer()
+#: src/features/ai/report-content.tsx
+msgid "Only the text below and your reason are sent privately to the operator of {0} for safety review. Remove personal information you don't want to share. Reports are deleted with your account."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Only this device schedules the notification."
 msgstr "Лише цей пристрій планує сповіщення."
@@ -6483,6 +6546,10 @@ msgstr "Інше"
 #: src/features/career/offers.tsx
 msgid "Other benefits"
 msgstr "Інші пільги"
+
+#: src/features/ai/report-content.tsx
+msgid "Other concern"
+msgstr ""
 
 #. placeholder {0}: others.length
 #: src/features/assistant/threads.tsx
@@ -6940,6 +7007,11 @@ msgstr "Роздрукувати"
 msgid "Print or export the form to a flat PDF before sending it."
 msgstr "Роздрукуйте або експортуйте форму у плаский PDF перед відправленням."
 
+#: app/(tabs)/settings/index.tsx
+#: src/auth/auth-header.tsx
+msgid "Privacy policy"
+msgstr "Політика конфіденційності"
+
 #: src/features/document-menu/index.tsx
 msgid "Private. Only you can see it."
 msgstr "Приватний. Тільки ви можете це побачити."
@@ -6990,10 +7062,15 @@ msgstr "Запропоновані зміни"
 msgid "Provided by your server: {connected}. Search and reading are set up for everyone here. Ask your administrator about changes."
 msgstr "Надано вашим сервером: {connected}. Пошук і читання тут налаштовані для всіх. Запитайте свого адміністратора про зміни."
 
+#: src/api/ai-consent.ts
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
 msgid "Provider"
 msgstr "Провайдер"
+
+#: src/api/ai-consent.ts
+msgid "Provider retention and use follow its privacy policy. Declining prevents this operation and leaves other app features available."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -7208,6 +7285,7 @@ msgstr "Читає підтримувані публічні сторінки в
 msgid "Ready"
 msgstr "Готовий"
 
+#: src/features/ai/report-content.tsx
 #: src/features/applications/list-screen.tsx
 msgid "Reason"
 msgstr "Причина"
@@ -7495,6 +7573,20 @@ msgstr "Відповідь скопійовано"
 #: src/features/ats-checker/checker.tsx
 msgid "Report"
 msgstr "звіт"
+
+#: app/(tabs)/settings/ai-report.tsx
+#: app/(tabs)/settings/ai.tsx
+#: src/features/ai/report-content.tsx
+msgid "Report AI content"
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report received by your server operator. Thank you."
+msgstr ""
+
+#: src/features/ai/report-content.tsx
+msgid "Report shared resume"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Require a password"
@@ -8174,6 +8266,10 @@ msgstr "Семантична таблиця стилів CSS"
 msgid "Send"
 msgstr "Надіслати"
 
+#: src/features/ai/report-content.tsx
+msgid "Send report"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr "Надсилайте саме резюме, а не обгортку у вигляді портфоліо."
@@ -8181,6 +8277,10 @@ msgstr "Надсилайте саме резюме, а не обгортку у 
 #: src/features/letters/write.tsx
 msgid "Sender details copied into the letter"
 msgstr "Дані відправника скопійовано в лист"
+
+#: src/features/ai/report-content.tsx
+msgid "Sending…"
+msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
@@ -8224,6 +8324,7 @@ msgid "Serbian"
 msgstr "Сербська"
 
 #: app/(auth)/sign-in.tsx
+#: src/api/ai-consent.ts
 #: src/features/settings/sign-out.tsx
 msgid "Server"
 msgstr "Сервер"
@@ -8281,6 +8382,10 @@ msgstr "Налаштування"
 msgid "Setup guide"
 msgstr "Інструкція з налаштування"
 
+#: src/features/ai/report-content.tsx
+msgid "Sexual content"
+msgstr ""
+
 #: src/features/write/picture-screen.tsx
 msgid "Shadow Color"
 msgstr "Колір тіні"
@@ -8307,6 +8412,11 @@ msgstr "Поділитися подією календаря (.ics)"
 msgid "Share CSV"
 msgstr "Поділитися CSV"
 
+#. placeholder {0}: provider.label
+#: src/api/ai-consent.ts
+msgid "Share data with {0}?"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Поділитися PNG"
@@ -8331,6 +8441,10 @@ msgstr "Поділитися пропущеними або недійсними 
 #: src/features/share/link.tsx
 msgid "Share via…"
 msgstr "Поділіться через…"
+
+#: src/features/public/public-resume.tsx
+msgid "Shared resumes stay hidden until your device settings allow them."
+msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
@@ -9175,6 +9289,10 @@ msgstr "Запис порожній або більший за 2 МБ. Спро�
 msgid "That reminder time has already passed."
 msgstr "Цей час нагадування вже минув."
 
+#: src/api/ai-consent.ts
+msgid "The account changed. Try again."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "The application keeps its other details."
 msgstr "У заяві про роботу зберігаються інші реквізити."
@@ -9377,6 +9495,10 @@ msgstr "Тест не пройшов."
 msgid "The text comes out unreadable."
 msgstr "Текст виходить нечитабельним."
 
+#: src/api/ai-consent.ts
+msgid "The text to read aloud is sent through your server to this speech provider. It can contain personal information."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "The top of the first page does not look like a name."
 msgstr "Верхня частина першої сторінки не схожа на ім'я."
@@ -9435,6 +9557,10 @@ msgstr "Не вдалося відкрити цю заявку."
 msgid "This application has no posting yet. Add one in Applications."
 msgstr "Ця заявка ще не має оголошення. Додайте його в Заявках."
 
+#: src/features/public/public-resume.tsx
+msgid "This author is blocked."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy."
 msgstr "Це змінилося в іншому місці, тому його не було збережено. Ваш текст зберігається тут; Повторити спробу зберігає його поверх іншої копії."
@@ -9479,6 +9605,10 @@ msgstr "Цей документ заблоковано. Ви все ще мож�
 #: src/features/documents/queries.ts
 msgid "This document is no longer available. Refresh and try again."
 msgstr "Цей документ більше не доступний. Оновіть і повторіть спробу."
+
+#: src/api/ai-consent.ts
+msgid "This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs."
+msgstr ""
 
 #: src/features/check/issues.ts
 msgid "This entry"
@@ -9953,6 +10083,10 @@ msgstr "Українська"
 msgid "Unavailable"
 msgstr "Недоступний"
 
+#: src/features/public/public-resume.tsx
+msgid "Unblock author"
+msgstr ""
+
 #: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
@@ -10328,6 +10462,10 @@ msgstr "переглядів · 30 днів"
 #: src/features/share/link.tsx
 msgid "Views and downloads"
 msgstr "Перегляди та завантаження"
+
+#: src/features/ai/report-content.tsx
+msgid "Violence or abuse"
+msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Visitors can download the PDF"
@@ -10878,6 +11016,14 @@ msgstr "Ваші загальнодоступні посилання почин�
 msgid "Your recording goes to {transcriberName} after you stop, to be transcribed. Your provider may charge. The server keeps transcripts, never recordings."
 msgstr "Після зупинки аудіозапис надсилається до {transcriberName} для розшифрування. Постачальник може стягувати плату. Сервер зберігає розшифровки, ніколи не зберігає аудіозаписи."
 
+#: src/api/ai-consent.ts
+msgid "Your recording is uploaded through your server to this transcription provider. It can contain personal information."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information."
+msgstr ""
+
 #: src/features/career/offers.tsx
 msgid "Your requirements"
 msgstr "Ваші вимоги"
@@ -10901,6 +11047,10 @@ msgstr "Ваші резюме, супровідні листи та заявки
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "Вибраний шрифт не може відобразити деякі символи. Їх показано як “?”. У розділі «Дизайн» виберіть шрифт, який їх підтримує."
+
+#: src/api/ai-consent.ts
+msgid "Your server sends a test prompt and the saved API key to this provider."
+msgstr ""
 
 #: src/features/ai/error.ts
 #: src/features/applications/error.ts

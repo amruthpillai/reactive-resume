@@ -13,7 +13,7 @@ Reactive Resume is open-source and can be operated in different ways (for exampl
 - **Contact**: amruth@rxresu.me
 - **Service URL**: https://rxresu.me
 - **Effective date**: 2023-01-01
-- **Last updated**: 2026-10-09
+- **Last updated**: 2026-10-17
 
 If you are self-hosting, **you** are the Service Operator and responsible for compliance (including configuring email delivery, storage, and logging appropriately).
 
@@ -116,6 +116,26 @@ Some settings are stored on your device:
 - **Local storage**: some client-side state, such as view preferences and unsaved drafts
 
 These local-only values are stored in your browser and are not necessarily transmitted to the Service Operator unless you choose to use related features.
+
+---
+
+## Native iOS and Android app
+
+The mobile app connects to the Reactive Resume server you select. Account data, documents, applications, uploads, and AI requests go to that server; a self-hosted server has its own operator and data practices. This policy describes the official hosted service, not every self-hosted installation.
+
+The app stores sign-in tokens in the operating system's secure storage. App-private storage holds preferences, unsaved drafts, and cached documents, fonts, images, and exports. PDF previews and PDF exports render on your device. Other exports and document checks can send content to your selected server. Loading remote images and fonts also makes network requests to their hosts.
+
+Before an AI operation, the app identifies the selected server and provider and asks permission to share the data needed for that operation. Declining blocks that operation. Enabling an automated career schedule authorizes its recurring processing while the schedule remains enabled; turn it off to stop future runs.
+
+Photo selection uses the system picker. Camera access is optional and used when you choose to take a profile photo. Interview practice requests microphone access when you record an answer. If you choose transcription, the recording is uploaded through your server to your selected transcription provider; generated speech sends its text through your server to your selected speech provider. These features are not on-device speech recognition. The Keep audio setting controls local recording retention, not your server's or provider's retention.
+
+Optional reminders use local operating-system notifications. The app does not register for remote push notifications. You can manage camera, microphone, and notification permissions in your device settings.
+
+You can report unsafe AI-generated content inside the app, including through **Settings → AI & developer → Report AI content**. A report stores only the content you choose to submit, its category, your explanation, your account identifier, and review timestamps on your selected server for private operator review. Reports are not sent to an AI provider. They are included in your account export and deleted with your account, or may be removed earlier by the operator after review.
+
+The native shared-resume viewer also lets you report a shared resume to your server operator and block its author. The report form starts with the public resume URL; only what you submit is stored under the report terms above. Blocked-author preferences stay on your device, scoped to your account and server. Blocking hides that author's shared resumes in the native viewer; it does not remove their content from the website or other devices. Open a blocked link and choose **Unblock author** to restore access.
+
+To delete your account, open **Settings → Account → Delete account**. The app opens your selected server's browser-based deletion confirmation; you may need to sign in again. Confirming deletion removes the account and associated data under the retention terms below. Removing the app from your device does not delete your account.
 
 ---
 

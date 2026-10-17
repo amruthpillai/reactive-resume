@@ -7,6 +7,7 @@ import { aiRequestRateLimit } from "../../middleware/rate-limit";
 import { aiProvidersService } from "../ai-providers/service";
 import { atsReviewInputSchema, atsReviewOutputSchema, reviewResumeText } from "./ats-review";
 import { improveInputSchema, improveLine, improveOutputSchema } from "./improve";
+import { reportAiContent } from "./reports";
 import { aiService, fileInputSchema } from "./service";
 
 /**
@@ -43,6 +44,7 @@ async function getRunnableProvider(userId: string, aiProviderId?: string) {
 }
 
 export const aiRouter = {
+	reportContent: reportAiContent,
 	parsePdf: protectedProcedure
 		.route({
 			method: "POST",

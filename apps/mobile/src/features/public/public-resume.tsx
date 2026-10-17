@@ -8,8 +8,10 @@ import { ScrollView, Share, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PasswordExpiredError, downloadPublicPdf, publicResumeUrl } from "./download";
 import { ResumeReflow } from "./resume-reflow";
+import { isAuthorBlocked, loadSharedResume, setAuthorBlocked } from "./safety";
 import { client } from "@/api/client";
 import { useSession } from "@/auth/session";
+import { ReportAiContent } from "@/features/ai/report-content";
 import { routes } from "@/routes";
 import { Button, EmptyState, Icon, IconButton, Skeleton, Text, TextField, showToast, useTheme } from "@/ui";
 
@@ -30,10 +32,27 @@ export function PublicResume({ username, slug }: PublicResumeProps) {
 	const session = useSession();
 	const { colors, space } = useTheme();
 	const [locked, setLocked] = useState(false);
+	const [, refreshSafety] = useState(0);
+	let blocked = false;
+	let safetyUnavailable = false;
+	try {
+		blocked = isAuthorBlocked(username);
+	} catch {
+		safetyUnavailable = true;
+	}
+	const blockAuthor = (value: boolean) => {
+		try {
+			setAuthorBlocked(username, value);
+			refreshSafety((version) => version + 1);
+		} catch {
+			showToast({ message: t`Couldn't save your blocked-author setting. Try again.` });
+		}
+	};
 
 	const resume = useQuery({
 		queryKey: ["public-resume", session.server, username, slug],
-		queryFn: () => client.resume.getBySlug({ username, slug }),
+		queryFn: () => loadSharedResume(username, slug),
+		enabled: session.status === "signed-in" && !blocked && !safetyUnavailable,
 		retry: (count, error) => !(error instanceof ORPCError) && count < 2,
 	});
 	const needsPassword =
@@ -66,6 +85,23 @@ export function PublicResume({ username, slug }: PublicResumeProps) {
 	const share = () =>
 		void Share.share({ url: publicResumeUrl(username, slug), message: publicResumeUrl(username, slug) }).catch(
 			() => {},
+		);
+
+	if (blocked || safetyUnavailable)
+		return (
+			<View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: space.s12 }}>
+				<Stack.Screen options={{ title: "" }} />
+				<EmptyState
+					icon="warning-circle"
+					title={blocked ? t`This author is blocked.` : t`Couldn't read your blocked-author settings.`}
+					message={t`Shared resumes stay hidden until your device settings allow them.`}
+					action={
+						blocked
+							? { label: t`Unblock author`, onPress: () => blockAuthor(false) }
+							: { label: t`Try again`, onPress: () => refreshSafety((version) => version + 1) }
+					}
+				/>
+			</View>
 		);
 
 	if (needsPassword)
@@ -128,6 +164,10 @@ export function PublicResume({ username, slug }: PublicResumeProps) {
 		<View style={{ flex: 1, backgroundColor: colors.paper }}>
 			<Stack.Screen options={{ title: name }} />
 			<ScrollView contentInsetAdjustmentBehavior="automatic">
+				<View style={{ padding: space.s3, gap: space.s2 }}>
+					<ReportAiContent source="public-resume" text={publicResumeUrl(username, slug)} />
+					<Button size="sm" variant="link" label={t`Block this author`} onPress={() => blockAuthor(true)} />
+				</View>
 				<ResumeReflow data={resume.data.data} />
 				<Text
 					variant="caption"
