@@ -1,0 +1,63 @@
+{
+  "sourceCommit": "1b616050d",
+  "variant": "non-debuggable release, existing debug signing",
+  "device": "API37 ARM64 emulator",
+  "cases": [
+    {
+      "case": "font2-existing",
+      "pid": "21612",
+      "routeResetToPicker": true,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    },
+    {
+      "case": "font1",
+      "pid": "21612",
+      "routeResetToPicker": true,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    },
+    {
+      "case": "tablet-size",
+      "pid": "21612",
+      "routeResetToPicker": false,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    },
+    {
+      "case": "tablet-density",
+      "pid": "21612",
+      "routeResetToPicker": true,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    },
+    {
+      "case": "phone-size",
+      "pid": "21612",
+      "routeResetToPicker": false,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    },
+    {
+      "case": "phone-density",
+      "pid": "21612",
+      "routeResetToPicker": true,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    },
+    {
+      "case": "font2-repeat",
+      "pid": "21612",
+      "routeResetToPicker": true,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    },
+    {
+      "case": "font1-repeat",
+      "pid": "21612",
+      "routeResetToPicker": true,
+      "navigation": "picker > Another server > Continue > form > Navigate up > picker > Continue > form",
+      "passed": true
+    }
+  ]
+}
