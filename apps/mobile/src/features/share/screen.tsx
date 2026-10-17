@@ -8,7 +8,6 @@ import { useShareDocument } from "./document";
 import { DownloadTab } from "./download";
 import { LinkTab } from "./link";
 import { useSession } from "@/auth/session";
-import { ResumeConflictSheet } from "@/draft";
 import { DocumentMenu } from "@/features/document-menu";
 import { HistoryPanel } from "@/features/history/history";
 import { Banner, Button, Segmented, Skeleton, useTheme } from "@/ui";
@@ -90,7 +89,6 @@ export function ShareScreen({ id, history = false }: ShareScreenProps) {
 			<View style={{ paddingHorizontal: space.s4 }}>
 				<Button label={t`Close`} variant="ghost" onPress={() => router.back()} />
 			</View>
-			<ResumeConflictSheet />
 		</SafeAreaView>
 	);
 }
