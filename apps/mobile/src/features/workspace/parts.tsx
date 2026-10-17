@@ -280,3 +280,22 @@ export function Progress({ value, label }: { value: number; label: string }) {
 		</View>
 	);
 }
+
+type SaveErrorProps = { autosave: { error: string | null; retry: () => void } };
+
+/** Shown when autosave stopped (a permanent error, or retries ran out): the text is kept and the user retries. */
+export function SaveError({ autosave }: SaveErrorProps) {
+	const { t } = useLingui();
+	if (!autosave.error) return null;
+	return (
+		<Banner
+			tone="danger"
+			message={
+				autosave.error === "CONFLICT"
+					? t`This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy.`
+					: t`This wasn't saved. Your text is kept on this device.`
+			}
+			action={{ label: t`Retry`, onPress: autosave.retry }}
+		/>
+	);
+}

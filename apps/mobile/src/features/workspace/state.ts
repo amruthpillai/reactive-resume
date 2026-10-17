@@ -47,78 +47,146 @@ export function createDraftStore(storage: DraftStorage) {
 
 export type Timers = { set: (run: () => void, ms: number) => unknown; clear: (id: unknown) => void };
 
+/** What a write did. `transient` failures (offline, 5xx, rate limit) may be retried; others need the user. */
+export type SaveResult = { ok: true } | { ok: false; transient: boolean; code: string };
+
+/**
+ * Sorts a failed request: no HTTP status (network down, timeout) and 408/429/5xx are transient; any other 4xx,
+ * including a 409 conflict with a concurrent edit, is permanent.
+ */
+export function saveFailure(error: unknown): Extract<SaveResult, { ok: false }> {
+	const { status, code } = (error ?? {}) as { status?: unknown; code?: unknown };
+	const http = typeof status === "number" ? status : null;
+	const transient = http === null || http === 408 || http === 429 || http >= 500;
+	return { ok: false, transient, code: typeof code === "string" ? code : http === null ? "NETWORK" : String(http) };
+}
+
 type AutosaveOptions = {
-	/** Resolves true once the server has the value, false when the write failed. Never rejects. */
-	save: (value: string) => Promise<boolean>;
-	/** Called once the server acknowledged `value`. */
+	/** Never rejects. */
+	save: (value: string) => Promise<SaveResult>;
+	/** The server confirmed this exact value (clear its device draft). Never called for an optimistic or refetched copy. */
 	onSaved?: (value: string) => void;
+	/** A failure that stopped automatic saving (its code), or null once it's cleared. */
+	onError?: (code: string | null) => void;
 	delay: number;
-	/** The wait before retrying a value whose write failed. */
+	/** The first wait before retrying a transient failure; it doubles each time. */
 	retryDelay: number;
+	/** Automatic retries of one value after a transient failure. */
+	maxRetries: number;
 	timers: Timers;
 };
 
 /**
- * Saves text a moment after typing stops, on `flush` (blur) and on `dispose` (leaving). A failed value is retried after
- * `retryDelay` instead of being marked done; a value already on its way is not sent twice.
+ * Saves text a moment after typing stops, on `flush` (blur) and on `dispose` (leaving). A transient failure is retried
+ * with exponential backoff up to `maxRetries` times; a permanent one (4xx, conflict) stops at once. Either way the value
+ * is kept for the user's `retry`, and new typing starts afresh. A value already on its way is not sent twice.
  */
-export function createAutosave({ save, onSaved, delay, retryDelay, timers }: AutosaveOptions) {
+export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxRetries, timers }: AutosaveOptions) {
 	let value = "";
 	let saved = "";
 	let inFlight: string | null = null;
-	let failed: string | null = null;
+	let failed: { value: string; attempts: number; stopped: boolean } | null = null;
 	let timer: unknown = null;
 	let disposed = false;
-	let acknowledged: string | null = null;
 	const cancel = () => {
 		if (timer !== null) timers.clear(timer);
 		timer = null;
 	};
 	const schedule = (ms: number) => {
 		cancel();
-		if (!disposed) timer = timers.set(flush, ms);
+		if (!disposed) timer = timers.set(() => send(false), ms);
 	};
-	function flush() {
+	const clearError = () => {
+		if (failed?.stopped) onError?.(null);
+		failed = null;
+	};
+	function send(manual: boolean) {
 		cancel();
 		if (value === saved || value === inFlight) return;
+		if (!manual && failed?.value === value && failed.stopped) return;
 		const sending = value;
 		inFlight = sending;
-		void save(sending).then((ok) => {
+		void save(sending).then((result) => {
 			if (inFlight === sending) inFlight = null;
-			if (ok) {
-				if (failed === sending) failed = null;
-				acknowledged = sending;
+			if (result.ok) {
+				if (failed?.value === sending) clearError();
 				onSaved?.(sending);
 				return;
 			}
-			failed = sending;
-			if (value === sending && value !== saved) schedule(retryDelay);
+			const attempts = failed?.value === sending && !manual ? failed.attempts + 1 : 1;
+			const stopped = !result.transient || attempts > maxRetries;
+			failed = { value: sending, attempts, stopped };
+			if (stopped) onError?.(result.code);
+			else if (value === sending) schedule(retryDelay * 2 ** (attempts - 1));
 		});
 	}
 	return {
 		update(nextValue: string, nextSaved: string) {
 			value = nextValue;
 			saved = nextSaved;
-			if (value === saved) {
-				cancel();
-				failed = null;
-				// The server already has it (saved here, or elsewhere): its device draft can go.
-				if (value !== acknowledged) {
-					acknowledged = value;
-					onSaved?.(value);
-				}
-				return;
-			}
-			if (value === inFlight) return;
-			schedule(value === failed ? retryDelay : delay);
+			// An equal copy (optimistic or refetched) needs no write; it doesn't confirm a draft either.
+			if (value === saved || value === inFlight) return cancel();
+			// A failed value waits for its retry timer, or for the user.
+			if (failed?.value === value) return;
+			clearError();
+			schedule(delay);
 		},
-		flush,
+		flush: () => send(false),
+		/** The user's Retry: sends the current value now and restarts the retry budget. */
+		retry: () => {
+			clearError();
+			send(true);
+		},
 		dispose() {
-			flush();
+			send(false);
 			disposed = true;
 			cancel();
 		},
 	};
+}
+
+// ---- Drafts per account ----
+
+export type DraftState<T> = {
+	key: string | null;
+	/** The key the shown value belongs to; null while it was typed before any account was known. */
+	owner: string | null;
+	value: T;
+	touched: boolean;
+};
+
+/**
+ * The draft to show when the account key changes. A key going away (the identity is being re-checked) keeps what's on
+ * screen; the same key coming back keeps it too. Another account's key never inherits it: that account's own draft,
+ * or the server value, is shown instead. Text typed before any key was known is adopted by the first key.
+ */
+export function nextDraftState<T>(
+	state: DraftState<T>,
+	key: string | null,
+	kept: T | undefined,
+	initial: T,
+): DraftState<T> {
+	if (key === null) return { ...state, key };
+	if (state.owner === key || (state.owner === null && state.touched)) return { ...state, key, owner: key };
+	return { key, owner: key, value: kept ?? initial, touched: false };
+}
+
+// ---- Delayed work bound to who started it ----
+
+/**
+ * Runs a delayed operation (after its Undo toast) only if the account that started it is still the signed-in one.
+ * Scopes are `getDraftScope()` values (server + OAuth subject); an unknown identity on either side cancels.
+ */
+export async function dispatchForOrigin(
+	origin: Promise<string | null>,
+	current: () => Promise<string | null>,
+	run: () => Promise<unknown>,
+): Promise<"sent" | "cancelled"> {
+	const from = await origin;
+	const now = await current();
+	if (from === null || from !== now) return "cancelled";
+	await run();
+	return "sent";
 }
 
 // ---- One pending operation per item ----

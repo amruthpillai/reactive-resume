@@ -2,6 +2,7 @@
 // checklist before submitting there yourself.
 import type { Fact } from "../hooks";
 import type { WorkspaceTabProps } from "../shell";
+import type { SaveResult } from "../state";
 import type { CareerWorkspace } from "@reactive-resume/schema/career";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
@@ -12,6 +13,7 @@ import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { careerWorkspaceSchema } from "@reactive-resume/schema/career";
 import {
+	clearDraft,
 	latest,
 	useAutosave,
 	useDraft,
@@ -22,10 +24,12 @@ import {
 	workspaceError,
 } from "../hooks";
 import { answersClipboard, answersDocument, countCharacters, countWords, diffWords, shortLabel } from "../logic";
-import { Actions, AiNotice, Block, CheckRow, Progress, useWorking, workingSteps } from "../parts";
+import { Actions, AiNotice, Block, CheckRow, Progress, SaveError, useWorking, workingSteps } from "../parts";
 import { shareText } from "../share";
 import { WorkspaceScreen } from "../shell";
+import { dispatchForOrigin } from "../state";
 import { orpc } from "@/api/client";
+import { getDraftScope } from "@/draft";
 import { useHasAIProvider } from "@/features/ai/providers";
 import { useUserTime } from "@/features/application-detail/hooks";
 import { useInvalidateApplications } from "@/features/applications/queries";
@@ -83,15 +87,18 @@ function Apply({ application, version }: WorkspaceTabProps) {
 	const currentAnswers = () => shown.map((answer) => drafts.current.get(answer.id)?.() ?? answer);
 	const removeAnswer = (id: string) => {
 		setRemoved((ids) => [...ids, id]);
+		const origin = getDraftScope();
 		withUndo({
 			message: t`Question removed`,
 			// `save` reports its own failure; rejecting here shows the question again.
-			commit: async () => {
-				const ok = await workspace.save({
-					answers: workspace.current().answers.filter((answer) => answer.id !== id),
-				});
-				if (!ok) throw new Error("Not removed");
-			},
+			commit: () =>
+				// Dropped if another account is signed in when the Undo window ends.
+				dispatchForOrigin(origin, getDraftScope, async () => {
+					const result = await workspace.save({
+						answers: workspace.current().answers.filter((answer) => answer.id !== id),
+					});
+					if (!result.ok) throw new Error("Not removed");
+				}),
 			restore: () => setRemoved((ids) => ids.filter((item) => item !== id)),
 			failed: () => undefined,
 		});
@@ -183,8 +190,8 @@ type AnswerCardProps = {
 	readOnly: boolean;
 	disabled: boolean;
 	registerDraft: (id: string, read: () => Answer) => () => void;
-	/** Resolves true once the server has it. */
-	onSave: (patch: Partial<Answer>) => Promise<boolean>;
+	/** Resolves once the server confirmed it, or with why it failed. */
+	onSave: (patch: Partial<Answer>) => Promise<SaveResult>;
 	onRemove: () => void;
 	unit: CountUnit;
 	onToggleUnit: () => void;
@@ -222,13 +229,13 @@ function AnswerCard({
 	const [proposal, setProposal] = useState<{ text: string; factIds: string[] } | null>(null);
 	const generate = useGenerate(applicationId);
 	const provider = useHasAIProvider().defaultProvider;
-	const flushAnswer = useAutosave(
+	const answerSave = useAutosave(
 		disabled || readOnly ? answer.answer : text,
 		answer.answer,
 		(value) => onSave({ answer: value }),
 		answerDraft.clear,
 	);
-	const flushQuestion = useAutosave(
+	const questionSave = useAutosave(
 		disabled || readOnly ? answer.question : question,
 		answer.question,
 		(value) => onSave({ question: value }),
@@ -289,7 +296,7 @@ function AnswerCard({
 					placeholder={t`Paste the question from the form`}
 					onChangeText={setQuestion}
 					onBlur={() => {
-						flushQuestion();
+						questionSave.flush();
 						if (question.trim()) setEditingQuestion(false);
 					}}
 				/>
@@ -333,7 +340,7 @@ function AnswerCard({
 								const accepted = proposal.text;
 								setText(accepted);
 								void onSave({ answer: accepted, factIds: proposal.factIds }).then(
-									(ok) => ok && answerDraft.clear(accepted),
+									(result) => result.ok && answerDraft.clear(accepted),
 								);
 								setProposal(null);
 							}}
@@ -351,9 +358,11 @@ function AnswerCard({
 					editable={!disabled}
 					placeholder={t`Write your answer, or draft one from your Knowledge.`}
 					onChangeText={setText}
-					onBlur={flushAnswer}
+					onBlur={answerSave.flush}
 				/>
 			)}
+			<SaveError autosave={questionSave} />
+			<SaveError autosave={answerSave} />
 
 			{backing.length > 0 ? (
 				<View style={{ gap: space.s1 }}>
@@ -480,6 +489,11 @@ function Checklist({
 				expectedAnswers: currentWorkspace.answers,
 			});
 			queryClient.setQueryData(workspace.queryKey, { ...currentWorkspace, answers: answersNow });
+			// The server confirmed these exact texts, so their device drafts can go (newer edits stay).
+			for (const answer of answersNow) {
+				clearDraft(`answer:${application.id}:${answer.id}:answer`, answer.answer);
+				clearDraft(`answer:${application.id}:${answer.id}:question`, answer.question);
+			}
 			// The ticks as they are now, not as they were when the button was pressed.
 			workspace.save({ checklist: [...new Set([...workspace.current().checklist, items.length - 1])] });
 			showToast({ message: t`Marked as applied. The versions you sent are kept.` });

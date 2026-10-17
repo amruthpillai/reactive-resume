@@ -1,3 +1,4 @@
+import type { DraftState, SaveResult } from "./state";
 // Data for the application workspace, ported from apps/web/src/features/career/hooks.ts. Query keys append the
 // server origin, as the other mobile features do, and stay under the oRPC prefixes so Career writes refresh them.
 import type { RouterOutput } from "@/api/client";
@@ -11,7 +12,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Storage from "expo-sqlite/kv-store";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { EMPTY_WORKSPACE } from "@reactive-resume/schema/career";
-import { createAutosave, createDraftStore } from "./state";
+import { createAutosave, createDraftStore, nextDraftState, saveFailure } from "./state";
 import { orpc } from "@/api/client";
 import { getServer, useSession } from "@/auth/session";
 import { getDraftScope } from "@/draft";
@@ -71,9 +72,9 @@ export function useWorkspace(applicationId: string) {
 			}),
 	});
 	const current = () => queryClient.getQueryData<CareerWorkspace>(queryKey) ?? EMPTY_WORKSPACE;
-	/** Resolves true once the server has the change, false when it failed (already reported). Never rejects. */
-	const save = (patch: Partial<CareerWorkspace>): Promise<boolean> => {
-		if (getServer() !== server) return Promise.resolve(false);
+	/** Resolves once the server confirmed the change, or with why it failed (already reported). Never rejects. */
+	const save = (patch: Partial<CareerWorkspace>): Promise<SaveResult> => {
+		if (getServer() !== server) return Promise.resolve({ ok: false, transient: false, code: "SERVER_CHANGED" });
 		const previous = current();
 		const defined = Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
 		const expected = Object.fromEntries(
@@ -85,14 +86,14 @@ export function useWorkspace(applicationId: string) {
 		const write = mutation.mutateAsync({ applicationId, ...defined, expected });
 		pending.add(write);
 		return write.then(
-			() => {
+			(): SaveResult => {
 				pending.delete(write);
-				return true;
+				return { ok: true };
 			},
-			() => {
+			(error: unknown) => {
 				pending.delete(write);
 				void Promise.allSettled(pending).then(() => queryClient.invalidateQueries({ queryKey }));
-				return false;
+				return saveFailure(error);
 			},
 		);
 	};
@@ -195,25 +196,29 @@ export function useGenerate(applicationId: string) {
 }
 
 /**
- * Saves text a moment after typing stops (2 s), on blur (`flush`) and when leaving. A failed write is retried after
- * 10 s rather than dropped; `onSaved` runs once the server has the value (clear the device draft there).
+ * Saves text a moment after typing stops (2 s), on blur (`flush`) and when leaving. Transient failures retry up to 3
+ * times (5, 10, 20 s); a permanent one (4xx, conflict) stops and sets `error` until the user's `retry` or new typing.
+ * `onSaved` runs only when the server confirmed that exact value (clear its device draft there).
  */
 export function useAutosave(
 	value: string,
 	saved: string,
-	save: (value: string) => Promise<boolean>,
+	save: (value: string) => Promise<SaveResult>,
 	onSaved?: (value: string) => void,
 ) {
 	const latestCallbacks = useRef({ save, onSaved });
 	useLayoutEffect(() => {
 		latestCallbacks.current = { save, onSaved };
 	});
+	const [error, setError] = useState<string | null>(null);
 	const [autosave] = useState(() =>
 		createAutosave({
 			save: (next) => latestCallbacks.current.save(next),
 			onSaved: (next) => latestCallbacks.current.onSaved?.(next),
+			onError: setError,
 			delay: 2000,
-			retryDelay: 10_000,
+			retryDelay: 5000,
+			maxRetries: 3,
 			timers: {
 				set: (run, ms) => setTimeout(run, ms),
 				clear: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
@@ -222,30 +227,60 @@ export function useAutosave(
 	);
 	useEffect(() => autosave.update(value, saved), [autosave, value, saved]);
 	useEffect(() => () => autosave.dispose(), [autosave]);
-	return autosave.flush;
+	return { flush: autosave.flush, retry: autosave.retry, error };
 }
 
 const draftStore = createDraftStore(Storage);
 /** The key prefix of every workspace draft for one account; sign-out cleanup can sweep it. */
 export const draftPrefix = (scope: string) => `reactive-resume:career-draft:${scope}:`;
 
-/** The signed-in account's draft scope (server + OAuth subject, as resume drafts and application notes use). */
+/**
+ * Writes and clears check the account again when they run: a draft never lands under, or removes, another identity's
+ * key. A newer write for the same key wins over an older one still resolving.
+ */
+const writeTurns = new Map<string, number>();
+function writeDraft(scope: string, key: string, value: unknown) {
+	const turn = (writeTurns.get(key) ?? 0) + 1;
+	writeTurns.set(key, turn);
+	void getDraftScope().then((now) => {
+		if (now === scope && writeTurns.get(key) === turn) draftStore.write(key, value);
+	});
+}
+function clearDraftAt(scope: string, key: string, sent: unknown) {
+	const turn = writeTurns.get(key) ?? 0;
+	void getDraftScope().then((now) => {
+		// A write queued after this clear was asked for is newer than `sent`: leave it.
+		if (now === scope && (writeTurns.get(key) ?? 0) === turn) draftStore.clear(key, sent);
+	});
+}
+
+/** Clears a draft by name for the signed-in account, once the server confirmed `sent` (Mark as applied). */
+export function clearDraft(name: string, sent: unknown) {
+	void getDraftScope().then((scope) => {
+		if (scope !== null) clearDraftAt(scope, `${draftPrefix(scope)}${name}`, sent);
+	});
+}
+
+/**
+ * The signed-in account's draft scope (server + OAuth subject, as resume drafts and application notes use). It is
+ * resolved again on every session change and never reused across identities; until it resolves, there is none.
+ */
 function useDraftScope() {
 	const session = useSession();
 	const signedIn = session.status === "signed-in";
-	const [scope, setScope] = useState<{ server: string; value: string | null } | null>(null);
+	const [scope, setScope] = useState<{ session: typeof session; value: string | null } | null>(null);
 	useEffect(() => {
 		if (!signedIn) return;
 		let live = true;
 		void getDraftScope().then((value) => {
-			if (live) setScope({ server: session.server, value });
+			if (live) setScope({ session, value });
 		});
 		return () => {
 			live = false;
 		};
-	}, [signedIn, session.server]);
-	// No scope (signed out, or the token can't name the account) keeps drafts on screen only.
-	return signedIn && scope?.server === session.server ? scope.value : null;
+	}, [signedIn, session]);
+	// No scope (signed out, re-checking, or the token can't name the account) keeps drafts on screen only.
+	return signedIn && scope?.session === session ? scope.value : null;
 }
 
 /**
@@ -255,36 +290,29 @@ function useDraftScope() {
 export function useDraft<T>(name: string | null, initial: T) {
 	const scope = useDraftScope();
 	const key = name !== null && scope !== null ? `${draftPrefix(scope)}${name}` : null;
-	const [state, setState] = useState(() => ({ key, value: initial, touched: false }));
-	if (state.key !== key) {
-		// The scope resolves after the first render: an edit made before then is kept and written below.
-		const kept = key === null ? undefined : draftStore.read<T>(key);
-		setState({
-			key,
-			value: state.touched && state.key === null ? state.value : (kept ?? initial),
-			touched: state.touched && state.key === null,
-		});
-	}
+	const [state, setState] = useState<DraftState<T>>(() => ({ key, owner: key, value: initial, touched: false }));
+	if (state.key !== key)
+		setState(nextDraftState(state, key, key === null ? undefined : draftStore.read<T>(key), initial));
+	// Text typed before the account was known is written once its key resolves.
 	useEffect(() => {
-		if (state.key !== null && state.touched) draftStore.write(state.key, state.value);
-	}, [state]);
+		if (state.key !== null && scope !== null && state.touched) writeDraft(scope, state.key, state.value);
+	}, [state, scope]);
 	const current = useRef(state);
 	useLayoutEffect(() => {
 		current.current = state;
 	});
 	const setValue = (update: SetStateAction<T>) => {
-		const previous = current.current.value;
-		const value = typeof update === "function" ? (update as (value: T) => T)(previous) : update;
-		current.current = { key, value, touched: true };
+		const previous = current.current;
+		const value = typeof update === "function" ? (update as (value: T) => T)(previous.value) : update;
+		current.current = { ...previous, value, touched: true };
 		setState(current.current);
-		if (key !== null) draftStore.write(key, value);
 	};
 	return {
 		value: state.value,
 		setValue,
-		/** Drops the device copy once `sent` is safe elsewhere; a newer edit stays. */
+		/** Drops the device copy once the server confirmed `sent`; a newer edit stays. */
 		clear: (sent: T) => {
-			if (key !== null) draftStore.clear(key, sent);
+			if (key !== null && scope !== null) clearDraftAt(scope, key, sent);
 		},
 	};
 }

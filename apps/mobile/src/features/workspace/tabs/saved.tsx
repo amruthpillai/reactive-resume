@@ -6,14 +6,16 @@ import type { IconName } from "@/ui";
 import type { SavedItemKind, WorkspaceTab } from "@reactive-resume/schema/career";
 import { plural, t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 import { useFacts, useSavedItems } from "../hooks";
 import { Actions, Block, EmptyNotice, tabLabel } from "../parts";
 import { WorkspaceScreen } from "../shell";
-import { orpc } from "@/api/client";
+import { dispatchForOrigin } from "../state";
+import { client, orpc } from "@/api/client";
+import { getDraftScope } from "@/draft";
 import { useUserTime } from "@/features/application-detail/hooks";
 import { formatMoney } from "@/features/career/offer-compare";
 import { withUndo } from "@/features/career/undo";
@@ -50,7 +52,6 @@ function Saved({ application, go }: WorkspaceTabProps) {
 	const { space } = useTheme();
 	const queryClient = useQueryClient();
 	const saved = useSavedItems(application.id);
-	const remove = useMutation(orpc.career.deleteSavedItem.mutationOptions());
 	const [filter, setFilter] = useState<SavedItemKind | null>(null);
 	const [hidden, setHidden] = useState<string[]>([]);
 	const [expanded, setExpanded] = useState<string | null>(null);
@@ -75,14 +76,17 @@ function Saved({ application, go }: WorkspaceTabProps) {
 	const onDelete = (item: SavedItem) => {
 		if (filter === item.data.kind && shown.length === 1) setFilter(null);
 		setHidden((ids) => [...ids, item.id]);
+		const origin = getDraftScope();
 		withUndo({
 			message: t`Deleted from Saved`,
 			restore: () => setHidden((ids) => ids.filter((id) => id !== item.id)),
 			failed: () => showToast({ message: t`Couldn't delete it. It's back in Saved.` }),
-			commit: async () => {
-				await remove.mutateAsync({ id: item.id });
-				await queryClient.invalidateQueries({ queryKey: orpc.career.savedItems.key() });
-			},
+			// Dropped if another account is signed in when the Undo window ends.
+			commit: () =>
+				dispatchForOrigin(origin, getDraftScope, async () => {
+					await client.career.deleteSavedItem({ id: item.id });
+					await queryClient.invalidateQueries({ queryKey: orpc.career.savedItems.key() });
+				}),
 		});
 	};
 

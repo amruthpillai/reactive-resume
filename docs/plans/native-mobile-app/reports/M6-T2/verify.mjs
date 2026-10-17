@@ -23,7 +23,10 @@ import {
 	createDraftStore,
 	createPendingRegistry,
 	createRequests,
+	dispatchForOrigin,
+	nextDraftState,
 	playLatest,
+	saveFailure,
 } from "../../../../../apps/mobile/src/features/workspace/state.ts";
 
 let passed = 0;
@@ -188,61 +191,162 @@ scenario("answers download: Markdown and text, unanswered questions left out", (
 
 // ---- Review fix round (Codex 195d8e34) ----
 
-scenario("fix 1: a failed autosave is retried, not marked done; the draft is cleared only once the server has it", async () => {
+const OK = { ok: true };
+const NETWORK = { ok: false, transient: true, code: "NETWORK" };
+const CONFLICT = { ok: false, transient: false, code: "CONFLICT" };
+const autosaveWith = (results, extra = {}) => {
 	const timers = fakeTimers();
-	const results = [false, true];
 	const sent = [];
 	const acknowledged = [];
+	const errors = [];
 	const autosave = createAutosave({
 		save: async (value) => {
 			sent.push(value);
-			return results.shift() ?? true;
+			return results.shift() ?? OK;
 		},
 		onSaved: (value) => acknowledged.push(value),
+		onError: (code) => errors.push(code),
 		delay: 2000,
-		retryDelay: 10_000,
+		retryDelay: 5000,
+		maxRetries: 3,
 		timers,
+		...extra,
 	});
-	autosave.update("server", "server");
-	acknowledged.length = 0;
+	return { timers, sent, acknowledged, errors, autosave };
+};
+
+scenario("fix 1: a failed autosave is retried, not marked done; leaving flushes once, never twice", async () => {
+	const { timers, sent, acknowledged, autosave } = autosaveWith([NETWORK, OK]);
 	autosave.update("typed answer", "server");
 	await timers.advance(2000);
 	assert.deepEqual(sent, ["typed answer"]);
 	assert.deepEqual(acknowledged, [], "a failed write keeps the draft");
-	// The optimistic copy rolls back on refetch; the same text is retried after the longer wait, not every 2 s.
-	autosave.update("typed answer", "server");
-	await timers.advance(2000);
-	assert.deepEqual(sent, ["typed answer"]);
-	await timers.advance(8000);
+	autosave.update("typed answer", "server"); // the optimistic copy rolled back on refetch
+	await timers.advance(5000);
 	assert.deepEqual(sent, ["typed answer", "typed answer"]);
 	assert.deepEqual(acknowledged, ["typed answer"]);
-	autosave.update("typed answer", "typed answer");
-	assert.deepEqual(acknowledged, ["typed answer"], "acknowledged once");
+	autosave.update("more", "typed answer");
+	autosave.flush();
+	autosave.flush();
 	autosave.dispose();
+	await timers.advance(0);
+	assert.deepEqual(sent, ["typed answer", "typed answer", "more"]);
 	assert.equal(timers.count(), 0);
 });
 
-scenario("fix 1: leaving flushes once; a value already on its way is not sent twice", async () => {
+// ---- Second review round (Codex 195d8e34) ----
+
+scenario("round 2, 1: an optimistic copy equal to the text never clears the draft; only the confirmed save does", async () => {
+	let confirm;
 	const timers = fakeTimers();
-	const sent = [];
-	let resolve;
+	const acknowledged = [];
 	const autosave = createAutosave({
-		save: (value) => {
-			sent.push(value);
-			return new Promise((done) => (resolve = done));
-		},
+		save: () => new Promise((resolve) => (confirm = resolve)),
+		onSaved: (value) => acknowledged.push(value),
 		delay: 2000,
-		retryDelay: 10_000,
+		retryDelay: 5000,
+		maxRetries: 3,
 		timers,
 	});
-	autosave.update("message", "");
-	autosave.flush();
-	autosave.flush();
-	autosave.dispose();
-	assert.deepEqual(sent, ["message"]);
-	resolve(false);
+	autosave.update("draft text", "server");
+	await timers.advance(2000);
+	// useWorkspace().save publishes the value to the query cache before the server answers.
+	autosave.update("draft text", "draft text");
+	assert.deepEqual(acknowledged, [], "the optimistic copy is not an acknowledgement");
+	// Text that already matches the server (a refetch, another device) is not a confirmed save either.
+	autosave.update("server copy", "server copy");
+	assert.deepEqual(acknowledged, []);
+	confirm(OK);
 	await timers.advance(0);
-	assert.equal(timers.count(), 0, "no retry timer after leaving; the device draft keeps it for next time");
+	assert.deepEqual(acknowledged, ["draft text"], "cleared for that exact revision, once confirmed");
+	const storage = memoryStorage();
+	const drafts = createDraftStore(storage);
+	drafts.write("k", "newer text typed meanwhile");
+	drafts.clear("k", "draft text");
+	assert.equal(drafts.read("k"), "newer text typed meanwhile", "the clear targets only the confirmed revision");
+});
+
+scenario("round 2, 2: a draft never moves to another identity's key, even through a re-check", () => {
+	const A = 'reactive-resume:career-draft:["https://rxresu.me","alice"]:message:app';
+	const B = 'reactive-resume:career-draft:["https://rxresu.me","bob"]:message:app';
+	let state = { key: A, owner: A, value: "alice's draft", touched: true };
+	state = nextDraftState(state, null, undefined, "server");
+	assert.equal(state.value, "alice's draft", "a scope re-check keeps the screen");
+	const back = nextDraftState(state, A, undefined, "server");
+	assert.equal(back.value, "alice's draft");
+	assert.equal(back.touched, true, "and still writes it under Alice's key");
+	const bob = nextDraftState(state, B, "bob's draft", "server");
+	assert.deepEqual(bob, { key: B, owner: B, value: "bob's draft", touched: false }, "Bob gets his own draft");
+	const bobFresh = nextDraftState(state, B, undefined, "server");
+	assert.equal(bobFresh.value, "server", "or the server value, never Alice's text");
+	assert.equal(bobFresh.touched, false, "nothing is written under Bob's key");
+	const early = nextDraftState({ key: null, owner: null, value: "typed early", touched: true }, A, "older", "server");
+	assert.equal(early.value, "typed early", "text typed before the scope resolved is adopted by the first key");
+	const untouched = nextDraftState({ key: null, owner: null, value: "server", touched: false }, A, "kept", "server");
+	assert.equal(untouched.value, "kept", "an untouched screen shows the kept draft");
+});
+
+scenario("round 2, 3: a delayed Apply runs only for the account that pressed it", async () => {
+	const runs = [];
+	const run = async () => runs.push("applyReply");
+	const alice = '["https://rxresu.me","alice"]';
+	const bob = '["https://rxresu.me","bob"]';
+	const otherServer = '["https://resume.example","alice"]';
+	assert.equal(await dispatchForOrigin(Promise.resolve(alice), async () => bob, run), "cancelled");
+	assert.equal(await dispatchForOrigin(Promise.resolve(alice), async () => otherServer, run), "cancelled");
+	assert.equal(await dispatchForOrigin(Promise.resolve(alice), async () => null, run), "cancelled", "signed out");
+	assert.equal(await dispatchForOrigin(Promise.resolve(null), async () => null, run), "cancelled", "unknown origin");
+	assert.deepEqual(runs, []);
+	assert.equal(await dispatchForOrigin(Promise.resolve(alice), async () => alice, run), "sent");
+	assert.deepEqual(runs, ["applyReply"]);
+});
+
+scenario("round 2, 4: errors keep their code; 4xx and conflicts stop at once, transient ones back off 3 times", async () => {
+	assert.deepEqual(saveFailure({ status: 409, code: "CONFLICT" }), CONFLICT);
+	assert.deepEqual(saveFailure({ status: 400, code: "BAD_REQUEST" }), { ok: false, transient: false, code: "BAD_REQUEST" });
+	assert.equal(saveFailure({ status: 403, code: "FORBIDDEN" }).transient, false);
+	assert.equal(saveFailure({ status: 429, code: "TOO_MANY_REQUESTS" }).transient, true);
+	assert.equal(saveFailure({ status: 503, code: "SERVICE_UNAVAILABLE" }).transient, true);
+	assert.deepEqual(saveFailure(new TypeError("Network request failed")), NETWORK);
+
+	const conflict = autosaveWith([CONFLICT]);
+	conflict.autosave.update("mine", "theirs");
+	await conflict.timers.advance(2000);
+	assert.deepEqual(conflict.errors, ["CONFLICT"], "surfaced");
+	// The refetch brings the concurrent edit; nothing overwrites it on its own.
+	conflict.autosave.update("mine", "their newer edit");
+	await conflict.timers.advance(60_000);
+	assert.deepEqual(conflict.sent, ["mine"]);
+	assert.equal(conflict.timers.count(), 0);
+	conflict.autosave.dispose();
+	assert.deepEqual(conflict.sent, ["mine"], "leaving doesn't force it either; the draft is kept");
+
+	const retried = autosaveWith([CONFLICT, OK]);
+	retried.autosave.update("mine", "theirs");
+	await retried.timers.advance(2000);
+	retried.autosave.retry();
+	await retried.timers.advance(0);
+	assert.deepEqual(retried.sent, ["mine", "mine"], "the user's Retry sends it");
+	assert.deepEqual(retried.errors, ["CONFLICT", null]);
+	assert.deepEqual(retried.acknowledged, ["mine"]);
+
+	const offline = autosaveWith([NETWORK, NETWORK, NETWORK, NETWORK]);
+	offline.autosave.update("text", "");
+	await offline.timers.advance(2000);
+	await offline.timers.advance(5000);
+	await offline.timers.advance(10_000);
+	assert.equal(offline.sent.length, 3, "backs off: 5 s, then 10 s");
+	await offline.timers.advance(19_999);
+	assert.equal(offline.sent.length, 3);
+	await offline.timers.advance(1);
+	assert.equal(offline.sent.length, 4, "then 20 s");
+	await offline.timers.advance(600_000);
+	assert.equal(offline.sent.length, 4, "stops after 3 retries");
+	assert.deepEqual(offline.errors, ["NETWORK"]);
+	offline.autosave.update("text, edited", "");
+	await offline.timers.advance(2000);
+	assert.equal(offline.sent.length, 5, "new typing starts afresh");
+	assert.deepEqual(offline.errors, ["NETWORK", null]);
 });
 
 scenario("fix 2 + 3: device drafts persist; finishing a review clears only the submitted revision", () => {

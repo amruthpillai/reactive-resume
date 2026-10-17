@@ -2,6 +2,7 @@
 // the changes it implies only if you choose.
 import type { SavedData, SavedItem } from "../hooks";
 import type { WorkspaceTabProps } from "../shell";
+import type { SaveResult } from "../state";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,11 +11,12 @@ import { useState, useSyncExternalStore } from "react";
 import { View } from "react-native";
 import { latest, useAutosave, useDraft, useGenerate, useSavedItems, useWorkspace } from "../hooks";
 import { isFixedChange, openChanges } from "../logic";
-import { AiNotice, Block, CheckRow, Pill, useWorking, workingSteps } from "../parts";
+import { AiNotice, Block, CheckRow, Pill, SaveError, useWorking, workingSteps } from "../parts";
 import { WorkspaceScreen } from "../shell";
-import { createPendingRegistry } from "../state";
+import { createPendingRegistry, dispatchForOrigin } from "../state";
 import { client, orpc } from "@/api/client";
 import { useSession } from "@/auth/session";
+import { getDraftScope } from "@/draft";
 import { useHasAIProvider } from "@/features/ai/providers";
 import { useUserTime } from "@/features/application-detail/hooks";
 import { describeNextStep, getNextStep } from "@/features/applications/next-step";
@@ -69,7 +71,7 @@ type PasteBoxProps = {
 	application: WorkspaceTabProps["application"];
 	initial: string;
 	readOnly: boolean;
-	onSave: (message: string) => Promise<boolean>;
+	onSave: (message: string) => Promise<SaveResult>;
 };
 
 /** W15: the employer's message, kept with the application, and "Read it for me". */
@@ -81,7 +83,7 @@ function PasteBox({ application, initial, readOnly, onSave }: PasteBoxProps) {
 	const message = draft.value;
 	const generate = useGenerate(application.id);
 	const provider = useHasAIProvider().defaultProvider;
-	const flush = useAutosave(readOnly ? initial : message, initial, onSave, draft.clear);
+	const autosave = useAutosave(readOnly ? initial : message, initial, onSave, draft.clear);
 	const label = useWorking(generate.isPending, workingSteps("reply"), t`Read it for me`);
 	const company = application.company;
 
@@ -94,8 +96,9 @@ function PasteBox({ application, initial, readOnly, onSave }: PasteBoxProps) {
 				editable={!readOnly}
 				placeholder={t`Paste the email or message, without the signature.`}
 				onChangeText={draft.setValue}
-				onBlur={flush}
+				onBlur={autosave.flush}
 			/>
+			<SaveError autosave={autosave} />
 			{!readOnly ? (
 				<View style={{ gap: space.s2 }}>
 					<AiNotice />
@@ -236,6 +239,8 @@ function ProposalCard({ reply, application, now, readOnly }: ProposalCardProps) 
 		const chosen = ticked;
 		// One pending apply per reply, even after leaving and reopening the tab: Undo always cancels that one.
 		if (!replyApplies.start(pendingKey, { changes: chosen, at: new Date() })) return;
+		// The account that pressed Apply; the commit is dropped if another one is signed in by then.
+		const origin = getDraftScope();
 		withUndo({
 			message: t`Application updated`,
 			restore: () => replyApplies.finish(pendingKey),
@@ -243,12 +248,14 @@ function ProposalCard({ reply, application, now, readOnly }: ProposalCardProps) 
 			// The client, not this screen's mutation: the commit may run after the screen is gone.
 			commit: async () => {
 				try {
-					await client.career.applyReply({ id: reply.id, changes: chosen });
-					await Promise.all([
-						invalidate(),
-						queryClient.invalidateQueries({ queryKey: orpc.career.savedItems.key() }),
-						queryClient.invalidateQueries({ queryKey: orpc.career.schedules.key() }),
-					]);
+					await dispatchForOrigin(origin, getDraftScope, async () => {
+						await client.career.applyReply({ id: reply.id, changes: chosen });
+						await Promise.all([
+							invalidate(),
+							queryClient.invalidateQueries({ queryKey: orpc.career.savedItems.key() }),
+							queryClient.invalidateQueries({ queryKey: orpc.career.schedules.key() }),
+						]);
+					});
 				} finally {
 					replyApplies.finish(pendingKey);
 				}
