@@ -18,8 +18,13 @@ describe("Computer Modern font mirror", () => {
 		expect(getWebFontSource("Computer Modern Bright")).toBe(originalUrl);
 	});
 
-	it.each(["", "/", "///"])("normalizes trailing slashes (%s) and preserves font paths", async (suffix) => {
-		vi.stubEnv("WEB_FONT_BASE_URL", `https://fonts.example.com/cm${suffix}`);
+	it.each([
+		"https://fonts.example.com/cm",
+		"https://fonts.example.com/cm/",
+		"https://fonts.example.com/cm///",
+		" https://fonts.example.com/cm/ ",
+	])("normalizes whitespace and trailing slashes in %s", async (baseUrl) => {
+		vi.stubEnv("WEB_FONT_BASE_URL", baseUrl);
 		const { getWebFontSource } = await import("./index");
 		expect(getWebFontSource("Computer Modern Bright")).toBe("https://fonts.example.com/cm/font/Bright/cmunbmr.woff");
 		expect(getWebFontSource("Computer Modern Bright", "700", true)).toBe(

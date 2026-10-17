@@ -43,7 +43,7 @@ becomes:
 https://fonts.example.com/cm/font/Bright/cmunbmr.woff
 ```
 
-Use an absolute HTTP(S) URL without a query string or fragment. Trailing slashes are removed. Do not include
+Use an absolute HTTP(S) URL without a query string or fragment. Surrounding whitespace and trailing slashes are removed. Do not include
 the `font/` segment in the base URL: the resolver appends it. Use an address reachable from the app server; inside
 Docker, `localhost` refers to the app container itself. The mirror must serve font bytes without a login page.
 
