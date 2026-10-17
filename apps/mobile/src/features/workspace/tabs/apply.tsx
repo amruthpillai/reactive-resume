@@ -141,6 +141,9 @@ function Apply({ application, version }: WorkspaceTabProps) {
 					disabled={submitting}
 					registerDraft={registerDraft}
 					onSave={(patch) => saveAnswer(answer.id, patch)}
+					fetchServer={() =>
+						workspace.fetchConfirmed().then((data) => data.answers.find((item) => item.id === answer.id))
+					}
 					onRemove={() => removeAnswer(answer.id)}
 					unit={unit}
 					onToggleUnit={() => setUnit(unit === "words" ? "characters" : "words")}
@@ -192,6 +195,8 @@ type AnswerCardProps = {
 	registerDraft: (id: string, read: () => Answer) => () => void;
 	/** Resolves once the server confirmed it, or with why it failed. */
 	onSave: (patch: Partial<Answer>) => Promise<SaveResult>;
+	/** This answer in a freshly fetched, server-confirmed workspace (undefined when it was removed there). */
+	fetchServer: () => Promise<Answer | undefined>;
 	onRemove: () => void;
 	unit: CountUnit;
 	onToggleUnit: () => void;
@@ -206,6 +211,7 @@ function AnswerCard({
 	disabled,
 	registerDraft,
 	onSave,
+	fetchServer,
 	onRemove,
 	unit,
 	onToggleUnit,
@@ -234,12 +240,14 @@ function AnswerCard({
 		answer.answer,
 		(value) => onSave({ answer: value }),
 		answerDraft,
+		() => fetchServer().then((server) => server?.answer ?? ""),
 	);
 	const questionSave = useAutosave(
 		disabled || readOnly ? answer.question : question,
 		answer.question,
 		(value) => onSave({ question: value }),
 		questionDraft,
+		() => fetchServer().then((server) => server?.question ?? ""),
 	);
 	const empty = !text.trim();
 	const aiLabel = useWorking(

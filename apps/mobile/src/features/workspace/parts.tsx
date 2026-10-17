@@ -281,7 +281,15 @@ export function Progress({ value, label }: { value: number; label: string }) {
 	);
 }
 
-type SaveErrorProps = { autosave: { error: string | null; retry: () => void; discard: () => void } };
+type SaveErrorProps = {
+	autosave: {
+		error: string | null;
+		retry: () => void;
+		takeServerVersion?: (() => Promise<void>) | undefined;
+		resolving: boolean;
+		resolveFailed: boolean;
+	};
+};
 
 /**
  * Shown when autosave stopped (a permanent error, or retries ran out): the text is kept and the user decides. After a
@@ -292,6 +300,7 @@ export function SaveError({ autosave }: SaveErrorProps) {
 	const { space } = useTheme();
 	if (!autosave.error) return null;
 	const conflict = autosave.error === "CONFLICT";
+	const takeServer = autosave.takeServerVersion;
 	return (
 		<View style={{ gap: space.s2 }}>
 			<Banner
@@ -301,10 +310,21 @@ export function SaveError({ autosave }: SaveErrorProps) {
 						? t`This changed somewhere else, so it wasn't saved. Your text is kept here; Retry saves it over the other copy.`
 						: t`This wasn't saved. Your text is kept on this device.`
 				}
-				action={{ label: t`Retry`, onPress: autosave.retry }}
+				action={autosave.resolving ? undefined : { label: t`Retry`, onPress: autosave.retry }}
 			/>
-			{conflict ? (
-				<Button variant="secondary" size="sm" label={t`Use server version`} onPress={autosave.discard} />
+			{conflict && takeServer ? (
+				<Button
+					variant="secondary"
+					size="sm"
+					label={t`Use server version`}
+					loading={autosave.resolving}
+					onPress={() => void takeServer()}
+				/>
+			) : null}
+			{autosave.resolveFailed ? (
+				<Text variant="callout" color="dangerText" accessibilityRole="alert">
+					{t`The server version couldn't be loaded. Your text is kept; try again.`}
+				</Text>
 			) : null}
 		</View>
 	);

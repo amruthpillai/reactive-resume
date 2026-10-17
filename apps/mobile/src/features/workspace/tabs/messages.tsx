@@ -52,6 +52,7 @@ function Messages({ application, version, now }: WorkspaceTabProps) {
 				initial={readOnly ? (reply?.data.message ?? "") : workspace.data.message || (reply?.data.message ?? "")}
 				readOnly={readOnly}
 				onSave={(message) => workspace.save({ message })}
+				fetchServer={() => workspace.fetchConfirmed().then((data) => data.message)}
 			/>
 			{reply ? <ReplyCard key={reply.id} reply={reply} readOnly={readOnly} /> : null}
 			{reply && reply.data.changes.length > 0 ? (
@@ -72,10 +73,12 @@ type PasteBoxProps = {
 	initial: string;
 	readOnly: boolean;
 	onSave: (message: string) => Promise<SaveResult>;
+	/** The message in a freshly fetched, server-confirmed workspace. */
+	fetchServer: () => Promise<string>;
 };
 
 /** W15: the employer's message, kept with the application, and "Read it for me". */
-function PasteBox({ application, initial, readOnly, onSave }: PasteBoxProps) {
+function PasteBox({ application, initial, readOnly, onSave, fetchServer }: PasteBoxProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	// Kept on the device until the server has it, so a failed save survives leaving the tab.
@@ -83,7 +86,7 @@ function PasteBox({ application, initial, readOnly, onSave }: PasteBoxProps) {
 	const message = draft.value;
 	const generate = useGenerate(application.id);
 	const provider = useHasAIProvider().defaultProvider;
-	const autosave = useAutosave(readOnly ? initial : message, initial, onSave, draft);
+	const autosave = useAutosave(readOnly ? initial : message, initial, onSave, draft, fetchServer);
 	const label = useWorking(generate.isPending, workingSteps("reply"), t`Read it for me`);
 	const company = application.company;
 

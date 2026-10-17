@@ -411,8 +411,10 @@ scenario("round 3: a conflict kept with the draft survives reopening; nothing ov
 	drafts.write(blockedKey, { value: "other text", code: "CONFLICT" });
 	const discarded = mount([]);
 	discarded.autosave.update("other text", "server text");
-	discarded.autosave.discard(); // Use server version (the hook then resets the draft to the server copy)
-	drafts.clear(key);
+	await discarded.autosave.takeServerVersion(
+		async () => "server text",
+		() => drafts.clear(key),
+	);
 	discarded.autosave.update("server text", "server text");
 	await discarded.timers.advance(60_000);
 	assert.deepEqual(discarded.sent, []);
@@ -420,6 +422,84 @@ scenario("round 3: a conflict kept with the draft survives reopening; nothing ov
 	assert.equal(drafts.read(blockedKey), undefined);
 	assert.equal(drafts.read(key), undefined);
 	assert.equal(mount([]).shown.length, 0, "a later reopen shows nothing");
+});
+
+scenario("final round: Use server version waits for a confirmed copy, never the optimistic cache; a failed fetch stays blocked", async () => {
+	const timers = fakeTimers();
+	const sent = [];
+	const shown = [];
+	const autosave = createAutosave({
+		save: async (value) => {
+			sent.push(value);
+			return value === "mine" ? CONFLICT : OK;
+		},
+		onError: (block) => shown.push(block?.code ?? null),
+		delay: 2000,
+		retryDelay: 5000,
+		maxRetries: 3,
+		timers,
+	});
+	// The save published "mine" optimistically, then the server answered 409. Its refetch hasn't landed yet, so the
+	// cache (the field's baseline) still holds the optimistic "mine".
+	autosave.update("mine", "server");
+	await timers.advance(2000);
+	assert.deepEqual(shown, ["CONFLICT"]);
+	autosave.update("mine", "mine");
+
+	let confirm;
+	let draft = "mine";
+	const using = autosave.takeServerVersion(
+		() => new Promise((resolve) => (confirm = resolve)),
+		(server) => (draft = server),
+	);
+	// While the confirmed copy loads, nothing clears the block or sends: not the stale baseline, typing, Retry or leaving.
+	autosave.update("mine", "their edit");
+	autosave.update("mine, more", "their edit");
+	autosave.retry();
+	autosave.flush();
+	await timers.advance(60_000);
+	assert.deepEqual(sent, ["mine"]);
+	assert.deepEqual(shown, ["CONFLICT"], "still blocked");
+	assert.equal(draft, "mine");
+
+	confirm("their edit");
+	await using;
+	assert.equal(draft, "their edit", "the draft is the server's confirmed copy");
+	assert.deepEqual(shown, ["CONFLICT", null], "unblocked only after draft and baseline moved to it");
+	autosave.update("their edit", "their edit");
+	await timers.advance(60_000);
+	assert.deepEqual(sent, ["mine"], "the real server edit is never overwritten");
+	autosave.update("their edit, and mine", "their edit");
+	await timers.advance(2000);
+	assert.deepEqual(sent, ["mine", "their edit, and mine"], "typing after resolving saves normally");
+
+	const blocked = createAutosave({
+		save: async (value) => (sent.push(value), CONFLICT),
+		onError: (block) => shown.push(block?.code ?? null),
+		delay: 2000,
+		retryDelay: 5000,
+		maxRetries: 3,
+		timers,
+	});
+	sent.length = 0;
+	shown.length = 0;
+	blocked.block({ value: "mine", code: "CONFLICT" });
+	blocked.update("mine", "mine");
+	let reset = false;
+	await assert.rejects(
+		blocked.takeServerVersion(
+			async () => {
+				throw new TypeError("Network request failed");
+			},
+			() => (reset = true),
+		),
+	);
+	assert.equal(reset, false, "the draft is untouched when the server copy can't be loaded");
+	blocked.update("mine", "server");
+	await timers.advance(60_000);
+	blocked.dispose();
+	assert.deepEqual(sent, [], "a failed fetch stays blocked");
+	assert.deepEqual(shown, ["CONFLICT"]);
 });
 
 scenario("fix 2 + 3: device drafts persist; finishing a review clears only the submitted revision", () => {

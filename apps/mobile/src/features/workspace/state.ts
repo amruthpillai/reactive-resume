@@ -72,7 +72,7 @@ type AutosaveOptions = {
 	save: (value: string) => Promise<SaveResult>;
 	/** The server confirmed this exact value (clear its device draft). Never called for an optimistic or refetched copy. */
 	onSaved?: (value: string) => void;
-	/** Automatic saving stopped (show it; persist it when permanent), or null once a save succeeded or was discarded. */
+	/** Automatic saving stopped (show it; persist it when permanent), or null once a save succeeded or the server version replaced it. */
 	onError?: (block: SaveBlock | null) => void;
 	delay: number;
 	/** The first wait before retrying a transient failure; it doubles each time. */
@@ -85,7 +85,7 @@ type AutosaveOptions = {
 /**
  * Saves text a moment after typing stops, on `flush` (blur) and on `dispose` (leaving). A transient failure is retried
  * with exponential backoff up to `maxRetries` times, and new typing afterwards starts afresh. A permanent failure (4xx,
- * conflict) stops all automatic saving, new typing and leaving included, until the user's `retry` succeeds or `discard`
+ * conflict) stops all automatic saving, new typing and leaving included, until the user's `retry` succeeds or `takeServerVersion`
  * drops the draft; `block` restores that state from the device on reopen. A value already on its way is not sent twice.
  */
 export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxRetries, timers }: AutosaveOptions) {
@@ -95,6 +95,8 @@ export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxR
 	let failed: { value: string; attempts: number; stopped: boolean; permanent: boolean } | null = null;
 	let timer: unknown = null;
 	let disposed = false;
+	// "Use server version" is loading the confirmed copy: nothing is sent meanwhile.
+	let resolving = false;
 	const cancel = () => {
 		if (timer !== null) timers.clear(timer);
 		timer = null;
@@ -109,7 +111,7 @@ export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxR
 	};
 	function send(manual: boolean) {
 		cancel();
-		if (value === saved || value === inFlight) return;
+		if (resolving || value === saved || value === inFlight) return;
 		if (!manual && (failed?.permanent || (failed?.value === value && failed.stopped))) return;
 		const sending = value;
 		inFlight = sending;
@@ -140,7 +142,7 @@ export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxR
 			clearError();
 			schedule(delay);
 		},
-		/** Restores a permanent failure kept on the device: nothing is sent until `retry` or `discard`. */
+		/** Restores a permanent failure kept on the device: nothing is sent until `retry` or `takeServerVersion`. */
 		block(blocked: { value: string; code: string }) {
 			cancel();
 			failed = { value: blocked.value, attempts: maxRetries + 1, stopped: true, permanent: true };
@@ -148,11 +150,28 @@ export function createAutosave({ save, onSaved, onError, delay, retryDelay, maxR
 		},
 		flush: () => send(false),
 		/** The user's Retry: sends the current value now; the error stays until the server confirms it. */
-		retry: () => send(true),
-		/** "Use server version": stop waiting; the caller replaces the draft with the server copy. */
-		discard: () => {
+		retry: () => {
+			if (!resolving) send(true);
+		},
+		/**
+		 * "Use server version". `fetchServer` must return a copy the server confirmed (a fresh fetch, never the
+		 * optimistic cache). Saving stays blocked while it loads; once it arrives, `reset` puts it in the draft and the
+		 * baseline moves to it, and only then is the block cleared. A failed fetch leaves everything blocked and rejects.
+		 */
+		async takeServerVersion(fetchServer: () => Promise<string>, reset: (server: string) => void) {
+			if (resolving) return;
+			resolving = true;
 			cancel();
-			clearError();
+			try {
+				const server = await fetchServer();
+				reset(server);
+				value = server;
+				saved = server;
+				cancel();
+				clearError();
+			} finally {
+				resolving = false;
+			}
 		},
 		dispose() {
 			send(false);

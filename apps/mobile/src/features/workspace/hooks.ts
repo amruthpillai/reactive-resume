@@ -104,6 +104,18 @@ export function useWorkspace(applicationId: string) {
 		/** The latest copy, including saves still in flight, for a change that commits later (after an Undo toast). */
 		current,
 		save,
+		/**
+		 * A copy the server confirmed: queued writes finish, then a fresh fetch (`staleTime: 0`) replaces whatever the
+		 * cache holds, optimistic values included. Rejects when it can't be fetched.
+		 */
+		fetchConfirmed: async () => {
+			while (pending.size > 0) await Promise.allSettled(pending);
+			return queryClient.fetchQuery({
+				...orpc.career.workspace.queryOptions({ input: { applicationId } }),
+				queryKey,
+				staleTime: 0,
+			});
+		},
 		/** Finish queued writes before an action that reads the authoritative workspace. */
 		settled: async () => {
 			while (pending.size > 0) await Promise.allSettled(pending);
@@ -200,18 +212,21 @@ type TextDraft = ReturnType<typeof useDraft<string>>;
 /**
  * Saves text a moment after typing stops (2 s), on blur (`flush`) and when leaving. Transient failures retry up to 3
  * times (5, 10, 20 s). A permanent one (4xx, conflict) stops and sets `error`; with a `draft`, it is kept on the device
- * with the text, so reopening the screen (or the app) shows it again and still waits for `retry` or `discard`
- * ("Use server version"). The draft clears only when the server confirmed that exact value.
+ * with the text, so reopening the screen (or the app) shows it again and still waits for `retry` or
+ * `takeServerVersion`. The draft clears only when the server confirmed that exact value.
  */
 export function useAutosave(
 	value: string,
 	saved: string,
 	save: (value: string) => Promise<SaveResult>,
 	draft?: TextDraft,
+	/** The field's value in a freshly fetched, server-confirmed copy ("Use server version"). */
+	fetchServer?: () => Promise<string>,
 ) {
-	const latest = useRef({ save, draft, saved });
+	const [resolve, setResolve] = useState<"idle" | "loading" | "failed">("idle");
+	const latest = useRef({ save, draft });
 	useLayoutEffect(() => {
-		latest.current = { save, draft, saved };
+		latest.current = { save, draft };
 	});
 	const [error, setError] = useState<string | null>(null);
 	const [autosave] = useState(() =>
@@ -245,11 +260,23 @@ export function useAutosave(
 	return {
 		flush: autosave.flush,
 		retry: autosave.retry,
-		/** Drops the draft for the server's copy. */
-		discard: () => {
-			autosave.discard();
-			latest.current.draft?.reset(latest.current.saved);
-		},
+		/**
+		 * Replaces the draft with the server's confirmed copy (`fetchServer`, never the optimistic cache). Saving stays
+		 * blocked while it loads, and stays blocked with `resolveFailed` if it can't be loaded.
+		 */
+		takeServerVersion: fetchServer
+			? async () => {
+					setResolve("loading");
+					try {
+						await autosave.takeServerVersion(fetchServer, (server) => latest.current.draft?.reset(server));
+						setResolve("idle");
+					} catch {
+						setResolve("failed");
+					}
+				}
+			: undefined,
+		resolving: resolve === "loading",
+		resolveFailed: resolve === "failed",
 		error,
 	};
 }
