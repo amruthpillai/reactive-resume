@@ -422,8 +422,8 @@ function ChangeSet({ proposals, states, locked, onAccept, onReject }: ChangeSetP
 					<View style={{ flexDirection: "row", alignItems: "center", gap: space.s2 }}>
 						<View
 							style={{
-								width: 20,
-								height: 20,
+								minWidth: 20,
+								minHeight: 20,
 								borderRadius: radius.rPill,
 								alignItems: "center",
 								justifyContent: "center",

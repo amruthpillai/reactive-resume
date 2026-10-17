@@ -1,8 +1,27 @@
 import type { IconName } from "@/ui";
 import type { ReactNode } from "react";
-import { useSyncExternalStore } from "react";
+import { createContext, use, useSyncExternalStore } from "react";
 import { View } from "react-native";
 import { Icon, Text, useTheme } from "@/ui";
+
+const BannerAboveContext = createContext(false);
+
+/** Set by the tab shell while a banner sits above the tabs and has cleared the status bar. */
+export const BannerAbove = BannerAboveContext;
+
+/**
+ * Screen options for a tab's native stack. The status bar is already cleared under a banner (and under Career's own
+ * strip, `cleared`), but Android's edge-to-edge header pads it natively whatever the JS inset says; this turns that off.
+ */
+export function useTabStackOptions(cleared = false) {
+	const { colors, type } = useTheme();
+	const disableTopInsetApplication = use(BannerAboveContext) || cleared;
+	return {
+		headerLargeTitle: true,
+		headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
+		unstable_nativeProps: { headerConfig: { disableTopInsetApplication } },
+	};
+}
 
 /** Well-known keys; any string works. The tab shell shows every banner that is set, in the order they were first set. */
 export type AppBannerKey = "session" | "guest" | (string & {});

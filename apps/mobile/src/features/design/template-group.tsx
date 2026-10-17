@@ -116,7 +116,7 @@ const PREVIEW_LINGER_MS = 3000;
 function TemplateCard(props: TemplateCardProps) {
 	const { id, data, width, enabled, onRendered, selected, previewing, disabled, onPreview, onApply } = props;
 	const { t } = useLingui();
-	const { colors, fonts, radius, space, shadows } = useTheme();
+	const { colors, fonts, motion, radius, space, shadows } = useTheme();
 	const session = useSession();
 	const [held, setHeld] = useState(false);
 	const preview = usePreview(enabled ? data : null, id, {
@@ -175,7 +175,7 @@ function TemplateCard(props: TemplateCardProps) {
 					source={{ uri: thumbnail ?? `${session.server}/templates/jpg/${id}.jpg` }}
 					contentFit="cover"
 					contentPosition="top"
-					transition={200}
+					transition={motion.d2}
 					style={{ flex: 1 }}
 				/>
 				{selected ? (

@@ -1,0 +1,43 @@
+{
+	"cli": { "version": ">= 18.0.0", "appVersionSource": "remote" },
+	"build": {
+		"base": {
+			"node": "24.22.0",
+			"pnpm": "12.11.2",
+			"env": { "EXPO_NO_TELEMETRY": "1" }
+		},
+		"development": {
+			"extends": "base",
+			"environment": "development",
+			"developmentClient": true,
+			"distribution": "internal"
+		},
+		"preview": {
+			"extends": "base",
+			"environment": "preview",
+			"distribution": "internal"
+		},
+		"production": {
+			"extends": "base",
+			"environment": "production",
+			"distribution": "store",
+			"autoIncrement": true
+		}
+	},
+	"submit": {
+		"production": {
+			"ios": {
+				"appleTeamId": "654ASRW868",
+				"ascAppId": "0000000000",
+				"ascApiKeyPath": "/Users/amruth/.config/rxresu/asc-api-key.p8",
+				"ascApiKeyId": "A3C24C84AK",
+				"ascApiKeyIssuerId": "2f5e6721-4612-4d0f-9921-db83f3c51053"
+			},
+			"android": {
+				"serviceAccountKeyPath": "/Users/amruth/.config/rxresu/play-service-account.json",
+				"track": "internal",
+				"releaseStatus": "draft"
+			}
+		}
+	}
+}

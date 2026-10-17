@@ -3,11 +3,13 @@ import { Stack, usePathname, useRouter } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { routes } from "@/routes";
+import { useTabStackOptions } from "@/shell/app-banner";
 import { Button, useTheme } from "@/ui";
 
 export default function CareerLayout() {
 	const { t } = useLingui();
-	const { colors, type, space } = useTheme();
+	const { colors, space } = useTheme();
+	const stackOptions = useTabStackOptions(true);
 	const pathname = usePathname();
 	const router = useRouter();
 	const tabs = [
@@ -34,14 +36,8 @@ export default function CareerLayout() {
 					))}
 				</ScrollView>
 			</View>
-			<Stack
-				screenOptions={{
-					headerLargeTitle: true,
-					headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
-					// The screens below are plain views, not the header's scroll view: a transparent header covers them.
-					headerTransparent: false,
-				}}
-			/>
+			{/* Plain content needs an opaque header; SafeAreaView already clears the status bar. */}
+			<Stack screenOptions={{ ...stackOptions, headerTransparent: false }} />
 		</SafeAreaView>
 	);
 }
