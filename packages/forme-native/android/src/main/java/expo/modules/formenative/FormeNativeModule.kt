@@ -4,6 +4,7 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.cancel
 
@@ -12,7 +13,7 @@ class FormeNativeModule : Module() {
   private val dispatcher = Executors.newSingleThreadExecutor { task ->
     Thread(task, "forme-native")
   }.asCoroutineDispatcher()
-  private val scope = CoroutineScope(dispatcher)
+  private val scope = CoroutineScope(dispatcher + SupervisorJob())
   private external fun execute(input: ByteArray, text: ByteArray, subset: Boolean): Array<ByteArray>
 
   override fun definition() = ModuleDefinition {
