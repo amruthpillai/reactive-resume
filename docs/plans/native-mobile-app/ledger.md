@@ -31,7 +31,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
+| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | REVIEW  | briefs/W5.md; JS-only                                                               |
 | M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | REVIEW  | briefs/W5.md; JS-only                                                               |
 | M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | RUNNING | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | REVIEW  | briefs/W4.md; JS-only                                                               |
@@ -177,3 +177,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: Launched M3-T5, M4-T3, M6-T2 (JS-only). Eight builders active; JS-only tasks do not compile native code, so CPU/disk stay manageable.
 - 2026-10-17: M2-T1 FIXED 5. Found that Hermes lacks `Intl.PluralRules` (every Lingui plural crashes on iOS launch). Coordinator approved `@formatjs/intl-pluralrules` plus its strict Hermes prerequisites as an addition to §1.4; M2-T1 adds them in `src/polyfills.ts` and records an Intl capability matrix.
 - 2026-10-17: M4-T3 done (review `5ed4c4c0`); M7-T2 done (review `7f77db95`). Coordinator integration list (after M2-T2): mount `DocumentMenu({ id })` in builder chrome; tablet search as a form sheet; ATS entry point beside Search; M6-T3 honours `?thread=`/`?ask=` on the assistant route.
+- 2026-10-17: M6-T3 done (review `cce125a4`). Integration for the coordinator: Page tab swaps `draft.data` for `useMarkedResumeData(id, draft.data).data` and renders `ProposedEditsCaption`; M3-T2 `onCopiedForJob` opens `routes.assistant(id)` with `prepare=1`; M6-T2 Coach seam renders `ChatView`.
