@@ -1,8 +1,16 @@
 // The preview pipeline's contract (M3-T4 implements it): draft data in, rasterised pages and the page map out.
 // Renders run on the device through @reactive-resume/pdf/native and @reactive-resume/forme-native.
+import type { ResumeDocument } from "@reactive-resume/pdf/document";
 import type { PageMap } from "@reactive-resume/pdf/page-map";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Template } from "@reactive-resume/schema/templates";
+import type { ComponentProps } from "react";
+
+/**
+ * `ResumeRenderOptions` from packages/pdf (for example `includeCoverLetterHeader` for letters). No public entry exports
+ * it by name yet, so it is read off `ResumeDocument`'s props; switch to the named type once `./native` exports it.
+ */
+export type ResumeRenderOptions = NonNullable<ComponentProps<typeof ResumeDocument>["renderOptions"]>;
 
 export type RenderRequest = {
 	/** Increases with every request. The scheduler drops a result when a newer request has been made. */
@@ -10,6 +18,8 @@ export type RenderRequest = {
 	data: ResumeData;
 	/** Renders with another template than `data.metadata.template` (Design → Template thumbnails). */
 	template?: Template | undefined;
+	/** Passed through to the renderer unchanged. */
+	renderOptions?: ResumeRenderOptions | undefined;
 	/** A field has focus: the debounce is 250 ms instead of 100 ms (the web values). */
 	focused?: boolean | undefined;
 	/** Rasterise only these zero-based pages; all pages when omitted. */

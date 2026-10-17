@@ -22,6 +22,8 @@ const config: ExpoConfig = {
 	android: {
 		package: "me.rxresu.app",
 		predictiveBackGestureEnabled: false,
+		// Added by a dependency's manifest; the app never draws over other apps.
+		blockedPermissions: ["android.permission.SYSTEM_ALERT_WINDOW"],
 		intentFilters: [
 			{
 				action: "VIEW",
@@ -50,19 +52,13 @@ const config: ExpoConfig = {
 		"expo-system-ui",
 		"expo-status-bar",
 		["expo-splash-screen", { backgroundColor: "#F8F7F3", dark: { backgroundColor: "#100F0C" } }],
-		[
-			"expo-image-picker",
-			{
-				photosPermission: "Reactive Resume uses your photos to set the picture on your resume.",
-				cameraPermission: false,
-				microphonePermission: false,
-			},
-		],
+		["expo-image-picker", { photosPermission: "Reactive Resume uses your photos to set the picture on your resume." }],
 		[
 			"expo-audio",
 			{ microphonePermission: "Reactive Resume records your answers when you practise for an interview." },
 		],
 		"expo-notifications",
+		"@react-native-community/datetimepicker",
 	],
 	extra: {
 		eas: { projectId: "5830280e-e1ba-45b7-b9c9-ba048fa3bd4d" },

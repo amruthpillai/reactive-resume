@@ -40,7 +40,9 @@ export type Tokens = {
 };
 
 const serverKey = "server";
-const tokensKey = (server: string) => `tokens.${server.replace(/[^a-z0-9]/gi, "_")}`;
+// SecureStore keys allow only `[A-Za-z0-9._-]`. Hex of the origin's UTF-8 bytes is collision-free within that set.
+const tokensKey = (server: string) =>
+	`tokens.${Array.from(new TextEncoder().encode(server), (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
 // Refresh this long before the access token expires, so a request never leaves with a token about to lapse.
 const expirySkewSeconds = 60;
 
@@ -82,24 +84,47 @@ export async function restoreSession(): Promise<void> {
 	}
 }
 
-/** Stores tokens for the current server; null deletes them. */
+/** Stores tokens for the current server (a refresh); null deletes them. */
 export async function saveTokens(next: Tokens | null): Promise<void> {
-	tokens = next;
-	const key = tokensKey(session.server);
+	const { server } = session;
+	const key = tokensKey(server);
 	if (next) await SecureStore.setItemAsync(key, JSON.stringify(next));
 	else await SecureStore.deleteItemAsync(key);
+	// The server changed while writing: these tokens belong to the old one and must not become current.
+	if (session.server !== server) return;
+	tokens = next;
 	setSession({ ...session, status: next ? "signed-in" : "signed-out" });
 }
 
 /**
- * Signs in to `server` (an origin) in the system browser and stores the tokens.
- * Resolves true when signed in and false when the user cancelled; throws on discovery, registration or token errors.
+ * Makes `server` the current server with its tokens, in one step: tokens are written first, then the server, then
+ * both switch in memory together, so no request can pair one server's token with another server.
+ */
+async function switchSession(server: string, next: Tokens): Promise<void> {
+	await SecureStore.setItemAsync(tokensKey(server), JSON.stringify(next));
+	await SecureStore.setItemAsync(serverKey, server);
+	tokens = next;
+	refreshing = null;
+	setSession({ status: "signed-in", server });
+}
+
+/**
+ * Signs in to `server` (an origin) in the system browser, then switches to it with `switchSession`.
+ * Until that last step nothing changes: a cancelled or failed sign-in leaves the current server and tokens as they
+ * were. Resolves true when signed in and false when the user cancelled; throws on discovery, registration or token
+ * errors.
  */
 export async function signIn(server: string): Promise<boolean> {
 	const origin = new URL(server).origin;
-	await SecureStore.setItemAsync(serverKey, origin);
-	setSession({ status: "signed-out", server: origin });
-	throw new Error("signIn is not implemented yet (M3-T1).");
+	const next = await authorize(origin);
+	if (!next) return false;
+	await switchSession(origin, next);
+	return true;
+}
+
+// M3-T1: discovery, DCR, PKCE in the system browser and the code exchange. Null when the user cancels.
+function authorize(_origin: string): Promise<Tokens | null> {
+	return Promise.reject(new Error("signIn is not implemented yet (M3-T1)."));
 }
 
 /** Revokes the refresh token on the server (best effort) and deletes the stored tokens. The server is kept. */

@@ -9,6 +9,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { restoreSession } from "@/auth/session";
 import { i18n, initI18n } from "@/i18n";
@@ -83,14 +84,16 @@ export default function RootLayout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<SafeAreaProvider>
-				<QueryClientProvider client={queryClient}>
-					<I18nProvider i18n={i18n}>
-						<BottomSheetModalProvider>
-							<RootStack />
-							<Toaster />
-						</BottomSheetModalProvider>
-					</I18nProvider>
-				</QueryClientProvider>
+				<KeyboardProvider>
+					<QueryClientProvider client={queryClient}>
+						<I18nProvider i18n={i18n}>
+							<BottomSheetModalProvider>
+								<RootStack />
+								<Toaster />
+							</BottomSheetModalProvider>
+						</I18nProvider>
+					</QueryClientProvider>
+				</KeyboardProvider>
 			</SafeAreaProvider>
 		</GestureHandlerRootView>
 	);
