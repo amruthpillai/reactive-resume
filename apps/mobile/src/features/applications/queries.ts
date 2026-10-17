@@ -1,3 +1,4 @@
+import type { Application } from "./types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/api/client";
 import { getServer, useSession } from "@/auth/session";
@@ -40,12 +41,36 @@ export function useInvalidateApplications() {
 
 export function useApplicationMutations() {
 	const invalidate = useInvalidateApplications();
-	// Settled also refreshes after a lost reply; no optimistic state can hide a failed write.
+	const queryClient = useQueryClient();
+	// Settlement refetches authoritative state, including after a lost reply or optimistic rollback.
 	const onSettled = () => {
 		void invalidate();
 	};
 	const create = useMutation({ ...orpc.applications.create.mutationOptions(), onSettled });
-	const update = useMutation({ ...orpc.applications.update.mutationOptions(), onSettled });
+	const update = useMutation({
+		...orpc.applications.update.mutationOptions(),
+		onMutate: async (input) => {
+			const listKey = applicationsListQueryKey();
+			await queryClient.cancelQueries({ queryKey: listKey });
+			const previous = queryClient.getQueryData<Application[]>(listKey);
+			queryClient.setQueryData<Application[]>(listKey, (rows) =>
+				rows?.map((row) =>
+					row.id === input.id
+						? {
+								...row,
+								...(input.status ? { status: input.status } : {}),
+								...(input.closedReason !== undefined ? { closedReason: input.closedReason } : {}),
+							}
+						: row,
+				),
+			);
+			return { previous, listKey };
+		},
+		onError: (_error, _input, context) => {
+			if (context?.previous) queryClient.setQueryData(context.listKey, context.previous);
+		},
+		onSettled,
+	});
 	const remove = useMutation({ ...orpc.applications.delete.mutationOptions(), onSettled });
 	const bulkUpdate = useMutation({ ...orpc.applications.bulkUpdate.mutationOptions(), onSettled });
 	const bulkDelete = useMutation({ ...orpc.applications.bulkDelete.mutationOptions(), onSettled });

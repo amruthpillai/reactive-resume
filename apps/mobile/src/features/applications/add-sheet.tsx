@@ -1,5 +1,6 @@
 import type { RouterOutput } from "@/api/client";
 import { useLingui } from "@lingui/react/macro";
+import { ORPCError } from "@orpc/client";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -97,12 +98,20 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 		try {
 			await work(request.signal);
 		} catch (cause) {
-			if (active.current && !request.signal.aborted && getServer() === session.server)
+			if (active.current && !request.signal.aborted && getServer() === session.server) {
+				if (action === "read" && mode === "link" && cause instanceof ORPCError && cause.code === "POSTING_UNREADABLE") {
+					setSourceUrl(input.trim());
+					setMode("text");
+					setInput("");
+					setDescription("");
+					setParsed(null);
+				}
 				setError(
 					action === "save"
 						? t`Could not confirm the save. Check Applications before retrying to avoid a duplicate.`
 						: applicationError(cause),
 				);
+			}
 		} finally {
 			lock.current = false;
 			if (active.current) setBusy(null);

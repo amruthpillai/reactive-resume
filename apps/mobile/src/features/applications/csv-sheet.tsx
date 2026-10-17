@@ -20,16 +20,15 @@ import { applicationError } from "./error";
 import { useApplicationMutations } from "./queries";
 import { Banner, Button, Segmented, SelectSheet, Sheet, Text, TextArea, TextField, useTheme } from "@/ui";
 
-/** Cache files contain personal data: remove them after native sharing finishes. */
+/** Recipients can read after shareAsync resolves; sweep task-owned files on the next export. */
 async function shareCsv(text: string, name: string) {
+	for (const file of Paths.cache.list()) {
+		if (file instanceof File && /^applications(?:-skipped)?-\d+\.csv$/.test(file.name)) file.delete();
+	}
 	if (!(await Sharing.isAvailableAsync())) throw new Error("Sharing unavailable");
 	const file = new File(Paths.cache, `${name}-${Date.now()}.csv`);
-	try {
-		await file.write(text);
-		await Sharing.shareAsync(file.uri, { mimeType: "text/csv", UTI: "public.comma-separated-values-text" });
-	} finally {
-		if (file.exists) file.delete();
-	}
+	await file.write(text);
+	await Sharing.shareAsync(file.uri, { mimeType: "text/csv", UTI: "public.comma-separated-values-text" });
 }
 
 type ApplicationsCsvSheetProps = { applications: Application[]; filtered: Application[]; onClose: () => void };
@@ -134,7 +133,9 @@ export function ApplicationsCsvSheet({ applications, filtered, onClose }: Applic
 	const mapped = table ? mapCsvToApplications(table, mapping) : null;
 	const duplicate = mapping.filter(Boolean).length !== new Set(mapping.filter(Boolean)).size;
 	const validMapping = mapping.includes("company") && mapping.includes("role") && !duplicate;
-	const validRows = mapped && mapped.rows.length > 0 && mapped.rows.length <= 500 && !mapped.invalidValues.length;
+	const importable = mapped?.rows.slice(0, 500) ?? [];
+	const overflow = (mapped?.rows.length ?? 0) - importable.length;
+	const validRows = importable.length > 0 && !mapped?.invalidValues.length;
 	const validRange = (!from || !!parseDateOnly(from)) && (!to || !!parseDateOnly(to)) && (!from || !to || from <= to);
 	const selected = validRange ? selectApplicationsForExport(applications, filtered, { scope, from, to }) : [];
 	const invalidRows =
@@ -161,7 +162,7 @@ export function ApplicationsCsvSheet({ applications, filtered, onClose }: Applic
 						{imported !== null ? (
 							<>
 								<Text variant="heading">{t`Import complete`}</Text>
-								<Text>{t`Imported ${imported} applications.`}</Text>
+								<Text>{t`Imported ${imported} applications. ${overflow} rows left out because only the first 500 import at once.`}</Text>
 								<Button label={t`Open Applications`} onPress={onClose} />
 							</>
 						) : (
@@ -206,17 +207,17 @@ export function ApplicationsCsvSheet({ applications, filtered, onClose }: Applic
 												message={t`Map Company and Role exactly once. Remove duplicate field matches.`}
 											/>
 										)}
-										<Text>{t`${mapped.rows.length} rows ready. ${mapped.skipped} rows missing Company or Role will be skipped. ${mapped.contactsSkipped} invalid contacts will be left out.`}</Text>
+										<Text>{t`${importable.length} rows ready. ${mapped.skipped} rows missing Company or Role will be skipped. ${mapped.contactsSkipped} invalid contacts will be left out.`}</Text>
 										{mapped.contactsSkipped > 0 && (
 											<Banner
 												tone="warn"
 												message={t`Contacts with an invalid email or no name are left out; their applications still import.`}
 											/>
 										)}
-										{mapped.rows.length > 500 && (
+										{overflow > 0 && (
 											<Banner
 												tone="warn"
-												message={t`Import accepts up to 500 applications at once. Split this CSV before importing.`}
+												message={t`Only the first 500 rows import at once, leaving out ${overflow}. Split the file to import the rest.`}
 											/>
 										)}
 										{mapped.invalidValues.map((value, index) => (
@@ -236,7 +237,7 @@ export function ApplicationsCsvSheet({ applications, filtered, onClose }: Applic
 												void run(async () => {
 													if (!validMapping || !validRows) return;
 													try {
-														const result = await importCsv.mutateAsync({ items: mapped.rows });
+														const result = await importCsv.mutateAsync({ items: importable });
 														if (active.current) setImported(result.imported);
 													} catch {
 														if (active.current)

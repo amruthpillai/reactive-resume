@@ -14,6 +14,8 @@ let provider = { hasAIProvider: false, isLoading: false, isUnavailable: false, e
 let documents = [], applications = [];
 const parsed = { company: "Page company", role: "Page role", location: "Remote", salary: "", sourceUrl: "https://example.invalid/job", jobDescription: "Posting", requirements: ["TypeScript"], postingSource: { method: "builtin", format: "text", truncated: false, completeness: "unknown" }, filledBy: "page", enrichmentWarning: null };
 const files = new Map();
+const cache = new Map();
+const { ORPCError } = requireMobile("@orpc/client");
 const operation = (name) => ({ key: () => ["applications", name], queryOptions: () => ({ queryKey: ["applications", name] }), mutationOptions: () => ({ operation: name }) });
 const env = {
  tag,
@@ -27,21 +29,27 @@ const env = {
   webAccess: { status: { queryOptions: () => ({ queryKey: ["web"] }) } },
  },
  query(options) { return { data: options.queryKey[0] === "documents" ? documents : options.queryKey[0] === "web" ? { search: true } : applications, isSuccess: true, isPending: false, isError: false, refetch: async () => {} }; },
- mutation(options) { return { mutateAsync: async (input) => { calls.push([options.operation, input]); try {
+ mutation(options) { return { mutateAsync: async (input) => { let context; try {
+  context = await options.onMutate?.(input); calls.push([options.operation, input]);
   if (holding) await holding; if (failed) throw new Error("Synthetic transport failure");
   if (options.operation === "create") return "new-id";
   if (options.operation === "import") return { imported: input.items.length };
   return { updated: input.ids?.length, deleted: input.ids?.length };
- } finally { options.onSettled?.(); } } }; },
- queryClient: { invalidateQueries: async () => {} },
+ } catch (error) { options.onError?.(error, input, context); throw error; } finally { options.onSettled?.(); } } }; },
+ queryClient: {
+  invalidateQueries: async () => {}, cancelQueries: async () => {},
+  getQueryData: (key) => cache.get(JSON.stringify(key)),
+  setQueryData(key, update) { const index = JSON.stringify(key); const previous = cache.get(index); cache.set(index, typeof update === "function" ? update(previous) : update); },
+ },
  client: { applications: { ai: {
-  parsePosting: async (input) => { calls.push(["parse", input]); if (holding) await holding; if (failed) throw new Error("Unreadable"); return parsed; },
+  parsePosting: async (input) => { calls.push(["parse", input]); if (holding) await holding; if (failed) throw failed instanceof Error ? failed : new Error("Unreadable"); return parsed; },
   autofill: async (input) => { calls.push(["fill", input]); return { company: "AI company", role: "AI role", location: "Remote", salary: "" }; },
   searchPostings: async (input) => { calls.push(["search", input]); return [{ title: "Role", description: "Description", url: "https://example.invalid/job" }]; },
  } } },
  router: { push: (href) => calls.push(["navigate", href]) },
  File: class {
   constructor(...parts) { this.uri = parts.join("/"); }
+  get name() { return this.uri.split("/").at(-1); }
   get size() { return (files.get(this.uri) ?? "").length; }
   get exists() { return files.has(this.uri); }
   async write(value) { files.set(this.uri, value); }
@@ -51,6 +59,7 @@ const env = {
  async pick() { files.set("picked", csvText); return { canceled: false, assets: [{ uri: "picked" }] }; },
  async share(uri) { calls.push(["share", files.get(uri)]); },
 };
+env.cacheFiles = () => [...files.keys()].filter((uri) => uri.startsWith("cache/")).map((uri) => new env.File(uri));
 globalThis.__m5 = env;
 const ui = ["Banner", "Button", "ChipInput", "ListRow", "Segmented", "SelectSheet", "Sheet", "Text", "TextArea", "TextField", "Screen", "Skeleton", "Icon", "IconButton", "Switch", "EmptyState"];
 const mockSources = {
@@ -65,7 +74,7 @@ const mockSources = {
  "expo-router": "exports.router=globalThis.__m5.router;",
  "@/routes": "exports.routes={application:(id)=>'/applications/'+id,signIn:()=>'/sign-in'};",
  "expo-document-picker": "exports.getDocumentAsync=globalThis.__m5.pick;",
- "expo-file-system": "exports.File=globalThis.__m5.File;exports.Paths={cache:'cache'};",
+ "expo-file-system": "exports.File=globalThis.__m5.File;exports.Paths={cache:{toString:()=> 'cache',list:()=>globalThis.__m5.cacheFiles()}};",
  "expo-sharing": "exports.isAvailableAsync=async()=>true;exports.shareAsync=globalThis.__m5.share;",
  "@/ui": ui.map((name) => `exports.${name}=${JSON.stringify(name)};`).join("") + "exports.useTheme=()=>({colors:{},space:{s2:8,s3:12,s4:16,s12:48},radius:{rPill:999},size:{hit:44,icon:{meta:16}}});",
 };
@@ -91,6 +100,7 @@ const csv = requireMobile("./src/features/applications/csv.ts");
 const list = requireMobile("./src/features/applications/list.ts");
 const { AddApplicationSheet } = requireMobile("./src/features/applications/add-sheet.tsx");
 const { ApplicationsCsvSheet } = requireMobile("./src/features/applications/csv-sheet.tsx");
+const { applicationError } = requireMobile("./src/features/applications/error.ts");
 const queries = requireMobile("./src/features/applications/queries.ts");
 const { ApplicationsListScreen } = requireMobile("./src/features/applications/list-screen.tsx");
 const app = (id, status = "saved", patch = {}) => ({ id, status, role: "Engineer", company: "Fictional", contacts: [], tags: [], activity: [], appliedAt: new Date("2026-01-01"), createdAt: new Date("2026-01-01"), updatedAt: new Date("2026-01-01"), ...patch });
@@ -106,7 +116,7 @@ const edit = (owner, type, label, value) => { control(owner, type, label).onChan
 const press = (owner, label) => { const button = control(owner, "Button", label); assert.ok(!button.disabled, `Disabled ${label}`); button.onPress(); owner.render(); };
 const tick = async () => { for (let i = 0; i < 8; i++) await new Promise((resolve) => setImmediate(resolve)); };
 let checks = 0;
-const check = async (name, work) => { await work(); checks++; console.log(`PASS ${name}`); };
+const check = async (name, work) => { if (process.env.M5_SCENARIO && !name.includes(process.env.M5_SCENARIO)) return; await work(); checks++; console.log(`PASS ${name}`); };
 const form = () => mount(AddApplicationSheet, { onClose() {} });
 const fillManual = (owner) => { press(owner, "Fill details manually"); edit(owner, "TextField", "Company", "Fictional"); edit(owner, "TextField", "Role / title", "Engineer"); };
 await check("CSV BOM, multiline quoting and explicit column mapping", () => {
@@ -144,22 +154,35 @@ await check("next interview precedence and exclusion of hidden bulk selections",
  assert.deepEqual(groups[0].data.map((app) => app.id), ["two", "one"]);
  assert.deepEqual(list.visibleSelection(groups, new Set(["interview"]), new Set(["one", "saved", "hidden"])), ["saved"]);
 });
-await check("export date scope and server-isolated list/detail keys", () => {
+await check("export date scope and server-isolated list/detail keys with optimistic rollback", async () => {
  const apps = [app("old"), app("new", "closed", { appliedAt: new Date("2026-10-01") })];
  assert.deepEqual(csv.selectApplicationsForExport(apps, [apps[0]], { scope: "all", from: "2026-09-01" }).map((app) => app.id), ["new"]);
  assert.notDeepEqual(queries.applicationsListQueryKey("https://one.invalid"), queries.applicationsListQueryKey("https://two.invalid"));
  assert.notDeepEqual(queries.applicationDetailQueryKey("id", "https://one.invalid"), queries.applicationDetailQueryKey("id", "https://two.invalid"));
+ const key = queries.applicationsListQueryKey(); const original = [app("optimistic"), app("untouched")]; cache.set(JSON.stringify(key), original);
+ const owner = mount(queries.useApplicationMutations); let resolve; holding = new Promise((done) => { resolve = done; });
+ const pending = owner.tree.update.mutateAsync({ id: "optimistic", status: "closed", closedReason: "withdrew" }); await tick();
+ assert.equal(env.queryClient.getQueryData(key)[0].status, "closed"); assert.equal(env.queryClient.getQueryData(key)[0].closedReason, "withdrew"); assert.equal(env.queryClient.getQueryData(key)[1], original[1]);
+ failed = true; resolve(); holding = null; await assert.rejects(pending); failed = false; assert.deepEqual(env.queryClient.getQueryData(key), original);
+ await owner.tree.update.mutateAsync({ id: "optimistic", status: "applied" }); assert.equal(env.queryClient.getQueryData(key)[0].status, "applied"); owner.unmount();
+
 });
 await check("link parsing works without AI and enters editable review", async () => {
  calls = []; const owner = form(); edit(owner, "TextField", "Job posting link", parsed.sourceUrl); press(owner, "Read posting"); await tick(); owner.render();
  assert.equal(control(owner, "TextField", "Company").value, "Page company"); assert.equal(calls[0][0], "parse"); owner.unmount();
+ const unreadable = form(); edit(unreadable, "TextField", "Job posting link", parsed.sourceUrl); failed = new ORPCError("POSTING_UNREADABLE", { status: 422 }); press(unreadable, "Read posting"); await tick(); unreadable.render(); failed = false;
+ assert.equal(control(unreadable, "Segmented").value, "text"); assert.equal(control(unreadable, "TextArea", "Pasted description").value, ""); assert.equal(control(unreadable, "Banner").message, "That link couldn't be read. Paste the posting text instead.");
+ fillManual(unreadable); press(unreadable, "Save job"); await tick(); assert.equal(calls.findLast(([name]) => name === "create")[1].sourceUrl, parsed.sourceUrl); unreadable.unmount();
+ assert.equal(applicationError(new ORPCError("SEARCH_FAILED", { status: 502 })), "Job search couldn't be reached. Try again or paste a posting link.");
+ assert.equal(applicationError(new ORPCError("SEARCH_UNAVAILABLE", { status: 503 })), "Job search isn't configured on this server.");
+
 });
 await check("manual save blocks double tap and sends application date/letter", async () => {
  calls = []; documents = [{ id: "letter", type: "letter", name: "Fictional letter" }];
  const owner = form(); fillManual(owner); control(owner, "SelectSheet", "Stage").onChange("applied"); owner.render();
  edit(owner, "TextField", "Application date", "2026-10-17"); control(owner, "SelectSheet", "Cover letter submitted (optional)").onChange("letter"); owner.render();
  let resolve; holding = new Promise((done) => { resolve = done; });
- const save = control(owner, "Button", "Save job").onPress; save(); save(); assert.equal(calls.filter(([name]) => name === "create").length, 1);
+ const save = control(owner, "Button", "Save job").onPress; save(); save(); await tick(); assert.equal(calls.filter(([name]) => name === "create").length, 1);
  resolve(); holding = null; await tick();
  const payload = calls.find(([name]) => name === "create")[1];
  assert.equal(payload.stageEnteredAt, "2026-10-17"); assert.equal(payload.coverLetterId, "letter"); assert.ok(calls.some(([name]) => name === "navigate")); owner.unmount();
@@ -184,17 +207,21 @@ await check("search waits for selection and autofill preserves edited values", a
  fillManual(owner); edit(owner, "TextArea", "Saved description", "Fictional description"); press(owner, "Fill empty fields with AI"); await tick(); owner.render();
  assert.equal(control(owner, "TextField", "Company").value, "Fictional"); assert.equal(control(owner, "TextField", "Location").value, "Remote"); owner.unmount();
 });
-await check("CSV picker requires mapping and blocks duplicate matches and >500 rows", async () => {
+await check("CSV picker requires mapping and imports first 500 with overflow report", async () => {
  csvText = "Company,Role\nFictional,Engineer"; calls = [];
  const owner = mount(ApplicationsCsvSheet, { applications: [], filtered: [], onClose() {} }); press(owner, "Upload .csv"); await tick(); owner.render(); assert.equal(files.has("picked"), false); assert.equal(calls.filter(([name]) => name === "import").length, 0);
  control(owner, "SelectSheet", "Column 2: Role").onChange("company"); owner.render(); assert.equal(control(owner, "Button", "Import applications").disabled, true);
  control(owner, "SelectSheet", "Column 2: Role").onChange("role"); owner.render(); press(owner, "Import applications"); await tick(); owner.render(); assert.equal(calls.filter(([name]) => name === "import").length, 1); owner.unmount();
- const large = mount(ApplicationsCsvSheet, { applications: [], filtered: [], onClose() {} }); edit(large, "TextArea", "CSV data", "Company,Role\n" + Array.from({ length: 501 }, (_, i) => `Fictional ${i},Engineer`).join("\n")); press(large, "Review columns"); assert.equal(control(large, "Button", "Import applications").disabled, true); large.unmount();
+ const large = mount(ApplicationsCsvSheet, { applications: [], filtered: [], onClose() {} }); edit(large, "TextArea", "CSV data", "Company,Role\n" + Array.from({ length: 501 }, (_, i) => `Fictional ${i},Engineer`).join("\n")); press(large, "Review columns"); assert.equal(control(large, "Button", "Import applications").disabled, false);
+ assert.ok(elements(large.tree).some((node) => node.type === "Banner" && node.props.message.includes("leaving out 1")));
+ press(large, "Import applications"); await tick(); large.render(); assert.equal(calls.findLast(([name]) => name === "import")[1].items.length, 500);
+ assert.ok(elements(large.tree).some((node) => node.type === "Text" && String(node.props.children).includes("1 rows left out"))); large.unmount();
 });
-await check("CSV share exports filtered scope and cleans personal-data cache", async () => {
- const apps = [app("one"), app("two")]; calls = [];
+await check("CSV share retains readable file and sweeps stale exports next time", async () => {
+ const apps = [app("one"), app("two")]; calls = []; files.clear();
  const owner = mount(ApplicationsCsvSheet, { applications: apps, filtered: [apps[0]], onClose() {} }); control(owner, "Segmented").onChange("export"); owner.render(); press(owner, "Share CSV"); await tick();
- assert.equal(csv.parseCsv(calls.find(([name]) => name === "share")[1]).length, 2); assert.equal(files.size, 0); owner.unmount();
+ assert.equal(csv.parseCsv(calls.find(([name]) => name === "share")[1]).length, 2); assert.equal(files.size, 1);
+ const previous = [...files.keys()][0]; files.set("cache/unrelated.txt", "keep"); await new Promise((resolve) => setTimeout(resolve, 2)); owner.render(); press(owner, "Share CSV"); await tick(); assert.equal(files.has(previous), false); assert.equal(files.has("cache/unrelated.txt"), true); assert.equal(files.size, 2); files.clear(); owner.unmount();
 });
 await check("bulk close sends explicit reason; delete waits for confirmation", async () => {
  applications = [app("one"), app("two")]; calls = [];
