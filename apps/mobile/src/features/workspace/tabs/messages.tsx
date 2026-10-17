@@ -4,15 +4,17 @@ import type { SavedData, SavedItem } from "../hooks";
 import type { WorkspaceTabProps } from "../shell";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import * as Clipboard from "expo-clipboard";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { View } from "react-native";
-import { latest, useDebouncedSave, useDraft, useGenerate, useSavedItems, useWorkspace } from "../hooks";
+import { latest, useAutosave, useDraft, useGenerate, useSavedItems, useWorkspace } from "../hooks";
 import { isFixedChange, openChanges } from "../logic";
 import { AiNotice, Block, CheckRow, Pill, useWorking, workingSteps } from "../parts";
 import { WorkspaceScreen } from "../shell";
-import { orpc } from "@/api/client";
+import { createPendingRegistry } from "../state";
+import { client, orpc } from "@/api/client";
+import { useSession } from "@/auth/session";
 import { useHasAIProvider } from "@/features/ai/providers";
 import { useUserTime } from "@/features/application-detail/hooks";
 import { describeNextStep, getNextStep } from "@/features/applications/next-step";
@@ -23,6 +25,9 @@ import { withUndo } from "@/features/career/undo";
 import { Banner, Button, Icon, Skeleton, Text, TextArea, showToast, useTheme } from "@/ui";
 
 type ReplyItem = SavedItem & { data: SavedData<"reply"> };
+
+/** Applies waiting on their Undo toast, by server and reply id; they outlive the Messages screen. */
+const replyApplies = createPendingRegistry<{ changes: number[]; at: Date }>();
 
 export function MessagesTab() {
 	return <WorkspaceScreen tab="messages">{(props) => <Messages {...props} />}</WorkspaceScreen>;
@@ -64,17 +69,19 @@ type PasteBoxProps = {
 	application: WorkspaceTabProps["application"];
 	initial: string;
 	readOnly: boolean;
-	onSave: (message: string) => void;
+	onSave: (message: string) => Promise<boolean>;
 };
 
 /** W15: the employer's message, kept with the application, and "Read it for me". */
 function PasteBox({ application, initial, readOnly, onSave }: PasteBoxProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
-	const [message, setMessage] = useState(initial);
+	// Kept on the device until the server has it, so a failed save survives leaving the tab.
+	const draft = useDraft(readOnly ? null : `message:${application.id}`, initial);
+	const message = draft.value;
 	const generate = useGenerate(application.id);
 	const provider = useHasAIProvider().defaultProvider;
-	const flush = useDebouncedSave(message, initial, onSave);
+	const flush = useAutosave(readOnly ? initial : message, initial, onSave, draft.clear);
 	const label = useWorking(generate.isPending, workingSteps("reply"), t`Read it for me`);
 	const company = application.company;
 
@@ -86,7 +93,7 @@ function PasteBox({ application, initial, readOnly, onSave }: PasteBoxProps) {
 				maxLength={20_000}
 				editable={!readOnly}
 				placeholder={t`Paste the email or message, without the signature.`}
-				onChangeText={setMessage}
+				onChangeText={draft.setValue}
 				onBlur={flush}
 			/>
 			{!readOnly ? (
@@ -171,10 +178,11 @@ function ProposalCard({ reply, application, now, readOnly }: ProposalCardProps) 
 	const { when, day } = useUserTime();
 	const queryClient = useQueryClient();
 	const invalidate = useInvalidateApplications();
-	const apply = useMutation(orpc.career.applyReply.mutationOptions());
+	const session = useSession();
 	const changes = reply.data.changes;
 	const [ticked, setTicked] = useState<number[]>(() => openChanges(changes, application.status));
-	const [appliedNow, setAppliedNow] = useState<{ changes: number[]; at: Date } | null>(null);
+	const pendingKey = `${session.server}:${reply.id}`;
+	const appliedNow = useSyncExternalStore(replyApplies.subscribe, () => replyApplies.get(pendingKey));
 	const applied =
 		appliedNow ??
 		(reply.data.applied ? { changes: reply.data.applied.changes, at: new Date(reply.data.applied.at) } : null);
@@ -226,16 +234,24 @@ function ProposalCard({ reply, application, now, readOnly }: ProposalCardProps) 
 
 	const onApply = () => {
 		const chosen = ticked;
-		setAppliedNow({ changes: chosen, at: new Date() });
+		// One pending apply per reply, even after leaving and reopening the tab: Undo always cancels that one.
+		if (!replyApplies.start(pendingKey, { changes: chosen, at: new Date() })) return;
 		withUndo({
 			message: t`Application updated`,
-			restore: () => setAppliedNow(null),
+			restore: () => replyApplies.finish(pendingKey),
 			failed: () => showToast({ message: t`Couldn't update the application. Nothing was changed.` }),
+			// The client, not this screen's mutation: the commit may run after the screen is gone.
 			commit: async () => {
-				await apply.mutateAsync({ id: reply.id, changes: chosen });
-				void invalidate();
-				void queryClient.invalidateQueries({ queryKey: orpc.career.savedItems.key() });
-				void queryClient.invalidateQueries({ queryKey: orpc.career.schedules.key() });
+				try {
+					await client.career.applyReply({ id: reply.id, changes: chosen });
+					await Promise.all([
+						invalidate(),
+						queryClient.invalidateQueries({ queryKey: orpc.career.savedItems.key() }),
+						queryClient.invalidateQueries({ queryKey: orpc.career.schedules.key() }),
+					]);
+				} finally {
+					replyApplies.finish(pendingKey);
+				}
 			},
 		});
 	};

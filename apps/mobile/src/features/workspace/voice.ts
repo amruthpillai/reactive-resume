@@ -195,10 +195,19 @@ export function usePlayer() {
 		}
 		setPlaying(false);
 	};
-	useEffect(() => stop, []);
+	const mounted = useRef(true);
+	useEffect(() => {
+		mounted.current = true;
+		return () => {
+			mounted.current = false;
+			stop();
+		};
+	}, []);
 	const play = async (uri: string, cleanup: () => void = () => undefined) => {
 		stop();
 		await setAudioModeAsync({ playsInSilentMode: true, allowsRecording: false }).catch(() => undefined);
+		// The screen went away while the audio session switched: nothing plays.
+		if (!mounted.current) return cleanup();
 		const player = createAudioPlayer({ uri });
 		current.current = { player, cleanup };
 		player.addListener("playbackStatusUpdate", (status) => {

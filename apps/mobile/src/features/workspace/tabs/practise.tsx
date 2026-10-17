@@ -14,6 +14,7 @@ import { latest, useDraft, useGenerate, useSavedItems, useStories, workspaceErro
 import { acceptedAudioType, clock, MAX_SECONDS, writeNumbersAsDigits } from "../logic";
 import { Actions, Block, PrivacyLine, Progress, useWorking, workingSteps } from "../parts";
 import { WorkspaceScreen } from "../shell";
+import { afterTranscribed, createRequests, playLatest } from "../state";
 import { deleteQuietly, speak, transcribe, usePlayer, useRecorder, useVoiceSettings } from "../voice";
 import { client } from "@/api/client";
 import { AIProviderSetupSheet, useHasAIProvider } from "@/features/ai/providers";
@@ -211,10 +212,11 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 	const feedbackLabel = useWorking(generate.isPending, workingSteps("practice"), t`Get feedback`);
 
 	// The recording stays on the device; it goes when it's replaced, or when leaving unless the user keeps it.
+	// Refs, not render state: transcription finishes after later renders, and must see the recording and Keep as they
+	// are then.
 	const audioRef = useRef(audio);
 	const keepRef = useRef(voice.settings.keep);
 	useEffect(() => {
-		audioRef.current = audio;
 		keepRef.current = voice.settings.keep;
 	});
 	useEffect(() => {
@@ -225,7 +227,9 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 		};
 	}, []);
 	const replaceAudio = (next: Recording | null) => {
-		if (audio && audio.uri !== next?.uri) deleteQuietly(new File(audio.uri));
+		const previous = audioRef.current;
+		if (previous && previous.uri !== next?.uri) deleteQuietly(new File(previous.uri));
+		audioRef.current = next;
 		setAudio(next);
 	};
 
@@ -243,7 +247,15 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 			setAnswer(result.text);
 			setSpoken({ id: result.id, text: result.text, seconds: recording.seconds });
 			setStep({ name: "idle" });
-			if (!voice.settings.keep) replaceAudio(null);
+			// Without Keep, the file just uploaded goes, even if another recording has replaced it on screen since.
+			const next = afterTranscribed({
+				uploaded: recording,
+				current: audioRef.current,
+				keep: keepRef.current,
+				remove: (uploaded) => deleteQuietly(new File(uploaded.uri)),
+			});
+			audioRef.current = next;
+			setAudio(next);
 		} catch {
 			if (alive.current) setStep({ name: "error" });
 		}
@@ -599,27 +611,31 @@ type HearItProps = { text: string; voice: VoiceSettings; player: Player };
 function HearIt({ text, voice, player }: HearItProps) {
 	const { t } = useLingui();
 	const [busy, setBusy] = useState(false);
-	const request = useRef(0);
+	const [requests] = useState(createRequests);
+	// A reply that lands after leaving (or after a newer question) is deleted instead of played.
+	useEffect(() => requests.invalidate, [requests]);
 	const reader = voice.settings.speak;
 	if (!reader) return null;
 	const stop = () => {
-		request.current += 1;
+		requests.invalidate();
 		player.stop();
 		setBusy(false);
 	};
 	const play = async () => {
 		if (player.playing || busy) return stop();
-		const generation = ++request.current;
 		setBusy(true);
+		let played = false;
 		try {
-			const file = await speak(reader, text);
-			if (generation !== request.current) return deleteQuietly(file);
-			await player.play(file.uri, () => deleteQuietly(file));
+			played = await playLatest(
+				requests,
+				() => speak(reader, text),
+				(file) => player.play(file.uri, () => deleteQuietly(file)),
+				deleteQuietly,
+			);
+			if (played) setBusy(false);
 		} catch (error) {
-			if (generation === request.current)
-				showToast({ message: workspaceError(error, t`Spoken audio is unavailable. Continue with the text question.`) });
-		} finally {
-			if (generation === request.current) setBusy(false);
+			stop();
+			showToast({ message: workspaceError(error, t`Spoken audio is unavailable. Continue with the text question.`) });
 		}
 	};
 	return (

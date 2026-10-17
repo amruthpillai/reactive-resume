@@ -101,7 +101,7 @@ function DebriefForm({ application, round, from, readOnly, onReviewed }: Debrief
 	const initial: Draft = from
 		? { question: from.data.question, answer: from.data.answer, landed: from.data.landed }
 		: { question: "", answer: "", landed: null };
-	// Tab switches keep what was written until it's reviewed.
+	// Kept on the device (server + account) until it's reviewed, across tabs and restarts.
 	const draft = useDraft<Draft>(readOnly ? null : `debrief:${application.id}:${round?.id ?? "none"}`, initial);
 	const value = readOnly ? initial : draft.value;
 	const change = (patch: Partial<Draft>) => {
@@ -109,6 +109,8 @@ function DebriefForm({ application, round, from, readOnly, onReviewed }: Debrief
 	};
 	const submit = () => {
 		if (!value.landed) return;
+		// Edits made while the review runs are a newer revision; only this one is cleared when it lands.
+		const submitted = value;
 		generate
 			.run({
 				task: "debrief",
@@ -120,7 +122,7 @@ function DebriefForm({ application, round, from, readOnly, onReviewed }: Debrief
 			.then(({ item }) => {
 				if (item?.data.kind !== "debrief") return;
 				onReviewed(item as Review);
-				draft.clear();
+				draft.clear(submitted);
 			})
 			.catch(() => undefined);
 	};

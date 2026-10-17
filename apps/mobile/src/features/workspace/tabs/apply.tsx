@@ -11,7 +11,16 @@ import { randomUUID } from "expo-crypto";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { careerWorkspaceSchema } from "@reactive-resume/schema/career";
-import { latest, useDebouncedSave, useFacts, useGenerate, useSavedItems, useWorkspace, workspaceError } from "../hooks";
+import {
+	latest,
+	useAutosave,
+	useDraft,
+	useFacts,
+	useGenerate,
+	useSavedItems,
+	useWorkspace,
+	workspaceError,
+} from "../hooks";
 import { answersClipboard, answersDocument, countCharacters, countWords, diffWords, shortLabel } from "../logic";
 import { Actions, AiNotice, Block, CheckRow, Progress, useWorking, workingSteps } from "../parts";
 import { shareText } from "../share";
@@ -76,9 +85,13 @@ function Apply({ application, version }: WorkspaceTabProps) {
 		setRemoved((ids) => [...ids, id]);
 		withUndo({
 			message: t`Question removed`,
-			// `save` reports its own failure and refetches, which brings the question back.
-			commit: () =>
-				Promise.resolve(workspace.save({ answers: workspace.current().answers.filter((answer) => answer.id !== id) })),
+			// `save` reports its own failure; rejecting here shows the question again.
+			commit: async () => {
+				const ok = await workspace.save({
+					answers: workspace.current().answers.filter((answer) => answer.id !== id),
+				});
+				if (!ok) throw new Error("Not removed");
+			},
 			restore: () => setRemoved((ids) => ids.filter((item) => item !== id)),
 			failed: () => undefined,
 		});
@@ -170,7 +183,8 @@ type AnswerCardProps = {
 	readOnly: boolean;
 	disabled: boolean;
 	registerDraft: (id: string, read: () => Answer) => () => void;
-	onSave: (patch: Partial<Answer>) => void;
+	/** Resolves true once the server has it. */
+	onSave: (patch: Partial<Answer>) => Promise<boolean>;
 	onRemove: () => void;
 	unit: CountUnit;
 	onToggleUnit: () => void;
@@ -191,8 +205,14 @@ function AnswerCard({
 }: AnswerCardProps) {
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
-	const [text, setText] = useState(answer.answer);
-	const [question, setQuestion] = useState(answer.question);
+	// Typed text stays on the device until the server has it, so a failed save survives leaving the tab.
+	const draftName = readOnly ? null : `answer:${applicationId}:${answer.id}`;
+	const answerDraft = useDraft(draftName && `${draftName}:answer`, answer.answer);
+	const questionDraft = useDraft(draftName && `${draftName}:question`, answer.question);
+	const text = answerDraft.value;
+	const question = questionDraft.value;
+	const setText = answerDraft.setValue;
+	const setQuestion = questionDraft.setValue;
 	useLayoutEffect(
 		() => registerDraft(answer.id, () => ({ ...answer, question, answer: text })),
 		[answer, question, text, registerDraft],
@@ -202,11 +222,17 @@ function AnswerCard({
 	const [proposal, setProposal] = useState<{ text: string; factIds: string[] } | null>(null);
 	const generate = useGenerate(applicationId);
 	const provider = useHasAIProvider().defaultProvider;
-	const flushAnswer = useDebouncedSave(disabled || readOnly ? answer.answer : text, answer.answer, (value) =>
-		onSave({ answer: value }),
+	const flushAnswer = useAutosave(
+		disabled || readOnly ? answer.answer : text,
+		answer.answer,
+		(value) => onSave({ answer: value }),
+		answerDraft.clear,
 	);
-	const flushQuestion = useDebouncedSave(disabled || readOnly ? answer.question : question, answer.question, (value) =>
-		onSave({ question: value }),
+	const flushQuestion = useAutosave(
+		disabled || readOnly ? answer.question : question,
+		answer.question,
+		(value) => onSave({ question: value }),
+		questionDraft.clear,
 	);
 	const empty = !text.trim();
 	const aiLabel = useWorking(
@@ -304,8 +330,11 @@ function AnswerCard({
 							label={t`Accept`}
 							disabled={disabled}
 							onPress={() => {
-								setText(proposal.text);
-								onSave({ answer: proposal.text, factIds: proposal.factIds });
+								const accepted = proposal.text;
+								setText(accepted);
+								void onSave({ answer: accepted, factIds: proposal.factIds }).then(
+									(ok) => ok && answerDraft.clear(accepted),
+								);
 								setProposal(null);
 							}}
 						/>

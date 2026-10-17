@@ -17,12 +17,52 @@ import {
 	RECORDING_OPTIONS,
 	writeNumbersAsDigits,
 } from "../../../../../apps/mobile/src/features/workspace/logic.ts";
+import {
+	afterTranscribed,
+	createAutosave,
+	createDraftStore,
+	createPendingRegistry,
+	createRequests,
+	playLatest,
+} from "../../../../../apps/mobile/src/features/workspace/state.ts";
 
 let passed = 0;
-const scenario = (name, run) => {
-	run();
-	passed++;
-	console.log(`ok - ${name}`);
+const queue = [];
+const scenario = (name, run) => queue.push({ name, run });
+
+/** Timers the scenarios advance by hand. */
+function fakeTimers() {
+	let now = 0;
+	let next = 1;
+	const pending = new Map();
+	return {
+		set: (run, ms) => {
+			const id = next++;
+			pending.set(id, { run, at: now + ms });
+			return id;
+		},
+		clear: (id) => pending.delete(id),
+		async advance(ms) {
+			now += ms;
+			for (const [id, timer] of [...pending].sort((a, b) => a[1].at - b[1].at))
+				if (timer.at <= now) {
+					pending.delete(id);
+					timer.run();
+				}
+			await new Promise((resolve) => setImmediate(resolve));
+		},
+		count: () => pending.size,
+	};
+}
+
+const memoryStorage = () => {
+	const items = new Map();
+	return {
+		items,
+		getItemSync: (key) => items.get(key) ?? null,
+		setItemSync: (key, value) => items.set(key, value),
+		removeItemSync: (key) => items.delete(key),
+	};
 };
 
 scenario("audio cap: exactly 2 MB passes, one byte more and empty/unknown sizes are refused", () => {
@@ -146,4 +186,149 @@ scenario("answers download: Markdown and text, unanswered questions left out", (
 	assert.equal(answersDocument("Dev · Fieldnote", answers, "txt"), "Dev · Fieldnote\n\n\nWhy us?\n\nYour tools team.\n");
 });
 
+// ---- Review fix round (Codex 195d8e34) ----
+
+scenario("fix 1: a failed autosave is retried, not marked done; the draft is cleared only once the server has it", async () => {
+	const timers = fakeTimers();
+	const results = [false, true];
+	const sent = [];
+	const acknowledged = [];
+	const autosave = createAutosave({
+		save: async (value) => {
+			sent.push(value);
+			return results.shift() ?? true;
+		},
+		onSaved: (value) => acknowledged.push(value),
+		delay: 2000,
+		retryDelay: 10_000,
+		timers,
+	});
+	autosave.update("server", "server");
+	acknowledged.length = 0;
+	autosave.update("typed answer", "server");
+	await timers.advance(2000);
+	assert.deepEqual(sent, ["typed answer"]);
+	assert.deepEqual(acknowledged, [], "a failed write keeps the draft");
+	// The optimistic copy rolls back on refetch; the same text is retried after the longer wait, not every 2 s.
+	autosave.update("typed answer", "server");
+	await timers.advance(2000);
+	assert.deepEqual(sent, ["typed answer"]);
+	await timers.advance(8000);
+	assert.deepEqual(sent, ["typed answer", "typed answer"]);
+	assert.deepEqual(acknowledged, ["typed answer"]);
+	autosave.update("typed answer", "typed answer");
+	assert.deepEqual(acknowledged, ["typed answer"], "acknowledged once");
+	autosave.dispose();
+	assert.equal(timers.count(), 0);
+});
+
+scenario("fix 1: leaving flushes once; a value already on its way is not sent twice", async () => {
+	const timers = fakeTimers();
+	const sent = [];
+	let resolve;
+	const autosave = createAutosave({
+		save: (value) => {
+			sent.push(value);
+			return new Promise((done) => (resolve = done));
+		},
+		delay: 2000,
+		retryDelay: 10_000,
+		timers,
+	});
+	autosave.update("message", "");
+	autosave.flush();
+	autosave.flush();
+	autosave.dispose();
+	assert.deepEqual(sent, ["message"]);
+	resolve(false);
+	await timers.advance(0);
+	assert.equal(timers.count(), 0, "no retry timer after leaving; the device draft keeps it for next time");
+});
+
+scenario("fix 2 + 3: device drafts persist; finishing a review clears only the submitted revision", () => {
+	const storage = memoryStorage();
+	const drafts = createDraftStore(storage);
+	const key = 'reactive-resume:career-draft:["https://rxresu.me","user-1"]:debrief:app:round';
+	const submitted = { question: "How did you design the tools?", answer: "Workflow first.", landed: "well" };
+	drafts.write(key, submitted);
+	// While the review is generating, the user keeps typing.
+	const edited = { ...submitted, answer: "Workflow first, then the C++ tooling." };
+	drafts.write(key, edited);
+	drafts.clear(key, submitted);
+	assert.deepEqual(drafts.read(key), edited, "the newer edit survives the review landing");
+	drafts.clear(key, edited);
+	assert.equal(drafts.read(key), undefined);
+	assert.equal(storage.items.size, 0);
+	const broken = { getItemSync: () => "{", setItemSync: () => {}, removeItemSync: () => {} };
+	assert.equal(createDraftStore(broken).read(key), undefined, "a corrupt draft reads as none");
+});
+
+scenario("fix 4: Apply, leave, return, Apply again: one pending operation; Undo cancels it", () => {
+	const replyApplies = createPendingRegistry();
+	const toasts = [];
+	// A stand-in for career/undo.ts: records the operation; Undo runs restore, the timeout runs commit.
+	const withUndo = ({ restore, commit }) => toasts.push({ undo: restore, commit });
+	const onApply = (key, changes) => {
+		if (!replyApplies.start(key, { changes })) return;
+		withUndo({
+			restore: () => replyApplies.finish(key),
+			commit: async () => replyApplies.finish(key),
+		});
+	};
+	let renders = 0;
+	const unsubscribe = replyApplies.subscribe(() => renders++);
+	onApply("https://rxresu.me:reply-1", [0, 1]);
+	unsubscribe(); // the Messages screen unmounts
+	const remounted = replyApplies.get("https://rxresu.me:reply-1");
+	assert.deepEqual(remounted, { changes: [0, 1] }, "the reopened screen shows it applied");
+	onApply("https://rxresu.me:reply-1", [0]);
+	assert.equal(toasts.length, 1, "no second pending operation");
+	toasts[0].undo();
+	assert.equal(replyApplies.get("https://rxresu.me:reply-1"), undefined, "Undo cancels the only one");
+	assert.equal(renders, 1);
+	onApply("https://rxresu.me:reply-1", [1]);
+	assert.equal(toasts.length, 2, "after Undo it can be applied again");
+});
+
+scenario("fix 5: after transcription the uploaded file is deleted without Keep, even if a newer one is on screen", () => {
+	const removed = [];
+	const remove = (audio) => removed.push(audio.uri);
+	const uploaded = { uri: "file:///cache/ExpoAudio/a.m4a" };
+	assert.equal(afterTranscribed({ uploaded, current: uploaded, keep: false, remove }), null);
+	assert.deepEqual(removed, [uploaded.uri]);
+	const newer = { uri: "file:///cache/ExpoAudio/b.m4a" };
+	assert.equal(afterTranscribed({ uploaded, current: newer, keep: false, remove }), newer);
+	assert.deepEqual(removed, [uploaded.uri, uploaded.uri]);
+	assert.equal(afterTranscribed({ uploaded, current: uploaded, keep: true, remove }), uploaded, "Keep keeps it");
+	assert.equal(removed.length, 2);
+});
+
+scenario("fix 6: a voice.speak reply after unmount (or a newer request) is deleted, never played", async () => {
+	const requests = createRequests();
+	const played = [];
+	const discarded = [];
+	let answer;
+	const pending = playLatest(
+		requests,
+		() => new Promise((resolve) => (answer = resolve)),
+		(file) => played.push(file),
+		(file) => discarded.push(file),
+	);
+	requests.invalidate(); // HearIt unmounts while the request is out
+	answer("speech-1.mp3");
+	assert.equal(await pending, false);
+	assert.deepEqual(played, []);
+	assert.deepEqual(discarded, ["speech-1.mp3"]);
+	const first = playLatest(requests, async () => "old.mp3", (file) => played.push(file), (file) => discarded.push(file));
+	const second = playLatest(requests, async () => "new.mp3", (file) => played.push(file), (file) => discarded.push(file));
+	assert.deepEqual(await Promise.all([first, second]), [false, true]);
+	assert.deepEqual(played, ["new.mp3"]);
+	assert.deepEqual(discarded, ["speech-1.mp3", "old.mp3"]);
+});
+
+for (const { name, run } of queue) {
+	await run();
+	passed++;
+	console.log(`ok - ${name}`);
+}
 console.log(`\n${passed} scenarios passed`);

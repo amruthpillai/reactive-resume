@@ -8,10 +8,13 @@ import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import Storage from "expo-sqlite/kv-store";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { EMPTY_WORKSPACE } from "@reactive-resume/schema/career";
+import { createAutosave, createDraftStore } from "./state";
 import { orpc } from "@/api/client";
 import { getServer, useSession } from "@/auth/session";
+import { getDraftScope } from "@/draft";
 import { useHasAIProvider } from "@/features/ai/providers";
 import { showToast } from "@/ui";
 
@@ -68,8 +71,9 @@ export function useWorkspace(applicationId: string) {
 			}),
 	});
 	const current = () => queryClient.getQueryData<CareerWorkspace>(queryKey) ?? EMPTY_WORKSPACE;
-	const save = (patch: Partial<CareerWorkspace>) => {
-		if (getServer() !== server) return;
+	/** Resolves true once the server has the change, false when it failed (already reported). Never rejects. */
+	const save = (patch: Partial<CareerWorkspace>): Promise<boolean> => {
+		if (getServer() !== server) return Promise.resolve(false);
 		const previous = current();
 		const defined = Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
 		const expected = Object.fromEntries(
@@ -80,11 +84,17 @@ export function useWorkspace(applicationId: string) {
 		queryClient.setQueryData(queryKey, { ...previous, ...defined });
 		const write = mutation.mutateAsync({ applicationId, ...defined, expected });
 		pending.add(write);
-		void write
-			.catch(() => {
+		return write.then(
+			() => {
+				pending.delete(write);
+				return true;
+			},
+			() => {
+				pending.delete(write);
 				void Promise.allSettled(pending).then(() => queryClient.invalidateQueries({ queryKey }));
-			})
-			.finally(() => pending.delete(write));
+				return false;
+			},
+		);
 	};
 	return {
 		data: query.data ?? EMPTY_WORKSPACE,
@@ -184,58 +194,97 @@ export function useGenerate(applicationId: string) {
 	};
 }
 
-/** Saves text a moment after typing stops (2 s), and when the field loses focus or unmounts. Returns `flush` for blur. */
-export function useDebouncedSave(value: string, saved: string, save: (value: string) => void, delay = 2000) {
-	const latestValue = useRef({ value, saved, save });
-	const attempted = useRef<string | undefined>(undefined);
+/**
+ * Saves text a moment after typing stops (2 s), on blur (`flush`) and when leaving. A failed write is retried after
+ * 10 s rather than dropped; `onSaved` runs once the server has the value (clear the device draft there).
+ */
+export function useAutosave(
+	value: string,
+	saved: string,
+	save: (value: string) => Promise<boolean>,
+	onSaved?: (value: string) => void,
+) {
+	const latestCallbacks = useRef({ save, onSaved });
 	useLayoutEffect(() => {
-		latestValue.current = { value, saved, save };
+		latestCallbacks.current = { save, onSaved };
 	});
-	const flush = useCallback(() => {
-		const current = latestValue.current;
-		if (current.value !== current.saved && current.value !== attempted.current) {
-			attempted.current = current.value;
-			current.save(current.value);
-		}
-	}, []);
-	useEffect(() => {
-		if (value === saved) return;
-		const id = setTimeout(flush, delay);
-		return () => clearTimeout(id);
-	}, [value, saved, delay, flush]);
-	useEffect(() => flush, [flush]);
-	return flush;
+	const [autosave] = useState(() =>
+		createAutosave({
+			save: (next) => latestCallbacks.current.save(next),
+			onSaved: (next) => latestCallbacks.current.onSaved?.(next),
+			delay: 2000,
+			retryDelay: 10_000,
+			timers: {
+				set: (run, ms) => setTimeout(run, ms),
+				clear: (id) => clearTimeout(id as ReturnType<typeof setTimeout>),
+			},
+		}),
+	);
+	useEffect(() => autosave.update(value, saved), [autosave, value, saved]);
+	useEffect(() => () => autosave.dispose(), [autosave]);
+	return autosave.flush;
 }
 
-// Web keeps these drafts in sessionStorage; here they live for the app session, keyed by server, and are dropped
-// when the session ends so another account never sees them.
-// ponytail: memory only, so a killed app loses an unsent practice answer or debrief; persist to kv-store if that bites.
-const drafts = new Map<string, unknown>();
+const draftStore = createDraftStore(Storage);
+/** The key prefix of every workspace draft for one account; sign-out cleanup can sweep it. */
+export const draftPrefix = (scope: string) => `reactive-resume:career-draft:${scope}:`;
 
-/** A text draft that survives switching tabs and screens, without crossing servers or sign-outs. */
-export function useDraft<T>(key: string | null, initial: T) {
+/** The signed-in account's draft scope (server + OAuth subject, as resume drafts and application notes use). */
+function useDraftScope() {
 	const session = useSession();
 	const signedIn = session.status === "signed-in";
+	const [scope, setScope] = useState<{ server: string; value: string | null } | null>(null);
 	useEffect(() => {
-		if (!signedIn) drafts.clear();
-	}, [signedIn]);
-	const storageKey = key === null ? null : `${session.server}:${key}`;
-	const read = () => (storageKey !== null && drafts.has(storageKey) ? (drafts.get(storageKey) as T) : initial);
-	const [state, setState] = useState(() => ({ key: storageKey, value: read() }));
-	if (state.key !== storageKey) setState({ key: storageKey, value: read() });
+		if (!signedIn) return;
+		let live = true;
+		void getDraftScope().then((value) => {
+			if (live) setScope({ server: session.server, value });
+		});
+		return () => {
+			live = false;
+		};
+	}, [signedIn, session.server]);
+	// No scope (signed out, or the token can't name the account) keeps drafts on screen only.
+	return signedIn && scope?.server === session.server ? scope.value : null;
+}
+
+/**
+ * A draft kept on the device until the server or the coach has it: it survives leaving the screen and restarting the
+ * app, scoped by server and account. `clear(sent)` removes it only while it is still that revision.
+ */
+export function useDraft<T>(name: string | null, initial: T) {
+	const scope = useDraftScope();
+	const key = name !== null && scope !== null ? `${draftPrefix(scope)}${name}` : null;
+	const [state, setState] = useState(() => ({ key, value: initial, touched: false }));
+	if (state.key !== key) {
+		// The scope resolves after the first render: an edit made before then is kept and written below.
+		const kept = key === null ? undefined : draftStore.read<T>(key);
+		setState({
+			key,
+			value: state.touched && state.key === null ? state.value : (kept ?? initial),
+			touched: state.touched && state.key === null,
+		});
+	}
+	useEffect(() => {
+		if (state.key !== null && state.touched) draftStore.write(state.key, state.value);
+	}, [state]);
 	const current = useRef(state);
 	useLayoutEffect(() => {
 		current.current = state;
 	});
 	const setValue = (update: SetStateAction<T>) => {
-		const previous = current.current.key === storageKey ? current.current.value : read();
+		const previous = current.current.value;
 		const value = typeof update === "function" ? (update as (value: T) => T)(previous) : update;
-		current.current = { key: storageKey, value };
+		current.current = { key, value, touched: true };
 		setState(current.current);
-		if (storageKey !== null && signedIn) drafts.set(storageKey, value);
+		if (key !== null) draftStore.write(key, value);
 	};
-	const clear = () => {
-		if (storageKey !== null) drafts.delete(storageKey);
+	return {
+		value: state.value,
+		setValue,
+		/** Drops the device copy once `sent` is safe elsewhere; a newer edit stays. */
+		clear: (sent: T) => {
+			if (key !== null) draftStore.clear(key, sent);
+		},
 	};
-	return { value: state.value, setValue, clear };
 }
