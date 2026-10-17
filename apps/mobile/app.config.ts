@@ -1,8 +1,5 @@
 import type { ExpoConfig } from "expo/config";
 
-// Build-time legal text uses installed packages and Node built-ins; no dependency or runtime filesystem access.
-require("./src/features/licences/generate.cjs");
-
 // The official host. Universal Links, App Links and the OAuth callback (`/auth/native-callback`) verify against it.
 const host = "rxresu.me";
 const microphonePermission = "Reactive Resume records your answers when you practise for an interview.";
@@ -55,11 +52,10 @@ const config: ExpoConfig = {
 			backgroundImage: "./assets/adaptive-background.png",
 			backgroundColor: "#F8F7F3",
 		},
-		// Profile camera and foreground Practise audio are used; pickers/share sheets need no broad storage access.
+		// Legacy camera capture needs WRITE_EXTERNAL_STORAGE; dependencies cap it at API 32. Keep read access blocked.
 		blockedPermissions: [
 			"android.permission.SYSTEM_ALERT_WINDOW",
 			"android.permission.READ_EXTERNAL_STORAGE",
-			"android.permission.WRITE_EXTERNAL_STORAGE",
 			"android.permission.READ_MEDIA_IMAGES",
 			"android.permission.READ_MEDIA_VIDEO",
 			"android.permission.READ_MEDIA_AUDIO",

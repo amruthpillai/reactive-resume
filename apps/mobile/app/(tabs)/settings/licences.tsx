@@ -2,7 +2,7 @@ import { useLingui } from "@lingui/react/macro";
 import { Stack } from "expo-router";
 import { useState } from "react";
 import { FlatList, View } from "react-native";
-import { javascriptNotices, nativeNotices } from "@/features/licences/notices";
+import { javascriptNotices, licenceTexts, nativeNotices } from "@/features/licences/notices";
 import { ListRow, Screen, Segmented, Text, useTheme } from "@/ui";
 
 export default function LicencesScreen() {
@@ -40,9 +40,13 @@ export default function LicencesScreen() {
 							onPress={() => setExpanded(expanded === item.title ? null : item.title)}
 						/>
 						{expanded === item.title && (
-							<Text selectable variant="callout" style={{ padding: space.s4 }}>
-								{item.text}
-							</Text>
+							<View style={{ padding: space.s4, gap: space.s3 }}>
+								{item.textIds.map((id, paragraph) => (
+									<Text key={`${id}:${paragraph}`} selectable variant="callout">
+										{licenceTexts[id]}
+									</Text>
+								))}
+							</View>
 						)}
 					</View>
 				)}
