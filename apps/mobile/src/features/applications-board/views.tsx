@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { router, Stack } from "expo-router";
 import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { routes } from "@/routes";
 import { Segmented, useTheme } from "@/ui";
 
@@ -13,9 +14,9 @@ export function ApplicationsViewFrame({ current, children }: ApplicationsViewFra
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
 	return (
-		<View style={{ flex: 1, backgroundColor: colors.bg }}>
-			{/* Views swap in place: no push animation, no back stack between them. */}
-			<Stack.Screen options={{ title: t`Applications`, animation: "none" }} />
+		<SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.bg }}>
+			{/* Views swap in place: no push animation, no back stack between them. The views draw their own title. */}
+			<Stack.Screen options={{ title: t`Applications`, animation: "none", headerShown: false }} />
 			<View style={{ paddingHorizontal: space.s4, paddingTop: space.s2, paddingBottom: space.s1 }}>
 				<Segmented
 					label={t`Application views`}
@@ -32,6 +33,6 @@ export function ApplicationsViewFrame({ current, children }: ApplicationsViewFra
 				/>
 			</View>
 			<View style={{ flex: 1 }}>{children}</View>
-		</View>
+		</SafeAreaView>
 	);
 }
