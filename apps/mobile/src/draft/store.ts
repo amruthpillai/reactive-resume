@@ -14,6 +14,7 @@ export type DraftAdapter<D extends Document, T> = {
 	data: (document: D) => T;
 	withData: (document: D, data: T) => D;
 	merge: (saved: D, submitted: D, current: D) => D;
+	matches: (left: D, right: D) => boolean;
 	version: (document: D) => string | number;
 	parse: (value: unknown) => D;
 	save: (document: D, baseline: D, sessionId: string, force: boolean) => Promise<D>;
@@ -56,6 +57,8 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 	let editing = false;
 	let deferred: D | null = null;
 	let timer: ReturnType<typeof setTimeout> | undefined;
+	let persistenceTimer: ReturnType<typeof setTimeout> | undefined;
+	let queueGeneration = 0;
 	let inflight: Promise<void> | null = null;
 	let replaying: Promise<void> | null = null;
 	let resolving = false;
@@ -98,7 +101,9 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 	}
 
 	function persist() {
-		if (!record || !scope) return;
+		clearTimeout(persistenceTimer);
+		persistenceTimer = undefined;
+		if (!record || !scope || !dirty) return;
 		pending.set(key(), record);
 		try {
 			env.storage.setItemSync(key(), JSON.stringify(record));
@@ -110,22 +115,41 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 		}
 	}
 
+	function schedulePersistence() {
+		if (!record || !scope) return;
+		pending.set(key(), record);
+		durable = false;
+		// Fixed trailing window: continuous typing still reaches disk at least every 300 ms.
+		persistenceTimer ??= setTimeout(persist, 300);
+	}
+
 	function readStored(storageKey: string): Record<D> | null {
 		const memory = pending.get(storageKey);
 		if (memory) return memory;
 		const raw = env.storage.getItemSync(storageKey);
 		if (!raw) return null;
-		const value = JSON.parse(raw) as Record<unknown>;
-		if (typeof value.sessionId !== "string") throw new Error("Invalid draft session.");
-		const baseline = adapter.parse(value.baseline);
-		const document = adapter.parse(value.document);
-		if (baseline.id !== document.id) throw new Error("Invalid draft identity.");
-		return {
-			baseline,
-			document,
-			sessionId: value.sessionId,
-			...(typeof value.copyId === "string" ? { copyId: value.copyId } : {}),
-		};
+		try {
+			const value = JSON.parse(raw) as Record<unknown>;
+			if (typeof value.sessionId !== "string") throw new Error("Invalid draft session.");
+			const baseline = adapter.parse(value.baseline);
+			const document = adapter.parse(value.document);
+			if (baseline.id !== document.id || !storageKey.endsWith(`:${adapter.kind}:${document.id}`))
+				throw new Error("Invalid draft identity.");
+			return {
+				baseline,
+				document,
+				sessionId: value.sessionId,
+				...(typeof value.copyId === "string" ? { copyId: value.copyId } : {}),
+			};
+		} catch {
+			// A corrupt record cannot be restored; it must not permanently block the server copy.
+			try {
+				env.storage.removeItemSync(storageKey);
+			} catch {
+				/* Retry removal on the next open. */
+			}
+			return null;
+		}
 	}
 
 	async function currentOwner() {
@@ -158,12 +182,30 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 				store.setState({ status: !durable ? "error" : env.online() ? "saving" : "offline" });
 			}
 			if (!env.online() && record) return;
+			const restored = record?.document;
 			const remote = await adapter.read(id);
+			if (inflight) await inflight;
 			if (!(await currentOwner()) || visit !== generation) return;
 			if (!record) {
 				record = { document: remote, baseline: remote, sessionId: generateId() };
 				publish(remote);
-			} else if (adapter.version(remote) !== adapter.version(record.baseline)) {
+			} else if (adapter.version(remote) < adapter.version(record.baseline)) {
+				return;
+			} else if (adapter.matches(remote, record.document) || (restored && adapter.matches(remote, restored))) {
+				// The write may have succeeded without its response. Keep anything typed during this read.
+				record.document = adapter.merge(remote, restored ?? record.document, record.document);
+				record.baseline = remote;
+				dirty = !adapter.matches(remote, record.document);
+				publish(record.document);
+				store.setState({ conflict: null, status: dirty ? "saving" : "saved" });
+				if (dirty) await flush();
+				else {
+					clearTimeout(persistenceTimer);
+					persistenceTimer = undefined;
+					env.storage.removeItemSync(key());
+					pending.delete(key());
+				}
+			} else if (adapter.version(remote) > adapter.version(record.baseline)) {
 				store.setState({ conflict: { remote }, locked: remote.isLocked, status: "error" });
 			} else if (remote.isLocked) {
 				store.setState({ locked: true, status: "error" });
@@ -200,7 +242,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 		deferred = null;
 		publish(document);
 		store.setState({ status: env.online() ? "saving" : "offline" });
-		persist();
+		schedulePersistence();
 		clearTimeout(timer);
 		timer = setTimeout(() => void flush(), adapter.delay);
 	}
@@ -253,6 +295,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 
 	async function flush(): Promise<void> {
 		clearTimeout(timer);
+		persist();
 		if (inflight) {
 			await inflight;
 			return flush();
@@ -355,12 +398,12 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 		const active = record;
 		const remote = await adapter.read(active.document.id);
 		if (!(await currentOwner()) || record !== active) return;
+		if (adapter.version(remote) <= adapter.version(active.baseline)) return;
 		// Never advance the baseline of unsaved data in response to SSE (including our own echo).
 		if (dirty || inflight) {
 			store.setState({ locked: remote.isLocked });
 			return;
 		}
-		if (adapter.version(remote) === adapter.version(active.baseline)) return;
 		if (editing || env.focused()) {
 			deferred = remote;
 			return;
@@ -369,7 +412,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 	}
 
 	function applyRemote(remote: D) {
-		if (!record || dirty) return;
+		if (!record || dirty || adapter.version(remote) <= adapter.version(record.baseline)) return;
 		if (JSON.stringify(adapter.data(remote)) !== JSON.stringify(adapter.data(record.document))) resetHistory();
 		record.baseline = remote;
 		record.document = remote;
@@ -384,15 +427,19 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 	}
 
 	async function replayQueue() {
+		const visit = queueGeneration;
 		const owner = await env.scope();
-		if (!owner || !env.online()) return;
+		if (!owner || !env.online() || visit !== queueGeneration) return;
 		await flush();
+		if (visit !== queueGeneration) return;
 		for (const storageKey of new Set([...env.storage.getAllKeysSync(), ...pending.keys()])) {
 			if (!storageKey.startsWith(prefix(owner)) || storageKey === (record && scope ? key() : null)) continue;
 			try {
 				const queued = readStored(storageKey);
-				if (!queued || (await env.scope()) !== owner) return;
+				if (!queued) continue;
+				if ((await env.scope()) !== owner || visit !== queueGeneration) return;
 				await adapter.save(queued.document, queued.baseline, queued.sessionId, false);
+				if (visit !== queueGeneration) return;
 				env.storage.removeItemSync(storageKey);
 				pending.delete(storageKey);
 			} catch {
@@ -408,27 +455,43 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 		return replaying;
 	}
 
+	function reset() {
+		generation++;
+		clearTimeout(timer);
+		clearTimeout(persistenceTimer);
+		persistenceTimer = undefined;
+		record = null;
+		scope = null;
+		dirty = false;
+		durable = true;
+		editing = false;
+		force = false;
+		deferred = null;
+		resetHistory();
+		store.setState(emptyState);
+	}
+
+	function clearDraftsFor(owner: string) {
+		queueGeneration++;
+		if (scope === owner) reset();
+		for (const storageKey of pending.keys()) if (storageKey.startsWith(prefix(owner))) pending.delete(storageKey);
+		for (const storageKey of env.storage.getAllKeysSync())
+			if (storageKey.startsWith(prefix(owner))) env.storage.removeItemSync(storageKey);
+	}
+
 	return {
 		store,
 		refresh,
 		replay,
 		blur,
+		clearDraftsFor,
 		focus: () => {
 			editing = true;
 		},
 		/** Session changes stop requests and hide the old account's in-memory draft immediately. */
 		suspend: () => {
-			generation++;
-			clearTimeout(timer);
-			record = null;
-			scope = null;
-			dirty = false;
-			durable = true;
-			editing = false;
-			force = false;
-			deferred = null;
-			resetHistory();
-			store.setState(emptyState);
+			persist();
+			reset();
 		},
 	};
 }

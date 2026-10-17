@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { nativeEnvironment } from "./native";
 import { resume, letter, useResumeStore, useLetterStore } from "./runtime";
 import { useSession } from "@/auth/session";
-export { useResumeStore, useLetterStore } from "./runtime";
+export { useResumeStore, useLetterStore, clearDraftsFor, getDraftScope } from "./runtime";
 
 /** Call once in the builder owner, not once per pane. Token refresh preserves history; account switches do not. */
 function useDraftOwner(id: string, draft: typeof resume | typeof letter) {
@@ -12,7 +12,10 @@ function useDraftOwner(id: string, draft: typeof resume | typeof letter) {
 	useEffect(() => {
 		let cancelled = false;
 		if (session.status !== "signed-in") {
-			owner.current = null;
+			if (session.status === "signed-out") {
+				if (owner.current) draft.clearDraftsFor(owner.current);
+				owner.current = null;
+			}
 			draft.suspend();
 			return;
 		}

@@ -51,6 +51,17 @@ function createNativeDraft<D extends { id: string; isLocked: boolean }, T>(adapt
 	});
 	return {
 		...draft,
+		clearDraftsFor: (owner: string) => {
+			try {
+				draft.clearDraftsFor(owner);
+			} finally {
+				if (!draft.store.getState().document) {
+					stopStream();
+					stop?.();
+					stop = undefined;
+				}
+			}
+		},
 		suspend: () => {
 			stopStream();
 			stop?.();
@@ -65,3 +76,14 @@ export const letter = createNativeDraft(letterAdapter);
 
 export const useResumeStore = resume.store;
 export const useLetterStore = letter.store;
+
+/** Call before discarding a signed-out account's tokens; never clear another account's local work. */
+export function clearDraftsFor(scope: string) {
+	try {
+		resume.clearDraftsFor(scope);
+	} finally {
+		letter.clearDraftsFor(scope);
+	}
+}
+
+export const getDraftScope = nativeEnvironment.scope;

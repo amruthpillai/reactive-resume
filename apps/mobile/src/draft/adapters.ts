@@ -65,6 +65,7 @@ export const resumeAdapter: DraftAdapter<ResumeDocument, ResumeDocument["data"]>
 		}),
 	}),
 	version: (document) => document.updatedAt.getTime(),
+	matches: (left, right) => Object.keys(changedFields(resumeFields(left), resumeFields(right))).length === 0,
 	merge: (saved, submitted, current) => ({
 		...saved,
 		...changedFields(resumeFields(current), resumeFields(submitted)),
@@ -112,6 +113,7 @@ export const letterAdapter: DraftAdapter<LetterDocument, LetterDocument> = {
 	data: (document) => document,
 	withData: (document, data) => ({ ...document, ...letterFields(data) }),
 	version: (document) => document.revision,
+	matches: (left, right) => Object.keys(changedFields(letterFields(left), letterFields(right))).length === 0,
 	merge: (saved, submitted, current) => ({
 		...saved,
 		...changedFields(letterFields(current), letterFields(submitted)),

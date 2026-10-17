@@ -42,6 +42,7 @@ function fixture({ delay = 500, disk = new Map(), initial, owner = "local/user-a
 		data: (d) => d.data,
 		withData: (d, data) => ({ ...d, data }),
 		version: (d) => d.revision,
+		matches: (a, b) => a.name === b.name && JSON.stringify(a.data) === JSON.stringify(b.data),
 		parse: (d) => d,
 		merge: (saved, submitted, current) => ({ ...saved, data: current.data, name: current.name }),
 		isConflict: (e) => e.message === "conflict",
@@ -387,6 +388,221 @@ await check("a late remote refresh cannot replace the next open document", async
 	assert.equal(f.state().data.name, "Other");
 	await f.state().close();
 });
+await check("stale refreshes after a successful save never roll back data or the next save baseline", async () => {
+	for (const focused of [false, true]) {
+		const f = fixture();
+		await f.state().open("draft");
+		f.focused(focused);
+		const old = structuredClone(f.remote());
+		let releaseRead;
+		f.adapter.read = () =>
+			new Promise((resolve) => {
+				releaseRead = resolve;
+			});
+		const refresh = f.draft.refresh();
+		await drain();
+		f.state().update((d) => {
+			d.name = "Saved here";
+		});
+		await f.state().flush();
+		releaseRead(old);
+		await refresh;
+		f.focused(false);
+		await f.draft.blur();
+		assert.equal(f.state().data.name, "Saved here");
+		f.state().update((d) => {
+			d.detail = "Next edit";
+		});
+		await f.state().flush();
+		assert.equal(f.state().conflict, null);
+		assert.equal(f.writes.at(-1).base.revision, 2);
+		await f.state().close();
+	}
+});
+await check("corrupt persisted drafts are discarded and the server document can open repeatedly", async () => {
+	const f = fixture();
+	await f.state().open("draft");
+	f.online(false);
+	f.state().update((d) => {
+		d.name = "Offline";
+	});
+	await f.state().close();
+	const key = [...f.disk.keys()][0];
+	assert(key);
+	f.disk.set(key, "{broken JSON");
+	const g = fixture({ disk: f.disk });
+	await g.state().open("draft");
+	assert.equal(g.state().data.name, "Before");
+	assert.equal(g.disk.size, 0);
+	await g.state().close();
+	await g.state().open("draft");
+	assert.equal(g.state().data.name, "Before");
+	await g.state().close();
+	const badKey = key.replace(/:draft$/, ":broken");
+	const queuedDisk = new Map([[badKey, "{broken JSON"]]);
+	const queued = fixture({ disk: queuedDisk });
+	await queued.state().open("draft");
+	queued.online(false);
+	queued.state().update((d) => {
+		d.name = "Replay after corrupt entry";
+	});
+	await queued.state().close();
+	queued.online(true);
+	await queued.draft.replay();
+	assert.equal(queued.remote().data.name, "Replay after corrupt entry");
+	assert.equal(queuedDisk.size, 0);
+});
+await check(
+	"lost save responses recover without conflicts and preserve typing during the first open read",
+	async () => {
+		const f = fixture();
+		await f.state().open("draft");
+		const save = f.adapter.save;
+		f.adapter.save = async (...args) => {
+			await save(...args);
+			throw Error("response lost");
+		};
+		f.state().update((d) => {
+			d.name = "Arrived on server";
+		});
+		await f.state().flush();
+		f.online(false);
+		await f.state().close();
+		const diskCopy = () => new Map(f.disk);
+		const g = fixture({ disk: diskCopy(), initial: structuredClone(f.remote()) });
+		await g.state().open("draft");
+		assert.equal(g.state().conflict, null);
+		assert.equal(g.state().data.name, "Arrived on server");
+		assert.equal(g.disk.size, 0);
+		assert.equal(g.writes.length, 0);
+		await g.state().close();
+		const h = fixture({ disk: diskCopy(), initial: structuredClone(f.remote()) });
+		const read = h.adapter.read;
+		let releaseRead;
+		h.adapter.read = () =>
+			new Promise((resolve) => {
+				releaseRead = resolve;
+			});
+		const opening = h.state().open("draft");
+		await drain();
+		h.state().update((d) => {
+			d.detail = "Typed during open";
+		});
+		releaseRead(await read("draft"));
+		await opening;
+		assert.equal(h.state().conflict, null);
+		assert.equal(h.remote().data.detail, "Typed during open");
+		assert.equal(h.writes.at(-1).base.revision, 2);
+		await h.state().close();
+		const m = fixture({ disk: diskCopy(), initial: { ...f.remote(), name: "Different server title" } });
+		await m.state().open("draft");
+		assert(m.state().conflict, "Equal data must not discard unsaved document metadata");
+		await m.state().resolveConflict("use-theirs");
+		await m.state().close();
+	},
+);
+await check("an initial open read cannot conflict with a save completed while it was in flight", async () => {
+	const f = fixture();
+	await f.state().open("draft");
+	f.online(false);
+	f.state().update((d) => {
+		d.name = "Restored";
+	});
+	await f.state().close();
+	const g = fixture({ disk: f.disk });
+	const old = structuredClone(g.remote());
+	let releaseRead;
+	g.adapter.read = () =>
+		new Promise((resolve) => {
+			releaseRead = resolve;
+		});
+	const opening = g.state().open("draft");
+	await drain();
+	g.state().update((d) => {
+		d.name = "New typing";
+	});
+	await g.state().flush();
+	releaseRead(old);
+	await opening;
+	assert.equal(g.state().conflict, null);
+	assert.equal(g.state().data.name, "New typing");
+	g.state().update((d) => {
+		d.detail = "More";
+	});
+	await g.state().flush();
+	assert.equal(g.writes.at(-1).base.revision, 2);
+	await g.state().close();
+});
+await check("persistence coalesces typing within 300ms and flush/suspend keep the latest edit", async () => {
+	const f = fixture();
+	await f.state().open("draft");
+	f.online(false);
+	let writes = 0;
+	const set = f.env.storage.setItemSync;
+	f.env.storage.setItemSync = (...args) => {
+		writes++;
+		return set(...args);
+	};
+	for (let i = 0; i < 10; i++) {
+		f.state().update((d) => {
+			d.name = String(i);
+		});
+		await advance(25);
+	}
+	assert.equal(writes, 0);
+	await advance(50);
+	assert.equal(writes, 1);
+	assert.equal(JSON.parse([...f.disk.values()][0]).document.data.name, "9");
+	f.state().update((d) => {
+		d.name = "Force on blur";
+	});
+	await f.draft.blur();
+	assert.equal(writes, 2);
+	f.state().update((d) => {
+		d.name = "Force on suspend";
+	});
+	f.draft.suspend();
+	assert.equal(writes, 3);
+	assert.equal(JSON.parse([...f.disk.values()][0]).document.data.name, "Force on suspend");
+	await advance(1000);
+	assert.equal(writes, 3);
+});
+await check(
+	"account cleanup clears both persisted and pending drafts without resurrecting in-flight saves",
+	async () => {
+		const disk = new Map();
+		const a = fixture({ disk }),
+			b = fixture({ disk, owner: "local/user-b" });
+		for (const f of [a, b]) {
+			await f.state().open("draft");
+			f.online(false);
+			f.state().update((d) => {
+				d.name = "Account draft";
+			});
+			await f.state().flush();
+		}
+		assert.equal(disk.size, 2);
+		a.online(true);
+		const release = a.hold();
+		const saving = a.state().flush();
+		await drain();
+		a.state().update((d) => {
+			d.name = "Last unsaved edit";
+		});
+		a.draft.clearDraftsFor("local/user-a");
+		release();
+		await saving;
+		await advance(1000);
+		assert.equal(a.state().document, null);
+		assert.equal(disk.size, 1);
+		await a.draft.replay();
+		assert.equal(disk.size, 1);
+		await b.state().close();
+		await a.state().open("draft");
+		assert.equal(a.state().data.name, "Account draft");
+		await a.state().close();
+	},
+);
 mock.timers.reset();
 console.log(`${passed} draft boundary scenarios passed`);
 
@@ -592,6 +808,34 @@ await check("real letter adapter revisions, body+design edits, restart dates and
 hook.deregister();
 delete globalThis.__m3t3client;
 console.log(`${passed} total boundary scenarios passed`);
+
+await check("real letter response loss adopts the server revision without discarding local content", async () => {
+	letterRemote = letterAdapter.parse(letterRemote);
+	const f = fixture();
+	const draft = createDraftStore(letterAdapter, f.env),
+		state = draft.store.getState;
+	await state().open("real-letter");
+	const update = rpcClient.coverLetters.update;
+	rpcClient.coverLetters.update = async (input) => {
+		await update(input);
+		throw Error("lost letter response");
+	};
+	state().update((d) => {
+		d.content = "Letter saved despite response loss";
+	});
+	await state().flush();
+	rpcClient.coverLetters.update = update;
+	f.online(false);
+	await state().close();
+	f.online(true);
+	const recovered = createDraftStore(letterAdapter, f.env);
+	await recovered.store.getState().open("real-letter");
+	assert.equal(recovered.store.getState().conflict, null);
+	assert.equal(recovered.store.getState().document.revision, letterRemote.revision);
+	assert.equal(recovered.store.getState().document.content, "Letter saved despite response loss");
+	assert.equal(f.disk.size, 0);
+	await recovered.store.getState().close();
+});
 
 // Native lifecycle boundary: real watchDraft + scope logic, with platform event emitters as external inputs.
 let token = `header.${Buffer.from(JSON.stringify({ sub: "user-a" })).toString("base64url")}.signature`;
@@ -815,6 +1059,41 @@ await check("native store owns SSE retry/abort, defers updates to field blur, an
 	assert.equal(queueDisk.size, 0);
 	draft.suspend();
 	runtime.letter.suspend();
+});
+await check("public sign-out cleanup removes resume and letter queues only for the supplied account", async () => {
+	const scope = await runtime.getDraftScope();
+	assert(scope);
+	for (const [store, edit, id] of [
+		[
+			runtime.useResumeStore,
+			(d) => {
+				d.basics.name = "Sign-out resume";
+			},
+			"real-resume",
+		],
+		[
+			runtime.useLetterStore,
+			(d) => {
+				d.content = "Sign-out letter";
+			},
+			"real-letter",
+		],
+	]) {
+		await store.getState().open(id);
+		await drain();
+		callbacks.network({ isConnected: false, isInternetReachable: false });
+		store.getState().update(edit);
+		await store.getState().flush();
+		await store.getState().close();
+	}
+	assert.equal(queueDisk.size, 2);
+	const otherKey = `reactive-resume:unsaved:${encodeURIComponent(JSON.stringify([server, "user-b"]))}:resume:other`;
+	queueDisk.set(otherKey, "Other account");
+	runtime.clearDraftsFor(scope);
+	await advance(1000);
+	assert.deepEqual([...queueDisk.keys()], [otherKey]);
+	assert.equal(runtime.useResumeStore.getState().document, null);
+	assert.equal(runtime.useLetterStore.getState().document, null);
 });
 runtimeHook.deregister();
 delete globalThis.__m3t3runtime;
