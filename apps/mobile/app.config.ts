@@ -6,13 +6,13 @@ const host = "rxresu.me";
 const config: ExpoConfig = {
 	name: "Reactive Resume",
 	slug: "reactive-resume",
-	scheme: "me.rxresu.app",
+	scheme: "me.rxresu",
 	owner: "amruthpillai",
 	version: "1.0.0",
 	orientation: "default",
 	userInterfaceStyle: "automatic",
 	ios: {
-		bundleIdentifier: "me.rxresu.app",
+		bundleIdentifier: "me.rxresu",
 		appleTeamId: "654ASRW868",
 		deploymentTarget: "17.4",
 		supportsTablet: true,
@@ -20,7 +20,7 @@ const config: ExpoConfig = {
 		associatedDomains: [`applinks:${host}`, `webcredentials:${host}`],
 	},
 	android: {
-		package: "me.rxresu.app",
+		package: "me.rxresu",
 		predictiveBackGestureEnabled: false,
 		// Added by a dependency's manifest; the app never draws over other apps.
 		blockedPermissions: ["android.permission.SYSTEM_ALERT_WINDOW"],

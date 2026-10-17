@@ -17,7 +17,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | SVa SV1+SV2 app links, callback page, Apple   | Codex       | 10498568 | mobile/SVa        | RUNNING |                                                                                     |
 | SVb SV4 offline_access unbinding              | Codex       | 4441e7ce | mobile/SVb        | RUNNING |                                                                                     |
 | SVc SV3+SV5 update conflict, account wrappers | Codex       | 3d077e9f | mobile/SVc        | RUNNING |                                                                                     |
-| M1-T1 apps/mobile skeleton                    | Claude Code | a735cf80 | mobile/M1-T1      | RUNNING | briefs/M1.md                                                                        |
+| M1-T1 apps/mobile skeleton                    | Claude Code | a735cf80 | mobile/M1-T1      | MERGED  | briefs/M1.md                                                                        |
 | M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2      | MERGED  | briefs/M1.md                                                                        |
 
 ## Gates
@@ -48,9 +48,9 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 ## Store identity (owner, 2026-10-17)
 
 - App name: **Reactive Resume**
-- iOS bundle ID: **me.rxresu.app**
-- Android package: **me.rxresu.app**
-- Apple Team ID: **654ASRW868**. AASA `appID` = `654ASRW868.me.rxresu.app`.
+- iOS bundle ID: **me.rxresu** (was `me.rxresu.app`; changed 2026-10-17 because Play reports `me.rxresu.app` in use)
+- Android package: **me.rxresu**
+- Apple Team ID: **654ASRW868**. AASA `appID` = `654ASRW868.me.rxresu`.
 - Accounts: the owner has a verified Apple Developer account and a verified Google Play Console account, both fees paid.
 - Still needed before M8:
   - an Expo account for EAS Build/Submit
@@ -137,3 +137,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M1-T2 merged (91c670782). Claude review `43206784`: NO BLOCKERS; SupervisorJob fix applied. Follow-ups for M3-T4: decode `data:` image sources and resolve relative picture URLs before `expo/fetch`; add a `preloadResumePdf` counterpart if useful; native-engine parity and the repair pass are still untested. Kotlin/Swift compile against SDK 58 is checked in the M1-T1 device build.
 - 2026-10-17: M8-T2a merged. Claude review `13f31815` found 1 blocker (workflow-wide `contents: write` during untrusted build code); fixed by a read-only build job plus a separate publish job, plus SHA-pinned setup-android and explicit toolchain install. Still needed before EAS builds (M8-T2): the owner publishes an approved artifact through the workflow, the checksum pin is committed in `prebuilt.json`, and the mobile `eas-build-pre-install` hook is wired.
 - 2026-10-17: M1-T1 done; Codex review `6dd34c09` found 5 blockers (cross-server token leak on failed sign-in, SecureStore key collisions, RECORD_AUDIO stripped, SYSTEM_ALERT_WINDOW, `RenderRequest` lacking render options). Fix round running. Coordinator decisions: `@reactive-resume/api` stays a type-only peer with `@boundaries-ignore` and an oxlint guard (keeps the `runtime:server` deny); `react-native-enriched-html` (renamed upstream) accepted; approved additions to §1.4: `expo-network`, `@react-native-community/datetimepicker`, `react-native-keyboard-controller`, `expo-haptics`. EAS slug verified (`@amruthpillai/reactive-resume`).
+- 2026-10-17: M1-T1 merged (FIXED 5). Wave checks on the integration branch: `turbo boundaries`, mobile/pdf/forme-native typecheck and `expo export` (iOS + Android) pass. **G1 note:** owner reported Play Console rejects `me.rxresu.app` as in use; app identity changed to **`me.rxresu`** on both platforms (bundle ID, package, URL scheme). Owner must register `me.rxresu` in Apple Developer and Play Console. Apple native ID-token `audience` (SVa follow-up) becomes `me.rxresu`.

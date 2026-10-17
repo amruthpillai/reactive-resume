@@ -35,7 +35,7 @@ This freezes README §1 with the spike results. Agents must not re-open these de
 
 ## Distribution (owner, 2026-10-17)
 
-- **App identity:** "Reactive Resume", iOS bundle ID and Android package `me.rxresu.app`, Apple Team ID `654ASRW868`.
+- **App identity:** "Reactive Resume", iOS bundle ID and Android package `me.rxresu`, Apple Team ID `654ASRW868`.
 - **EAS project:** ID `5830280e-e1ba-45b7-b9c9-ba048fa3bd4d`, Expo account `amruthpillai`. M1 sets `owner: "amruthpillai"` and `extra.eas.projectId` in `apps/mobile/app.config.ts`. The owner's `eas init` wrote a root `app.json` in the coordinator worktree; that file was removed after this was recorded.
 - **Credentials:**
   - Credentials never enter the repo, briefs, reports or logs.
