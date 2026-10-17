@@ -767,10 +767,6 @@ msgstr "Một vai trò không có mô tả"
 msgid "A second opinion on your wording"
 msgstr "Ý kiến ​​​​thứ hai về cách diễn đạt của bạn"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "Máy chủ Reactive Resume tự lưu trữ"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "Hiện tại, một thời gian theo dõi ngắn thường là ổn"
@@ -1453,7 +1449,6 @@ msgstr "Chế độ xem hồ sơ ứng tuyển"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Danh sách có dấu đầu dòng"
 msgid "Burgundy"
 msgstr "Đỏ rượu vang"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "bởi <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Lịch"
@@ -2163,10 +2162,6 @@ msgstr "Chọn thời gian"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Chọn tối đa 200 hồ sơ ứng tuyển cho mỗi hành động hàng loạt."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Chọn máy chủ lưu trữ tài liệu của bạn. Bạn có thể chuyển đổi máy chủ sau trong “Cài đặt”."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Vòng tròn"
@@ -2234,6 +2229,10 @@ msgstr "Đóng hồ sơ xin việc…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Đóng hồ sơ ứng tuyển"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Đóng tìm kiếm"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "Đừng gửi {0}"
 msgid "Don't send {0} posting"
 msgstr "Không gửi tin tuyển dụng {0}"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Quyên tặng"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Lời chào"
 msgid "Grid view"
 msgstr "Chế độ xem lưới"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Được nhóm theo giai đoạn xin việc, với việc cấp bách nhất trước tiên."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Nhập"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Nhập hoặc xuất CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Nhập sơ yếu lý lịch hiện tại của bạn hoặc bắt đầu mới với tên của bạn."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Nhập/Xuất"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Đã khóa. Mở khóa để chỉnh sửa."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Nhấn và giữ thẻ để kéo thẻ đó sang giai đoạn khác."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Nhấn giữ để chọn"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Mở cài đặt AI"
 msgid "Open application"
 msgstr "Mở hồ sơ ứng tuyển"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Mở không gian làm việc của hồ sơ ứng tuyển này"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Mở Hồ sơ ứng tuyển"
@@ -7090,10 +7093,6 @@ msgstr "Xuất lại với font đã nhúng, sau đó mở tệp và kiểm tra 
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Mã nguồn mở và miễn phí · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Đọc bản tóm tắt"
@@ -7773,6 +7772,10 @@ msgstr "Vai trò {0}"
 msgid "Role / title"
 msgstr "Vai trò / chức danh"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Vị trí, công ty hoặc người liên hệ"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Vai trò, công ty hoặc vị trí"
@@ -8031,7 +8034,6 @@ msgstr "Phỏng vấn sơ tuyển"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Tìm kiếm"
 
@@ -8039,6 +8041,7 @@ msgstr "Tìm kiếm"
 msgid "Search and enhanced reading"
 msgstr "Tìm kiếm và nâng cao khả năng đọc"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Tìm kiếm đơn xin việc"
@@ -8050,6 +8053,10 @@ msgstr "Lệnh tìm kiếm"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "Search bao gồm các tài liệu, hồ sơ ứng tuyển, các cuộc trò chuyện và hành động của trợ lý."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Tìm kiếm tài liệu"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Tìm kiếm ngôn ngữ"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Tìm kiếm hoặc chạy…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Tìm kiếm vai trò, công ty hoặc liên hệ"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Phần · thứ tự in"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Các phần sử dụng tiêu đề được hệ thống nhận biết và thể hiện kinh nghiệm làm việc."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Lựa chọn"
 
@@ -8222,7 +8223,6 @@ msgstr "Đã gửi tới {0}"
 msgid "Serbian"
 msgstr "Serbia"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Nguồn"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "Nguồn và lịch sử chỉnh sửa"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Mã nguồn trên GitHub"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "Nhà cung cấp không trả lời."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "Nhà cung cấp không trả lời. Kiểm tra chìa khóa, model và đế URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Máy chủ Reactive Resume công cộng"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

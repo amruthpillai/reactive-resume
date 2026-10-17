@@ -767,10 +767,6 @@ msgstr "Peranan tidak mempunyai huraian"
 msgid "A second opinion on your wording"
 msgstr "Pendapat kedua tentang kata-kata anda"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "Reactive Resume yang dihoskan sendiri"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "Susulan singkat biasanya baik sekarang"
@@ -1453,7 +1449,6 @@ msgstr "Paparan permohonan"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Senarai bertitik tumpu mata"
 msgid "Burgundy"
 msgstr "Burgundi"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "oleh <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Kalendar"
@@ -2163,10 +2162,6 @@ msgstr "Pilih masa"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Pilih sehingga 200 permohonan setiap tindakan pukal."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Pilih tempat dokumen anda disimpan. Anda boleh bertukar kemudian dalam Tetapan."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Bulatan"
@@ -2234,6 +2229,10 @@ msgstr "Tutup permohonan kerja…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Tutup permohonan"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Tutup carian"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "Jangan hantar {0}"
 msgid "Don't send {0} posting"
 msgstr "Jangan hantar iklan kerja {0}"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Derma"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Salam pembuka"
 msgid "Grid view"
 msgstr "Pandangan grid"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Dikelompokkan mengikut peringkat; apa yang memerlukan anda dahulu."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Import ia"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Import atau eksport CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Import resume semasa anda, atau mulakan baru dengan nama anda."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Import/Eksport"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Terkunci. Buka kunci untuk mengedit."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Tekan lama kad untuk menyeretnya ke peringkat lain."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Tekan lama untuk memilih"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Buka tetapan AI"
 msgid "Open application"
 msgstr "Buka permohonan"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Buka ruang kerja permohonan"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Buka senarai Permohonan"
@@ -7090,10 +7093,6 @@ msgstr "Eksport semula dengan fon dibenamkan, kemudian buka fail dan semak teks 
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Sumber percuma dan terbuka · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Baca taklimat"
@@ -7773,6 +7772,10 @@ msgstr "Peranan {0}"
 msgid "Role / title"
 msgstr "Peranan / tajuk"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Jawatan, syarikat atau kenalan"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Peranan, syarikat atau lokasi"
@@ -8031,7 +8034,6 @@ msgstr "Temu bual saringan"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Carian"
 
@@ -8039,6 +8041,7 @@ msgstr "Carian"
 msgid "Search and enhanced reading"
 msgstr "Cari dan bacaan dipertingkatkan"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Cari permohonan kerja"
@@ -8050,6 +8053,10 @@ msgstr "Perintah carian"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "Carian meliputi dokumen, permohonan, perbualan pembantu dan tindakan."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Cari dokumen"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Cari bahasa"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Cari atau jalankan…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Cari peranan, syarikat atau kenalan"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Bahagian · pesanan cetakan"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Bahagian menggunakan pengecaman sistem pengepala, dan pengalaman kerja menunjukkan."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Pilih"
 
@@ -8222,7 +8223,6 @@ msgstr "Dihantar kepada {0}"
 msgid "Serbian"
 msgstr "Serbia"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Sumber"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "Sejarah sumber dan pembetulan"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Kod sumber di GitHub"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "Pembekal tidak menjawab."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "Pembekal tidak menjawab. Semak kunci, model dan pangkalan URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Pelayan Reactive Resume awam"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

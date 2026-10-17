@@ -10,7 +10,7 @@ export default function NativeCallback() {
 	const router = useRouter();
 	useEffect(() => {
 		if (router.canGoBack()) router.back();
-		else router.replace(routes.server());
+		else router.replace(routes.signIn());
 	}, [router]);
 
 	return null;

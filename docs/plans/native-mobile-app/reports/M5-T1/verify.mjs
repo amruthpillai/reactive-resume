@@ -63,6 +63,7 @@ env.cacheFiles = () => [...files.keys()].filter((uri) => uri.startsWith("cache/"
 globalThis.__m5 = env;
 const ui = ["Banner", "Button", "ChipInput", "ListRow", "Segmented", "SelectSheet", "Sheet", "Text", "TextArea", "TextField", "Screen", "Skeleton", "Icon", "IconButton", "Switch", "EmptyState"];
 const mockSources = {
+ "@/features/applications-board/views": "exports.ApplicationsViewFrame='ApplicationsViewFrame';",
  react: "exports.useState=globalThis.__m5.useState;exports.useRef=globalThis.__m5.useRef;exports.useEffect=globalThis.__m5.useEffect;",
  "@lingui/react/macro": "exports.useLingui=()=>({t:globalThis.__m5.tag,i18n:{locale:'en'}});",
  "@lingui/core/macro": "exports.t=globalThis.__m5.tag;exports.plural=(n,o)=>o.other.replace('#',n);",

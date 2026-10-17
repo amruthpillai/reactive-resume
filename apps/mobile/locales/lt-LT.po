@@ -767,10 +767,6 @@ msgstr "Vaidmuo neturi aprašymo"
 msgid "A second opinion on your wording"
 msgstr "Antra nuomonė dėl jūsų formuluotės"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "Savarankiškai priglobtas Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "Trumpas stebėjimas dabar paprastai yra gerai"
@@ -1453,7 +1449,6 @@ msgstr "Paraiškų rodiniai"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Sąrašas su ženkleliais"
 msgid "Burgundy"
 msgstr "Burgundija"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "sukūrė <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Kalendorius"
@@ -2163,10 +2162,6 @@ msgstr "Pasirinkite laiką"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Vienam masiniam veiksmui pasirinkite iki 200 darbo paraiškų."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Pasirinkite, kur yra jūsų dokumentai. Vėliau galėsite perjungti naudodami Nustatymai."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Apskritimas"
@@ -2234,6 +2229,10 @@ msgstr "Uždaryti darbo paraišką…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Uždarykite darbo paraiškas"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Uždaryti paiešką"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "Nesiųskite {0}"
 msgid "Don't send {0} posting"
 msgstr "Nesiųskite {0} darbo skelbimo"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Paaukoti"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Kreipinys"
 msgid "Grid view"
 msgstr "Tinklelio vaizdas"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Sugrupuota pagal etapus; ko tau pirmiausia reikia."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Importuokite jį"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Importuoti arba eksportuoti CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Importuokite dabartinį gyvenimo aprašymą arba pradėkite nuo savo vardo."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Importuoti/Eksportuoti"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Užrakinta. Atrakinkite, kad galėtumėte redaguoti."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Ilgai paspauskite kortelę, kad nutemptumėte ją į kitą etapą."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Paspauskite ir palaikykite, kad pasirinktumėte"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Atidarykite AI nustatymus"
 msgid "Open application"
 msgstr "Atidaryti darbo paraišką"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Atidaryti darbo paraiškos darbo sritį"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Atidaryti darbo paraiškas"
@@ -7090,10 +7093,6 @@ msgstr "Eksportuokite iš naujo su įterptais šriftais, tada atidarykite failą
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Nemokamas ir atvirasis šaltinis · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Skaityti atmintinę"
@@ -7773,6 +7772,10 @@ msgstr "Vaidmuo {0}"
 msgid "Role / title"
 msgstr "Pareigos / pavadinimas"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Pareigos, įmonė arba kontaktas"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Vaidmuo, įmonė ar vieta"
@@ -8031,7 +8034,6 @@ msgstr "Pirminis darbo pokalbis"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Paieška"
 
@@ -8039,6 +8041,7 @@ msgstr "Paieška"
 msgid "Search and enhanced reading"
 msgstr "Paieška ir patobulintas skaitymas"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Ieškokite darbo paraiškų"
@@ -8050,6 +8053,10 @@ msgstr "Paieškos komandos"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "Paieška apima dokumentus, darbo paraiškas, asistento pokalbius ir veiksmus."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Ieškokite dokumentų"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Ieškoti kalbų"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Ieškokite arba paleiskite…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Ieškokite vaidmens, įmonės ar kontakto"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Skyriai · spausdinimo tvarka"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Skyriuose naudojamos antraščių sistemos atpažinimas, o darbo patirtis rodo."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Pasirinkite"
 
@@ -8222,7 +8223,6 @@ msgstr "Išsiųstas į {0}"
 msgid "Serbian"
 msgstr "Serbų"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Šaltinis"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "Šaltinis ir taisymo istorija"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Pirminis kodas „GitHub“"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "Teikėjas neatsakė."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "Teikėjas neatsakė. Patikrinkite raktą, modelį ir pagrindą URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Viešasis Reactive Resume serveris"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

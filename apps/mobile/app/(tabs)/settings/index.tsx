@@ -1,16 +1,22 @@
-import { useLingui } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
+import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { openBrowserAsync } from "expo-web-browser";
+import { View } from "react-native";
 import { SettingsGroup, SettingsPage } from "@/features/settings/layout";
 import { useProfile } from "@/features/settings/queries";
 import { SignOutRow } from "@/features/settings/sign-out";
 import { routes } from "@/routes";
-import { Avatar, ListRow, Text, showToast, useThemePreference } from "@/ui";
+import { Avatar, ListRow, Text, showToast, useTheme, useThemePreference } from "@/ui";
 
 export default function SettingsScreen() {
 	const router = useRouter();
 	const { t } = useLingui();
+	const { space } = useTheme();
 	const profile = useProfile();
+	const openLink = (url: string) => {
+		void openBrowserAsync(url).catch(() => showToast({ message: t`Couldn't open the browser. Try again.` }));
+	};
 	const theme = useThemePreference();
 	const appearance = { system: t`System`, light: t`Light`, dark: t`Dark` }[theme];
 	return (
@@ -48,20 +54,45 @@ export default function SettingsScreen() {
 					chevron
 					onPress={() => router.push("/(tabs)/settings/licences")}
 				/>
+				<ListRow title={t`Help & docs`} leading="question" onPress={() => openLink("https://docs.rxresu.me")} />
 				<ListRow
-					title={t`Help & docs`}
-					leading="question"
-					onPress={() => {
-						void openBrowserAsync("https://docs.rxresu.me").catch(() =>
-							showToast({ message: t`Couldn't open the browser. Try again.` }),
-						);
-					}}
+					title={t`Donate`}
+					leading="hand-heart"
+					external
+					onPress={() => openLink("https://opencollective.com/reactive-resume/donate")}
+				/>
+				<ListRow
+					title={t`Source code on GitHub`}
+					leading="code"
+					external
+					onPress={() => openLink("https://github.com/reactive-resume/reactive-resume")}
 				/>
 			</SettingsGroup>
 			<SettingsGroup>
 				<SignOutRow />
 			</SettingsGroup>
-			<Text variant="caption" color="ink3" align="center">{t`Reactive Resume · Free and open source · MIT`}</Text>
+			<View style={{ alignItems: "center", gap: space.s1 }}>
+				<Text variant="caption" color="ink3" align="center">
+					Reactive Resume
+				</Text>
+				<Text variant="caption" color="ink3" align="center">
+					<Trans>
+						by{" "}
+						<Text
+							variant="caption"
+							color="accentText"
+							accessibilityRole="link"
+							onPress={() => openLink("https://amruthpillai.com")}
+							style={{ textDecorationLine: "underline" }}
+						>
+							Amruth Pillai
+						</Text>
+					</Trans>
+				</Text>
+				<Text variant="caption" color="ink3" align="center">
+					v{Constants.expoConfig?.version ?? "—"}
+				</Text>
+			</View>
 		</SettingsPage>
 	);
 }

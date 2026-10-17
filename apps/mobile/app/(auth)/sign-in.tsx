@@ -27,7 +27,7 @@ export default function SignInScreen() {
 	const { attempt, start, cancel, reset } = useSignIn();
 	const flags = useQuery({ queryKey: ["auth", "flags", server], queryFn: () => getFlags(server) });
 
-	const changeServer = () => (router.canDismiss() ? router.dismissAll() : router.replace(routes.server()));
+	const changeServer = () => router.push(routes.server());
 
 	return (
 		<Screen scroll={false} edges={["top", "bottom"]}>

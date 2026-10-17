@@ -767,10 +767,6 @@ msgstr "Ролята няма описание"
 msgid "A second opinion on your wording"
 msgstr "Второ мнение за твоята формулировка"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "Самостоятелно хостван Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "Кратко проследяване обикновено е добре сега"
@@ -1453,7 +1449,6 @@ msgstr "Изгледи на кандидатурите"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Списък с водещи символи"
 msgid "Burgundy"
 msgstr "Бордо"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "от <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Календар"
@@ -2163,10 +2162,6 @@ msgstr "Изберете час"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Изберете до 200 кандидатури за групово действие."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Изберете къде да се съхраняват документите ви. Можете да смените сървъра по-късно в Настройки."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Кръг"
@@ -2234,6 +2229,10 @@ msgstr "Затворете кандидатурата за работа..."
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Приключете кандидатурите"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Затваряне на търсенето"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "Не изпращайте {0}"
 msgid "Don't send {0} posting"
 msgstr "Не изпращайте {0} обява за работа"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Дарете"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Обръщение"
 msgid "Grid view"
 msgstr "Изглед с решетка"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Групирани по етап; най-важното е първо."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Импортирайте го"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Импортиране или експортиране на CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Импортирайте текущата си автобиография или започнете отначало с вашето име."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Импортиране/Експортиране"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Заключено. Отключете за редактиране."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Натиснете дълго карта, за да я плъзнете на друг етап."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Натиснете и задръжте за избор"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Отворете настройките на AI"
 msgid "Open application"
 msgstr "Отваряне на кандидатурата"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Отваряне на работното пространство за кандидатурата"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Отваряне на Кандидатури"
@@ -7090,10 +7093,6 @@ msgstr "Експортирайте отново с вградени шрифто
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Безплатен и отворен код · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Прочитане на брифинга"
@@ -7773,6 +7772,10 @@ msgstr "Роля {0}"
 msgid "Role / title"
 msgstr "Роля / длъжност"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Длъжност, компания или контакт"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Роля, компания или местоположение"
@@ -8031,7 +8034,6 @@ msgstr "Предварително интервю"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Търсене"
 
@@ -8039,6 +8041,7 @@ msgstr "Търсене"
 msgid "Search and enhanced reading"
 msgstr "Търсене и подобрено четене"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Търсене на кандидатури за работа"
@@ -8050,6 +8053,10 @@ msgstr "Команди за търсене"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "Търсенето обхваща документи, кандидатури, разговори с асистенти и действия."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Търсене на документи"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Търсене на езици"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Търсете или стартирайте..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Търсете роля, фирма или контакт"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Секции · ред за печат"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Секциите използват заглавия, които системите разпознават и работният опит показва."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Изберете"
 
@@ -8222,7 +8223,6 @@ msgstr "Изпратено до {0}"
 msgid "Serbian"
 msgstr "Сръбски"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Източник"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "Източник и история на корекцията"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Изходен код в GitHub"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "Доставчикът не отговори."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "Доставчикът не отговори. Проверете ключа, модела и основата URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Публичният Reactive Resume сървър"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

@@ -767,10 +767,6 @@ msgstr "یک نقش توصیفی ندارد"
 msgid "A second opinion on your wording"
 msgstr "نظر دوم در مورد جمله شما"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "میزبان خود Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "یک پیگیری کوتاه معمولاً در حال حاضر خوب است"
@@ -1453,7 +1449,6 @@ msgstr "نماهای درخواست‌ها"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "لیست گلوله شده"
 msgid "Burgundy"
 msgstr "بورگوندی"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "توسط <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "تقویم"
@@ -2163,10 +2162,6 @@ msgstr "زمان را انتخاب کنید"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "در هر اقدام انبوه تا 200 درخواست شغلی را انتخاب کنید."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "محل زندگی اسناد خود را انتخاب کنید. می‌توانید بعداً در تنظیمات جابجا شوید."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "دایره"
@@ -2234,6 +2229,10 @@ msgstr "بستن درخواست کار…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "درخواست‌های شغلی را ببندید"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "بستن جستجو"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "{0} نفرستید"
 msgid "Don't send {0} posting"
 msgstr "پست شغلی {0} نفرستید"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "اهدا کنید"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "خطاب"
 msgid "Grid view"
 msgstr "نمای شبکه ای"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "گروه بندی بر اساس مرحله؛ چه چیزی ابتدا به شما نیاز دارد"
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "وارد کردن"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "واردات یا صادرات CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "رزومه فعلی خود را وارد کنید یا با نام خود شروع کنید."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "درون‌ریزی/برون‌بری"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "قفل شده است. برای ویرایش قفل را باز کنید.
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "یک کارت را به مدت طولانی فشار دهید تا آن را به مرحله دیگری بکشید."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "برای انتخاب، لمس کنید و نگه دارید"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "تنظیمات هوش مصنوعی را باز کنید"
 msgid "Open application"
 msgstr "درخواست کار را باز کنید"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "فضای کاری برنامه شغلی را باز کنید"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "درخواست‌های شغلی را باز کنید"
@@ -7090,10 +7093,6 @@ msgstr "با فونت‌های جاسازی‌شده دوباره خروجی ب�
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · رایگان و متن باز · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "خواندن گزارش توجیهی"
@@ -7773,6 +7772,10 @@ msgstr "نقش {0}"
 msgid "Role / title"
 msgstr "نقش / عنوان"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "عنوان شغلی، شرکت یا مخاطب"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "نقش، شرکت یا مکان"
@@ -8031,7 +8034,6 @@ msgstr "مصاحبه غربالگری"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "جستجو"
 
@@ -8039,6 +8041,7 @@ msgstr "جستجو"
 msgid "Search and enhanced reading"
 msgstr "جستجو و خواندن پیشرفته"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "جستجوی درخواست های شغلی"
@@ -8050,6 +8053,10 @@ msgstr "دستورهای جستجو"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "جستجو اسناد، درخواست های شغلی، مکالمات دستیار و اقدامات را پوشش می دهد."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "جستجوی اسناد"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "جستجوی زبان ها"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "جستجو یا اجرا…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "نقش، شرکت یا مخاطب را جستجو کنید"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "بخش ها · سفارش چاپ"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "بخش‌ها از سرفصل‌ها استفاده می‌کنند که سیستم‌های شناسایی، و تجربه کاری نشان می‌دهد."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "انتخاب کنید"
 
@@ -8222,7 +8223,6 @@ msgstr "به {0} ارسال شد"
 msgid "Serbian"
 msgstr "صربی"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "منبع"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "تاریخچه منبع و تصحیح"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "کد منبع در GitHub"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "ارائه دهنده جواب نداد"
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "ارائه دهنده جواب نداد کلید، مدل و پایه URL را بررسی کنید."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "سرور عمومی Reactive Resume"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

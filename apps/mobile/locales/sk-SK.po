@@ -767,10 +767,6 @@ msgstr "Rola nemá popis"
 msgid "A second opinion on your wording"
 msgstr "Druhý názor na vašu formuláciu"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "Vlastné hostenie Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "Krátke sledovanie je teraz zvyčajne v poriadku"
@@ -1453,7 +1449,6 @@ msgstr "Zobrazenia žiadostí"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Zoznam s odrážkami"
 msgid "Burgundy"
 msgstr "Bordová"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "od <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Kalendár"
@@ -2163,10 +2162,6 @@ msgstr "Vyberte si čas"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Vyberte si až 200 žiadostí o prácu na hromadnú akciu."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Vyberte, kde sa nachádzajú vaše dokumenty. Prepnúť môžete neskôr v Nastaveniachch."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Kruh"
@@ -2234,6 +2229,10 @@ msgstr "Zavrieť žiadosť o prácu…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Zatvorte žiadosti o zamestnanie"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Zavrieť vyhľadávanie"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "Neposielajte {0}"
 msgid "Don't send {0} posting"
 msgstr "Neposielať pracovný inzerát od {0}"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Darovať"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Oslovenie"
 msgid "Grid view"
 msgstr "Zobrazenie mriežky"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Zoskupené podľa fázy, najnaliehavejšie ako prvé."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Importujte ho"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Importujte alebo exportujte CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Importujte svoj aktuálny životopis alebo začnite odznova so svojím menom."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Import/Export"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Zamknuté. Ak chcete upraviť, odomknite."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Dlhým stlačením kartu presuňte do inej fázy."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Vyberte dlhým stlačením"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Otvorte nastavenia AI"
 msgid "Open application"
 msgstr "Otvorte žiadosť o zamestnanie"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Otvorte pracovný priestor žiadosti o prácu"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Otvoriť žiadosti o zamestnanie"
@@ -7090,10 +7093,6 @@ msgstr "Exportujte znova s vloženými písmami, potom otvorte súbor a overte, 
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Bezplatný a otvorený zdroj · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Prečítať brífing"
@@ -7773,6 +7772,10 @@ msgstr "Rola {0}"
 msgid "Role / title"
 msgstr "Úloha / názov"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Pozícia, spoločnosť alebo kontakt"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Rola, spoločnosť alebo miesto"
@@ -8031,7 +8034,6 @@ msgstr "Úvodný pohovor"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Hľadať"
 
@@ -8039,6 +8041,7 @@ msgstr "Hľadať"
 msgid "Search and enhanced reading"
 msgstr "Vyhľadávanie a vylepšené čítanie"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Hľadajte žiadosti o zamestnanie"
@@ -8050,6 +8053,10 @@ msgstr "Vyhľadávacie príkazy"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "Vyhľadávanie zahŕňa dokumenty, žiadosti o zamestnanie, konverzácie s asistentom a akcie."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Vyhľadajte dokumenty"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Hľadať jazyky"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Vyhľadajte alebo spustite…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Rola vyhľadávania, spoločnosť alebo kontakt"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Sekcie · poradie tlače"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Sekcie používajú systémy rozpoznania nadpisov a ukazujú pracovné skúsenosti."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Vyberte"
 
@@ -8222,7 +8223,6 @@ msgstr "Odoslané na {0}"
 msgid "Serbian"
 msgstr "Srbčina"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Zdroj"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "História zdroja a opráv"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Zdrojový kód na GitHube"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "Poskytovateľ neodpovedal."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "Poskytovateľ neodpovedal. Skontrolujte kľúč, model a základňu URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Verejný server Reactive Resume"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

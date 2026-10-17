@@ -767,10 +767,6 @@ msgstr "역할에는 설명이 없습니다."
 msgid "A second opinion on your wording"
 msgstr "귀하의 표현에 대한 두 번째 의견"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "자체 호스팅 Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "짧은 후속 조치는 일반적으로 이제 괜찮습니다."
@@ -1453,7 +1449,6 @@ msgstr "지원 목록 보기"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "글머리 기호 목록"
 msgid "Burgundy"
 msgstr "버건디"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "개발: <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "달력"
@@ -2163,10 +2162,6 @@ msgstr "시간을 선택하세요"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "일괄 작업당 최대 200개의 지원 내역를 선택하세요."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "문서가 어디에 있는지 선택하세요. 나중에 설정에서 전환할 수 있습니다."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "원"
@@ -2234,6 +2229,10 @@ msgstr "채용 지원서를 닫습니다…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "지원 마감"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "검색 닫기"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "{0}를 보내지 마세요"
 msgid "Don't send {0} posting"
 msgstr "{0} 채용 공고를 보내지 마세요."
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "기부하세요"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "인사말"
 msgid "Grid view"
 msgstr "그리드 보기"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "단계별 그룹 · 주의가 필요한 항목부터."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "가져오기"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "CSV 가져오기 또는 내보내기"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "현재 이력서를 가져오거나 귀하의 이름으로 새로 시작하세요."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "가져오기/내보내기"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "잠겼습니다. 편집하려면 잠금을 해제하세요."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "카드를 길게 누르면 다른 단계로 드래그됩니다."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "길게 눌러 선택"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "AI 설정 열기"
 msgid "Open application"
 msgstr "지원 내역 열기"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "지원 작업 공간 열기"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "지원 목록 열기"
@@ -7090,10 +7093,6 @@ msgstr "폰트를 임베드하여 다시 내보낸 뒤 파일을 열어 텍스�
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · 무료 오픈 소스 · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "브리핑 읽기"
@@ -7773,6 +7772,10 @@ msgstr "역할 {0}"
 msgid "Role / title"
 msgstr "직무 / 직책"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "직무, 회사 또는 연락처"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "역할, 회사 또는 위치"
@@ -8031,7 +8034,6 @@ msgstr "사전 심사 면접"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "찾다"
 
@@ -8039,6 +8041,7 @@ msgstr "찾다"
 msgid "Search and enhanced reading"
 msgstr "검색 및 향상된 읽기"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "채용 지원서 검색"
@@ -8050,6 +8053,10 @@ msgstr "검색 명령"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "검색에는 문서, 지원 내역, 보조 대화 및 작업이 포함됩니다."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "문서 검색"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "언어 검색"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "검색하거나 실행하세요…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "역할, 회사 또는 연락처 검색"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "섹션 · 인쇄 주문"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "섹션에서는 시스템이 인식하고 업무 경험이 표시되는 제목을 사용합니다."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "선택"
 
@@ -8222,7 +8223,6 @@ msgstr "{0}로 보냄"
 msgid "Serbian"
 msgstr "세르비아어"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "출처"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "소스 및 수정 내역"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "GitHub 소스 코드"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "제공자는 응답하지 않았습니다."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "제공자는 응답하지 않았습니다. 키, 모델, 베이스 URL를 확인하세요."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Reactive Resume 공개 서버"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

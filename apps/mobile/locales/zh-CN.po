@@ -767,10 +767,6 @@ msgstr "角色没有描述"
 msgid "A second opinion on your wording"
 msgstr "对你的措辞的第二意见"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "自托管 Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "现在通常进行简短的跟进就可以了"
@@ -1453,7 +1449,6 @@ msgstr "申请视图"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "项目符号列表"
 msgid "Burgundy"
 msgstr "酒红色"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "作者：<0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "日历"
@@ -2163,10 +2162,6 @@ msgstr "选择时间"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "每个批量操作最多选择 200 个申请。"
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "选择您的文档所在的位置。您可以稍后在设置中切换。"
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "圆形"
@@ -2234,6 +2229,10 @@ msgstr "关闭职位申请..."
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "关闭申请"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "关闭搜索"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "不要发送 {0}"
 msgid "Don't send {0} posting"
 msgstr "不发送{0}的招聘信息"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "捐赠"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "称呼"
 msgid "Grid view"
 msgstr "网格视图"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "按阶段分组，优先显示需要处理的申请。"
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "导入它"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "导入或导出 CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "导入您当前的简历，或以您的名字重新开始。"
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "导入/导出"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "锁定。解锁即可编辑。"
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "长按卡片可将其拖至另一个阶段。"
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "长按选择"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "打开AI设置"
 msgid "Open application"
 msgstr "打开申请"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "打开申请工作区"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "打开申请列表"
@@ -7090,10 +7093,6 @@ msgstr "重新导出并嵌入字体，然后打开文件检查文字复制出来
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · 免费开源 · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "阅读简报"
@@ -7773,6 +7772,10 @@ msgstr "角色 {0}"
 msgid "Role / title"
 msgstr "职位 / 头衔"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "职位、公司或联系人"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "角色、公司或地点"
@@ -8031,7 +8034,6 @@ msgstr "筛选面试"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "搜索"
 
@@ -8039,6 +8041,7 @@ msgstr "搜索"
 msgid "Search and enhanced reading"
 msgstr "搜索和增强阅读"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "搜索职位申请"
@@ -8050,6 +8053,10 @@ msgstr "搜索命令"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "搜索涵盖文档、申请、助理对话和操作。"
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "搜索文件"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "搜索语言"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "搜索或运行..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "搜索职位、公司或联系人"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "章节·打印顺序"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "各部分使用系统能够识别的标题，且工作经历已显示。"
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "选择"
 
@@ -8222,7 +8223,6 @@ msgstr "发送至{0}"
 msgid "Serbian"
 msgstr "塞尔维亚语"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "来源"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "来源和更正历史"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "GitHub 上的源代码"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "提供者没有回答。"
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "提供者没有回答。检查钥匙、型号和底座URL。"
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "公共Reactive Resume服务器"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

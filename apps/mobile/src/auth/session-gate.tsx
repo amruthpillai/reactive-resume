@@ -4,14 +4,14 @@ import { useRootNavigationState, useRouter, useSegments } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { hostOf } from "./auth-header";
-import { getSession, hasChosenServer, signOut, subscribeIdentity, subscribeSession, useSession } from "./session";
+import { getSession, signOut, subscribeIdentity, subscribeSession, useSession } from "./session";
 import { useSignIn } from "./use-sign-in";
 import { routes } from "@/routes";
 import { Banner, Button, Sheet, showToast, useTheme } from "@/ui";
 
 /**
  * Route guard and session-expired prompt. Mounted once in app/_layout.tsx.
- * - Signed out anywhere but `(auth)`: go to sign-in (server picker on first launch).
+ * - Signed out anywhere but `(auth)`: go to sign-in.
  * - Signing out: go to sign-in at once, in the same tick, so a caller that navigates after `signOut()` (Settings →
  *   Switch server) always has the last word; then the AU7 toast.
  * - Signed in on an `(auth)` screen: go to Documents.
@@ -64,8 +64,7 @@ export function SessionGate() {
 		previous.current = status;
 		if (!navigationReady || atCallback) return;
 		const signedOutNow = before === "signed-in" || before === "expired";
-		if (status === "signed-out" && !inAuth && !signedOutNow)
-			router.replace(hasChosenServer() ? routes.signIn() : routes.server());
+		if (status === "signed-out" && !inAuth && !signedOutNow) router.replace(routes.signIn());
 		else if (status === "signed-in" && inAuth) router.replace(routes.documents());
 	}, [navigationReady, status, inAuth, atCallback, router]);
 

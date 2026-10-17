@@ -767,10 +767,6 @@ msgstr "একটি ভূমিকার কোন বর্ণনা নে�
 msgid "A second opinion on your wording"
 msgstr "আপনার শব্দের উপর একটি দ্বিতীয় মতামত"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "একটি স্ব-হোস্টেড Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "একটি সংক্ষিপ্ত ফলো-আপ সাধারণত এখন ঠিক আছে"
@@ -1453,7 +1449,6 @@ msgstr "আবেদনের ভিউ"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "বুলেটেড তালিকা"
 msgid "Burgundy"
 msgstr "বারগান্ডি"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "তৈরি করেছেন <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "ক্যালেন্ডার"
@@ -2163,10 +2162,6 @@ msgstr "সময় বেছে নিন"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "বাল্ক অ্যাকশন প্রতি 200 আবেদন পর্যন্ত বেছে নিন।"
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "আপনার নথি কোথায় রাখবেন বেছে নিন। পরে সেটিংস থেকে বদলাতে পারবেন।"
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "বৃত্ত"
@@ -2234,6 +2229,10 @@ msgstr "চাকরির আবেদন বন্ধ করুন..."
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "আবেদন বন্ধ করুন"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "অনুসন্ধান বন্ধ করুন"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "{0} পাঠাবেন না"
 msgid "Don't send {0} posting"
 msgstr "{0}-এর চাকরির বিজ্ঞপ্তি পাঠাবেন না"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "দান করুন"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "সম্ভাষণ"
 msgid "Grid view"
 msgstr "গ্রিড ভিউ"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "পর্যায় দ্বারা গোষ্ঠীবদ্ধ; আপনার প্রথমে কি প্রয়োজন।"
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "এটি আমদানি করুন"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "CSV আমদানি বা রপ্তানি করুন"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "আপনার বর্তমান জীবনবৃত্তান্ত আমদানি করুন, অথবা আপনার নাম দিয়ে নতুন করে শুরু করুন।"
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "আমদানি/রপ্তানি"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "তালাবদ্ধ। সম্পাদনা করতে আন
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "একটি কার্ডকে অন্য পর্যায়ে টেনে আনতে দীর্ঘক্ষণ টিপুন।"
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "নির্বাচন করতে চেপে ধরে রাখুন"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "AI সেটিংস খুলুন"
 msgid "Open application"
 msgstr "আবেদন খুলুন"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "আবেদনের কর্মক্ষেত্র খুলুন"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "আবেদন খুলুন"
@@ -7090,10 +7093,6 @@ msgstr "ফন্ট এমবেড করে পুনরায় এক্�
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · বিনামূল্যে এবং মুক্ত উৎস · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "ব্রিফিং পড়ুন"
@@ -7773,6 +7772,10 @@ msgstr "ভূমিকা {0}"
 msgid "Role / title"
 msgstr "ভূমিকা / পদবি"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "পদ, কোম্পানি বা যোগাযোগের ব্যক্তি"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "ভূমিকা, কোম্পানি বা অবস্থান"
@@ -8031,7 +8034,6 @@ msgstr "স্ক্রীনিং ইন্টারভিউ"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "অনুসন্ধান"
 
@@ -8039,6 +8041,7 @@ msgstr "অনুসন্ধান"
 msgid "Search and enhanced reading"
 msgstr "অনুসন্ধান এবং উন্নত পড়া"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "চাকরির আবেদন অনুসন্ধান করুন"
@@ -8050,6 +8053,10 @@ msgstr "অনুসন্ধান কমান্ডসমূহ"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "অনুসন্ধান নথি, আবেদন, সহকারী কথোপকথন এবং ক্রিয়া কভার করে।"
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "নথি অনুসন্ধান করুন"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "ভাষা খুঁজুন"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "অনুসন্ধান করুন বা চালান..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "ভূমিকা, কোম্পানি বা পরিচিতি অনুসন্ধান করুন"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "বিভাগ · প্রিন্ট অর্ডার"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "বিভাগগুলি শিরোনাম সিস্টেমগুলিকে স্বীকৃতি দেয় এবং কাজের অভিজ্ঞতা প্রদর্শন করে।"
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "নির্বাচন করুন"
 
@@ -8222,7 +8223,6 @@ msgstr "{0} এ পাঠানো হয়েছে"
 msgid "Serbian"
 msgstr "সার্বিয়ান"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "উৎস"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "উত্স এবং সংশোধন ইতিহাস"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "GitHub-এ সোর্স কোড"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "প্রদানকারী উত্তর দেয়নি।"
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "প্রদানকারী উত্তর দেয়নি। কী, মডেল এবং বেস URL চেক করুন।"
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "সর্বজনীন Reactive Resume সার্ভার"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

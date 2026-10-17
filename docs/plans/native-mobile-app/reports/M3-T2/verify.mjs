@@ -75,18 +75,20 @@ const mocks = {
 	"@/api/client": expose(["client", "orpc", "rest"]),
 	"@/auth/session": "exports.useSession=globalThis.__m3t2.session;exports.getServer=()=>globalThis.__m3t2.session().server;",
 	"@/features/ai/providers": "exports.useHasAIProvider=()=>globalThis.__m3t2.ai;exports.AIProviderSetupSheet='AIProviderSetupSheet';",
-	"@/ui": uiNames.map((name) => `exports.${name}='${name}';`).join("") + expose(["showToast"]) + "exports.useTheme=()=>({space:{s1:4,s2:8,s3:12,s4:16},colors:{accent:'green'},radius:{},size:{hit:44,row:52,icon:{row:20}}});",
-	"react-native": "exports.View='View';exports.ActivityIndicator='ActivityIndicator';exports.FlatList='FlatList';exports.Pressable='Pressable';exports.ScrollView='ScrollView';exports.PixelRatio={get:()=>2};exports.Platform={OS:'android'};exports.I18nManager={isRTL:false};exports.useWindowDimensions=()=>({width:400});",
+	"@/ui": uiNames.map((name) => `exports.${name}='${name}';`).join("") + expose(["showToast"]) + "exports.useTheme=()=>({space:{s1:4,s2:8,s3:12,s4:16},colors:{accent:'green'},type:{bodyLarge:{}},radius:{},size:{hit:44,row:52,icon:{row:20}}});",
+	"react-native": "exports.Keyboard={dismiss:()=>globalThis.__m3t2.client.dismissKeyboard()};exports.TextInput='TextInput';exports.View='View';exports.ActivityIndicator='ActivityIndicator';exports.FlatList='FlatList';exports.Pressable='Pressable';exports.ScrollView='ScrollView';exports.PixelRatio={get:()=>2};exports.Platform={OS:'android'};exports.I18nManager={isRTL:false};exports.useWindowDimensions=()=>({width:400});",
 	"expo-router": "exports.useRouter=()=>({replace:(href)=>globalThis.__m3t2.client.navigate(href),back:()=>{}});exports.Stack={Screen:'Stack.Screen'};exports.useLocalSearchParams=()=>globalThis.__m3t2.params;exports.useFocusEffect=()=>{};",
 	"expo-haptics": "exports.impactAsync=async()=>{};exports.ImpactFeedbackStyle={Light:'light'};",
 	"react-native-gesture-handler/ReanimatedSwipeable": "module.exports='Swipeable';",
+	"@/components/collection-header": "exports.CollectionHeader='CollectionHeader';",
 	"@/components/forme-check": "exports.FormeCheck='FormeCheck';",
 	"@/draft/runtime": "exports.useLetterStore=(selector)=>selector({});exports.useResumeStore=(selector)=>selector({});",
 	"@reactive-resume/utils/string": "exports.stripHtml=(value)=>value?.replace(/<[^>]*>/g,'')??'';",
 };
 const feature = fileURLToPath(new URL("apps/mobile/src/features/documents/", root));
 const packages = fileURLToPath(new URL("packages/schema/", root));
-const isSource = (url) => url?.startsWith("file:") && (fileURLToPath(url).startsWith(feature) || fileURLToPath(url).startsWith(packages));
+const collectionHeader = new URL("apps/mobile/src/components/collection-header.tsx", root).href;
+const isSource = (url) => url?.startsWith("file:") && (url === collectionHeader || fileURLToPath(url).startsWith(feature) || fileURLToPath(url).startsWith(packages));
 const hooks = registerHooks({
 	resolve(specifier, context, next) {
 		if (isSource(context.parentURL)) {
@@ -117,6 +119,7 @@ const { importDocument } = mobile("./src/features/documents/import-file.ts");
 const { useDocumentOperations } = mobile("./src/features/documents/queries.ts");
 const { NewDocument } = mobile("./src/features/documents/new-document.tsx");
 const { DocumentSheets } = mobile("./src/features/documents/document-sheets.tsx");
+const { CollectionHeader } = mobile("./src/components/collection-header.tsx");
 const { DocumentsLibrary } = mobile("./src/features/documents/library.tsx");
 const { Thumbnail } = mobile("./src/features/documents/thumbnail.tsx");
 const { defaultResumeData } = mobile("@reactive-resume/schema/resume/default");
@@ -295,6 +298,43 @@ await check("review bulk Trash emits one toast with successful-only Undo", async
 	assert.equal(toasts.length, 1); assert.ok(toasts[0].action);
 	toasts[0].action.onPress(); await flush();
 	assert.deepEqual(calls.filter(([name]) => name === "documents.restore").map(([, input]) => input.id), ["moved"]);
+});
+await check("shared collection search opens on demand and closing clears the query", () => {
+ let value = "";
+ const screen = mount(() => CollectionHeader({ title: "Documents", searchLabel: "Search documents", placeholder: "Find documents", value, onChangeText: (next) => { value = next; } }));
+ assert.ok(!elements(screen.tree).some((element) => element.type === "TextInput"));
+ elements(screen.tree).find((element) => element.type === "IconButton" && element.props.label === "Search documents").props.onPress(); screen.render();
+ let input = elements(screen.tree).find((element) => element.type === "TextInput").props;
+ assert.equal(input.autoFocus, true);
+ input.onChangeText("Northwind"); screen.render();
+ input = elements(screen.tree).find((element) => element.type === "TextInput").props;
+ assert.equal(input.value, "Northwind");
+ elements(screen.tree).find((element) => element.type === "IconButton" && element.props.label === "Close search").props.onPress(); screen.render();
+ assert.equal(value, "");
+ assert.ok(!elements(screen.tree).some((element) => element.type === "TextInput"));
+ assert.equal(calls.filter(([name]) => name === "dismissKeyboard").length, 1);
+});
+await check("sort pill cycles all methods and long press enters document selection", () => {
+ documents = [doc("Zulu", { updatedAt: date(4), createdAt: date(1) }), doc("Alpha", { updatedAt: date(2), createdAt: date(5) })];
+ const screen = mount(() => DocumentsLibrary({}));
+ const list = () => elements(screen.tree).find((element) => element.type === "FlatList").props;
+ const sort = () => elements(screen.tree).find((element) => element.type === "Chip" && element.props.label.startsWith("Sort:")).props;
+ assert.deepEqual(list().data.map((item) => item.id), ["Zulu", "Alpha"]);
+ sort().onPress(); screen.render();
+ assert.deepEqual(list().data.map((item) => item.id), ["Alpha", "Zulu"]);
+ sort().onPress(); screen.render();
+ assert.equal(sort().label, "Sort: Date created");
+ assert.deepEqual(list().data.map((item) => item.id), ["Alpha", "Zulu"]);
+ sort().onPress(); screen.render();
+ assert.equal(sort().label, "Sort: Last edited");
+ assert.deepEqual(list().data.map((item) => item.id), ["Zulu", "Alpha"]);
+ assert.ok(!elements(screen.tree).some((element) => element.type === "Button" && element.props.label === "Select"));
+ const itemNode = elements(list().renderItem({ item: documents[0] })).find((element) => typeof element.type === "function");
+ const item = mount(() => itemNode.type(itemNode.props));
+ elements(item.tree).find((element) => element.type === "Pressable").props.onLongPress(); screen.render();
+ const selectedNode = elements(list().renderItem({ item: documents[0] })).find((element) => typeof element.type === "function");
+ assert.equal(selectedNode.props.selecting, true);
+ assert.equal(selectedNode.props.selected, true);
 });
 await check("review viewability enables letter reads only for visible cards", async () => {
 	documents = Array.from({ length: 60 }, (_, index) => doc(`letter-${index}`, { type: "letter" }));

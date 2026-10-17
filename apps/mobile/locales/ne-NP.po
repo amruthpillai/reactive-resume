@@ -767,10 +767,6 @@ msgstr "भूमिकाको कुनै वर्णन हुँदैन
 msgid "A second opinion on your wording"
 msgstr "तपाईंको शब्दमा दोस्रो राय"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "आफ्नै सर्भरमा होस्ट गरिएको Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "एक छोटो फलो-अप सामान्यतया ठीक छ"
@@ -1453,7 +1449,6 @@ msgstr "आवेदनका दृश्यहरू"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "बुलेट गरिएको सूची"
 msgid "Burgundy"
 msgstr "बरगन्डी"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "<0>Amruth Pillai</0> द्वारा"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "पात्रो"
@@ -2163,10 +2162,6 @@ msgstr "समय छान्नुहोस्"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "एकमुष्ट कार्यमा 200 वटासम्म आवेदनहरू छान्नुहोस्।"
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "तपाईंको कागजातहरू कहाँ बस्छन् छनौट गर्नुहोस्। तपाईं पछि सेटिङहरू मा स्विच गर्न सक्नुहुन्छ।"
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "वृत्त"
@@ -2234,6 +2229,10 @@ msgstr "जागिरको आवेदन बन्द गर्नुहो
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "आवेदनहरू बन्द गर्नुहोस्"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "खोज बन्द गर्नुहोस्"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "{0} नपठाउनुहोस्"
 msgid "Don't send {0} posting"
 msgstr "{0} जागिरको विज्ञापन नपठाउनुहोस्"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "दान गर्नुहोस्"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "अभिवादन"
 msgid "Grid view"
 msgstr "ग्रिड दृश्य"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "चरणअनुसार समूहबद्ध; तपाईंको ध्यान चाहिने पहिले।"
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "यसलाई आयात गर्नुहोस्"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "आयात वा निर्यात CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "आफ्नो हालको बायोडाटा आयात गर्नुहोस्, वा आफ्नो नामको साथ नयाँ सुरु गर्नुहोस्।"
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "आयात/निर्यात"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "ताला लगाइएको। सम्पादन गर्न
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "कार्डलाई अर्को चरणमा तान्न लामो समयसम्म थिच्नुहोस्।"
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "छान्नका लागि थिचेर राख्नुहोस्"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "AI सेटिंग्स खोल्नुहोस्"
 msgid "Open application"
 msgstr "आवेदन खोल्नुहोस्"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "आवेदन कार्यक्षेत्र खोल्नुहोस्"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "आवेदनहरू खोल्नुहोस्"
@@ -7090,10 +7093,6 @@ msgstr "फन्ट एम्बेड गरेर पुनः निर्�
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · निःशुल्क र खुला स्रोत · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "ब्रिफिङ पढ्नुहोस्"
@@ -7773,6 +7772,10 @@ msgstr "भूमिका {0}"
 msgid "Role / title"
 msgstr "भूमिका / शीर्षक"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "पद, कम्पनी वा सम्पर्क"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "भूमिका, कम्पनी वा स्थान"
@@ -8031,7 +8034,6 @@ msgstr "प्रारम्भिक छनोट अन्तर्वार�
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "खोज्नुहोस्"
 
@@ -8039,6 +8041,7 @@ msgstr "खोज्नुहोस्"
 msgid "Search and enhanced reading"
 msgstr "खोज र परिष्कृत पठन"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "नौकरी आवेदनहरू खोज्नुहोस्"
@@ -8050,6 +8053,10 @@ msgstr "खोज आदेशहरू"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "खोजले कागजातहरू, आवेदनहरू, सहायक कुराकानीहरू र कार्यहरू समावेश गर्दछ।"
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "कागजातहरू खोज्नुहोस्"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "भाषाहरू खोज्नुहोस्"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "खोज्नुहोस् वा चलाउनुहोस्..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "भूमिका, कम्पनी वा सम्पर्क खोज्नुहोस्"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "खण्डहरू · प्रिन्ट अर्डर"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "खण्डहरूले हेडिङ प्रणालीहरू पहिचान, र कार्य अनुभव शोहरू प्रयोग गर्छन्।"
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "चयन गर्नुहोस्"
 
@@ -8222,7 +8223,6 @@ msgstr "{0} मा पठाइयो"
 msgid "Serbian"
 msgstr "सर्बियन"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "स्रोत"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "स्रोत र सुधार इतिहास"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "GitHub मा स्रोत कोड"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "प्रदायकले जवाफ दिएनन्।"
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "प्रदायकले जवाफ दिएनन्। कुञ्जी, मोडेल र आधार URL जाँच गर्नुहोस्।"
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "सार्वजनिक Reactive Resume सर्भर"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

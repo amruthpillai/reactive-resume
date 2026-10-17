@@ -767,10 +767,6 @@ msgstr "ഒരു വേഷത്തിന് വിവരണമില്ല"
 msgid "A second opinion on your wording"
 msgstr "നിങ്ങളുടെ പദപ്രയോഗത്തെക്കുറിച്ച് രണ്ടാമത്തെ അഭിപ്രായം"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "സ്വയം ഹോസ്റ്റ് ചെയ്‌ത Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "ഒരു ചെറിയ ഫോളോ-അപ്പ് ഇപ്പോൾ സാധാരണയായി നല്ലതാണ്"
@@ -1453,7 +1449,6 @@ msgstr "അപേക്ഷ കാഴ്ചകൾ"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "ബുള്ളറ്റ് ലിസ്റ്റ്"
 msgid "Burgundy"
 msgstr "ബർഗണ്ടി"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "<0>Amruth Pillai</0> തയ്യാറാക്കിയത്"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "കലണ്ടർ"
@@ -2163,10 +2162,6 @@ msgstr "സമയം തിരഞ്ഞെടുക്കുക"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "ഓരോ ബൾക്ക് ആക്ഷനും 200 തൊഴിൽ അപേക്ഷകൾ വരെ തിരഞ്ഞെടുക്കുക."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "നിങ്ങളുടെ പ്രമാണങ്ങൾ എവിടെയാണ് താമസിക്കുന്നതെന്ന് തിരഞ്ഞെടുക്കുക. നിങ്ങൾക്ക് പിന്നീട് സെറ്റിംഗ്സ്-ൽ മാറാം."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "വൃത്തം"
@@ -2234,6 +2229,10 @@ msgstr "ജോലി അപേക്ഷ അടയ്ക്കുക..."
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "അപേക്ഷകൾ അടയ്ക്കുക"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "തിരയൽ അടയ്ക്കുക"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "{0} അയയ്‌ക്കരുത്"
 msgid "Don't send {0} posting"
 msgstr "{0}-ൽ നിന്ന് ജോലി വിവരണം അയയ്‌ക്കരുത്"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "സംഭാവന ചെയ്യുക"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "അഭിസംബോധന"
 msgid "Grid view"
 msgstr "ഗ്രിഡ് കാഴ്ച"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "ഘട്ടം അനുസരിച്ച് ഗ്രൂപ്പുചെയ്‌തു, ഏറ്റവും അടിയന്തിര ഇനങ്ങൾ ആദ്യം."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "അത് ഇറക്കുമതി ചെയ്യുക"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "CSV ഇറക്കുമതി ചെയ്യുക അല്ലെങ്കിൽ കയറ്റുമതി ചെയ്യുക"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "നിങ്ങളുടെ നിലവിലെ റെസ്യൂമെ ഇമ്പോർട്ടുചെയ്യുക അല്ലെങ്കിൽ നിങ്ങളുടെ പേരിൽ പുതുതായി ആരംഭിക്കുക."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "ഇറക്കുമതി/കയറ്റുമതി"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "പൂട്ടി. എഡിറ്റ് ചെയ്യാൻ അൺ�
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "കാർഡ് മറ്റൊരു ഘട്ടത്തിലേക്ക് വലിച്ചിടാൻ ദീർഘനേരം അമർത്തുക."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "തിരഞ്ഞെടുക്കാൻ അമർത്തിപ്പിടിക്കുക"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "AI ക്രമീകരണങ്ങൾ തുറക്കുക"
 msgid "Open application"
 msgstr "ഈ തൊഴിൽ അപേക്ഷ തുറക്കുക"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "ഈ തൊഴിൽ അപേക്ഷയ്ക്കായി വർക്ക്‌സ്‌പെയ്‌സ് തുറക്കുക"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "തൊഴിൽ അപേക്ഷകളുടെ സ്ക്രീൻ തുറക്കുക"
@@ -7090,10 +7093,6 @@ msgstr "ഫോണ്ടുകൾ എംബെഡ് ചെയ്ത് വീണ
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · സ്വതന്ത്രവും തുറന്നതുമായ ഉറവിടം · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "ബ്രീഫിംഗ് വായിക്കുക"
@@ -7773,6 +7772,10 @@ msgstr "റോൾ {0}"
 msgid "Role / title"
 msgstr "റോൾ / തലക്കെട്ട്"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "തസ്തിക, കമ്പനി അല്ലെങ്കിൽ ബന്ധപ്പെടേണ്ട വ്യക്തി"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "റോൾ, കമ്പനി അല്ലെങ്കിൽ സ്ഥാനം"
@@ -8031,7 +8034,6 @@ msgstr "സ്ക്രീനിംഗ് അഭിമുഖം"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "തിരയുക"
 
@@ -8039,6 +8041,7 @@ msgstr "തിരയുക"
 msgid "Search and enhanced reading"
 msgstr "തിരയലും മെച്ചപ്പെടുത്തിയ വായനയും"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "ജോലി അപേക്ഷകൾ തിരയുക"
@@ -8050,6 +8053,10 @@ msgstr "തിരയൽ നിർദ്ദേശങ്ങൾ"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "തിരയലിൽ ഡോക്യുമെൻ്റുകൾ, അപേക്ഷകൾ, അസിസ്റ്റൻ്റ് സംഭാഷണങ്ങൾ, പ്രവർത്തനങ്ങൾ എന്നിവ ഉൾപ്പെടുന്നു."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "പ്രമാണങ്ങൾ തിരയുക"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "ഭാഷകൾക്കായി തിരയുക"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "തിരയുക അല്ലെങ്കിൽ പ്രവർത്തിപ്പിക്കുക..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "സെർച്ച് റോൾ, കമ്പനി അല്ലെങ്കിൽ കോൺടാക്റ്റ്"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "വിഭാഗങ്ങൾ · പ്രിൻ്റ് ഓർഡർ"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "വിഭാഗങ്ങൾ തലക്കെട്ട് സംവിധാനങ്ങൾ തിരിച്ചറിയുകയും പ്രവൃത്തി പരിചയം കാണിക്കുകയും ചെയ്യുന്നു."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "തിരഞ്ഞെടുക്കുക"
 
@@ -8222,7 +8223,6 @@ msgstr "{0}-ലേക്ക് അയച്ചു"
 msgid "Serbian"
 msgstr "സെർബിയൻ"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "ഉറവിടം"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "ഉറവിടവും തിരുത്തൽ ചരിത്രവും"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "GitHub-ലെ സോഴ്‌സ് കോഡ്"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "ദാതാവ് ഉത്തരം നൽകിയില്ല."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "ദാതാവ് ഉത്തരം നൽകിയില്ല. കീ, മോഡൽ, അടിസ്ഥാന URL എന്നിവ പരിശോധിക്കുക."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "പൊതു Reactive Resume സെർവർ"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

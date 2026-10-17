@@ -66,13 +66,21 @@ await mount();
 assert.deepEqual(calls.splice(0), ["/sign-in"], "recreated signed-out root redirects without global-router crash");
 chosen = false;
 await mount();
-assert.deepEqual(calls.splice(0), ["/server"], "first launch still opens server picker");
+assert.deepEqual(calls.splice(0), ["/sign-in"], "first launch opens sign-in with default server");
+// The launch route must agree with SessionGate before any server has been chosen.
+const entryModule = { exports: {} };
+const entrySource = readFileSync(new URL("app/index.tsx", mobile), "utf8");
+runInNewContext(transformSync(entrySource, { loader: "tsx", format: "cjs", jsx: "automatic" }).code, {
+ module: entryModule, exports: entryModule.exports,
+ require: (id) => id === "@/auth/session" ? modules["./session"] : id === "expo-router" ? { Redirect: "Redirect" } : modules[id],
+});
+assert.equal(entryModule.exports.default().props.href, "/sign-in", "fresh launch skips server selection");
 ready = false;
 await mount();
 assert.deepEqual(calls, [], "no redirect before navigation state exists");
 ready = true;
 await render();
-assert.deepEqual(calls.splice(0), ["/server"], "redirect resumes when navigation is ready");
+assert.deepEqual(calls.splice(0), ["/sign-in"], "redirect resumes when navigation is ready");
 segments = ["(auth)", "server-address"];
 await mount();
 assert.deepEqual(calls, [], "recreation preserves the active server form");

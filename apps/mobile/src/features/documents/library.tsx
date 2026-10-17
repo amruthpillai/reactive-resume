@@ -16,6 +16,7 @@ import { useDocumentOperations, useDocuments } from "./queries";
 import { Thumbnail } from "./thumbnail";
 import { client, orpc } from "@/api/client";
 import { useSession } from "@/auth/session";
+import { CollectionHeader } from "@/components/collection-header";
 import { FormeCheck } from "@/components/forme-check";
 import { routes } from "@/routes";
 import {
@@ -30,11 +31,9 @@ import {
 	ListRow,
 	Screen,
 	Segmented,
-	SelectSheet,
 	Sheet,
 	Skeleton,
 	Text,
-	TextField,
 	useTheme,
 } from "@/ui";
 
@@ -88,6 +87,7 @@ function DocumentItem({
 				accessibilityRole={selecting ? "checkbox" : "button"}
 				accessibilityLabel={selecting ? t`Select ${document.name}` : document.name}
 				accessibilityState={{ checked: selecting ? selected : undefined }}
+				accessibilityHint={!trashed && !selecting ? t`Long press to select` : undefined}
 				onPress={selecting ? onSelect : onOpen}
 				onLongPress={trashed ? onMenu : onSelect}
 				style={{ flex: 1, flexDirection: grid ? "column" : "row", gap: space.s3, minHeight: size.hit }}
@@ -227,10 +227,17 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 		setTags([]);
 		setPublicOnly(false);
 	};
+	const sortControl = (
+		<Chip
+			icon="arrows-down-up"
+			label={`${t`Sort`}: ${{ edited: t`Last edited`, name: t`Name`, created: t`Date created` }[sort]}`}
+			onPress={() => setSort(sort === "edited" ? "name" : sort === "name" ? "created" : "edited")}
+		/>
+	);
 	return (
 		<Screen scroll={false} edges={["top"]}>
 			<Stack.Screen options={{ title: trashed ? t`Trash` : t`Documents`, headerShown: false }} />
-			<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.s2 }}>
+			<View style={{ flexDirection: "row", alignItems: "center", gap: space.s2 }}>
 				{trashed && (
 					<IconButton
 						icon="arrow-left"
@@ -238,20 +245,32 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 						onPress={() => router.replace(routes.documents())}
 					/>
 				)}
-				<Text variant="display" style={{ flex: 1 }}>
-					{trashed ? t`Trash` : t`Documents`}
-				</Text>
-				{!trashed && (
-					<Button
-						variant="ghost"
-						label={selecting ? t`Done` : t`Select`}
-						onPress={() => {
-							setSelecting(!selecting);
-							setSelection([]);
-						}}
+				<View style={{ flex: 1 }}>
+					<CollectionHeader
+						title={trashed ? t`Trash` : t`Documents`}
+						searchLabel={t`Search documents`}
+						placeholder={t`Names, tags or applications`}
+						value={q}
+						onChangeText={setQ}
+						actions={
+							!trashed && (
+								<>
+									{selecting && (
+										<Button
+											variant="ghost"
+											label={t`Done`}
+											onPress={() => {
+												setSelecting(false);
+												setSelection([]);
+											}}
+										/>
+									)}
+									<IconButton icon="plus" label={t`New document`} onPress={() => router.push(routes.new())} />
+								</>
+							)
+						}
 					/>
-				)}
-				{!trashed && <IconButton icon="plus" label={t`New document`} onPress={() => router.push(routes.new())} />}
+				</View>
 			</View>
 			{session.status !== "signed-in" ? (
 				<EmptyState
@@ -276,14 +295,6 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 						/>
 					)}
 					{operations.error && <Banner tone="danger" message={operations.error} />}
-					<TextField
-						label={t`Search`}
-						placeholder={t`Names, tags or applications`}
-						value={q}
-						onChangeText={setQ}
-						autoCorrect={false}
-						returnKeyType="search"
-					/>
 					{!trashed && (
 						<>
 							<Segmented
@@ -314,6 +325,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 								contentContainerStyle={{ alignItems: "center", gap: space.s2 }}
 								style={{ flexGrow: 0 }}
 							>
+								{sortControl}
 								<Chip label={t`Public`} selected={publicOnly} onPress={() => setPublicOnly(!publicOnly)} />
 								{collectTags(all).map((tag) => (
 									<Chip
@@ -331,16 +343,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 							</ScrollView>
 						</>
 					)}
-					<SelectSheet
-						label={t`Sort`}
-						value={sort}
-						options={[
-							{ value: "edited", label: t`Last edited` },
-							{ value: "name", label: t`Name` },
-							{ value: "created", label: t`Date created` },
-						]}
-						onChange={setSort}
-					/>
+					{trashed && <View style={{ alignItems: "flex-start" }}>{sortControl}</View>}
 					{selecting && (
 						<View style={{ gap: space.s2 }}>
 							<Text variant="label">{plural(selected.length, { one: "# selected", other: "# selected" })}</Text>
@@ -430,7 +433,7 @@ export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
 						}
 						ListFooterComponent={
 							!trashed ? (
-								<View style={{ marginTop: space.s4 }}>
+								<View>
 									<Card>
 										<ListRow
 											title={t`Trash`}

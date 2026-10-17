@@ -767,10 +767,6 @@ msgstr "En rolle har ingen beskrivelse"
 msgid "A second opinion on your wording"
 msgstr "En anden mening om din formulering"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "En selv-hostet Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "En kort opfølgning er normalt fint nu"
@@ -1453,7 +1449,6 @@ msgstr "Ansøgningsvisninger"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Punktopstilling"
 msgid "Burgundy"
 msgstr "Bordeaux"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "af <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Kalender"
@@ -2163,10 +2162,6 @@ msgstr "Vælg tid"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Vælg op til 200 jobansøgninger pr. massehandling."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Vælg, hvor dine dokumenter gemmes. Du kan skifte senere i Indstillinger."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Cirkel"
@@ -2234,6 +2229,10 @@ msgstr "Luk jobansøgningen..."
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Luk jobansøgninger"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Luk søgning"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "Send ikke {0}"
 msgid "Don't send {0} posting"
 msgstr "Send ikke {0} jobopslag"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Donér"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Hilsen"
 msgid "Grid view"
 msgstr "Gittervisning"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Grupperet efter scene; hvad har brug for dig først."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Importér"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Importer eller eksporter CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Importer dit nuværende CV, eller start på en frisk med dit navn."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Importér/Eksportér"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Låst. Lås op for at redigere."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Tryk længe på et kort for at trække det til en anden fase."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Tryk og hold for at vælge"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Åbn AI-indstillingerne"
 msgid "Open application"
 msgstr "Åbn ansøgning"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Åbn jobansøgningsarbejdsområde"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Åbn Ansøgninger"
@@ -7090,10 +7093,6 @@ msgstr "Eksporter igen med indlejrede skrifttyper, åbn derefter filen, og tjek 
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Gratis og åben kildekode · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Læs briefing"
@@ -7773,6 +7772,10 @@ msgstr "Rolle {0}"
 msgid "Role / title"
 msgstr "Rolle / titel"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Stilling, virksomhed eller kontakt"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Rolle, virksomhed eller lokation"
@@ -8031,7 +8034,6 @@ msgstr "Indledende samtale"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Søge"
 
@@ -8039,6 +8041,7 @@ msgstr "Søge"
 msgid "Search and enhanced reading"
 msgstr "Søgning og forbedret læsning"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Søg jobansøgninger"
@@ -8050,6 +8053,10 @@ msgstr "Kommandoer til søgning"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "Søgning dækker over dokumenter, jobansøgninger, assistentsamtaler og handlinger."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Søg i dokumenter"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Søg efter sprog"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Søg eller kør..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Søg rolle, virksomhed eller kontakt"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Sektioner · printordre"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Sektioner bruger overskrifter, som systemer genkender, og arbejdserfaring viser."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Vælg"
 
@@ -8222,7 +8223,6 @@ msgstr "Sendt til {0}"
 msgid "Serbian"
 msgstr "Serbisk"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Kilde"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "Kilde og rettelseshistorik"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Kildekode på GitHub"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "Udbyderen svarede ikke."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "Udbyderen svarede ikke. Tjek nøglen, modellen og basen URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Den offentlige Reactive Resume-server"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

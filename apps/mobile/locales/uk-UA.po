@@ -767,10 +767,6 @@ msgstr "Роль не має опису"
 msgid "A second opinion on your wording"
 msgstr "Друга думка щодо вашого формулювання"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "Reactive Resume на власному сервері"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "Короткий контроль зараз зазвичай підходить"
@@ -1453,7 +1449,6 @@ msgstr "Подання заявок"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Маркірований список"
 msgid "Burgundy"
 msgstr "Бордовий"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "автор: <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Календар"
@@ -2163,10 +2162,6 @@ msgstr "Виберіть час"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Виберіть до 200 заявок для масової дії."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Виберіть місце зберігання ваших документів. Ви можете перейти пізніше в Налаштування."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Кругле"
@@ -2234,6 +2229,10 @@ msgstr "Закрийте заявку на роботу…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Закрити заявки"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Закрити пошук"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "Не надсилайте {0}"
 msgid "Don't send {0} posting"
 msgstr "Не надсилайте оголошення про роботу {0}"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Пожертвувати"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Звертання"
 msgid "Grid view"
 msgstr "Вигляд сітки"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Згруповано за етапом; спочатку те, що потребує уваги."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Імпортуйте його"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Імпорт або експорт CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Імпортуйте своє поточне резюме або почніть заново зі свого імені."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Імпорт/Експорт"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Заблоковано. Розблокуйте, щоб редагува�
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Утримуйте картку, щоб перетягнути її на інший етап."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Натисніть і утримуйте для вибору"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Відкрийте налаштування AI"
 msgid "Open application"
 msgstr "Відкрити заявку"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Відкрити робочий простір заявки"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Відкрити Заявки"
@@ -7090,10 +7093,6 @@ msgstr "Експортуйте знову з вбудованими шрифта
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Безкоштовний і з відкритим кодом · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Прочитати брифінг"
@@ -7773,6 +7772,10 @@ msgstr "Роль {0}"
 msgid "Role / title"
 msgstr "Роль / назва"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Посада, компанія або контакт"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Роль, компанія або місцезнаходження"
@@ -8031,7 +8034,6 @@ msgstr "Відбіркова співбесіда"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Пошук"
 
@@ -8039,6 +8041,7 @@ msgstr "Пошук"
 msgid "Search and enhanced reading"
 msgstr "Пошук і розширене читання"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Пошук заявок на роботу"
@@ -8050,6 +8053,10 @@ msgstr "Команди пошуку"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "Пошук охоплює документи, заявки, розмови з помічниками та дії."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Пошук документів"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Пошук мов"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Пошук або запуск…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Пошук ролі, компанії чи контакту"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Розділи · порядок друку"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Розділи використовують заголовки, які системи розпізнають, і досвід роботи показує."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Виберіть"
 
@@ -8222,7 +8223,6 @@ msgstr "Надіслано на {0}"
 msgid "Serbian"
 msgstr "Сербська"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Джерело"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "Джерело та історія виправлень"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Вихідний код на GitHub"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "Провайдер не відповів."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "Провайдер не відповів. Перевірте ключ, модель і базу URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "Публічний сервер Reactive Resume"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

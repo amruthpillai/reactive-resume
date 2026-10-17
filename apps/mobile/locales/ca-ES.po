@@ -767,10 +767,6 @@ msgstr "Un rol no té descripció"
 msgid "A second opinion on your wording"
 msgstr "Una segona opinió sobre la teva redacció"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "Un Reactive Resume autoallotjat"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "Un breu seguiment normalment està bé ara"
@@ -1453,7 +1449,6 @@ msgstr "Vistes de candidatures"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "Llista amb pics"
 msgid "Burgundy"
 msgstr "Bordeus"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "per <0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "Calendari"
@@ -2163,10 +2162,6 @@ msgstr "Tria el temps"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "Trieu fins a 200 candidatures per acció massiva."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "Trieu on viuen els vostres documents. Podeu canviar més endavant a Configuració."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "Cercle"
@@ -2234,6 +2229,10 @@ msgstr "Tanca la sol·licitud de feina..."
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "Tanca candidatures"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "Tanca la cerca"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "No envieu {0}"
 msgid "Don't send {0} posting"
 msgstr "No envieu {0} anunci de feina"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "Donar"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "Salutació"
 msgid "Grid view"
 msgstr "Vista de quadrícula"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "Agrupades per fase; primer el que et necessita."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "Importa'l"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "Importa o exporta CSV"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "Importa el teu currículum vitae actual o comença amb el teu nom."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "Importa/Exporta"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "Tancat. Desbloqueja per editar."
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "Premeu llargament una targeta per arrossegar-la a una altra etapa."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "Mantén premut per seleccionar"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "Obriu la configuració de l'IA"
 msgid "Open application"
 msgstr "Sol·licitud de feina oberta"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "Espai de treball obert de candidatura"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "Sol·licituds de feina obertes"
@@ -7090,10 +7093,6 @@ msgstr "Torna a exportar amb els tipus de lletra incrustats i després obre el f
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · Gratuït i de codi obert · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "Llegeix el dossier"
@@ -7773,6 +7772,10 @@ msgstr "Rol {0}"
 msgid "Role / title"
 msgstr "Rol / títol"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "Càrrec, empresa o contacte"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "Rol, empresa o ubicació"
@@ -8031,7 +8034,6 @@ msgstr "Entrevista de selecció"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "Cerca"
 
@@ -8039,6 +8041,7 @@ msgstr "Cerca"
 msgid "Search and enhanced reading"
 msgstr "Cerca i lectura millorada"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "Cerca sol·licituds de feina"
@@ -8050,6 +8053,10 @@ msgstr "Comandes de cerca"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "La cerca inclou documents, candidatures, converses i accions d'assistent."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "Cerca documents"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "Cerca idiomes"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "Cerca o executa..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "Cerca rol, empresa o contacte"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "Seccions · ordre d'impressió"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "Les seccions utilitzen encapçalaments sistemes de reconeixement i l'experiència laboral mostra."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "Seleccioneu"
 
@@ -8222,7 +8223,6 @@ msgstr "Enviat a {0}"
 msgid "Serbian"
 msgstr "Serbi"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "Font"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "Font i historial de correccions"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "Codi font a GitHub"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "El proveïdor no va respondre."
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "El proveïdor no va respondre. Comproveu la clau, el model i la base URL."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "El servidor públic de Reactive Resume"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

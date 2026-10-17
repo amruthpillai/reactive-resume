@@ -767,10 +767,6 @@ msgstr "役割には説明がありません"
 msgid "A second opinion on your wording"
 msgstr "あなたの言葉遣いについてのセカンドオピニオン"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "自己ホスト型の Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "今は短いフォローアップで十分です"
@@ -1453,7 +1449,6 @@ msgstr "応募ビュー"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "箇条書きリスト"
 msgid "Burgundy"
 msgstr "バーガンディー"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "開発者：<0>Amruth Pillai</0>"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "カレンダー"
@@ -2163,10 +2162,6 @@ msgstr "時間を選択してください"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "一括アクションごとに最大 200 件の応募を選択できます。"
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "書類の保存場所を選択します。後で 設定 で切り替えることができます。"
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "サークル"
@@ -2234,6 +2229,10 @@ msgstr "求人応募を閉じてください…"
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "応募を閉じる"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "検索を閉じる"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "{0} を送信しないでください"
 msgid "Don't send {0} posting"
 msgstr "{0}の求人情報を送信しない"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "寄付する"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "宛名の挨拶"
 msgid "Grid view"
 msgstr "グリッドビュー"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "段階ごとにグループ化されており、最も緊急性の高いアイテムが最初に表示されます。"
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "インポートしてください"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "CSV のインポートまたはエクスポート"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "現在のレジュメをインポートするか、自分の名前で新たに始めます。"
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "インポート/エクスポート"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "ロックされています。編集するにはロックを解除して
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "カードを長押しして、別の段階にドラッグできます。"
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "長押しして選択"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "AI設定を開く"
 msgid "Open application"
 msgstr "この応募類を開く"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "このジョブ 応募のワークスペースを開く"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "応募画面を開く"
@@ -7090,10 +7093,6 @@ msgstr "フォントを埋め込んで再エクスポートしてからファイ
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · 無料かつオープンソース · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "ブリーフィングを読む"
@@ -7773,6 +7772,10 @@ msgstr "役割 {0}"
 msgid "Role / title"
 msgstr "職種 / 役職"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "職種、会社、連絡先"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "役割、会社または場所"
@@ -8031,7 +8034,6 @@ msgstr "選考面接"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "検索"
 
@@ -8039,6 +8041,7 @@ msgstr "検索"
 msgid "Search and enhanced reading"
 msgstr "検索と拡張読書"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "求人応募を検索する"
@@ -8050,6 +8053,10 @@ msgstr "検索コマンド"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "検索には、書類、応募、アシスタントの会話およびアクションが含まれます。"
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "文書の検索"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "言語を検索する"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "検索または実行…"
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "役割、会社、または連絡先を検索する"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "セクション・印刷注文"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "セクションには、システムが認識する見出しが使用され、作業経験が表示されます。"
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "選択"
 
@@ -8222,7 +8223,6 @@ msgstr "{0} に送信されました"
 msgid "Serbian"
 msgstr "セルビア語"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "ソース"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "出典と修正履歴"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "GitHubのソースコード"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "プロバイダーは応答しませんでした。"
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "プロバイダーは応答しませんでした。キー、モデル、ベース URL を確認してください。"
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "パブリック Reactive Resume サーバー"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

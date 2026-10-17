@@ -767,10 +767,6 @@ msgstr "పాత్రకు వివరణ లేదు"
 msgid "A second opinion on your wording"
 msgstr "మీ పదజాలంపై రెండవ అభిప్రాయం"
 
-#: app/(auth)/server.tsx
-msgid "A self-hosted Reactive Resume"
-msgstr "స్వీయ-హోస్ట్ Reactive Resume"
-
 #: src/features/applications/next-step.ts
 msgid "A short follow-up is usually fine now"
 msgstr "చిన్న ఫాలో-అప్ ఇప్పుడు సాధారణంగా మంచిది"
@@ -1453,7 +1449,6 @@ msgstr "ఉద్యోగ దరఖాస్తు వీక్షణలు"
 
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
-#: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Applications"
@@ -1877,6 +1872,10 @@ msgstr "బుల్లెట్ జాబితా"
 msgid "Burgundy"
 msgstr "బుర్గుండి"
 
+#: app/(tabs)/settings/index.tsx
+msgid "by <0>Amruth Pillai</0>"
+msgstr "<0>Amruth Pillai</0> రూపొందించారు"
+
 #: src/features/applications-board/views.tsx
 msgid "Calendar"
 msgstr "క్యాలెండర్"
@@ -2163,10 +2162,6 @@ msgstr "సమయాన్ని ఎంచుకోండి"
 msgid "Choose up to 200 applications per bulk action."
 msgstr "ఒక్కో బల్క్ యాక్షన్‌కి గరిష్టంగా 200 ఉద్యోగ దరఖాస్తు‌లను ఎంచుకోండి."
 
-#: app/(auth)/server.tsx
-msgid "Choose where your documents live. You can switch later in Settings."
-msgstr "మీ పత్రాలు ఎక్కడ నివసిస్తున్నాయో ఎంచుకోండి. మీరు తర్వాత సెట్టింగులులో మారవచ్చు."
-
 #: src/features/design/advanced.tsx
 msgid "Circle"
 msgstr "వృత్తం"
@@ -2234,6 +2229,10 @@ msgstr "ఉద్యోగ దరఖాస్తును మూసివేయ�
 #: src/features/applications/list-screen.tsx
 msgid "Close applications"
 msgstr "ఉద్యోగ దరఖాస్తులను మూసివేయండి"
+
+#: src/components/collection-header.tsx
+msgid "Close search"
+msgstr "శోధనను మూసివేయండి"
 
 #: src/features/applications/list-screen.tsx
 msgid "Close selected applications"
@@ -3428,6 +3427,10 @@ msgstr "{0}ని పంపవద్దు"
 msgid "Don't send {0} posting"
 msgstr "{0} ఉద్యోగ ప్రకటనను పంపవద్దు"
 
+#: app/(tabs)/settings/index.tsx
+msgid "Donate"
+msgstr "విరాళం ఇవ్వండి"
+
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
@@ -4227,10 +4230,6 @@ msgstr "సంబోధన"
 msgid "Grid view"
 msgstr "గ్రిడ్ వీక్షణ"
 
-#: src/features/applications/list-screen.tsx
-msgid "Grouped by stage; what needs you first."
-msgstr "దశలవారీగా, అత్యవసరమైనవి ముందుగా చూపబడతాయి."
-
 #: src/features/ats-checker/checker.tsx
 #: src/features/check/score.tsx
 msgid "Hard for software to read"
@@ -4513,13 +4512,16 @@ msgid "Import it"
 msgstr "దానిని దిగుమతి చేయండి"
 
 #: src/features/applications/csv-sheet.tsx
-#: src/features/applications/list-screen.tsx
 msgid "Import or export CSV"
 msgstr "CSVని దిగుమతి చేయండి లేదా ఎగుమతి చేయండి"
 
 #: src/features/documents/library.tsx
 msgid "Import your current resume, or start fresh with your name."
 msgstr "మీ ప్రస్తుత రెజ్యూమ్ని దిగుమతి చేసుకోండి లేదా మీ పేరుతో తాజాగా ప్రారంభించండి."
+
+#: src/features/applications/list-screen.tsx
+msgid "Import/Export"
+msgstr "దిగుమతి/ఎగుమతి"
 
 #: src/features/history/history.tsx
 msgid "Imported"
@@ -5271,6 +5273,11 @@ msgstr "లాక్ చేయబడింది. సవరించడాని
 #: src/features/applications-board/board-screen.tsx
 msgid "Long press a card to drag it to another stage."
 msgstr "కార్డ్‌ని మరొక దశకు లాగడానికి ఎక్కువసేపు నొక్కండి."
+
+#: src/features/applications/list-screen.tsx
+#: src/features/documents/library.tsx
+msgid "Long press to select"
+msgstr "ఎంచుకోవడానికి నొక్కి పట్టుకోండి"
 
 #: src/features/ats-checker/messages.ts
 msgid "Long stretches are set in capitals."
@@ -6337,10 +6344,6 @@ msgstr "AI సెట్టింగ్‌లను తెరవండి"
 msgid "Open application"
 msgstr "దరఖాస్తును తెరవండి"
 
-#: src/features/applications/list-screen.tsx
-msgid "Open application workspace"
-msgstr "దరఖాస్తు కార్యస్థలాన్ని తెరవండి"
-
 #: src/features/applications/csv-sheet.tsx
 msgid "Open Applications"
 msgstr "దరఖాస్తులను తెరవండి"
@@ -7090,10 +7093,6 @@ msgstr "ఫాంట్‌లు ఎంబెడ్ చేసి తిరిగ
 msgid "Reactive Resume"
 msgstr "Reactive Resume"
 
-#: app/(tabs)/settings/index.tsx
-msgid "Reactive Resume · Free and open source · MIT"
-msgstr "Reactive Resume · ఉచిత మరియు ఓపెన్ సోర్స్ · MIT"
-
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Read briefing"
 msgstr "బ్రీఫింగ్ చదువు"
@@ -7773,6 +7772,10 @@ msgstr "పాత్ర {0}"
 msgid "Role / title"
 msgstr "పాత్ర / హోదా"
 
+#: src/features/applications-board/views.tsx
+msgid "Role, company or contact"
+msgstr "పదవి, సంస్థ లేదా పరిచయం"
+
 #: src/features/applications/add-sheet.tsx
 msgid "Role, company or location"
 msgstr "పాత్ర, కంపెనీ లేదా స్థానం"
@@ -8031,7 +8034,6 @@ msgstr "స్క్రీనింగ్ ఇంటర్వ్యూ"
 #: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
-#: src/features/documents/library.tsx
 msgid "Search"
 msgstr "శోధన"
 
@@ -8039,6 +8041,7 @@ msgstr "శోధన"
 msgid "Search and enhanced reading"
 msgstr "శోధన మరియు మెరుగైన పఠనం"
 
+#: src/features/applications-board/views.tsx
 #: src/features/letters/write.tsx
 msgid "Search applications"
 msgstr "ఉద్యోగ దరఖాస్తులను శోధించండి"
@@ -8050,6 +8053,10 @@ msgstr "శోధన ఆదేశాలు"
 #: src/features/search/search-screen.tsx
 msgid "Search covers documents, applications, assistant conversations and actions."
 msgstr "శోధన పత్రాలు, ఉద్యోగ దరఖాస్తులు, సహాయక సంభాషణలు మరియు చర్యలను కవర్ చేస్తుంది."
+
+#: src/features/documents/library.tsx
+msgid "Search documents"
+msgstr "పత్రాలను శోధించండి"
 
 #: src/features/career/facts.tsx
 msgid "Search facts"
@@ -8082,10 +8089,6 @@ msgstr "భాషలను వెతకండి"
 #: src/shell/app-tabs.tsx
 msgid "Search or run…"
 msgstr "శోధించండి లేదా అమలు చేయండి..."
-
-#: src/features/applications/list-screen.tsx
-msgid "Search role, company or contact"
-msgstr "శోధన పాత్ర, కంపెనీ లేదా పరిచయం"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Search terms go to your web search service."
@@ -8131,9 +8134,7 @@ msgstr "విభాగాలు · ప్రింట్ ఆర్డర్"
 msgid "Sections use headings systems recognise, and work experience shows."
 msgstr "విభాగాలు గుర్తించే శీర్షికల వ్యవస్థలను ఉపయోగిస్తాయి మరియు పని అనుభవం చూపిస్తుంది."
 
-#: src/features/applications/list-screen.tsx
 #: src/features/documents/document-sheets.tsx
-#: src/features/documents/library.tsx
 msgid "Select"
 msgstr "ఎంచుకోండి"
 
@@ -8222,7 +8223,6 @@ msgstr "{0}కి పంపబడింది"
 msgid "Serbian"
 msgstr "సెర్బియన్"
 
-#: app/(auth)/server.tsx
 #: app/(auth)/sign-in.tsx
 #: src/features/settings/sign-out.tsx
 msgid "Server"
@@ -8697,6 +8697,10 @@ msgstr "మూలం"
 #: src/features/career/facts.tsx
 msgid "Source and correction history"
 msgstr "మూలం మరియు దిద్దుబాటు చరిత్ర"
+
+#: app/(tabs)/settings/index.tsx
+msgid "Source code on GitHub"
+msgstr "GitHubలో సోర్స్ కోడ్"
 
 #: src/features/assistant/chat-view.tsx
 #: src/features/assistant/messages.tsx
@@ -9307,10 +9311,6 @@ msgstr "ప్రొవైడర్ సమాధానం ఇవ్వలేద�
 #: src/features/ai/provider-editor.tsx
 msgid "The provider didn't answer. Check the key, the model and the base URL."
 msgstr "ప్రొవైడర్ సమాధానం ఇవ్వలేదు. కీ, మోడల్ మరియు బేస్ URLని తనిఖీ చేయండి."
-
-#: app/(auth)/server.tsx
-msgid "The public Reactive Resume server"
-msgstr "పబ్లిక్ Reactive Resume సర్వర్"
 
 #: src/features/application-detail/sheets.tsx
 msgid "The reason is kept for Insights. Linked documents aren't touched."

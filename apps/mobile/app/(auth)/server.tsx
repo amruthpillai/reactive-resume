@@ -1,87 +1,19 @@
 import type { ImperativeRouter } from "expo-router";
 import { useLingui } from "@lingui/react/macro";
-import { useRouter, Stack, useLocalSearchParams } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { AuthHeader, hostOf } from "@/auth/auth-header";
+import { hostOf } from "@/auth/auth-header";
 import { serverErrorMessage } from "@/auth/messages";
 import { discover, isAllowedServer, ServerError, toOrigin } from "@/auth/oauth";
 import { DEFAULT_SERVER, useSession } from "@/auth/session";
 import { routes } from "@/routes";
-import { Button, Card, Icon, ListRow, Screen, Text, TextField, useTheme } from "@/ui";
+import { Button, Screen, Text, TextField, useTheme } from "@/ui";
 
 const continueTo = (server: string, router: ImperativeRouter) =>
 	router.push({ pathname: routes.signIn(), params: { server } });
-
-/** AU1 (server picker); with `?custom=1`, AU2/AU3 (another server). */
-export default function ServerScreen() {
-	const { custom } = useLocalSearchParams<{ custom?: string }>();
-	return custom ? <CustomServer /> : <ServerPicker />;
-}
-
-function ServerPicker() {
-	const router = useRouter();
-	const { t } = useLingui();
-	const { colors, size, space } = useTheme();
-	const { server } = useSession();
-	const [choice, setChoice] = useState<"default" | "custom">(server === DEFAULT_SERVER ? "default" : "custom");
-
-	const radio = (selected: boolean) => (
-		<Icon
-			name={selected ? "check-circle" : "circle"}
-			filled={selected}
-			size={size.icon.toolbar}
-			color={selected ? colors.accent : colors.ink3}
-		/>
-	);
-
-	return (
-		<Screen scroll={false} edges={["top", "bottom"]}>
-			<ScrollView
-				style={{ flex: 1 }}
-				contentInsetAdjustmentBehavior="automatic"
-				contentContainerStyle={{ gap: space.s6 }}
-			>
-				<AuthHeader subtitle={t`Choose where your documents live. You can switch later in Settings.`} />
-				<View style={{ gap: space.s2 }}>
-					<Text variant="caption" color="ink3" style={{ paddingHorizontal: space.s4 }}>
-						{t`Server`}
-					</Text>
-					<Card style={{ padding: 0, overflow: "hidden" }}>
-						<ListRow
-							title={hostOf(DEFAULT_SERVER)}
-							subtitle={t`The public Reactive Resume server`}
-							leading="globe"
-							trailing={radio(choice === "default")}
-							selected={choice === "default"}
-							onPress={() => setChoice("default")}
-						/>
-						<ListRow
-							title={t`Another server`}
-							subtitle={t`A self-hosted Reactive Resume`}
-							leading="globe-simple"
-							trailing={radio(choice === "custom")}
-							selected={choice === "custom"}
-							onPress={() => setChoice("custom")}
-						/>
-					</Card>
-				</View>
-			</ScrollView>
-			<Button
-				label={t`Continue`}
-				size="lg"
-				fullWidth
-				onPress={() =>
-					choice === "default"
-						? continueTo(DEFAULT_SERVER, router)
-						: router.push({ pathname: routes.server(), params: { custom: "1" } })
-				}
-			/>
-		</Screen>
-	);
-}
 
 type Check =
 	| { state: "idle" }
@@ -91,7 +23,7 @@ type Check =
 
 const checkDelay = 600;
 
-function CustomServer() {
+export default function CustomServer() {
 	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const { colors, space } = useTheme();
