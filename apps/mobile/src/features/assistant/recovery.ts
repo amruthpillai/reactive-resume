@@ -69,6 +69,11 @@ export function createRequestLane({ stop, busy }: LaneOptions) {
 		return current;
 	};
 
+	const runIfIdle = (task: (isCurrent: () => boolean) => Promise<void>) => {
+		if (active || busy()) return Promise.resolve();
+		return start(++generation, task);
+	};
+
 	return {
 		busy: () => active !== null || busy(),
 		async run(task: (isCurrent: () => boolean) => Promise<void>) {
@@ -77,9 +82,16 @@ export function createRequestLane({ stop, busy }: LaneOptions) {
 			if (token !== generation) return;
 			await start(token, task);
 		},
-		runIfIdle(task: (isCurrent: () => boolean) => Promise<void>) {
-			if (active || busy()) return Promise.resolve();
-			return start(++generation, task);
+		runIfIdle,
+		/**
+		 * Waits for `settled` (a detach), then runs `task` as `runIfIdle` would, unless a run or cancel came in between
+		 * (Stop, unmount, another background) or `allowed()` (the app is still active) says no.
+		 */
+		async runAfter(settled: Promise<void>, allowed: () => boolean, task: (isCurrent: () => boolean) => Promise<void>) {
+			const token = generation;
+			await settled.catch(() => undefined);
+			if (token !== generation || !allowed()) return;
+			await runIfIdle(task);
 		},
 		async cancel() {
 			generation++;

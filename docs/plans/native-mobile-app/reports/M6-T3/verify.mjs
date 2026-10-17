@@ -93,7 +93,53 @@ const answered = {
 	output: "Yes, at Pixel Forge",
 };
 
+
+// As chat-view.tsx: background cancels the lane (detach), foreground queues recovery behind that detach.
+const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+function lifecycle() {
+	let open = true; // a reply is streaming when the app goes to the background
+	const state = { app: "active", followed: 0 };
+	const lane = createRequestLane({
+		stop: async () => {
+			await pause(30);
+			open = false;
+		},
+		busy: () => open,
+	});
+	const background = () => {
+		state.app = "background";
+		const busy = lane.busy();
+		const cancelled = lane.cancel();
+		return busy ? cancelled : null;
+	};
+	const foreground = (detaching) => {
+		state.app = "active";
+		return lane.runAfter(detaching ?? Promise.resolve(), () => state.app === "active", async () => {
+			state.followed++;
+		});
+	};
+	return { lane, state, background, foreground };
+}
+
+const queuedRecovery = (intervene) => async () => {
+	const { lane, state, background, foreground } = lifecycle();
+	const queued = foreground(background());
+	await intervene({ lane, background });
+	await queued;
+	await pause(50);
+	assert.equal(state.followed, 0, "the queued recovery must not start");
+};
+
 const scenarios = {
+	async "queued foreground recovery runs once the detach settled"() {
+		const { state, background, foreground } = lifecycle();
+		await foreground(background());
+		assert.equal(state.followed, 1);
+	},
+	"queued foreground recovery is dropped after Stop": queuedRecovery(({ lane }) => lane.cancel()),
+	"queued foreground recovery is dropped after unmount": queuedRecovery(({ lane }) => lane.cancel()),
+	"queued foreground recovery is dropped after another background": queuedRecovery(({ background }) => background()),
+
 	async "send: only the newest message, context read at send time, attachments, streamed reply"() {
 		let turn = 0;
 		const { chat, calls, context } = harness({

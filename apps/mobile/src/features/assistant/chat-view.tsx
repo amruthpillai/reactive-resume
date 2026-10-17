@@ -284,26 +284,23 @@ function Conversation(props: ConversationProps) {
 
 	// Follows a reply the connection lost, only while no other request is open; it checks it is still current after
 	// every await (recovery.ts).
-	const recover = useEffectEvent(
-		() =>
-			void lane.runIfIdle((isCurrent) =>
-				recoverRun({
-					isCurrent,
-					reload: async () => {
-						const options = orpc.agent.threads.get.queryOptions({ input: { id: threadId } });
-						const latest = await queryClient.fetchQuery({ ...options, staleTime: 0 }).catch(() => null);
-						return latest && { messages: latest.messages as UIMessage[], active: Boolean(latest.thread.activeRunId) };
-					},
-					apply: (saved) => {
-						clearError();
-						setMessages(saved);
-					},
-					resume: () => resumeStream(),
-				}).finally(() => {
-					if (isCurrent()) refreshThreads(queryClient);
-				}),
-			),
-	);
+	const followRun = (isCurrent: () => boolean) =>
+		recoverRun({
+			isCurrent,
+			reload: async () => {
+				const options = orpc.agent.threads.get.queryOptions({ input: { id: threadId } });
+				const latest = await queryClient.fetchQuery({ ...options, staleTime: 0 }).catch(() => null);
+				return latest && { messages: latest.messages as UIMessage[], active: Boolean(latest.thread.activeRunId) };
+			},
+			apply: (saved) => {
+				clearError();
+				setMessages(saved);
+			},
+			resume: () => resumeStream(),
+		}).finally(() => {
+			if (isCurrent()) refreshThreads(queryClient);
+		});
+	const recover = useEffectEvent(() => void lane.runIfIdle(followRun));
 
 	// A reply still running when the conversation opened is followed until it finishes (resume needs Redis). Only the
 	// state at opening counts: a later refresh of the thread never starts a second stream. Leaving aborts every request.
@@ -315,15 +312,19 @@ function Conversation(props: ConversationProps) {
 
 	// In the background the OS may cut the connection, so requests are detached here; the run goes on on the server.
 	// Back in the foreground, once the detach settled, the thread is reloaded as saved and a run still going is followed.
+	// Every background transition cancels (even when idle), so a recovery still queued from an earlier foreground is
+	// dropped; the queued one also checks the app is still active when the detach has settled.
 	const onAppState = useEffectEvent((state: string) => {
 		if (state === "background") {
-			if (lane.busy()) detaching.current = lane.cancel();
+			const busy = lane.busy();
+			const cancelled = lane.cancel();
+			if (busy) detaching.current = cancelled;
 			return;
 		}
 		if (state !== "active" || (!detaching.current && status !== "error")) return;
 		const settled = detaching.current ?? Promise.resolve();
 		detaching.current = null;
-		void settled.then(() => recover());
+		void lane.runAfter(settled, () => AppState.currentState === "active", followRun);
 	});
 	useEffect(() => {
 		const subscription = AppState.addEventListener("change", onAppState);
