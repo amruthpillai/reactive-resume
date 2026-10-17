@@ -4,6 +4,7 @@
 	"private": true,
 	"main": "index.ts",
 	"scripts": {
+		"eas-build-pre-install": "node ../../packages/forme-native/scripts/fetch-prebuilt.mjs",
 		"start": "expo start",
 		"ios": "expo run:ios",
 		"android": "expo run:android",

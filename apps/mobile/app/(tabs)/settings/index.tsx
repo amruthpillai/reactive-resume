@@ -42,6 +42,12 @@ export default function SettingsScreen() {
 			<SettingsGroup>
 				<SignOutRow switchServer />
 				<ListRow
+					title={t`Licences`}
+					leading="file-text"
+					chevron
+					onPress={() => router.push("/(tabs)/settings/licences")}
+				/>
+				<ListRow
 					title={t`Help & docs`}
 					leading="question"
 					onPress={() => {
