@@ -15,7 +15,7 @@ type CheckResult = {
 	[key: string]: unknown;
 };
 
-// ponytail: es-toolkit withTimeout takes a fn, not a promise — call site passes check (not check())
+/** Bound each dependency check and retain failure diagnostics for server-side logging. */
 async function runCheck(check: () => Promise<object>, timeoutMs = HEALTHCHECK_TIMEOUT_MS): Promise<CheckResult> {
 	const startedAt = performance.now();
 
@@ -54,6 +54,7 @@ async function checkDatabase() {
 
 const checkStorage = () => getStorageService().healthcheck();
 
+/** Report dependency readiness while keeping internal failure details in server logs. */
 export async function handleHealth() {
 	const redisClient = getRedis();
 	const [database, storage, redis] = await Promise.all([

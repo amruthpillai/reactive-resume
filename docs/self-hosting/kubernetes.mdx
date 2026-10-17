@@ -319,8 +319,9 @@ rate limits.
   outage. If the server process itself exits, Kubernetes restarts the container anyway.
 
 Storage checks have a 5-second deadline by default, including both S3 PUT and DELETE requests. For slower storage,
-set `STORAGE_HEALTHCHECK_TIMEOUT_MS` in the app Secret and set both probes' `timeoutSeconds` above that duration
-(for example, `10000` milliseconds and `11` seconds). Database and Redis checks keep their 1.5-second deadlines.
+set `STORAGE_HEALTHCHECK_TIMEOUT_MS` (milliseconds) in the app Secret. Set both probes' `timeoutSeconds` (seconds)
+above that duration (for example, `STORAGE_HEALTHCHECK_TIMEOUT_MS=10000` and `timeoutSeconds: 11`). Database and
+Redis checks keep their 1.5-second deadlines.
 
 See [Check the health endpoint](/self-hosting/docker#check-the-health-endpoint) for the response format. To call it
 yourself:
