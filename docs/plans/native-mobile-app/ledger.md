@@ -127,3 +127,6 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
     - the AASA path patterns are broad
     - a retry link on the same domain may not reopen the app through Universal Links
 - 2026-10-17: Owner supplied the App Store Connect Team key IDs (role Developer); see `decisions.md`.
+- 2026-10-17: The owner asked to clean up Paseo. All 11 task workspaces and 22 `plan=native-mobile` agents are archived. Archiving deleted the worktrees and kept the branches.
+  - The S2/S3 reports, the S2 `packages-pdf.patch` and the S3 `protocol-run.txt` were copied onto `mobile/native-app` first.
+  - Kept on branches only: `mobile/S1` (about 40 MB of fixtures plus `apps/spike-s1`), `mobile/S2` (`apps/spike-s2`), `mobile/S3` (`apps/spike-s3`, screenshots).
