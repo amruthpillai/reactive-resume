@@ -12,10 +12,11 @@ import { Linking, View } from "react-native";
 import { contactSchema } from "@reactive-resume/schema/applications/data";
 import { WallClockField } from "./date-field";
 import { followUpReminder, leadLabel, useDocuments, useUserTime } from "./hooks";
+import { followUpDay } from "@/features/applications-board/calendar";
 import { applicationError } from "@/features/applications/error";
 import { useApplicationMutations } from "@/features/applications/queries";
 import { CLOSED_REASONS, getClosedReasonLabel } from "@/features/applications/stages";
-import { DEFAULT_LEAD, followUpStart, REMINDER_LEADS, useReminders, zonedParts } from "@/features/reminders";
+import { DEFAULT_LEAD, followUpStart, REMINDER_LEADS, useReminders } from "@/features/reminders";
 import {
 	Banner,
 	Button,
@@ -198,7 +199,8 @@ function FollowUpForm({ application, onClose }: Omit<ApplicationSheetProps, "ope
 	const reminders = useReminders(application.id);
 	const existing = reminders.leadFor({ kind: "follow-up", applicationId: application.id });
 	const [date, setDate] = useState(() =>
-		application.followUpAt ? zonedParts(application.followUpAt, timeZone).date : "",
+		// Web stores the bare date at UTC midnight; read it as that date, not the evening before west of UTC.
+		application.followUpAt ? followUpDay(application.followUpAt, timeZone) : "",
 	);
 	const [note, setNote] = useState(application.followUpNote ?? "");
 	const [remind, setRemind] = useState<boolean | null>(null);

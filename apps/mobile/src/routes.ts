@@ -7,6 +7,8 @@ export type LetterPane = "write" | "design";
 export type CareerPane = "today" | "coach" | "knowledge" | "offers";
 export type SettingsPane = "account" | "preferences" | "ai";
 export type ApplicationTab = WorkspaceTab;
+/** The Applications tab's views; List is the tab's index. */
+export type ApplicationsView = "list" | "board" | "calendar" | "insights";
 
 const segment = (value: string) => encodeURIComponent(value);
 
@@ -18,7 +20,8 @@ export const routes = {
 	// (tabs)
 	documents: () => "/documents" as const,
 	trash: () => "/documents/trash" as const,
-	applications: () => "/applications" as const,
+	applications: (view: ApplicationsView = "list") =>
+		view === "list" ? ("/applications" as const) : (`/applications/${view}` as const),
 	career: (pane: CareerPane = "today") => `/career/${pane}` as const,
 	settings: (pane?: SettingsPane) => (pane ? (`/settings/${pane}` as const) : ("/settings" as const)),
 
