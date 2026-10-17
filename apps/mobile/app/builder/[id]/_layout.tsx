@@ -1,38 +1,34 @@
 import type { BuilderPane } from "@/routes";
+import type { PaneTab } from "@/shell/builder-chrome";
 import { useLingui } from "@lingui/react/macro";
-import { Stack, useLocalSearchParams } from "expo-router";
-import { View } from "react-native";
-import { PaneBackButton, PaneBar } from "@/components/pane-bar";
+import { router, useLocalSearchParams } from "expo-router";
+import PageScreen from "./page";
 import { routes } from "@/routes";
+import { BuilderChrome } from "@/shell/builder-chrome";
 
-const panes = new Set(["write", "page", "design", "check"]);
-
-/** Resume builder: Write, Page, Design and Check panes, plus entry, share, history and assistant on top. */
+/**
+ * Resume builder. Phone: Write, Page, Design and Check as bottom tabs. Tablet: the Write / Design / Check panel with
+ * the Page screen beside it. Entry and history push inside the editor; Share and the assistant open as modals.
+ */
 export default function BuilderLayout() {
 	const { t } = useLingui();
 	const { id } = useLocalSearchParams<{ id: string }>();
 
+	const panes: PaneTab<BuilderPane>[] = [
+		{ pane: "write", label: t`Write`, icon: "pencil-simple", href: routes.builder(id, "write") },
+		{ pane: "page", label: t`Page`, icon: "file-text", href: routes.builder(id, "page") },
+		{ pane: "design", label: t`Design`, icon: "palette", href: routes.builder(id, "design") },
+		{ pane: "check", label: t`Check`, icon: "list-checks", href: routes.builder(id, "check") },
+	];
+
 	return (
-		<View style={{ flex: 1 }}>
-			<Stack
-				screenOptions={({ route }) => ({
-					animation: "none",
-					...(panes.has(route.name) ? { headerLeft: () => <PaneBackButton /> } : {}),
-				})}
-			>
-				<Stack.Screen name="entry/[section]/[item]" options={{ animation: "default" }} />
-				<Stack.Screen name="share" options={{ presentation: "modal" }} />
-				<Stack.Screen name="history" options={{ animation: "default" }} />
-				<Stack.Screen name="assistant" options={{ presentation: "modal" }} />
-			</Stack>
-			<PaneBar<BuilderPane>
-				panes={[
-					{ pane: "write", label: t`Write`, icon: "pencil-simple", href: routes.builder(id, "write") },
-					{ pane: "page", label: t`Page`, icon: "file-text", href: routes.builder(id, "page") },
-					{ pane: "design", label: t`Design`, icon: "palette", href: routes.builder(id, "design") },
-					{ pane: "check", label: t`Check`, icon: "check-circle", href: routes.builder(id, "check") },
-				]}
-			/>
-		</View>
+		<BuilderChrome
+			panes={panes}
+			tabletPanes={["write", "design", "check"]}
+			page={<PageScreen />}
+			title={t`Resume`}
+			onShare={() => router.push(routes.share(id))}
+			modals={["share", "assistant"]}
+		/>
 	);
 }
