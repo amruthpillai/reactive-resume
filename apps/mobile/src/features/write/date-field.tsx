@@ -14,6 +14,7 @@ type MonthInputProps = {
 	locale: string;
 	format?: DateFormat | undefined;
 	disabled?: boolean | undefined;
+	autoFocus?: boolean | undefined;
 	/** Shown instead of the value, e.g. "Present" while ongoing. */
 	placeholderValue?: string | undefined;
 	onCommit: (value: YearMonth | null) => void;
@@ -30,6 +31,7 @@ function MonthInput({
 	locale,
 	format,
 	disabled,
+	autoFocus,
 	placeholderValue,
 	onCommit,
 	onInvalid,
@@ -53,6 +55,7 @@ function MonthInput({
 				placeholder={t`Mar 2022`}
 				value={placeholderValue ?? typed ?? showYearMonth(value, locale, format)}
 				editable={!disabled && placeholderValue === undefined}
+				autoFocus={autoFocus && !disabled}
 				autoComplete="off"
 				autoCorrect={false}
 				onFocus={resumeFieldFocus.onFocus}
@@ -136,6 +139,7 @@ type DatesFieldProps = {
 	/** Awards, certifications and publications have one date. */
 	single?: boolean | undefined;
 	disabled?: boolean | undefined;
+	autoFocus?: boolean | undefined;
 	onChange: (dates: ResumeDates) => void;
 };
 
@@ -143,7 +147,7 @@ type DatesFieldProps = {
  * Structured dates: start – end with a Present switch, or a single date. Editing any part clears the "needs a
  * look" note left by text that couldn't be read exactly.
  */
-export function DatesField({ dates, locale, format, single = false, disabled, onChange }: DatesFieldProps) {
+export function DatesField({ dates, locale, format, single = false, disabled, autoFocus, onChange }: DatesFieldProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const [invalid, setInvalid] = useState({ start: false, end: false });
@@ -155,6 +159,7 @@ export function DatesField({ dates, locale, format, single = false, disabled, on
 			<View style={{ flexDirection: "row", gap: space.s2 }}>
 				<MonthInput
 					label={single ? t`Date` : t`Start`}
+					autoFocus={autoFocus}
 					value={dates.start}
 					locale={locale}
 					format={format}

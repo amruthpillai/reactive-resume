@@ -48,10 +48,18 @@ export function fixIssue(id: string, issue: CheckIssue) {
 		return;
 	}
 	const target = fresh.fix.target;
-	const field = fresh.finding.pointer.split("/").at(-1) ?? "";
-	// coordinator: M3-T5 fields.ts supplies labels; section/item/field ids are the navigation seam.
+	const tokens = fresh.finding.pointer.split("/");
+	const items = tokens.indexOf("items");
+	const field = tokens.slice(items === -1 ? 2 : items + 2).join("/");
 	router.push({
-		pathname: target.kind === "item" ? routes.entry(id, target.sectionId, target.itemId) : routes.builder(id, "write"),
+		pathname:
+			target.kind === "header"
+				? routes.entry(id, "basics", "basics")
+				: target.kind === "item"
+					? routes.entry(id, target.sectionId, target.itemId)
+					: target.sectionId === "summary"
+						? routes.entry(id, "summary", "summary")
+						: routes.builder(id, "write"),
 		params: { section: target.kind === "header" ? "basics" : target.sectionId, field },
 	});
 }

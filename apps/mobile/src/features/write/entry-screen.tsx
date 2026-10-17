@@ -48,10 +48,10 @@ export function EditorScreen({ title, backTitle, right, children }: EditorScreen
 	);
 }
 
-type EntryScreenProps = { resumeId: string; sectionId: string; entryId: string };
+type EntryScreenProps = { resumeId: string; sectionId: string; entryId: string; focusField?: string | undefined };
 
 /** One entry, full screen: its fields, saved as you type. Deleting is immediate, with Undo in the toast. */
-export function EntryScreen({ resumeId, sectionId, entryId }: EntryScreenProps) {
+export function EntryScreen({ resumeId, sectionId, entryId, focusField }: EntryScreenProps) {
 	const { t, i18n } = useLingui();
 	const type = useWriteData((data) => getSectionType(data, sectionId) ?? null, null);
 	const section = useMemo<WriteSection | null>(
@@ -98,6 +98,7 @@ export function EntryScreen({ resumeId, sectionId, entryId }: EntryScreenProps) 
 				page={{ locale, dateFormat: dateFormat ?? undefined }}
 				disabled={locked}
 				autoFocus={autoFocus}
+				focusField={focusField}
 			/>
 			<EntrySheet
 				resumeId={resumeId}
@@ -112,7 +113,9 @@ export function EntryScreen({ resumeId, sectionId, entryId }: EntryScreenProps) 
 }
 
 /** The summary: one rich text, with the guidance web gives, and Improve. */
-export function SummaryScreen() {
+type SummaryScreenProps = { autoFocus?: boolean | undefined };
+
+export function SummaryScreen({ autoFocus }: SummaryScreenProps) {
 	const { t } = useLingui();
 	const content = useWriteData((data) => data.summary.content, "");
 	const title = useSectionTitle({ id: "summary", kind: "summary", type: "summary" });
@@ -128,7 +131,7 @@ export function SummaryScreen() {
 					value={content}
 					disabled={locked}
 					hint={t`2–3 sentences reads best`}
-					autoFocus={!locked && !content}
+					autoFocus={!locked && (autoFocus || !content)}
 					onChange={(html) =>
 						update(
 							(draft) => {

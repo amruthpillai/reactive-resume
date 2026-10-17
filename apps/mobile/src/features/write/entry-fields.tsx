@@ -94,11 +94,12 @@ type LinkFieldProps = {
 	onChange: (value: Website & { inlineLink?: boolean }) => void;
 	/** Entries can print the link on their title instead of on its own line. Basics can't. */
 	allowInlineLink?: boolean | undefined;
+	autoFocus?: boolean | undefined;
 	disabled?: boolean | undefined;
 };
 
 /** Address, the label printed instead of it, and "Show link in title". https:// is added when left without one. */
-export function LinkField({ label, value, onChange, allowInlineLink = true, disabled }: LinkFieldProps) {
+export function LinkField({ label, value, onChange, allowInlineLink = true, autoFocus, disabled }: LinkFieldProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const validate = useValidators();
@@ -111,6 +112,7 @@ export function LinkField({ label, value, onChange, allowInlineLink = true, disa
 				label={label}
 				value={value.url}
 				editable={!disabled}
+				autoFocus={autoFocus && !disabled}
 				placeholder="https://"
 				keyboardType="url"
 				autoCapitalize="none"
@@ -148,7 +150,13 @@ export function LinkField({ label, value, onChange, allowInlineLink = true, disa
 	);
 }
 
-type FieldProps = { entry: Entry; write: EntryWriter; page: PageSettings; disabled: boolean };
+type FieldProps = {
+	entry: Entry;
+	write: EntryWriter;
+	page: PageSettings;
+	disabled: boolean;
+	focusField?: string | undefined;
+};
 
 function Level({ entry, write, disabled }: FieldProps) {
 	const { t } = useLingui();
@@ -220,7 +228,7 @@ function IconAndColor({ entry, write, disabled }: FieldProps) {
 	);
 }
 
-function Roles({ entry, write, page, disabled }: FieldProps) {
+function Roles({ entry, write, page, disabled, focusField }: FieldProps) {
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
 	const roles = (entry as unknown as Values).roles ?? [];
@@ -277,6 +285,7 @@ function Roles({ entry, write, page, disabled }: FieldProps) {
 					</View>
 					<BoundText
 						label={t`Position`}
+						autoFocus={!disabled && focusField === `roles/${index}/position`}
 						value={role.position}
 						disabled={disabled}
 						onChange={(value) =>
@@ -289,6 +298,9 @@ function Roles({ entry, write, page, disabled }: FieldProps) {
 						dates={role.dates ?? EMPTY_RESUME_DATES}
 						locale={page.locale}
 						format={page.dateFormat}
+						autoFocus={
+							!disabled && ["dates", "period", "date"].some((key) => focusField?.startsWith(`roles/${index}/${key}`))
+						}
 						disabled={disabled}
 						onChange={(dates) =>
 							update(role, "dates", (target) => {
@@ -298,6 +310,7 @@ function Roles({ entry, write, page, disabled }: FieldProps) {
 					/>
 					<RichTextField
 						label={t`Description of role ${index + 1}`}
+						autoFocus={!disabled && focusField === `roles/${index}/description`}
 						value={role.description}
 						disabled={disabled}
 						onChange={(html) =>
@@ -337,9 +350,9 @@ type EntryFieldsProps = FieldProps & { type: CustomSectionType; autoFocus?: bool
 export function EntryFields({ type, autoFocus, ...props }: EntryFieldsProps) {
 	const { t, i18n } = useLingui();
 	const { space } = useTheme();
-	const [more, setMore] = useState(false);
 	const fields = ENTRY_FIELDS[type];
-	const { entry, write, page, disabled } = props;
+	const { entry, write, page, disabled, focusField } = props;
+	const [more, setMore] = useState(() => fields.some((field) => field.more && field.key === focusField));
 	const values = entry as unknown as Values;
 
 	const render = (field: EntryField, index: number) => {
@@ -352,7 +365,7 @@ export function EntryFields({ type, autoFocus, ...props }: EntryFieldsProps) {
 						label={label}
 						value={str(values[field.key])}
 						disabled={disabled}
-						autoFocus={autoFocus && index === 0}
+						autoFocus={!disabled && (focusField ? focusField === field.key : autoFocus && index === 0)}
 						keyboardType={field.keyboard === "phone" ? "phone-pad" : undefined}
 						onChange={(value) =>
 							write(field.key, (target) => {
@@ -371,6 +384,7 @@ export function EntryFields({ type, autoFocus, ...props }: EntryFieldsProps) {
 							single={field.kind === "date"}
 							locale={page.locale}
 							format={page.dateFormat}
+							autoFocus={!disabled && ["dates", "period", "date"].some((key) => focusField?.startsWith(key))}
 							disabled={disabled}
 							onChange={(dates) =>
 								write("dates", (target) => {
@@ -387,6 +401,7 @@ export function EntryFields({ type, autoFocus, ...props }: EntryFieldsProps) {
 						label={label}
 						disabled={disabled}
 						value={values.website ?? { url: "", label: "", inlineLink: false }}
+						autoFocus={!disabled && focusField?.startsWith("website")}
 						onChange={(website) =>
 							write("website", (target) => {
 								target.website = website;
@@ -401,6 +416,7 @@ export function EntryFields({ type, autoFocus, ...props }: EntryFieldsProps) {
 						label={label}
 						value={str(values[field.key])}
 						disabled={disabled}
+						autoFocus={!disabled && focusField === field.key}
 						onChange={(html) =>
 							write(field.key, (target) => {
 								target[field.key] = html;

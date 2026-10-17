@@ -17,6 +17,7 @@ let owner, calls = [], toasts = [], fail = null, hold = null, offline = false, p
 let session = { status: "signed-in", server: "https://test.invalid" };
 let files = new Map(), documents = [], jobs = [], picker = null, summaryFailure = false, badges = [], queriesSeen = [];
 let restReply = () => new Response(JSON.stringify("uploaded-id"));
+let resumePreview = { result: null }, previewRequests = [], resumeDocument;
 const date = (day) => new Date(`2026-10-${String(day).padStart(2, "0")}T00:00:00Z`);
 const doc = (id, extra = {}) => ({ id, type: "resume", name: id, tags: [], isLocked: false, isPublic: false, slug: id, trashedAt: null, createdAt: date(1), updatedAt: date(2), application: null, ...extra });
 const api = (path = []) => new Proxy(() => {}, {
@@ -47,7 +48,7 @@ const env = {
 	useRef(initial) { return owner.hooks[owner.cursor++] ??= { current: initial }; },
 	useCallback(callback) { owner.cursor++; return callback; },
 	useEffect(effect) { const index = owner.cursor++; if (!(index in owner.hooks)) { owner.hooks[index] = true; owner.cleanups.push(effect()); } },
-	useQuery(options) { queriesSeen.push(options); return { data: options.queryKey[0] === "documents" ? (options.queryKey[1] === "counts" ? { trash: 1 } : documents) : options.queryKey[0] === "applications" ? jobs : undefined, isPending: pending, isSuccess: !pending, isError: false, refetch: async () => {} }; },
+	useQuery(options) { queriesSeen.push(options); return { data: options.queryKey[0] === "documents" ? (options.queryKey[1] === "counts" ? { trash: 1 } : documents) : options.queryKey[0] === "applications" ? jobs : options.queryKey[0] === "resume" ? resumeDocument : undefined, isPending: pending, isSuccess: !pending, isError: false, refetch: async () => {} }; },
 	useQueryClient: () => ({ invalidateQueries: async () => {} }),
 	showToast: (toast) => toasts.push(toast),
 	params: {},
@@ -55,6 +56,7 @@ const env = {
 	getDocumentAsync: async () => picker ?? { canceled: true },
 	newDocuments: { ids: [], markNew: (document) => badges.push(document), markOpened: () => {} },
 };
+Object.defineProperties(env, { resumePreview: { get: () => resumePreview }, previewRequests: { get: () => previewRequests } });
 globalThis.__m3t2 = env;
 globalThis.__DEV__ = false;
 const expose = (names) => names.map((name) => `exports.${name}=globalThis.__m3t2.${name};`).join("");
@@ -65,6 +67,8 @@ const mocks = {
 	"@lingui/react/macro": "exports.useLingui=()=>({t:globalThis.__m3t2.t,i18n:{locale:'en'}});",
 	"@orpc/client": expose(["ORPCError"]),
 	"@tanstack/react-query": expose(["useQuery", "useQueryClient"]),
+	"expo-image": "exports.Image='Image';",
+	"@/preview/usePreview": "exports.usePreview=(data,template,options)=>{globalThis.__m3t2.previewRequests.push({data,options});return data ? globalThis.__m3t2.resumePreview : {result:null};};",
 	"expo-network": expose(["getNetworkStateAsync"]),
 	"expo-document-picker": expose(["getDocumentAsync"]),
 	"expo-file-system": expose(["File"]),
@@ -72,12 +76,12 @@ const mocks = {
 	"@/auth/session": "exports.useSession=globalThis.__m3t2.session;exports.getServer=()=>globalThis.__m3t2.session().server;",
 	"@/features/ai/providers": "exports.useHasAIProvider=()=>globalThis.__m3t2.ai;exports.AIProviderSetupSheet='AIProviderSetupSheet';",
 	"@/ui": uiNames.map((name) => `exports.${name}='${name}';`).join("") + expose(["showToast"]) + "exports.useTheme=()=>({space:{s1:4,s2:8,s3:12,s4:16},colors:{accent:'green'},radius:{},size:{hit:44,row:52,icon:{row:20}}});",
-	"react-native": "exports.View='View';exports.ActivityIndicator='ActivityIndicator';exports.FlatList='FlatList';exports.Pressable='Pressable';exports.ScrollView='ScrollView';exports.Platform={OS:'android'};exports.I18nManager={isRTL:false};exports.useWindowDimensions=()=>({width:400});",
+	"react-native": "exports.View='View';exports.ActivityIndicator='ActivityIndicator';exports.FlatList='FlatList';exports.Pressable='Pressable';exports.ScrollView='ScrollView';exports.PixelRatio={get:()=>2};exports.Platform={OS:'android'};exports.I18nManager={isRTL:false};exports.useWindowDimensions=()=>({width:400});",
 	"expo-router": "exports.router={replace:(href)=>globalThis.__m3t2.client.navigate(href),back:()=>{}};exports.Stack={Screen:'Stack.Screen'};exports.useLocalSearchParams=()=>globalThis.__m3t2.params;exports.useFocusEffect=()=>{};",
 	"expo-haptics": "exports.impactAsync=async()=>{};exports.ImpactFeedbackStyle={Light:'light'};",
 	"react-native-gesture-handler/ReanimatedSwipeable": "module.exports='Swipeable';",
 	"@/components/forme-check": "exports.FormeCheck='FormeCheck';",
-	"@/draft/runtime": "exports.useLetterStore=(selector)=>selector({});",
+	"@/draft/runtime": "exports.useLetterStore=(selector)=>selector({});exports.useResumeStore=(selector)=>selector({});",
 	"@reactive-resume/utils/string": "exports.stripHtml=(value)=>value?.replace(/<[^>]*>/g,'')??'';",
 };
 const feature = fileURLToPath(new URL("apps/mobile/src/features/documents/", root));
@@ -314,6 +318,28 @@ await check("review viewability enables letter reads only for visible cards", as
 	queriesSeen.filter((query) => query.queryKey[0] === "coverLetters").forEach((options, index) => observers[index].setOptions(requestOptions(options)));
 	await flush(); assert.equal(reads, 2);
 	unsubscribe.forEach((stop) => stop()); client.clear();
+});
+await check("resume thumbnails render the native first page only for visible signed-in cards", () => {
+	resumeDocument = { data: defaultResumeData };
+	resumePreview = { result: { pages: [{ index: 0, uri: "file://native-resume-first-page.png" }] } };
+	previewRequests = [];
+	const summary = doc("preview");
+	const card = mount(() => Thumbnail({ document: summary, visible: true }));
+	const layout = elements(card.tree).find((element) => element.props?.onLayout);
+	layout?.props.onLayout({ nativeEvent: { layout: { width: 180 } } });
+	card.render();
+	assert.ok(elements(card.tree).some((element) => element.type === "Image" && element.props.source?.uri === "file://native-resume-first-page.png"), "visible resume must display native PDF first page");
+	assert.equal(previewRequests.at(-1)?.data, defaultResumeData);
+	assert.deepEqual(previewRequests.at(-1)?.options.pages, [0]);
+	queriesSeen = []; previewRequests = [];
+	mount(() => Thumbnail({ document: summary, visible: false }));
+	assert.ok(queriesSeen.filter((query) => query.queryKey[0] === "resume").every((query) => !query.enabled));
+	assert.ok(previewRequests.every((request) => request.data === null), "hidden cards must not render native PDFs");
+	session = { ...session, status: "signed-out" }; queriesSeen = []; previewRequests = [];
+	mount(() => Thumbnail({ document: summary, visible: true }));
+	assert.ok(queriesSeen.filter((query) => query.queryKey[0] === "resume").every((query) => !query.enabled));
+	assert.ok(previewRequests.every((request) => request.data === null), "signed-out cards must not reuse cached resume data");
+	session = { ...session, status: "signed-in" }; resumeDocument = undefined; resumePreview = { result: null };
 });
 await check("review singular counts render day, document and selection correctly", () => {
 	const day = new Date(Date.now() - 29 * 86_400_000);
