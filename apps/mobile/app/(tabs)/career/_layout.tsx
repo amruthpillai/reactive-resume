@@ -1,14 +1,45 @@
-import { Stack } from "expo-router";
-import { useTheme } from "@/ui";
+import { useLingui } from "@lingui/react/macro";
+import { Stack, usePathname, useRouter } from "expo-router";
+import { ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { routes } from "@/routes";
+import { Button, useTheme } from "@/ui";
 
 export default function CareerLayout() {
-	const { colors, type } = useTheme();
+	const { t } = useLingui();
+	const { colors, type, space } = useTheme();
+	const pathname = usePathname();
+	const router = useRouter();
+	const tabs = [
+		{ value: "today", label: t`Today` },
+		{ value: "coach", label: t`Coach` },
+		{ value: "knowledge", label: t`Knowledge` },
+		{ value: "offers", label: t`Offers` },
+	] as const;
 	return (
-		<Stack
-			screenOptions={{
-				headerLargeTitle: true,
-				headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
-			}}
-		/>
+		<SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: colors.bg }}>
+			<View>
+				<ScrollView
+					horizontal
+					showsHorizontalScrollIndicator={false}
+					contentContainerStyle={{ paddingHorizontal: space.s4, gap: space.s2 }}
+				>
+					{tabs.map((tab) => (
+						<Button
+							key={tab.value}
+							variant={pathname.endsWith(`/${tab.value}`) ? "primary" : "ghost"}
+							label={tab.label}
+							onPress={() => router.replace(routes.career(tab.value))}
+						/>
+					))}
+				</ScrollView>
+			</View>
+			<Stack
+				screenOptions={{
+					headerLargeTitle: true,
+					headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
+				}}
+			/>
+		</SafeAreaView>
 	);
 }

@@ -28222,10 +28222,123 @@
 			}
 		},
 		"/auth/profile": {
+			"get": {
+				"operationId": "getProfile",
+				"summary": "Get your profile",
+				"description": "Returns only the authenticated user's profile and timezone. No secrets are included.",
+				"tags": [
+					"Authentication"
+				],
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"username": {
+											"type": "string"
+										},
+										"displayUsername": {
+											"type": "string"
+										},
+										"image": {
+											"anyOf": [
+												{
+													"type": "string"
+												},
+												{
+													"type": "null"
+												}
+											]
+										},
+										"email": {
+											"type": "string"
+										},
+										"emailVerified": {
+											"type": "boolean"
+										},
+										"timezone": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"id",
+										"name",
+										"username",
+										"displayUsername",
+										"image",
+										"email",
+										"emailVerified",
+										"timezone"
+									]
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Structured API error. See status and code; do not branch on message text.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": [
+										"defined",
+										"code",
+										"status",
+										"message"
+									],
+									"properties": {
+										"defined": {
+											"type": "boolean"
+										},
+										"code": {
+											"type": "string"
+										},
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"data": {}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"apiKey": []
+					},
+					{
+						"bearerAuth": []
+					},
+					{
+						"cookieAuth": []
+					}
+				],
+				"x-codeSamples": [
+					{
+						"lang": "bash",
+						"label": "cURL",
+						"source": "curl \"https://rxresu.me/api/openapi/auth/profile\" --header \"x-api-key: <api-key>\""
+					}
+				]
+			},
 			"patch": {
 				"operationId": "updateProfile",
 				"summary": "Update your profile",
-				"description": "Updates only the authenticated user's name, username, or image. Usernames must be unique.",
+				"description": "Updates only the authenticated user's name, username, image, or timezone. Usernames must be unique.",
 				"tags": [
 					"Authentication"
 				],
@@ -28257,6 +28370,10 @@
 												"type": "null"
 											}
 										]
+									},
+									"timezone": {
+										"type": "string",
+										"maxLength": 100
 									}
 								}
 							}
