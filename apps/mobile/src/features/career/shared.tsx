@@ -1,6 +1,6 @@
 import type { SwitchProps } from "@/ui";
 import type { ReactNode } from "react";
-import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import { Pressable, View } from "react-native";
 import { Banner, Button, ConfirmDialog, Sheet, Skeleton, Switch, Text, useTheme } from "@/ui";
@@ -19,6 +19,7 @@ export function Section({ title, children }: SectionProps) {
 }
 type LoadStateProps = { query: { isError: boolean; isPending: boolean; refetch: () => unknown } };
 export function LoadState({ query }: LoadStateProps) {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	if (query.isError)
 		return (
@@ -71,6 +72,7 @@ export function SwitchRow(props: SwitchProps) {
 type EditorSheetProps = { title: string; dirty: boolean; pending: boolean; onClose: () => void; children: ReactNode };
 /** Keep form state mounted while native dismissal asks whether to discard it. */
 export function EditorSheet({ title, dirty, pending, onClose, children }: EditorSheetProps) {
+	const { t } = useLingui();
 	const [visible, setVisible] = useState(true);
 	const [confirm, setConfirm] = useState(false);
 	const reopen = () => {

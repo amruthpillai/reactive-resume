@@ -24,7 +24,7 @@ export function withUndo({ message, commit, restore, failed }: UndoOptions) {
 	};
 	const timer = setTimeout(() => finish(true), 6000);
 	const listener = AppState.addEventListener("change", (state) => {
-		if (state !== "active") finish(true);
+		if (state === "background") finish(true);
 	});
 	const toast = showToast({ message, duration: 6000, action: { label: t`Undo`, onPress: () => finish(false) } });
 	return { flush: () => finish(true), cancel: () => finish(false) };

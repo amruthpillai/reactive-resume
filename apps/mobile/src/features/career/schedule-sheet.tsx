@@ -1,6 +1,7 @@
 import type { Schedule } from "./hooks";
 import type { RouterInput } from "@/api/client";
 import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -30,6 +31,7 @@ type ScheduleSheetProps = {
 	onDelete: (id: string) => void;
 };
 export function ScheduleSheet(props: ScheduleSheetProps) {
+	const { t } = useLingui();
 	const account = useCareerTime();
 	const career = useCareerQueries();
 	const applications = useApplications();
@@ -90,6 +92,7 @@ function ScheduleForm({
 	verified,
 	ai,
 }: FormProps) {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const now = useNow();
 	const upcoming = collectInterviews(applications, now);

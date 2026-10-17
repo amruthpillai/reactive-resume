@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Stack } from "expo-router";
 import { useState } from "react";
 import { Facts } from "./facts";
@@ -10,6 +10,7 @@ import { useSession } from "@/auth/session";
 import { Screen, SelectSheet, Text } from "@/ui";
 
 export function KnowledgeScreen() {
+	const { t } = useLingui();
 	const [tab, setTab] = useState("facts");
 	const session = useSession();
 	const { profile } = useCareerQueries();

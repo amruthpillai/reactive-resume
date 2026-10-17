@@ -1,6 +1,6 @@
 import type { RouterOutput } from "@/api/client";
 import type { CareerProfileData } from "@reactive-resume/schema/career";
-import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -15,6 +15,7 @@ import { Banner, Button, ChipInput, SelectSheet, Text, TextArea, TextField, useT
 
 type PreferencesProps = { initial: CareerProfileData };
 export function Preferences({ initial }: PreferencesProps) {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const { locale, timeZone, profile: account } = useCareerTime();
 	const router = useRouter();
@@ -31,8 +32,9 @@ export function Preferences({ initial }: PreferencesProps) {
 	const noticeValue =
 		notice.trim() === "" ? null : /^\d+$/.test(notice) && Number(notice) <= 52 ? Number(notice) : undefined;
 	const next = { ...draft, minBase: { ...draft.minBase, amount: parsedAmount }, noticeWeeks: noticeValue };
-	const valid = careerProfileDataSchema.safeParse(next);
-	const json = valid.success ? JSON.stringify(valid.data) : null;
+	const valid =
+		parsedAmount === undefined || noticeValue === undefined ? null : careerProfileDataSchema.safeParse(next);
+	const json = valid?.success ? JSON.stringify(valid.data) : null;
 	const [saved, setSaved] = useState(JSON.stringify(initial));
 	const [error, setError] = useState(false);
 	const [saving, setSaving] = useState(false);
@@ -89,7 +91,7 @@ export function Preferences({ initial }: PreferencesProps) {
 		<View style={{ gap: space.s4 }}>
 			<Text variant="title">{t`What you're looking for`}</Text>
 			<Text accessibilityLiveRegion="polite" color={error ? "dangerText" : "ink3"}>
-				{!valid.success ? t`Not saved` : error ? t`Not saved` : saving || json !== saved ? t`Saving…` : t`Saved`}
+				{!valid?.success ? t`Not saved` : error ? t`Not saved` : saving || json !== saved ? t`Saving…` : t`Saved`}
 			</Text>
 			{error ? (
 				<>
@@ -183,7 +185,7 @@ export function Preferences({ initial }: PreferencesProps) {
 				onBlur={() => flush()}
 				error={noticeValue === undefined ? t`Enter a whole number from 0 to 52, or leave blank.` : undefined}
 			/>
-			{!valid.success ? (
+			{!valid?.success ? (
 				<Banner tone="warn" message={t`Check your preferences. Invalid changes are not saved.`} />
 			) : null}
 			<Text color="ink3">{t`Times are shown in ${timeZone}.`}</Text>

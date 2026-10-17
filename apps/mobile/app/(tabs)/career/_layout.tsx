@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Stack, usePathname, useRouter } from "expo-router";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,6 +6,7 @@ import { routes } from "@/routes";
 import { Button, useTheme } from "@/ui";
 
 export default function CareerLayout() {
+	const { t } = useLingui();
 	const { colors, type, space } = useTheme();
 	const pathname = usePathname();
 	const router = useRouter();

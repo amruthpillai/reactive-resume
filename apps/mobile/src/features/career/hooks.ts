@@ -1,6 +1,5 @@
 import type { RouterOutput } from "@/api/client";
-import { t } from "@lingui/core/macro";
-import { useLingui } from "@lingui/react";
+import { useLingui } from "@lingui/react/macro";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AppState } from "react-native";
@@ -104,6 +103,7 @@ export function useNow() {
 }
 
 export function useCareerAction() {
+	const { t } = useLingui();
 	const queryClient = useQueryClient();
 	const session = useSession();
 	const [pending, setPending] = useState(false);
@@ -136,6 +136,7 @@ export function useCareerAction() {
 }
 
 export function useUndoRows() {
+	const { t } = useLingui();
 	const session = useSession();
 	const [hidden, setHidden] = useState<string[]>([]);
 	const pending = useRef(new Map<string, ReturnType<typeof withUndo>>());

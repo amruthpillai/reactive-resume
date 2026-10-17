@@ -1,6 +1,7 @@
 import type { Fact, Story } from "./hooks";
 import type { CareerStoryData } from "@reactive-resume/schema/career";
 import { t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import { View } from "react-native";
 import { careerStoryInputSchema } from "@reactive-resume/schema/career";
@@ -17,6 +18,7 @@ const parts = () =>
 		{ key: "reflection", label: t`Reflection`, max: 4000 },
 	] as const;
 export function Stories() {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const { stories, facts } = useCareerQueries();
 	const [editor, setEditor] = useState<{ story: Story | null } | null>(null);
@@ -81,6 +83,7 @@ export function Stories() {
 
 type StoryEditorProps = { story: Story | null; facts: Fact[]; onClose: () => void };
 function StoryEditor({ story, facts, onClose }: StoryEditorProps) {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const [draft, setDraft] = useState<CareerStoryData>(
 		() =>
@@ -119,7 +122,12 @@ function StoryEditor({ story, facts, onClose }: StoryEditorProps) {
 			},
 		);
 	return (
-		<EditorSheet dirty={dirty} pending={action.pending} onClose={onClose} title={t`Edit STARR story`}>
+		<EditorSheet
+			dirty={dirty}
+			pending={action.pending}
+			onClose={onClose}
+			title={story ? t`Edit STARR story` : t`New STARR story`}
+		>
 			<View style={{ padding: space.s4, gap: space.s4 }}>
 				<TextField label={t`Title`} value={draft.title} maxLength={200} onChangeText={(title) => change({ title })} />
 				<ChipInput label={t`Tags`} values={draft.tags} onChange={(tags) => change({ tags })} />

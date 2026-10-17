@@ -1,5 +1,6 @@
 import type { Schedule } from "./hooks";
-import { t } from "@lingui/core/macro";
+import { plural } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Stack, useRouter } from "expo-router";
 import { openBrowserAsync } from "expo-web-browser";
 import { type ComponentRef, useRef, useState } from "react";
@@ -15,6 +16,7 @@ import { routes } from "@/routes";
 import { Banner, Button, Card, Chip, EmptyState, Screen, Text, showToast, useTheme } from "@/ui";
 
 export function TodayScreen() {
+	const { t } = useLingui();
 	const { space, size } = useTheme();
 	const tablet = useWindowDimensions().width >= size.panel * 2;
 	const router = useRouter();
@@ -319,7 +321,7 @@ export function TodayScreen() {
 									</Text>
 									{row.intervalDays ? (
 										<Text color="ink3">
-											{t`Every ${row.intervalDays} days`} · {row.timezone}
+											{plural(row.intervalDays, { one: "Every day", other: "Every # days" })} · {row.timezone}
 										</Text>
 									) : null}
 									<SwitchRow

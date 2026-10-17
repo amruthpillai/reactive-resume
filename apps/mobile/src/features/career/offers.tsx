@@ -1,6 +1,7 @@
 import type { SavedItem } from "./hooks";
 import type { CareerProfileData, OfferTerms } from "@reactive-resume/schema/career";
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
 import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import { View, useWindowDimensions } from "react-native";
@@ -14,6 +15,7 @@ type Offer = SavedItem & { data: OfferTerms & { kind: "offer" } };
 const periodLabel = (value: OfferTerms["period"]) =>
 	value === "year" ? t`Per year` : value === "month" ? t`Per month` : t`Per hour`;
 export function OffersScreen() {
+	const { t } = useLingui();
 	const { space, size } = useTheme();
 	const tablet = useWindowDimensions().width >= size.panel * 2;
 	const router = useRouter();
@@ -94,6 +96,7 @@ export function OffersScreen() {
 
 type OfferCardProps = { offer: Offer; other: Offer | undefined; profile: CareerProfileData | undefined };
 function OfferCard({ offer, other, profile }: OfferCardProps) {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const time = useCareerTime();
 	const now = useNow();
@@ -121,7 +124,15 @@ function OfferCard({ offer, other, profile }: OfferCardProps) {
 		{ label: t`Bonus conditions`, value: data.variableConditions || unknown },
 		{ label: t`Equity`, value: data.equity ? t`${data.equity} · Value uncertain` : unknown },
 		{ label: t`Where you work`, value: data.location || unknown },
-		{ label: t`Office days per week`, value: data.officeDays === null ? unknown : String(data.officeDays) },
+		{
+			label: t`Office days per week`,
+			value:
+				data.officeDays === null
+					? unknown
+					: data.officeDays === 0
+						? t`Remote`
+						: plural(data.officeDays, { one: "# office day a week", other: "# office days a week" }),
+		},
 		{ label: t`Leave`, value: data.leave || unknown },
 		{ label: t`Learning budget`, value: money("learning") },
 		{ label: t`Other benefits`, value: data.other || t`Not recorded` },
@@ -181,7 +192,14 @@ function OfferCard({ offer, other, profile }: OfferCardProps) {
 								: t`Location match is unknown.`}
 						</Text>
 					) : null}
-					{profile.noticeWeeks !== null ? <Text>{t`Your notice period: ${profile.noticeWeeks} weeks.`}</Text> : null}
+					{profile.noticeWeeks !== null ? (
+						<Text>
+							{plural(profile.noticeWeeks, {
+								one: "Your notice period: # week.",
+								other: "Your notice period: # weeks.",
+							})}
+						</Text>
+					) : null}
 				</View>
 			) : null}
 			{questions.length ? (

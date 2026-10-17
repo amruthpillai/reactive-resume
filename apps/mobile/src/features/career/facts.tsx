@@ -1,10 +1,14 @@
 import type { Fact } from "./hooks";
+import type { RouterInput } from "@/api/client";
 import type { FactCategory } from "@reactive-resume/schema/career";
-import { t } from "@lingui/core/macro";
-import { useState } from "react";
+import { plural, t } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react/macro";
+import * as Crypto from "expo-crypto";
+import { useRef, useState } from "react";
 import { View } from "react-native";
 import { client, useCareerAction, useCareerQueries, useCareerTime, useUndoRows } from "./hooks";
 import { Actions, EditorSheet, LoadState, SwitchRow } from "./shared";
+import { getServer, useSession } from "@/auth/session";
 import { Banner, Button, Card, Chip, EmptyState, SelectSheet, Sheet, Text, TextArea, TextField, useTheme } from "@/ui";
 
 const categoryLabel = (category: string) =>
@@ -17,6 +21,7 @@ const categories = (): { value: FactCategory; label: string }[] =>
 		label: categoryLabel(value),
 	}));
 export function Facts() {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const { facts } = useCareerQueries();
 	const [search, setSearch] = useState("");
@@ -25,6 +30,25 @@ export function Facts() {
 	const [source, setSource] = useState<Fact | null>(null);
 	const undo = useUndoRows();
 	const action = useCareerAction();
+	const session = useSession();
+	const busy = useRef(new Set<string>());
+	const [updating, setUpdating] = useState<string[]>([]);
+	const [failed, setFailed] = useState(false);
+	const updateFact = async (input: RouterInput["career"]["updateFact"]) => {
+		if (session.status !== "signed-in" || getServer() !== session.server || busy.current.has(input.id)) return;
+		busy.current.add(input.id);
+		setUpdating([...busy.current]);
+		setFailed(false);
+		try {
+			await client.career.updateFact(input);
+		} catch {
+			setFailed(true);
+		} finally {
+			busy.current.delete(input.id);
+			setUpdating([...busy.current]);
+			void action.refresh();
+		}
+	};
 	const { when } = useCareerTime();
 	const rows = (facts.data ?? []).filter(
 		(fact) =>
@@ -45,7 +69,9 @@ export function Facts() {
 			/>
 			<Button label={t`Add a fact`} onPress={() => setEditor({ fact: null })} />
 			<LoadState query={facts} />
-			{action.error ? <Banner tone="danger" message={action.error} /> : null}
+			{failed ? (
+				<Banner tone="danger" message={t`Couldn't save that change. Check your connection and try again.`} />
+			) : null}
 			{!facts.isPending && !facts.isError && !rows.length ? (
 				<EmptyState title={t`No facts match`} message={t`Add a fact or try another word or type.`} />
 			) : null}
@@ -56,16 +82,17 @@ export function Facts() {
 						<Chip label={fact.company ? t`${fact.company} only` : t`All applications`} />
 					</Actions>
 					<Text>{fact.text}</Text>
-					<Text
-						variant="callout"
-						color="ink3"
-					>{t`Used by ${fact.usedBy.stories} stories and ${fact.usedBy.savedItems} saved items.`}</Text>
+					<Text variant="callout" color="ink3">
+						{fact.usedBy.stories + fact.usedBy.savedItems === 0
+							? t`Not used in a story or saved item yet`
+							: `${plural(fact.usedBy.stories, { one: "Backs # story", other: "Backs # stories" })} · ${plural(fact.usedBy.savedItems, { one: "used in # saved item", other: "used in # saved items" })}`}
+					</Text>
 					<SwitchRow
 						label={t`Use this fact`}
 						value={fact.status === "active"}
-						disabled={action.pending}
+						disabled={updating.includes(fact.id)}
 						onValueChange={(active) => {
-							void action.run(() => client.career.updateFact({ id: fact.id, status: active ? "active" : "excluded" }));
+							void updateFact({ id: fact.id, status: active ? "active" : "excluded" });
 						}}
 					/>
 					<Actions>
@@ -75,9 +102,9 @@ export function Facts() {
 							<Button
 								variant="ghost"
 								label={t`Use for all applications`}
-								disabled={action.pending}
+								disabled={updating.includes(fact.id)}
 								onPress={() => {
-									void action.run(() => client.career.updateFact({ id: fact.id, share: true }));
+									void updateFact({ id: fact.id, share: true });
 								}}
 							/>
 						) : null}
@@ -129,6 +156,7 @@ export function Facts() {
 
 type FactEditorProps = { fact: Fact | null; onClose: () => void };
 function FactEditor({ fact, onClose }: FactEditorProps) {
+	const { t } = useLingui();
 	const { space } = useTheme();
 	const [text, setText] = useState(fact?.text ?? "");
 	const [category, setCategory] = useState<FactCategory>("accomplishment");
@@ -160,7 +188,7 @@ function FactEditor({ fact, onClose }: FactEditorProps) {
 									text: text.trim(),
 									category,
 									applicationId: null,
-									source: { kind: "manual", id: "", quote: "" },
+									source: { kind: "manual", id: Crypto.randomUUID(), quote: text.trim() },
 								});
 						}, onClose);
 					}}

@@ -1,5 +1,6 @@
 // Run from repository root: node docs/plans/native-mobile-app/reports/M6-T1/verify.mjs
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 import { readFileSync, existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import { resolve, dirname } from "node:path";
@@ -152,7 +153,13 @@ const mocks = {
 		jsxs: (type, props) => ({ type, props }),
 		Fragment: "Fragment",
 	},
-	"@lingui/core/macro": { t: tag },
+	"@lingui/core/macro": {
+		t: tag,
+		plural: (count, forms) =>
+			(forms[new Intl.PluralRules("en").select(count)] ?? forms.other).replaceAll("#", String(count)),
+	},
+	"@lingui/react/macro": { useLingui: () => ({ t: tag, i18n: { locale: "en-US" } }) },
+	"expo-crypto": { randomUUID },
 	"@lingui/react": { useLingui: () => ({ i18n: { locale: "en-US" } }) },
 	"react-native": {
 		AppState: appState,
@@ -292,6 +299,7 @@ const click = (owner, label) => {
 };
 let checks = 0;
 async function check(name, work) {
+	if (process.env.M6_SCENARIO && !name.includes(process.env.M6_SCENARIO)) return;
 	await work();
 	checks++;
 	console.log(`PASS ${name}`);
@@ -404,6 +412,40 @@ await check("background flush commits once; later timer and Undo cannot repeat i
 	assert.equal(commits, 1);
 	assert.equal(restores, 0);
 });
+await check("inactive preserves the Undo window until background", async () => {
+	let commits = 0,
+		restores = 0;
+	withUndo({
+		message: "Fixture",
+		commit: async () => commits++,
+		restore: () => restores++,
+		failed() {
+			assert.fail();
+		},
+	});
+	for (const listener of [...listeners]) listener("inactive");
+	await tick();
+	assert.equal(commits, 0);
+	assert.equal(toasts.size, 1);
+	[...toasts.values()].at(-1).action.onPress();
+	await advance(6000);
+	assert.equal(commits, 0);
+	assert.equal(restores, 1);
+	withUndo({
+		message: "Fixture",
+		commit: async () => commits++,
+		restore() {},
+		failed() {
+			assert.fail();
+		},
+	});
+	for (const listener of [...listeners]) listener("inactive");
+	await tick();
+	assert.equal(commits, 0);
+	for (const listener of [...listeners]) listener("background");
+	await tick();
+	assert.equal(commits, 1);
+});
 await check("failed delayed write restores row and reports failure", async () => {
 	let restored = 0,
 		failures = 0;
@@ -501,6 +543,28 @@ await check("preference writes serialize and flush on background", async () => {
 	assert.equal(calls.length, 2);
 	assert.equal(calls[1][1].minBase.amount, 105000);
 	owner.unmount();
+});
+await check("invalid notice periods never flush or erase the previous value", async () => {
+	calls.length = 0;
+	const owner = mount(Preferences, { initial: { ...initial, noticeWeeks: 4 } });
+	for (const value of ["53", "-1", "1.5", "abc"]) {
+		edit(owner, "Notice period (weeks)", value);
+		find(owner, "TextField", "Notice period (weeks)").onBlur();
+		for (const listener of [...listeners]) listener("background");
+		await advance(2100);
+		assert.equal(calls.length, 0);
+	}
+	owner.unmount();
+	await tick();
+	assert.equal(calls.length, 0);
+	const corrected = mount(Preferences, { initial: { ...initial, noticeWeeks: 4 } });
+	edit(corrected, "Notice period (weeks)", "5");
+	await advance(2000);
+	assert.equal(calls[0][1].noticeWeeks, 5);
+	edit(corrected, "Notice period (weeks)", "");
+	await advance(2000);
+	assert.equal(calls[1][1].noticeWeeks, null);
+	corrected.unmount();
 });
 const hooks = load("apps/mobile/src/features/career/hooks.ts");
 await check("double taps queue one removal and navigation flushes it", async () => {
@@ -665,6 +729,53 @@ await check("fact correction sends text only and retains scope/category", async 
 	owner.unmount();
 	parent.unmount();
 });
+await check("manual fact payload includes UUID and trimmed source quote", async () => {
+	calls.length = 0;
+	const parent = mount(Facts);
+	click(parent, "Add a fact");
+	const child = nodes(parent.tree).find((node) => typeof node.type === "function" && node.type.name === "FactEditor");
+	const owner = mount(child.type, child.props);
+	find(owner, "TextArea", "Fact").onChangeText("  Supported fictional achievement  ");
+	owner.render();
+	click(owner, "Save fact");
+	await tick();
+	const [name, input] = calls[0];
+	assert.equal(name, "career.saveFact");
+	assert.equal(input.applicationId, null);
+	assert.equal(input.text, "Supported fictional achievement");
+	assert.equal(input.source.kind, "manual");
+	assert.match(input.source.id, /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+	assert.equal(input.source.quote, input.text);
+	owner.unmount();
+	parent.unmount();
+});
+await check("different fact toggles remain independent while the first saves", async () => {
+	calls.length = 0;
+	queries.set("career.facts", [fact, { ...fact, id: "second-fact", text: "Second fictional result" }]);
+	let release;
+	holding = new Promise((resolve) => {
+		release = resolve;
+	});
+	const parent = mount(Facts);
+	const switches = () =>
+		nodes(parent.tree).filter((node) => typeof node.type === "function" && node.type.name === "SwitchRow");
+	switches()[0].props.onValueChange(false);
+	parent.render();
+	assert.equal(switches()[0].props.disabled, true);
+	assert.equal(switches()[1].props.disabled, false);
+	switches()[1].props.onValueChange(false);
+	await tick();
+	assert.equal(calls.length, 2);
+	assert.equal(calls[0][1].id, "fact");
+	assert.equal(calls[1][1].id, "second-fact");
+	holding = null;
+	release();
+	await tick();
+	parent.render();
+	assert.equal(switches()[0].props.disabled, false);
+	parent.unmount();
+	queries.set("career.facts", [fact]);
+});
 const { Stories } = load("apps/mobile/src/features/career/stories.tsx");
 await check("STARR controls require Situation Task Action and allow unknown results", async () => {
 	calls.length = 0;
@@ -672,6 +783,7 @@ await check("STARR controls require Situation Task Action and allow unknown resu
 	click(parent, "Add a story");
 	const child = nodes(parent.tree).find((node) => typeof node.type === "function" && node.type.name === "StoryEditor");
 	const owner = mount(child.type, child.props);
+	assert.equal(owner.tree.props.title, "New STARR story");
 	assert.equal(find(owner, "Button", "Save story").disabled, true);
 	edit(owner, "Title", "Fictional story");
 	for (const label of ["Situation (required)", "Task (required)", "Action (required)"]) {
@@ -685,6 +797,73 @@ await check("STARR controls require Situation Task Action and allow unknown resu
 	assert.equal(calls[0][1].reflection, "");
 	owner.unmount();
 	parent.unmount();
+});
+const displayedText = (owner) =>
+	nodes(owner.tree)
+		.filter((node) => node.type === "Text")
+		.flatMap((node) => node.props.children)
+		.filter((text) => typeof text === "string")
+		.join(" ");
+await check("fact usage renders singular and plural counts", () => {
+	for (const count of [1, 2]) {
+		queries.set("career.facts", [{ ...fact, usedBy: { stories: count, savedItems: count } }]);
+		const owner = mount(Facts);
+		const text = displayedText(owner);
+		assert.ok(
+			text.includes(count === 1 ? "Backs 1 story · used in 1 saved item" : "Backs 2 stories · used in 2 saved items"),
+		);
+		owner.unmount();
+	}
+	queries.set("career.facts", [fact]);
+});
+const { OffersScreen } = load("apps/mobile/src/features/career/offers.tsx");
+const { offerTermsSchema } = load("packages/schema/src/career.ts");
+await check("offer notice and office counts render singular and plural", () => {
+	for (const count of [1, 2]) {
+		queries.set("career.profile", { ...initial, noticeWeeks: count });
+		queries.set("career.savedItems", [
+			{
+				id: "offer",
+				applicationId: "job",
+				application: { company: "Fictional", role: "Engineer" },
+				data: {
+					...offerTermsSchema.parse({ currency: "USD", period: "year", base: null, variable: null, officeDays: count }),
+					kind: "offer",
+				},
+			},
+		]);
+		const parent = mount(OffersScreen);
+		const child = nodes(parent.tree).find((node) => typeof node.type === "function" && node.type.name === "OfferCard");
+		const owner = mount(child.type, child.props);
+		const text = displayedText(owner);
+		assert.ok(text.includes(count === 1 ? "Your notice period: 1 week." : "Your notice period: 2 weeks."));
+		assert.ok(text.includes(count === 1 ? "1 office day a week" : "2 office days a week"));
+		owner.unmount();
+		parent.unmount();
+	}
+	queries.set("career.profile", initial);
+	queries.set("career.savedItems", []);
+});
+const { TodayScreen } = load("apps/mobile/src/features/career/today.tsx");
+await check("schedule interval renders Every day and plural days", () => {
+	queries.set("career.notifications", []);
+	queries.set("career.opportunities", []);
+	for (const days of [1, 3]) {
+		queries.set("career.schedules", [
+			{
+				id: "schedule",
+				kind: "discovery",
+				query: "Engineer",
+				enabled: true,
+				intervalDays: days,
+				timezone: "Europe/Berlin",
+				nextRunAt: new Date("2026-10-20T06:00Z"),
+			},
+		]);
+		const owner = mount(TodayScreen);
+		assert.ok(displayedText(owner).includes(days === 1 ? "Every day" : "Every 3 days"));
+		owner.unmount();
+	}
 });
 assert.equal(listeners.size, 0);
 assert.equal(timers.size, 0);
