@@ -157,6 +157,8 @@ function BottomSheet({
 	return (
 		<BottomSheetModal
 			ref={ref}
+			// Keep the sheet's controls individually reachable by VoiceOver instead of one adjustable group.
+			accessible={false}
 			onDismiss={onDismiss}
 			onChange={(index) => {
 				// A detent change after the sheet is up, not the first appearance.
