@@ -111,6 +111,8 @@ try {
 	}
 	assert.deepEqual(parse(`https://rxresu.me${fixturePage}?${parity}`), target(fixturePage));
 	assert.deepEqual(parse(`me.rxresu://r/alex/cv?${parity}&ask=never-send`), target("/r/alex/cv", null));
+	for (const query of ["parity=%", "smoke=%FF", `${parity}=extra`, "parity=%&smoke=" + encodeURIComponent(localOrigin)])
+		assert.deepEqual(parse(`${fixturePage}?${query}`), target(fixturePage, null), "Malformed fixture query must fail closed");
 	globalThis.__DEV__ = false;
 	for (const [url] of devLinks) assert.deepEqual(parse(url), target(fixturePage, null), "Release must drop dev parameters");
 	const hostileHosts = [

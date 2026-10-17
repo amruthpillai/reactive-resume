@@ -89,11 +89,19 @@ export function parseDeepLink(input: string, currentServer: string): DeepLink | 
 	const target = (href: AppHref): DeepLink => ({ kind: "target", server, href });
 
 	if (__DEV__ && native && pathname === "/builder/preview-sample/page") {
-		const query = new URLSearchParams(path.split("#", 1)[0]?.split("?", 2)[1]);
-		for (const key of ["parity", "smoke"] as const) {
-			const origin = query.get(key);
-			const match = origin?.match(/^http:\/\/127\.0\.0\.1:([1-9]\d{0,4})\/?$/);
-			if (origin && match && Number(match[1]) <= 65535)
+		for (const pair of path.split("#", 1)[0]?.split("?", 2)[1]?.split("&") ?? []) {
+			const separator = pair.indexOf("=");
+			if (separator < 0) continue;
+			const key = pair.slice(0, separator);
+			if (key !== "parity" && key !== "smoke") continue;
+			let origin: string;
+			try {
+				origin = decodeURIComponent(pair.slice(separator + 1).replaceAll("+", " "));
+			} catch {
+				return target(routes.builder("preview-sample", "page"));
+			}
+			const match = origin.match(/^http:\/\/127\.0\.0\.1:([1-9]\d{0,4})\/?$/);
+			if (match && Number(match[1]) <= 65535)
 				return target(
 					`${routes.builder("preview-sample", "page")}?${key}=${encodeURIComponent(origin.replace(/\/$/, ""))}` as AppHref,
 				);
