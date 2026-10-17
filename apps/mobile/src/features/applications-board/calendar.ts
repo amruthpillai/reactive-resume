@@ -3,7 +3,7 @@
 // Pure: Node runs it in the M5-T3 scenarios.
 import type { Application } from "../applications/types";
 import type { InterviewTimelineEntry } from "@reactive-resume/schema/applications/data";
-import { zonedParts } from "../reminders/schedule.ts";
+import { followUpStart, zonedParts } from "../reminders/schedule.ts";
 
 const DAY_MS = 86_400_000;
 
@@ -31,6 +31,17 @@ export const dayKeyOf = (instant: Date | string, timeZone: string) => zonedParts
 export function followUpDay(followUpAt: Date | string, timeZone: string) {
 	const date = new Date(followUpAt);
 	return date.getTime() % DAY_MS === 0 ? date.toISOString().slice(0, 10) : dayKeyOf(date, timeZone);
+}
+
+/**
+ * The application as the follow-up editor should read it: the follow-up moved to 09:00 on the calendar's day, on the
+ * user's clock. The editor reads the date on that clock, so a web UTC-midnight date opens (and saves) on the same day
+ * the calendar shows instead of the evening before west of UTC.
+ */
+export function editableFollowUp<T extends Pick<Application, "followUpAt">>(application: T, timeZone: string): T {
+	if (!application.followUpAt) return application;
+	const start = followUpStart(followUpDay(application.followUpAt, timeZone), timeZone);
+	return start ? { ...application, followUpAt: start } : application;
 }
 
 /** Interviews and follow-ups of open applications, soonest first. Closed applications stay off the calendar. */

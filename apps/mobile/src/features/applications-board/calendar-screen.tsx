@@ -10,19 +10,21 @@ import {
 	collectEvents,
 	dateOfKey,
 	dayKeyOf,
+	editableFollowUp,
 	groupByDay,
 	monthGrid,
 	shiftMonth,
 	upcomingEvents,
 	weekStartsOn,
 } from "./calendar";
-import { ApplicationsViewFrame, useIsTablet } from "./views";
+import { ApplicationsViewFrame } from "./views";
 import { interviewTypeLabel, useNow, useUserTime } from "@/features/application-detail/hooks";
 import { InterviewSheet } from "@/features/application-detail/interview-sheet";
 import { FollowUpSheet } from "@/features/application-detail/sheets";
 import { applicationError } from "@/features/applications/error";
 import { useApplications } from "@/features/applications/queries";
 import { routes } from "@/routes";
+import { useIsTablet } from "@/shell/use-is-tablet";
 import { Banner, Button, Card, EmptyState, IconButton, SelectSheet, Sheet, Skeleton, Text, useTheme } from "@/ui";
 
 // Chips per day cell on tablet before "+N more"; phone cells show up to this many dots.
@@ -356,7 +358,11 @@ function ApplicationCalendar() {
 				/>
 			) : null}
 			{editing?.kind === "follow-up" ? (
-				<FollowUpSheet application={editing.application} open={editorOpen} onClose={() => setEditorOpen(false)} />
+				<FollowUpSheet
+					application={editableFollowUp(editing.application, timeZone)}
+					open={editorOpen}
+					onClose={() => setEditorOpen(false)}
+				/>
 			) : null}
 		</>
 	);

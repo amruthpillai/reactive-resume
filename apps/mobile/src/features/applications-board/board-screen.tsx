@@ -1,3 +1,4 @@
+import type { ColumnRect, PendingMove } from "./board";
 import type { Application } from "@/features/applications/types";
 import type { ApplicationStatus } from "@reactive-resume/schema/applications/data";
 import type { ComponentRef } from "react";
@@ -9,13 +10,15 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector, LegacyScrollView } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue } from "react-native-reanimated";
-import { ApplicationsViewFrame, useIsTablet } from "./views";
+import { keepPending, pendingAfterError, stageAt } from "./board";
+import { ApplicationsViewFrame } from "./views";
 import { CloseSheet, MarkAppliedSheet } from "@/features/application-detail/sheets";
 import { applicationError } from "@/features/applications/error";
 import { describeNextStep, getNextStep } from "@/features/applications/next-step";
 import { useApplicationMutations, useApplications } from "@/features/applications/queries";
 import { getStageColor, getStageLabel } from "@/features/applications/stages";
 import { routes } from "@/routes";
+import { useIsTablet } from "@/shell/use-is-tablet";
 import { Banner, Button, Card, EmptyState, ListRow, Sheet, Skeleton, Switch, Text, showToast, useTheme } from "@/ui";
 
 const STAGES: readonly ApplicationStatus[] = ["saved", "applied", "screening", "interview", "offer", "closed"];
@@ -28,9 +31,7 @@ const LONG_PRESS_MS = 400;
 // While a card is held this close to the board's edge, the board scrolls one column, at most this often.
 const AUTO_SCROLL_EVERY_MS = 500;
 
-type Rect = { x: number; width: number };
 type Drag = { application: Application; left: number; top: number; width: number };
-type SheetState = { kind: "move" | "close" | "applied"; application: Application };
 type DragEvent = { absoluteX: number; absoluteY: number; x: number; y: number };
 type DragHandlers = {
 	start: (application: Application, event: DragEvent, width: number) => void;
@@ -52,36 +53,40 @@ export function BoardScreen() {
  */
 function Board() {
 	const { t } = useLingui();
-	const { radius, shadows, space } = useTheme();
+	const { motion, radius, shadows, space } = useTheme();
 	const { width: windowWidth } = useWindowDimensions();
 	const tablet = useIsTablet();
 	const reduceMotion = useReducedMotion();
 	const query = useApplications();
 	const { update } = useApplicationMutations();
 	const [showClosed, setShowClosed] = useState(false);
-	const [sheet, setSheet] = useState<SheetState | null>(null);
-	const [sheetOpen, setSheetOpen] = useState(false);
+	// One open flag per sheet: a sheet's late dismissal can never close the one that replaced it.
+	const [moving, setMoving] = useState<Application | null>(null);
+	const [moveOpen, setMoveOpen] = useState(false);
+	const [closing, setClosing] = useState<Application | null>(null);
+	const [closeOpen, setCloseOpen] = useState(false);
+	const [marking, setMarking] = useState<Application | null>(null);
+	const [markOpen, setMarkOpen] = useState(false);
 	const [drag, setDrag] = useState<Drag | null>(null);
 	const [hover, setHover] = useState<ApplicationStatus | null>(null);
 	// The list publishes the optimistic move after an await, so until then the board shows the card in its new column
 	// itself; otherwise it blinks back for a frame (web board does the same).
-	const [pending, setPending] = useState<{ id: string; from: ApplicationStatus; to: ApplicationStatus } | null>(null);
+	const [pending, setPending] = useState<PendingMove | null>(null);
 	const translateX = useSharedValue(0);
 	const translateY = useSharedValue(0);
 	const scrollRef = useRef<ComponentRef<typeof ScrollView>>(null);
 	const board = useRef<ComponentRef<typeof View>>(null);
 	const boardRect = useRef({ x: 0, y: 0, width: 0 });
 	const columns = useRef(new Map<ApplicationStatus, ComponentRef<typeof View>>());
-	const rects = useRef(new Map<ApplicationStatus, Rect>());
+	const rects = useRef(new Map<ApplicationStatus, ColumnRect>());
 	const scrollX = useRef(0);
 	const autoScrolled = useRef(false);
 	const hovered = useRef<ApplicationStatus | null>(null);
 	const dragged = useRef<Application | null>(null);
+	const fingerX = useRef(0);
 
 	const applications = query.data ?? [];
-	if (pending && applications.find((application) => application.id === pending.id)?.status !== pending.from) {
-		setPending(null);
-	}
+	if (pending && !keepPending(pending, applications)) setPending(null);
 	const statusOf = (application: Application) =>
 		pending?.id === application.id ? pending.to : (application.status as ApplicationStatus);
 	const stages = showClosed ? STAGES : STAGES.filter((stage) => stage !== "closed");
@@ -91,43 +96,56 @@ function Board() {
 	const columnWidth = tablet ? TABLET_COLUMN : Math.min(PHONE_COLUMN, windowWidth - space.s4 * 2 - space.s8);
 	const cardWidth = columnWidth - space.s3 * 2;
 
-	const openSheet = (kind: SheetState["kind"], application: Application) => {
-		setSheet({ kind, application });
-		setSheetOpen(true);
-	};
-
 	const moveTo = (application: Application, stage: ApplicationStatus) => {
 		const from = statusOf(application);
 		if (stage === from) return;
-		if (stage === "closed") return openSheet("close", application);
-		if (from === "saved" && stage === "applied") return openSheet("applied", application);
+		if (stage === "closed") {
+			setClosing(application);
+			return setCloseOpen(true);
+		}
+		if (from === "saved" && stage === "applied") {
+			setMarking(application);
+			return setMarkOpen(true);
+		}
 		setPending({ id: application.id, from: application.status as ApplicationStatus, to: stage });
 		update.mutate(
 			{ id: application.id, status: stage },
 			{
 				onSuccess: () => showToast({ message: t`Moved to ${getStageLabel(stage)}` }),
-				onError: (error) => showToast({ message: applicationError(error) }),
+				onError: (error) => {
+					setPending((current) => pendingAfterError(current, application.id, stage));
+					showToast({ message: applicationError(error) });
+				},
 			},
 		);
 	};
 
 	// Column positions in the window, re-read whenever the board scrolls during a drag (also right for RTL).
-	const measureColumns = () => {
-		for (const [stage, view] of columns.current) {
-			view.measureInWindow((x, _y, width) => rects.current.set(stage, { x, width }));
+	const measureColumns = () =>
+		Promise.all(
+			[...columns.current].map(
+				([stage, view]) =>
+					new Promise<void>((resolve) =>
+						view.measureInWindow((x, _y, width) => {
+							rects.current.set(stage, { x, width });
+							resolve();
+						}),
+					),
+			),
+		);
+	const hoverAt = (x: number) => {
+		const stage = stageAt(x, rects.current);
+		if (stage !== hovered.current) {
+			hovered.current = stage;
+			setHover(stage);
 		}
-	};
-	const stageAt = (absoluteX: number) => {
-		for (const [stage, rect] of rects.current) {
-			if (absoluteX >= rect.x && absoluteX <= rect.x + rect.width) return stage;
-		}
-		return null;
 	};
 
 	const handlers: DragHandlers = {
 		start: (application, event, width) => {
 			rects.current.clear();
-			measureColumns();
+			fingerX.current = event.absoluteX;
+			void measureColumns();
 			translateX.set(0);
 			translateY.set(0);
 			hovered.current = null;
@@ -146,11 +164,8 @@ function Board() {
 		move: (absoluteX, translationX, translationY) => {
 			translateX.set(translationX);
 			translateY.set(translationY);
-			const stage = stageAt(absoluteX);
-			if (stage !== hovered.current) {
-				hovered.current = stage;
-				setHover(stage);
-			}
+			fingerX.current = absoluteX;
+			hoverAt(absoluteX);
 			const { x, width } = boardRect.current;
 			const edge = absoluteX < x + space.s10 ? -1 : absoluteX > x + width - space.s10 ? 1 : 0;
 			if (edge !== 0 && !autoScrolled.current) {
@@ -163,7 +178,6 @@ function Board() {
 			}
 		},
 		end: (drop) => {
-			const target = hovered.current;
 			const application = dragged.current;
 			// Every tap finalizes the pan too; only a started drag has anything to undo.
 			if (!application) return;
@@ -171,10 +185,15 @@ function Board() {
 			dragged.current = null;
 			setHover(null);
 			setDrag(null);
-			if (drop && target) {
+			if (!drop) return;
+			// Auto-scroll may still be moving the columns: resolve the target from fresh positions at the release point.
+			const x = fingerX.current;
+			void measureColumns().then(() => {
+				const target = stageAt(x, rects.current);
+				if (!target) return;
 				void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 				moveTo(application, target);
-			}
+			});
 		},
 	};
 	// Cards get a proxy that never changes, so a re-render mid-drag doesn't rebuild (and cancel) their pan gesture.
@@ -256,7 +275,8 @@ function Board() {
 					scrollEventThrottle={16}
 					onScroll={(event) => {
 						scrollX.current = event.nativeEvent.contentOffset.x;
-						if (drag) measureColumns();
+						// Columns slide under a still finger while auto-scrolling: re-measure, then re-pick the hovered column.
+						if (drag) void measureColumns().then(() => hoverAt(fingerX.current));
 					}}
 					contentContainerStyle={{ padding: space.s4, gap: space.s3 }}
 				>
@@ -270,7 +290,10 @@ function Board() {
 							highlighted={hover === stage && drag !== null && statusOf(drag.application) !== stage}
 							draggingId={drag?.application.id ?? null}
 							handlers={stableHandlers}
-							onMove={(application) => openSheet("move", application)}
+							onMove={(application) => {
+								setMoving(application);
+								setMoveOpen(true);
+							}}
 							register={(view) => {
 								if (view) columns.current.set(stage, view);
 								else columns.current.delete(stage);
@@ -298,23 +321,18 @@ function Board() {
 				) : null}
 			</View>
 			<MoveSheet
-				application={sheet?.kind === "move" ? sheet.application : null}
-				current={sheet ? statusOf(sheet.application) : null}
-				open={sheetOpen && sheet?.kind === "move"}
-				onClose={() => setSheetOpen(false)}
+				application={moving}
+				current={moving ? statusOf(moving) : null}
+				open={moveOpen}
+				onClose={() => setMoveOpen(false)}
 				onPick={(stage) => {
-					setSheetOpen(false);
-					// Let the move sheet go before a Close or Mark as applied sheet takes its place.
-					if (sheet) setTimeout(() => moveTo(sheet.application, stage), 0);
+					setMoveOpen(false);
+					// A Close or Mark as applied sheet replaces this one once its dismissal (d3) has run.
+					if (moving) setTimeout(() => moveTo(moving, stage), motion.d3);
 				}}
 			/>
-			{sheet && sheet.kind !== "move" ? (
-				sheet.kind === "close" ? (
-					<CloseSheet application={sheet.application} open={sheetOpen} onClose={() => setSheetOpen(false)} />
-				) : (
-					<MarkAppliedSheet application={sheet.application} open={sheetOpen} onClose={() => setSheetOpen(false)} />
-				)
-			) : null}
+			{closing ? <CloseSheet application={closing} open={closeOpen} onClose={() => setCloseOpen(false)} /> : null}
+			{marking ? <MarkAppliedSheet application={marking} open={markOpen} onClose={() => setMarkOpen(false)} /> : null}
 		</View>
 	);
 }

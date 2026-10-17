@@ -9,12 +9,13 @@ import { I18nManager, ScrollView, View } from "react-native";
 import Svg, { Circle, Defs, G, LinearGradient, Path, Rect, Stop, Text as SvgText } from "react-native-svg";
 import { weekStartsOn } from "./calendar";
 import { computeOutcomes, computePipeline, computeTimeline, countSources } from "./insights";
-import { ApplicationsViewFrame, useIsTablet } from "./views";
+import { ApplicationsViewFrame } from "./views";
 import { useDocuments, useNow, useUserTime } from "@/features/application-detail/hooks";
 import { ApplicationsCsvSheet } from "@/features/applications/csv-sheet";
 import { applicationError } from "@/features/applications/error";
 import { useApplications } from "@/features/applications/queries";
 import { getStageColor, getStageLabel } from "@/features/applications/stages";
+import { useIsTablet } from "@/shell/use-is-tablet";
 import { Banner, Button, Card, Skeleton, Text, showToast, useTheme } from "@/ui";
 
 const BAR_HEIGHT = 18;

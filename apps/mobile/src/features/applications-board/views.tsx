@@ -1,23 +1,10 @@
+import type { ApplicationsView } from "@/routes";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { router, Stack } from "expo-router";
-import { useWindowDimensions, View } from "react-native";
+import { View } from "react-native";
+import { routes } from "@/routes";
 import { Segmented, useTheme } from "@/ui";
-
-export type ApplicationsView = "list" | "board" | "calendar" | "insights";
-
-// Sibling routes under app/(tabs)/applications. Kept here until routes.ts (M1 contract) gains them.
-const HREFS = {
-	list: "/applications",
-	board: "/applications/board",
-	calendar: "/applications/calendar",
-	insights: "/applications/insights",
-} as const satisfies Record<ApplicationsView, string>;
-
-/** Tablet layout from 700 pt wide, the shell's `useIsTablet()` rule (M2-T2); switch to that hook once it merges. */
-export function useIsTablet() {
-	return useWindowDimensions().width >= 700;
-}
 
 type ApplicationsViewFrameProps = { current: ApplicationsView; children: ReactNode };
 
@@ -40,7 +27,7 @@ export function ApplicationsViewFrame({ current, children }: ApplicationsViewFra
 						{ value: "insights", label: t`Insights` },
 					]}
 					onChange={(view) => {
-						if (view !== current) router.replace(HREFS[view]);
+						if (view !== current) router.replace(routes.applications(view));
 					}}
 				/>
 			</View>
