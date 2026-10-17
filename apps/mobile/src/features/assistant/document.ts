@@ -6,8 +6,9 @@ import { applyTo, getProposalState, getStateIn } from "@reactive-resume/resume/p
 import { acceptResumeProposals } from "./proposals";
 import { getAccountScope } from "@/auth/session";
 import { useLetterStore, useResumeStore } from "@/draft";
+import { letterAdapter } from "@/draft/adapters";
 import { useApplications } from "@/features/applications/queries";
-import { showToast } from "@/ui";
+import { dismissToast, showToast } from "@/ui";
 
 /** The document the assistant works on (web: AssistantDocument). Each builder layout owns its draft. */
 export type AssistantDocument = {
@@ -91,21 +92,42 @@ export function useLetterAssistantDocument(letterId: string, applicationId?: str
 			stateOf: (proposal) => getStateIn(document.content, proposal),
 			accept: (proposals) => {
 				if (!isCurrent() || useLetterStore.getState().locked) return;
+				const before = useLetterStore.getState().data?.content;
 				useLetterStore.getState().update(
 					(draft) => {
 						for (const proposal of proposals) draft.content = applyTo(draft.content, proposal) ?? draft.content;
 					},
 					{ newStep: true },
 				);
-				showToast({
+				const accepted = useLetterStore.getState().data;
+				if (!accepted || accepted.content === before) return;
+				let eligible = true;
+				const toastId = showToast({
 					message: proposals.length === 1 ? t`Edit applied` : t`${proposals.length} edits applied`,
 					action: {
 						label: t`Undo`,
 						onPress: () => {
-							if (isCurrent()) useLetterStore.getState().undo();
+							const current = useLetterStore.getState();
+							if (
+								eligible &&
+								isCurrent() &&
+								current.document &&
+								!current.locked &&
+								letterAdapter.matches(current.document, accepted)
+							)
+								current.undo();
+							else showToast({ message: t`Use the builder's Undo to undo earlier changes.` });
 						},
 					},
 				});
+				const unsubscribe = useLetterStore.subscribe((current) => {
+					// Saves replace the whole letter; compare authored fields, ignoring revision and server metadata.
+					if (isCurrent() && current.document && letterAdapter.matches(current.document, accepted)) return;
+					eligible = false;
+					dismissToast(toastId);
+					unsubscribe();
+				});
+				setTimeout(unsubscribe, 6000);
 			},
 			flush: async () => {
 				if (!isCurrent()) return false;

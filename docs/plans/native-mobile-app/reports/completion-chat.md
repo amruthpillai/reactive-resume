@@ -36,9 +36,19 @@ Validation:
 - `rtk proxy pnpm lint:agent` — passed, repository-wide.
 - `rtk proxy pnpm format:check` — passed, repository-wide.
 - `rtk proxy pnpm exec turbo boundaries` — passed: 23 packages, no violations.
-- `rtk proxy node --import ./apps/server/node_modules/tsx/dist/loader.mjs docs/plans/native-mobile-app/reports/M6-T3/verify.mjs` — 17 existing transport/recovery scenarios plus 11 completion integration scenarios passed.
+- `rtk proxy node --import ./apps/server/node_modules/tsx/dist/loader.mjs docs/plans/native-mobile-app/reports/M6-T3/verify.mjs` — 17 existing transport/recovery scenarios plus 15 completion integration scenarios passed.
 - `git diff --check` — passed.
 
 ## Deferred verification
 
-No native build, simulator/emulator run, screenshots, live provider/account, or real-server assistant run performed. Existing smoke workers should verify Coach sheet keyboard/scroll behavior, letter assistant rendering/accept/Undo/history, and single-strip company/role/badges on both platforms. Coordinator retains cross-harness review and translation extraction. Existing CI has no mobile harness task; these results are local, not CI evidence.
+No native build, simulator/emulator run, screenshots, live provider/account, or real-server assistant run performed. Existing smoke workers should verify Coach sheet keyboard/scroll behavior, letter assistant rendering/accept/Undo/history, and single-strip company/role/badges on both platforms. Coordinator retains merge and translation extraction. Existing CI has no mobile harness task; these results are local, not CI evidence.
+
+## Review correction: proposal toast Undo
+
+Review of `179b0128c` found one P2 blocker: accepting a letter proposal, closing Assistant, and typing in the editor left a toast whose generic Undo removed that later typing. The existing resume proposal toast had the same weakness.
+
+Both acceptance paths now capture the accepted state and dismiss/invalidate the toast after an intervening authored edit. A retained callback refuses to undo once invalidated, including after builder Undo returns to the accepted text. No-op acceptance creates no Undo toast. Account/document and lock guards remain. Listeners expire after the existing six-second toast window.
+
+Letter validation reuses `letterAdapter.matches` to compare authored fields, rather than whole-document identity: autosave revision/date/server metadata changes replace letter data without adding an undo step. Resume authored data references remain stable across saves under the existing resume adapter contract. No draft-store changes, new abstraction, or test-only production export were needed.
+
+Extended the completion harness using real DraftStore and the actual letter/resume adapter data/merge/comparison behavior. Four cases cover both document kinds: accept → close Assistant → type → toast Undo preserves typing (and remains invalid after builder Undo); accept → save → toast Undo restores pre-proposal text while preserving letter revision metadata. Both typing cases demonstrably failed against `179b0128c` before the fix; both ordinary-save cases passed before and after it. Existing history/status/Undo scenarios also pass. Final local checks: mobile typecheck, repository lint/format, boundaries, full M6-T3 harness (17 transport + 15 integration), and diff whitespace.

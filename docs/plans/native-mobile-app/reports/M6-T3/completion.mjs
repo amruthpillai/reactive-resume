@@ -185,7 +185,7 @@ const mocks = {
 		"exports.client=E.client;exports.streamClient=E.client;exports.orpc=E.orpc;exports.SessionChangedError=class extends Error {};",
 	"@/auth/session": "exports.useSession=()=>E.session;exports.getAccountScope=()=>E.scope;",
 	"@/draft":
-		"exports.useLetterStore=(select)=>select(E.store.getState());exports.useLetterStore.getState=()=>E.store.getState();exports.useResumeStore=(select)=>select(E.resumeState??{document:null,status:'idle'});exports.useResumeStore.getState=()=>E.resumeState;",
+		"exports.useLetterStore=(select)=>select(E.store.getState());exports.useLetterStore.getState=()=>E.store.getState();exports.useLetterStore.subscribe=(fn)=>E.store.subscribe(fn);exports.useResumeStore=(select)=>select(E.resumeStore?.getState()??{document:null,status:'idle'});exports.useResumeStore.getState=()=>E.resumeStore.getState();exports.useResumeStore.subscribe=(fn)=>E.resumeStore.subscribe(fn);",
 	"@/features/ai/providers":
 		"exports.useHasAIProvider=()=>E.providers;exports.AIProviderSetupSheet='AIProviderSetupSheet';",
 	"@/features/applications/queries":
@@ -200,7 +200,7 @@ const mocks = {
 	"@/features/applications/stages": "exports.getStageColor=()=>'';exports.getStageLabel=(v)=>v;",
 	"@/ui":
 		uiNames.map((name) => `exports.${name}='${name}';`).join("") +
-		"exports.useTheme=()=>({colors:{},radius:{},space:{},size:{icon:{}},type:{body:{},bodyLarge:{}}});exports.showToast=(value)=>E.toasts.push(value);exports.setThemePreference=()=>{};exports.Sheet=({open,children})=>open?children:null;",
+		"exports.useTheme=()=>({colors:{},radius:{},space:{},size:{icon:{}},type:{body:{},bodyLarge:{}}});exports.showToast=(value)=>E.toasts.push(value);exports.dismissToast=()=>{};exports.setThemePreference=()=>{};exports.Sheet=({open,children})=>open?children:null;",
 	"messages-stub": "exports.MessageView='MessageView';exports.FileChip='FileChip';",
 	"workspace-hooks":
 		"exports.useSavedItems=()=>({data:E.savedItems,isPending:false});exports.useWorkspace=()=>({isPending:false,query:{isError:false}});",
@@ -250,6 +250,9 @@ const { CoachSheet } = requireMobile("./src/features/workspace/coach-sheet.tsx")
 const { WorkspaceScreen } = requireMobile("./src/features/workspace/shell.tsx");
 const { SearchScreen } = requireMobile("./src/features/search/search-screen.tsx");
 const { useAssistantChat } = requireMobile("./src/features/assistant/chat.ts");
+const { acceptResumeProposals } = requireMobile("./src/features/assistant/proposals.ts");
+const { letterAdapter, resumeAdapter } = requireMobile("./src/draft/adapters.ts");
+const { sampleResumeData } = requireMobile("@reactive-resume/schema/resume/sample");
 const { createDraftStore } = requireMobile("./src/draft/store.ts");
 
 function mount(Component, props = {}) {
@@ -332,20 +335,26 @@ const thread = (id, patch = {}) => ({
 	lastMessageAt: new Date(),
 	...patch,
 });
-async function draft() {
+async function draft(kind = "letter") {
 	const disk = new Map();
+	const initial =
+		kind === "letter"
+			? letter
+			: {
+					id: "resume-a",
+					name: "Resume A",
+					isLocked: false,
+					updatedAt: new Date("2026-10-17T12:00:00Z"),
+					data: structuredClone(sampleResumeData),
+				};
 	const adapter = {
-		kind: "letter",
-		delay: 800,
-		read: async (id) => ({ ...structuredClone(letter), id }),
-		data: (d) => d,
-		withData: (_d, data) => data,
-		version: (d) => d.revision,
-		matches: (a, b) => JSON.stringify(a) === JSON.stringify(b),
+		...(kind === "letter" ? letterAdapter : resumeAdapter),
+		read: async (id) => ({ ...structuredClone(initial), id }),
 		parse: (v) => v,
-		merge: (saved, _submitted, current) => ({ ...current, revision: saved.revision }),
-		isConflict: () => false,
-		save: async (d) => ({ ...d, revision: d.revision + 1 }),
+		save: async (d) =>
+			kind === "letter"
+				? { ...structuredClone(d), revision: d.revision + 1 }
+				: { ...structuredClone(d), updatedAt: new Date(+d.updatedAt + 1000) },
 		copy: async () => {},
 	};
 	const instance = createDraftStore(adapter, {
@@ -358,8 +367,9 @@ async function draft() {
 			removeItemSync: (k) => disk.delete(k),
 		},
 	});
-	env.store = instance.store;
-	await env.store.getState().open(letter.id);
+	if (kind === "letter") env.store = instance.store;
+	else env.resumeStore = instance.store;
+	await instance.store.getState().open(initial.id);
 	return instance;
 }
 const proposals = [
@@ -390,6 +400,7 @@ async function check(name, run) {
 	env.calls = [];
 	env.chrome = [];
 	env.toasts = [];
+	env.resumeStore = null;
 	env.scope = "server/account-a";
 	env.providers.hasAIProvider = true;
 	env.threadError = null;
@@ -398,6 +409,7 @@ async function check(name, run) {
 	await draft();
 	await run();
 	await env.store.getState().close();
+	await env.resumeStore?.getState().close();
 	console.log(`PASS ${name}`);
 	passed++;
 }
@@ -490,6 +502,84 @@ await check(
 		probe.unmount();
 	},
 );
+
+for (const kind of ["letter", "resume"]) {
+	await check(`${kind} proposal toast refuses Undo after subsequent typing`, async () => {
+		if (kind === "resume") await draft(kind);
+		const store = kind === "letter" ? env.store : env.resumeStore;
+		let document;
+		const probe = mount(() => {
+			if (kind === "letter") document = useLetterAssistantDocument("letter-a");
+			return null;
+		});
+		const contentOf = (data) => (kind === "letter" ? data.content : data.summary.content);
+		const proposal =
+			kind === "letter"
+				? proposals[0]
+				: {
+						...proposals[0],
+						target: { sectionId: "summary", field: "content" },
+						before: store.getState().data.summary.content,
+					};
+		if (kind === "letter") document.accept([proposal]);
+		else acceptResumeProposals([proposal]);
+		const undo = env.toasts.at(-1).action.onPress;
+		probe.unmount(); // Closing Assistant keeps its toast, while the builder draft owner stays mounted.
+		store.getState().update(
+			(data) => {
+				if (kind === "letter") data.content += "<p>Later typing.</p>";
+				else data.summary.content += "<p>Later typing.</p>";
+			},
+			{ newStep: true },
+		);
+		const typed = contentOf(store.getState().data);
+		undo();
+		assert.equal(contentOf(store.getState().data), typed, "proposal toast must never undo later typing");
+		store.getState().undo();
+		assert.ok(
+			!contentOf(store.getState().data).includes("Later typing"),
+			"typing remains a separate builder Undo step",
+		);
+		const accepted = contentOf(store.getState().data);
+		undo();
+		assert.equal(
+			contentOf(store.getState().data),
+			accepted,
+			"invalidated toast stays invalid after returning to accepted text",
+		);
+	});
+	await check(`${kind} proposal toast still undoes acceptance after ordinary save`, async () => {
+		if (kind === "resume") await draft(kind);
+		const store = kind === "letter" ? env.store : env.resumeStore;
+		let document;
+		const probe = mount(() => {
+			if (kind === "letter") document = useLetterAssistantDocument("letter-a");
+			return null;
+		});
+		const contentOf = (data) => (kind === "letter" ? data.content : data.summary.content);
+		const before = contentOf(store.getState().data);
+		const proposal =
+			kind === "letter"
+				? proposals[0]
+				: { ...proposals[0], target: { sectionId: "summary", field: "content" }, before };
+		if (kind === "letter") document.accept([proposal]);
+		else acceptResumeProposals([proposal]);
+		const undo = env.toasts.at(-1).action.onPress;
+		const accepted = store.getState().data;
+		await store.getState().flush();
+		assert.equal(store.getState().status, "saved");
+		if (kind === "letter") {
+			assert.notEqual(store.getState().data, accepted);
+			assert.equal(store.getState().data.revision, accepted.revision + 1);
+		}
+		probe.unmount();
+		undo();
+		assert.equal(contentOf(store.getState().data), before, "metadata-only save must not invalidate proposal Undo");
+		assert.equal(store.getState().canUndo, false);
+		if (kind === "letter")
+			assert.equal(store.getState().data.revision, accepted.revision + 1, "Undo preserves saved revision metadata");
+	});
+}
 
 await check(
 	"Letter history proposals accept/reject persist on selected thread and Undo restores pending status",
