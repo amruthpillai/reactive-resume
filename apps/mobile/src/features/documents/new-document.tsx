@@ -221,8 +221,6 @@ export function NewDocument() {
 			<Stack.Screen
 				options={{
 					title: t`New document`,
-					presentation: "formSheet",
-					sheetAllowedDetents: [0.5, 0.9],
 					sheetGrabberVisible: !busy,
 					gestureEnabled: !busy,
 					headerBackVisible: !busy,

@@ -56,7 +56,10 @@ function RootStack() {
 				<Stack.Screen name="(auth)" options={{ headerShown: false }} />
 				<Stack.Screen name="builder/[id]" options={{ headerShown: false, title: t`Resume` }} />
 				<Stack.Screen name="letter/[id]" options={{ headerShown: false, title: t`Cover letter` }} />
-				<Stack.Screen name="new" options={{ presentation: "modal", title: t`New` }} />
+				<Stack.Screen
+					name="new"
+					options={{ presentation: "formSheet", sheetAllowedDetents: [0.5, 0.9], title: t`New` }}
+				/>
 				<Stack.Screen name="search" options={{ presentation: "modal", title: t`Search` }} />
 				<Stack.Screen name="ats-checker" options={{ title: t`ATS checker` }} />
 				<Stack.Screen name="applications/[id]" options={{ headerShown: false, title: t`Application` }} />
