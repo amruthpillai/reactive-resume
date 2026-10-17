@@ -1,0 +1,135 @@
+// Proposed edits from the assistant: as cards in the chat, applied to the draft through the M3-T3 store, and marked on
+// the Page tab (ported from apps/web/src/features/resume/editor/proposals/proposals.ts).
+import type { Proposal } from "@reactive-resume/resume/proposals";
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import { t } from "@lingui/core/macro";
+import { produce } from "immer";
+import { useMemo } from "react";
+import { create } from "zustand";
+import {
+	applyProposal,
+	applyTo,
+	getProposalState,
+	readTarget,
+	splitBlock,
+	splitBlocks,
+	writeTarget,
+} from "@reactive-resume/resume/proposals";
+import { useResumeStore } from "@/draft";
+import { showToast } from "@/ui";
+
+type ProposeEditsOutput = {
+	edits?: Array<Omit<Proposal, "source" | "target"> & { target: Record<string, string | undefined> }>;
+	skipped?: unknown[];
+};
+
+export type ToolPart = {
+	type: string;
+	toolCallId?: string;
+	state?: string;
+	input?: unknown;
+	output?: unknown;
+	errorText?: string;
+};
+
+export const isProposeEdits = (part: { type: string }): part is ToolPart =>
+	part.type === "tool-propose_edits" && (part as ToolPart).state === "output-available";
+
+export const skippedCount = (part: ToolPart) => (part.output as ProposeEditsOutput | undefined)?.skipped?.length ?? 0;
+
+/** The edits in a `propose_edits` result, with what the user has done with each since. */
+export function toProposals(part: ToolPart, statuses: ReadonlyMap<string, Proposal["status"]>): Proposal[] {
+	const output = part.output as ProposeEditsOutput | undefined;
+	return (output?.edits ?? []).map((edit) => ({
+		...edit,
+		target: {
+			sectionId: edit.target.sectionId ?? "",
+			field: edit.target.field ?? "",
+			...(edit.target.itemId === undefined ? {} : { itemId: edit.target.itemId }),
+			...(edit.target.roleId === undefined ? {} : { roleId: edit.target.roleId }),
+		},
+		status: statuses.get(edit.id) ?? edit.status,
+		source: "assistant",
+	}));
+}
+
+/** Applies proposals to the open resume as one undo step; the toast's Undo takes them back. */
+export function acceptResumeProposals(proposals: readonly Proposal[]) {
+	const store = useResumeStore.getState();
+	store.update(
+		(draft) => {
+			for (const proposal of proposals) applyProposal(draft as ResumeData, proposal);
+		},
+		{ newStep: true },
+	);
+	showToast({
+		message: proposals.length === 1 ? t`Edit applied` : t`${proposals.length} edits applied`,
+		action: { label: t`Undo`, onPress: () => useResumeStore.getState().undo() },
+	});
+}
+
+// ---- Page markings ----
+
+const NONE: readonly Proposal[] = [];
+
+/** The assistant's proposals for one resume, kept after the assistant closes so Page can mark them. */
+export const useAssistantProposals = create<{ resumeId: string | null; proposals: readonly Proposal[] }>(() => ({
+	resumeId: null,
+	proposals: [],
+}));
+
+export const publishProposals = (resumeId: string, proposals: readonly Proposal[]) =>
+	useAssistantProposals.setState({ resumeId, proposals });
+
+/** The proposals still waiting on the user (not accepted, rejected or out of date). */
+export const pendingProposals = (data: ResumeData, proposals: readonly Proposal[]) =>
+	proposals.filter((proposal) => getProposalState(data, proposal) === "pending");
+
+// The PDF needs literal colours for its marks (web README §5.9), the same as web's page canvas.
+const OLD_TEXT_COLOR = "#7d7b73";
+const NEW_TEXT_BACKGROUND = "#d4efd9";
+const struck = (html: string) => `<s style="color: ${OLD_TEXT_COLOR}">${html}</s>`;
+const highlighted = (html: string) => `<mark data-color="${NEW_TEXT_BACKGROUND}">${html}</mark>`;
+
+function markChange(before: string, after: string) {
+	if (after.startsWith(before) && after.length > before.length) {
+		const added = after.slice(before.length);
+		const marked = splitBlocks(added).reduce((html, block) => {
+			const parts = splitBlock(block.html);
+			return parts ? html.replace(block.html, () => `${parts.open}${highlighted(parts.inner)}${parts.close}`) : html;
+		}, added);
+		return `${before}${marked === added ? highlighted(added) : marked}`;
+	}
+	const old = splitBlock(before);
+	const next = splitBlock(after);
+	if (!old || !next) return `${struck(before)} ${highlighted(after)}`;
+	return `${old.open}${struck(old.inner)} ${highlighted(next.inner)}${old.close}`;
+}
+
+/** The page as it would read with the proposals: old text struck through, new text highlighted. Never saved. */
+export function markProposals(data: ResumeData, proposals: readonly Proposal[]): ResumeData {
+	const pending = pendingProposals(data, proposals);
+	if (pending.length === 0) return data;
+	return produce(data, (draft) => {
+		for (const proposal of pending) {
+			const value = readTarget(draft, proposal.target);
+			const next = applyTo(value, { before: proposal.before, after: markChange(proposal.before, proposal.after) });
+			if (next !== undefined) writeTarget(draft, proposal.target, next);
+		}
+	});
+}
+
+/**
+ * For the Page tab: the resume data with this resume's pending assistant edits marked, and how many there are.
+ * `data` is the draft's data; pass the result to `usePreview` instead.
+ */
+export function useMarkedResumeData(resumeId: string, data: ResumeData | null) {
+	const proposals = useAssistantProposals((state) => (state.resumeId === resumeId ? state.proposals : NONE));
+	return useMemo(
+		() =>
+			!data || proposals.length === 0
+				? { data, pending: 0 }
+				: { data: markProposals(data, proposals), pending: pendingProposals(data, proposals).length },
+		[data, proposals],
+	);
+}

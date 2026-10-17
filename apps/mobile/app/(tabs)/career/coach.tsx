@@ -1,7 +1,8 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { useLocalSearchParams } from "expo-router";
+import { CoachScreen, offerIdsFrom } from "@/features/assistant/coach-screen";
 
-export default function CoachScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`Coach`} />;
+/** `?offers=` carries the saved offers chosen in Offers → Plan what to ask. */
+export default function CoachRoute() {
+	const { offers } = useLocalSearchParams<{ offers?: string | string[] }>();
+	return <CoachScreen offerIds={offerIdsFrom(offers)} />;
 }
