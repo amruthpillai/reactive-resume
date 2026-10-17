@@ -5,8 +5,14 @@
 //   TZ=Pacific/Kiritimati node docs/plans/native-mobile-app/reports/M5-T3/verify.mjs
 import assert from "node:assert/strict";
 import {
+	keepPending,
+	pendingAfterError,
+	stageAt,
+} from "../../../../../apps/mobile/src/features/applications-board/board.ts";
+import {
 	collectEvents,
 	dayKeyOf,
+	editableFollowUp,
 	followUpDay,
 	groupByDay,
 	monthGrid,
@@ -238,6 +244,50 @@ scenario("sources: counted per source, most first, empty sources left out (serve
 		{ source: "Referral", count: 2 },
 		{ source: "LinkedIn", count: 1 },
 	]);
+});
+
+scenario("follow-up editor opens on the calendar's day; saving it keeps that day (review fix 4)", () => {
+	// Web stored 21 Oct as UTC midnight: the calendar shows 21 Oct in Los Angeles, so the editor must too.
+	const web = { id: "a", followUpAt: new Date("2026-10-21T00:00:00Z") };
+	const la = editableFollowUp(web, "America/Los_Angeles");
+	assert.equal(dayKeyOf(la.followUpAt, "America/Los_Angeles"), "2026-10-21");
+	assert.equal(la.followUpAt.toISOString(), "2026-10-21T16:00:00.000Z"); // 09:00 PDT, what a save writes
+	assert.equal(followUpDay(la.followUpAt, "America/Los_Angeles"), "2026-10-21");
+	// East of UTC and on the app's own 09:00 values nothing moves.
+	assert.equal(dayKeyOf(editableFollowUp(web, "Pacific/Auckland").followUpAt, "Pacific/Auckland"), "2026-10-21");
+	const app09 = { id: "b", followUpAt: new Date("2026-10-21T16:00:00Z") };
+	assert.equal(editableFollowUp(app09, "America/Los_Angeles").followUpAt.toISOString(), "2026-10-21T16:00:00.000Z");
+	assert.equal(editableFollowUp({ id: "c", followUpAt: null }, "UTC").followUpAt, null);
+});
+
+scenario("board: a failed move clears its own override even before the optimistic render (review fix 2)", () => {
+	const pending = { id: "a", from: "saved", to: "screening" };
+	// The mutation failed and rolled back before the list ever showed Screening: the list still says Saved.
+	const list = [{ id: "a", status: "saved" }];
+	assert.equal(keepPending(pending, list), pending); // render-time check alone would keep it forever
+	assert.equal(pendingAfterError(pending, "a", "screening"), null);
+	// A later move of the same card, or another card's move, is left alone.
+	assert.equal(pendingAfterError({ id: "a", from: "saved", to: "offer" }, "a", "screening")?.to, "offer");
+	assert.equal(pendingAfterError({ id: "b", from: "saved", to: "applied" }, "a", "screening")?.id, "b");
+	// Once the list moves on, the override goes.
+	assert.equal(keepPending(pending, [{ id: "a", status: "screening" }]), null);
+	assert.equal(keepPending(pending, []), null);
+});
+
+scenario("board: the drop target is picked from current column positions (review fix 3)", () => {
+	const before = new Map([
+		["saved", { x: 16, width: 268 }],
+		["applied", { x: 296, width: 268 }],
+	]);
+	assert.equal(stageAt(300, before), "applied");
+	assert.equal(stageAt(290, before), null); // in the gap
+	// Auto-scroll moved the columns one step left under a finger that stayed at x = 300.
+	const after = new Map([
+		["saved", { x: -264, width: 268 }],
+		["applied", { x: 16, width: 268 }],
+		["screening", { x: 296, width: 268 }],
+	]);
+	assert.equal(stageAt(300, after), "screening");
 });
 
 let failed = 0;
