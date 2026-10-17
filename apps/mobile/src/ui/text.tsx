@@ -13,21 +13,29 @@ export type TextProps = NativeTextProps & {
 	variant?: TextVariant | undefined;
 	/** A colour token. Defaults to `ink`. */
 	color?: ColorToken | undefined;
+	/**
+	 * Hanken Grotesk weight for UI variants, where tokens.md names one (field labels 600, document names 600).
+	 * Ignored for the Newsreader and mono variants.
+	 */
+	weight?: 400 | 500 | 600 | 700 | undefined;
 	align?: "auto" | "left" | "center" | "right" | undefined;
 	children?: ReactNode;
 };
 
-export function Text({ variant = "body", color = "ink", align, style, ...props }: TextProps) {
-	const { colors, type } = useTheme();
+const displayVariants = new Set<TextVariant>(["largeIOS", "largeAnd", "display", "heading", "mono"]);
+
+export function Text({ variant = "body", color = "ink", weight, align, style, ...props }: TextProps) {
+	const { colors, fonts, type } = useTheme();
 	const { maxFontSizeMultiplier, ...font } = type[variant] as (typeof type)[TextVariant] & {
 		maxFontSizeMultiplier?: number;
 	};
+	const fontFamily = weight && !displayVariants.has(variant) ? fonts.ui[weight] : font.fontFamily;
 
 	return (
 		<NativeText
 			maxFontSizeMultiplier={maxFontSizeMultiplier}
 			{...props}
-			style={[font, { color: colors[color] }, align ? { textAlign: align } : null, style]}
+			style={[font, { fontFamily, color: colors[color] }, align ? { textAlign: align } : null, style]}
 		/>
 	);
 }
