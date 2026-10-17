@@ -110,3 +110,8 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: G2b approved by the owner. `decisions.md` frozen (G1). **M1 on hold at the owner's request; do not launch it until the owner says so.** SVa, SVb and SVc are still running.
 - 2026-10-17: SVb and SVc done; Claude reviews `5a2b4b38` and `c29b7098` running. SVa unblocked (two narrow ownership exceptions approved). The mockup server is stopped.
 - 2026-10-17: Owner set the download-size budget to ≤ 50 MB per platform (`decisions.md`).
+- 2026-10-17: SVb merged; Claude review `5a2b4b38` found NO BLOCKERS. Follow-up: `offline_access` tokens survive "sign out everywhere" and password-reset session revocation until consent is revoked. Document this in the security docs (M8 docs task).
+- 2026-10-17: SVc review `c29b7098` found 1 blocker: the account integration test skips in CI because `OAUTH_TEST_DATABASE_URL` is missing from `packages/api/turbo.json`. Fix round running. The owner approved the `packages/auth/src/config.ts` `accountAuth` bridge directly in Paseo.
+  - The bridge is an AsyncLocalStorage identity, only for internal calls (`!ctx.request`) on `/update-user`, `/api-key/list` and `/api-key/delete`.
+  - Follow-ups: it depends on Better Auth 1.7.7 internals, so keep its test running on upgrades. The new auth procedures are not rate-limited.
+- 2026-10-17: SVa done (916 tests passed); Claude review `d37bc6ee` running.
