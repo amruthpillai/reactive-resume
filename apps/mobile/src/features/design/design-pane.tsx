@@ -1,30 +1,35 @@
 import type { AdvancedId } from "./advanced";
 import type { PickerSpec } from "./picker";
-import type { Template } from "@reactive-resume/schema/templates";
 import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import { I18nManager, Pressable, View, useWindowDimensions } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import Animated, { LinearTransition, SlideInLeft, SlideInRight } from "react-native-reanimated";
 import { AdvancedGroup, AdvancedPageScreen, ColoursScreen, StylesScreen, TypographyScreen } from "./advanced";
-import { designWrite, useDesignDraft } from "./draft";
+import {
+	applyTemplate,
+	designWrite,
+	setPreviewTemplate,
+	useClearPreviewOnLeave,
+	useDesignDraft,
+	usePreviewTemplate,
+	usePreviewedDraft,
+} from "./draft";
 import { LayoutScreen } from "./layout-screen";
 import { Picker } from "./picker";
-import { templateName } from "./presets";
+import { TemplatePreviewCaption } from "./preview-caption";
 import { ColorGroup, PageGroup, TypeGroup } from "./style-groups";
 import { TemplateGroup } from "./template-group";
 import { client } from "@/api/client";
 import { useSession } from "@/auth/session";
-import { ResumeConflictSheet, useResumeStore } from "@/draft";
+import { useResumeStore } from "@/draft";
 import { nativeEnvironment } from "@/draft/native";
 import { ResumePage } from "@/preview/page";
+import { useIsTablet } from "@/shell/use-is-tablet";
 import { Banner, IconButton, Skeleton, Text, showToast, useTheme } from "@/ui";
 
 type Tab = "template" | "type" | "color" | "page";
 type Entry = { kind: "advanced"; id: AdvancedId } | { kind: "picker"; spec: PickerSpec };
-
-/** M2-T2's `useIsTablet()` rule (window ≥ 700 pt). Swap for it once the shell merges. */
-const TABLET_WIDTH = 700;
 
 /**
  * Design. Phone: the page in the top half and a sheet with Template · Type · Color · Page tabs; the grabber raises
@@ -35,18 +40,20 @@ export function DesignPane({ id }: { id: string }) {
 	const { t } = useLingui();
 	const { colors, fonts, radius, space, size, motion, shadows } = useTheme();
 	const window = useWindowDimensions();
-	const tablet = window.width >= TABLET_WIDTH;
+	const tablet = useIsTablet();
 	const draft = useDesignDraft(id);
 	const session = useSession();
 	const [tab, setTab] = useState<Tab>("template");
 	const [expanded, setExpanded] = useState(false);
 	const [advancedOpen, setAdvancedOpen] = useState(false);
 	const [stack, setStack] = useState<Entry[]>([]);
-	const [preview, setPreview] = useState<Template | null>(null);
+	const preview = usePreviewTemplate();
+	useClearPreviewOnLeave();
 	const [scrollLocked, setScrollLocked] = useState(false);
 	const [height, setHeight] = useState(window.height / 2);
 	const [panelWidth, setPanelWidth] = useState(window.width);
 	const { data, locked } = draft;
+	const pageDraft = usePreviewedDraft(draft);
 	const disabled = locked || !data;
 	const full = tablet || expanded;
 	const top = stack.at(-1);
@@ -57,21 +64,6 @@ export function DesignPane({ id }: { id: string }) {
 	};
 	const pop = () => setStack((value) => value.slice(0, -1));
 	const pick = (spec: PickerSpec) => push({ kind: "picker", spec });
-	const apply = (template: Template) => {
-		setPreview(null);
-		if (!data || data.metadata.template === template) return;
-		designWrite(
-			"template",
-			(value) => {
-				value.metadata.template = template;
-			},
-			true,
-		);
-		showToast({
-			message: t`Template changed to ${templateName(template)}`,
-			action: { label: t`Undo`, onPress: () => useResumeStore.getState().undo() },
-		});
-	};
 	const unlock = async () => {
 		await client.documents.setLocked({ type: "resume", id, isLocked: false });
 		await useResumeStore.getState().open(id);
@@ -117,8 +109,8 @@ export function DesignPane({ id }: { id: string }) {
 					columns={tablet ? 2 : 3}
 					width={panelWidth - space.s4 * 2}
 					preview={preview}
-					onPreview={setPreview}
-					onApply={apply}
+					onPreview={setPreviewTemplate}
+					onApply={applyTemplate}
 				/>
 			);
 		if (tab === "type")
@@ -257,40 +249,14 @@ export function DesignPane({ id }: { id: string }) {
 
 	if (tablet) return <View style={{ flex: 1, backgroundColor: colors.surface }}>{sheet}</View>;
 
-	const pageData = data && preview ? { ...data, metadata: { ...data.metadata, template: preview } } : data;
 	return (
 		<View
 			style={{ flex: 1, backgroundColor: colors.sunken }}
 			onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
 		>
 			<View style={{ height: height / 2 + space.s3 }}>
-				<ResumePage
-					id={id}
-					draft={{ ...draft, data: pageData, locked: locked || !!preview }}
-					focused={nativeEnvironment.focused()}
-				/>
-				{preview ? (
-					<Pressable
-						accessibilityRole="button"
-						onPress={() => apply(preview)}
-						style={{
-							position: "absolute",
-							top: space.s3,
-							alignSelf: "center",
-							flexDirection: "row",
-							gap: space.s2,
-							paddingHorizontal: space.s4,
-							minHeight: size.hit - space.s2,
-							alignItems: "center",
-							borderRadius: radius.rPill,
-							backgroundColor: colors.ink,
-						}}
-					>
-						<Text variant="callout" color="bg">
-							{t`Previewing ${templateName(preview)} · tap to apply`}
-						</Text>
-					</Pressable>
-				) : null}
+				<ResumePage id={id} draft={pageDraft} focused={nativeEnvironment.focused()} />
+				<TemplatePreviewCaption />
 			</View>
 			{expanded ? (
 				<Pressable
@@ -321,7 +287,6 @@ export function DesignPane({ id }: { id: string }) {
 			>
 				{sheet}
 			</Animated.View>
-			<ResumeConflictSheet />
 		</View>
 	);
 }

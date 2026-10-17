@@ -1,8 +1,10 @@
 import type { DesignWrite } from "./draft";
 import type { PickerSpec } from "./picker";
-import type { DensityId, MarginId } from "./presets";
+import type { DensityId, FontPairingId, MarginId } from "./presets";
+import type { MessageDescriptor } from "@lingui/core";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { Locale } from "@reactive-resume/utils/locale";
+import { msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 import { Pressable, TextInput, View } from "react-native";
@@ -17,7 +19,7 @@ import {
 	applyFontPairing,
 	applyMargins,
 	applyTextSize,
-	contrastOnWhite,
+	contrastOver,
 	darkenForWhite,
 	hexToRgba,
 	isValidHex,
@@ -37,13 +39,32 @@ export type GroupProps = {
 	pick: (spec: PickerSpec) => void;
 };
 
+const PAIRING_NAMES: Record<FontPairingId, MessageDescriptor> = {
+	classic: msg`Classic`,
+	traditional: msg`Traditional`,
+	balanced: msg`Balanced`,
+	professional: msg`Professional`,
+	clean: msg`Clean`,
+};
+
+const ACCENT_NAMES: Record<(typeof ACCENTS)[number], MessageDescriptor> = {
+	"#3E6B4F": msg`Moss`,
+	"#2F5A8A": msg`Ink blue`,
+	"#1F6E73": msg`Teal`,
+	"#6B3E6E": msg`Plum`,
+	"#A0442A": msg`Rust`,
+	"#8A2C3F": msg`Burgundy`,
+	"#7A5A12": msg`Ochre`,
+	"#3B3F45": msg`Graphite`,
+};
+
 const familiesLabel = (heading: string, body: string) => (heading === body ? heading : `${heading} + ${body}`);
 
 type TypeGroupProps = GroupProps & { onCustomFonts: () => void };
 
 /** Type: five font pairings (or any font, in Advanced), the text size (9–12.5 pt) and density. */
 export function TypeGroup({ data, write, disabled, onCustomFonts }: TypeGroupProps) {
-	const { t } = useLingui();
+	const { t, i18n } = useLingui();
 	const { colors, radius, space, size } = useTheme();
 	const { metadata } = data;
 	const pairing = matchFontPairing(metadata);
@@ -77,7 +98,7 @@ export function TypeGroup({ data, write, disabled, onCustomFonts }: TypeGroupPro
 							onPress={() => write("pairing", (draft) => applyFontPairing(draft.metadata, option.id), true)}
 							style={row(selected)}
 						>
-							<Text variant="label">{option.label}</Text>
+							<Text variant="label">{i18n._(PAIRING_NAMES[option.id])}</Text>
 							<Text variant="caption" color="ink3" numberOfLines={1} style={{ flex: 1 }}>
 								{familiesLabel(option.heading, option.body)}
 							</Text>
@@ -127,15 +148,17 @@ export function TypeGroup({ data, write, disabled, onCustomFonts }: TypeGroupPro
 
 /** Color: eight accents or a custom hex, with its contrast on white and a darker shade when it's too light. */
 export function ColorGroup({ data, write, disabled }: GroupProps) {
-	const { t } = useLingui();
+	const { t, i18n } = useLingui();
 	const { colors, fonts, radius, space, size, type } = useTheme();
 	const current = rgbaToHex(data.metadata.design.colors.primary) ?? "#000000";
 	const [typed, setTyped] = useState<string | null>(null);
 	const hex = typed ?? current;
 	const valid = isValidHex(hex);
 	const normalized = valid ? `#${hex.trim().replace("#", "").toUpperCase()}` : current;
-	const ratio = contrastOnWhite(normalized);
-	const tooLight = valid && ratio < MIN_CONTRAST;
+	const { primary, background } = data.metadata.design.colors;
+	// A typed hex is opaque; the saved colour may carry alpha, which prints lighter over the page background.
+	const ratio = contrastOver(typed !== null && valid ? normalized : primary, background);
+	const tooLight = ratio < MIN_CONTRAST;
 	const setAccent = (next: string, discrete = true) =>
 		write(
 			"accent",
@@ -156,29 +179,29 @@ export function ColorGroup({ data, write, disabled }: GroupProps) {
 				accessibilityLabel={t`Accent colour`}
 				style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: space.s3 }}
 			>
-				{ACCENTS.map((accent) => {
-					const selected = accent.hex === current;
+				{ACCENTS.map((hex) => {
+					const selected = hex === current;
 					return (
 						<Pressable
-							key={accent.hex}
+							key={hex}
 							accessibilityRole="radio"
-							accessibilityLabel={accent.label}
+							accessibilityLabel={i18n._(ACCENT_NAMES[hex])}
 							accessibilityState={{ checked: selected, disabled }}
 							disabled={disabled}
 							onPress={() => {
 								setTyped(null);
-								setAccent(accent.hex);
+								setAccent(hex);
 							}}
 							style={{
 								width: swatch,
 								height: swatch,
 								borderRadius: swatch / 2,
-								backgroundColor: accent.hex,
+								backgroundColor: hex,
 								alignItems: "center",
 								justifyContent: "center",
 								borderWidth: selected ? 2 : 0,
 								borderColor: colors.surface,
-								outlineColor: accent.hex,
+								outlineColor: hex,
 								outlineWidth: selected ? 2 : 0,
 							}}
 						>

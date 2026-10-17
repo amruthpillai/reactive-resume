@@ -1,33 +1,57 @@
-import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import type { WritableDraft } from "immer";
-import { useEffect } from "react";
-import { useSession } from "@/auth/session";
+import type { ResumeDraftStore } from "@/draft/types";
+import type { Template } from "@reactive-resume/schema/templates";
+import { t } from "@lingui/core/macro";
+import { useEffect, useMemo } from "react";
+import { create } from "zustand";
+import { templateName } from "./presets";
+import { writeTo } from "./write";
 import { useResumeStore } from "@/draft";
+import { showToast } from "@/ui";
 
-/**
- * Design subscribes to the builder's draft; it never closes it. Until the builder layout owns the draft (M2-T2
- * fix round), Page owns it, so this opens the resume when no owner has (Design opened first, or right after Page
- * closed it on a pane switch). Once the layout owns it, the open never fires and this is a plain subscription.
- */
+export type { DesignWrite } from "./write";
+
+/** The builder layout owns the draft; Design only subscribes. */
 export function useDesignDraft(id: string) {
 	const draft = useResumeStore();
-	const session = useSession();
-	const current = draft.document?.id === id;
-	useEffect(() => {
-		if (!current && session.status === "signed-in")
-			void useResumeStore
-				.getState()
-				.open(id)
-				.catch(() => {});
-	}, [id, current, session.status]);
-	return current ? draft : { ...draft, document: null, data: null };
+	return draft.document?.id === id ? draft : { ...draft, document: null, data: null };
 }
 
-/**
- * Edits the resume data. `key` names the control: continuous changes (slider drags, typing) with the same key
- * within a second are one undo step; `discrete` changes (a tap) are always a step of their own.
- */
-export type DesignWrite = (key: string, mutate: (data: WritableDraft<ResumeData>) => void, discrete?: boolean) => void;
+export const designWrite = writeTo((recipe, options) => useResumeStore.getState().update(recipe, options));
 
-export const designWrite: DesignWrite = (key, mutate, discrete = false) =>
-	useResumeStore.getState().update(mutate, discrete ? { newStep: true } : { coalesceKey: `design.${key}` });
+/** The template held down in Design, shown on whichever page is visible (the phone half or the tablet page). */
+const usePreviewStore = create<{ template: Template | null }>(() => ({ template: null }));
+
+export const usePreviewTemplate = () => usePreviewStore((state) => state.template);
+export const setPreviewTemplate = (template: Template | null) => usePreviewStore.setState({ template });
+
+/** Clears the preview when Design unmounts, so no page keeps showing it. */
+export function useClearPreviewOnLeave() {
+	useEffect(() => () => setPreviewTemplate(null), []);
+}
+
+/** Applies a template as its own undo step, with a toast offering Undo. */
+export function applyTemplate(template: Template) {
+	setPreviewTemplate(null);
+	const { data, update, undo } = useResumeStore.getState();
+	if (!data || data.metadata.template === template) return;
+	update(
+		(value) => {
+			value.metadata.template = template;
+		},
+		{ newStep: true },
+	);
+	showToast({ message: t`Template changed to ${templateName(template)}`, action: { label: t`Undo`, onPress: undo } });
+}
+
+type PageDraft = Pick<ResumeDraftStore, "data" | "update" | "locked" | "undo">;
+
+/** What a page renders: the draft with the held template swapped in, read-only while it shows (no Fit). */
+export function usePreviewedDraft<T extends PageDraft>(draft: T): T {
+	const template = usePreviewTemplate();
+	const { data } = draft;
+	const previewed = useMemo(
+		() => (data && template ? { ...data, metadata: { ...data.metadata, template } } : data),
+		[data, template],
+	);
+	return template ? { ...draft, data: previewed, locked: true } : draft;
+}

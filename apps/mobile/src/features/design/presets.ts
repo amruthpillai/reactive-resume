@@ -11,11 +11,11 @@ type Metadata = ResumeData["metadata"];
 
 /** Five traditional resume faces. Families that aren't a pairing leave the control with no selection. */
 export const FONT_PAIRINGS = [
-	{ id: "classic", label: "Classic", heading: "EB Garamond", body: "EB Garamond", headingWeight: "600" },
-	{ id: "traditional", label: "Traditional", heading: "Tinos", body: "Tinos", headingWeight: "700" },
-	{ id: "balanced", label: "Balanced", heading: "Source Serif 4", body: "Source Sans 3", headingWeight: "600" },
-	{ id: "professional", label: "Professional", heading: "Carlito", body: "Carlito", headingWeight: "700" },
-	{ id: "clean", label: "Clean", heading: "Lato", body: "Lato", headingWeight: "700" },
+	{ id: "classic", heading: "EB Garamond", body: "EB Garamond", headingWeight: "600" },
+	{ id: "traditional", heading: "Tinos", body: "Tinos", headingWeight: "700" },
+	{ id: "balanced", heading: "Source Serif 4", body: "Source Sans 3", headingWeight: "600" },
+	{ id: "professional", heading: "Carlito", body: "Carlito", headingWeight: "700" },
+	{ id: "clean", heading: "Lato", body: "Lato", headingWeight: "700" },
 ] as const;
 
 export type FontPairingId = (typeof FONT_PAIRINGS)[number]["id"];
@@ -87,16 +87,16 @@ export function applyTextSize(metadata: WritableDraft<Metadata>, size: number) {
 	heading.fontSize = Math.round(size * ratio * 2) / 2;
 }
 
-/** Eight accents, all readable on white. Hex values are resume colours, not app tokens. */
+/** Eight accents, all readable on white. Hex values are resume colours, not app tokens; names live with the UI. */
 export const ACCENTS = [
-	{ label: "Moss", hex: "#3E6B4F" },
-	{ label: "Ink blue", hex: "#2F5A8A" },
-	{ label: "Teal", hex: "#1F6E73" },
-	{ label: "Plum", hex: "#6B3E6E" },
-	{ label: "Rust", hex: "#A0442A" },
-	{ label: "Burgundy", hex: "#8A2C3F" },
-	{ label: "Ochre", hex: "#7A5A12" },
-	{ label: "Graphite", hex: "#3B3F45" },
+	"#3E6B4F",
+	"#2F5A8A",
+	"#1F6E73",
+	"#6B3E6E",
+	"#A0442A",
+	"#8A2C3F",
+	"#7A5A12",
+	"#3B3F45",
 ] as const;
 
 /** Advanced → Design quick colours (web `quickColorOptions`, Tailwind 600s). */
@@ -145,14 +145,54 @@ export function rgbaToHex(color: string): string | null {
 
 export const isValidHex = (hex: string) => HEX.test(hex.trim());
 
-/** Normalises typed colour text: `#RRGGBB`/`RRGGBB` becomes rgba; `rgb(a)(…)` passes through; anything else is null. */
+type Rgba = { r: number; g: number; b: number; a: number };
+
+/** `rgb(a)(…)` with channels 0–255 and alpha 0–1, else null. */
+function parseRgba(value: string): Rgba | null {
+	const match = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(\d*\.?\d+)\s*)?\)$/i.exec(value.trim());
+	if (!match) return null;
+	const [r, g, b] = match.slice(1, 4).map(Number) as [number, number, number];
+	const a = match[4] === undefined ? 1 : Number(match[4]);
+	return [r, g, b].every((channel) => channel <= 255) && a <= 1 ? { r, g, b, a } : null;
+}
+
+const toRgba = ({ r, g, b, a }: Rgba) => `rgba(${r}, ${g}, ${b}, ${a})`;
+
+/** Typed colour text as a canonical `rgba(r, g, b, a)`: hex with or without #, or rgb(a) in range. Else null. */
 export function parseColorInput(text: string): string | null {
 	const value = text.trim();
 	if (isValidHex(value)) return hexToRgba(value);
-	return /^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*(0|1|0?\.\d+)\s*)?\)$/i.test(value) ? value : null;
+	const rgba = parseRgba(value);
+	return rgba ? toRgba(rgba) : null;
 }
 
-export { contrastOnWhite };
+const toRgb = (color: string): Rgba | null =>
+	parseRgba(color) ?? (isValidHex(color) ? parseRgba(hexToRgba(color)) : null);
+const over = (top: Rgba, bottom: Rgba): Rgba => ({
+	r: top.r * top.a + bottom.r * (1 - top.a),
+	g: top.g * top.a + bottom.g * (1 - top.a),
+	b: top.b * top.a + bottom.b * (1 - top.a),
+	a: 1,
+});
+const linear = (channel: number) => {
+	const value = channel / 255;
+	return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+};
+const luminance = ({ r, g, b }: Rgba) => 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
+
+/**
+ * WCAG contrast of `color` as it prints on `background`: the background is laid over white paper and the colour
+ * over the background, so transparency counts. 1 when either can't be read.
+ */
+export function contrastOver(color: string, background = "#FFFFFF"): number {
+	const white = { r: 255, g: 255, b: 255, a: 1 };
+	const top = toRgb(color);
+	const bottom = toRgb(background);
+	if (!top || !bottom) return 1;
+	const paper = over(bottom, white);
+	const [light, dark] = [luminance(paper), luminance(over(top, paper))].sort((x, y) => y - x) as [number, number];
+	return (light + 0.05) / (dark + 0.05);
+}
 
 /** Below this the Color group warns (WCAG AA for normal text). */
 export const MIN_CONTRAST = 4.5;

@@ -4,6 +4,8 @@ import { View } from "react-native";
 import { useSession } from "@/auth/session";
 import { useResumeStore } from "@/draft";
 import { nativeEnvironment } from "@/draft/native";
+import { usePreviewedDraft } from "@/features/design/draft";
+import { TemplatePreviewCaption } from "@/features/design/preview-caption";
 import { ResumePage } from "@/preview/page";
 import { Banner } from "@/ui";
 
@@ -20,6 +22,8 @@ export default function PageScreen() {
 	const draft = useResumeStore();
 	const session = useSession();
 	const current = draft.document?.id === id;
+	// On tablet this page sits beside Design: a template held there shows here.
+	const shown = usePreviewedDraft(current ? draft : { ...draft, data: null });
 	return (
 		<View style={{ flex: 1 }}>
 			<Stack.Screen options={{ title: t`Page`, headerTransparent: false }} />
@@ -35,7 +39,8 @@ export default function PageScreen() {
 					action={{ label: t`Retry`, onPress: () => void draft.open(id).catch(() => undefined) }}
 				/>
 			) : null}
-			<ResumePage id={id} draft={current ? draft : { ...draft, data: null }} focused={nativeEnvironment.focused()} />
+			<ResumePage id={id} draft={shown} focused={nativeEnvironment.focused()} />
+			<TemplatePreviewCaption />
 		</View>
 	);
 }

@@ -250,9 +250,13 @@ export function LayoutScreen({ data, write, disabled, onDragChange }: LayoutScre
 				step={0.1}
 				disabled={disabled}
 				onChange={(value) =>
-					write("sidebarWidth", (draft) => {
-						draft.metadata.layout.sidebarWidth = value;
-					})
+					write(
+						"sidebarWidth",
+						(draft) => {
+							draft.metadata.layout.sidebarWidth = value;
+						},
+						true,
+					)
 				}
 			/>
 

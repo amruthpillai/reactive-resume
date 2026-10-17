@@ -209,9 +209,13 @@ export function TypographyScreen({ data, write, disabled, pick }: GroupProps) {
 					step={0.1}
 					disabled={disabled}
 					onChange={(value) =>
-						set(`${prefix}.size`, (draft) => {
-							draft[prefix].fontSize = value;
-						})
+						set(
+							`${prefix}.size`,
+							(draft) => {
+								draft[prefix].fontSize = value;
+							},
+							true,
+						)
 					}
 				/>
 				<Stepper
@@ -223,9 +227,13 @@ export function TypographyScreen({ data, write, disabled, pick }: GroupProps) {
 					step={0.05}
 					disabled={disabled}
 					onChange={(value) =>
-						set(`${prefix}.lineHeight`, (draft) => {
-							draft[prefix].lineHeight = value;
-						})
+						set(
+							`${prefix}.lineHeight`,
+							(draft) => {
+								draft[prefix].lineHeight = value;
+							},
+							true,
+						)
 					}
 				/>
 			</View>
@@ -458,9 +466,13 @@ export function AdvancedPageScreen({ data, write, disabled }: GroupProps) {
 					step={1}
 					disabled={disabled}
 					onChange={(value) =>
-						write(`page.${key}`, (draft) => {
-							draft.metadata.page[key] = value;
-						})
+						write(
+							`page.${key}`,
+							(draft) => {
+								draft.metadata.page[key] = value;
+							},
+							true,
+						)
 					}
 				/>
 			))}
