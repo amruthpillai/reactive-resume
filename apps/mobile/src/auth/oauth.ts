@@ -151,30 +151,44 @@ const originOf = (url: string) => {
 	}
 };
 
+// The authorization-response parameters a redirect may carry (RFC 6749 §4.1.2, RFC 9207).
+const protocolParams = new Set(["code", "state", "iss", "error", "error_description", "error_uri"]);
+
 /**
- * The query and fragment parameters of a redirect URL, parsed by hand: React Native's `URLSearchParams` is not
- * reliable (S3), so nothing here depends on it. Later duplicates win; `+` is a space (form encoding).
+ * The authorization-response parameters of a redirect URL, parsed by hand: React Native's `URLSearchParams` is not
+ * reliable (S3). Only the query counts (the code flow answers in the query). Throws when a protocol parameter repeats
+ * or appears in the fragment, where an inherited `#iss=` could otherwise stand in for the real one.
  */
-export function parseRedirectParams(url: string): Record<string, string> {
-	const params: Record<string, string> = {};
+export function parseAuthorizationResponse(url: string): Record<string, string> {
 	const decode = (value: string) => {
 		try {
 			return decodeURIComponent(value.replaceAll("+", " "));
 		} catch {
-			return value;
+			throw new Error("Malformed redirect.");
 		}
 	};
-	const queryStart = url.indexOf("?");
+	const split = (part: string) =>
+		part
+			.split("&")
+			.filter(Boolean)
+			.map((pair): [string, string] => {
+				const equals = pair.indexOf("=");
+				return [
+					decode(equals === -1 ? pair : pair.slice(0, equals)),
+					equals === -1 ? "" : decode(pair.slice(equals + 1)),
+				];
+			});
 	const hashStart = url.indexOf("#");
-	const query = queryStart === -1 ? "" : url.slice(queryStart + 1, hashStart > queryStart ? hashStart : undefined);
+	const beforeHash = hashStart === -1 ? url : url.slice(0, hashStart);
+	const queryStart = beforeHash.indexOf("?");
+	const query = queryStart === -1 ? "" : beforeHash.slice(queryStart + 1);
 	const fragment = hashStart === -1 ? "" : url.slice(hashStart + 1);
-	for (const part of [query, fragment]) {
-		for (const pair of part.split("&")) {
-			if (!pair) continue;
-			const equals = pair.indexOf("=");
-			const key = decode(equals === -1 ? pair : pair.slice(0, equals));
-			params[key] = equals === -1 ? "" : decode(pair.slice(equals + 1));
-		}
+
+	if (split(fragment).some(([key]) => protocolParams.has(key))) throw new Error("Protocol parameter in the fragment.");
+	const params: Record<string, string> = {};
+	for (const [key, value] of split(query)) {
+		if (protocolParams.has(key) && key in params) throw new Error(`Repeated ${key}.`);
+		params[key] = value;
 	}
 	return params;
 }

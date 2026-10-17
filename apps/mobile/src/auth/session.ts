@@ -23,6 +23,7 @@
 import * as AuthSession from "expo-auth-session";
 import * as Network from "expo-network";
 import * as SecureStore from "expo-secure-store";
+import Storage from "expo-sqlite/kv-store";
 import * as WebBrowser from "expo-web-browser";
 import { useSyncExternalStore } from "react";
 import {
@@ -30,7 +31,7 @@ import {
 	forgetClient,
 	getClientId,
 	isAllowedServer,
-	parseRedirectParams,
+	parseAuthorizationResponse,
 	redirectUri,
 	registerClient,
 	scopes,
@@ -79,6 +80,8 @@ let accountScope: string | null = null;
 let identity = 0;
 let refreshing: { account: number; result: Promise<string | null> } | null = null;
 let queue: Promise<unknown> = Promise.resolve();
+// Counts sign-in attempts; sign-out bumps it too. An attempt commits only if it is still the latest.
+let attempts = 0;
 const listeners = new Set<() => void>();
 const identityListeners = new Set<() => void>();
 
@@ -190,6 +193,12 @@ export async function recoverFromUnauthorized(used: Credentials): Promise<Creden
 	if (!used.accessToken || used.account !== identity || !tokens) return null;
 	// Another request already refreshed this account: retry with the newer token.
 	if (tokens.accessToken !== used.accessToken) return { ...used, accessToken: tokens.accessToken };
+	if (refreshing?.account === used.account) {
+		const accessToken = await refreshing.result;
+		return accessToken && accessToken !== used.accessToken && used.account === identity
+			? { ...used, accessToken }
+			: null;
+	}
 	if (!tokens.refreshToken) {
 		await transition(() => expire(used.account));
 		return null;
@@ -223,15 +232,13 @@ export async function restoreSession(): Promise<void> {
 		const stored = await SecureStore.getItemAsync(tokensKey(server));
 		tokens = stored ? (JSON.parse(stored) as Tokens) : null;
 		accountScope = scopeOf(server, tokens?.accessToken);
-		const marker = await SecureStore.getItemAsync(refreshMarkerKey(server));
-		if (marker && tokens?.refreshToken && marker === fingerprint(tokens.refreshToken)) {
+		// A refresh was sent and its outcome never fully landed on disk: whatever tokens are stored may be consumed.
+		if (await SecureStore.getItemAsync(refreshMarkerKey(server))) {
 			tokens = null;
-			await SecureStore.deleteItemAsync(tokensKey(server));
-			await SecureStore.deleteItemAsync(refreshMarkerKey(server));
 			setSession({ status: "expired", server });
+			await retireTokens(server);
 			return;
 		}
-		if (marker) await SecureStore.deleteItemAsync(refreshMarkerKey(server));
 		setSession({ status: tokens ? "signed-in" : "signed-out", server });
 	} catch {
 		tokens = null;
@@ -267,9 +274,15 @@ export function saveTokens(next: Tokens | null): Promise<void> {
 export async function signIn(server: string): Promise<boolean> {
 	const origin = new URL(server).origin;
 	if (!isAllowedServer(origin)) throw new Error("The app needs an https server.");
+	const attempt = ++attempts;
 	const next = await authorize(origin);
 	if (!next) return false;
-	await transition(async () => {
+	return transition(async () => {
+		// Sign-out (or a newer sign-in) started after this attempt: its tokens must not bring the session back.
+		if (attempt !== attempts) {
+			await revoke(origin, next.refreshToken);
+			return false;
+		}
 		await SecureStore.setItemAsync(tokensKey(origin), JSON.stringify(next));
 		await SecureStore.setItemAsync(serverKey, origin);
 		await SecureStore.deleteItemAsync(refreshMarkerKey(origin));
@@ -278,8 +291,8 @@ export async function signIn(server: string): Promise<boolean> {
 		accountScope = scopeOf(origin, next.accessToken);
 		changeIdentity();
 		setSession({ status: "signed-in", server: origin });
+		return true;
 	});
-	return true;
 }
 
 /** A sign-in that failed at the redirect, with the OAuth error code `messages.ts` maps. */
@@ -314,8 +327,13 @@ async function authorize(origin: string): Promise<Tokens | null> {
 	if (result.type === "cancel" || result.type === "dismiss") return null;
 	if (result.type !== "success" && result.type !== "error") throw new SignInError(`authorization_${result.type}`);
 
-	// Parsed here, by hand, rather than trusting expo-auth-session's URL parsing (S3: URLSearchParams on RN).
-	const params = parseRedirectParams(result.url);
+	// Parsed here, by hand and from the query only, rather than trusting expo-auth-session's URL parsing.
+	let params: Record<string, string>;
+	try {
+		params = parseAuthorizationResponse(result.url);
+	} catch {
+		throw new SignInError("invalid_response");
+	}
 	if (params.state !== pending.state) throw new SignInError("state_mismatch");
 	// RFC 9207. Better Auth 1.7.7 advertises `authorization_response_iss_parameter_supported` and adds `iss` to code and
 	// error redirects; a server that does not advertise it must at least not name another issuer.
@@ -356,31 +374,59 @@ export function cancelSignIn(): void {
 	WebBrowser.dismissAuthSession();
 }
 
+/** Removes another feature's account data on sign-out. Gets the departing account's scope; may throw to abort. */
+export type SignOutCleanup = (scope: string) => void | Promise<void>;
+
+const signOutCleanups = new Set<SignOutCleanup>();
+
 /**
- * Signs out the current account, after any queued refresh. Against a snapshot of that account only: revokes its
- * refresh token (best effort), clears its drafts on this device, then deletes its tokens. The server and its
- * registered client are kept. Access tokens already issued stay valid until they expire (at most an hour). Throws,
- * still signed in, when the drafts cannot be cleared.
+ * Registers account-scoped cleanup to run on sign-out (in-memory queues, caches). Returns the unregister function.
+ * Data on disk under a known prefix is also swept by `scopedStoragePrefixes`, even if its feature never loaded.
+ */
+export function registerSignOutCleanup(cleanup: SignOutCleanup): () => void {
+	signOutCleanups.add(cleanup);
+	return () => signOutCleanups.delete(cleanup);
+}
+
+// kv-store prefixes other features keep per account (`<prefix><scope>:<id>`): application notes (M5-T2) and Career
+// workspace drafts (M6-T2). Resume and letter drafts are cleared by the draft runtime.
+const scopedStoragePrefixes = ["reactive-resume:application-notes:", "reactive-resume:career-draft:"];
+
+/** Best-effort revocation of a refresh token on `server`. */
+async function revoke(server: string, refreshToken: string | undefined): Promise<void> {
+	if (!refreshToken) return;
+	await Promise.all([discover(server), getClientId(server)])
+		.then(([discovery, clientId]) => {
+			if (!clientId || !discovery.revocationEndpoint) return;
+			return AuthSession.revokeAsync(
+				{ clientId, token: refreshToken, tokenTypeHint: AuthSession.TokenTypeHint.RefreshToken },
+				discovery,
+			);
+		})
+		.catch(() => null);
+}
+
+/**
+ * Signs out the current account, after any queued refresh, and invalidates every sign-in still in the browser.
+ * Against a snapshot of that account only: revokes its refresh token (best effort), clears its local data (drafts,
+ * application notes, Career drafts, registered cleanups), then deletes its tokens. The server and its registered
+ * client are kept. Access tokens already issued stay valid until they expire (at most an hour). Throws, still signed
+ * in, when local data cannot be cleared.
  */
 export function signOut(): Promise<void> {
+	attempts++;
 	return transition(async () => {
 		const departing = { server: session.server, tokens, scope: accountScope, account: identity };
-		const refreshToken = departing.tokens?.refreshToken;
-		if (refreshToken) {
-			await Promise.all([discover(departing.server), getClientId(departing.server)])
-				.then(([discovery, clientId]) => {
-					if (!clientId || !discovery.revocationEndpoint) return;
-					return AuthSession.revokeAsync(
-						{ clientId, token: refreshToken, tokenTypeHint: AuthSession.TokenTypeHint.RefreshToken },
-						discovery,
-					);
-				})
-				.catch(() => null);
-		}
+		await revoke(departing.server, departing.tokens?.refreshToken);
 		if (departing.scope) {
+			const { scope } = departing;
 			// Imported here: the draft runtime imports the API client, which imports this module.
 			const { clearDraftsFor } = await import("@/draft/runtime");
-			clearDraftsFor(departing.scope);
+			clearDraftsFor(scope);
+			const prefixes = scopedStoragePrefixes.map((prefix) => `${prefix}${scope}:`);
+			for (const key of Storage.getAllKeysSync())
+				if (prefixes.some((prefix) => key.startsWith(prefix))) Storage.removeItemSync(key);
+			for (const cleanup of signOutCleanups) await cleanup(scope);
 		}
 		await SecureStore.deleteItemAsync(tokensKey(departing.server));
 		await SecureStore.deleteItemAsync(refreshMarkerKey(departing.server));
@@ -398,6 +444,8 @@ export function signOut(): Promise<void> {
  */
 export function getAccessToken(): Promise<string | null> {
 	if (!tokens) return Promise.resolve(null);
+	// The refresh token is retired while its refresh is out; wait for that refresh.
+	if (refreshing?.account === identity) return refreshing.result;
 	const expiresSoon = tokens.expiresAt !== undefined && tokens.expiresAt - expirySkewSeconds <= Date.now() / 1000;
 	if (!expiresSoon) return Promise.resolve(tokens.accessToken);
 	if (!tokens.refreshToken) return Promise.resolve(null);
@@ -436,41 +484,33 @@ async function refreshAccessToken(account: number, refreshToken: string): Promis
 	}
 
 	await SecureStore.setItemAsync(refreshMarkerKey(server), fingerprint(refreshToken));
-	let response: AuthSession.TokenResponse;
+	// From here the token counts as spent: whatever happens, it is never sent again.
+	tokens = { ...stale, refreshToken: undefined };
 	try {
-		response = await Promise.race([
+		const response = await Promise.race([
 			AuthSession.refreshAsync({ clientId, refreshToken, extraParams: { resource: server } }, discovery),
 			// A request that never answers would hold the transition queue (and sign-out) forever.
 			new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Refresh timed out.")), refreshTimeout)),
 		]);
-	} catch (error) {
-		if (!(error instanceof AuthSession.TokenError)) {
-			// No answer: the server may have rotated the token, so it must never be sent again.
-			await expire(account);
-			return null;
-		}
-		// The server answered with an error, so the token was not rotated.
+		const next = toTokens(response, undefined);
+		// The marker goes only once the new tokens are durably stored.
+		await SecureStore.setItemAsync(tokensKey(server), JSON.stringify(next));
 		await SecureStore.deleteItemAsync(refreshMarkerKey(server));
-		if (error.code === "invalid_grant" || error.code === "invalid_client") {
-			if (error.code === "invalid_client") await forgetClient(server);
-			await expire(account);
-			return null;
-		}
-		return stale.accessToken;
+		if (identity !== account) return null;
+		tokens = next;
+		accountScope = scopeOf(server, next.accessToken) ?? accountScope;
+		return next.accessToken;
+	} catch (error) {
+		// No answer, an error answer, or a store that would not keep the result: fail closed and ask for a new sign-in.
+		if (error instanceof AuthSession.TokenError && error.code === "invalid_client") await forgetClient(server);
+		await expire(account);
+		return null;
 	}
-
-	const next = toTokens(response, refreshToken);
-	await SecureStore.setItemAsync(tokensKey(server), JSON.stringify(next));
-	await SecureStore.deleteItemAsync(refreshMarkerKey(server));
-	if (identity !== account) return null;
-	tokens = next;
-	accountScope = scopeOf(server, next.accessToken) ?? accountScope;
-	return next.accessToken;
 }
 
 /**
- * The account's refresh token is gone or rejected. Deletes its tokens and marks the session `expired`, which keeps the
- * user on the current screen with a prompt to sign in again. Runs inside the transition queue.
+ * The account's refresh token is gone, rejected or possibly spent. Drops the tokens and marks the session `expired`,
+ * which keeps the user on the current screen with a prompt to sign in again. Runs inside the transition queue.
  */
 async function expire(account: number): Promise<void> {
 	if (identity !== account) return;
@@ -478,6 +518,18 @@ async function expire(account: number): Promise<void> {
 	tokens = null;
 	changeIdentity();
 	setSession({ status: "expired", server });
-	await SecureStore.deleteItemAsync(tokensKey(server)).catch(() => null);
+	await retireTokens(server);
+}
+
+/**
+ * Deletes the stored tokens, then the refresh marker. The marker stays if the tokens could not be deleted, so the next
+ * launch expires the session instead of sending a possibly spent token.
+ */
+async function retireTokens(server: string): Promise<void> {
+	try {
+		await SecureStore.deleteItemAsync(tokensKey(server));
+	} catch {
+		return;
+	}
 	await SecureStore.deleteItemAsync(refreshMarkerKey(server)).catch(() => null);
 }
