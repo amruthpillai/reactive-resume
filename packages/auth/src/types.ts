@@ -6,4 +6,4 @@ export type AuthSession = {
 };
 
 // ponytail: plain union replaces z.enum solely used for type inference
-export type AuthProvider = "credential" | "passkey" | "google" | "github" | "linkedin" | "custom";
+export type AuthProvider = "credential" | "passkey" | "apple" | "google" | "github" | "linkedin" | "custom";

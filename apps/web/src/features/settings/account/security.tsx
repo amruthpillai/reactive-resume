@@ -13,7 +13,7 @@ import { useConfirm, usePrompt } from "@/hooks/use-confirm";
 import { authClient } from "@/libs/auth/client";
 import { getReadableErrorMessage } from "@/libs/error-message";
 
-const SOCIAL: AuthProvider[] = ["google", "github", "linkedin", "custom"];
+const SOCIAL: AuthProvider[] = ["apple", "google", "github", "linkedin", "custom"];
 
 const monthYear = (date: Date) => date.toLocaleDateString(undefined, { month: "long", year: "numeric" });
 

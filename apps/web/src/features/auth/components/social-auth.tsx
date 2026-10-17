@@ -1,7 +1,7 @@
 import type { RouterOutput } from "@/libs/orpc/client";
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
-import { GithubLogoIcon, GoogleLogoIcon, LinkedinLogoIcon } from "@phosphor-icons/react";
+import { AppleLogoIcon, GithubLogoIcon, GoogleLogoIcon, LinkedinLogoIcon } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearch } from "@tanstack/react-router";
 import { Button } from "@reactive-resume/ui/components/button";
@@ -83,6 +83,22 @@ function SocialAuthButtons({ providers }: SocialAuthButtonsProps) {
 
 	return (
 		<div className={cn(ENTER_CLASS, "grid grid-cols-2 gap-4")}>
+			<Button
+				onClick={() =>
+					runSignIn(() =>
+						authClient.signIn.social({
+							provider: "apple",
+							callbackURL: callbackURL ?? "/dashboard",
+							...getOAuthSignInOptions(callbackURL),
+						}),
+					)
+				}
+				className={cn("hidden flex-1 bg-black text-white hover:bg-black/80", "apple" in providers && "inline-flex")}
+			>
+				<AppleLogoIcon />
+				<Trans comment="Brand name label for Apple social sign-in button">Apple</Trans>
+			</Button>
+
 			<Button
 				variant="secondary"
 				onClick={() =>

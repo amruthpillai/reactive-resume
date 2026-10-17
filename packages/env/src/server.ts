@@ -96,6 +96,41 @@ export const env = createEnv({
 		BETTER_AUTH_API_KEY: z.string().min(1).optional(),
 		// Domain verification token from the OpenAI plugin portal, served at /.well-known/openai-apps-challenge.
 		OPENAI_APPS_CHALLENGE_TOKEN: z.string().trim().min(1).optional(),
+		// Native app association files (empty lists leave the endpoints disabled).
+		MOBILE_IOS_APP_IDS: z
+			.string()
+			.transform((value) =>
+				value
+					.split(",")
+					.map((id) => id.trim())
+					.filter(Boolean),
+			)
+			.pipe(z.array(z.string().regex(/^[A-Z0-9]{10}\.[A-Za-z0-9.-]+$/)))
+			.default([]),
+		MOBILE_ANDROID_PACKAGES: z
+			.string()
+			.transform((value) =>
+				value
+					.split(",")
+					.map((id) => id.trim())
+					.filter(Boolean),
+			)
+			.pipe(z.array(z.string().regex(/^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+$/)))
+			.default([]),
+		MOBILE_ANDROID_CERT_SHA256: z
+			.string()
+			.transform((value) =>
+				value
+					.split(",")
+					.map((hash) => hash.trim())
+					.filter(Boolean),
+			)
+			.pipe(z.array(z.string().regex(/^(?:[A-Fa-f0-9]{2}:){31}[A-Fa-f0-9]{2}$/)))
+			.default([]),
+
+		// Social Auth (Apple): client secret is a pre-signed Apple JWT.
+		APPLE_CLIENT_ID: z.string().min(1).optional(),
+		APPLE_CLIENT_SECRET: z.string().min(1).optional(),
 
 		// Social Auth (Google)
 		GOOGLE_CLIENT_ID: z.string().min(1).optional(),
