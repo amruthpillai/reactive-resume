@@ -8,6 +8,7 @@ const mobile = new URL("../../../../../apps/mobile/", import.meta.url);
 const state = { server: "https://rxresu.me", token: "fixture-token", choices: [], events: [], signIn: null, tokenRead: null };
 globalThis.deepLinkScenario = state;
 const stubs = {
+	"expo-web-browser": "export const openBrowserAsync = async (path) => { globalThis.deepLinkScenario.events.push(['browser', path]); };",
 	"@lingui/core/macro": "export const t = (parts, ...values) => parts.reduce((text, part, i) => text + part + (values[i] ?? ''), '');",
 	"react-native": `export const Alert = { alert(title, message, buttons) {
 		const s = globalThis.deepLinkScenario;
@@ -18,6 +19,7 @@ const stubs = {
 	} };`,
 	"@/i18n": "export const initI18n = async () => {};",
 	"@/auth/session": `const s = globalThis.deepLinkScenario;
+		export const DEFAULT_SERVER = 'https://rxresu.me';
 		export const getServer = () => s.server;
 		export const getAccessToken = async () => { s.events.push(['token']); return s.tokenRead ? s.tokenRead() : s.token; };
 		export const restoreSession = async () => { s.events.push(['restore']); };
@@ -53,14 +55,14 @@ const hooks = registerHooks({
 
 try {
 	const { parseDeepLink } = await import(new URL("src/linking/parse.ts", mobile));
+	const parse = (url, current = state.server) => parseDeepLink(url, current);
 	const { redirectSystemPath } = await import(new URL("app/+native-intent.tsx", mobile));
 	const target = (href, server = "https://rxresu.me") => ({ kind: "target", server, href });
 	const mappings = [
 		["https://rxresu.me/alex/cv", target("/r/alex/cv")],
 		["https://RXRESU.ME:443/alex/cv/?utm_source=mail#top", target("/r/alex/cv")],
-		["https://resume.example/alex/cv", target("/r/alex/cv", "https://resume.example")],
-		["https://rxresu.me.evil.test/alex/cv", target("/r/alex/cv", "https://rxresu.me.evil.test")],
-		["https://resume.example:8443/alex/cv", target("/r/alex/cv", "https://resume.example:8443")],
+		["https://resume.example/alex/cv", target("/r/alex/cv", "https://resume.example"), "https://resume.example"],
+		["https://resume.example:8443/alex/cv", target("/r/alex/cv", "https://resume.example:8443"), "https://resume.example:8443"],
 		["https://rxresu.me/documents/cv", target("/r/documents/cv")],
 		["https://rxresu.me/alex/caf%C3%A9", target("/r/alex/caf%C3%A9")],
 		["https://rxresu.me/builder/resume_1", target("/builder/resume_1/write")],
@@ -80,7 +82,15 @@ try {
 		["/builder/resume-1", target("/builder/resume-1/write", null)],
 		["/r/alex/cv", target("/r/alex/cv", null)],
 	];
-	for (const [url, expected] of mappings) assert.deepEqual(parseDeepLink(url), expected, url);
+	for (const [url, expected, current] of mappings) assert.deepEqual(parse(url, current), expected, url);
+	const hostileHosts = [
+		"https://evil.com/alex/cv", "https://rxresu.me.evil.com/alex/cv", "https://rxresu.me%2eevil.com/alex/cv",
+		"https://rxresu.me:8443/alex/cv", "https://resume.example:8443/alex/cv",
+		"https://resume.example/auth/native-callback?code=fixture&state=fixture",
+		"https://rxresu.me.evil.com/auth/native-callback?code=fixture&state=fixture",
+	];
+	for (const url of hostileHosts) assert.equal(parse(url), null, url);
+	assert.equal(parse("https://resume.example/auth/native-callback", "https://resume.example"), null);
 	const invalid = [
 		"", "not a URL", "//evil.test/alex/cv", "javascript:alert(1)", "https://", "http://rxresu.me/alex/cv",
 		"https://rxresu.me@evil.test/alex/cv", "https://user:pass@rxresu.me/alex/cv", "other://builder/resume-1",
@@ -94,16 +104,19 @@ try {
 		"https://rxresu.me/builder/resume-1/unknown", "https://rxresu.me/builder/resume-1/entry/section",
 		"https://rxresu.me/alex/" + "x".repeat(8192),
 	];
-	for (const url of invalid) assert.equal(parseDeepLink(url), null, url);
+	for (const url of invalid) assert.equal(parse(url), null, url);
+	for (const path of ["me.rxresu:///", "/"]) {
+		assert.deepEqual(parse(path), { kind: "root" });
+		assert.equal(redirectSystemPath({ path, initial: true }), "/");
+	}
 	const callbacks = [
 		"https://rxresu.me/auth/native-callback?code=fixture%2Bcode&state=fixture#untouched",
-		"https://resume.example/auth/native-callback?error=access_denied&state=fixture",
 		"me.rxresu:/auth/native-callback?code=fixture&state=fixture",
 		"me.rxresu://auth/native-callback?code=fixture&state=fixture",
 		"/auth/native-callback?code=fixture&state=fixture",
 	];
 	for (const path of callbacks) {
-		assert.deepEqual(parseDeepLink(path), { kind: "callback" });
+		assert.deepEqual(parse(path), { kind: "callback" });
 		assert.equal(redirectSystemPath({ path, initial: true }), path);
 		assert.equal(redirectSystemPath({ path, initial: false }), path);
 	}
@@ -126,31 +139,40 @@ try {
 	reset({ choices: [false] });
 	assert.equal(await open("https://other.example/alex/cv"), null);
 	assert.equal(state.server, "https://rxresu.me");
-	assert.equal(state.events.length, 1);
-	assert.equal(state.events[0][0], "dialog");
-	reset({ choices: [true] });
-	assert.equal(await open("https://other.example/alex/cv"), "/r/alex/cv");
-	assert.equal(state.server, "https://other.example");
-	assert.deepEqual(state.events.at(-1), ["signIn", "https://other.example"]);
+	assert.deepEqual(state.events, [["browser", "https://other.example/alex/cv"]]);
+	reset({ server: "https://selfhost.example", choices: [true] });
+	assert.equal(await open("https://rxresu.me/alex/cv"), "/r/alex/cv");
+	assert.equal(state.server, "https://rxresu.me");
+	assert.deepEqual(state.events.at(-1), ["signIn", "https://rxresu.me"]);
 	reset({ token: null, choices: [true], signIn: async () => false });
 	assert.equal(await open("https://rxresu.me/alex/cv"), null);
 	assert.equal(state.token, null);
 	let attempts = 0;
-	reset({ choices: [true, true], signIn: async () => { if (!attempts++) throw new Error("fixture failure"); return true; } });
-	assert.equal(await open("https://other.example/builder/resume-1"), "/builder/resume-1/write");
+	reset({ server: "https://selfhost.example", choices: [true, true], signIn: async () => { if (!attempts++) throw new Error("fixture failure"); return true; } });
+	assert.equal(await open("https://rxresu.me/builder/resume-1"), "/builder/resume-1/write");
 	assert.equal(attempts, 2);
-	reset({ choices: [true, false], signIn: async () => { throw new Error("fixture failure"); } });
-	assert.equal(await open("https://other.example/alex/cv"), null);
-	assert.equal(state.server, "https://rxresu.me");
+	reset({ server: "https://selfhost.example", choices: [true, false], signIn: async () => { throw new Error("fixture failure"); } });
+	assert.equal(await open("https://rxresu.me/alex/cv"), null);
+	assert.equal(state.server, "https://selfhost.example");
 	assert.equal(state.token, "fixture-token");
 	reset({ choices: [false] });
-	assert.equal(await open("https://other.example/alex/cv", true), "/documents");
+	assert.equal(await open("https://other.example/alex/cv", true), "/");
+	assert.deepEqual(state.events, [["restore"], ["browser", "https://other.example/alex/cv"]]);
+	for (const path of [...hostileHosts, ...invalid.filter((url) => url.startsWith("https://"))]) {
+		reset();
+		assert.equal(await open(path), null);
+		assert.deepEqual(state.events, [["browser", path]], "Rejected HTTPS must open browser, never sign in");
+	}
+	reset({ server: "https://selfhost.example" });
+	assert.equal(await open("https://selfhost.example/alex/cv", true), "/r/alex/cv");
+	assert.deepEqual(state.events, [["restore"], ["token"]]);
 	reset({ tokenRead: async () => { state.server = "https://changed.example"; return "fixture-token"; } });
 	assert.equal(await open("https://rxresu.me/builder/resume-1"), null);
+	assert.deepEqual(state.events, [["token"], ["browser", "https://rxresu.me/builder/resume-1"]]);
 	reset();
-	assert.equal(await open("javascript:alert(1)"), "");
-	assert.equal(await open("javascript:alert(1)", true), "/documents");
-	assert.deepEqual(state.events, []);
+	assert.equal(await open("javascript:alert(1)"), null);
+	assert.equal(await open("javascript:alert(1)", true), "/");
+	assert.deepEqual(state.events, [["restore"]]);
 
 	let finishSignIn;
 	let started;
@@ -165,7 +187,7 @@ try {
 	assert.equal(await second, "/r/alex/cv");
 	assert.equal(state.events.filter(([kind]) => kind === "signIn").length, 1);
 	assert.deepEqual(state.choices, []);
-	console.log(`PASS: ${mappings.length} mappings, ${invalid.length} hostile/unsupported inputs, ${callbacks.length} callback forms; cold/warm sign-in, server-switch consent, cancel, retry, session race and queued callback bypass.`);
+	console.log(`PASS: ${mappings.length} mappings, ${invalid.length + hostileHosts.length} hostile/unsupported inputs, ${callbacks.length} callback forms; exact-origin allowlist, browser fallback, cold launch, sign-in, consent, retry, session race and queued callback bypass.`);
 } finally {
 	hooks.deregister();
 	delete globalThis.deepLinkScenario;

@@ -1,7 +1,11 @@
 import type { AppHref, BuilderPane } from "../routes";
 import { routes } from "../routes";
+import { DEFAULT_SERVER } from "@/auth/session";
 
-export type DeepLink = { kind: "callback" } | { kind: "target"; server: string | null; href: AppHref };
+export type DeepLink =
+	| { kind: "callback" }
+	| { kind: "root" }
+	| { kind: "target"; server: string | null; href: AppHref };
 
 // Matches the server's public-resume exclusions.
 const reserved = new Set([
@@ -32,7 +36,7 @@ const nativeReserved = new Set([
 const panes = new Set<string>(["write", "page", "design", "check"]);
 
 /** Only known screens, with decoded segments checked before WHATWG URL can erase traversal. */
-export function parseDeepLink(input: string): DeepLink | null {
+export function parseDeepLink(input: string, currentServer: string): DeepLink | null {
 	if (input.length > 8192) return null;
 	let path: string;
 	let server: string | null = null;
@@ -58,8 +62,11 @@ export function parseDeepLink(input: string): DeepLink | null {
 
 	const pathname = path.split(/[?#]/, 1)[0];
 	// AuthSession owns this response. Never inspect its query, authenticate, or remap it as a public resume.
-	if (pathname === "/auth/native-callback") return { kind: "callback" };
+	if (pathname === "/auth/native-callback")
+		return server === null || server === DEFAULT_SERVER ? { kind: "callback" } : null;
+	if (server !== null && server !== DEFAULT_SERVER && server !== currentServer) return null;
 	if (!pathname || /[\s\\]/.test(input)) return null;
+	if (native && pathname === "/") return { kind: "root" };
 	let segments: string[];
 	try {
 		segments = pathname.replace(/\/$/, "").slice(1).split("/").map(decodeURIComponent);

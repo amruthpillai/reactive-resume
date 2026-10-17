@@ -32,8 +32,6 @@ const config: ExpoConfig = {
 				data: [
 					{ scheme: "https", host, path: "/auth/native-callback" },
 					{ scheme: "https", host, pathPrefix: "/builder/" },
-					// Android simple-glob also matches deeper paths; +native-intent allows only known screens.
-					{ scheme: "https", host, pathPattern: "/.*/.*" },
 				],
 			},
 		],
