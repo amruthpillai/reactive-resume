@@ -1,8 +1,9 @@
+import type { RelinkResult } from "./save";
 import type { LetterDocument } from "@/draft/types";
 import type { Application } from "@/features/applications/types";
 import type { WritableDraft } from "immer";
 import type { ReactNode } from "react";
-import { plural } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
 import { router } from "expo-router";
@@ -42,6 +43,12 @@ type Recipe = (letter: WritableDraft<LetterDocument>) => void;
 
 /** Typing: one undo step per field while typing pauses under a second. */
 const edit = (key: string, recipe: Recipe) => useLetterStore.getState().update(recipe, { coalesceKey: key });
+
+/** Tells the user how a link change went: confirmed, waiting for a connection, or refused over unsaved edits. */
+export function relinked(result: RelinkResult, done?: string) {
+	if (result === "unsaved") showToast({ message: t`Couldn't save your changes. Try again before continuing.` });
+	else if (result === "linked" && done) showToast({ message: done });
+}
 
 type SectionProps = { title: string; aside?: ReactNode; children: ReactNode };
 
@@ -152,7 +159,7 @@ function ForSection({ application, applications, disabled }: ForSectionProps) {
 				draft.recipientCompany = next.company;
 				draft.recipientName = next.contacts[0]?.name ?? "";
 			}
-		});
+		}).then((result) => relinked(result));
 	};
 
 	return (
@@ -345,11 +352,12 @@ function FromSection({ letter, disabled }: { letter: LetterDocument; disabled: b
 				draft.designLinked = false;
 			}
 			draft.sourceResumeId = resumeId || null;
-		});
+		}).then((result) => relinked(result));
 
 	const setLinked = (senderLinked: boolean) => {
-		void relinkLetter((draft) => void (draft.senderLinked = senderLinked));
-		showToast({ message: senderLinked ? t`Linked to the resume again` : t`Sender details copied into the letter` });
+		void relinkLetter((draft) => void (draft.senderLinked = senderLinked)).then((result) =>
+			relinked(result, senderLinked ? t`Linked to the resume again` : t`Sender details copied into the letter`),
+		);
 	};
 
 	return (

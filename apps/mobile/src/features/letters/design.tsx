@@ -23,20 +23,10 @@ import {
 } from "./design-presets";
 import { useResumes } from "./queries";
 import { relinkLetter } from "./save";
+import { relinked } from "./write";
 import { useLetterStore } from "@/draft";
 import { routes } from "@/routes";
-import {
-	Button,
-	IconButton,
-	ListRow,
-	Segmented,
-	SelectSheet,
-	Switch,
-	Text,
-	TextField,
-	showToast,
-	useTheme,
-} from "@/ui";
+import { Button, IconButton, ListRow, Segmented, SelectSheet, Switch, Text, TextField, useTheme } from "@/ui";
 
 type Metadata = WritableDraft<LetterDocument["style"]["metadata"]>;
 
@@ -78,12 +68,12 @@ export function LetterDesign({ id }: { id: string }) {
 	const disabled = letter.isLocked;
 
 	const setLinked = (designLinked: boolean) => {
-		void relinkLetter((draft) => void (draft.designLinked = designLinked));
-		showToast({
-			message: designLinked
-				? t`The letter matches the resume's design again`
-				: t`The letter keeps this design as its own`,
-		});
+		void relinkLetter((draft) => void (draft.designLinked = designLinked)).then((result) =>
+			relinked(
+				result,
+				designLinked ? t`The letter matches the resume's design again` : t`The letter keeps this design as its own`,
+			),
+		);
 	};
 
 	return (

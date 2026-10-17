@@ -34,7 +34,10 @@ const fixture = {
 		},
 	},
 	client: { coverLetters: {} },
-	useLetterStore: { getState: () => fixture.store.getState() },
+	useLetterStore: {
+		getState: () => fixture.store.getState(),
+		subscribe: (listener) => fixture.store.subscribe(listener),
+	},
 	getDraftScope: async () => fixture.scope,
 };
 globalThis.__m4t4 = fixture;
@@ -278,6 +281,7 @@ function letterServer() {
 		style: own,
 	};
 	const saves = [];
+	const network = { online: true, failing: false };
 	const adapter = {
 		kind: "letter",
 		delay: 800,
@@ -291,6 +295,7 @@ function letterServer() {
 		isConflict: () => false,
 		copy: async () => {},
 		save: async (letter, baseline) => {
+			if (network.failing) throw new Error("unreachable");
 			const input = changed(letter, baseline);
 			saves.push(input);
 			// As coverLetterService.update: sending a design ends the link; a link reads the resume's design.
@@ -315,10 +320,10 @@ function letterServer() {
 			getAllKeysSync: () => [...disk.keys()],
 		},
 		scope: async () => "server/user-a",
-		online: () => true,
+		online: () => network.online,
 		focused: () => false,
 	});
-	return { store: draftStore.store, saves, resume, remote: () => remote };
+	return { store: draftStore.store, saves, resume, network, remote: () => remote };
 }
 
 await check("undoing typing after Match the resume keeps the resume's design and the link", async () => {
@@ -328,7 +333,8 @@ await check("undoing typing after Match the resume keeps the resume's design and
 	await state().open("letter-1");
 	state().update((letter) => void (letter.content = "<p>Hello there</p>"), { coalesceKey: "content" });
 	await state().flush();
-	assert.equal(await relinkLetter((letter) => void (letter.designLinked = true)), true);
+	assert.equal(await relinkLetter((letter) => void (letter.designLinked = true)), "linked");
+	await new Promise((resolve) => setImmediate(resolve));
 	assert.deepEqual(state().document.style, server.resume);
 	state().undo();
 	assert.equal(state().document.content, "<p>Hello</p>");
@@ -343,11 +349,93 @@ await check("undoing typing after Match the resume keeps the resume's design and
 	assert.deepEqual(state().document.style, server.resume);
 	await state().close();
 });
-await check("a link that fails to save leaves history alone and reports failure", async () => {
+await check("pending edits that can't be saved stop the link change before it's made", async () => {
 	fixture.store = simpleStore({ status: "error" });
 	fixture.store.state.updateDocument = () => void events.push({ kind: "updateDocument" });
-	assert.equal(await relinkLetter(() => {}), false);
-	assert.deepEqual(events.map((event) => event.kind), ["updateDocument", "flush"]);
+	assert.equal(await relinkLetter(() => {}), "unsaved");
+	assert.deepEqual(events.map((event) => event.kind), ["flush"]);
+});
+
+// Second review, blocker 1: pending design edits are saved before the link change, which then goes alone.
+await check("Match after a pending design edit saves the edit first, then links on its own", async () => {
+	const server = letterServer();
+	fixture.store = server.store;
+	const state = server.store.getState;
+	await state().open("letter-1");
+	state().update((letter) => {
+		letter.style.metadata.design.colors.primary = "rgba(47, 90, 138, 1)";
+	});
+	assert.equal(await relinkLetter((letter) => void (letter.designLinked = true)), "linked");
+	assert.deepEqual(
+		server.saves.map((input) => Object.keys(input)),
+		[["style"], ["designLinked"]],
+	);
+	assert.equal(server.remote().designLinked, true);
+	assert.equal(state().document.designLinked, true);
+	assert.deepEqual(state().document.style, server.resume);
+	await state().close();
+});
+
+// Second review, blocker 2: a link confirmed later (Retry, reconnect) still rebases history.
+for (const [label, interrupt, recover] of [
+	[
+		"a failed save and Retry",
+		(server) => void (server.network.failing = true),
+		async (server, state) => {
+			server.network.failing = false;
+			state().retry();
+		},
+	],
+	[
+		"going offline and reconnecting",
+		(server) => void (server.network.online = false),
+		async (server, state) => {
+			server.network.online = true;
+			await state().flush();
+		},
+	],
+])
+	await check(`a link confirmed after ${label} still keeps undo from unlinking`, async () => {
+		const server = letterServer();
+		fixture.store = server.store;
+		const state = server.store.getState;
+		await state().open("letter-1");
+		state().update((letter) => void (letter.content = "<p>Hello there</p>"), { coalesceKey: "content" });
+		await state().flush();
+		interrupt(server);
+		assert.equal(await relinkLetter((letter) => void (letter.designLinked = true)), "queued");
+		assert.equal(server.remote().designLinked, false);
+		await recover(server, state);
+		for (let tick = 0; tick < 20 && state().status !== "saved"; tick++)
+			await new Promise((resolve) => setImmediate(resolve));
+		await new Promise((resolve) => setImmediate(resolve));
+		assert.equal(server.remote().designLinked, true);
+		state().undo();
+		assert.equal(state().document.content, "<p>Hello</p>");
+		assert.equal(state().document.designLinked, true);
+		assert.deepEqual(state().document.style, server.resume);
+		await state().flush();
+		assert.equal(server.remote().designLinked, true);
+		await state().close();
+	});
+await check("a link left unconfirmed when the editor closes never rebases another visit", async () => {
+	const server = letterServer();
+	fixture.store = server.store;
+	const state = server.store.getState;
+	await state().open("letter-1");
+	state().update((letter) => void (letter.content = "<p>Hello there</p>"), { coalesceKey: "content" });
+	await state().flush();
+	server.network.online = false;
+	assert.equal(await relinkLetter((letter) => void (letter.designLinked = true)), "queued");
+	nextLetterVisit();
+	const writes = server.saves.length;
+	server.network.online = true;
+	await state().flush();
+	await new Promise((resolve) => setImmediate(resolve));
+	// The queued link still saves; only the history rebase (one extra empty save) is dropped with the visit.
+	assert.equal(server.remote().designLinked, true);
+	assert.equal(server.saves.length, writes + 1);
+	await state().close();
 });
 
 // Review blocker 3: a restore that finishes after the user moved on never replaces their draft.
