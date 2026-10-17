@@ -131,13 +131,17 @@ export const crudRouter = {
 			operationId: "updateResume",
 			summary: "Update a resume",
 			description:
-				"Updates one or more fields of a resume identified by its ID. All fields are optional; only provided fields will be updated. Locked resumes cannot be updated. Requires authentication.",
+				"Updates one or more fields of a resume identified by its ID. All fields are optional; only provided fields will be updated. When expectedUpdatedAt is provided, a stale version returns RESUME_VERSION_CONFLICT (409) with data.updatedAt. Locked resumes cannot be updated. Requires authentication.",
 			successDescription: "The updated resume with its full data.",
 		})
 		.input(resumeDto.update.input)
 		.use(resumeMutationRateLimit)
 		.output(resumeDto.update.output)
 		.errors({
+			RESUME_VERSION_CONFLICT: {
+				message: "The resume changed after this patch was generated.",
+				status: 409,
+			},
 			RESUME_LOCKED: { status: 403, message: "Unlock the resume first." },
 			RESUME_SLUG_ALREADY_EXISTS: {
 				message: "A resume with this slug already exists.",
@@ -150,6 +154,7 @@ export const crudRouter = {
 				userId: context.user.id,
 				...(input.name !== undefined ? { name: input.name } : {}),
 				...(input.sessionId !== undefined ? { sessionId: input.sessionId } : {}),
+				...(input.expectedUpdatedAt !== undefined ? { expectedUpdatedAt: input.expectedUpdatedAt } : {}),
 				...(input.slug !== undefined ? { slug: input.slug } : {}),
 				...(input.tags !== undefined ? { tags: input.tags } : {}),
 				...(input.data !== undefined ? { data: input.data } : {}),
