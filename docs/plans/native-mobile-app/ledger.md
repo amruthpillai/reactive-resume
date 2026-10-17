@@ -36,11 +36,11 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | FIXING  | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | FIXING  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
-| M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | REVIEW  | briefs/W4.md; JS-only                                                               |
+| M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | FIXING  | briefs/W4.md; JS-only                                                               |
 | M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | REVIEW  | briefs/W4.md; JS-only                                                               |
-| M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | REVIEW  | briefs/W5.md; JS-only                                                               |
+| M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | FIXING  | briefs/W5.md; JS-only                                                               |
 | M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | RUNNING | briefs/W4.md; JS-only; adds letter Page pane                                        |
-| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | RUNNING | briefs/W6.md; JS-only                                                               |
+| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | REVIEW  | briefs/W6.md; JS-only                                                               |
 
 ## Gates
 
@@ -202,3 +202,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M3-T1 second review: 4 more blockers (fragment iss override, refresh replay after persistence failure, marker cleared before token delete, pending sign-in committing after sign-out). Round 3 also adds `registerSignOutCleanup` for feature kv prefixes.
 - 2026-10-17: M6-T2 second review: 4 more blockers (drafts cleared on optimistic values, scope cached across accounts, delayed Apply not identity-bound, unbounded/conflicting retries). Round 3.
 - 2026-10-17: M4-T1 done (review `895bc4ca`); M5-T3 done (review `ad729a91`). M3-T5 second review: 2 blockers (CSS-encoded marks lost, picture scope race); round 3.
+- 2026-10-17: Reviews: M4-T1 (`895bc4ca`) 6 blockers; M5-T3 (`ad729a91`) 4 blockers; M7-T3 done (review `5e7fbf24`). M3-T5, M6-T2 final checks running. Coordinator fixed the M5-T1 scenario harness routes mock (`bfaea3847`).
