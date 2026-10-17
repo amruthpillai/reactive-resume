@@ -106,7 +106,7 @@ export const refreshThreads = (queryClient: ReturnType<typeof useQueryClient>) =
 const agentMessages: AgentMessagesApi = {
 	// The server validates the message against its own UI message schema.
 	send: (input, options) => streamClient.agent.messages.send(input as never, options),
-	resume: (input) => streamClient.agent.messages.resume(input),
+	resume: (input, options) => streamClient.agent.messages.resume(input, options),
 };
 
 type UseAssistantChatInput = {
@@ -125,21 +125,24 @@ type UseAssistantChatInput = {
  */
 export function useAssistantChat({ threadId, initialMessages, resume, context, onFinish }: UseAssistantChatInput) {
 	const contextRef = useRef(context);
-	useLayoutEffect(() => {
-		contextRef.current = context;
-	});
+	// What the chat shows now: a resumed run keeps the parts of the message from before it.
+	const messagesRef = useRef(initialMessages);
 
 	const transport = useMemo<ChatTransport<UIMessage>>(
 		() => ({
 			// The server's resumable stream replays the reply from its start, so the client starts the message over.
 			resumeStreamIsReplay: true,
 			sendMessages: (options) => sendAgentMessage(agentMessages, threadId, contextRef.current, options),
-			reconnectToStream: () => resumeAgentStream(agentMessages, threadId),
+			reconnectToStream: ({ abortSignal }) =>
+				resumeAgentStream(agentMessages, threadId, {
+					signal: abortSignal,
+					messageById: (id) => messagesRef.current.find((message) => message.id === id),
+				}),
 		}),
 		[threadId],
 	);
 
-	return useChat<UIMessage>({
+	const chat = useChat<UIMessage>({
 		id: threadId,
 		messages: initialMessages,
 		resume,
@@ -148,6 +151,11 @@ export function useAssistantChat({ threadId, initialMessages, resume, context, o
 		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
 		onFinish,
 	});
+	useLayoutEffect(() => {
+		contextRef.current = context;
+		messagesRef.current = chat.messages;
+	});
+	return chat;
 }
 
 /**

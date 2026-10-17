@@ -1,8 +1,9 @@
 import type { Proposal, ProposalState } from "@reactive-resume/resume/proposals";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { getProposalState } from "@reactive-resume/resume/proposals";
 import { acceptResumeProposals } from "./proposals";
+import { useSession } from "@/auth/session";
 import { useResumeStore } from "@/draft";
 import { useApplications } from "@/features/applications/queries";
 
@@ -46,4 +47,27 @@ export function useResumeAssistantDocument(resumeId: string, applicationId?: str
 			accept: acceptResumeProposals,
 		};
 	}, [document, data, locked, applications, applicationId]);
+}
+
+const openDraft = (resumeId: string) =>
+	void useResumeStore
+		.getState()
+		.open(resumeId)
+		.catch(() => undefined);
+
+/**
+ * Opens `resumeId` in the M3-T3 draft store when no builder pane has (a direct link to the Assistant), and again when
+ * the id or account changes. Opening one resume twice is safe: the store drops the older open. The draft stays open
+ * on leaving: a pane below keeps using it, and the next open replaces it.
+ */
+export function useOpenResumeDraft(resumeId: string) {
+	const session = useSession();
+	const loaded = useResumeStore((state) => state.document?.id === resumeId);
+	const failed = useResumeStore((state) => state.document === null && state.status === "error");
+
+	useEffect(() => {
+		if (session.status === "signed-in" && !loaded) openDraft(resumeId);
+	}, [resumeId, session, loaded]);
+
+	return { failed, retry: () => openDraft(resumeId) };
 }

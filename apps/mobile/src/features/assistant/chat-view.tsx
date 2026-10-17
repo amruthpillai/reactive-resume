@@ -66,6 +66,7 @@ type Prompt = { threadId: string; text: string; attachments: ChatAttachment[] };
 
 const MAX_FILES = 10;
 const MAX_FILE_BYTES = 25 * 1024 * 1024;
+const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
 
 /** One conversation (or a new one), its change sets and questions, and the composer. */
 export function ChatView(props: ChatViewProps) {
@@ -219,7 +220,18 @@ function Conversation(props: ConversationProps) {
 		context: props.context,
 		onFinish: refresh,
 	});
-	const { messages, sendMessage, status, error, clearError, regenerate, stop, addToolOutput, resumeStream } = chat;
+	const {
+		messages,
+		sendMessage,
+		setMessages,
+		status,
+		error,
+		clearError,
+		regenerate,
+		stop,
+		addToolOutput,
+		resumeStream,
+	} = chat;
 	const streaming = status === "submitted" || status === "streaming";
 	const readOnly = props.readOnly || props.disabled === true;
 
@@ -265,19 +277,34 @@ function Conversation(props: ConversationProps) {
 		void stop();
 	};
 
-	// Back from the background: a stream the OS cut off continues where the server is (agent.messages.resume).
-	const reconnect = useEffectEvent(async () => {
-		if (status !== "error") return;
+	// In the background the OS may cut the connection, so the stream is detached here; the run goes on on the server.
+	// Back in the foreground the thread is reloaded as the server saved it, and a run still going is picked up again.
+	const detached = useRef(false);
+	const reload = () => {
 		const options = orpc.agent.threads.get.queryOptions({ input: { id: threadId } });
-		const latest = await queryClient.fetchQuery({ ...options, staleTime: 0 }).catch(() => null);
-		if (!latest?.thread.activeRunId) return;
+		return queryClient.fetchQuery({ ...options, staleTime: 0 }).catch(() => null);
+	};
+	const onAppState = useEffectEvent(async (state: string) => {
+		if (state === "background" && streaming) {
+			detached.current = true;
+			void stop();
+			return;
+		}
+		if (state !== "active" || (!detached.current && status !== "error")) return;
+		detached.current = false;
+		const latest = await reload();
+		if (!latest) return;
 		clearError();
-		void resumeStream();
+		setMessages(latest.messages as UIMessage[]);
+		if (!latest.thread.activeRunId) return;
+		// A resumed stream that stays quiet ends on its own (transport.ts RESUME_IDLE_MS); then the saved copy wins.
+		await resumeStream();
+		const settled = await reload();
+		if (settled && !settled.thread.activeRunId) setMessages(settled.messages as UIMessage[]);
+		refreshThreads(queryClient);
 	});
 	useEffect(() => {
-		const subscription = AppState.addEventListener("change", (state) => {
-			if (state === "active") void reconnect();
-		});
+		const subscription = AppState.addEventListener("change", (state) => void onAppState(state));
 		return () => subscription.remove();
 	}, []);
 
@@ -451,7 +478,7 @@ function errorText(error: unknown, fallback: string) {
 
 // ---- Composer ----
 
-type Upload = ChatAttachment & { busy?: boolean };
+type Upload = ChatAttachment & { size: number; busy?: boolean };
 
 type ComposerProps = Pick<ChatViewProps, "chips" | "privacy" | "placeholder"> & {
 	streaming: boolean;
@@ -486,51 +513,65 @@ function Composer(props: ComposerProps) {
 	const attach = async () => {
 		const picked = await DocumentPicker.getDocumentAsync({ multiple: true, copyToCacheDirectory: true });
 		if (picked.canceled) return;
-		const room = MAX_FILES - attachments.length;
-		if (picked.assets.length > room) showToast({ message: t`Attach up to 10 files to a message.` });
-		const assets = picked.assets.slice(0, Math.max(0, room));
-		const tooBig = assets.filter((asset) => (asset.size ?? new File(asset.uri).size) > MAX_FILE_BYTES);
-		if (tooBig.length > 0) showToast({ message: t`Files can be up to 25 MB each.` });
-		const files = assets
-			.filter((asset) => !tooBig.includes(asset))
-			.map((asset, index) => ({ asset, key: `upload-${Date.now()}-${index}` }));
+		// Sizes are checked before any file is read: 25 MB a file and 100 MB in all, the server's limits.
+		let budget = MAX_TOTAL_BYTES - attachments.reduce((total, item) => total + item.size, 0);
+		let room = MAX_FILES - attachments.length;
+		const files: { asset: DocumentPicker.DocumentPickerAsset; key: string; size: number }[] = [];
+		const skipped = { count: 0, big: false, total: false };
+		for (const [index, asset] of picked.assets.entries()) {
+			const size = asset.size ?? new File(asset.uri).size;
+			if (room === 0) skipped.count++;
+			else if (size > MAX_FILE_BYTES) skipped.big = true;
+			else if (size > budget) skipped.total = true;
+			else {
+				files.push({ asset, key: `upload-${Date.now()}-${index}`, size });
+				budget -= size;
+				room--;
+			}
+		}
+		if (skipped.count > 0) showToast({ message: t`Attach up to 10 files to a message.` });
+		if (skipped.big) showToast({ message: t`Files can be up to 25 MB each.` });
+		if (skipped.total) showToast({ message: t`Attachments can be up to 100 MB in all.` });
 		if (files.length === 0) return;
 		setAttachments((current) => [
 			...current,
-			...files.map(({ asset, key }) => ({
+			...files.map(({ asset, key, size }) => ({
 				id: key,
 				filename: asset.name,
 				mediaType: asset.mimeType ?? "application/octet-stream",
+				size,
 				busy: true,
 			})),
 		]);
+		const drop = (key: string) => setAttachments((current) => current.filter((item) => item.id !== key));
+		let threadId: string;
 		try {
-			const threadId = await props.ensureThread();
-			await Promise.all(
-				files.map(async ({ asset, key }) => {
-					try {
-						const attachment = await client.agent.attachments.create({
-							threadId,
-							filename: asset.name,
-							mediaType: asset.mimeType ?? "application/octet-stream",
-							data: await new File(asset.uri).base64(),
-						});
-						setAttachments((current) =>
-							current.map((item) =>
-								item.id === key
-									? { id: attachment.id, filename: attachment.filename, mediaType: attachment.mediaType }
-									: item,
-							),
-						);
-					} catch (error) {
-						setAttachments((current) => current.filter((item) => item.id !== key));
-						showToast({ message: errorText(error, t`Couldn't attach the file.`) });
-					}
-				}),
-			);
+			threadId = await props.ensureThread();
 		} catch (error) {
-			setAttachments((current) => current.filter((item) => !item.busy));
+			for (const { key } of files) drop(key);
 			showToast({ message: errorText(error, t`Couldn't attach the file.`) });
+			return;
+		}
+		// One file at a time: only one base64 copy is in memory at once.
+		for (const { asset, key } of files) {
+			try {
+				const attachment = await client.agent.attachments.create({
+					threadId,
+					filename: asset.name,
+					mediaType: asset.mimeType ?? "application/octet-stream",
+					data: await new File(asset.uri).base64(),
+				});
+				setAttachments((current) =>
+					current.map((item) =>
+						item.id === key
+							? { id: attachment.id, filename: attachment.filename, mediaType: attachment.mediaType, size: item.size }
+							: item,
+					),
+				);
+			} catch (error) {
+				drop(key);
+				showToast({ message: errorText(error, t`Couldn't attach the file.`) });
+			}
 		}
 	};
 

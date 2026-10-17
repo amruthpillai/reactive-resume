@@ -3,19 +3,19 @@ import type { AssistantDocument } from "./document";
 import type { IconName } from "@/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useThreads } from "./chat";
 import { ChatView, ContextChip } from "./chat-view";
-import { useResumeAssistantDocument } from "./document";
+import { useOpenResumeDraft, useResumeAssistantDocument } from "./document";
 import { publishProposals } from "./proposals";
 import { ModelButton, ModelSheet, ProviderGate, useConversationProvider } from "./provider";
 import { PastConversations } from "./threads";
 import { client } from "@/api/client";
 import { useHasAIProvider } from "@/features/ai/providers";
 import { routes } from "@/routes";
-import { Icon, IconButton, Text, useTheme } from "@/ui";
+import { Banner, Icon, IconButton, Text, useTheme } from "@/ui";
 
 export type AssistantScreenProps = {
 	resumeId: string;
@@ -29,6 +29,16 @@ export type AssistantScreenProps = {
 	applicationId?: string | undefined;
 };
 
+/** Another document's conversation opens that document, with the Assistant on it. */
+function openElsewhere(thread: ThreadSummary) {
+	if (thread.workingResumeId && !thread.coverLetterId) {
+		router.replace(routes.builder(thread.workingResumeId));
+		router.push({ pathname: routes.assistant(thread.workingResumeId), params: { thread: thread.id } });
+	}
+	// Letters have no assistant on mobile yet: open the letter itself.
+	else if (thread.coverLetterId) router.replace(routes.letter(thread.coverLetterId));
+}
+
 const belongsTo = (thread: ThreadSummary, document: AssistantDocument) =>
 	document.kind === "letter"
 		? thread.coverLetterId === document.id
@@ -41,6 +51,7 @@ const belongsTo = (thread: ThreadSummary, document: AssistantDocument) =>
 export function AssistantScreen(props: AssistantScreenProps) {
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
+	const draft = useOpenResumeDraft(props.resumeId);
 	const document = useResumeAssistantDocument(props.resumeId, props.applicationId);
 	const providers = useHasAIProvider();
 	const threads = useThreads();
@@ -69,21 +80,50 @@ export function AssistantScreen(props: AssistantScreenProps) {
 	};
 
 	const openThread = (thread: ThreadSummary) => {
-		if (document && belongsTo(thread, document)) {
-			setSelected(thread.id);
-			setView("thread");
-		} else if (thread.workingResumeId && !thread.coverLetterId)
-			router.replace({ pathname: routes.assistant(thread.workingResumeId), params: { thread: thread.id } });
-		// Letters have no assistant on mobile yet: open the letter itself.
-		else if (thread.coverLetterId) router.replace(routes.letter(thread.coverLetterId));
+		if (!document || !belongsTo(thread, document)) return openElsewhere(thread);
+		setSelected(thread.id);
+		setView("thread");
 	};
 
-	const body = !document ? (
+	// A `?thread=` link shows its chat (and Accept) only for a conversation about this resume; one about another
+	// document opens that document, and an unknown one is refused.
+	const linked = selected !== null && selected === props.threadId ? selected : null;
+	const linkedThread = linked ? threads.data?.find((thread) => thread.id === linked) : undefined;
+	const link =
+		!linked || !document || !threads.data
+			? "ok"
+			: !linkedThread
+				? "missing"
+				: belongsTo(linkedThread, document)
+					? "ok"
+					: "elsewhere";
+	const openLinked = useEffectEvent((thread: ThreadSummary) => openElsewhere(thread));
+	useEffect(() => {
+		if (link === "elsewhere" && linkedThread) openLinked(linkedThread);
+	}, [link, linkedThread]);
+
+	const body = draft.failed ? (
+		<View style={{ padding: space.s4 }}>
+			<Banner
+				tone="danger"
+				message={t`Resume could not be loaded.`}
+				action={{ label: t`Retry`, onPress: draft.retry }}
+			/>
+		</View>
+	) : !document || link === "elsewhere" ? (
 		<View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: space.s2 }}>
 			<ActivityIndicator />
 			<Text color="ink2">
 				<Trans>Opening the resume…</Trans>
 			</Text>
+		</View>
+	) : link === "missing" && view !== "history" ? (
+		<View style={{ padding: space.s4 }}>
+			<Banner
+				tone="warn"
+				message={t`This conversation couldn't be opened.`}
+				action={{ label: t`New conversation`, onPress: () => setSelected("new") }}
+			/>
 		</View>
 	) : view === "history" ? (
 		<PastConversations

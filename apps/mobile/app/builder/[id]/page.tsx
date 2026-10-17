@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { useSession } from "@/auth/session";
 import { ResumeConflictSheet, useResumeDraft } from "@/draft";
 import { nativeEnvironment } from "@/draft/native";
+import { ProposedEditsCaption, useMarkedResumeData } from "@/features/assistant/page-marks";
 import { ResumePage } from "@/preview/page";
 import { Banner } from "@/ui";
 
@@ -19,6 +20,8 @@ export default function PageScreen() {
 	const draft = useResumeDraft(id);
 	const session = useSession();
 	const current = draft.document?.id === id;
+	// The Assistant's pending edits, marked on the page (never saved).
+	const marked = useMarkedResumeData(id, current ? draft.data : null);
 	return (
 		<View style={{ flex: 1 }}>
 			<Stack.Screen options={{ title: t`Page`, headerTransparent: false }} />
@@ -34,7 +37,8 @@ export default function PageScreen() {
 					action={{ label: t`Retry`, onPress: () => void draft.open(id).catch(() => undefined) }}
 				/>
 			) : null}
-			<ResumePage id={id} draft={current ? draft : { ...draft, data: null }} focused={nativeEnvironment.focused()} />
+			<ProposedEditsCaption resumeId={id} pending={marked.pending} />
+			<ResumePage id={id} draft={{ ...draft, data: marked.data }} focused={nativeEnvironment.focused()} />
 			<ResumeConflictSheet />
 		</View>
 	);

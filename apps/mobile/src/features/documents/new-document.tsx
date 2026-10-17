@@ -113,8 +113,9 @@ export function NewDocument() {
 		if (current(signal)) setApplicationLinked(true);
 	};
 	const onCopiedForJob = (resumeId: string) => {
-		// ASSISTANT HANDOFF (M6-T3): open this copy with the Assistant ready to tailor it for the linked job.
+		// Opens this copy with the Assistant on its next-step suggestions for the linked job.
 		open({ id: resumeId, type: "resume" });
+		router.push({ pathname: routes.assistant(resumeId), params: { prepare: "1" } });
 	};
 	const create = (kind: "blank" | "sample" | "letter") =>
 		run(async (signal) => {

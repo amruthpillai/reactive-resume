@@ -43,28 +43,35 @@ function iterator(frames, { failAfter, hang, signal } = {}) {
 	};
 }
 
-function harness({ send, resume = () => iterator([]) }) {
-	const calls = { send: [], resume: 0 };
+function harness({ send = () => iterator([]), resume = () => iterator([]), messages = [], idleMs }) {
+	const calls = { send: [], resume: 0, resumeOptions: [] };
 	const api = {
 		send: async (input, options) => {
 			calls.send.push({ input, options });
 			return send(input, options);
 		},
-		resume: async () => {
+		resume: async (_input, options) => {
 			calls.resume++;
-			return resume();
+			calls.resumeOptions.push(options);
+			return resume(options);
 		},
 	};
 	const context = { current: { document: true, posting: true } };
 	// Same transport object as useAssistantChat in chat.ts.
+	let chat;
 	const transport = {
 		resumeStreamIsReplay: true,
 		sendMessages: (options) => sendAgentMessage(api, "thread-1", context.current, options),
-		reconnectToStream: () => resumeAgentStream(api, "thread-1"),
+		reconnectToStream: ({ abortSignal }) =>
+			resumeAgentStream(api, "thread-1", {
+				signal: abortSignal,
+				messageById: (id) => chat.messages.find((message) => message.id === id),
+				...(idleMs ? { idleMs } : {}),
+			}),
 	};
-	const chat = new Chat({
+	chat = new Chat({
 		id: "thread-1",
-		messages: [],
+		messages,
 		transport,
 		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
 	});
@@ -76,6 +83,14 @@ const textOf = (message) =>
 		.filter((part) => part.type === "text")
 		.map((part) => part.text)
 		.join("");
+
+const answered = {
+	type: "tool-ask_user_question",
+	toolCallId: "q1",
+	state: "output-available",
+	input: { question: "Netcode?" },
+	output: "Yes, at Pixel Forge",
+};
 
 const scenarios = {
 	async "send: only the newest message, context read at send time, attachments, streamed reply"() {
@@ -156,6 +171,60 @@ const scenarios = {
 		assert.equal(calls.send[0].options.signal.aborted, true);
 		assert.equal(chat.status, "ready");
 		assert.equal(textOf(chat.messages.at(-1)), "Partial");
+	},
+
+	async "resuming a continuation keeps the parts from before the run and replaces only the replayed ones"() {
+		const before = {
+			id: "a1",
+			role: "assistant",
+			parts: [{ type: "step-start" }, { type: "text", text: "Before the question.", state: "done" }, answered],
+		};
+		// The server replays the continuation run of a1 from its start.
+		const run = reply("a1", ["After", " the answer."]).map(sse);
+		const { chat } = harness({
+			messages: [{ id: "u1", role: "user", parts: [{ type: "text", text: "Tailor it" }] }, before],
+			resume: () => iterator(run),
+		});
+		// The client already showed part of the run before the connection dropped.
+		chat.messages = [
+			chat.messages[0],
+			{ ...before, parts: [...before.parts, { type: "step-start" }, { type: "text", text: "After", state: "streaming" }] },
+		];
+		await chat.resumeStream();
+		assert.equal(chat.status, "ready");
+		assert.equal(chat.messages.length, 2);
+		const message = chat.messages[1];
+		const texts = message.parts.filter((part) => part.type === "text").map((part) => part.text);
+		assert.deepEqual(texts, ["Before the question.", "After the answer."]);
+		const question = message.parts.find((part) => part.type === "tool-ask_user_question");
+		assert.equal(question?.output, "Yes, at Pixel Forge");
+	},
+
+	async "stop cancels a resumed stream: the abort signal reaches agent.messages.resume"() {
+		const { chat, calls } = harness({
+			resume: (options) => iterator(reply("a1", ["Going"]).slice(0, 4).map(sse), { hang: true, signal: options.signal }),
+		});
+		const resuming = chat.resumeStream();
+		await new Promise((resolve) => setTimeout(resolve, 50));
+		assert.equal(chat.status, "streaming");
+		await chat.stop();
+		await resuming;
+		assert.ok(calls.resumeOptions[0].signal instanceof AbortSignal);
+		assert.equal(calls.resumeOptions[0].signal.aborted, true);
+		assert.equal(chat.status, "ready");
+	},
+
+	async "a resumed stream that goes quiet ends instead of hanging"() {
+		const { chat, calls } = harness({
+			idleMs: 100,
+			resume: (options) => iterator(reply("a1", ["Stuck"]).slice(0, 4).map(sse), { hang: true, signal: options.signal }),
+		});
+		const started = Date.now();
+		await chat.resumeStream();
+		assert.ok(Date.now() - started < 2000);
+		assert.equal(calls.resumeOptions[0].signal.aborted, true);
+		assert.notEqual(chat.status, "streaming");
+		assert.equal(textOf(chat.messages.at(-1)), "Stuck");
 	},
 
 	async "answering the assistant's question continues the reply with the tool output"() {
