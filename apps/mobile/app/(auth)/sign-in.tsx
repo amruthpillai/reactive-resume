@@ -1,7 +1,137 @@
 import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { useQuery } from "@tanstack/react-query";
+import { router, useLocalSearchParams } from "expo-router";
+import { ActivityIndicator, ScrollView, View } from "react-native";
+import { AuthHeader, hostOf } from "@/auth/auth-header";
+import { getFlags, toOrigin } from "@/auth/oauth";
+import { useSession } from "@/auth/session";
+import { useSignIn } from "@/auth/use-sign-in";
+import { routes } from "@/routes";
+import { Banner, Button, Card, ListRow, Screen, Text, useTheme } from "@/ui";
 
+/** The server from the picker (`?server=`), else the current one. Only https outside development builds. */
+function useTargetServer(): string {
+	const { server: current } = useSession();
+	const { server } = useLocalSearchParams<{ server?: string }>();
+	const origin = server ? toOrigin(server) : null;
+	return origin && (__DEV__ || origin.startsWith("https:")) ? origin : current;
+}
+
+/** AU4 sign-in landing, AU5 waiting for the browser, AU6 sign-ups disabled, AU9 sign-in didn't complete. */
 export default function SignInScreen() {
 	const { t } = useLingui();
-	return <RouteStub title={t`Sign in`} />;
+	const { space } = useTheme();
+	const server = useTargetServer();
+	const host = hostOf(server);
+	const { attempt, start, cancel, reset } = useSignIn();
+	const flags = useQuery({ queryKey: ["auth", "flags", server], queryFn: () => getFlags(server) });
+
+	const changeServer = () => (router.canDismiss() ? router.dismissAll() : router.replace(routes.server()));
+
+	return (
+		<Screen scroll={false} edges={["top", "bottom"]}>
+			<ScrollView
+				style={{ flex: 1 }}
+				contentInsetAdjustmentBehavior="automatic"
+				contentContainerStyle={{ gap: space.s6 }}
+			>
+				{attempt.state === "waiting" ? (
+					<Waiting onCancel={cancel} />
+				) : attempt.state === "failed" ? (
+					<>
+						<AuthHeader />
+						<View style={{ gap: space.s3 }}>
+							<Banner
+								tone="danger"
+								icon="warning-circle"
+								title={t`Sign-in didn't complete`}
+								message={attempt.message}
+							/>
+							<Button
+								label={t`Try again in browser`}
+								icon="arrow-square-out"
+								size="lg"
+								fullWidth
+								onPress={() => void start(server)}
+							/>
+							<Button label={t`Back to sign in`} variant="ghost" size="lg" fullWidth onPress={reset} />
+						</View>
+					</>
+				) : (
+					<>
+						<AuthHeader subtitle={t`Your resumes, letters and applications, on ${host}.`} />
+						<View style={{ gap: space.s3 }}>
+							{flags.data?.disableSignups ? (
+								<Banner
+									tone="info"
+									icon="info"
+									title={t`New account sign-ups are currently disabled on this server.`}
+									message={t`You can sign in with an account you already have.`}
+								/>
+							) : null}
+							<Button
+								label={t`Continue in browser`}
+								icon="arrow-square-out"
+								size="lg"
+								fullWidth
+								onPress={() => void start(server)}
+							/>
+							{/* The browser's sign-in page offers the guest account; the app cannot create one itself. */}
+							{flags.data?.allowGuestLogin ? (
+								<Button
+									label={t`Continue as guest`}
+									variant="secondary"
+									size="lg"
+									fullWidth
+									onPress={() => void start(server)}
+								/>
+							) : null}
+							{flags.data?.disableSignups ? null : (
+								<Text variant="callout" color="ink3" align="center">
+									{t`Sign in or create an account in the browser, with email, a passkey, Google, GitHub or LinkedIn. You come back here when you're done.`}
+								</Text>
+							)}
+						</View>
+					</>
+				)}
+			</ScrollView>
+			{attempt.state === "idle" ? (
+				<Card style={{ padding: 0, overflow: "hidden" }}>
+					<ListRow
+						title={host}
+						subtitle={t`Server`}
+						leading="globe-simple"
+						trailing={
+							<Text variant="callout" color="ink3">
+								{t`Change`}
+							</Text>
+						}
+						chevron
+						onPress={changeServer}
+					/>
+				</Card>
+			) : null}
+		</Screen>
+	);
+}
+
+type WaitingProps = {
+	onCancel: () => void;
+};
+
+function Waiting({ onCancel }: WaitingProps) {
+	const { t } = useLingui();
+	const { colors, space } = useTheme();
+
+	return (
+		<>
+			<AuthHeader />
+			<View style={{ gap: space.s3, alignItems: "flex-start", paddingHorizontal: space.s2 }}>
+				<ActivityIndicator size="large" color={colors.accent} />
+				<Text variant="heading">{t`Finish signing in in the browser`}</Text>
+				<Text color="ink2">{t`When you're done, the browser closes and you come back here.`}</Text>
+				<Button label={t`Cancel`} variant="secondary" onPress={onCancel} />
+			</View>
+		</>
+	);
 }

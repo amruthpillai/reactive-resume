@@ -8,13 +8,18 @@
  *   `invalid_client`. Body in docs/plans/native-mobile-app/reports/S3.md §1.
  * - Send `resource=<server origin>` (RFC 8707) on authorize, token and refresh requests. Without it the server issues
  *   an opaque access token that `/api/rpc` rejects.
- * - The redirect is `https://<server host>/auth/native-callback` (Universal Links / App Links). On iOS pass
- *   `preferUniversalLinks: true` to `promptAsync`.
+ * - The redirect is `https://rxresu.me/auth/native-callback` for every server (the app's associated domain, through
+ *   Universal Links / App Links); see `redirectUri` in oauth.ts. On iOS pass `preferUniversalLinks: true` to
+ *   `promptAsync`.
+ * - A rejected refresh token (`invalid_grant`, `invalid_client`) deletes the tokens and sets status `expired`.
  * - Refresh is single-flight: concurrent callers share one in-flight refresh. Replaying a rotated refresh token makes
  *   the server revoke the whole token family and signs the phone out.
  */
+import * as AuthSession from "expo-auth-session";
 import * as SecureStore from "expo-secure-store";
+import * as WebBrowser from "expo-web-browser";
 import { useSyncExternalStore } from "react";
+import { discover, forgetClient, getClientId, redirectUri, registerClient, scopes, storeKey } from "./oauth";
 
 export const DEFAULT_SERVER = "https://rxresu.me";
 
@@ -40,13 +45,13 @@ export type Tokens = {
 };
 
 const serverKey = "server";
-// SecureStore keys allow only `[A-Za-z0-9._-]`. Hex of the origin's UTF-8 bytes is collision-free within that set.
-const tokensKey = (server: string) =>
-	`tokens.${Array.from(new TextEncoder().encode(server), (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
+const tokensKey = (server: string) => storeKey("tokens", server);
 // Refresh this long before the access token expires, so a request never leaves with a token about to lapse.
 const expirySkewSeconds = 60;
 
 let session: Session = { status: "loading", server: DEFAULT_SERVER };
+// Whether the user ever picked a server (a sign-in completed). First launch shows the server picker.
+let serverChosen = false;
 let tokens: Tokens | null = null;
 let refreshing: Promise<string | null> | null = null;
 const listeners = new Set<() => void>();
@@ -71,10 +76,17 @@ export function getServer(): string {
 	return session.server;
 }
 
+/** False until a sign-in has completed on this device: the signed-out screen is then the server picker. */
+export function hasChosenServer(): boolean {
+	return serverChosen;
+}
+
 /** Reads the last server and its tokens from SecureStore. Call once at launch. An unreadable store signs out. */
 export async function restoreSession(): Promise<void> {
 	try {
-		const server = (await SecureStore.getItemAsync(serverKey)) ?? DEFAULT_SERVER;
+		const storedServer = await SecureStore.getItemAsync(serverKey);
+		serverChosen = storedServer !== null;
+		const server = storedServer ?? DEFAULT_SERVER;
 		const stored = await SecureStore.getItemAsync(tokensKey(server));
 		tokens = stored ? (JSON.parse(stored) as Tokens) : null;
 		setSession({ status: tokens ? "signed-in" : "signed-out", server });
@@ -103,6 +115,7 @@ export async function saveTokens(next: Tokens | null): Promise<void> {
 async function switchSession(server: string, next: Tokens): Promise<void> {
 	await SecureStore.setItemAsync(tokensKey(server), JSON.stringify(next));
 	await SecureStore.setItemAsync(serverKey, server);
+	serverChosen = true;
 	tokens = next;
 	refreshing = null;
 	setSession({ status: "signed-in", server });
@@ -122,14 +135,71 @@ export async function signIn(server: string): Promise<boolean> {
 	return true;
 }
 
-// M3-T1: discovery, DCR, PKCE in the system browser and the code exchange. Null when the user cancels.
-function authorize(_origin: string): Promise<Tokens | null> {
-	return Promise.reject(new Error("signIn is not implemented yet (M3-T1)."));
+/** Discovery, DCR, PKCE in the system browser and the code exchange. Null when the user cancels. */
+async function authorize(origin: string): Promise<Tokens | null> {
+	const discovery = await discover(origin);
+	const clientId = await registerClient(origin, discovery);
+	const redirect = redirectUri(origin);
+	const request = new AuthSession.AuthRequest({
+		clientId,
+		redirectUri: redirect,
+		scopes,
+		usePKCE: true,
+		extraParams: { resource: origin },
+	});
+	// iOS 17.4+: an https redirect completes through ASWebAuthenticationSession's `.https` callback.
+	const result = await request.promptAsync(discovery, { preferUniversalLinks: true });
+	if (result.type === "cancel" || result.type === "dismiss") return null;
+	if (result.type === "error") throw result.error ?? new Error("authorization_failed");
+	if (result.type !== "success") throw new Error(`authorization_${result.type}`);
+
+	try {
+		const response = await AuthSession.exchangeCodeAsync(
+			{
+				clientId,
+				code: result.params.code ?? "",
+				redirectUri: redirect,
+				extraParams: { code_verifier: request.codeVerifier ?? "", resource: origin },
+			},
+			discovery,
+		);
+		return toTokens(response);
+	} catch (error) {
+		if (error instanceof AuthSession.TokenError && error.code === "invalid_client") await forgetClient(origin);
+		throw error;
+	}
 }
 
-/** Revokes the refresh token on the server (best effort) and deletes the stored tokens. The server is kept. */
+const toTokens = (response: AuthSession.TokenResponse, previousRefreshToken?: string): Tokens => ({
+	accessToken: response.accessToken,
+	refreshToken: response.refreshToken ?? previousRefreshToken,
+	expiresAt: response.expiresIn ? response.issuedAt + response.expiresIn : undefined,
+});
+
+/** Closes the browser of a sign-in in progress; `signIn` then resolves false. */
+export function cancelSignIn(): void {
+	WebBrowser.dismissAuthSession();
+}
+
+/**
+ * Revokes the refresh token on the server (best effort) and deletes the stored tokens. The server and its registered
+ * client are kept. Access tokens already issued stay valid until they expire (at most an hour).
+ */
 export async function signOut(): Promise<void> {
-	// M3-T1: `AuthSession.revokeAsync` for the refresh token before deleting.
+	await refreshing?.catch(() => null);
+	const { server } = session;
+	const refreshToken = tokens?.refreshToken;
+	if (refreshToken) {
+		await Promise.all([discover(server), getClientId(server)])
+			.then(([discovery, clientId]) => {
+				if (!clientId || !discovery.revocationEndpoint) return;
+				return AuthSession.revokeAsync(
+					{ clientId, token: refreshToken, tokenTypeHint: AuthSession.TokenTypeHint.RefreshToken },
+					discovery,
+				);
+			})
+			.catch(() => null);
+	}
 	await saveTokens(null);
 }
 
@@ -148,7 +218,44 @@ export function getAccessToken(): Promise<string | null> {
 	return refreshing;
 }
 
-// M3-T1: `AuthSession.refreshAsync` with `resource`, then `saveTokens`; on `invalid_grant` set status `expired`.
-function refreshAccessToken(_refreshToken: string): Promise<string | null> {
-	return Promise.reject(new Error("Token refresh is not implemented yet (M3-T1)."));
+async function refreshAccessToken(refreshToken: string): Promise<string | null> {
+	const { server } = session;
+	try {
+		const [discovery, clientId] = await Promise.all([discover(server), getClientId(server)]);
+		if (!clientId) {
+			await expire(server, refreshToken);
+			return null;
+		}
+		const response = await AuthSession.refreshAsync(
+			{ clientId, refreshToken, extraParams: { resource: server } },
+			discovery,
+		);
+		// Signed out or switched server meanwhile: these tokens must not come back.
+		if (session.server !== server || tokens?.refreshToken !== refreshToken) return null;
+		const next = toTokens(response, refreshToken);
+		await saveTokens(next);
+		return next.accessToken;
+	} catch (error) {
+		if (
+			error instanceof AuthSession.TokenError &&
+			(error.code === "invalid_grant" || error.code === "invalid_client")
+		) {
+			if (error.code === "invalid_client") await forgetClient(server);
+			await expire(server, refreshToken);
+			return null;
+		}
+		// Offline or a server error: send the old token and let the request fail the way it would have anyway.
+		return tokens?.accessToken ?? null;
+	}
+}
+
+/**
+ * The server rejected the refresh token (revoked, expired, or the client is gone). Deletes the tokens and marks the
+ * session `expired`, which keeps the user on the current screen with a prompt to sign in again.
+ */
+async function expire(server: string, refreshToken: string): Promise<void> {
+	if (session.server !== server || tokens?.refreshToken !== refreshToken) return;
+	tokens = null;
+	setSession({ status: "expired", server });
+	await SecureStore.deleteItemAsync(tokensKey(server)).catch(() => null);
 }
