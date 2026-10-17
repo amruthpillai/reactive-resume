@@ -63,3 +63,21 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - **M8 notices:** HarfBuzz Old-MIT and the Rust crate notices.
 - **Bundle:** consider loading `phosphor-icons.json` (766 KB) as an asset rather than bundling it eagerly.
 - **Android build:** needs a full JDK. Homebrew `openjdk@17` lacks `jlink`; use Android Studio's JBR 21.
+- 2026-10-17: S3 succeeded: DCR, PKCE, bearer oRPC, SSE and refresh all work on iOS and Android with SDK 58.
+  - The https callback is unproven because no tunnel tool is available; it needs a public deployment with SV1.
+  - Owner decisions:
+    - SV4: unbind `offline_access` grants from the browser session.
+    - SV5: creating API keys and deleting the account stay browser-only, through the in-app browser tab.
+  - Codex review `86d20183` is running.
+- 2026-10-17: DS3d merged (all 46 DS4d findings fixed). DS3a merged earlier.
+
+## Carry-forward for M3-T1 (from S3)
+
+- Send `resource=<server origin>` on authorize, token and refresh. Without it the access token is opaque and `/api/rpc` returns 401.
+- Refresh is single-flight: one shared in-flight promise. A replayed rotated refresh token deletes the whole token family.
+- Use the DCR body from `reports/S3.md` §1. Cache `client_id` per server origin in SecureStore. Re-register on `invalid_client`.
+- iOS: `promptAsync(discovery, { preferUniversalLinks: true })` plus the Associated Domains `webcredentials:<host>` entitlement. Android: an `autoVerify` intent filter for `/auth/native-callback`.
+- `verifyPassword` unlocks work through the native cookie store. No app code is needed.
+- RN `URLSearchParams.get()` is broken. Parse query strings by hand where needed.
+- Android needs JDK 17 or 21 (Gradle's Temurin or Android Studio's JBR), not the system JDK 27.
+- Watch for the RN 0.88 dev-inspector NPE on Android dev builds.
