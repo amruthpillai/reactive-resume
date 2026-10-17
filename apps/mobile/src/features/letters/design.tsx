@@ -186,7 +186,7 @@ function OwnDesign({ letter, disabled }: { letter: LetterDocument; disabled: boo
 								key={accent.hex}
 								accessibilityRole="radio"
 								accessibilityLabel={i18n._(accent.label)}
-								accessibilityState={{ selected }}
+								accessibilityState={{ checked: selected }}
 								onPress={() => {
 									setHex(accent.hex);
 									design("color", (value) => void (value.design.colors.primary = hexToRgba(accent.hex)));

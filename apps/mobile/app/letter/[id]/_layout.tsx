@@ -10,14 +10,20 @@ import { nextLetterVisit } from "@/features/letters/save";
 import { LetterShareSheet } from "@/features/letters/share";
 import { routes } from "@/routes";
 import { BuilderChrome, useBuilderChrome } from "@/shell/builder-chrome";
+import { useKeyCommands } from "@/shell/key-commands";
 
-/** Fills the chrome from the draft once for every pane: name and save status. */
+/** Fills the chrome from the draft once for every pane: name and save status. ⌘Z / ⇧⌘Z undo and redo. */
 function DraftChrome() {
+	const { t } = useLingui();
 	const name = useLetterStore((state) => state.document?.name);
 	const status = useLetterStore((state) => state.status);
 	const locked = useLetterStore((state) => state.locked);
 	const retry = useLetterStore((state) => state.retry);
 	useBuilderChrome({ title: name, save: name ? { status, locked, onRetry: retry } : undefined });
+	useKeyCommands([
+		{ id: "undo", input: "z", title: t`Undo`, run: () => useLetterStore.getState().undo() },
+		{ id: "redo", input: "z", shift: true, title: t`Redo`, run: () => useLetterStore.getState().redo() },
+	]);
 	return null;
 }
 
