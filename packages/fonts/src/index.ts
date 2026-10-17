@@ -100,22 +100,6 @@ const punctuationFallbackFonts = {
 	sansSerif: "Noto Sans",
 } as const;
 
-// Server-only mirror for the five Computer Modern families. Preserve the upstream
-// font/<family>/<file>.woff layout. Google URLs and font-picker previews stay unchanged.
-const WEB_FONT_CDN_PREFIX = "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest";
-const WEB_FONT_BASE_URL = (typeof process !== "undefined" ? process.env.WEB_FONT_BASE_URL : undefined)
-	?.trim()
-	.replace(/\/+$/, "");
-
-/** Repoints Computer Modern files to the mirror, preserving other font hosts. */
-const rewriteWebFontUrl = (url: string): string => {
-	if (!WEB_FONT_BASE_URL) return url;
-	if (url.startsWith(WEB_FONT_CDN_PREFIX)) {
-		return WEB_FONT_BASE_URL + url.slice(WEB_FONT_CDN_PREFIX.length);
-	}
-	return url;
-};
-
 const webFontList = webFontListJSON as WebFont[];
 const webFontMap = new Map<string, WebFont>(webFontList.map((font) => [font.family, font]));
 const standardFontList = standardPdfFontList.filter((font) => !webFontMap.has(font.family));
@@ -196,13 +180,13 @@ export function getWebFont(family: string) {
 	return webFontMap.get(family);
 }
 
-/** Resolves a font file with weight/style fallbacks and the optional Computer Modern mirror. */
+/** Resolves a catalog font file with weight/style fallbacks. */
 export function getWebFontSource(family: string, weight: FontWeight = "400", italic = false) {
 	const webFont = getWebFont(family);
 	if (!webFont) return null;
 
 	const key = `${weight}${italic ? "italic" : ""}` as FontFileWeight;
-	return rewriteWebFontUrl(webFont.files[key] ?? (italic ? webFont.files[weight] : undefined) ?? webFont.preview);
+	return webFont.files[key] ?? (italic ? webFont.files[weight] : undefined) ?? webFont.preview;
 }
 
 export function sortFontWeights<T extends string>(fontWeights: T[]): T[] {

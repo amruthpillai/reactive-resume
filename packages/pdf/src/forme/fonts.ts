@@ -102,16 +102,24 @@ const load = (src: string) => {
 /**
  * The font faces a document needs, as bytes Forme can embed. A face that fails to load is left out and listed in
  * `missing`; Forme falls back to its built-in fonts for that text.
+ * An explicit mirror base rewrites only Computer Modern downloads, leaving catalog sources unchanged.
  */
 export async function loadFonts(
 	requests: readonly PdfFontRequest[],
+	webFontBaseUrl?: string,
 ): Promise<{ fonts: FormeFont[]; warnings: string[]; missing: string[] }> {
+	const mirrorBase = webFontBaseUrl?.trim().replace(/\/+$/, "");
+	const computerModernBase = "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest";
 	const warnings: string[] = [];
 	const missing: string[] = [];
 	const loaded = await Promise.all(
 		requests.map(async (request): Promise<FormeFont | null> => {
 			try {
-				return { family: request.family, weight: request.weight, italic: request.italic, src: await load(request.src) };
+				const source =
+					mirrorBase && request.src.startsWith(computerModernBase)
+						? mirrorBase + request.src.slice(computerModernBase.length)
+						: request.src;
+				return { family: request.family, weight: request.weight, italic: request.italic, src: await load(source) };
 			} catch (error) {
 				warnings.push(error instanceof Error ? error.message : `Font ${request.src} could not be loaded.`);
 				missing.push(request.family);

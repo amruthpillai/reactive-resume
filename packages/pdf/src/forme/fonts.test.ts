@@ -4,6 +4,7 @@ import { loadFonts } from "./fonts";
 afterEach(() => {
 	vi.useRealTimers();
 	vi.unstubAllGlobals();
+	vi.unstubAllEnvs();
 });
 
 const font = (path: string) => ({
@@ -11,6 +12,41 @@ const font = (path: string) => ({
 	weight: 400,
 	italic: false,
 	src: `https://fonts.gstatic.com${path}`,
+});
+
+const computerModernBase = "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest";
+const mirrorBase = "https://fonts.example.com/cm";
+
+it.each([
+	[undefined, computerModernBase],
+	["", computerModernBase],
+	[mirrorBase, mirrorBase],
+	[`${mirrorBase}/`, mirrorBase],
+	[`${mirrorBase}///`, mirrorBase],
+	[` ${mirrorBase}/ `, mirrorBase],
+])("uses explicit mirror %s without reading the server environment", async (baseUrl, expectedBase) => {
+	vi.stubEnv("WEB_FONT_BASE_URL", "https://unused-env.example/cm");
+	vi.resetModules();
+	const { loadFonts: loadMirroredFonts } = await import("./fonts");
+	const requested: string[] = [];
+	vi.stubGlobal("fetch", (source: URL | string) => {
+		requested.push(String(source));
+		return Promise.resolve(new Response(new Uint8Array([1, 2, 3])));
+	});
+	const requests = [
+		{ ...font(""), src: `${computerModernBase}/font/Bright/cmunbmr.woff` },
+		{ ...font(""), weight: 700, italic: true, src: `${computerModernBase}/font/Bright/cmunbxo.woff` },
+		font("/s/mirror-test/font.ttf"),
+	];
+	expect((await loadMirroredFonts(requests, baseUrl)).missing).toEqual([]);
+	expect(requested).toEqual([
+		`${expectedBase}/font/Bright/cmunbmr.woff`,
+		`${expectedBase}/font/Bright/cmunbxo.woff`,
+		"https://fonts.gstatic.com/s/mirror-test/font.ttf",
+	]);
+	await loadMirroredFonts(requests, baseUrl);
+	expect(requested).toHaveLength(3);
+	expect(requests[0]?.src).toBe(`${computerModernBase}/font/Bright/cmunbmr.woff`);
 });
 
 it("falls back to fonts.gstatic.cn when fonts.gstatic.com doesn't answer, then starts there", async () => {

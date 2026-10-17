@@ -63,8 +63,9 @@ WEB_FONT_BASE_URL="https://fonts.example.com/cm"
 The server validates the URL at startup. An unset or empty value preserves the original URLs. Remove the variable
 and restart or redeploy to return to the default CDN.
 
-The resolver reads this value when its module loads. Set it before starting the server. This server-only variable
-is not exposed to the Vite browser app; rebuilding the web app does not enable browser mirroring.
+Set this value before starting the server. The server PDF entry supplies it to the font loader; the shared font
+catalog does not read environment variables. This setting is not exposed to the Vite browser app; rebuilding the
+web app does not enable browser mirroring.
 The Cloudflare Workers deployment is not covered by this Node.js server setup.
 
 ## 3. Check delivery
