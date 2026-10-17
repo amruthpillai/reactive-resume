@@ -1,0 +1,195 @@
+import type { RouterOutput } from "@/api/client";
+import type { CareerProfileData } from "@reactive-resume/schema/career";
+import { useLingui } from "@lingui/react/macro";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { AppState, View } from "react-native";
+import { careerProfileDataSchema } from "@reactive-resume/schema/career";
+import { parseAmount } from "./amount";
+import { useCareerTime } from "./hooks";
+import { client, orpc } from "@/api/client";
+import { getServer, useSession } from "@/auth/session";
+import { routes } from "@/routes";
+import { Banner, Button, ChipInput, SelectSheet, Text, TextArea, TextField, useTheme } from "@/ui";
+
+type PreferencesProps = { initial: CareerProfileData };
+export function Preferences({ initial }: PreferencesProps) {
+	const { t } = useLingui();
+	const { space } = useTheme();
+	const { locale, timeZone, profile: account } = useCareerTime();
+	const router = useRouter();
+	const session = useSession();
+	const queryClient = useQueryClient();
+	const [draft, setDraft] = useState(initial);
+	const [amount, setAmount] = useState(
+		initial.minBase.amount === null
+			? ""
+			: new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(initial.minBase.amount),
+	);
+	const [notice, setNotice] = useState(initial.noticeWeeks === null ? "" : String(initial.noticeWeeks));
+	const parsedAmount = parseAmount(amount, locale);
+	const noticeValue =
+		notice.trim() === "" ? null : /^\d+$/.test(notice) && Number(notice) <= 52 ? Number(notice) : undefined;
+	const next = { ...draft, minBase: { ...draft.minBase, amount: parsedAmount }, noticeWeeks: noticeValue };
+	const valid =
+		parsedAmount === undefined || noticeValue === undefined ? null : careerProfileDataSchema.safeParse(next);
+	const json = valid?.success ? JSON.stringify(valid.data) : null;
+	const [saved, setSaved] = useState(JSON.stringify(initial));
+	const [error, setError] = useState(false);
+	const [saving, setSaving] = useState(false);
+	const latest = useRef({ json, server: session.server, accountId: account.data?.id });
+	const queue = useRef<Promise<unknown>>(Promise.resolve());
+	const attempted = useRef<string | null>(saved);
+	useLayoutEffect(() => {
+		latest.current = { json, server: session.server, accountId: account.data?.id };
+	});
+	const flush = useCallback(
+		(retry = false) => {
+			const current = latest.current;
+			if (!current.accountId || !current.json || (!retry && attempted.current === current.json)) return;
+			attempted.current = current.json;
+			const queuedJson = current.json;
+			const value = careerProfileDataSchema.parse(JSON.parse(queuedJson));
+			setSaving(true);
+			setError(false);
+			const write = queue.current.then(async () => {
+				const identity = queryClient.getQueryData<RouterOutput["auth"]["getProfile"]>([
+					...orpc.auth.getProfile.key(),
+					current.server,
+				]);
+				if (getServer() !== current.server || identity?.id !== current.accountId) return;
+				await client.career.saveProfile(value);
+				setSaved(queuedJson);
+				void queryClient.invalidateQueries({ queryKey: orpc.career.profile.key() });
+			});
+			queue.current = write
+				.catch(() => {
+					setError(true);
+				})
+				.finally(() => {
+					if (attempted.current === current.json) setSaving(false);
+				});
+		},
+		[queryClient],
+	);
+	useEffect(() => {
+		const timer = setTimeout(() => flush(), 2000);
+		return () => clearTimeout(timer);
+	}, [json, account.data?.id, flush]);
+	useEffect(() => {
+		const listener = AppState.addEventListener("change", (state) => {
+			if (state !== "active") flush();
+		});
+		return () => {
+			listener.remove();
+			flush();
+		};
+	}, [flush]);
+	const change = (patch: Partial<CareerProfileData>) => setDraft((current) => ({ ...current, ...patch }));
+	return (
+		<View style={{ gap: space.s4 }}>
+			<Text variant="title">{t`What you're looking for`}</Text>
+			<Text accessibilityLiveRegion="polite" color={error ? "dangerText" : "ink3"}>
+				{!valid?.success ? t`Not saved` : error ? t`Not saved` : saving || json !== saved ? t`Saving…` : t`Saved`}
+			</Text>
+			{error ? (
+				<>
+					<Banner tone="danger" message={t`Couldn't save your preferences. Your draft is still here.`} />
+					<Button variant="secondary" label={t`Retry`} onPress={() => flush(true)} />
+				</>
+			) : null}
+			<SelectSheet
+				label={t`Remember facts from my messages`}
+				value={draft.memoryMode}
+				onChange={(memoryMode) => change({ memoryMode })}
+				options={[
+					{ value: "ask", label: t`Ask first` },
+					{ value: "auto", label: t`Automatically` },
+					{ value: "off", label: t`Never` },
+				]}
+			/>
+			<Text color="ink3">
+				{draft.memoryMode === "ask"
+					? t`The coach proposes each fact in the chat. Nothing is saved until you agree.`
+					: draft.memoryMode === "auto"
+						? t`The coach saves facts you state, and tells you. You can undo.`
+						: t`The coach doesn't remember anything from your messages.`}
+			</Text>
+			<ChipInput
+				label={t`Target roles`}
+				values={draft.targetRoles}
+				onChange={(targetRoles) => change({ targetRoles })}
+			/>
+			<ChipInput
+				label={t`Where you want to work`}
+				values={draft.locations}
+				onChange={(locations) => change({ locations })}
+			/>
+			<TextArea
+				label={t`What matters to you`}
+				value={draft.priorities}
+				maxLength={4000}
+				onChangeText={(priorities) => change({ priorities })}
+				onBlur={() => flush()}
+			/>
+			<Text variant="title">{t`Requirements`}</Text>
+			<Text color="ink3">{t`Used to check roles and offers. Each is a number, so the coach can compare without guessing.`}</Text>
+			<TextField
+				label={t`Minimum base salary`}
+				keyboardType="decimal-pad"
+				value={amount}
+				onChangeText={setAmount}
+				onBlur={() => flush()}
+				error={
+					parsedAmount === undefined
+						? t`Enter a full amount, such as 95000. Your previous amount is unchanged.`
+						: undefined
+				}
+			/>
+			<TextField
+				label={t`Currency`}
+				value={draft.minBase.currency}
+				autoCapitalize="characters"
+				maxLength={3}
+				onChangeText={(currency) => change({ minBase: { ...draft.minBase, currency: currency.toUpperCase() } })}
+				onBlur={() => flush()}
+				error={!/^[A-Z]{3}$/.test(draft.minBase.currency) ? t`Enter a three-letter currency code.` : undefined}
+			/>
+			<SelectSheet
+				label={t`Pay period`}
+				value={draft.minBase.period}
+				onChange={(period) => change({ minBase: { ...draft.minBase, period } })}
+				options={[
+					{ value: "year", label: t`Per year` },
+					{ value: "month", label: t`Per month` },
+					{ value: "hour", label: t`Per hour` },
+				]}
+			/>
+			<SelectSheet
+				label={t`Office days a week, at most`}
+				value={draft.maxOfficeDays === null ? "any" : String(draft.maxOfficeDays)}
+				onChange={(value) => change({ maxOfficeDays: value === "any" ? null : Number(value) })}
+				options={[
+					{ value: "any", label: t`Any` },
+					{ value: "0", label: t`Remote` },
+					...[1, 2, 3, 4, 5].map((days) => ({ value: String(days), label: String(days) })),
+				]}
+			/>
+			<TextField
+				label={t`Notice period (weeks)`}
+				keyboardType="number-pad"
+				value={notice}
+				maxLength={3}
+				onChangeText={setNotice}
+				onBlur={() => flush()}
+				error={noticeValue === undefined ? t`Enter a whole number from 0 to 52, or leave blank.` : undefined}
+			/>
+			{!valid?.success ? (
+				<Banner tone="warn" message={t`Check your preferences. Invalid changes are not saved.`} />
+			) : null}
+			<Text color="ink3">{t`Times are shown in ${timeZone}.`}</Text>
+			<Button label={t`Change timezone`} variant="ghost" onPress={() => router.push(routes.settings("preferences"))} />
+		</View>
+	);
+}
