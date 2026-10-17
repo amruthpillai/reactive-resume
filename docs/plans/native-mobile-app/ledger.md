@@ -25,7 +25,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | RUNNING | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | RUNNING | briefs/W2.md                                                                        |
-| M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | REVIEW  | briefs/W3.md; pulled forward, JS-only                                               |
+| M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
 | M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1      | RUNNING | briefs/W3.md; pulled forward, JS-only                                               |
 
 ## Gates
@@ -151,3 +151,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: Host load reached ~460 with five builders each compiling native dev clients. From wave 3 on, builders reuse one shared dev client per platform built by the coordinator after each merge, and only rebuild native code when their task changes native modules.
 - 2026-10-17: M3-T3 merged (FIXED 4, 24 Node scenarios). Device save path still unverified; covered by the wave-2 smoke test.
 - 2026-10-17: M6-T4 and M7-T1 pulled forward into free slots, JS-only (no native builds; coordinator screenshots after merge). M7-T1 asked for a bearer profile/timezone contract; coordinator approved a narrow ownership extension: `auth.getProfile()` and `timezone` on `auth.updateProfile` (through the SVc `accountAuth` bridge), with focused tests.
+- 2026-10-17: M6-T4 merged. Claude review `c8235124`: NO BLOCKERS; five behaviour notes fixed (changed-fields-only edits, retest gating, stale test errors, error mapping, password-manager autofill off on key fields). Screenshots pending on the shared dev client.
