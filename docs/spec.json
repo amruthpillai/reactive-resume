@@ -28221,36 +28221,63 @@
 				]
 			}
 		},
-		"/auth/providers": {
-			"get": {
-				"operationId": "listAuthProviders",
-				"summary": "List authentication providers",
-				"description": "Returns a list of all authentication providers enabled on this Reactive Resume instance, along with their display names. Possible providers include password-based credentials, Google, GitHub, LinkedIn, and custom OAuth. No authentication required.",
+		"/auth/profile": {
+			"patch": {
+				"operationId": "updateProfile",
+				"summary": "Update your profile",
+				"description": "Updates only the authenticated user's name, username, or image. Usernames must be unique.",
 				"tags": [
 					"Authentication"
 				],
-				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"minLength": 1,
+										"maxLength": 64
+									},
+									"username": {
+										"type": "string",
+										"minLength": 3,
+										"maxLength": 64,
+										"pattern": "^[a-z0-9._-]+$"
+									},
+									"image": {
+										"anyOf": [
+											{
+												"type": "string",
+												"format": "uri"
+											},
+											{
+												"type": "null"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
 				"responses": {
 					"200": {
-						"description": "A map of enabled authentication provider identifiers to their display names.",
+						"description": "OK",
 						"content": {
 							"application/json": {
 								"schema": {
 									"type": "object",
-									"propertyNames": {
-										"enum": [
-											"credential",
-											"passkey",
-											"google",
-											"github",
-											"linkedin",
-											"custom"
-										],
-										"type": "string"
+									"properties": {
+										"status": {
+											"type": "boolean"
+										}
 									},
-									"additionalProperties": {
-										"type": "string"
-									}
+									"required": [
+										"status"
+									]
 								}
 							}
 						}
@@ -28287,17 +28314,215 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"apiKey": []
+					},
+					{
+						"bearerAuth": []
+					},
+					{
+						"cookieAuth": []
+					}
+				],
 				"x-codeSamples": [
 					{
 						"lang": "bash",
 						"label": "cURL",
-						"source": "curl \"https://rxresu.me/api/openapi/auth/providers\""
+						"source": "curl --request PATCH \"https://rxresu.me/api/openapi/auth/profile\" --header \"x-api-key: <api-key>\" --header \"Content-Type: application/json\" --data '{}'"
 					}
 				]
 			}
 		},
 		"/auth/api-keys": {
+			"get": {
+				"operationId": "listApiKeys",
+				"summary": "List your API keys",
+				"description": "Lists only the authenticated user's API-key metadata. Key secrets are never returned.",
+				"tags": [
+					"Authentication"
+				],
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"apiKeys": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "string"
+													},
+													"name": {
+														"anyOf": [
+															{
+																"type": "string"
+															},
+															{
+																"type": "null"
+															}
+														]
+													},
+													"start": {
+														"anyOf": [
+															{
+																"type": "string"
+															},
+															{
+																"type": "null"
+															}
+														]
+													},
+													"prefix": {
+														"anyOf": [
+															{
+																"type": "string"
+															},
+															{
+																"type": "null"
+															}
+														]
+													},
+													"enabled": {
+														"type": "boolean"
+													},
+													"createdAt": {
+														"type": "string",
+														"format": "date-time",
+														"x-native-type": "date"
+													},
+													"updatedAt": {
+														"type": "string",
+														"format": "date-time",
+														"x-native-type": "date"
+													},
+													"expiresAt": {
+														"anyOf": [
+															{
+																"type": "string",
+																"format": "date-time",
+																"x-native-type": "date"
+															},
+															{
+																"type": "null"
+															}
+														]
+													},
+													"lastRequest": {
+														"anyOf": [
+															{
+																"type": "string",
+																"format": "date-time",
+																"x-native-type": "date"
+															},
+															{
+																"type": "null"
+															}
+														]
+													},
+													"permissions": {
+														"anyOf": [
+															{
+																"type": "object",
+																"propertyNames": {
+																	"type": "string"
+																},
+																"additionalProperties": {
+																	"type": "array",
+																	"items": {
+																		"type": "string"
+																	}
+																}
+															},
+															{
+																"type": "null"
+															}
+														]
+													}
+												},
+												"required": [
+													"id",
+													"name",
+													"start",
+													"prefix",
+													"enabled",
+													"createdAt",
+													"updatedAt",
+													"expiresAt",
+													"lastRequest",
+													"permissions"
+												]
+											}
+										},
+										"total": {
+											"type": "number"
+										}
+									},
+									"required": [
+										"apiKeys",
+										"total"
+									]
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Structured API error. See status and code; do not branch on message text.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": [
+										"defined",
+										"code",
+										"status",
+										"message"
+									],
+									"properties": {
+										"defined": {
+											"type": "boolean"
+										},
+										"code": {
+											"type": "string"
+										},
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"data": {}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"apiKey": []
+					},
+					{
+						"bearerAuth": []
+					},
+					{
+						"cookieAuth": []
+					}
+				],
+				"x-codeSamples": [
+					{
+						"lang": "bash",
+						"label": "cURL",
+						"source": "curl \"https://rxresu.me/api/openapi/auth/api-keys\" --header \"x-api-key: <api-key>\""
+					}
+				]
+			},
 			"post": {
 				"operationId": "createScopedApiKey",
 				"summary": "Create an API key",
@@ -28414,6 +28639,173 @@
 						"lang": "bash",
 						"label": "cURL",
 						"source": "curl --request POST \"https://rxresu.me/api/openapi/auth/api-keys\" --header \"x-api-key: <api-key>\" --header \"Content-Type: application/json\" --data '{\n  \"name\": \"<string>\",\n  \"expiresIn\": 123,\n  \"access\": \"read\"\n}'"
+					}
+				]
+			}
+		},
+		"/auth/api-keys/{keyId}": {
+			"delete": {
+				"operationId": "deleteApiKey",
+				"summary": "Delete your API key",
+				"description": "Revokes an API key belonging to the authenticated user.",
+				"tags": [
+					"Authentication"
+				],
+				"parameters": [
+					{
+						"name": "keyId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"minLength": 1
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									]
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Structured API error. See status and code; do not branch on message text.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": [
+										"defined",
+										"code",
+										"status",
+										"message"
+									],
+									"properties": {
+										"defined": {
+											"type": "boolean"
+										},
+										"code": {
+											"type": "string"
+										},
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"data": {}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"apiKey": []
+					},
+					{
+						"bearerAuth": []
+					},
+					{
+						"cookieAuth": []
+					}
+				],
+				"x-codeSamples": [
+					{
+						"lang": "bash",
+						"label": "cURL",
+						"source": "curl --request DELETE \"https://rxresu.me/api/openapi/auth/api-keys/<keyId>\" --header \"x-api-key: <api-key>\""
+					}
+				]
+			}
+		},
+		"/auth/providers": {
+			"get": {
+				"operationId": "listAuthProviders",
+				"summary": "List authentication providers",
+				"description": "Returns a list of all authentication providers enabled on this Reactive Resume instance, along with their display names. Possible providers include password-based credentials, Apple, Google, GitHub, LinkedIn, and custom OAuth. No authentication required.",
+				"tags": [
+					"Authentication"
+				],
+				"parameters": [],
+				"responses": {
+					"200": {
+						"description": "A map of enabled authentication provider identifiers to their display names.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"propertyNames": {
+										"enum": [
+											"credential",
+											"passkey",
+											"apple",
+											"google",
+											"github",
+											"linkedin",
+											"custom"
+										],
+										"type": "string"
+									},
+									"additionalProperties": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "Structured API error. See status and code; do not branch on message text.",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": [
+										"defined",
+										"code",
+										"status",
+										"message"
+									],
+									"properties": {
+										"defined": {
+											"type": "boolean"
+										},
+										"code": {
+											"type": "string"
+										},
+										"status": {
+											"type": "integer"
+										},
+										"message": {
+											"type": "string"
+										},
+										"data": {}
+									}
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"x-codeSamples": [
+					{
+						"lang": "bash",
+						"label": "cURL",
+						"source": "curl \"https://rxresu.me/api/openapi/auth/providers\""
 					}
 				]
 			}
@@ -60274,7 +60666,7 @@
 			"put": {
 				"operationId": "updateResume",
 				"summary": "Update a resume",
-				"description": "Updates one or more fields of a resume identified by its ID. All fields are optional; only provided fields will be updated. Locked resumes cannot be updated. Requires authentication.",
+				"description": "Updates one or more fields of a resume identified by its ID. All fields are optional; only provided fields will be updated. When expectedUpdatedAt is provided, a stale version returns RESUME_VERSION_CONFLICT (409) with data.updatedAt. Locked resumes cannot be updated. Requires authentication.",
 				"tags": [
 					"Resumes"
 				],
@@ -60322,6 +60714,12 @@
 									"showDownloadButtons": {
 										"type": "boolean",
 										"description": "Whether download buttons are shown on the public resume page."
+									},
+									"expectedUpdatedAt": {
+										"type": "string",
+										"format": "date-time",
+										"x-native-type": "date",
+										"description": "If provided, the update only applies when the resume version still matches this timestamp."
 									},
 									"sessionId": {
 										"type": "string",
@@ -64714,6 +65112,66 @@
 												"message": {
 													"type": "string",
 													"default": "Unlock the resume first."
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										},
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": false
+												},
+												"code": {
+													"type": "string"
+												},
+												"status": {
+													"type": "number"
+												},
+												"message": {
+													"type": "string"
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										}
+									]
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "409",
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": true
+												},
+												"code": {
+													"const": "RESUME_VERSION_CONFLICT"
+												},
+												"status": {
+													"const": 409
+												},
+												"message": {
+													"type": "string",
+													"default": "The resume changed after this patch was generated."
 												},
 												"data": {}
 											},
@@ -87057,7 +87515,7 @@
 			"patch": {
 				"operationId": "patchResumeMetadata",
 				"summary": "Update a resume",
-				"description": "Updates one or more fields of a resume identified by its ID. All fields are optional; only provided fields will be updated. Locked resumes cannot be updated. Requires authentication.",
+				"description": "Updates one or more fields of a resume identified by its ID. All fields are optional; only provided fields will be updated. When expectedUpdatedAt is provided, a stale version returns RESUME_VERSION_CONFLICT (409) with data.updatedAt. Locked resumes cannot be updated. Requires authentication.",
 				"tags": [
 					"Resumes"
 				],
@@ -87105,6 +87563,12 @@
 									"showDownloadButtons": {
 										"type": "boolean",
 										"description": "Whether download buttons are shown on the public resume page."
+									},
+									"expectedUpdatedAt": {
+										"type": "string",
+										"format": "date-time",
+										"x-native-type": "date",
+										"description": "If provided, the update only applies when the resume version still matches this timestamp."
 									},
 									"sessionId": {
 										"type": "string",
@@ -91497,6 +91961,66 @@
 												"message": {
 													"type": "string",
 													"default": "Unlock the resume first."
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										},
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": false
+												},
+												"code": {
+													"type": "string"
+												},
+												"status": {
+													"type": "number"
+												},
+												"message": {
+													"type": "string"
+												},
+												"data": {}
+											},
+											"required": [
+												"defined",
+												"code",
+												"status",
+												"message"
+											]
+										}
+									]
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "409",
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{
+											"type": "object",
+											"properties": {
+												"defined": {
+													"const": true
+												},
+												"code": {
+													"const": "RESUME_VERSION_CONFLICT"
+												},
+												"status": {
+													"const": 409
+												},
+												"message": {
+													"type": "string",
+													"default": "The resume changed after this patch was generated."
 												},
 												"data": {}
 											},
