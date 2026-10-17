@@ -6,7 +6,7 @@ import { Platform, View } from "react-native";
 import { getPresentLabel } from "@reactive-resume/schema/resume/dates";
 import { editDates, fromPickerDate, isReversed, pickerDate, readTypedDate, showYearMonth } from "./dates";
 import { resumeFieldFocus } from "@/draft";
-import { Button, Icon, Sheet, Switch, Text, TextField, useTheme } from "@/ui";
+import { Button, Icon, IconButton, Sheet, Switch, Text, TextField, useTheme } from "@/ui";
 
 type MonthInputProps = {
 	label: string;
@@ -73,7 +73,7 @@ function MonthInput({
 					if (next !== undefined) setTyped(null);
 				}}
 				trailing={
-					<Button
+					<IconButton
 						variant="ghost"
 						icon="calendar-dots"
 						label={t`Pick ${label}`}
