@@ -2,7 +2,7 @@ import type { ResumeDraftStore } from "@/draft/types";
 import type { PageMapNode } from "@reactive-resume/pdf/page-map";
 import { useLingui } from "@lingui/react/macro";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AccessibilityInfo, ActivityIndicator, Pressable, ScrollView, View, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -21,6 +21,7 @@ export type ResumePageProps = {
 
 /** The Page body consumes M1's DraftStore contract; shells and draft persistence stay with their owners. */
 export function ResumePage({ id, draft, focused, previewData }: ResumePageProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const theme = useTheme();
 	const { colors, space, size, motion, shadows } = theme;

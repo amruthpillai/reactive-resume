@@ -5,7 +5,7 @@ import type { ComponentRef } from "react";
 import type { ScrollView } from "react-native";
 import { useLingui } from "@lingui/react/macro";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Pressable, View, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector, LegacyScrollView } from "react-native-gesture-handler";
@@ -52,6 +52,7 @@ export function BoardScreen() {
  * Dropping on Closed asks for a reason and Saved → Applied asks what was sent, as the detail screen does.
  */
 function Board() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { motion, radius, shadows, space } = useTheme();
 	const { width: windowWidth } = useWindowDimensions();
@@ -466,6 +467,7 @@ type BoardCardProps = { application: Application; onMove?: (() => void) | undefi
 
 /** Role, company and next step; Open and Move to… (mockup `boardCard`). Without `onMove` it is the drag preview. */
 function BoardCard({ application, onMove }: BoardCardProps) {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const { space } = useTheme();
 	const next = describeNextStep(getNextStep(application), application, i18n.locale);

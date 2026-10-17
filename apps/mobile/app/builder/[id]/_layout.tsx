@@ -1,7 +1,7 @@
 import type { BuilderPane } from "@/routes";
 import type { PaneTab } from "@/shell/builder-chrome";
 import { useLingui } from "@lingui/react/macro";
-import { router, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import PageScreen from "./page";
 import { ResumeConflictSheet, useResumeDraftOwner, useResumeStore } from "@/draft";
 import { DocumentMenu } from "@/features/document-menu";
@@ -30,6 +30,7 @@ function DraftChrome() {
  * the Page screen beside it. Entry and history push inside the editor; Share and the assistant open as modals.
  */
 export default function BuilderLayout() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { id } = useLocalSearchParams<{ id: string }>();
 	// The one owner of the draft for the whole builder: panes, the tablet page and pushed screens only subscribe, so

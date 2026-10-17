@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
-import { router, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { AuthHeader, hostOf } from "@/auth/auth-header";
 import { getFlags, isAllowedServer, toOrigin } from "@/auth/oauth";
@@ -19,6 +19,7 @@ function useTargetServer(): string {
 
 /** AU4 sign-in landing, AU5 waiting for the browser, AU6 sign-ups disabled, AU9 sign-in didn't complete. */
 export default function SignInScreen() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const server = useTargetServer();

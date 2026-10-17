@@ -71,7 +71,7 @@ const mockSources = {
  "@/api/client": "exports.client=globalThis.__m5.client;exports.orpc=globalThis.__m5.orpc;",
  "@/auth/session": "exports.useSession=globalThis.__m5.session;exports.getServer=()=>globalThis.__m5.session().server;",
  "@/features/ai/providers": "exports.useHasAIProvider=globalThis.__m5.providers;exports.AIProviderSetupSheet='AIProviderSetupSheet';",
- "expo-router": "exports.router=globalThis.__m5.router;",
+ "expo-router": "exports.useRouter=()=>globalThis.__m5.router;",
  "@/routes": "exports.routes={application:(id)=>'/applications/'+id,applicationDetails:(id)=>'/applications/'+id+'/details',signIn:()=>'/sign-in'};",
  "expo-document-picker": "exports.getDocumentAsync=globalThis.__m5.pick;",
  "expo-file-system": "exports.File=globalThis.__m5.File;exports.Paths={cache:{toString:()=> 'cache',list:()=>globalThis.__m5.cacheFiles()}};",

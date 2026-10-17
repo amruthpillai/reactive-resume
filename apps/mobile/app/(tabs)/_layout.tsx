@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { useNetworkState } from "expo-network";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { Tabs } from "expo-router/tabs";
 import { View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
@@ -18,6 +18,7 @@ import { useTheme } from "@/ui";
  * under the status bar above every tab. Screens end at the top of the keyboard.
  */
 export default function TabsLayout() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const tablet = useIsTablet();
 	const insets = useSafeAreaInsets();

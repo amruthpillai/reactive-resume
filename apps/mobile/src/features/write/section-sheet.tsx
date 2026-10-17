@@ -1,7 +1,7 @@
 import type { LayoutColumn, WriteSection } from "./model";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { addEntry, edit, requestFocus, useSectionTitle, useSortByDate, useUndoToast, useWriteData } from "./hooks";
 import { deleteCustomSection, findPlacement, getSectionObject, NO_PAGES, placeSection, selectPages } from "./model";
@@ -22,6 +22,7 @@ type Page = "menu" | "columns" | "keywords" | "move";
 
 /** Every web section action: add, sort, move, rename, icon, show, heading, columns, layout, clear or delete. */
 export function SectionSheet({ resumeId, section, open, onClose, onMove }: SectionSheetProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
 	const title = useSectionTitle(section);

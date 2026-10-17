@@ -5,7 +5,7 @@ import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-import { router, Stack, useFocusEffect } from "expo-router";
+import { useRouter, Stack, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, I18nManager, Platform, Pressable, ScrollView, View, useWindowDimensions } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
@@ -145,6 +145,7 @@ type DocumentsLibraryProps = { trashed?: boolean };
 const viewabilityConfig = { itemVisiblePercentThreshold: 1 };
 
 export function DocumentsLibrary({ trashed = false }: DocumentsLibraryProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space, size } = useTheme();
 	const { width } = useWindowDimensions();

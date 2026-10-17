@@ -1,8 +1,8 @@
 import type { CheckIssue } from "./issues";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { ImperativeRouter } from "expo-router";
 import { t } from "@lingui/core/macro";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
 import { Platform } from "react-native";
 import { computeCheck } from "./model";
 import { useResumeStore } from "@/draft";
@@ -37,7 +37,7 @@ export function editWithUndo(id: string, edit: (draft: ResumeData) => void, mess
 	return true;
 }
 
-export function fixIssue(id: string, issue: CheckIssue) {
+export function fixIssue(id: string, issue: CheckIssue, router: ImperativeRouter) {
 	const current = useResumeStore.getState();
 	if (current.document?.id !== id || !current.data || current.locked) return;
 	// Resolve the stable key again: array pointers can move after a reorder or remote edit.

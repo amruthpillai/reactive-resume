@@ -2,7 +2,7 @@ import type { ExportFormat } from "./files";
 import type { ResumeDocument } from "@/draft/types";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { View } from "react-native";
 import { lintResumeForAts } from "@reactive-resume/resume/ats";
@@ -19,6 +19,7 @@ import { Banner, Button, ListRow, Switch, Text, TextField, useTheme } from "@/ui
 
 type DownloadProps = { resume: ResumeDocument; offline: boolean };
 export function DownloadTab({ resume, offline }: DownloadProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const issues = lintResumeForAts(resume.data).findings.length;
