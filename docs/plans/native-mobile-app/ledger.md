@@ -35,10 +35,12 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | REVIEW  | briefs/W5.md; JS-only                                                               |
 | M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | FIXING  | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
-| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | FIXING  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
+| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | REVIEW  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
 | M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | RUNNING | briefs/W4.md; JS-only                                                               |
 | M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
 | M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
+| M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | RUNNING | briefs/W4.md; JS-only; adds letter Page pane                                        |
+| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | RUNNING | briefs/W6.md; JS-only                                                               |
 
 ## Gates
 
@@ -195,3 +197,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M3-T5 review `bf75f9a3`: 5 blockers (selector render loop, rich text reload/caret, iOS short-fragment parse, link edits dropped, cross-resume picture upload). M2-T2 FIXED 4 (draft owner hooks in layouts; panes subscribe) — second review by `b952f6f3`.
 - 2026-10-17: M3-T1 FIXED 5 (`ac8c2ddad`; session probes 4/4); second review by `9fae76e4`. M2-T2 second review: 1 blocker (duplicate conflict sheet in Share screen); fixing.
 - 2026-10-17: M2-T2 merged (FIXED 4 + FIXED 1). The builder and letter layouts own the draft (`useResumeDraftOwner`/`useLetterDraftOwner`); panes subscribe via `useResumeStore()`; one conflict sheet per editor.
+- 2026-10-17: M6-T2 FIXED 6; second review `195d8e34`. Launched M4-T4 and M7-T3. Sign-out cleanup must also clear `reactive-resume:career-draft:<scope>:` (M6-T2) and application notes (M5-T2) — assign to M8-T1 integration if M3-T1's fix round doesn't cover it.
