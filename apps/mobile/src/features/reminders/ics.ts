@@ -1,0 +1,102 @@
+// Ported from apps/web/src/features/applications/ics.ts. Pure: no React Native imports, so Node can run it.
+
+export type CalendarEvent = {
+	uid: string;
+	title: string;
+	start: Date;
+	end: Date;
+	location?: string;
+	description?: string;
+};
+
+// RFC 5545: commas, semicolons and backslashes are escaped, line breaks become \n.
+const escapeText = (value: string) =>
+	value.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+
+const utcStamp = (date: Date) =>
+	date
+		.toISOString()
+		.replace(/[-:]/g, "")
+		.replace(/\.\d{3}/, "");
+
+const octets = (char: string) => {
+	const code = char.codePointAt(0) ?? 0;
+	return code < 0x80 ? 1 : code < 0x800 ? 2 : code < 0x10000 ? 3 : 4;
+};
+
+// RFC 5545 §3.1: lines longer than 75 octets of UTF-8 fold onto continuation lines that start with a space.
+// Folds between code points, so a multi-byte character or surrogate pair is never split.
+function fold(line: string) {
+	const parts: string[] = [];
+	let current = "";
+	let size = 0;
+	for (const char of line) {
+		const width = octets(char);
+		if (size + width > 75) {
+			parts.push(current);
+			current = " ";
+			size = 1;
+		}
+		current += char;
+		size += width;
+	}
+	parts.push(current);
+	return parts.join("\r\n");
+}
+
+/** One or more events as an .ics file's text, in UTC, for "Add to calendar". */
+export function buildIcs(event: CalendarEvent | CalendarEvent[], now = new Date()): string {
+	const events = Array.isArray(event) ? event : [event];
+	const lines = [
+		"BEGIN:VCALENDAR",
+		"VERSION:2.0",
+		"PRODID:-//Reactive Resume//Applications//EN",
+		"CALSCALE:GREGORIAN",
+		...events.flatMap((item) => [
+			"BEGIN:VEVENT",
+			`UID:${item.uid}@reactive-resume`,
+			`DTSTAMP:${utcStamp(now)}`,
+			`DTSTART:${utcStamp(item.start)}`,
+			`DTEND:${utcStamp(item.end)}`,
+			`SUMMARY:${escapeText(item.title)}`,
+			...(item.location ? [`LOCATION:${escapeText(item.location)}`] : []),
+			...(item.description ? [`DESCRIPTION:${escapeText(item.description)}`] : []),
+			"END:VEVENT",
+		]),
+		"END:VCALENDAR",
+	];
+
+	return `${lines.map(fold).join("\r\n")}\r\n`;
+}
+
+/** A file name safe on every platform: "Fieldnote-interview-2026-10-19.ics". */
+export const icsFileName = (company: string, day: string) => `${company}-${day}.ics`.replace(/[^\w.-]+/g, "-");
+
+type InterviewForEvent = {
+	id: string;
+	at: Date | string;
+	durationMinutes: number;
+	location: string;
+	notes: string;
+};
+
+/** An interview as a calendar event. Like web, only the interview's own notes go in the description, not people. */
+export const interviewEvent = (interview: InterviewForEvent, title: string): CalendarEvent => {
+	const start = new Date(interview.at);
+	return {
+		uid: interview.id,
+		title,
+		start,
+		end: new Date(start.getTime() + interview.durationMinutes * 60_000),
+		...(interview.location ? { location: interview.location } : {}),
+		...(interview.notes ? { description: interview.notes } : {}),
+	};
+};
+
+/** A follow-up as a 30-minute calendar event. */
+export const followUpEvent = (applicationId: string, start: Date, title: string): CalendarEvent => ({
+	uid: `follow-up-${applicationId}`,
+	title,
+	start,
+	end: new Date(start.getTime() + 30 * 60_000),
+});

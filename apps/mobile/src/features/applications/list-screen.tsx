@@ -345,7 +345,7 @@ function ApplicationsList() {
 									leading={selecting ? (selectedIds.includes(item.id) ? "check-square" : "square") : undefined}
 									accessibilityHint={selecting ? t`Toggle selection` : t`Open application workspace`}
 									disabled={busy}
-									onPress={() => (selecting ? toggle(item.id) : router.push(routes.application(item.id)))}
+									onPress={() => (selecting ? toggle(item.id) : router.push(routes.applicationDetails(item.id)))}
 									onLongPress={() => {
 										setSelecting(true);
 										toggle(item.id);
