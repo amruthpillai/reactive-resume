@@ -1,21 +1,13 @@
 import { t } from "@lingui/core/macro";
-import { useEffect } from "react";
-import { useSession } from "@/auth/session";
 import { useResumeStore } from "@/draft";
 
-/** Modal panes borrow the builder's draft; they must not close its owner on dismissal. */
+/**
+ * Share and History are builder routes: `app/builder/[id]/_layout.tsx` owns the draft (open, close, conflict sheet).
+ * They only subscribe, and see no document until the owner has loaded this resume.
+ */
 export function useShareDocument(id: string) {
 	const draft = useResumeStore();
-	const session = useSession();
-	const current = draft.document?.id === id;
-	useEffect(() => {
-		if (useResumeStore.getState().document?.id !== id && session.status === "signed-in")
-			void useResumeStore
-				.getState()
-				.open(id)
-				.catch(() => {});
-	}, [id, session.status]);
-	return current ? draft : { ...draft, document: null, data: null };
+	return draft.document?.id === id ? draft : { ...draft, document: null, data: null };
 }
 
 /** flush resolves on offline/conflict failures too; check the resulting status before server actions. */
