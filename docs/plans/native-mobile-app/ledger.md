@@ -40,7 +40,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | MERGED  | briefs/W5.md; JS-only                                                               |
 | M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | RUNNING | briefs/W4.md; JS-only; adds letter Page pane                                        |
-| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | REVIEW  | briefs/W6.md; JS-only                                                               |
+| M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | MERGED  | briefs/W6.md; JS-only                                                               |
 
 ## Gates
 
@@ -211,3 +211,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M4-T2 merged (review `19f1b361` NO BLOCKERS; 16 scenarios incl. 17-template parity). M4-T4 review: 3 blockers (draft after failed flush, link/undo snapshots, restore completion after navigation); builder told to merge base and drop its rich-text port. M4-T1 FIXED 1 to final check.
 - 2026-10-17: M4-T1 merged (review `895bc4ca` NO BLOCKERS after 3 rounds). Coordinator resolved `app/builder/[id]/page.tsx` conflict: template preview (`usePreviewedDraft`) feeds the Assistant page marks, so both captions show.
 - 2026-10-17: M6-T2 merged (review `195d8e34` NO BLOCKERS after 4 rounds; 22 scenarios). Coordinator: DocumentMenu now opens from the builder title (`inChrome`, `25d4d4ff6`); `restoreSession()` is single-flight inside the session transition queue so a cold-link sign-in can't be overwritten by the launch restore (M7-T3 review note 3c).
+- 2026-10-17: M7-T3 merged (review `5e7fbf24` NO BLOCKERS). Coordinator closed the startup/warm-link restore race: `restoreSession()` single-flight in the transition queue and `open.ts` always awaits it (harness adjusted, 22/38/4 pass). Android public-resume App Links deferred (browser for v1). Known: iOS `openBrowserAsync` holds the link queue until the tab closes. M4-T4 FIXED 3 to final check.
