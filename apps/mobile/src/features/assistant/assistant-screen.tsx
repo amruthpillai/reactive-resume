@@ -8,14 +8,16 @@ import { ActivityIndicator, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useThreads } from "./chat";
 import { ChatView, ContextChip } from "./chat-view";
-import { useOpenResumeDraft, useResumeAssistantDocument } from "./document";
+import { useResumeAssistantDocument } from "./document";
 import { publishProposals } from "./proposals";
 import { ModelButton, ModelSheet, ProviderGate, useConversationProvider } from "./provider";
 import { PastConversations } from "./threads";
 import { client } from "@/api/client";
+import { useSession } from "@/auth/session";
+import { useResumeStore } from "@/draft";
 import { useHasAIProvider } from "@/features/ai/providers";
 import { routes } from "@/routes";
-import { Banner, Icon, IconButton, Text, useTheme } from "@/ui";
+import { Banner, Button, Icon, IconButton, Text, useTheme } from "@/ui";
 
 export type AssistantScreenProps = {
 	resumeId: string;
@@ -51,7 +53,8 @@ const belongsTo = (thread: ThreadSummary, document: AssistantDocument) =>
 export function AssistantScreen(props: AssistantScreenProps) {
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
-	const draft = useOpenResumeDraft(props.resumeId);
+	const session = useSession();
+	const loadFailed = useResumeStore((state) => state.document === null && state.status === "error");
 	const document = useResumeAssistantDocument(props.resumeId, props.applicationId);
 	const providers = useHasAIProvider();
 	const threads = useThreads();
@@ -85,110 +88,130 @@ export function AssistantScreen(props: AssistantScreenProps) {
 		setView("thread");
 	};
 
-	// A `?thread=` link shows its chat (and Accept) only for a conversation about this resume; one about another
-	// document opens that document, and an unknown one is refused.
+	// A `?thread=` link shows its chat (and Accept) only once the list positively confirms it is about this resume;
+	// one about another document opens that document, and an unknown one is refused.
 	const linked = selected !== null && selected === props.threadId ? selected : null;
 	const linkedThread = linked ? threads.data?.find((thread) => thread.id === linked) : undefined;
-	// Only a positively verified link counts: a list that is loading or failed keeps the chat away.
-	const link = !linked
-		? "ok"
-		: threads.error && !threads.data
-			? "failed"
-			: !threads.data || !document
-				? "pending"
-				: !linkedThread
-					? "missing"
-					: belongsTo(linkedThread, document)
-						? "ok"
-						: "elsewhere";
+	const link =
+		!linked || !threads.data || !document
+			? "ok"
+			: !linkedThread
+				? "missing"
+				: belongsTo(linkedThread, document)
+					? "ok"
+					: "elsewhere";
 	const openLinked = useEffectEvent((thread: ThreadSummary) => openElsewhere(thread));
 	useEffect(() => {
 		if (link === "elsewhere" && linkedThread) openLinked(linkedThread);
 	}, [link, linkedThread]);
 
-	const body = draft.failed ? (
-		<View style={{ padding: space.s4 }}>
-			<Banner
-				tone="danger"
-				message={t`Resume could not be loaded.`}
-				action={{ label: t`Retry`, onPress: draft.retry }}
-			/>
-		</View>
-	) : !document || link === "elsewhere" ? (
-		<View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: space.s2 }}>
+	const waiting = (message: string, action?: { label: string; onPress: () => void }) => (
+		<View style={{ flex: 1, alignItems: "center", justifyContent: "center", gap: space.s2, padding: space.s4 }}>
 			<ActivityIndicator />
-			<Text color="ink2">
-				<Trans>Opening the resume…</Trans>
+			<Text color="ink2" align="center">
+				{message}
 			</Text>
+			{action ? <Button variant="link" label={action.label} onPress={action.onPress} /> : null}
 		</View>
-	) : link === "missing" && view !== "history" ? (
-		<View style={{ padding: space.s4 }}>
-			<Banner
-				tone="warn"
-				message={t`This conversation couldn't be opened.`}
-				action={{ label: t`New conversation`, onPress: () => setSelected("new") }}
-			/>
-		</View>
-	) : view === "history" ? (
-		<PastConversations
-			threads={threads.data ?? []}
-			isMine={(thread) => belongsTo(thread, document)}
-			currentId={threadId}
-			onOpen={openThread}
-			onDeleted={(id) => {
-				if (id === threadId) setSelected("new");
-			}}
-		/>
-	) : (
-		<ChatView
-			key={draftKey}
-			threadId={threadId}
-			createThread={async () =>
-				(
-					await client.agent.threads.start({
-						resumeId: document.id,
-						...(provider ? { aiProviderId: provider.id } : {}),
-					})
-				).id
-			}
-			onThreadCreated={(id) => {
-				setSelected(id);
-				setPrepare(false);
-				void threads.refetch();
-			}}
-			context={{ ...context, ...(document.posting ? { applicationId: document.posting.id } : {}) }}
-			document={document}
-			connection={label}
-			privacy={disclosure(t, document, context, label)}
-			placeholder={t`Ask, or describe a change…`}
-			assistantName={t`Assistant`}
-			disabled={document.locked}
-			prompt={ask}
-			onPromptSent={() => setAsk(null)}
-			onSwitchModel={() => setModelOpen(true)}
-			chips={
-				<>
-					{context.document ? (
-						<ContextChip
-							icon="file-text"
-							label={document.name}
-							removeLabel={t`Don't send ${document.name}`}
-							onRemove={() => setContext({ ...context, document: false })}
-						/>
-					) : null}
-					{context.posting && document.posting ? (
-						<ContextChip
-							icon="briefcase"
-							label={t`${document.posting.company} posting`}
-							removeLabel={t`Don't send ${document.posting.company} posting`}
-							onRemove={() => setContext({ ...context, posting: false })}
-						/>
-					) : null}
-				</>
-			}
-			empty={(send) => <Suggestions document={document} prepare={prepare} onPick={send} />}
-		/>
 	);
+	const notice = (tone: "warn" | "danger", message: string, action: { label: string; onPress: () => void }) => (
+		<View style={{ padding: space.s4 }}>
+			<Banner tone={tone} message={message} action={action} />
+		</View>
+	);
+
+	// Chat (and Accept) mounts only after every check passes; each other state says what it waits for or offers a way on.
+	const body =
+		session.status !== "signed-in" ? (
+			notice("warn", t`Sign in to use the Assistant.`, {
+				label: t`Sign in`,
+				onPress: () => router.push(routes.signIn()),
+			})
+		) : loadFailed ? (
+			notice("danger", t`Resume could not be loaded.`, {
+				label: t`Retry`,
+				onPress: () =>
+					void useResumeStore
+						.getState()
+						.open(props.resumeId)
+						.catch(() => undefined),
+			})
+		) : !document ? (
+			waiting(t`Opening the resume…`, {
+				label: t`Open resume`,
+				onPress: () => router.replace(routes.builder(props.resumeId)),
+			})
+		) : threads.isError ? (
+			notice("danger", t`Conversations couldn't load.`, { label: t`Retry`, onPress: () => void threads.refetch() })
+		) : !threads.data ? (
+			waiting(t`Loading conversations…`)
+		) : link === "elsewhere" ? (
+			waiting(t`Opening the conversation…`)
+		) : link === "missing" && view !== "history" ? (
+			notice("warn", t`This conversation couldn't be opened.`, {
+				label: t`New conversation`,
+				onPress: () => setSelected("new"),
+			})
+		) : view === "history" ? (
+			<PastConversations
+				threads={threads.data ?? []}
+				isMine={(thread) => belongsTo(thread, document)}
+				currentId={threadId}
+				onOpen={openThread}
+				onDeleted={(id) => {
+					if (id === threadId) setSelected("new");
+				}}
+			/>
+		) : (
+			<ChatView
+				key={draftKey}
+				threadId={threadId}
+				createThread={async () =>
+					(
+						await client.agent.threads.start({
+							resumeId: document.id,
+							...(provider ? { aiProviderId: provider.id } : {}),
+						})
+					).id
+				}
+				onThreadCreated={(id) => {
+					setSelected(id);
+					setPrepare(false);
+					void threads.refetch();
+				}}
+				context={{ ...context, ...(document.posting ? { applicationId: document.posting.id } : {}) }}
+				document={document}
+				connection={label}
+				privacy={disclosure(t, document, context, label)}
+				placeholder={t`Ask, or describe a change…`}
+				assistantName={t`Assistant`}
+				disabled={document.locked}
+				prompt={ask}
+				onPromptSent={() => setAsk(null)}
+				onSwitchModel={() => setModelOpen(true)}
+				chips={
+					<>
+						{context.document ? (
+							<ContextChip
+								icon="file-text"
+								label={document.name}
+								removeLabel={t`Don't send ${document.name}`}
+								onRemove={() => setContext({ ...context, document: false })}
+							/>
+						) : null}
+						{context.posting && document.posting ? (
+							<ContextChip
+								icon="briefcase"
+								label={t`${document.posting.company} posting`}
+								removeLabel={t`Don't send ${document.posting.company} posting`}
+								onRemove={() => setContext({ ...context, posting: false })}
+							/>
+						) : null}
+					</>
+				}
+				empty={(send) => <Suggestions document={document} prepare={prepare} onPick={send} />}
+			/>
+		);
 
 	const gate = (
 		<ProviderGate

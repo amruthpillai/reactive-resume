@@ -14,7 +14,7 @@ const { lastAssistantMessageIsCompleteWithToolCalls } = await import(pathToFileU
 const { sendAgentMessage, resumeAgentStream } = await import(
 	pathToFileURL(`${mobile}/src/features/assistant/transport.ts`).href
 );
-const { recoverRun } = await import(pathToFileURL(`${mobile}/src/features/assistant/recovery.ts`).href);
+const { createRequestLane, recoverRun } = await import(pathToFileURL(`${mobile}/src/features/assistant/recovery.ts`).href);
 
 const sse = (chunk) => `data: ${JSON.stringify(chunk)}\n\n`;
 const reply = (id, words) => [
@@ -277,6 +277,81 @@ const scenarios = {
 			if (at === "reload") assert.deepEqual(calls, { reload: 1, apply: 0, resume: 0 });
 			else assert.deepEqual(calls, { reload: 1, apply: 1, resume: 1 });
 		}
+	},
+
+	async "one request at a time: no recovery during a send, a new send waits for the old one, Stop aborts all"() {
+		let open = 0;
+		let most = 0;
+		const track = (it, signal) => {
+			open++;
+			most = Math.max(most, open);
+			let closed = false;
+			const close = () => {
+				if (!closed) open--;
+				closed = true;
+			};
+			signal?.addEventListener("abort", close);
+			return {
+				next: async () => {
+					const result = await it.next().catch((error) => {
+						close();
+						throw error;
+					});
+					if (result.done) close();
+					return result;
+				},
+				return: async () => {
+					close();
+					return it.return();
+				},
+			};
+		};
+		let sends = 0;
+		const { chat, calls } = harness({
+			send: (_input, options) =>
+				track(
+					++sends === 1
+						? iterator(reply("a1", ["First"]).slice(0, 4).map(sse), { hang: true, signal: options.signal })
+						: iterator(reply("a2", ["Second"]).map(sse)),
+					options.signal,
+				),
+			resume: (options) =>
+				track(iterator(reply("a3", ["Resumed"]).slice(0, 4).map(sse), { hang: true, signal: options.signal }), options.signal),
+		});
+		const lane = createRequestLane({
+			stop: () => chat.stop(),
+			busy: () => chat.status === "submitted" || chat.status === "streaming",
+		});
+		const first = lane.run(() => chat.sendMessage({ text: "One" }));
+		await new Promise((resolve) => setTimeout(resolve, 30));
+		assert.equal(chat.status, "streaming");
+
+		// A thread refresh that says a run is active must not start recovery while the send is open.
+		let recovered = 0;
+		await lane.runIfIdle(async () => {
+			recovered++;
+			await chat.resumeStream();
+		});
+		assert.equal(recovered, 0);
+		assert.equal(calls.resume, 0);
+
+		// A new send cancels and awaits the first before its own request starts.
+		await lane.run(() => chat.sendMessage({ text: "Two" }));
+		await first;
+		assert.equal(calls.send[0].options.signal.aborted, true);
+		assert.equal(calls.send.length, 2);
+		assert.equal(textOf(chat.messages.at(-1)), "Second");
+
+		// Recovery now runs (idle), and Stop aborts it.
+		const following = lane.runIfIdle(() => chat.resumeStream());
+		await new Promise((resolve) => setTimeout(resolve, 30));
+		assert.equal(calls.resume, 1);
+		assert.equal(lane.busy(), true);
+		await lane.cancel();
+		await following;
+		assert.equal(calls.resumeOptions[0].signal.aborted, true);
+		assert.equal(lane.busy(), false);
+		assert.equal(most, 1, "two requests were never open at once");
 	},
 
 	async "stop cancels a resumed stream: the abort signal reaches agent.messages.resume"() {

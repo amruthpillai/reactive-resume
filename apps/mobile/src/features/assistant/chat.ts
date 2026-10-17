@@ -2,8 +2,8 @@
 import type { MessageContext } from "./transport";
 import type { AgentMessagesApi } from "./transport";
 import type { RouterOutput } from "@/api/client";
-import type { ChatTransport, FileUIPart, UIMessage } from "ai";
-import { useChat } from "@ai-sdk/react";
+import type { FileUIPart, UIMessage } from "ai";
+import { Chat, useChat } from "@ai-sdk/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { lastAssistantMessageIsCompleteWithToolCalls } from "ai";
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
@@ -124,36 +124,37 @@ type UseAssistantChatInput = {
 /** Running replies are picked up by the caller (chat-view.tsx `recoverRun`), not on mount. */
 export function useAssistantChat({ threadId, initialMessages, context, onFinish }: UseAssistantChatInput) {
 	const contextRef = useRef(context);
-	// What the chat shows now: a resumed run keeps the parts of the message from before it.
-	const messagesRef = useRef(initialMessages);
-
-	const transport = useMemo<ChatTransport<UIMessage>>(
-		() => ({
-			// The server's resumable stream replays the reply from its start, so the client starts the message over.
-			resumeStreamIsReplay: true,
-			sendMessages: (options) => sendAgentMessage(agentMessages, threadId, contextRef.current, options),
-			reconnectToStream: ({ abortSignal }) =>
-				resumeAgentStream(agentMessages, threadId, {
-					signal: abortSignal,
-					messageById: (id) => messagesRef.current.find((message) => message.id === id),
-				}),
-		}),
-		[threadId],
-	);
-
-	const chat = useChat<UIMessage>({
-		id: threadId,
-		messages: initialMessages,
-		transport,
-		throttle: 50,
-		sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
-		onFinish,
-	});
+	const onFinishRef = useRef(onFinish);
 	useLayoutEffect(() => {
 		contextRef.current = context;
-		messagesRef.current = chat.messages;
+		onFinishRef.current = onFinish;
 	});
-	return chat;
+
+	// One Chat per conversation (the caller keys it by thread), so callers can hold it outside render (chat-view.tsx).
+	const instance = useMemo(() => {
+		const chat: Chat<UIMessage> = new Chat<UIMessage>({
+			id: threadId,
+			messages: initialMessages,
+			transport: {
+				// The server's resumable stream replays the reply from its start, so the client starts the message over.
+				resumeStreamIsReplay: true,
+				sendMessages: (options) => sendAgentMessage(agentMessages, threadId, contextRef.current, options),
+				// A resumed run keeps the parts of the message from before it, as the chat shows them now.
+				reconnectToStream: ({ abortSignal }) =>
+					resumeAgentStream(agentMessages, threadId, {
+						signal: abortSignal,
+						messageById: (id) => chat.messages.find((message) => message.id === id),
+					}),
+			},
+			sendAutomaticallyWhen: lastAssistantMessageIsCompleteWithToolCalls,
+			onFinish: () => onFinishRef.current(),
+		});
+		return chat;
+		// The initial messages are read once, when the chat is created.
+		// oxlint-disable-next-line react-hooks/exhaustive-deps -- the chat takes its messages once; it's keyed by thread
+	}, [threadId]);
+
+	return { ...useChat<UIMessage>({ chat: instance, throttle: 50 }), instance };
 }
 
 /**
