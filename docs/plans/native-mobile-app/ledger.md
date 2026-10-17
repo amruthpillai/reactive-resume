@@ -39,8 +39,11 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | RUNNING | briefs/W4.md; JS-only; adds letter Page pane                                        |
+| M4-T4 Cover letter editor                     | Claude Code | 644a0597 | mobile/M4-T4      | MERGED  | briefs/W4.md; JS-only; adds letter Page pane                                        |
 | M7-T3 Deep links                              | Codex       | ab19cf73 | mobile/M7-T3      | MERGED  | briefs/W6.md; JS-only                                                               |
+| M8-T1 A11y, RTL, tablet, keyboard             | Claude Code | e2da8526 | mobile/M8-T1      | RUNNING | briefs/W6.md; static audit, device pass by coordinator                              |
+| M8-T2 Store readiness                         | Codex       | 8b80adcc | mobile/M8-T2      | FIXING  | briefs/W6.md; permissions re-audit after base merge                                 |
+| Smoke iOS integrated pass                     | Claude Code | e63bec3f | mobile/smoke-ios  | RUNNING | dev client, local server, parity script                                             |
 
 ## Gates
 
@@ -212,3 +215,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M4-T1 merged (review `895bc4ca` NO BLOCKERS after 3 rounds). Coordinator resolved `app/builder/[id]/page.tsx` conflict: template preview (`usePreviewedDraft`) feeds the Assistant page marks, so both captions show.
 - 2026-10-17: M6-T2 merged (review `195d8e34` NO BLOCKERS after 4 rounds; 22 scenarios). Coordinator: DocumentMenu now opens from the builder title (`inChrome`, `25d4d4ff6`); `restoreSession()` is single-flight inside the session transition queue so a cold-link sign-in can't be overwritten by the launch restore (M7-T3 review note 3c).
 - 2026-10-17: M7-T3 merged (review `5e7fbf24` NO BLOCKERS). Coordinator closed the startup/warm-link restore race: `restoreSession()` single-flight in the transition queue and `open.ts` always awaits it (harness adjusted, 22/38/4 pass). Android public-resume App Links deferred (browser for v1). Known: iOS `openBrowserAsync` holds the link queue until the tab closes. M4-T4 FIXED 3 to final check.
+- 2026-10-17: M4-T4 merged (review `35b943fb` NO BLOCKERS after 3 rounds; 26 scenarios, plain `node`). Letters reuse `features/write/rich-text`. Catalogs extracted + seeded from web (2419 msgids; 729 mobile-only strings untranslated, to fill after the last merges). Launched M8-T1 (`e2da8526`, static a11y/RTL/tablet/keyboard audit) and iOS smoke pass (`e63bec3f`, wks_192e530b79720619). M8-T2 built (`45971cf04`); sent back to re-audit permissions after merging base (voice uses mic).

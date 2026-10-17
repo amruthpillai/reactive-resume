@@ -1,7 +1,7 @@
-import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
+import { useLocalSearchParams } from "expo-router";
+import { LetterWrite } from "@/features/letters/write";
 
 export default function LetterWriteScreen() {
-	const { t } = useLingui();
-	return <RouteStub title={t`Write`} />;
+	const { id } = useLocalSearchParams<{ id: string }>();
+	return <LetterWrite id={id} />;
 }
