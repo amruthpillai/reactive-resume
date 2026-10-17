@@ -2,6 +2,7 @@ import type { CheckIssue } from "./issues";
 import type { WritingNote } from "./review";
 import type { Proposal } from "@reactive-resume/resume/proposals";
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import type { Dispatch, SetStateAction } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
@@ -21,16 +22,23 @@ import { useResumeStore } from "@/draft";
 import { AIProviderSetupSheet, useHasAIProvider } from "@/features/ai/providers";
 import { Banner, Button, Card, SelectSheet, Skeleton, Text, useTheme } from "@/ui";
 
-type WritingProps = { id: string; data: ResumeData; issues: CheckIssue[]; offline: boolean };
-type Review = { summary: string; strengths: string[]; proposals: Proposal[]; notes: WritingNote[] };
+type WritingProps = {
+	id: string;
+	data: ResumeData;
+	issues: CheckIssue[];
+	offline: boolean;
+	locked: boolean;
+	review: WritingReview | null;
+	setReview: Dispatch<SetStateAction<WritingReview | null>>;
+};
+export type WritingReview = { summary: string; strengths: string[]; proposals: Proposal[]; notes: WritingNote[] };
 
-export function Writing({ id, data, issues, offline }: WritingProps) {
+export function Writing({ id, data, issues, offline, locked, review, setReview }: WritingProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const providers = useHasAIProvider();
 	const [setup, setSetup] = useState(false);
 	const [providerId, setProviderId] = useState<string | null>(null);
-	const [review, setReview] = useState<Review | null>(null);
 	const [pending, setPending] = useState(false);
 	const [error, setError] = useState(false);
 	const controller = useRef<AbortController | null>(null);
@@ -181,11 +189,7 @@ export function Writing({ id, data, issues, offline }: WritingProps) {
 									<Text color="warnText">{t`This passage changed. Run the review again.`}</Text>
 								) : state === "pending" ? (
 									<View style={{ flexDirection: "row", gap: space.s2, flexWrap: "wrap" }}>
-										<Button
-											label={t`Accept`}
-											disabled={useResumeStore.getState().locked}
-											onPress={() => accept(proposal)}
-										/>
+										<Button label={t`Accept`} disabled={locked} onPress={() => accept(proposal)} />
 										<Button
 											variant="ghost"
 											label={t`Reject`}

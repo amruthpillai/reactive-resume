@@ -1,4 +1,5 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -7,6 +8,7 @@ import { editWithUndo } from "./actions";
 import { addSkill, checkStateOf, matchPosting } from "./model";
 import { client } from "@/api/client";
 import { useResumeStore } from "@/draft";
+import { resume } from "@/draft/runtime";
 import { useApplication, useApplications, useInvalidateApplications } from "@/features/applications/queries";
 import { routes } from "@/routes";
 import { Banner, Button, Card, Chip, SelectSheet, Sheet, Skeleton, Text, TextArea, useTheme } from "@/ui";
@@ -42,15 +44,19 @@ export function JobMatch({ id, data, applicationId, locked, offline, onTerm }: J
 		setLinking(true);
 		setFailed(false);
 		try {
+			await useResumeStore.getState().flush();
+			const ready = useResumeStore.getState();
+			if (request.signal.aborted || ready.document?.id !== id || ready.locked) return;
+			if (ready.conflict || ready.status === "error" || ready.status === "offline") throw new Error("Draft not saved");
 			await client.documents.linkApplication(
 				{ type: "resume", id, applicationId: applicationId || null },
 				{ signal: request.signal },
 			);
-			const store = useResumeStore.getState();
-			if (!request.signal.aborted && store.document?.id === id)
-				store.updateDocument((document) => {
-					document.applicationId = applicationId || null;
-				});
+			if (!request.signal.aborted && useResumeStore.getState().document?.id === id) {
+				await resume.refresh();
+				// Apply a metadata refresh deferred by the posting field's keyboard, without queuing a save.
+				await resume.blur();
+			}
 			void invalidate();
 		} catch {
 			if (!request.signal.aborted) {
@@ -127,7 +133,12 @@ export function JobMatch({ id, data, applicationId, locked, offline, onTerm }: J
 			) : (
 				match && (
 					<>
-						<Text variant="title">{t`${match.found.length} of ${match.total} posting terms covered`}</Text>
+						<Text variant="title">
+							{plural(match.total, {
+								one: `${match.found.length} of # posting term covered`,
+								other: `${match.found.length} of # posting terms covered`,
+							})}
+						</Text>
 						<Text color="ink3">{t`Job match isn't part of the readability score.`}</Text>
 						{match.total === 0 && <Text>{t`No recognisable terms in this posting.`}</Text>}
 						<Text variant="label">{t`Not in your resume · add only if true`}</Text>
@@ -167,7 +178,12 @@ export function JobMatch({ id, data, applicationId, locked, offline, onTerm }: J
 			<Sheet open={!!open} onClose={() => setTerm(null)} title={open?.label}>
 				{open && (
 					<View style={{ padding: space.s4, gap: space.s3 }}>
-						<Text>{t`“${open.label}” appears ${open.jdCount} times in the posting. If it's part of your experience, add it where it belongs.`}</Text>
+						<Text>
+							{plural(open.jdCount, {
+								one: `“${open.label}” appears once in the posting. If it's part of your experience, add it where it belongs.`,
+								other: `“${open.label}” appears # times in the posting. If it's part of your experience, add it where it belongs.`,
+							})}
+						</Text>
 						<Button
 							label={t`Add to Skills`}
 							disabled={locked}

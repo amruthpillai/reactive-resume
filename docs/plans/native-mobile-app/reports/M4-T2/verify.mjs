@@ -14,14 +14,15 @@ const calls = [], toasts = [], files = new Map();
 const tag = (parts, ...values) => parts.reduce((text, part, index) => text + part + (values[index] ?? ""), "");
 let active;
 const env = {
- tag, store: null,
+ tag, plural: (n, options) => (options[new Intl.PluralRules(env.locale ?? "en").select(n)] ?? options.other).replaceAll("#",String(n)), store: null, session: {status:"signed-in",server:"https://fixture.invalid"},
  providers: { hasAIProvider: true, isLoading: false, error: null, usableProviders: [{id: "provider", label: "Fixture", model: "fixture"}], defaultProvider: {id: "provider", label: "Fixture", model: "fixture"} },
  useState(initial) { const owner = active, index = owner.cursor++; if (!(index in owner.state)) owner.state[index] = typeof initial === "function" ? initial() : initial; return [owner.state[index], (value) => { owner.state[index] = typeof value === "function" ? value(owner.state[index]) : value; }]; },
+ useMemo(fn, deps) { const owner = active, index = owner.cursor++; const old = owner.state[index]; if (!old || deps.some((value, n) => !Object.is(value, old.deps[n]))) owner.state[index] = {deps, value: fn()}; return owner.state[index].value; },
  useRef(initial) { const owner = active, index = owner.cursor++; return owner.state[index] ??= { current: initial }; },
  useEffect(effect, deps) { const owner = active, index = owner.cursor++; const old = owner.state[index]; if (!old || deps.some((value, n) => !Object.is(value, old.deps[n]))) owner.effects.push(() => { old?.cleanup?.(); owner.state[index] = {deps, cleanup: effect()}; }); },
  network: { isConnected: true, isInternetReachable: true }, status: 200,
  response: { score: 90, document: { pageCount: 1, truncated: false }, checks: [], findings: [], fullText: "David Kowalski\nExperience" },
- router: { push: (value) => calls.push(["route", value]) },
+ router: { push: (value) => calls.push(["route", value]), replace: (value) => calls.push(["replace", value]) },
  rest: async (path, init) => { calls.push(["rest", path, init]); if (env.pdfHolding) await env.pdfHolding; return { ok: env.status === 200, status: env.status, json: async () => env.response }; },
  File: class {
   constructor(...parts) { this.uri = parts.join("/"); }
@@ -35,23 +36,30 @@ const env = {
 };
 globalThis.__check = env;
 globalThis.FormData = env.FormData;
-env.client = { ai: { atsReview: async (input, options) => { calls.push(["review", input, options]); if (env.reviewHolding) await env.reviewHolding; return {summary: "Fixture review", strengths: [], suggestions: []}; } } };
+env.client = { documents: { linkApplication: async (...args) => env.linkApplication(...args) }, ai: { atsReview: async (input, options) => { calls.push(["review", input, options]); if (env.reviewHolding) await env.reviewHolding; return {summary: "Fixture review", strengths: [], suggestions: []}; } } };
 const mocks = {
- "@lingui/core/macro": "export const t = globalThis.__check.tag;",
- "@/draft": "export const useResumeStore = {getState:()=>globalThis.__check.store.getState(),subscribe:(fn)=>globalThis.__check.store.subscribe(fn)};",
+ "@/draft/runtime": "export const resume={refresh:(...args)=>globalThis.__check.runtime.refresh(...args),blur:(...args)=>globalThis.__check.runtime.blur(...args)};",
+ "@/features/applications/queries": "export const useApplications=()=>({data:[],isPending:false,isError:false});export const useApplication=()=>({data:null,isPending:false,isError:false});export const useInvalidateApplications=()=>async()=>{};",
+ "@lingui/core/macro": "export const t = globalThis.__check.tag;export const plural=globalThis.__check.plural;",
+ "@/draft": "export function useResumeStore(selector){return selector(globalThis.__check.store.getState());}useResumeStore.getState=()=>globalThis.__check.store.getState();useResumeStore.subscribe=(fn)=>globalThis.__check.store.subscribe(fn);",
  "@/ui": "export const showToast=(value)=>{globalThis.__check.toasts.push(value);return globalThis.__check.toasts.length;};export const dismissToast=(id)=>globalThis.__check.calls.push(['dismiss',id]);",
  "expo-router": "export const router=globalThis.__check.router;",
- "react-native": "export const Platform={OS:'ios'};export const View='View';",
- "react": "export const useState=globalThis.__check.useState;export const useRef=globalThis.__check.useRef;export const useEffect=globalThis.__check.useEffect;export const useCallback=(fn)=>fn;export const useDebugValue=()=>{};export const useSyncExternalStore=()=>{};export default {useCallback,useDebugValue,useSyncExternalStore};",
+ "react-native": "export const Platform={OS:'ios'};export const View='View';export const ScrollView='ScrollView';export const RefreshControl='RefreshControl';export const Pressable='Pressable';export const I18nManager={isRTL:false};export const AccessibilityInfo={};export const Animated={createAnimatedComponent:(value)=>value};",
+ "react": "export const useState=globalThis.__check.useState;export const useDeferredValue=(value)=>value;export const useRef=globalThis.__check.useRef;export const useEffect=globalThis.__check.useEffect;export const useMemo=globalThis.__check.useMemo;export const useCallback=(fn)=>fn;export const useDebugValue=()=>{};export const useSyncExternalStore=()=>{};export default {useCallback,useDebugValue,useSyncExternalStore};",
  "react/jsx-runtime": "export const Fragment='Fragment';export const jsx=(type,props)=>({type,props});export const jsxs=jsx;",
  "@lingui/react/macro": "export const useLingui=()=>({t:globalThis.__check.tag});",
  "@/features/ai/providers": "export const useHasAIProvider=()=>globalThis.__check.providers;export const AIProviderSetupSheet='AIProviderSetupSheet';",
  "expo-haptics": "export const NotificationFeedbackType={Success:'success'};export const notificationAsync=async()=>{};",
+ "expo-image": "export const Image='Image';",
  "expo-file-system": "export const File=globalThis.__check.File;export const Paths={cache:'cache'};",
- "expo-network": "export const getNetworkStateAsync=async()=>globalThis.__check.network;",
+ "expo-network": "export const getNetworkStateAsync=async()=>globalThis.__check.network;export const useNetworkState=()=>globalThis.__check.network;",
+ "react-native-reanimated": "const animation={duration:()=>animation,reduceMotion:()=>animation};export const FadeOut=animation;export const LinearTransition=animation;export const ReduceMotion={System:'system'};export default {View:'Animated.View'};",
+ "react-native-svg": "export default 'Svg';export const Circle='Circle';",
+ "@/preview/usePreview": "export const usePreview=()=>({result:null});",
+ "@/auth/session": "export const useSession=()=>globalThis.__check.session;",
  "@/api/client": "export const rest=(...args)=>globalThis.__check.rest(...args);export const client=globalThis.__check.client;",
 };
-mocks["@/ui"] += ["Banner", "Button", "Card", "SelectSheet", "Skeleton", "Text"].map((name) => `export const ${name}='${name}';`).join("") + "export const useTheme=()=>({space:{s1:4,s2:8,s3:12,s12:48}});";
+mocks["@/ui"] += ["Banner", "Button", "Card", "SelectSheet", "Skeleton", "Text", "Chip", "Sheet", "TextArea", "EmptyState", "Segmented", "IconButton", "ListRow"].map((name) => `export const ${name}='${name}';`).join("") + "export const useTheme=()=>({space:{s1:4,s2:8,s3:12,s12:48},colors:{},motion:{d2:200}});";
 env.calls = calls; env.toasts = toasts;
 const path = (relative) => JSON.stringify(join(root, relative));
 let checks = 0;
@@ -61,7 +69,9 @@ try {
    export * from ${path("apps/mobile/src/features/check/model.ts")};
    export * from ${path("apps/mobile/src/features/check/review.ts")};
    export * from ${path("apps/mobile/src/features/check/actions.ts")};
-   export * from ${path("apps/mobile/src/features/check/pdf-check.ts")};
+   export * from ${path("apps/mobile/src/features/ats-checker/check.ts")};
+   export { CheckScreen } from ${path("apps/mobile/src/features/check/screen.tsx")};
+   export { JobMatch } from ${path("apps/mobile/src/features/check/job-match.tsx")};
    export { Writing } from ${path("apps/mobile/src/features/check/writing.tsx")};
    export { Parser } from ${path("apps/mobile/src/features/check/parser.tsx")};
    export { buildIssues as webIssues } from ${path("apps/web/src/features/resume/editor/check/issues.ts")};
@@ -76,6 +86,8 @@ try {
   plugins: [{ name: "native-transports", setup(build) {
    build.onResolve({ filter: /.*/ }, ({ path: name }) => {
     if (name in mocks) return { path: name, namespace: "mock" };
+    if (name === "@/features/ats-checker/check") return { path: join(root,"apps/mobile/src/features/ats-checker/check.ts") };
+    if (name === "@/features/ats-checker/messages") return { path: join(root,"apps/mobile/src/features/ats-checker/messages.ts") };
     if (name === "@/routes") return { path: join(root, "apps/mobile/src/routes.ts") };
     if (name === "@/libs/resume/section") return { path: join(root, "apps/web/src/libs/resume/section.tsx") };
    });
@@ -213,7 +225,7 @@ try {
  const settle = () => new Promise((resolve) => setImmediate(resolve));
  await draft.store.getState().open("resume");
  await scenario("writing UI is opt-in; double tap single-flight; cancellation ignores late result", async () => {
-  const owner = component(code.Writing), props = {id: "resume", data: draft.store.getState().data, issues: code.computeCheck(draft.store.getState().data).issues, offline: false};
+  const owner = component(code.Writing), props = {id: "resume", data: draft.store.getState().data, issues: code.computeCheck(draft.store.getState().data).issues, offline: false, locked:false, review:null, setReview:(value)=>{props.review=typeof value==="function"?value(props.review):value;}};
   const count = calls.filter((call) => call[0] === "review").length;
   let tree = render(owner, props); assert.equal(calls.filter((call) => call[0] === "review").length, count);
   let release; env.reviewHolding = new Promise((resolve) => { release = resolve; });
@@ -225,8 +237,43 @@ try {
   env.providers.hasAIProvider = false; tree = render(owner, props); button(tree, "Connect an AI provider");
   assert.equal(calls.filter((call) => call[0] === "review").length, count + 1); env.providers.hasAIProvider = true; stop(owner);
  });
+ await scenario("Job term and ignored-issue counts use singular and plural branches", () => {
+  const owner=component(code.JobMatch),props={id:"resume",data:sample(),applicationId:null,locked:false,offline:false,onTerm(){}};
+  let tree=render(owner,props);find(tree,(node)=>node.type==="TextArea").props.onChangeText("Figma");tree=render(owner,props);find(tree,(node)=>node.type==="Chip"&&node.props.label==="Figma").props.onPress();tree=render(owner,props);
+  assert(find(tree,(node)=>node.type==="Text"&&typeof node.props.children==="string"&&node.props.children.includes("appears once in the posting")));
+  find(tree,(node)=>node.type==="TextArea").props.onChangeText("Figma Figma");tree=render(owner,props);assert(find(tree,(node)=>node.type==="Text"&&typeof node.props.children==="string"&&node.props.children.includes("appears 2 times")));stop(owner);
+  const issue=code.computeCheck(env.store.getState().data).issues[0];env.store.getState().update((data)=>{code.checkStateOf(data).ignored=[issue.key];},{newStep:true});
+  const screen=component(code.CheckScreen);tree=render(screen,{id:"resume"});button(tree,"Show 1 ignored issue again");stop(screen);
+ });
+ await scenario("link flushes pending text, adopts server metadata without a synthetic save, next edit has fresh CAS", async () => {
+  let remote = {id: "resume", isLocked: false, version: 1, applicationId: null, data: sample()};
+  const storage = new Map(); const events = []; let focused = false;
+  const linked = code.createDraftStore({kind:"resume",delay:500,read:async()=>{events.push("read");return structuredClone(remote);},data:(doc)=>doc.data,withData:(doc,data)=>({...doc,data}),merge:(saved,_submitted,current)=>({...current,version:saved.version}),matches:(a,b)=>JSON.stringify({data:a.data,applicationId:a.applicationId})===JSON.stringify({data:b.data,applicationId:b.applicationId}),version:(doc)=>doc.version,parse:(doc)=>doc,save:async(doc,baseline)=>{events.push("save");if(baseline.version!==remote.version){const error=new Error("RESUME_VERSION_CONFLICT");error.conflict=true;throw error;}remote={...structuredClone(doc),version:remote.version+1};return structuredClone(remote);},copy:async()=>{},isConflict:(error)=>error.conflict}, {storage:{getItemSync:(key)=>storage.get(key)??null,setItemSync:(key,value)=>storage.set(key,value),removeItemSync:(key)=>storage.delete(key),getAllKeysSync:()=>[...storage.keys()]},scope:async()=>"link-fixture",online:()=>true,focused:()=>focused});
+  env.store=linked.store;env.runtime=linked;
+  env.linkApplication=async(input)=>{events.push("link");remote={...remote,version:remote.version+1,applicationId:input.applicationId};};
+  await linked.store.getState().open("resume"); events.length=0;
+  linked.store.getState().update((data)=>{data.basics.name="Pending text";},{newStep:true});
+  const owner=component(code.JobMatch),props={id:"resume",data:linked.store.getState().data,applicationId:null,locked:false,offline:false,onTerm(){}};
+  let tree=render(owner,props); const select=find(tree,(node)=>node.type==="SelectSheet"&&node.props.label==="Linked application"); assert(select);
+  select.props.onChange("application"); await settle(); await settle();
+  await linked.store.getState().flush(); assert.equal(linked.store.getState().conflict,null);
+  assert.deepEqual(events,["save","link","read"]); assert.equal(linked.store.getState().document.applicationId,"application"); assert.equal(linked.store.getState().data.basics.name,"Pending text");
+  await linked.store.getState().flush(); assert.equal(events.filter((event)=>event==="save").length,1); assert.equal(linked.store.getState().conflict,null); assert(linked.store.getState().canUndo);
+  linked.store.getState().update((data)=>{data.basics.name="Next text";},{newStep:true}); await linked.store.getState().flush(); assert.equal(remote.data.basics.name,"Next text"); assert.equal(linked.store.getState().conflict,null);
+  focused=true;tree=render(owner,{...props,data:linked.store.getState().data});find(tree,(node)=>node.type==="SelectSheet").props.onChange("");await settle();await settle();assert.equal(linked.store.getState().document.applicationId,null);assert.equal(linked.store.getState().conflict,null);
+  stop(owner);await linked.store.getState().close();linked.suspend();env.store=draft.store;
+ });
+ await scenario("Check screen retains Writing results across tab switches and delegates failed-open retry to layout navigation", () => {
+  const owner=component(code.CheckScreen),props={id:"resume"};
+  let tree=render(owner,props);find(tree,(node)=>node.type==="Segmented").props.onChange("writing");tree=render(owner,props);
+  const child=find(tree,(node)=>node.type===code.Writing);assert(child);child.props.setReview({summary:"Retained review",strengths:[],proposals:[],notes:[]});
+  tree=render(owner,props);find(tree,(node)=>node.type==="Segmented").props.onChange("match");tree=render(owner,props);assert(!find(tree,(node)=>node.type===code.Writing));
+  find(tree,(node)=>node.type==="Segmented").props.onChange("writing");tree=render(owner,props);assert.equal(find(tree,(node)=>node.type===code.Writing).props.review.summary,"Retained review");
+  const previous=env.store.getState();env.store.setState({document:null,data:null,status:"error",open:()=>{throw new Error("Pane independently opened draft");}});tree=render(owner,props);
+  const empty=find(tree,(node)=>node.type==="EmptyState");assert(empty);empty.props.action.onPress();assert.deepEqual(calls.slice(-2),[["replace","/documents"],["route","/builder/resume/check"]]);env.store.setState(previous);stop(owner);
+ });
  await scenario("parser UI opt-in, cancellation, cached lens switching, temporary-file cleanup", async () => {
-  env.response = { score: 90, document: { pageCount: 1, truncated: false }, checks: [], findings: [], fullText: "Fixture extracted text" }; env.status = 200;
+  env.response = { score: 90, document: { pageCount: 1, truncated: false }, checks: [], findings: [], fullText: "Fixture extracted text", applicableChecks:1,passedChecks:1,skippedChecks:1 }; env.status = 200;
   const owner = component(code.Parser); const pdf = new TextEncoder().encode("%PDF-1.7\nparser fixture");
   const props = {pdf, optedIn: false, visible: true, onOptIn() {}, offline: false, issues: [], onSelect() {}, refreshVersion: 0};
   let tree = render(owner, props); const count = calls.filter((call) => call[0] === "rest").length; await settle(); assert.equal(calls.filter((call) => call[0] === "rest").length, count);
@@ -234,6 +281,7 @@ try {
   render(owner, props); await settle(); tree = render(owner, props); button(tree, "Cancel").onPress(); release(); await settle(); env.pdfHolding = null;
   tree = render(owner, props); assert(!find(tree, (node) => node.props?.value?.fullText === "Fixture extracted text")); find(tree, (node) => node.type === "Banner" && node.props.action?.label === "Retry").props.action.onPress();
   render(owner, props); await settle(); tree = render(owner, props); assert(find(tree, (node) => node.props?.value?.fullText === "Fixture extracted text"));
+  const parsed=find(tree,(node)=>node.props?.value?.fullText==="Fixture extracted text");const parsedOwner=component(parsed.type);const reportTree=render(parsedOwner,parsed.props);assert(find(reportTree,(node)=>node.type==="Text"&&node.props.children==="1 check could not run."));assert(find(reportTree,(node)=>node.type==="Text"&&node.props.children==="1 of 1 exported PDF check passes."));stop(parsedOwner);
   const after = calls.filter((call) => call[0] === "rest").length;
   props.visible = false; render(owner, props); props.visible = true; render(owner, props); await settle(); assert.equal(calls.filter((call) => call[0] === "rest").length, after);
   assert(![...files.keys()].some((key) => key.startsWith("cache/check-parser-")));

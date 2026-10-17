@@ -7,8 +7,8 @@ import { buildMarkdown } from "@reactive-resume/resume/markdown";
 import { generateId } from "@reactive-resume/utils/string";
 import { buildIssues } from "./issues";
 
-export function computeCheck(data: ResumeData) {
-	const report = lintResumeForAts(data);
+export function computeCheck(data: ResumeData, now = new Date()) {
+	const report = lintResumeForAts(data, { now });
 	return { report, issues: buildIssues(report, data) };
 }
 

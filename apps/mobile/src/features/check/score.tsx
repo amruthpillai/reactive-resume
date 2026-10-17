@@ -1,4 +1,5 @@
 import type { AtsReport } from "@reactive-resume/resume/ats";
+import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useEffect, useState } from "react";
 import { AccessibilityInfo, Animated, View } from "react-native";
@@ -70,10 +71,11 @@ export function Score({ report }: ScoreProps) {
 							? t`Mostly readable`
 							: t`Hard for software to read`}
 				</Text>
-				<Text
-					variant="callout"
-					color="ink2"
-				>{t`${report.passedRules} of ${report.totalRules} checks pass. ${report.findings.length} things to review.`}</Text>
+				<Text variant="callout" color="ink2">
+					{t`${report.passedRules} of ${report.totalRules} checks pass.` +
+						" " +
+						plural(report.findings.length, { one: "# thing to review.", other: "# things to review." })}
+				</Text>
 				<Text variant="caption" color="ink3">{t`Live · updates as you edit`}</Text>
 			</View>
 		</Card>

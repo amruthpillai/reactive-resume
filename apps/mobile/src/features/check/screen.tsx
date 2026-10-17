@@ -1,8 +1,10 @@
 import type { CheckIssue } from "./issues";
+import type { WritingReview } from "./writing";
+import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useNetworkState } from "expo-network";
 import { router } from "expo-router";
-import { useDeferredValue, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import Animated, { FadeOut, LinearTransition, ReduceMotion } from "react-native-reanimated";
 import { ATS_CATEGORIES } from "@reactive-resume/resume/ats";
@@ -23,23 +25,30 @@ export function CheckScreen({ id }: CheckScreenProps) {
 	const { t } = useLingui();
 	const { colors, space, motion } = useTheme();
 	// Subscribe only. Builder layout owns open/close, save/conflict state and undo history.
-	const draft = useResumeStore();
+	const current = useResumeStore((state) => state.document?.id === id);
+	const sourceData = useResumeStore((state) => (state.document?.id === id ? state.data : null));
+	const status = useResumeStore((state) => state.status);
+	const locked = useResumeStore((state) => state.locked);
+	const applicationId = useResumeStore((state) =>
+		state.document?.id === id ? (state.document.applicationId ?? null) : null,
+	);
 	const session = useSession();
 	const network = useNetworkState();
-	const data = useDeferredValue(draft.document?.id === id ? draft.data : null);
-	const [refreshVersion, setRefreshVersion] = useState(0);
-	const check = data ? computeCheck(data) : null;
+	const data = useDeferredValue(sourceData);
+	const [refreshVersion, setRefreshVersion] = useState(() => Date.now());
+	const check = useMemo(() => (data ? computeCheck(data, new Date(refreshVersion)) : null), [data, refreshVersion]);
+	const [writingReview, setWritingReview] = useState<WritingReview | null>(null);
 	const [tab, setTab] = useState<"issues" | "match" | "writing">("issues");
 	const [selected, setSelected] = useState<string | null>(null);
 	const [showPage, setShowPage] = useState(false);
 	const [highlightTerm, setHighlightTerm] = useState<string | null>(null);
 	const [initialLens, setInitialLens] = useState<"person" | "parser">("person");
 	const [category, setCategory] = useState<string | null>(null);
-	const offline = draft.status === "offline" || network.isConnected === false || network.isInternetReachable === false;
-	if (session.status !== "signed-in" || !data || !check || draft.document?.id !== id)
+	const offline = status === "offline" || network.isConnected === false || network.isInternetReachable === false;
+	if (session.status !== "signed-in" || !data || !check || !current)
 		return (
 			<View style={{ padding: space.s4, gap: space.s3 }}>
-				{session.status === "loading" || (session.status === "signed-in" && draft.status !== "error") ? (
+				{session.status === "loading" || (session.status === "signed-in" && status !== "error") ? (
 					<Skeleton height={space.s12} />
 				) : (
 					<EmptyState
@@ -52,8 +61,11 @@ export function CheckScreen({ id }: CheckScreenProps) {
 						action={{
 							label: session.status === "signed-in" ? t`Retry` : t`Sign in again`,
 							onPress: () => {
-								if (session.status === "signed-in") void draft.open(id).catch(() => {});
-								else router.push(routes.signIn());
+								if (session.status === "signed-in") {
+									// Replace the builder route so its layout, the sole draft owner, retries opening it.
+									router.replace(routes.documents());
+									router.push(routes.builder(id, "check"));
+								} else router.push(routes.signIn());
 							},
 						}}
 					/>
@@ -75,7 +87,7 @@ export function CheckScreen({ id }: CheckScreenProps) {
 				<RefreshControl
 					refreshing={false}
 					onRefresh={() => {
-						setRefreshVersion((value) => value + 1);
+						setRefreshVersion(Date.now());
 					}}
 					tintColor={colors.accent}
 				/>
@@ -87,9 +99,7 @@ export function CheckScreen({ id }: CheckScreenProps) {
 					message={t`You're offline. Issues and Job match still work; reconnect for Writing and PDF checks.`}
 				/>
 			)}
-			{draft.locked && (
-				<Banner tone="warn" message={t`This resume is locked. Checks are available; editing is disabled.`} />
-			)}
+			{locked && <Banner tone="warn" message={t`This resume is locked. Checks are available; editing is disabled.`} />}
 			<Score report={check.report} />
 			<Segmented
 				label={t`Check views`}
@@ -116,7 +126,7 @@ export function CheckScreen({ id }: CheckScreenProps) {
 							setSelected(key);
 							setHighlightTerm(null);
 						}}
-						locked={draft.locked}
+						locked={locked}
 						highlightTerm={highlightTerm}
 						initialLens={initialLens}
 						refreshVersion={refreshVersion}
@@ -140,13 +150,13 @@ export function CheckScreen({ id }: CheckScreenProps) {
 								</Text>
 								<Text variant="title">{issue.title}</Text>
 								<Text color="ink2">{issue.body}</Text>
-								<Button label={issue.fix.label} disabled={draft.locked} onPress={() => fixIssue(id, issue)} />
+								<Button label={issue.fix.label} disabled={locked} onPress={() => fixIssue(id, issue)} />
 								<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
 									<Button variant="ghost" label={t`Show on page`} onPress={() => onPage(issue)} />
 									<Button
 										variant="ghost"
 										label={issue.keepLabel ? t`Keep` : t`Ignore`}
-										disabled={draft.locked}
+										disabled={locked}
 										onPress={() =>
 											editWithUndo(
 												id,
@@ -186,8 +196,11 @@ export function CheckScreen({ id }: CheckScreenProps) {
 					{check.report.ignored.length > 0 && (
 						<Button
 							variant="ghost"
-							label={t`Show ${check.report.ignored.length} ignored issues again`}
-							disabled={draft.locked}
+							label={plural(check.report.ignored.length, {
+								one: "Show # ignored issue again",
+								other: "Show # ignored issues again",
+							})}
+							disabled={locked}
 							onPress={() =>
 								editWithUndo(
 									id,
@@ -214,8 +227,8 @@ export function CheckScreen({ id }: CheckScreenProps) {
 				<JobMatch
 					id={id}
 					data={data}
-					applicationId={draft.document.applicationId ?? null}
-					locked={draft.locked}
+					applicationId={applicationId}
+					locked={locked}
 					offline={offline}
 					onTerm={(term) => {
 						setSelected(null);
@@ -225,7 +238,15 @@ export function CheckScreen({ id }: CheckScreenProps) {
 					}}
 				/>
 			) : (
-				<Writing id={id} data={data} issues={check.issues} offline={offline} />
+				<Writing
+					id={id}
+					data={data}
+					issues={check.issues}
+					offline={offline}
+					locked={locked}
+					review={writingReview}
+					setReview={setWritingReview}
+				/>
 			)}
 		</ScrollView>
 	);

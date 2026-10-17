@@ -1,11 +1,12 @@
 import type { CheckIssue } from "./issues";
-import type { AtsResult } from "./pdf-check";
+import type { AtsResult } from "@/features/ats-checker/check";
+import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { File, Paths } from "expo-file-system";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
-import { runAtsCheck } from "./pdf-check";
-import { getPdfFindingMessage } from "./pdf-messages";
+import { runAtsCheck } from "@/features/ats-checker/check";
+import { getPdfFindingMessage } from "@/features/ats-checker/messages";
 import { Banner, Button, Card, Skeleton, Text, useTheme } from "@/ui";
 
 type ParserProps = {
@@ -134,10 +135,17 @@ function Parsed({ value, stale, issues, onSelect }: ParsedProps) {
 		<Card style={{ gap: space.s3 }}>
 			{stale && <Text color="warnText">{t`Previous PDF result. It may not match your current draft.`}</Text>}
 			<Text variant="caption">{t`Extracted from the PDF on the page · reading order`}</Text>
-			<Text>{t`${value.report.passedChecks} of ${value.report.applicableChecks} exported PDF checks pass.`}</Text>
+			<Text>
+				{plural(value.report.applicableChecks, {
+					one: `${value.report.passedChecks} of # exported PDF check passes.`,
+					other: `${value.report.passedChecks} of # exported PDF checks pass.`,
+				})}
+			</Text>
 			{value.report.document.truncated && <Banner tone="warn" message={t`Only the first 30 pages were checked.`} />}
 			{value.report.skippedChecks > 0 && (
-				<Text color="ink3">{t`${value.report.skippedChecks} checks could not run.`}</Text>
+				<Text color="ink3">
+					{plural(value.report.skippedChecks, { one: "# check could not run.", other: "# checks could not run." })}
+				</Text>
 			)}
 			{!value.fullText.trim() ? (
 				<Banner tone="warn" message={t`This PDF has no text layer, so a parser reads nothing from it.`} />
