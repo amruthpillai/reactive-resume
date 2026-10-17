@@ -1,5 +1,6 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { exportJWK, generateKeyPair, SignJWT } from "jose";
+import * as schema from "@reactive-resume/db/schema";
 
 const mocks = vi.hoisted(() => ({ getJwks: vi.fn(), select: vi.fn() }));
 vi.mock("better-auth", async (importOriginal) => ({
@@ -19,6 +20,36 @@ const publicJwk = await exportJWK(publicKey);
 beforeEach(() => {
 	mocks.select.mockReset();
 	mocks.getJwks.mockResolvedValue({ keys: [{ ...publicJwk, kid: "test", alg: "EdDSA" }] });
+});
+
+it("only allows offline_access tokens to outlive an expired browser session", async () => {
+	mocks.select.mockReturnValue({
+		from: (table: unknown) => ({
+			where: () => ({
+				limit: async () => {
+					if (table === schema.oauthClient) return [{ disabled: false }];
+					if (table === schema.oauthConsent) return [{ id: "current", scopes: ["api:read", "offline_access"] }];
+					// Expired sessions are excluded by the session query's expiresAt predicate.
+					return [];
+				},
+			}),
+		}),
+	});
+	for (const scope of ["api:read", "api:read offline_access"]) {
+		const token = await new SignJWT({ azp: "client", sid: "expired-session", scope, rr_grant_id: "current" })
+			.setProtectedHeader({ alg: "EdDSA", kid: "test" })
+			.setIssuer("https://resume.example/api/auth")
+			.setAudience("https://resume.example/mcp")
+			.setSubject("owner")
+			.setIssuedAt()
+			.setExpirationTime("5m")
+			.sign(privateKey);
+		if (scope === "api:read") {
+			await expect(verifyOAuthToken(token)).rejects.toThrow("OAuth session has ended.");
+		} else {
+			await expect(verifyOAuthToken(token)).resolves.toMatchObject({ sub: "owner", scope });
+		}
+	}
 });
 
 it.each([

@@ -60,7 +60,10 @@ export async function verifyOAuthToken(token: string): Promise<JWTPayload> {
 		.limit(1);
 	if (!client || client.disabled)
 		throw new APIError("UNAUTHORIZED", { message: "OAuth client is disabled or deleted." });
-	if (payload.sid !== undefined) {
+	const scopes = typeof payload.scope === "string" ? payload.scope.split(/\s+/).filter(Boolean) : [];
+	// offline_access grants outlive the browser session. After refresh revocation or in-app sign-out,
+	// issued JWT access tokens remain valid for up to 1 h; consent revocation blocks them immediately below.
+	if (payload.sid !== undefined && !scopes.includes("offline_access")) {
 		if (typeof payload.sid !== "string") throw new APIError("UNAUTHORIZED", { message: "Invalid token session." });
 		const [session] = await db
 			.select()
@@ -80,7 +83,6 @@ export async function verifyOAuthToken(token: string): Promise<JWTPayload> {
 		.from(schema.oauthConsent)
 		.where(and(eq(schema.oauthConsent.clientId, payload.azp), eq(schema.oauthConsent.userId, payload.sub)))
 		.limit(1);
-	const scopes = typeof payload.scope === "string" ? payload.scope.split(/\s+/).filter(Boolean) : [];
 	if (
 		!consent ||
 		(payload.rr_grant_id !== undefined
