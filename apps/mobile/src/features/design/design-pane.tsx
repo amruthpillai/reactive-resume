@@ -1,0 +1,327 @@
+import type { AdvancedId } from "./advanced";
+import type { PickerSpec } from "./picker";
+import type { Template } from "@reactive-resume/schema/templates";
+import { useLingui } from "@lingui/react/macro";
+import { useState } from "react";
+import { I18nManager, Pressable, View, useWindowDimensions } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import Animated, { LinearTransition, SlideInLeft, SlideInRight } from "react-native-reanimated";
+import { AdvancedGroup, AdvancedPageScreen, ColoursScreen, StylesScreen, TypographyScreen } from "./advanced";
+import { designWrite, useDesignDraft } from "./draft";
+import { LayoutScreen } from "./layout-screen";
+import { Picker } from "./picker";
+import { templateName } from "./presets";
+import { ColorGroup, PageGroup, TypeGroup } from "./style-groups";
+import { TemplateGroup } from "./template-group";
+import { client } from "@/api/client";
+import { useSession } from "@/auth/session";
+import { ResumeConflictSheet, useResumeStore } from "@/draft";
+import { nativeEnvironment } from "@/draft/native";
+import { ResumePage } from "@/preview/page";
+import { Banner, IconButton, Skeleton, Text, showToast, useTheme } from "@/ui";
+
+type Tab = "template" | "type" | "color" | "page";
+type Entry = { kind: "advanced"; id: AdvancedId } | { kind: "picker"; spec: PickerSpec };
+
+/** M2-T2's `useIsTablet()` rule (window ≥ 700 pt). Swap for it once the shell merges. */
+const TABLET_WIDTH = 700;
+
+/**
+ * Design. Phone: the page in the top half and a sheet with Template · Type · Color · Page tabs; the grabber raises
+ * it to full height. Advanced sits at the end of Page and pushes sub-screens inside the sheet. Tablet: the same
+ * sheet content as the panel, beside the page the builder layout draws.
+ */
+export function DesignPane({ id }: { id: string }) {
+	const { t } = useLingui();
+	const { colors, fonts, radius, space, size, motion, shadows } = useTheme();
+	const window = useWindowDimensions();
+	const tablet = window.width >= TABLET_WIDTH;
+	const draft = useDesignDraft(id);
+	const session = useSession();
+	const [tab, setTab] = useState<Tab>("template");
+	const [expanded, setExpanded] = useState(false);
+	const [advancedOpen, setAdvancedOpen] = useState(false);
+	const [stack, setStack] = useState<Entry[]>([]);
+	const [preview, setPreview] = useState<Template | null>(null);
+	const [scrollLocked, setScrollLocked] = useState(false);
+	const [height, setHeight] = useState(window.height / 2);
+	const [panelWidth, setPanelWidth] = useState(window.width);
+	const { data, locked } = draft;
+	const disabled = locked || !data;
+	const full = tablet || expanded;
+	const top = stack.at(-1);
+
+	const push = (entry: Entry) => {
+		setExpanded(true);
+		setStack((value) => [...value, entry]);
+	};
+	const pop = () => setStack((value) => value.slice(0, -1));
+	const pick = (spec: PickerSpec) => push({ kind: "picker", spec });
+	const apply = (template: Template) => {
+		setPreview(null);
+		if (!data || data.metadata.template === template) return;
+		designWrite(
+			"template",
+			(value) => {
+				value.metadata.template = template;
+			},
+			true,
+		);
+		showToast({
+			message: t`Template changed to ${templateName(template)}`,
+			action: { label: t`Undo`, onPress: () => useResumeStore.getState().undo() },
+		});
+	};
+	const unlock = async () => {
+		await client.documents.setLocked({ type: "resume", id, isLocked: false });
+		await useResumeStore.getState().open(id);
+	};
+
+	const titles: Record<AdvancedId, string> = {
+		typography: t`Typography`,
+		colours: t`Design`,
+		page: t`Page`,
+		layout: t`Layout`,
+		styles: t`Custom Styles`,
+	};
+	const tabs: { id: Tab; label: string }[] = [
+		{ id: "template", label: t`Template` },
+		{ id: "type", label: t`Type` },
+		{ id: "color", label: t`Color` },
+		{ id: "page", label: t`Page` },
+	];
+
+	const body = () => {
+		if (!data) {
+			return (
+				<View style={{ gap: space.s3 }} accessibilityLabel={t`Loading`}>
+					<Skeleton height={space.s8} width="60%" />
+					<Skeleton height={space.s12 * 3} />
+					<Skeleton height={space.s12} />
+				</View>
+			);
+		}
+		const props = { data, write: designWrite, disabled, pick };
+		if (top?.kind === "advanced") {
+			if (top.id === "typography") return <TypographyScreen {...props} />;
+			if (top.id === "colours") return <ColoursScreen {...props} />;
+			if (top.id === "page") return <AdvancedPageScreen {...props} />;
+			if (top.id === "layout") return <LayoutScreen {...props} onDragChange={setScrollLocked} />;
+			return <StylesScreen {...props} />;
+		}
+		if (tab === "template")
+			return (
+				<TemplateGroup
+					{...props}
+					layout={full ? "grid" : "strip"}
+					columns={tablet ? 2 : 3}
+					width={panelWidth - space.s4 * 2}
+					preview={preview}
+					onPreview={setPreview}
+					onApply={apply}
+				/>
+			);
+		if (tab === "type")
+			return (
+				<TypeGroup
+					{...props}
+					onCustomFonts={() => {
+						setTab("page");
+						setAdvancedOpen(true);
+						push({ kind: "advanced", id: "typography" });
+					}}
+				/>
+			);
+		if (tab === "color") return <ColorGroup {...props} />;
+		return (
+			<View style={{ gap: space.s6 }}>
+				<PageGroup {...props} />
+				<View style={{ height: 1, backgroundColor: colors.line }} />
+				<AdvancedGroup
+					{...props}
+					open={advancedOpen}
+					onOpenChange={setAdvancedOpen}
+					onPush={(advanced) => push({ kind: "advanced", id: advanced })}
+				/>
+			</View>
+		);
+	};
+
+	const banner =
+		session.status === "signed-out" || session.status === "expired" ? (
+			<Banner tone="warn" message={t`Sign in to view this resume.`} />
+		) : draft.status === "error" && !draft.document ? (
+			<Banner
+				tone="danger"
+				message={t`Resume could not be loaded.`}
+				action={{ label: t`Retry`, onPress: () => void draft.open(id).catch(() => undefined) }}
+			/>
+		) : locked ? (
+			<Banner
+				tone="info"
+				icon="lock"
+				message={t`This resume is locked. Unlock it first to make changes.`}
+				action={{
+					label: t`Unlock`,
+					onPress: () => void unlock().catch(() => showToast({ message: t`Couldn't unlock the resume.` })),
+				}}
+			/>
+		) : null;
+
+	const sheet = (
+		<View style={{ flex: 1 }} onLayout={(event) => setPanelWidth(event.nativeEvent.layout.width)}>
+			{tablet ? null : (
+				<Pressable
+					accessibilityRole="button"
+					accessibilityLabel={expanded ? t`Lower the design sheet` : t`Raise the design sheet`}
+					accessibilityState={{ expanded }}
+					onPress={() => {
+						setExpanded(!expanded);
+						if (expanded) setStack([]);
+					}}
+					style={{ height: space.s5 + space.s0, alignItems: "center", justifyContent: "center" }}
+				>
+					<View
+						style={{
+							width: size.grabber.width,
+							height: size.grabber.height,
+							borderRadius: radius.rPill,
+							backgroundColor: colors.line2,
+						}}
+					/>
+				</Pressable>
+			)}
+			{top ? (
+				<View style={{ flexDirection: "row", alignItems: "center", minHeight: size.hit, paddingEnd: space.s4 }}>
+					<IconButton icon="caret-left" label={t`Back`} onPress={pop} />
+					<Text variant="title" numberOfLines={1} style={{ flex: 1 }}>
+						{top.kind === "advanced" ? titles[top.id] : top.spec.title}
+					</Text>
+				</View>
+			) : (
+				<View
+					accessibilityRole="tablist"
+					style={{ flexDirection: "row", borderBottomWidth: 1, borderBottomColor: colors.line }}
+				>
+					{tabs.map((item) => {
+						const active = item.id === tab;
+						return (
+							<Pressable
+								key={item.id}
+								accessibilityRole="tab"
+								accessibilityState={{ selected: active }}
+								onPress={() => setTab(item.id)}
+								style={{
+									flex: 1,
+									minHeight: size.hit,
+									alignItems: "center",
+									justifyContent: "center",
+									borderBottomWidth: 2,
+									borderBottomColor: active ? colors.accent : "transparent",
+								}}
+							>
+								<Text variant="callout" color={active ? "accentText" : "ink2"} style={{ fontFamily: fonts.ui[600] }}>
+									{item.label}
+								</Text>
+							</Pressable>
+						);
+					})}
+				</View>
+			)}
+			{banner}
+			{top?.kind === "picker" ? (
+				<Animated.View
+					key={`picker-${stack.length}`}
+					entering={(I18nManager.isRTL ? SlideInLeft : SlideInRight).duration(motion.d3)}
+					style={{ flex: 1, paddingTop: space.s2 }}
+				>
+					<Picker {...top.spec} onDone={pop} />
+				</Animated.View>
+			) : (
+				<Animated.View
+					key={top ? `advanced-${stack.length}` : "root"}
+					{...(top ? { entering: (I18nManager.isRTL ? SlideInLeft : SlideInRight).duration(motion.d3) } : {})}
+					style={{ flex: 1 }}
+				>
+					<KeyboardAwareScrollView
+						scrollEnabled={!scrollLocked}
+						keyboardShouldPersistTaps="handled"
+						contentContainerStyle={{ padding: space.s4, paddingBottom: space.s12 }}
+					>
+						{body()}
+					</KeyboardAwareScrollView>
+				</Animated.View>
+			)}
+		</View>
+	);
+
+	if (tablet) return <View style={{ flex: 1, backgroundColor: colors.surface }}>{sheet}</View>;
+
+	const pageData = data && preview ? { ...data, metadata: { ...data.metadata, template: preview } } : data;
+	return (
+		<View
+			style={{ flex: 1, backgroundColor: colors.sunken }}
+			onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
+		>
+			<View style={{ height: height / 2 + space.s3 }}>
+				<ResumePage
+					id={id}
+					draft={{ ...draft, data: pageData, locked: locked || !!preview }}
+					focused={nativeEnvironment.focused()}
+				/>
+				{preview ? (
+					<Pressable
+						accessibilityRole="button"
+						onPress={() => apply(preview)}
+						style={{
+							position: "absolute",
+							top: space.s3,
+							alignSelf: "center",
+							flexDirection: "row",
+							gap: space.s2,
+							paddingHorizontal: space.s4,
+							minHeight: size.hit - space.s2,
+							alignItems: "center",
+							borderRadius: radius.rPill,
+							backgroundColor: colors.ink,
+						}}
+					>
+						<Text variant="callout" color="bg">
+							{t`Previewing ${templateName(preview)} · tap to apply`}
+						</Text>
+					</Pressable>
+				) : null}
+			</View>
+			{expanded ? (
+				<Pressable
+					accessibilityRole="button"
+					accessibilityLabel={t`Lower the design sheet`}
+					onPress={() => {
+						setExpanded(false);
+						setStack([]);
+					}}
+					style={{ position: "absolute", top: 0, start: 0, end: 0, bottom: 0, backgroundColor: colors.scrimSheet }}
+				/>
+			) : null}
+			<Animated.View
+				layout={LinearTransition.duration(motion.d3)}
+				accessibilityLabel={t`Design`}
+				style={{
+					position: "absolute",
+					start: 0,
+					end: 0,
+					bottom: 0,
+					height: expanded ? height - space.s3 : height / 2,
+					backgroundColor: colors.surface,
+					borderTopStartRadius: radius.r3xl,
+					borderTopEndRadius: radius.r3xl,
+					boxShadow: shadows.e3.boxShadow,
+					overflow: "hidden",
+				}}
+			>
+				{sheet}
+			</Animated.View>
+			<ResumeConflictSheet />
+		</View>
+	);
+}
