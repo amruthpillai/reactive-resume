@@ -31,8 +31,9 @@ const config: ExpoConfig = {
 				category: ["BROWSABLE", "DEFAULT"],
 				data: [
 					{ scheme: "https", host, path: "/auth/native-callback" },
-					// `/$username/$slug` is left to M7-T3: a two-segment pattern would also capture web-only routes.
 					{ scheme: "https", host, pathPrefix: "/builder/" },
+					// Android simple-glob also matches deeper paths; +native-intent allows only known screens.
+					{ scheme: "https", host, pathPattern: "/.*/.*" },
 				],
 			},
 		],
