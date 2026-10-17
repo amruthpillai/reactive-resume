@@ -42,3 +42,6 @@ This freezes README §1 with the spike results. Agents must not re-open these de
   - Agents never read `.p8` or `.p12` files.
   - EAS Submit uses an App Store Connect **Team** API key (`.p8` plus Key ID plus Issuer ID). The owner registers it with `eas credentials` or provides it through `eas.json` `ascApiKeyPath`, kept outside the repo.
   - The iOS distribution certificate and provisioning profile are managed by EAS.
+- **App Store Connect Team API key (owner, 2026-10-17):** Key ID `A3C24C84AK`, Issuer ID `2f5e6721-4612-4d0f-9921-db83f3c51053`, role **Developer**. These IDs are not secret; the `.p8` file stays with the owner, outside the repo.
+  - The Developer role can upload builds and manage internal TestFlight testing.
+  - External TestFlight testing and creating the App Store app record need **App Manager** or **Admin**. Either the owner creates the app record by hand once (then set `ascAppId` in `eas.json`), or the key's role is raised to App Manager.

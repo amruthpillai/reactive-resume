@@ -116,3 +116,14 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
   - Follow-ups: it depends on Better Auth 1.7.7 internals, so keep its test running on upgrades. The new auth procedures are not rate-limited.
 - 2026-10-17: SVa done (916 tests passed); Claude review `d37bc6ee` running.
 - 2026-10-17: The size budget is a soft target, not enforced (owner). EAS project linked by the owner (`5830280e-…`, account `amruthpillai`). Recorded in `decisions.md`; the stray root `app.json` was removed.
+- 2026-10-17: SVa and SVc merged; `docs/spec.json` regenerated.
+  - Checks on the integration branch: typecheck (auth, api, env, server, web), auth tests 33/33, api tests 392 passed / 69 skipped (database suites need test DB env), and `turbo boundaries` all pass.
+  - The SVa review flagged edits to `apps/web/src/features/settings/account/{auth-hooks.ts,security.tsx}` outside Ownership.
+    - `auth-hooks.ts` was required: its `.exhaustive()` match fails to compile once `AuthProvider` includes `apple`.
+    - `security.tsx` adds Apple to the linked-accounts list.
+    - The coordinator accepts both after the fact, as direct consequences of the approved `AuthProvider` change.
+  - SVa follow-ups:
+    - native Apple ID-token sign-in later needs the `audience` set to `me.rxresu.app`
+    - the AASA path patterns are broad
+    - a retry link on the same domain may not reopen the app through Universal Links
+- 2026-10-17: Owner supplied the App Store Connect Team key IDs (role Developer); see `decisions.md`.
