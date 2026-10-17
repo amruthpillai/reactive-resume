@@ -58,7 +58,7 @@ function RootStack() {
 				<Stack.Screen name="new" options={{ presentation: "modal", title: t`New` }} />
 				<Stack.Screen name="search" options={{ presentation: "modal", title: t`Search` }} />
 				<Stack.Screen name="ats-checker" options={{ title: t`ATS checker` }} />
-				<Stack.Screen name="applications/[id]/[tab]" options={{ title: t`Application` }} />
+				<Stack.Screen name="applications/[id]" options={{ headerShown: false, title: t`Application` }} />
 				<Stack.Screen name="r/[username]/[slug]" options={{ title: t`Resume` }} />
 			</Stack>
 		</ThemeProvider>
