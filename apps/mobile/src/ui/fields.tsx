@@ -378,6 +378,8 @@ function Segment({ label, icon, active, onPress }: SegmentProps) {
 			accessibilityLabel={label}
 			accessibilityState={{ checked: active }}
 			onPress={onPress}
+			// 40 pt inside the track's 2 pt padding; the slop brings the target to 44.
+			hitSlop={{ top: space.s0, bottom: space.s0 }}
 			style={{
 				flex: 1,
 				minHeight: size.hit - space.s0 * 2,

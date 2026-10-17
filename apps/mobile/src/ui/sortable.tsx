@@ -18,8 +18,8 @@ export type SortableItemInfo<T> = {
 	 * Move up / Move down for screen readers. Spread both onto the row's accessible element; dragging is not
 	 * available to them.
 	 */
-	accessibilityActions: AccessibilityActionInfo[];
-	onAccessibilityAction: (event: AccessibilityActionEvent) => void;
+	accessibilityActions?: AccessibilityActionInfo[] | undefined;
+	onAccessibilityAction?: ((event: AccessibilityActionEvent) => void) | undefined;
 };
 
 export type SortableListProps<T> = {

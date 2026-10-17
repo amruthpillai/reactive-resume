@@ -1,8 +1,8 @@
 // Dev-only gallery of every src/ui primitive, for design review and screenshots. Not a product screen, so its
 // sample copy is not translated. Production builds redirect home.
 //
-// Deep links: `me.rxresu://dev/ui?group=fields`, and `&open=sheet|tags|footer|dialog|destructive|toast|undo`
-// to open an overlay on arrival.
+// Deep links: `me.rxresu://dev/ui?group=fields`, and `&open=sheet|long|reopen|tags|footer|dialog|destructive|toast|undo`
+// to open an overlay on arrival. `reopen` closes the sheet and reopens it while it is still sliding away.
 import type { ReactNode } from "react";
 import { Redirect, Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -391,9 +391,17 @@ function Overlays({ open: initial }: OverlaysProps) {
 			if (initial === "toast" || initial === "undo") setOpen(undefined);
 			if (initial === "toast") toast({ message: "Link copied" });
 			else if (initial === "undo") toast({ message: "Moved to trash", undo: noop });
-			else setOpen(initial);
+			else if (initial === "reopen") {
+				setOpen("sheet");
+				later.push(setTimeout(() => setOpen(undefined), 1200));
+				later.push(setTimeout(() => setOpen("sheet"), 1300));
+			} else setOpen(initial);
 		}, 400);
-		return () => clearTimeout(timer);
+		const later: ReturnType<typeof setTimeout>[] = [];
+		return () => {
+			clearTimeout(timer);
+			for (const id of later) clearTimeout(id);
+		};
 	}, [initial]);
 
 	return (
@@ -416,6 +424,13 @@ function Overlays({ open: initial }: OverlaysProps) {
 				]}
 			/>
 
+			<Sheet open={open === "long"} onClose={close} title="Move to">
+				<ListGroup>
+					{Array.from({ length: 30 }, (_, index) => (
+						<ListRow key={index} title={`Section ${index + 1}`} onPress={close} />
+					))}
+				</ListGroup>
+			</Sheet>
 			<Sheet open={open === "sheet"} onClose={close} title="Sort by">
 				<ListGroup>
 					<ListRow title="Last edited" selected onPress={close} />

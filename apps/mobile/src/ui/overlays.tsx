@@ -1,13 +1,7 @@
 import type { ColorToken } from "./tokens";
 import type { BottomSheetFooterProps } from "@gorhom/bottom-sheet";
 import type { ReactNode } from "react";
-import {
-	BottomSheetBackdrop,
-	BottomSheetFooter,
-	BottomSheetModal,
-	BottomSheetScrollView,
-	BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetFooter, BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { useLingui } from "@lingui/react/macro";
 import { createContext, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
@@ -37,8 +31,8 @@ export type SheetProps = {
 	onClose: () => void;
 	title?: string | undefined;
 	/**
-	 * Heights as fractions of the screen (`0.5`) or `"content"` to fit. Defaults to `["content"]`. Only fractional
-	 * detents scroll; pass them for content that can outgrow the screen.
+	 * Heights as fractions of the screen (`0.5`) or `"content"` to fit. Defaults to `["content"]`. A content-sized
+	 * sheet stops at 90% of the screen and scrolls past that.
 	 */
 	detents?: ("content" | number)[] | undefined;
 	children?: ReactNode;
@@ -96,15 +90,12 @@ function BottomSheet({
 }: SheetProps) {
 	const { colors, radius, shadows, size, space } = useTheme();
 	const insets = useSafeAreaInsets();
+	const { height } = useWindowDimensions();
 	const ref = useRef<BottomSheetModal>(null);
 	const detentIndex = useRef(-1);
 	const [footerHeight, setFooterHeight] = useState(0);
 	const snapPoints = detents.filter((detent) => detent !== "content").map((detent) => `${detent * 100}%`);
 	const bottom = insets.bottom + space.s2;
-	// A sheet that fits its content sizes to a plain view: gorhom does not measure a scroll view's content when it
-	// first presents, so a content-sized scrolling sheet never appears. Long content passes fractional detents.
-	const fits = snapPoints.length === 0;
-	const Body = fits ? BottomSheetView : BottomSheetScrollView;
 	const bodyStyle = {
 		gap: space.s2,
 		paddingTop: space.s1,
@@ -112,17 +103,36 @@ function BottomSheet({
 		paddingBottom: footer ? footerHeight + space.s4 : bottom + space.s2,
 	};
 
-	// Only a dismissal the user started (swipe, backdrop, Escape) reports `onClose`; one the parent asked for by
-	// setting `open` to false does not, so a late callback cannot close a sheet the parent opened since.
-	// Dismissing a modal that was never presented leaves gorhom unable to present it later, so only an open → closed
-	// change dismisses.
+	// The parent controls `open`; gorhom finishes each dismissal later through `onDismiss`. `wantsOpen` is what the
+	// parent asked for, `presented` whether gorhom shows the sheet, `closing` a dismissal the parent started that has
+	// not finished. Only a dismissal the user started (swipe, backdrop, Escape) reports `onClose`. Reopening while a
+	// dismissal runs waits for it to finish, so its late callback cannot close the reopened sheet. Dismissing a modal
+	// that was never presented leaves gorhom unable to present it later, so only a presented sheet is dismissed.
 	const wantsOpen = useRef(false);
+	const presented = useRef(false);
+	const closing = useRef(false);
 	useEffect(() => {
-		const wasOpen = wantsOpen.current;
 		wantsOpen.current = open;
-		if (open) ref.current?.present();
-		else if (wasOpen) ref.current?.dismiss();
+		if (open) {
+			if (closing.current || presented.current) return;
+			presented.current = true;
+			ref.current?.present();
+		} else if (presented.current && !closing.current) {
+			closing.current = true;
+			ref.current?.dismiss();
+		}
 	}, [open]);
+	const onDismiss = () => {
+		presented.current = false;
+		if (closing.current) {
+			closing.current = false;
+			if (!wantsOpen.current) return;
+			presented.current = true;
+			ref.current?.present();
+			return;
+		}
+		if (wantsOpen.current) onClose();
+	};
 
 	const renderFooter = footer
 		? (footerProps: BottomSheetFooterProps) => (
@@ -147,15 +157,15 @@ function BottomSheet({
 	return (
 		<BottomSheetModal
 			ref={ref}
-			onDismiss={() => {
-				if (wantsOpen.current) onClose();
-			}}
+			onDismiss={onDismiss}
 			onChange={(index) => {
 				// A detent change after the sheet is up, not the first appearance.
 				if (index >= 0 && detentIndex.current >= 0 && index !== detentIndex.current) haptics.selection();
 				detentIndex.current = index;
 			}}
 			enableDynamicSizing={detents.includes("content")}
+			// A content-sized sheet stops at 90% of the screen; past that its content scrolls.
+			maxDynamicContentSize={Math.round(height * 0.9)}
 			{...(snapPoints.length > 0 ? { snapPoints } : {})}
 			keyboardBehavior="interactive"
 			keyboardBlurBehavior="restore"
@@ -199,15 +209,14 @@ function BottomSheet({
 			{...(renderFooter ? { footerComponent: renderFooter } : {})}
 		>
 			<InSheetContext.Provider value>
-				<Body
+				<BottomSheetScrollView
 					accessibilityViewIsModal
 					onAccessibilityEscape={onClose}
 					keyboardShouldPersistTaps="handled"
-					style={fits ? bodyStyle : undefined}
-					contentContainerStyle={fits ? undefined : bodyStyle}
+					contentContainerStyle={bodyStyle}
 				>
 					{children}
-				</Body>
+				</BottomSheetScrollView>
 			</InSheetContext.Provider>
 		</BottomSheetModal>
 	);
@@ -471,6 +480,11 @@ type ActiveToast = ToastOptions & { id: number };
 
 let toasts: ActiveToast[] = [];
 let nextToastId = 1;
+const toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
+const clearToastTimer = (id: number) => {
+	clearTimeout(toastTimers.get(id));
+	toastTimers.delete(id);
+};
 const toastListeners = new Set<() => void>();
 const emitToasts = (next: ActiveToast[]) => {
 	toasts = next;
@@ -482,6 +496,7 @@ void AccessibilityInfo.isScreenReaderEnabled().then((value) => (screenReader = v
 AccessibilityInfo.addEventListener("screenReaderChanged", (value) => (screenReader = value));
 
 export function dismissToast(id: number) {
+	clearToastTimer(id);
 	emitToasts(toasts.filter((toast) => toast.id !== id));
 }
 
@@ -492,9 +507,15 @@ export function dismissToast(id: number) {
 export function showToast(options: ToastOptions): number {
 	const id = nextToastId++;
 	const hasAction = !!options.action || !!options.undo;
+	// The new toast replaces the current one, and its timer with it.
+	for (const toast of toasts) clearToastTimer(toast.id);
 	emitToasts([{ ...options, id }]);
 	AccessibilityInfo.announceForAccessibility(options.message);
-	setTimeout(() => dismissToast(id), (options.duration ?? (hasAction ? 6000 : 4000)) * (screenReader ? 2 : 1));
+	const duration = (options.duration ?? (hasAction ? 6000 : 4000)) * (screenReader ? 2 : 1);
+	toastTimers.set(
+		id,
+		setTimeout(() => dismissToast(id), duration),
+	);
 	return id;
 }
 
@@ -514,6 +535,15 @@ export function Toaster() {
 			return () => toastListeners.delete(listener);
 		},
 		() => toasts,
+	);
+
+	// Without a host nothing shows the toasts, so they and their timers go with it.
+	useEffect(
+		() => () => {
+			for (const toast of toasts) clearToastTimer(toast.id);
+			toasts = [];
+		},
+		[],
 	);
 
 	return (
