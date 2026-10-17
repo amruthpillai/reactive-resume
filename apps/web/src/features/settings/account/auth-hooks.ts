@@ -13,6 +13,12 @@ import { orpc } from "@/libs/orpc/client";
  */
 export function getProviderName(providerId: AuthProvider): string {
 	return match(providerId)
+		.with("apple", () =>
+			t({
+				comment: "Authentication provider display name in account settings",
+				message: "Apple",
+			}),
+		)
 		.with("credential", () =>
 			t({
 				comment: "Authentication provider display name in account settings",
@@ -144,7 +150,7 @@ export function useAuthProviderActions() {
 
 /**
  * Hook to get enabled social providers for the current user
- * Possible values: "credential", "google", "github", "linkedin", "custom"
+ * Possible values: "credential", "passkey", "apple", "google", "github", "linkedin", "custom"
  */
 export function useEnabledProviders() {
 	const { data: enabledProviders = {} } = useQuery(orpc.auth.providers.list.queryOptions());

@@ -24,6 +24,7 @@ import { Route as AuthConsentRouteImport } from "./routes/auth/consent";
 import { Route as AuthErrorRouteImport } from "./routes/auth/error";
 import { Route as AuthForgotPasswordRouteImport } from "./routes/auth/forgot-password";
 import { Route as AuthLoginRouteImport } from "./routes/auth/login";
+import { Route as AuthNativeCallbackRouteImport } from "./routes/auth/native-callback";
 import { Route as AuthRegisterRouteImport } from "./routes/auth/register";
 import { Route as AuthResetPasswordRouteImport } from "./routes/auth/reset-password";
 import { Route as AuthResumePasswordRouteImport } from "./routes/auth/resume-password";
@@ -130,6 +131,11 @@ const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: "/login",
   path: "/login",
+  getParentRoute: () => AuthRouteRoute,
+} as any);
+const AuthNativeCallbackRoute = AuthNativeCallbackRouteImport.update({
+  id: "/native-callback",
+  path: "/native-callback",
   getParentRoute: () => AuthRouteRoute,
 } as any);
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
@@ -329,6 +335,7 @@ export interface FileRoutesByFullPath {
   "/auth/error": typeof AuthErrorRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
+  "/auth/native-callback": typeof AuthNativeCallbackRoute;
   "/auth/register": typeof AuthRegisterRoute;
   "/auth/reset-password": typeof AuthResetPasswordRoute;
   "/auth/resume-password": typeof AuthResumePasswordRoute;
@@ -371,6 +378,7 @@ export interface FileRoutesByTo {
   "/auth/error": typeof AuthErrorRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
+  "/auth/native-callback": typeof AuthNativeCallbackRoute;
   "/auth/register": typeof AuthRegisterRoute;
   "/auth/reset-password": typeof AuthResetPasswordRoute;
   "/auth/resume-password": typeof AuthResumePasswordRoute;
@@ -422,6 +430,7 @@ export interface FileRoutesById {
   "/auth/error": typeof AuthErrorRoute;
   "/auth/forgot-password": typeof AuthForgotPasswordRoute;
   "/auth/login": typeof AuthLoginRoute;
+  "/auth/native-callback": typeof AuthNativeCallbackRoute;
   "/auth/register": typeof AuthRegisterRoute;
   "/auth/reset-password": typeof AuthResetPasswordRoute;
   "/auth/resume-password": typeof AuthResumePasswordRoute;
@@ -474,6 +483,7 @@ export interface FileRouteTypes {
     | "/auth/error"
     | "/auth/forgot-password"
     | "/auth/login"
+    | "/auth/native-callback"
     | "/auth/register"
     | "/auth/reset-password"
     | "/auth/resume-password"
@@ -516,6 +526,7 @@ export interface FileRouteTypes {
     | "/auth/error"
     | "/auth/forgot-password"
     | "/auth/login"
+    | "/auth/native-callback"
     | "/auth/register"
     | "/auth/reset-password"
     | "/auth/resume-password"
@@ -566,6 +577,7 @@ export interface FileRouteTypes {
     | "/auth/error"
     | "/auth/forgot-password"
     | "/auth/login"
+    | "/auth/native-callback"
     | "/auth/register"
     | "/auth/reset-password"
     | "/auth/resume-password"
@@ -717,6 +729,13 @@ declare module "@tanstack/react-router" {
       path: "/login";
       fullPath: "/auth/login";
       preLoaderRoute: typeof AuthLoginRouteImport;
+      parentRoute: typeof AuthRouteRoute;
+    };
+    "/auth/native-callback": {
+      id: "/auth/native-callback";
+      path: "/native-callback";
+      fullPath: "/auth/native-callback";
+      preLoaderRoute: typeof AuthNativeCallbackRouteImport;
       parentRoute: typeof AuthRouteRoute;
     };
     "/auth/register": {
@@ -988,6 +1007,7 @@ interface AuthRouteRouteChildren {
   AuthErrorRoute: typeof AuthErrorRoute;
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute;
   AuthLoginRoute: typeof AuthLoginRoute;
+  AuthNativeCallbackRoute: typeof AuthNativeCallbackRoute;
   AuthRegisterRoute: typeof AuthRegisterRoute;
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute;
   AuthResumePasswordRoute: typeof AuthResumePasswordRoute;
@@ -1001,6 +1021,7 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthErrorRoute: AuthErrorRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
+  AuthNativeCallbackRoute: AuthNativeCallbackRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthResumePasswordRoute: AuthResumePasswordRoute,

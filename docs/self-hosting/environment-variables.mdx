@@ -70,9 +70,31 @@ for callback URLs and provider setup.
 
 | Variables                                      | Provider |
 | ---------------------------------------------- | -------- |
+| `APPLE_CLIENT_ID`, `APPLE_CLIENT_SECRET`       | Apple    |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`     | Google   |
 | `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`     | GitHub   |
 | `LINKEDIN_CLIENT_ID`, `LINKEDIN_CLIENT_SECRET` | LinkedIn |
+
+For Apple, use your Services ID as `APPLE_CLIENT_ID` and a signed client-secret JWT as `APPLE_CLIENT_SECRET`
+(not the `.p8` private key). Register `APP_URL` followed by `/api/auth/callback/apple` as the return URL.
+Renew the JWT before it expires; Apple permits at most six months. Both variables must be set to enable the
+provider and trust Apple's `https://appleid.apple.com` POST callback origin. This browser flow does not need
+an app bundle identifier in Better Auth.
+
+### Native app links
+
+Association files are optional. Leave these unset to return 404 from their endpoints. Values are comma-separated;
+whitespace around each value is ignored.
+
+| Variable                     | Description                                                                                                                                                                                   |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MOBILE_IOS_APP_IDS`         | Apple application identifiers, such as `ABCDE12345.me.rxresu.app` (`TEAMID.bundle.id`). Serves `/.well-known/apple-app-site-association` with `applinks` and `webcredentials`.                |
+| `MOBILE_ANDROID_PACKAGES`    | Android package names, such as `me.rxresu.app`. Together with the fingerprints below, serves `/.well-known/assetlinks.json`.                                                                  |
+| `MOBILE_ANDROID_CERT_SHA256` | Colon-separated SHA-256 certificate fingerprints (32 hexadecimal byte pairs). Every listed package trusts every listed fingerprint; include the Play app-signing certificate for Play builds. |
+
+The app must also configure its associated domains or Android intent filters for your HTTPS host. Links cover
+`/auth/native-callback`, public resume URLs and `/builder/*`. `/auth/native-callback` provides a fallback when
+the app does not open. Hosting these files alone does not verify device handoff.
 
 ### Custom OAuth or OpenID Connect provider
 

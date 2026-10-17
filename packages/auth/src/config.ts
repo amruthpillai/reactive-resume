@@ -177,7 +177,11 @@ const getAuthConfig = () => {
 		database: drizzleAdapter(db, { schema, provider: "pg" }),
 
 		telemetry: { enabled: false },
-		trustedOrigins: TRUSTED_ORIGINS,
+		trustedOrigins: [
+			...TRUSTED_ORIGINS,
+			// Apple's form_post callback includes this origin; keep CSRF checks enabled.
+			...(env.APPLE_CLIENT_ID && env.APPLE_CLIENT_SECRET ? ["https://appleid.apple.com"] : []),
+		],
 		rateLimit: {
 			...rateLimitConfig.betterAuth.global,
 			...(authRateLimitStorage ? { customStorage: authRateLimitStorage } : {}),
@@ -346,6 +350,17 @@ const getAuthConfig = () => {
 		},
 
 		socialProviders: {
+			apple: {
+				enabled: !!env.APPLE_CLIENT_ID && !!env.APPLE_CLIENT_SECRET,
+				disableSignUp: env.FLAG_DISABLE_SIGNUPS,
+				clientId: env.APPLE_CLIENT_ID ?? "",
+				clientSecret: env.APPLE_CLIENT_SECRET ?? "",
+				mapProfileToUser: createProfileMapper({
+					providerName: "Apple",
+					getName: (profile, context) => profile.name || context.emailLocalPart,
+				}),
+			},
+
 			google: {
 				enabled: !!env.GOOGLE_CLIENT_ID && !!env.GOOGLE_CLIENT_SECRET,
 				disableSignUp: env.FLAG_DISABLE_SIGNUPS,

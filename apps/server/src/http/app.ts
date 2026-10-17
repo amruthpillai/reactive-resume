@@ -27,6 +27,7 @@ import { handleSchemaJson } from "../static/schema";
 import { handleLlms, handleRobots, handleSitemap } from "../static/seo";
 import { handleUpload } from "../static/uploads";
 import { handleWebApp, serveWebDistStatic } from "../static/web";
+import { handleAppleAppSiteAssociation, handleAndroidAssetLinks } from "./app-links";
 import { handleAuth, handleOAuth } from "./auth";
 import { handleCareerJobs } from "./career-jobs";
 import { handleHealth } from "./health";
@@ -114,6 +115,8 @@ export function createApp(options: AppOptions = {}) {
 	app.all("/mcp", (c) => handleMcp(c.req.raw, client(c)));
 	app.all("/mcp/*", (c) => handleMcp(c.req.raw, client(c)));
 
+	app.get("/.well-known/apple-app-site-association", () => handleAppleAppSiteAssociation());
+	app.get("/.well-known/assetlinks.json", () => handleAndroidAssetLinks());
 	app.get("/.well-known/integrations.json", () => handleIntegrations());
 	app.on(["GET", "HEAD"], "/.well-known/api-catalog", (c) => handleApiCatalog({ head: c.req.method === "HEAD" }));
 	app.on(["GET", "HEAD"], "/.well-known/agent-skills/index.json", (c) =>
