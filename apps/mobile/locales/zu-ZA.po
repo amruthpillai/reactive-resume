@@ -142,6 +142,11 @@ msgstr ""
 msgid "{0, plural, one {# office day a week} other {# office days a week}}"
 msgstr ""
 
+#. placeholder {0}: result?.pageCount ?? 1
+#: src/features/letters/page.tsx
+msgid "{0, plural, one {# page} other {# pages}}"
+msgstr ""
+
 #. placeholder {0}: proposals.length
 #: src/features/assistant/messages.tsx
 msgid "{0, plural, one {# proposed edit} other {# proposed edits}}"
@@ -384,6 +389,7 @@ msgid "{0} selected"
 msgstr ""
 
 #. placeholder {0}: resume.data.basics.name || resume.name
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "{0}-Resume"
 msgstr ""
@@ -405,6 +411,7 @@ msgid "{0}, entry {1} of {2}"
 msgstr ""
 
 #. placeholder {0}: Math.round(zoom * 100)
+#: src/features/letters/page.tsx
 #: src/preview/page.tsx
 msgid "{0}%"
 msgstr ""
@@ -569,6 +576,10 @@ msgstr ""
 msgid "{names} come last in the text. Most systems still find them; some don't."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "{pairing} type"
+msgstr ""
+
 #: src/features/assistant/page-marks.tsx
 msgid "{pending, plural, one {# proposed edit on this page · nothing changes until you accept} other {# proposed edits on this page · nothing changes until you accept}}"
 msgstr ""
@@ -579,6 +590,10 @@ msgstr ""
 
 #: src/features/write/outline.tsx
 msgid "{sections, plural, one {# section} other {# sections}}"
+msgstr ""
+
+#: src/features/letters/share.tsx
+msgid "{sender}-Cover-Letter"
 msgstr ""
 
 #: src/features/assistant/messages.tsx
@@ -601,6 +616,10 @@ msgstr ""
 msgid "{supported} supported, {partial} partly supported, {missing} with no evidence yet. {summary}"
 msgstr ""
 
+#: src/features/letters/design.tsx
+msgid "{textSize} pt"
+msgstr ""
+
 #: src/features/write/section-sheet.tsx
 msgid "{title} cleared"
 msgstr ""
@@ -617,6 +636,7 @@ msgstr ""
 msgid "{toCheck, plural, one {# to check} other {# to check}}"
 msgstr ""
 
+#: src/features/letters/write.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "{words, plural, one {# word} other {# words}}"
 msgstr ""
@@ -650,6 +670,10 @@ msgstr ""
 msgid "10–11 recommended"
 msgstr ""
 
+#: src/features/letters/share.tsx
+msgid "2 files"
+msgstr ""
+
 #: src/features/career/schedule-sheet.tsx
 msgid "2 hours before"
 msgstr ""
@@ -662,8 +686,16 @@ msgstr ""
 msgid "24 hours before"
 msgstr ""
 
+#: src/features/letters/share.tsx
+msgid "A backup of this letter. Imports back into Reactive Resume as a letter."
+msgstr ""
+
 #: src/features/check/issues.ts
 msgid "A city and country let roles be matched to where you are."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "A comfortable length, and it fits on one page."
 msgstr ""
 
 #: src/features/ats-checker/messages.ts
@@ -1380,6 +1412,7 @@ msgstr ""
 #: src/features/application-detail/detail-screen.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/career/schedule-sheet.tsx
+#: src/features/letters/write.tsx
 #: src/shell/workspace-chrome.tsx
 msgid "Application"
 msgstr ""
@@ -1682,6 +1715,7 @@ msgid "Back to Documents"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Back to now"
 msgstr ""
 
@@ -1703,6 +1737,7 @@ msgid "Background Color"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Balanced"
 msgstr ""
 
@@ -1726,6 +1761,7 @@ msgid "Before interview"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Before restore"
 msgstr ""
 
@@ -1767,6 +1803,7 @@ msgstr ""
 msgid "Body text set to {minimum} pt"
 msgstr ""
 
+#: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Bold"
 msgstr ""
@@ -1828,12 +1865,14 @@ msgstr ""
 msgid "bullet {n}"
 msgstr ""
 
+#: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 #: src/features/write/section-sheet.tsx
 msgid "Bulleted list"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Burgundy"
 msgstr ""
 
@@ -1891,11 +1930,16 @@ msgid "Certifications"
 msgstr ""
 
 #: app/(auth)/sign-in.tsx
+#: src/features/letters/write.tsx
 msgid "Change"
 msgstr ""
 
 #: src/features/ai/web-access.tsx
 msgid "Change connection"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Change it in Design."
 msgstr ""
 
 #: src/features/search/search-screen.tsx
@@ -1909,6 +1953,10 @@ msgstr ""
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
 msgid "Change the follow-up"
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "Change the resume's design"
 msgstr ""
 
 #: src/features/search/search-screen.tsx
@@ -1941,6 +1989,10 @@ msgstr ""
 
 #: src/features/search/search-screen.tsx
 msgid "Check a PDF"
+msgstr ""
+
+#: src/features/documents/new-document.tsx
+msgid "Check a PDF with the ATS checker"
 msgstr ""
 
 #: src/features/ats-checker/checker.tsx
@@ -2066,6 +2118,10 @@ msgstr ""
 msgid "Choose a photo smaller than 10 MB."
 msgstr ""
 
+#: src/features/letters/design.tsx
+msgid "Choose a resume in Write to match its design. Until then, the letter has its own."
+msgstr ""
+
 #: src/features/application-detail/date-field.tsx
 msgid "Choose a time"
 msgstr ""
@@ -2119,10 +2175,12 @@ msgid "Clarify"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Classic"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Clean"
 msgstr ""
 
@@ -2143,6 +2201,10 @@ msgstr ""
 #: src/features/applications/list-screen.tsx
 #: src/preview/page.tsx
 msgid "Clear selection"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Clear the greeting or sign-off to omit it. Clearing the sign-off also removes the automatic signature."
 msgstr ""
 
 #: src/features/write/section-sheet.tsx
@@ -2206,6 +2268,7 @@ msgid "Coach"
 msgstr ""
 
 #: src/features/design/design-pane.tsx
+#: src/features/letters/design.tsx
 msgid "Color"
 msgstr ""
 
@@ -2238,6 +2301,7 @@ msgstr ""
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
+#: src/features/letters/write.tsx
 #: src/features/write/fields.ts
 msgid "Company"
 msgstr ""
@@ -2525,6 +2589,10 @@ msgstr ""
 msgid "Couldn't check or save this address. Try again."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Couldn't check your AI providers."
+msgstr ""
+
 #: src/features/documents/queries.ts
 msgid "Couldn't complete this action. Try again."
 msgstr ""
@@ -2625,6 +2693,7 @@ msgid "Couldn't load the sample file. Try again."
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Couldn't load this version's page."
 msgstr ""
 
@@ -2633,6 +2702,7 @@ msgid "Couldn't load this. Check your connection and try again."
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Couldn't load versions."
 msgstr ""
 
@@ -2642,6 +2712,10 @@ msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Couldn't load your public address."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Couldn't load your resumes."
 msgstr ""
 
 #: app/(tabs)/settings/preferences.tsx
@@ -2754,6 +2828,12 @@ msgstr ""
 msgid "Couldn't save the timezone."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
+msgstr ""
+
+#: src/features/letters/share.tsx
+#: src/features/letters/write.tsx
 #: src/features/share/document.ts
 msgid "Couldn't save your changes. Try again before continuing."
 msgstr ""
@@ -2899,6 +2979,11 @@ msgstr ""
 msgid "Cover letter — {0}"
 msgstr ""
 
+#: src/features/letters/share.tsx
+#: src/features/letters/write.tsx
+msgid "Cover letter could not be loaded."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 msgid "Cover letter file"
 msgstr ""
@@ -2942,6 +3027,7 @@ msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Created"
 msgstr ""
 
@@ -2978,6 +3064,7 @@ msgstr ""
 
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 #: src/features/write/pickers.tsx
 msgid "Custom"
 msgstr ""
@@ -3027,6 +3114,7 @@ msgstr ""
 
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/application-detail/sheets.tsx
+#: src/features/letters/write.tsx
 #: src/features/write/date-field.tsx
 #: src/features/write/fields.ts
 msgid "Date"
@@ -3091,9 +3179,15 @@ msgstr ""
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/threads.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 #: src/features/workspace/tabs/saved.tsx
 #: src/features/write/entry-sheet.tsx
 msgid "Delete"
+msgstr ""
+
+#. placeholder {0}: menu ? versionTitle(menu) : ""
+#: src/features/letters/share.tsx
+msgid "Delete “{0}”?"
 msgstr ""
 
 #. placeholder {0}: title(thread)
@@ -3212,6 +3306,10 @@ msgstr ""
 msgid "Density"
 msgstr ""
 
+#: app/(tabs)/settings/licences.tsx
+msgid "Dependency type"
+msgstr ""
+
 #: src/features/applications/list-screen.tsx
 msgid "Descending"
 msgstr ""
@@ -3240,9 +3338,9 @@ msgstr ""
 #: app/builder/[id]/_layout.tsx
 #: app/builder/[id]/design.tsx
 #: app/letter/[id]/_layout.tsx
-#: app/letter/[id]/design.tsx
 #: src/features/design/advanced.tsx
 #: src/features/design/design-pane.tsx
+#: src/features/letters/write.tsx
 msgid "Design"
 msgstr ""
 
@@ -3268,6 +3366,7 @@ msgid "Direction"
 msgstr ""
 
 #: src/features/career/shared.tsx
+#: src/features/letters/write.tsx
 msgid "Discard"
 msgstr ""
 
@@ -3283,6 +3382,7 @@ msgstr ""
 msgid "Discard your offline edits?"
 msgstr ""
 
+#: src/features/letters/write.tsx
 #: src/ui/layout.tsx
 msgid "Dismiss"
 msgstr ""
@@ -3327,6 +3427,7 @@ msgstr ""
 #: src/features/applications/list-screen.tsx
 #: src/features/career/today.tsx
 #: src/features/documents/library.tsx
+#: src/features/letters/rich-text-field.tsx
 #: src/features/write/date-field.tsx
 #: src/features/write/pickers.tsx
 #: src/features/write/rich-text-field.tsx
@@ -3341,14 +3442,28 @@ msgstr ""
 msgid "Double-checking"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/screen.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Download"
 msgstr ""
 
 #. placeholder {0}: format.toUpperCase()
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "Download {0}"
+msgstr ""
+
+#: src/features/letters/share.tsx
+msgid "Download both PDFs"
+msgstr ""
+
+#: src/features/letters/share.tsx
+msgid "Download failed."
+msgstr ""
+
+#: src/features/letters/share.tsx
+msgid "Download opens the system share sheet. Choose a storage provider to save the file."
 msgstr ""
 
 #: src/features/share/download.tsx
@@ -3359,6 +3474,7 @@ msgstr ""
 msgid "Download PDF"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr ""
@@ -3384,12 +3500,36 @@ msgstr ""
 msgid "Draft · not printed"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Draft · uses only the posting"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Draft · uses only your resume"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Draft · uses only your resume and the posting"
+msgstr ""
+
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
 msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a summary"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Draft from the posting"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Draft from your resume"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Draft kept. Edit anything you like."
 msgstr ""
 
 #: src/features/workspace/tabs/prepare.tsx
@@ -3404,8 +3544,25 @@ msgstr ""
 msgid "Drafting a reply"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Drafting needs an AI provider."
+msgstr ""
+
 #: src/features/workspace/parts.tsx
 msgid "Drafting questions"
+msgstr ""
+
+#. placeholder {0}: draft.provider
+#: src/features/letters/write.tsx
+msgid "Drafting stopped: {0} didn't respond. Nothing on the page changed."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Drafting stopped. Nothing on the page changed."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Drafting…"
 msgstr ""
 
 #: src/features/design/layout-screen.tsx
@@ -3512,6 +3669,7 @@ msgid "Edit…"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Editing session"
 msgstr ""
 
@@ -3658,6 +3816,10 @@ msgstr ""
 msgid "Every day"
 msgstr ""
 
+#: src/features/letters/share.tsx
+msgid "Every editing session adds a version automatically. Named versions are kept until you delete them. Restoring saves the current state first."
+msgstr ""
+
 #: src/features/check/issues.ts
 msgid "Every entry has dates in a form systems read, in order, and none in the future."
 msgstr ""
@@ -3769,6 +3931,7 @@ msgstr ""
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "File name"
 msgstr ""
@@ -3787,6 +3950,10 @@ msgstr ""
 
 #: src/features/applications/add-sheet.tsx
 msgid "Fill empty fields with AI"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Filled from the application. The greeting follows the name."
 msgstr ""
 
 #: src/features/career/schedule-sheet.tsx
@@ -3817,6 +3984,7 @@ msgstr ""
 msgid "First run (YYYY-MM-DD)"
 msgstr ""
 
+#: src/features/letters/page.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
 msgid "Fit"
@@ -3897,6 +4065,7 @@ msgid "Font Family"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgid "Font pairing"
 msgstr ""
 
@@ -3912,7 +4081,12 @@ msgstr ""
 msgid "Font Weights"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "For"
+msgstr ""
+
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "For example, Sent to Lumen"
 msgstr ""
 
@@ -3920,10 +4094,12 @@ msgstr ""
 msgid "For example: “{name}: I did … at … in 2024, and it led to …”"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "For LibreOffice and other open-source editors. Layout is simplified."
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "For portals or recruiters who ask for Word. Layout is simplified."
 msgstr ""
@@ -3948,6 +4124,7 @@ msgstr ""
 msgid "Forgetting unlinks this fact from stories and saved items. The original source stays unchanged."
 msgstr ""
 
+#: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Formatting"
 msgstr ""
@@ -3958,11 +4135,16 @@ msgid "Found {0}"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgid "Free-form"
 msgstr ""
 
 #: src/features/settings/locale-names.ts
 msgid "French"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "From"
 msgstr ""
 
 #: src/features/workspace/tabs/fit.tsx
@@ -4003,6 +4185,10 @@ msgstr ""
 msgid "Get new roles here every morning"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Getting long. Try “Shorter”, or cut the least specific paragraph."
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "Give every role a period, such as \"Jan 2020 - Present\", so your timeline can be reconstructed."
 msgstr ""
@@ -4020,11 +4206,16 @@ msgid "Grade"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Graphite"
 msgstr ""
 
 #: src/features/settings/locale-names.ts
 msgid "Greek"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Greeting"
 msgstr ""
 
 #: src/features/documents/library.tsx
@@ -4094,6 +4285,10 @@ msgstr ""
 msgid "Help me work “{0}” into my resume, only where my experience supports it."
 msgstr ""
 
+#: src/features/letters/design.tsx
+msgid "Hex"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/write/entry-fields.tsx
 #: src/features/write/outline.tsx
@@ -4132,6 +4327,10 @@ msgstr ""
 msgid "Hide key"
 msgstr ""
 
+#: app/(tabs)/settings/licences.tsx
+msgid "Hide licence"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 msgid "Hide Link Underline"
 msgstr ""
@@ -4160,11 +4359,13 @@ msgstr ""
 msgid "Hiring manager"
 msgstr ""
 
+#: src/features/letters/write.tsx
 #: src/features/share/letter.ts
 msgid "Hiring team"
 msgstr ""
 
 #: src/features/document-menu/index.tsx
+#: src/features/letters/share.tsx
 #: src/features/share/screen.tsx
 msgid "History"
 msgstr ""
@@ -4357,6 +4558,7 @@ msgid "Inferred"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Ink blue"
 msgstr ""
 
@@ -4460,6 +4662,7 @@ msgstr ""
 msgid "Italian"
 msgstr ""
 
+#: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Italic"
 msgstr ""
@@ -4476,12 +4679,20 @@ msgstr ""
 msgid "Its messages and attachments are deleted. Edits you accepted stay in the document."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Its own design ({summary})."
+msgstr ""
+
 #: src/features/ai/provider-editor.tsx
 msgid "Its saved key is deleted. Conversations using it need another provider."
 msgstr ""
 
 #: src/features/settings/locale-names.ts
 msgid "Japanese"
+msgstr ""
+
+#: app/(tabs)/settings/licences.tsx
+msgid "JavaScript"
 msgstr ""
 
 #: src/features/search/search-screen.tsx
@@ -4525,6 +4736,7 @@ msgstr ""
 msgid "Jobs"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "JSON"
 msgstr ""
@@ -4534,6 +4746,7 @@ msgid "Kannada"
 msgstr ""
 
 #: src/features/check/screen.tsx
+#: src/features/letters/write.tsx
 msgid "Keep"
 msgstr ""
 
@@ -4661,6 +4874,10 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
+#: src/features/letters/design.tsx
+msgid "Larger text"
+msgstr ""
+
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
 msgid "Last edited"
@@ -4722,6 +4939,10 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Length"
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "Length · minutes"
 msgstr ""
@@ -4751,12 +4972,27 @@ msgid "Let's start with what you have"
 msgstr ""
 
 #: src/features/documents/library.tsx
+#: src/features/letters/write.tsx
 msgid "Letter"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgctxt "US Letter paper size (8.5 × 11 in), shown beside A4"
 msgid "Letter"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Letter body"
+msgstr ""
+
+#: src/features/letters/page.tsx
+msgid "Letter page"
+msgstr ""
+
+#. placeholder {0}: page.index + 1
+#: src/features/letters/page.tsx
+msgid "Letter page {0}"
 msgstr ""
 
 #: src/features/search/search-screen.tsx
@@ -4771,6 +5007,11 @@ msgstr ""
 #: src/features/write/entry-fields.tsx
 #: src/features/write/fields.ts
 msgid "Level"
+msgstr ""
+
+#: app/(tabs)/settings/index.tsx
+#: app/(tabs)/settings/licences.tsx
+msgid "Licences"
 msgstr ""
 
 #: src/features/ats-checker/messages.ts
@@ -4819,6 +5060,10 @@ msgstr ""
 msgid "Link address"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Link an application"
+msgstr ""
+
 #: src/features/check/job-match.tsx
 msgid "Link an application or paste a posting to compare its terms."
 msgstr ""
@@ -4858,6 +5103,14 @@ msgstr ""
 #. placeholder {0}: document.application.company
 #: src/features/search/search-screen.tsx
 msgid "Linked to {0}"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Linked to the resume again"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Linked. Name, email, phone and city update when the resume does."
 msgstr ""
 
 #: src/features/applications-board/views.tsx
@@ -4903,6 +5156,10 @@ msgstr ""
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/search/search-screen.tsx
 msgid "Loading conversations…"
+msgstr ""
+
+#: src/features/letters/page.tsx
+msgid "Loading cover letter…"
 msgstr ""
 
 #: src/features/assistant/coach-screen.tsx
@@ -5002,6 +5259,7 @@ msgstr ""
 msgid "Look for"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "Looks exactly like the page. Use it for applications and email."
 msgstr ""
@@ -5085,6 +5343,7 @@ msgid "Margin (Vertical)"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgid "Margins"
 msgstr ""
 
@@ -5114,6 +5373,7 @@ msgstr ""
 msgid "Mark the application as applied to keep the versions you sent."
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "Markdown"
 msgstr ""
@@ -5130,6 +5390,10 @@ msgstr ""
 msgid "Marked as read"
 msgstr ""
 
+#: src/features/letters/design.tsx
+msgid "Match “{resumeName}”"
+msgstr ""
+
 #: src/features/applications/csv-sheet.tsx
 msgid "Match columns"
 msgstr ""
@@ -5140,6 +5404,14 @@ msgstr ""
 
 #: src/features/career/offers.tsx
 msgid "Matches a preferred location."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Matches the resume ({summary})."
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "Matching the resume"
 msgstr ""
 
 #: src/features/workspace/parts.tsx
@@ -5209,6 +5481,10 @@ msgstr ""
 msgid "More options"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "More personal"
+msgstr ""
+
 #: src/features/assistant/provider.tsx
 msgid "More providers and options are in Settings. Editing, design, Check issues and downloads work without AI."
 msgstr ""
@@ -5226,6 +5502,7 @@ msgid "Morning of runs at 08:00, or two hours before interviews starting before 
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Moss"
 msgstr ""
 
@@ -5235,6 +5512,10 @@ msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Most entries have no dates."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Most recruiters read 180–320 words. The shaded band shows the range."
 msgstr ""
 
 #: src/features/check/issues.ts
@@ -5360,6 +5641,7 @@ msgstr ""
 #: src/features/documents/library.tsx
 #: src/features/documents/new-document.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 #: src/features/settings/profile.tsx
 #: src/features/write/fields.ts
 msgid "Name"
@@ -5370,7 +5652,12 @@ msgstr ""
 msgid "Name of person {0}"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Name or team"
+msgstr ""
+
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Name this version"
 msgstr ""
 
@@ -5379,10 +5666,12 @@ msgid "Name, email, phone and location are found, and links are full addresses."
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Named version"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Named versions are kept until you delete them. This can't be undone."
 msgstr ""
 
@@ -5391,7 +5680,12 @@ msgid "Names, tags or applications"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgid "Narrow"
+msgstr ""
+
+#: app/(tabs)/settings/licences.tsx
+msgid "Native & fonts"
 msgstr ""
 
 #: src/features/ai/provider-list.tsx
@@ -5512,7 +5806,12 @@ msgstr ""
 msgid "No AI provider yet"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "No application"
+msgstr ""
+
 #: src/features/documents/document-sheets.tsx
+#: src/features/letters/write.tsx
 msgid "No applications yet. Add one in Applications first."
 msgstr ""
 
@@ -5539,6 +5838,10 @@ msgstr ""
 
 #: src/features/assistant/threads.tsx
 msgid "No conversations about this document yet."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "No date"
 msgstr ""
 
 #: src/features/ats-checker/messages.ts
@@ -5654,6 +5957,10 @@ msgstr ""
 msgid "No results"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "No resume"
+msgstr ""
+
 #: src/features/ats-checker/messages.ts
 msgid "No skills section was found."
 msgstr ""
@@ -5713,6 +6020,7 @@ msgid "None of your AI connections can transcribe speech (OpenAI, Google Gemini,
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgid "Normal"
 msgstr ""
 
@@ -5830,9 +6138,11 @@ msgid "Notifications are off"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Now"
 msgstr ""
 
+#: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Numbered list"
 msgstr ""
@@ -5842,6 +6152,7 @@ msgid "Observation"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Ochre"
 msgstr ""
 
@@ -5855,6 +6166,10 @@ msgstr ""
 
 #: src/features/share/link.tsx
 msgid "Off. Only you can see this resume."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Off. The letter keeps its own copy of your details."
 msgstr ""
 
 #: src/features/applications/stages.ts
@@ -5982,6 +6297,7 @@ msgid "Open"
 msgstr ""
 
 #: src/features/assistant/provider.tsx
+#: src/features/letters/write.tsx
 msgid "Open AI settings"
 msgstr ""
 
@@ -6060,6 +6376,7 @@ msgstr ""
 msgid "Open workspace"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "OpenDocument"
 msgstr ""
@@ -6096,6 +6413,7 @@ msgstr ""
 #. placeholder {0}: versionTitle(version)
 #: src/features/documents/library.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Options for {0}"
 msgstr ""
 
@@ -6143,16 +6461,19 @@ msgstr ""
 
 #: app/builder/[id]/_layout.tsx
 #: app/builder/[id]/page.tsx
+#: app/letter/[id]/_layout.tsx
 #: src/features/design/advanced.tsx
 #: src/features/design/design-pane.tsx
+#: src/features/letters/design.tsx
 msgid "Page"
 msgstr ""
 
 #. Layout editor page label with 1-based page number
 #. placeholder {0}: index + 1
 #. placeholder {0}: item.page + 1
-#. placeholder {0}: pageIndex + 1
+#. placeholder {0}: page.index + 1
 #: src/features/design/layout-screen.tsx
+#: src/features/letters/page.tsx
 #: src/features/write/entry-sheet.tsx
 #: src/features/write/outline.tsx
 #: src/features/write/section-sheet.tsx
@@ -6185,6 +6506,10 @@ msgstr ""
 #. placeholder {0}: result?.pageCount ?? 1
 #: src/preview/page.tsx
 msgid "Page {currentPage} of {0}"
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "Page format"
 msgstr ""
 
 #: src/features/assistant/messages.tsx
@@ -6277,6 +6602,7 @@ msgstr ""
 msgid "Pay period"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "PDF · Best for applying"
 msgstr ""
@@ -6381,6 +6707,7 @@ msgstr ""
 msgid "Plain text (.txt)"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "Plain text with headings. Paste into application forms and notes."
 msgstr ""
@@ -6406,6 +6733,7 @@ msgid "Play recording"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Plum"
 msgstr ""
 
@@ -6518,6 +6846,7 @@ msgstr ""
 msgid "Preparing export…"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "Preparing file…"
 msgstr ""
@@ -6534,6 +6863,7 @@ msgstr ""
 msgid "Press and hold, then drag to another column or page."
 msgstr ""
 
+#: src/features/letters/page.tsx
 #: src/preview/page.tsx
 msgid "Preview could not be rendered. Retry, or try another template or font in Design."
 msgstr ""
@@ -6577,6 +6907,7 @@ msgid "Private. Only you can see it."
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Professional"
 msgstr ""
 
@@ -6736,6 +7067,10 @@ msgstr ""
 msgid "Read it for me"
 msgstr ""
 
+#: app/(tabs)/settings/licences.tsx
+msgid "Read licence"
+msgstr ""
+
 #: src/features/applications/add-sheet.tsx
 #: src/features/career/today.tsx
 msgid "Read posting"
@@ -6847,6 +7182,10 @@ msgstr ""
 msgid "Recalled"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Recipient"
+msgstr ""
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Record again"
 msgstr ""
@@ -6871,6 +7210,10 @@ msgstr ""
 msgid "Recruiter"
 msgstr ""
 
+#: src/features/letters/share.tsx
+msgid "Recruiters see this name. Your name plus “Cover Letter” works well."
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Recruiters see this name. Your name plus “Resume” works well."
 msgstr ""
@@ -6881,6 +7224,11 @@ msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Rectangle (Full Width)"
+msgstr ""
+
+#: app/builder/[id]/_layout.tsx
+#: app/letter/[id]/_layout.tsx
+msgid "Redo"
 msgstr ""
 
 #: src/features/write/fields.ts
@@ -7051,15 +7399,18 @@ msgid "Rename {0}"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Rename version"
 msgstr ""
 
 #: src/features/document-menu/index.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 #: src/features/write/section-sheet.tsx
 msgid "Rename…"
 msgstr ""
 
+#: src/features/letters/page.tsx
 #: src/preview/page.tsx
 msgid "Rendering preview…"
 msgstr ""
@@ -7145,18 +7496,22 @@ msgstr ""
 
 #: src/features/documents/library.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Restore"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Restore this version"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Restore this version?"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Restored a version"
 msgstr ""
 
@@ -7169,8 +7524,13 @@ msgstr ""
 #: src/features/applications/add-sheet.tsx
 #: src/features/career/facts.tsx
 #: src/features/documents/library.tsx
+#: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 msgid "Resume"
+msgstr ""
+
+#: src/features/letters/share.tsx
+msgid "Resume + letter"
 msgstr ""
 
 #: app/builder/[id]/page.tsx
@@ -7235,6 +7595,9 @@ msgstr ""
 #: src/features/documents/library.tsx
 #: src/features/documents/new-document.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/page.tsx
+#: src/features/letters/share.tsx
+#: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
@@ -7424,6 +7787,7 @@ msgid "Russian"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Rust"
 msgstr ""
 
@@ -7449,6 +7813,7 @@ msgstr ""
 #: src/features/document-menu/index.tsx
 #: src/features/documents/document-sheets.tsx
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 #: src/features/write/pickers.tsx
 msgid "Save"
 msgstr ""
@@ -7623,6 +7988,7 @@ msgid "Screening interview"
 msgstr ""
 
 #: app/_layout.tsx
+#: app/(tabs)/_layout.tsx
 #: src/features/applications/add-sheet.tsx
 #: src/features/design/picker.tsx
 #: src/features/documents/library.tsx
@@ -7631,6 +7997,10 @@ msgstr ""
 
 #: src/features/ai/web-access.tsx
 msgid "Search and enhanced reading"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Search applications"
 msgstr ""
 
 #: src/features/search/search-screen.tsx
@@ -7767,6 +8137,10 @@ msgstr ""
 msgid "Send the resume itself rather than a portfolio wrapper."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Sender details copied into the letter"
+msgstr ""
+
 #: src/features/workspace/tabs/prepare.tsx
 msgid "Sends this application (posting, notes, interview details) and Knowledge that's switched on to {name}."
 msgstr ""
@@ -7794,11 +8168,13 @@ msgid "Sends your resume's text only to {0} · {1}, with your key."
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Sent"
 msgstr ""
 
 #. placeholder {0}: version.name
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Sent to {0}"
 msgstr ""
 
@@ -7878,6 +8254,7 @@ msgstr ""
 msgid "Share"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/screen.tsx
 msgid "Share & export"
 msgstr ""
@@ -7902,6 +8279,7 @@ msgstr ""
 msgid "Share recording"
 msgstr ""
 
+#: src/features/letters/share.tsx
 #: src/features/share/screen.tsx
 msgid "Share sections"
 msgstr ""
@@ -7924,12 +8302,20 @@ msgstr ""
 msgid "Sharpening the opening"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Short and direct. Fine if the posting asks for brevity."
+msgstr ""
+
 #: src/features/assistant/assistant-screen.tsx
 msgid "Short and polite, for the recruiter"
 msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "Shorten questions to 2,000 characters and answers to 6,000 characters before marking this applied."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Shorter"
 msgstr ""
 
 #. placeholder {0}: Math.min(remaining, COLUMN_PAGE_SIZE)
@@ -8116,6 +8502,10 @@ msgstr ""
 msgid "Sign-in didn't complete"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Sign-off"
+msgstr ""
+
 #. placeholder {0}: hostOf(server)
 #: src/auth/session-gate.tsx
 msgid "Signed out of {0}. Your documents are still there."
@@ -8174,6 +8564,10 @@ msgstr ""
 msgid "Small numbers, but worth noticing."
 msgstr ""
 
+#: src/features/letters/design.tsx
+msgid "Smaller text"
+msgstr ""
+
 #: src/features/check/issues.ts
 msgid "Some application systems ask for one before you can apply."
 msgstr ""
@@ -8187,6 +8581,7 @@ msgid "Some characters come out as question marks."
 msgstr ""
 
 #. placeholder {0}: result.lostCharacters.join(", ")
+#: src/features/letters/page.tsx
 #: src/preview/page.tsx
 msgid "Some characters could not be drawn: {0}. Choose another font in Design."
 msgstr ""
@@ -8211,6 +8606,7 @@ msgstr ""
 msgid "Some systems only recognise links that start with https://. This one reads as plain text: “{value}”."
 msgstr ""
 
+#: src/features/letters/page.tsx
 #: src/preview/page.tsx
 msgid "Some text could not be drawn. Choose another font in Design."
 msgstr ""
@@ -8363,6 +8759,22 @@ msgstr ""
 msgid "Start the resume with your name on its own line."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Start typing, or draft from what we know: the {company} posting and your resume."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Start typing, or draft from what we know: the {company} posting."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Start typing, or draft from what we know: your resume."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Start typing. To draft one, link a resume or an application first."
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "Start with the sections most resumes have."
 msgstr ""
@@ -8380,6 +8792,7 @@ msgid "Stay in Documents"
 msgstr ""
 
 #: src/features/assistant/chat-view.tsx
+#: src/features/letters/write.tsx
 msgid "Stop"
 msgstr ""
 
@@ -8576,6 +8989,7 @@ msgid "Task (required)"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Teal"
 msgstr ""
 
@@ -8610,12 +9024,17 @@ msgstr ""
 
 #: src/features/design/design-pane.tsx
 #: src/features/document-menu/index.tsx
+#: src/features/letters/design.tsx
 msgid "Template"
 msgstr ""
 
 #. placeholder {0}: templateName(template)
 #: src/features/design/draft.ts
 msgid "Template changed to {0}"
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "Template, type and colors follow the resume, so the pair always matches."
 msgstr ""
 
 #: src/features/ats-checker/checker.tsx
@@ -8668,6 +9087,7 @@ msgid "Text sits in the header or footer area."
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgid "Text size"
 msgstr ""
 
@@ -8768,6 +9188,7 @@ msgid "The connection couldn't be loaded or saved. Try again."
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "The current state will be saved as “Before restore” first."
 msgstr ""
 
@@ -8783,6 +9204,10 @@ msgstr ""
 msgid "The follow-up is saved. To get a reminder, allow notifications in your device settings."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "The greeting follows the name."
+msgstr ""
+
 #: src/features/application-detail/interview-sheet.tsx
 msgid "The interview is saved. To get a reminder, allow notifications in your device settings."
 msgstr ""
@@ -8793,6 +9218,22 @@ msgstr ""
 
 #: src/features/career/schedule-sheet.tsx
 msgid "The lead time has passed. Saving runs the briefing now."
+msgstr ""
+
+#: src/features/letters/share.tsx
+msgid "The letter as it is"
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "The letter keeps a design of its own."
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "The letter keeps this design as its own"
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "The letter matches the resume's design again"
 msgstr ""
 
 #: src/features/write/improve.tsx
@@ -8841,6 +9282,11 @@ msgstr ""
 
 #: src/features/ats-checker/checker.tsx
 msgid "The rest of the file isn't in this report."
+msgstr ""
+
+#: src/features/letters/design.tsx
+#: src/features/letters/write.tsx
+msgid "the resume"
 msgstr ""
 
 #: src/features/history/history.tsx
@@ -8938,6 +9384,10 @@ msgstr ""
 
 #: src/features/assistant/chat-view.tsx
 msgid "Thinking…"
+msgstr ""
+
+#: app/(tabs)/settings/licences.tsx
+msgid "Third-party software notices. Select a dependency to read its licence."
 msgstr ""
 
 #: src/features/application-detail/detail-screen.tsx
@@ -9074,8 +9524,20 @@ msgstr ""
 msgid "This JSON isn't a supported resume or cover letter."
 msgstr ""
 
+#: src/features/letters/share.tsx
+msgid "This letter and “{resumeName}” as two PDFs, named to match."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "This letter changed elsewhere"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "This letter is locked. Unlock it in Documents to edit."
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "This letter keeps its recipient as written."
 msgstr ""
 
 #: src/linking/open.ts
@@ -9248,6 +9710,10 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "To"
+msgstr ""
+
 #: src/features/write/outline.tsx
 msgid "To check"
 msgstr ""
@@ -9297,6 +9763,7 @@ msgid "Track in Applications"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design-presets.ts
 msgid "Traditional"
 msgstr ""
 
@@ -9345,6 +9812,7 @@ msgstr ""
 #: src/features/ai/provider-list.tsx
 #: src/features/ai/web-access.tsx
 #: src/features/application-detail/detail-screen.tsx
+#: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
 #: src/features/workspace/coach-sheet.tsx
@@ -9420,6 +9888,7 @@ msgstr ""
 #: src/features/career/facts.tsx
 #: src/features/design/advanced.tsx
 #: src/features/design/design-pane.tsx
+#: src/features/letters/design.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Type"
 msgstr ""
@@ -9449,6 +9918,7 @@ msgstr ""
 msgid "Unavailable"
 msgstr ""
 
+#: src/features/letters/rich-text-field.tsx
 #: src/features/write/rich-text-field.tsx
 msgid "Underline"
 msgstr ""
@@ -9457,6 +9927,8 @@ msgstr ""
 msgid "Underline links"
 msgstr ""
 
+#: app/builder/[id]/_layout.tsx
+#: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
@@ -9631,6 +10103,14 @@ msgstr ""
 msgid "Use color {color}"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Use default"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Use details from “{resumeName}”"
+msgstr ""
+
 #: src/features/career/facts.tsx
 msgid "Use for all applications"
 msgstr ""
@@ -9654,6 +10134,10 @@ msgstr ""
 
 #: src/features/workspace/parts.tsx
 msgid "Use server version"
+msgstr ""
+
+#: src/features/letters/design.tsx
+msgid "Use six hex digits, like #3E6B4F."
 msgstr ""
 
 #: src/features/check/actions.ts
@@ -9733,15 +10217,22 @@ msgstr ""
 msgid "Verifying password..."
 msgstr ""
 
+#: src/features/letters/share.tsx
+msgid "Version"
+msgstr ""
+
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Version options"
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Version restored. Your previous state is saved as “Before restore”."
 msgstr ""
 
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Version saved"
 msgstr ""
 
@@ -9784,6 +10275,7 @@ msgstr ""
 
 #. placeholder {0}: versionTitle(selected)
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "Viewing {0} · read-only"
 msgstr ""
 
@@ -9993,6 +10485,7 @@ msgid "Why do you want this role at {company}?"
 msgstr ""
 
 #: src/features/design/style-groups.tsx
+#: src/features/letters/design.tsx
 msgid "Wide"
 msgstr ""
 
@@ -10004,6 +10497,11 @@ msgstr ""
 msgid "Within your office-day limit."
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Without one, you fill in the recipient yourself and drafting uses only your resume."
+msgstr ""
+
+#: src/features/letters/share.tsx
 #: src/features/share/download.tsx
 msgid "Word"
 msgstr ""
@@ -10039,7 +10537,6 @@ msgstr ""
 #: app/builder/[id]/_layout.tsx
 #: app/builder/[id]/write.tsx
 #: app/letter/[id]/_layout.tsx
-#: app/letter/[id]/write.tsx
 msgid "Write"
 msgstr ""
 
@@ -10065,6 +10562,10 @@ msgstr ""
 
 #: src/features/workspace/tabs/debrief.tsx
 msgid "Write it down while it's fresh"
+msgstr ""
+
+#: src/features/letters/write.tsx
+msgid "Write it myself"
 msgstr ""
 
 #: src/features/workspace/tabs/practise.tsx
@@ -10162,7 +10663,12 @@ msgstr ""
 msgid "You're offline. Download PDF uses this device. Other formats and linked letters need a connection. Fonts and images must already be cached."
 msgstr ""
 
+#: src/features/letters/share.tsx
+msgid "You're offline. Download PDF uses this device. Other formats need a connection. Fonts and images must already be cached."
+msgstr ""
+
 #: src/features/history/history.tsx
+#: src/features/letters/share.tsx
 msgid "You're offline. History needs a connection."
 msgstr ""
 
@@ -10287,6 +10793,10 @@ msgstr ""
 msgid "Your name"
 msgstr ""
 
+#: src/features/letters/write.tsx
+msgid "Your name and contact details come from a resume."
+msgstr ""
+
 #: src/features/check/issues.ts
 msgid "Your name is missing"
 msgstr ""
@@ -10329,6 +10839,10 @@ msgstr ""
 
 #: src/features/career/offers.tsx
 msgid "Your requirements"
+msgstr ""
+
+#: src/features/letters/share.tsx
+msgid "your resume"
 msgstr ""
 
 #: src/features/check/issues.ts
@@ -10380,10 +10894,12 @@ msgstr ""
 msgid "YYYY-MM-DD (optional)"
 msgstr ""
 
+#: src/features/letters/page.tsx
 #: src/preview/page.tsx
 msgid "Zoom in"
 msgstr ""
 
+#: src/features/letters/page.tsx
 #: src/preview/page.tsx
 msgid "Zoom out"
 msgstr ""
