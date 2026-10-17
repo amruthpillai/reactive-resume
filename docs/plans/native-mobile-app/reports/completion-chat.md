@@ -36,7 +36,7 @@ Validation:
 - `rtk proxy pnpm lint:agent` — passed, repository-wide.
 - `rtk proxy pnpm format:check` — passed, repository-wide.
 - `rtk proxy pnpm exec turbo boundaries` — passed: 23 packages, no violations.
-- `rtk proxy node --import ./apps/server/node_modules/tsx/dist/loader.mjs docs/plans/native-mobile-app/reports/M6-T3/verify.mjs` — 17 existing transport/recovery scenarios plus 15 completion integration scenarios passed.
+- `rtk proxy node --import ./apps/server/node_modules/tsx/dist/loader.mjs docs/plans/native-mobile-app/reports/M6-T3/verify.mjs` — 17 existing transport/recovery scenarios plus 19 completion integration scenarios passed.
 - `git diff --check` — passed.
 
 ## Deferred verification
@@ -47,8 +47,16 @@ No native build, simulator/emulator run, screenshots, live provider/account, or 
 
 Review of `179b0128c` found one P2 blocker: accepting a letter proposal, closing Assistant, and typing in the editor left a toast whose generic Undo removed that later typing. The existing resume proposal toast had the same weakness.
 
-Both acceptance paths now capture the accepted state and dismiss/invalidate the toast after an intervening authored edit. A retained callback refuses to undo once invalidated, including after builder Undo returns to the accepted text. No-op acceptance creates no Undo toast. Account/document and lock guards remain. Listeners expire after the existing six-second toast window.
+Both acceptance paths now capture the accepted state and dismiss/invalidate the toast after an intervening authored edit. A retained callback refuses to undo once invalidated, including after builder Undo returns to the accepted text. No-op acceptance creates no Undo toast. Account/document and lock guards remain. Listeners cover the maximum 12-second screen-reader action-toast window, and eligibility expires when monitoring ends.
 
 Letter validation reuses `letterAdapter.matches` to compare authored fields, rather than whole-document identity: autosave revision/date/server metadata changes replace letter data without adding an undo step. Resume authored data references remain stable across saves under the existing resume adapter contract. No draft-store changes, new abstraction, or test-only production export were needed.
 
-Extended the completion harness using real DraftStore and the actual letter/resume adapter data/merge/comparison behavior. Four cases cover both document kinds: accept → close Assistant → type → toast Undo preserves typing (and remains invalid after builder Undo); accept → save → toast Undo restores pre-proposal text while preserving letter revision metadata. Both typing cases demonstrably failed against `179b0128c` before the fix; both ordinary-save cases passed before and after it. Existing history/status/Undo scenarios also pass. Final local checks: mobile typecheck, repository lint/format, boundaries, full M6-T3 harness (17 transport + 15 integration), and diff whitespace.
+Extended the completion harness using real DraftStore and the actual letter/resume adapter data/merge/comparison behavior. Four cases cover both document kinds: accept → close Assistant → type → toast Undo preserves typing (and remains invalid after builder Undo); accept → save → toast Undo restores pre-proposal text while preserving letter revision metadata. Both typing cases demonstrably failed against `179b0128c` before the fix; both ordinary-save cases passed before and after it. Existing history/status/Undo scenarios also pass. Final local checks: mobile typecheck, repository lint/format, boundaries, full M6-T3 harness (17 transport + 19 integration), and diff whitespace.
+
+## Review correction: accessible toast lifetime
+
+Final review of `72ac24602` found that action toasts last 12 seconds with a screen reader (`ui/overlays.tsx`), while proposal guards stopped monitoring after six seconds without expiring eligibility. A letter edited from accepted text A to B after six seconds, then back to A in a separate history step, could therefore pass the old equality guard and Undo back to B.
+
+Both letter and resume proposal guards now monitor for the full 12-second maximum and set eligibility false before unsubscribing at expiry. No UI API/export, store abstraction, or production-only test seam was added.
+
+The real-DraftStore harness now uses controlled Date/setTimeout timers for both document types. It verifies valid accept-save-Undo at 11 seconds, refuses A → B → A edits starting at 6.1 seconds with a 1.1-second coalescing gap, and refuses retained callbacks after 12.001 seconds. The letter A → B → A regression and both post-expiry callback cases failed against `72ac24602` before the repair. All 19 integration scenarios pass after it, alongside the existing 17 transport/recovery scenarios. Mobile typecheck, repository lint/format, boundaries, and whitespace checks pass locally. Native and screen-reader device verification remain with smoke workers; no CI claim.

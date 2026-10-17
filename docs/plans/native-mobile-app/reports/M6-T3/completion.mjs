@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { createRequire, registerHooks } from "node:module";
 import { fileURLToPath } from "node:url";
+import { mock } from "node:test";
 
 const mobile = new URL("../../../../../apps/mobile/", import.meta.url);
 const requireMobile = createRequire(new URL("package.json", mobile));
@@ -395,7 +396,7 @@ const proposals = [
 	},
 ];
 let passed = 0;
-async function check(name, run) {
+async function check(name, run, timed = false) {
 	if (process.env.COMPLETION_SCENARIO && !name.includes(process.env.COMPLETION_SCENARIO)) return;
 	env.calls = [];
 	env.chrome = [];
@@ -406,10 +407,15 @@ async function check(name, run) {
 	env.threadError = null;
 	env.threads = [];
 	env.apps = [{ id: "app-a", company: "Northwind", role: "Engineer", updatedAt: new Date(), tags: [] }];
-	await draft();
-	await run();
-	await env.store.getState().close();
-	await env.resumeStore?.getState().close();
+	if (timed) mock.timers.enable({ apis: ["setTimeout", "Date"], now: 10000 });
+	try {
+		await draft();
+		await run();
+	} finally {
+		await env.store.getState().close();
+		await env.resumeStore?.getState().close();
+		if (timed) mock.timers.reset();
+	}
 	console.log(`PASS ${name}`);
 	passed++;
 }
@@ -503,26 +509,35 @@ await check(
 	},
 );
 
+async function proposalDraft(kind) {
+	if (kind === "resume") await draft(kind);
+	const store = kind === "letter" ? env.store : env.resumeStore;
+	let document;
+	const probe = mount(() => {
+		if (kind === "letter") document = useLetterAssistantDocument("letter-a");
+		return null;
+	});
+	const contentOf = (data) => (kind === "letter" ? data.content : data.summary.content);
+	const proposal =
+		kind === "letter"
+			? proposals[0]
+			: {
+					...proposals[0],
+					target: { sectionId: "summary", field: "content" },
+					before: contentOf(store.getState().data),
+				};
+	return {
+		store,
+		probe,
+		contentOf,
+		accept: () => (kind === "letter" ? document.accept([proposal]) : acceptResumeProposals([proposal])),
+	};
+}
+
 for (const kind of ["letter", "resume"]) {
 	await check(`${kind} proposal toast refuses Undo after subsequent typing`, async () => {
-		if (kind === "resume") await draft(kind);
-		const store = kind === "letter" ? env.store : env.resumeStore;
-		let document;
-		const probe = mount(() => {
-			if (kind === "letter") document = useLetterAssistantDocument("letter-a");
-			return null;
-		});
-		const contentOf = (data) => (kind === "letter" ? data.content : data.summary.content);
-		const proposal =
-			kind === "letter"
-				? proposals[0]
-				: {
-						...proposals[0],
-						target: { sectionId: "summary", field: "content" },
-						before: store.getState().data.summary.content,
-					};
-		if (kind === "letter") document.accept([proposal]);
-		else acceptResumeProposals([proposal]);
+		const { store, probe, contentOf, accept } = await proposalDraft(kind);
+		accept();
 		const undo = env.toasts.at(-1).action.onPress;
 		probe.unmount(); // Closing Assistant keeps its toast, while the builder draft owner stays mounted.
 		store.getState().update(
@@ -548,37 +563,86 @@ for (const kind of ["letter", "resume"]) {
 			"invalidated toast stays invalid after returning to accepted text",
 		);
 	});
-	await check(`${kind} proposal toast still undoes acceptance after ordinary save`, async () => {
-		if (kind === "resume") await draft(kind);
-		const store = kind === "letter" ? env.store : env.resumeStore;
-		let document;
-		const probe = mount(() => {
-			if (kind === "letter") document = useLetterAssistantDocument("letter-a");
-			return null;
-		});
-		const contentOf = (data) => (kind === "letter" ? data.content : data.summary.content);
-		const before = contentOf(store.getState().data);
-		const proposal =
-			kind === "letter"
-				? proposals[0]
-				: { ...proposals[0], target: { sectionId: "summary", field: "content" }, before };
-		if (kind === "letter") document.accept([proposal]);
-		else acceptResumeProposals([proposal]);
-		const undo = env.toasts.at(-1).action.onPress;
-		const accepted = store.getState().data;
-		await store.getState().flush();
-		assert.equal(store.getState().status, "saved");
-		if (kind === "letter") {
-			assert.notEqual(store.getState().data, accepted);
-			assert.equal(store.getState().data.revision, accepted.revision + 1);
-		}
-		probe.unmount();
-		undo();
-		assert.equal(contentOf(store.getState().data), before, "metadata-only save must not invalidate proposal Undo");
-		assert.equal(store.getState().canUndo, false);
-		if (kind === "letter")
-			assert.equal(store.getState().data.revision, accepted.revision + 1, "Undo preserves saved revision metadata");
-	});
+	await check(
+		`${kind} proposal toast still undoes acceptance after save at 11 seconds in screen-reader window`,
+		async () => {
+			const { store, probe, contentOf, accept } = await proposalDraft(kind);
+			const before = contentOf(store.getState().data);
+			accept();
+			const undo = env.toasts.at(-1).action.onPress;
+			const accepted = store.getState().data;
+			await store.getState().flush();
+			assert.equal(store.getState().status, "saved");
+			if (kind === "letter") {
+				assert.notEqual(store.getState().data, accepted);
+				assert.equal(store.getState().data.revision, accepted.revision + 1);
+			}
+			mock.timers.tick(11000);
+			await tick();
+			probe.unmount();
+			undo();
+			assert.equal(contentOf(store.getState().data), before, "metadata-only save must not invalidate proposal Undo");
+			assert.equal(store.getState().canUndo, false);
+			if (kind === "letter")
+				assert.equal(store.getState().data.revision, accepted.revision + 1, "Undo preserves saved revision metadata");
+		},
+		true,
+	);
+	await check(
+		`${kind} proposal toast refuses edits back to accepted text after six seconds`,
+		async () => {
+			const { store, probe, contentOf, accept } = await proposalDraft(kind);
+			accept();
+			const undo = env.toasts.at(-1).action.onPress;
+			const accepted = contentOf(store.getState().data);
+			probe.unmount();
+			mock.timers.tick(6100);
+			await tick();
+			store.getState().update((data) => {
+				if (kind === "letter") data.content = "<p>Intervening typing.</p>";
+				else data.summary.content = "<p>Intervening typing.</p>";
+			});
+			mock.timers.tick(1100); // Separate history steps, past the draft coalescing interval.
+			await tick();
+			store.getState().update((data) => {
+				if (kind === "letter") data.content = accepted;
+				else data.summary.content = accepted;
+			});
+			undo();
+			assert.equal(
+				contentOf(store.getState().data),
+				accepted,
+				"12-second accessible action must not undo intervening typing",
+			);
+			store.getState().undo();
+			assert.equal(
+				contentOf(store.getState().data),
+				"<p>Intervening typing.</p>",
+				"returning to accepted text created its own Undo step",
+			);
+		},
+		true,
+	);
+	await check(
+		`${kind} proposal toast expires eligibility after its accessible lifetime`,
+		async () => {
+			const { store, probe, contentOf, accept } = await proposalDraft(kind);
+			accept();
+			const undo = env.toasts.at(-1).action.onPress;
+			const accepted = contentOf(store.getState().data);
+			mock.timers.tick(12001);
+			await tick();
+			probe.unmount();
+			undo();
+			assert.equal(
+				contentOf(store.getState().data),
+				accepted,
+				"a retained callback cannot Undo after its monitor expires",
+			);
+			assert.equal(store.getState().canUndo, true, "builder Undo history remains available");
+		},
+		true,
+	);
 }
 
 await check(

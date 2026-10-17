@@ -93,7 +93,11 @@ export function acceptResumeProposals(proposals: readonly Proposal[]) {
 		dismissToast(toastId);
 		unsubscribe();
 	});
-	setTimeout(unsubscribe, 6000);
+	// Action toasts last up to 12 seconds with a screen reader; eligibility ends with monitoring.
+	setTimeout(() => {
+		eligible = false;
+		unsubscribe();
+	}, 12000);
 }
 
 // ---- Page markings ----
