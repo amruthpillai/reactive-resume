@@ -1,0 +1,57 @@
+import type { CheckIssue } from "./issues";
+import type { ResumeData } from "@reactive-resume/schema/resume/data";
+import { t } from "@lingui/core/macro";
+import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
+import { Platform } from "react-native";
+import { computeCheck } from "./model";
+import { useResumeStore } from "@/draft";
+import { routes } from "@/routes";
+import { dismissToast, showToast } from "@/ui";
+
+/** Shared draft owner retains history; a toast must never undo a later, unrelated edit. */
+export function editWithUndo(id: string, edit: (draft: ResumeData) => void, message: string) {
+	const store = useResumeStore.getState();
+	if (store.document?.id !== id || !store.data || store.locked) return false;
+	store.update(edit, { newStep: true });
+	const changed = useResumeStore.getState().data;
+	if (changed === store.data) return false;
+	const toastId = showToast({
+		message,
+		action: {
+			label: t`Undo`,
+			onPress: () => {
+				const current = useResumeStore.getState();
+				if (current.document?.id === id && current.data === changed && !current.locked) current.undo();
+				else showToast({ message: t`Use the builder's Undo to undo earlier changes.` });
+			},
+		},
+	});
+	const unsubscribe = useResumeStore.subscribe((current) => {
+		if (current.document?.id === id && current.data === changed) return;
+		dismissToast(toastId);
+		unsubscribe();
+	});
+	setTimeout(unsubscribe, 6000);
+	if (Platform.OS === "ios") void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+	return true;
+}
+
+export function fixIssue(id: string, issue: CheckIssue) {
+	const current = useResumeStore.getState();
+	if (current.document?.id !== id || !current.data || current.locked) return;
+	// Resolve the stable key again: array pointers can move after a reorder or remote edit.
+	const fresh = computeCheck(current.data).issues.find((entry) => entry.key === issue.key);
+	if (!fresh) return;
+	if (fresh.fix.kind === "apply") {
+		editWithUndo(id, fresh.fix.apply, fresh.fix.done);
+		return;
+	}
+	const target = fresh.fix.target;
+	const field = fresh.finding.pointer.split("/").at(-1) ?? "";
+	// coordinator: M3-T5 fields.ts supplies labels; section/item/field ids are the navigation seam.
+	router.push({
+		pathname: target.kind === "item" ? routes.entry(id, target.sectionId, target.itemId) : routes.builder(id, "write"),
+		params: { section: target.kind === "header" ? "basics" : target.sectionId, field },
+	});
+}

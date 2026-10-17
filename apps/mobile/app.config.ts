@@ -5,6 +5,7 @@ require("./src/features/licences/generate.cjs");
 
 // The official host. Universal Links, App Links and the OAuth callback (`/auth/native-callback`) verify against it.
 const host = "rxresu.me";
+const microphonePermission = "Reactive Resume records your answers when you practise for an interview.";
 
 const config: ExpoConfig = {
 	name: "Reactive Resume",
@@ -54,7 +55,7 @@ const config: ExpoConfig = {
 			backgroundImage: "./assets/adaptive-background.png",
 			backgroundColor: "#F8F7F3",
 		},
-		// Profile camera is used. Pickers/share sheets need no broad storage access; Practise has no audio code yet.
+		// Profile camera and foreground Practise audio are used; pickers/share sheets need no broad storage access.
 		blockedPermissions: [
 			"android.permission.SYSTEM_ALERT_WINDOW",
 			"android.permission.READ_EXTERNAL_STORAGE",
@@ -62,8 +63,6 @@ const config: ExpoConfig = {
 			"android.permission.READ_MEDIA_IMAGES",
 			"android.permission.READ_MEDIA_VIDEO",
 			"android.permission.READ_MEDIA_AUDIO",
-			"android.permission.RECORD_AUDIO",
-			"android.permission.MODIFY_AUDIO_SETTINGS",
 			"android.permission.FOREGROUND_SERVICE",
 			"android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
 			"android.permission.FOREGROUND_SERVICE_MICROPHONE",
@@ -94,7 +93,6 @@ const config: ExpoConfig = {
 				category: ["BROWSABLE", "DEFAULT"],
 				data: [
 					{ scheme: "https", host, path: "/auth/native-callback" },
-					// `/$username/$slug` is left to M7-T3: a two-segment pattern would also capture web-only routes.
 					{ scheme: "https", host, pathPrefix: "/builder/" },
 				],
 			},
@@ -128,14 +126,14 @@ const config: ExpoConfig = {
 			{
 				photosPermission: "Reactive Resume uses your photos to set the picture on your resume.",
 				cameraPermission: "Reactive Resume uses your camera to take a profile photo.",
-				microphonePermission: false,
+				microphonePermission,
 			},
 		],
 		[
 			"expo-audio",
 			{
-				microphonePermission: false,
-				recordAudioAndroid: false,
+				microphonePermission,
+				recordAudioAndroid: true,
 				enableBackgroundPlayback: false,
 				enableBackgroundRecording: false,
 			},

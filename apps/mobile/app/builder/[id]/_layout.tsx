@@ -4,6 +4,7 @@ import { useLingui } from "@lingui/react/macro";
 import { router, useLocalSearchParams } from "expo-router";
 import PageScreen from "./page";
 import { ResumeConflictSheet, useResumeDraftOwner, useResumeStore } from "@/draft";
+import { DocumentMenu } from "@/features/document-menu";
 import { routes } from "@/routes";
 import { BuilderChrome, useBuilderChrome } from "@/shell/builder-chrome";
 
@@ -46,6 +47,7 @@ export default function BuilderLayout() {
 			modals={["share", "assistant"]}
 		>
 			<DraftChrome />
+			<DocumentMenu id={id} inChrome />
 			<ResumeConflictSheet />
 		</BuilderChrome>
 	);
