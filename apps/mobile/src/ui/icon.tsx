@@ -30,6 +30,7 @@ import { CalendarBlankIcon } from "phosphor-react-native/src/icons/CalendarBlank
 import { CalendarDotIcon } from "phosphor-react-native/src/icons/CalendarDot";
 import { CalendarDotsIcon } from "phosphor-react-native/src/icons/CalendarDots";
 import { CalendarPlusIcon } from "phosphor-react-native/src/icons/CalendarPlus";
+import { CameraIcon } from "phosphor-react-native/src/icons/Camera";
 import { CameraPlusIcon } from "phosphor-react-native/src/icons/CameraPlus";
 import { CaretDownIcon } from "phosphor-react-native/src/icons/CaretDown";
 import { CaretLeftIcon } from "phosphor-react-native/src/icons/CaretLeft";
@@ -77,6 +78,7 @@ import { HandHeartIcon } from "phosphor-react-native/src/icons/HandHeart";
 import { HighlighterIcon } from "phosphor-react-native/src/icons/Highlighter";
 import { HourglassIcon } from "phosphor-react-native/src/icons/Hourglass";
 import { HouseIcon } from "phosphor-react-native/src/icons/House";
+import { ImageIcon } from "phosphor-react-native/src/icons/Image";
 import { InfoIcon } from "phosphor-react-native/src/icons/Info";
 import { KanbanIcon } from "phosphor-react-native/src/icons/Kanban";
 import { KeyIcon } from "phosphor-react-native/src/icons/Key";
@@ -110,16 +112,19 @@ import { PencilLineIcon } from "phosphor-react-native/src/icons/PencilLine";
 import { PencilSimpleIcon } from "phosphor-react-native/src/icons/PencilSimple";
 import { PhoneIcon } from "phosphor-react-native/src/icons/Phone";
 import { PlayIcon } from "phosphor-react-native/src/icons/Play";
+import { PlugsConnectedIcon } from "phosphor-react-native/src/icons/PlugsConnected";
 import { PlusIcon } from "phosphor-react-native/src/icons/Plus";
 import { PlusCircleIcon } from "phosphor-react-native/src/icons/PlusCircle";
 import { PrinterIcon } from "phosphor-react-native/src/icons/Printer";
 import { QrCodeIcon } from "phosphor-react-native/src/icons/QrCode";
 import { QuestionIcon } from "phosphor-react-native/src/icons/Question";
+import { RobotIcon } from "phosphor-react-native/src/icons/Robot";
 import { RowsIcon } from "phosphor-react-native/src/icons/Rows";
 import { ScalesIcon } from "phosphor-react-native/src/icons/Scales";
 import { ScissorsIcon } from "phosphor-react-native/src/icons/Scissors";
 import { SealCheckIcon } from "phosphor-react-native/src/icons/SealCheck";
 import { ShareNetworkIcon } from "phosphor-react-native/src/icons/ShareNetwork";
+import { ShieldCheckIcon } from "phosphor-react-native/src/icons/ShieldCheck";
 import { SidebarSimpleIcon } from "phosphor-react-native/src/icons/SidebarSimple";
 import { SignOutIcon } from "phosphor-react-native/src/icons/SignOut";
 import { SlidersHorizontalIcon } from "phosphor-react-native/src/icons/SlidersHorizontal";
@@ -133,6 +138,7 @@ import { StopIcon } from "phosphor-react-native/src/icons/Stop";
 import { StopCircleIcon } from "phosphor-react-native/src/icons/StopCircle";
 import { SunIcon } from "phosphor-react-native/src/icons/Sun";
 import { TagIcon } from "phosphor-react-native/src/icons/Tag";
+import { TerminalWindowIcon } from "phosphor-react-native/src/icons/TerminalWindow";
 import { TextAaIcon } from "phosphor-react-native/src/icons/TextAa";
 import { TextAlignCenterIcon } from "phosphor-react-native/src/icons/TextAlignCenter";
 import { TextAlignJustifyIcon } from "phosphor-react-native/src/icons/TextAlignJustify";
@@ -199,6 +205,7 @@ const icons = {
 	"calendar-dot": CalendarDotIcon,
 	"calendar-dots": CalendarDotsIcon,
 	"calendar-plus": CalendarPlusIcon,
+	camera: CameraIcon,
 	"camera-plus": CameraPlusIcon,
 	"caret-down": CaretDownIcon,
 	"caret-left": CaretLeftIcon,
@@ -246,6 +253,7 @@ const icons = {
 	highlighter: HighlighterIcon,
 	hourglass: HourglassIcon,
 	house: HouseIcon,
+	image: ImageIcon,
 	info: InfoIcon,
 	kanban: KanbanIcon,
 	key: KeyIcon,
@@ -279,16 +287,19 @@ const icons = {
 	"pencil-simple": PencilSimpleIcon,
 	phone: PhoneIcon,
 	play: PlayIcon,
+	"plugs-connected": PlugsConnectedIcon,
 	plus: PlusIcon,
 	"plus-circle": PlusCircleIcon,
 	printer: PrinterIcon,
 	"qr-code": QrCodeIcon,
 	question: QuestionIcon,
+	robot: RobotIcon,
 	rows: RowsIcon,
 	scales: ScalesIcon,
 	scissors: ScissorsIcon,
 	"seal-check": SealCheckIcon,
 	"share-network": ShareNetworkIcon,
+	"shield-check": ShieldCheckIcon,
 	"sidebar-simple": SidebarSimpleIcon,
 	"sign-out": SignOutIcon,
 	"sliders-horizontal": SlidersHorizontalIcon,
@@ -302,6 +313,7 @@ const icons = {
 	"stop-circle": StopCircleIcon,
 	sun: SunIcon,
 	tag: TagIcon,
+	"terminal-window": TerminalWindowIcon,
 	"text-aa": TextAaIcon,
 	"text-align-center": TextAlignCenterIcon,
 	"text-align-justify": TextAlignJustifyIcon,

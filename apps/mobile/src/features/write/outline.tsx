@@ -124,7 +124,7 @@ export function Outline({ resumeId, imported, initialSection }: OutlineProps) {
 							<ImportedBanner data={data} source={imported} onDismiss={() => setDismissedImport(true)} />
 						) : null}
 						<BasicsCard resumeId={resumeId} data={data} />
-						<View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+						<View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", gap: space.s2 }}>
 							<Text variant="micro" color="ink3">
 								{t`Sections · print order`}
 							</Text>

@@ -36,8 +36,8 @@ export default function CareerLayout() {
 					))}
 				</ScrollView>
 			</View>
-			{/* The SafeAreaView above has cleared the status bar. */}
-			<Stack screenOptions={stackOptions} />
+			{/* Plain content needs an opaque header; SafeAreaView already clears the status bar. */}
+			<Stack screenOptions={{ ...stackOptions, headerTransparent: false }} />
 		</SafeAreaView>
 	);
 }
