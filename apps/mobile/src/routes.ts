@@ -3,7 +3,7 @@
 import type { WorkspaceTab } from "@reactive-resume/schema/career";
 
 export type BuilderPane = "write" | "page" | "design" | "check";
-export type LetterPane = "write" | "design";
+export type LetterPane = "write" | "page" | "design";
 export type CareerPane = "today" | "coach" | "knowledge" | "offers";
 export type SettingsPane = "account" | "preferences" | "ai";
 export type ApplicationTab = WorkspaceTab;
