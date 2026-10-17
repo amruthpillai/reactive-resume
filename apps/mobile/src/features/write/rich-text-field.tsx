@@ -7,7 +7,6 @@ import { useLingui } from "@lingui/react/macro";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { ScrollView, View } from "react-native";
 import { EnrichedTextInput } from "react-native-enriched-html";
-import { KeyboardStickyView } from "react-native-keyboard-controller";
 import { ImprovePanel } from "./improve";
 import { PromptSheet } from "./pickers";
 import { createRichTextSession, fromEnrichedHtml, lineAtCaret, replaceLine } from "./rich-text";
@@ -312,42 +311,40 @@ export function RichTextToolbar() {
 	return (
 		<>
 			{editor?.focused ? (
-				<KeyboardStickyView style={{ position: "absolute", left: 0, right: 0, bottom: 0 }}>
-					<View
-						accessibilityRole="toolbar"
-						accessibilityLabel={t`Formatting`}
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							minHeight: size.hit + 2,
-							borderTopWidth: 1,
-							borderTopColor: colors.line,
-							backgroundColor: colors.raised,
-						}}
-					>
-						<ScrollView horizontal keyboardShouldPersistTaps="always" showsHorizontalScrollIndicator={false}>
-							<View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: space.s1 }}>
-								{buttons.map((button) => (
-									<IconButton
-										key={button.key}
-										icon={button.icon}
-										label={button.label}
-										selected={button.isActive ?? false}
-										onPress={button.run}
-									/>
-								))}
+				<View
+					accessibilityRole="toolbar"
+					accessibilityLabel={t`Formatting`}
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						minHeight: size.hit + 2,
+						borderTopWidth: 1,
+						borderTopColor: colors.line,
+						backgroundColor: colors.raised,
+					}}
+				>
+					<ScrollView horizontal keyboardShouldPersistTaps="always" showsHorizontalScrollIndicator={false}>
+						<View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: space.s1 }}>
+							{buttons.map((button) => (
 								<IconButton
-									icon="sparkle"
-									label={t`Improve selected line`}
-									disabled={!editor.canImprove}
-									onPress={editor.improve}
+									key={button.key}
+									icon={button.icon}
+									label={button.label}
+									selected={button.isActive ?? false}
+									onPress={button.run}
 								/>
-							</View>
-						</ScrollView>
-						<Button variant="link" label={t`Done`} onPress={() => editor?.ref.current?.blur()} />
-						<View style={{ width: space.s3 }} />
-					</View>
-				</KeyboardStickyView>
+							))}
+							<IconButton
+								icon="sparkle"
+								label={t`Improve selected line`}
+								disabled={!editor.canImprove}
+								onPress={editor.improve}
+							/>
+						</View>
+					</ScrollView>
+					<Button variant="link" label={t`Done`} onPress={() => editor?.ref.current?.blur()} />
+					<View style={{ width: space.s3 }} />
+				</View>
 			) : null}
 			<PromptSheet
 				open={linkOpen}

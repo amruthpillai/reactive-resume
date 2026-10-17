@@ -84,6 +84,7 @@ import { KanbanIcon } from "phosphor-react-native/src/icons/Kanban";
 import { KeyIcon } from "phosphor-react-native/src/icons/Key";
 import { KeyboardIcon } from "phosphor-react-native/src/icons/Keyboard";
 import { LightningIcon } from "phosphor-react-native/src/icons/Lightning";
+import { LinkBreakIcon } from "phosphor-react-native/src/icons/LinkBreak";
 import { LinkSimpleHorizontalIcon } from "phosphor-react-native/src/icons/LinkSimpleHorizontal";
 import { LinkSimpleHorizontalBreakIcon } from "phosphor-react-native/src/icons/LinkSimpleHorizontalBreak";
 import { ListBulletsIcon } from "phosphor-react-native/src/icons/ListBullets";
@@ -207,6 +208,7 @@ const icons = {
 	"calendar-plus": CalendarPlusIcon,
 	camera: CameraIcon,
 	"camera-plus": CameraPlusIcon,
+	camera: CameraIcon,
 	"caret-down": CaretDownIcon,
 	"caret-left": CaretLeftIcon,
 	"caret-right": CaretRightIcon,
@@ -259,6 +261,7 @@ const icons = {
 	key: KeyIcon,
 	keyboard: KeyboardIcon,
 	lightning: LightningIcon,
+	"link-break": LinkBreakIcon,
 	"link-simple-horizontal": LinkSimpleHorizontalIcon,
 	"link-simple-horizontal-break": LinkSimpleHorizontalBreakIcon,
 	"list-bullets": ListBulletsIcon,
@@ -289,6 +292,7 @@ const icons = {
 	play: PlayIcon,
 	"plugs-connected": PlugsConnectedIcon,
 	plus: PlusIcon,
+	"plugs-connected": PlugsConnectedIcon,
 	"plus-circle": PlusCircleIcon,
 	printer: PrinterIcon,
 	"qr-code": QrCodeIcon,
@@ -304,6 +308,7 @@ const icons = {
 	"sign-out": SignOutIcon,
 	"sliders-horizontal": SlidersHorizontalIcon,
 	sparkle: SparkleIcon,
+	"terminal-window": TerminalWindowIcon,
 	"speaker-high": SpeakerHighIcon,
 	square: SquareIcon,
 	"square-split-horizontal": SquareSplitHorizontalIcon,

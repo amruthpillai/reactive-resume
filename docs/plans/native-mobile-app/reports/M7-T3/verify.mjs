@@ -7,6 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const mobile = new URL("../../../../../apps/mobile/", import.meta.url);
 const state = { server: "https://rxresu.me", token: "fixture-token", choices: [], events: [], signIn: null, tokenRead: null };
 globalThis.deepLinkScenario = state;
+globalThis.__DEV__ = false;
 const stubs = {
 	"expo-web-browser": "export const openBrowserAsync = async (path) => { globalThis.deepLinkScenario.events.push(['browser', path]); };",
 	"@lingui/core/macro": "export const t = (parts, ...values) => parts.reduce((text, part, i) => text + part + (values[i] ?? ''), '');",
@@ -83,6 +84,37 @@ try {
 		["/r/alex/cv", target("/r/alex/cv", null)],
 	];
 	for (const [url, expected, current] of mappings) assert.deepEqual(parse(url, current), expected, url);
+	const fixturePage = "/builder/preview-sample/page";
+	const localOrigin = "http://127.0.0.1:18086";
+	const parity = `parity=${encodeURIComponent(localOrigin)}`;
+	const devLinks = [
+		[`me.rxresu://${fixturePage.slice(1)}?${parity}`, `${fixturePage}?${parity}`],
+		[`${fixturePage}?smoke=${encodeURIComponent(localOrigin)}&ask=never-send`, `${fixturePage}?smoke=${encodeURIComponent(localOrigin)}`],
+		[`me.rxresu:///${fixturePage.slice(1)}?parity=http%3A%2F%2F127.0.0.1%3A80`, `${fixturePage}?parity=http%3A%2F%2F127.0.0.1%3A80`],
+	];
+	globalThis.__DEV__ = true;
+	for (const [url, href] of devLinks) assert.deepEqual(parse(url), target(href, null), url);
+	const rejectedDevOrigins = [
+		"http://remote.example:18086", "https://127.0.0.1:18086", "http://localhost:18086",
+		"http://127.0.0.2:18086", "http://127.0.0.1", "http://127.0.0.1:0", "http://127.0.0.1:65536",
+		"http://127.0.0.1:18086/fixture", "http://user@127.0.0.1:18086", "http://2130706433:18086",
+		"http://127.0.0.1.evil.test:18086", "http://127.0.0.1:18086?ask=never-send",
+	];
+	for (const origin of rejectedDevOrigins)
+		assert.deepEqual(parse(`${fixturePage}?parity=${encodeURIComponent(origin)}`), target(fixturePage, null), origin);
+	for (const url of [
+		`${fixturePage}?ask=never-send`, `${fixturePage}/?${parity}`,
+		`/builder/other-resume/page?${parity}`, `/builder/preview-sample/assistant?${parity}&ask=never-send`,
+	]) {
+		const expected = url.split("?")[0].replace(/\/$/, "");
+		assert.deepEqual(parse(url), target(expected, null), url);
+	}
+	assert.deepEqual(parse(`https://rxresu.me${fixturePage}?${parity}`), target(fixturePage));
+	assert.deepEqual(parse(`me.rxresu://r/alex/cv?${parity}&ask=never-send`), target("/r/alex/cv", null));
+	for (const query of ["parity=%", "smoke=%FF", `${parity}=extra`, "parity=%&smoke=" + encodeURIComponent(localOrigin)])
+		assert.deepEqual(parse(`${fixturePage}?${query}`), target(fixturePage, null), "Malformed fixture query must fail closed");
+	globalThis.__DEV__ = false;
+	for (const [url] of devLinks) assert.deepEqual(parse(url), target(fixturePage, null), "Release must drop dev parameters");
 	const hostileHosts = [
 		"https://evil.com/alex/cv", "https://rxresu.me.evil.com/alex/cv", "https://rxresu.me%2eevil.com/alex/cv",
 		"https://rxresu.me:8443/alex/cv", "https://resume.example:8443/alex/cv",
@@ -133,6 +165,14 @@ try {
 			return value;
 		});
 	};
+	globalThis.__DEV__ = true;
+	reset();
+	assert.equal(await open(devLinks[0][0], true), devLinks[0][1]);
+	assert.deepEqual(state.events, [["restore"], ["token"]], "Dev fixture still restores and authenticates");
+	reset({ token: null, choices: [false] });
+	assert.equal(await open(devLinks[0][0]), null, "Dev fixture cannot bypass sign-in");
+	assert.deepEqual(state.events.map(([kind]) => kind), ["token", "dialog"]);
+	globalThis.__DEV__ = false;
 	reset();
 	assert.equal(await open("https://rxresu.me/alex/cv", true), "/r/alex/cv");
 	assert.deepEqual(state.events, [["restore"], ["token"]]);
@@ -196,8 +236,9 @@ try {
 	assert.equal(await second, "/r/alex/cv");
 	assert.equal(state.events.filter(([kind]) => kind === "signIn").length, 1);
 	assert.deepEqual(state.choices, []);
-	console.log(`PASS: ${mappings.length} mappings, ${invalid.length + hostileHosts.length} hostile/unsupported inputs, ${callbacks.length} callback forms; exact-origin allowlist, browser fallback, cold launch, sign-in, consent, retry, session race and queued callback bypass.`);
+	console.log(`PASS: ${mappings.length} mappings, ${invalid.length + hostileHosts.length} hostile/unsupported inputs, ${callbacks.length} callback forms; dev-only loopback fixture routing, release query stripping, exact-origin allowlist, browser fallback, cold launch, sign-in, consent, retry, session race and queued callback bypass.`);
 } finally {
 	hooks.deregister();
 	delete globalThis.deepLinkScenario;
+	delete globalThis.__DEV__;
 }
