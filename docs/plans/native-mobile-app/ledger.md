@@ -22,7 +22,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
 | M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | MERGED  | briefs/W2.md                                                                        |
 | M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | MERGED  | briefs/W2.md                                                                        |
-| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | FIXING  | briefs/W2.md                                                                        |
+| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | MERGED  | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | MERGED  | briefs/W2.md                                                                        |
 | M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
@@ -204,3 +204,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M4-T1 done (review `895bc4ca`); M5-T3 done (review `ad729a91`). M3-T5 second review: 2 blockers (CSS-encoded marks lost, picture scope race); round 3.
 - 2026-10-17: Reviews: M4-T1 (`895bc4ca`) 6 blockers; M5-T3 (`ad729a91`) 4 blockers; M7-T3 done (review `5e7fbf24`). M3-T5, M6-T2 final checks running. Coordinator fixed the M5-T1 scenario harness routes mock (`bfaea3847`).
 - 2026-10-17: M6-T3 merged (four review rounds; 17 transport scenarios) and M7-T2 merged after it. Pending: M3-T1 final check; M3-T5/M6-T2 one blocker each; M4-T2 2 blockers (link → version conflict, plurals); coordinator approves Check running all 22 rules locally.
+- 2026-10-17: M3-T1 merged after six rounds (Codex security review NO BLOCKERS; 11 session probes). Includes `registerSignOutCleanup`, kv sweep for notes/career drafts, SignOutCleanupError handling in Settings, launch redirect in `app/index.tsx`. Coordinator accepts fail-closed refresh (server_error/dropped connection mid-refresh → sign in again).
