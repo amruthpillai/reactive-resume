@@ -3,18 +3,18 @@ import { useQuery } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { AuthHeader, hostOf } from "@/auth/auth-header";
-import { getFlags, toOrigin } from "@/auth/oauth";
+import { getFlags, isAllowedServer, toOrigin } from "@/auth/oauth";
 import { useSession } from "@/auth/session";
 import { useSignIn } from "@/auth/use-sign-in";
 import { routes } from "@/routes";
 import { Banner, Button, Card, ListRow, Screen, Text, useTheme } from "@/ui";
 
-/** The server from the picker (`?server=`), else the current one. Only https outside development builds. */
+/** The server from the picker (`?server=`), else the current one. Only servers `isAllowedServer` accepts. */
 function useTargetServer(): string {
 	const { server: current } = useSession();
 	const { server } = useLocalSearchParams<{ server?: string }>();
 	const origin = server ? toOrigin(server) : null;
-	return origin && (__DEV__ || origin.startsWith("https:")) ? origin : current;
+	return origin && isAllowedServer(origin) ? origin : current;
 }
 
 /** AU4 sign-in landing, AU5 waiting for the browser, AU6 sign-ups disabled, AU9 sign-in didn't complete. */

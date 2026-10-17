@@ -3,24 +3,15 @@ import type { NetworkState } from "expo-network";
 import * as Network from "expo-network";
 import Storage from "expo-sqlite/kv-store";
 import { AppState, Keyboard, TextInput } from "react-native";
-import { getAccessToken, getServer } from "@/auth/session";
+import { getAccountScope } from "@/auth/session";
 
 let online = true;
 
-/** Partition local documents by OAuth subject as well as server; signing in as another user never replays them. */
-async function scope() {
-	const server = getServer();
-	const token = await getAccessToken();
-	if (!token || server !== getServer()) return null;
-	try {
-		const encoded = token.split(".")[1];
-		if (!encoded) return null;
-		const payload = JSON.parse(atob(encoded.replaceAll("-", "+").replaceAll("_", "/"))) as { sub?: unknown };
-		return typeof payload.sub === "string" ? JSON.stringify([server, payload.sub]) : null;
-	} catch {
-		return null;
-	}
-}
+/**
+ * Partition local documents by OAuth subject as well as server; signing in as another user never replays them. Read
+ * from the stored session without a refresh, so drafts open offline.
+ */
+const scope = () => Promise.resolve(getAccountScope());
 
 export const nativeEnvironment: DraftEnvironment = {
 	storage: Storage,

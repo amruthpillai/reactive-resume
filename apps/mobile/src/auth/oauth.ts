@@ -11,14 +11,27 @@ export const scopes = ["openid", "profile", "email", "offline_access", "api:read
 const appHost = "rxresu.me";
 
 /**
- * The OAuth redirect URI. It is the same for every server: `https://rxresu.me/auth/native-callback` is the only https
- * URL the app can receive (its associated domain), and DCR accepts any public https redirect. Development builds
- * talking to a local http server use the app's private-use scheme instead (RFC 8252 §7.1), because no https callback
- * can be verified locally; that server must run with `FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI=true`.
+ * The OAuth redirect URI, the same for every server (coordinator decision, M3-T1):
+ * `https://rxresu.me/auth/native-callback` is the only https URL the app can receive (its associated domain, through
+ * Universal Links and App Links); a self-hosted host can never be one. DCR on any server accepts a public https
+ * redirect. If the hand-off fails and the browser loads that page instead, the code is useless without the PKCE
+ * verifier, and the fallback page (SV1) never logs it.
+ * Development builds talking to a local http server use the app's private-use scheme instead (RFC 8252 §7.1), because
+ * no https callback can be verified locally; that server must run with `FLAG_ALLOW_UNSAFE_OAUTH_REDIRECT_URI=true`.
  */
 export function redirectUri(origin: string): string {
 	if (__DEV__ && origin.startsWith("http:")) return "me.rxresu:/auth/native-callback";
 	return `https://${appHost}/auth/native-callback`;
+}
+
+// Hosts a development build may reach over http: the simulator's own machine and the Android emulator's host alias.
+const developmentHosts = new Set(["localhost", "127.0.0.1", "10.0.2.2"]);
+
+/** Servers the app talks to: https only; development builds also allow http on the local machine. */
+export function isAllowedServer(origin: string): boolean {
+	if (origin.startsWith("https://")) return true;
+	if (!__DEV__ || !origin.startsWith("http://")) return false;
+	return developmentHosts.has(origin.slice("http://".length).replace(/:\d+$/, ""));
 }
 
 // SecureStore keys allow only `[A-Za-z0-9._-]`. Hex of the origin's UTF-8 bytes is collision-free within that set.

@@ -6,7 +6,7 @@ import { KeyboardStickyView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AuthHeader, hostOf } from "@/auth/auth-header";
 import { serverErrorMessage } from "@/auth/messages";
-import { discover, ServerError, toOrigin } from "@/auth/oauth";
+import { discover, isAllowedServer, ServerError, toOrigin } from "@/auth/oauth";
 import { DEFAULT_SERVER, useSession } from "@/auth/session";
 import { routes } from "@/routes";
 import { Button, Card, Icon, ListRow, Screen, Text, TextField, useTheme } from "@/ui";
@@ -103,8 +103,8 @@ function CustomServer() {
 		const id = ++latest.current;
 		const origin = toOrigin(input);
 		if (!origin) return setCheck({ state: "error", message: t`Enter an address like resume.example.org.` });
-		// Development builds may use a local http server; release builds need https.
-		if (origin.startsWith("http:") && !__DEV__)
+		// https only; development builds may also use http on this machine (isAllowedServer).
+		if (!isAllowedServer(origin))
 			return setCheck({ state: "error", message: t`This server uses http. The app needs https.` });
 
 		setCheck({ state: "checking", origin });

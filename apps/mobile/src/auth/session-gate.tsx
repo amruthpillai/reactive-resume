@@ -3,41 +3,56 @@ import { router, useRootNavigationState, useSegments } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { hostOf } from "./auth-header";
-import { hasChosenServer, signOut, useSession } from "./session";
+import { getSession, hasChosenServer, signOut, subscribeSession, useSession } from "./session";
 import { useSignIn } from "./use-sign-in";
 import { routes } from "@/routes";
 import { Banner, Button, Sheet, showToast, useTheme } from "@/ui";
 
 /**
- * Route guard and session-expired prompt. Mount once inside the root navigator's providers.
+ * Route guard and session-expired prompt. Mounted once in app/_layout.tsx.
  * - Signed out anywhere but `(auth)`: go to sign-in (server picker on first launch).
+ * - Signing out: go to sign-in at once, in the same tick, so a caller that navigates after `signOut()` (Settings →
+ *   Switch server) always has the last word; then the AU7 toast.
  * - Signed in on an `(auth)` screen: go to Documents.
  * - Expired: stay where the user is, under a sheet that asks to sign in again (AU8).
  */
 export function SessionGate() {
 	const { t } = useLingui();
-	const { status, server } = useSession();
-	const previous = useRef(status);
+	const { status } = useSession();
 	const segments = useSegments();
 	const navigationReady = !!useRootNavigationState()?.key;
 	const path = segments.join("/");
 	const inAuth = path.startsWith("(auth)");
 	// The OAuth redirect route steps back by itself (app/(auth)/auth/native-callback.tsx).
 	const atCallback = path === "(auth)/auth/native-callback";
+	const where = useRef({ inAuth });
+	const previous = useRef(status);
 
 	useEffect(() => {
-		if (!navigationReady || atCallback) return;
-		if (status === "signed-out" && !inAuth) router.replace(hasChosenServer() ? routes.signIn() : routes.server());
-		else if (status === "signed-in" && inAuth) router.replace(routes.documents());
-	}, [navigationReady, status, inAuth, atCallback]);
+		where.current = { inAuth };
+	});
 
-	// AU7: after signing out, say where the documents are.
+	useEffect(() => {
+		let last = getSession().status;
+		return subscribeSession(() => {
+			const { status: next, server } = getSession();
+			const leaving = next === "signed-out" && (last === "signed-in" || last === "expired");
+			last = next;
+			if (!leaving) return;
+			if (!where.current.inAuth) router.replace(routes.signIn());
+			showToast({ message: t`Signed out of ${hostOf(server)}. Your documents are still there.` });
+		});
+	}, [t]);
+
 	useEffect(() => {
 		const before = previous.current;
 		previous.current = status;
-		if (status === "signed-out" && (before === "signed-in" || before === "expired"))
-			showToast({ message: t`Signed out of ${hostOf(server)}. Your documents are still there.` });
-	}, [status, server, t]);
+		if (!navigationReady || atCallback) return;
+		const signedOutNow = before === "signed-in" || before === "expired";
+		if (status === "signed-out" && !inAuth && !signedOutNow)
+			router.replace(hasChosenServer() ? routes.signIn() : routes.server());
+		else if (status === "signed-in" && inAuth) router.replace(routes.documents());
+	}, [navigationReady, status, inAuth, atCallback]);
 
 	return status === "expired" ? <SessionExpiredSheet /> : null;
 }
@@ -73,7 +88,13 @@ function SessionExpiredSheet() {
 					loading={attempt.state === "waiting"}
 					onPress={() => void start(server)}
 				/>
-				<Button label={t`Sign out`} variant="ghost" size="lg" fullWidth onPress={() => void signOut()} />
+				<Button
+					label={t`Sign out`}
+					variant="ghost"
+					size="lg"
+					fullWidth
+					onPress={() => void signOut().catch(() => showToast({ message: t`Couldn't sign out. Try again.` }))}
+				/>
 			</View>
 		</Sheet>
 	);
