@@ -60,3 +60,25 @@ Final review of `72ac24602` found that action toasts last 12 seconds with a scre
 Both letter and resume proposal guards now monitor for the full 12-second maximum and set eligibility false before unsubscribing at expiry. No UI API/export, store abstraction, or production-only test seam was added.
 
 The real-DraftStore harness now uses controlled Date/setTimeout timers for both document types. It verifies valid accept-save-Undo at 11 seconds, refuses A → B → A edits starting at 6.1 seconds with a 1.1-second coalescing gap, and refuses retained callbacks after 12.001 seconds. The letter A → B → A regression and both post-expiry callback cases failed against `72ac24602` before the repair. All 19 integration scenarios pass after it, alongside the existing 17 transport/recovery scenarios. Mobile typecheck, repository lint/format, boundaries, and whitespace checks pass locally. Native and screen-reader device verification remain with smoke workers; no CI claim.
+
+## Android Coach correction and scoped router lifecycle
+
+Merged `mobile/native-app` first (fast-forward to `1097cb6a5`). Android reported the single workspace tab strip and company title passing; this task did not rerun that native check.
+
+The shared phone Sheet inherited Gorhom 5.2.14's `switch` stack behavior. Its installed modal provider minimizes the previous modal when presenting another one. Workspace Coach contains ProviderGate's inline setup sheet, so Connect minimized its own parent, matching Android's observed Coach dismissal. Shared Sheet now reads its existing nesting context and uses `push` for nested sheets; root sheets retain `switch`. This also covers nested model/provider pickers without a new prop, dependency, native change, or separate presentation framework. Tablet FormSheet is unchanged.
+
+ProviderGate previously blocked its children whenever no usable provider existed, including the conversation list selected by the header. History and selected saved transcripts now remain readable without a provider in workspace Coach, document Assistant, and career Coach. All three ChatView callers disable sending without a usable provider. Workspace history offers the existing New conversation action even when empty, returning to inline setup. Encryption precondition and thread/account/document ownership checks remain enforced.
+
+Replaced the global Expo router import with public `useRouter` in the three exclusively assigned assistant files: `provider.tsx`, `assistant-screen.tsx`, and `page-marks.tsx`. Cross-document navigation receives the component's router and retains both target document and selected conversation. SessionGate and other router callers remain with their assigned owners.
+
+Extended the existing completion harness with four behavioral scenarios. The nested setup scenario runs the actual shared Sheet, actual AI provider setup/form, and the installed Gorhom modal-provider queue; only native hosts/refs and external I/O are replaced. It opens the API-key form without minimizing Coach, then dismisses only setup. Provider-free workspace/document scenarios open exact history read-only, and empty workspace history returns to Connect without starting/sending a conversation. Navigation handlers execute with an unavailable global router and a working hook-owned router; Review, provider settings, model settings, and cross-document letter/resume navigation retain their destinations/thread IDs.
+
+Baseline proof against `1097cb6a5`: workspace and document history each fail with missing conversation rows, nested Connect fails because the real modal queue minimizes Coach, and Review fails on the unbound global router. Restoring the fix makes the same scenarios pass. No production-only exports or source-grep tests added.
+
+Local validation:
+
+- Mobile typecheck; repository `lint:agent` and `format:check`; Turbo boundaries (23 packages); whitespace check — passed.
+- M6-T3: 17 transport/recovery + 23 completion integration scenarios — passed.
+- M6-T4: 13 provider/settings scenarios — passed.
+
+Android worker `a3f01913-0a85-4e3c-8f12-9ac68aa5d46c` notified for coordinated release rebundle/live verification. Native presentation, keyboard/back behavior, and activity-recreation verification remain device-worker work; Node harness is not native proof or CI. No native build, push, deployment, catalog, ledger, manifest, or lockfile edits performed here.

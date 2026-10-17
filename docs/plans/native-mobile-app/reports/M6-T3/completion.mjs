@@ -107,6 +107,57 @@ const env = {
 		};
 	},
 };
+// Exercise shared Sheet against the installed library's real modal queue; only native views/refs are replaced.
+env.createContext = (value) => {
+	const context = { value };
+	context.Provider = { context };
+	return context;
+};
+env.useContext = (context) => context.value;
+env.modalContext = env.createContext(null);
+env.nativeCalls = [];
+env.nativeRecords = new Map();
+env.theme = {
+	colors: {},
+	radius: {},
+	shadows: { e3: {} },
+	space: { s0: 2, s1: 4, s2: 8, s3: 12, s4: 16, s5: 20, s6: 24, s12: 48 },
+	size: { formSheet: 540, topBar: 48, grabber: { width: 36, height: 5 }, icon: {} },
+	type: { body: {}, bodyLarge: {} },
+};
+function NativeModal(props) {
+	const queue = env.useContext(env.modalContext);
+	const state = env.useRef({ shown: false, id: `modal-${env.nativeRecords.size}`, status: { current: null } }).current;
+	const methods = env.useMemo(
+		() => ({
+			status: state.status,
+			present() {
+				env.nativeCalls.push(["present", state.id]);
+				queue.mountSheet(state.id, { current: methods }, props.stackBehavior ?? env.defaultStack);
+				state.shown = true;
+				state.status.current = env.modalStatus.PRESENTED;
+			},
+			minimize() {
+				env.nativeCalls.push(["minimize", state.id]);
+				state.status.current = env.modalStatus.MINIMIZED;
+			},
+			restore() {
+				state.status.current = env.modalStatus.PRESENTED;
+			},
+			dismiss() {
+				queue.willUnmountSheet(state.id);
+				state.status.current = env.modalStatus.DISMISSING;
+				queue.unmountSheet(state.id);
+				state.shown = false;
+				props.onDismiss();
+			},
+		}),
+		[],
+	);
+	props.ref.current = methods;
+	env.nativeRecords.set(state.id, methods);
+	return jsx("NativeModal", { children: state.shown ? props.children : null });
+}
 env.orpc = { agent: { threads: { list: query("threads"), get: query("thread"), key: () => ["threads"] } } };
 env.client = {
 	agent: {
@@ -160,25 +211,30 @@ const uiNames = [
 	"Sheet",
 	"TextField",
 	"ConfirmDialog",
+	"SelectSheet",
+	"Switch",
 	"EmptyState",
 	"Screen",
 ];
 const mocks = {
 	react:
-		"exports.createElement=(type,props,...children)=>E.jsx(type,{...props,...(children.length?{children:children.length===1?children[0]:children}:{})},props?.key);exports.useState=E.useState;exports.useRef=E.useRef;exports.useMemo=E.useMemo;exports.useEffect=E.useEffect;exports.useLayoutEffect=E.useEffect;exports.useEffectEvent=(fn)=>fn;",
+		"exports.createElement=(type,props,...children)=>E.jsx(type,{...props,...(children.length?{children:children.length===1?children[0]:children}:{})},props?.key);exports.useState=E.useState;exports.useRef=E.useRef;exports.useMemo=E.useMemo;exports.useEffect=E.useEffect;exports.useLayoutEffect=E.useEffect;exports.useEffectEvent=(fn)=>fn;exports.createContext=E.createContext;exports.use=E.useContext;exports.useContext=E.useContext;exports.useCallback=(fn)=>fn;exports.useSyncExternalStore=()=>{};",
 	"react/jsx-runtime": "exports.Fragment='Fragment';exports.jsx=E.jsx;exports.jsxs=E.jsx;",
 	"@ai-sdk/react": "exports.Chat=E.Chat;exports.useChat=E.useChat;",
 	"@lingui/core/macro": "exports.t=E.tag;exports.plural=(n,o)=>(n===1?o.one:o.other).replaceAll('#',n);",
 	"@lingui/react/macro": "exports.useLingui=()=>({t:E.tag,i18n:{locale:'en'}});exports.Trans=({children})=>children;",
 	"@tanstack/react-query": "exports.useQuery=E.useQuery;exports.useQueryClient=()=>E.queryClient;",
 	"react-native":
-		["View", "ScrollView", "Pressable", "ActivityIndicator", "TextInput"].map((n) => `exports.${n}='${n}';`).join("") +
-		"exports.useWindowDimensions=()=>({height:800});exports.Platform={OS:'android'};exports.AppState={currentState:'active',addEventListener:()=>({remove(){}})};exports.BackHandler={addEventListener:()=>({remove(){}})};",
-	"react-native-safe-area-context": "exports.SafeAreaView='SafeAreaView';",
+		["View", "ScrollView", "Pressable", "ActivityIndicator", "TextInput", "Modal", "KeyboardAvoidingView"]
+			.map((n) => `exports.${n}='${n}';`)
+			.join("") +
+		"exports.useWindowDimensions=()=>({height:800,width:400});exports.Platform={OS:'android',select:(v)=>v.android??v.default};exports.StyleSheet={hairlineWidth:1,absoluteFill:{}};exports.AccessibilityInfo={isScreenReaderEnabled:async()=>false,addEventListener:()=>({remove(){}}),announceForAccessibility(){}};exports.AppState={currentState:'active',addEventListener:()=>({remove(){}})};exports.BackHandler={addEventListener:()=>({remove(){}})};",
+	"react-native-safe-area-context":
+		"exports.SafeAreaView='SafeAreaView';exports.useSafeAreaInsets=()=>({top:0,bottom:0,left:0,right:0});",
 	"react-native-keyboard-controller":
 		"exports.KeyboardAvoidingView='KeyboardAvoidingView';exports.KeyboardAwareScrollView='KeyboardAwareScrollView';",
 	"expo-router":
-		"exports.router=E.router;exports.useRouter=()=>E.router;exports.Stack={Screen:'Stack.Screen'};exports.useLocalSearchParams=()=>E.params;",
+		"exports.router=new Proxy({},{get(){throw new Error('Global router unbound after activity recreation');}});exports.useRouter=()=>E.router;exports.Stack={Screen:'Stack.Screen'};exports.useLocalSearchParams=()=>E.params;",
 	"expo-clipboard": "exports.setStringAsync=async()=>{};",
 	"expo-document-picker": "exports.getDocumentAsync=async()=>({canceled:true});",
 	"expo-file-system": "exports.File=class {};",
@@ -188,7 +244,7 @@ const mocks = {
 	"@/draft":
 		"exports.useLetterStore=(select)=>select(E.store.getState());exports.useLetterStore.getState=()=>E.store.getState();exports.useLetterStore.subscribe=(fn)=>E.store.subscribe(fn);exports.useResumeStore=(select)=>select(E.resumeStore?.getState()??{document:null,status:'idle'});exports.useResumeStore.getState=()=>E.resumeStore.getState();exports.useResumeStore.subscribe=(fn)=>E.resumeStore.subscribe(fn);",
 	"@/features/ai/providers":
-		"exports.useHasAIProvider=()=>E.providers;exports.AIProviderSetupSheet='AIProviderSetupSheet';",
+		"exports.useHasAIProvider=()=>E.providers;exports.AIProviderSetupSheet=(props)=>E.realSheets?E.SetupSheet(props):E.jsx('AIProviderSetupSheet',props);",
 	"@/features/applications/queries":
 		"exports.useApplications=()=>({data:E.apps});exports.useApplication=()=>({data:E.application});",
 	"@/features/documents/queries": "exports.useDocuments=()=>({data:[]});",
@@ -201,17 +257,47 @@ const mocks = {
 	"@/features/applications/stages": "exports.getStageColor=()=>'';exports.getStageLabel=(v)=>v;",
 	"@/ui":
 		uiNames.map((name) => `exports.${name}='${name}';`).join("") +
-		"exports.useTheme=()=>({colors:{},radius:{},space:{},size:{icon:{}},type:{body:{},bodyLarge:{}}});exports.showToast=(value)=>E.toasts.push(value);exports.dismissToast=()=>{};exports.setThemePreference=()=>{};exports.Sheet=({open,children})=>open?children:null;",
+		"exports.useTheme=()=>E.theme;exports.showToast=(value)=>E.toasts.push(value);exports.dismissToast=()=>{};exports.setThemePreference=()=>{};exports.Sheet=(props)=>E.realSheets?E.Sheet(props):(props.open?props.children:null);",
+	"expo/fetch": "exports.fetch=async()=>{throw new Error('Unexpected network request');};",
+	"react-native-reanimated":
+		"exports.default={View:'AnimatedView'};exports.useSharedValue=(value)=>({value});exports.Easing={exp:0,out:(value)=>value};exports.FadeIn={};exports.FadeOut={};exports.FadeInDown={};exports.FadeOutDown={};",
+	"@gorhom/bottom-sheet":
+		"exports.BottomSheetModal=E.NativeModal;exports.BottomSheetBackdrop='Backdrop';exports.BottomSheetFooter='Footer';exports.BottomSheetScrollView='BottomSheetScrollView';",
+	"@gorhom/portal": "exports.PortalProvider=({children})=>children;",
+	"modal-contexts":
+		"exports.BottomSheetModalProvider=({children})=>children;exports.BottomSheetModalInternalProvider=E.modalContext.Provider;",
+	"hosting-container": "exports.BottomSheetHostingContainer=()=>null;",
+	"provider-state": "exports.useHasAIProvider=()=>E.providers;",
+	"overlay-motion":
+		"exports.useIsWide=()=>false;exports.useReducedMotion=()=>false;exports.haptics={selection(){},warning(){},success(){}};",
+	"overlay-theme": "exports.useTheme=()=>E.theme;",
+	"overlay-text": "exports.Text='Text';",
 	"messages-stub": "exports.MessageView='MessageView';exports.FileChip='FileChip';",
 	"workspace-hooks":
 		"exports.useSavedItems=()=>({data:E.savedItems,isPending:false});exports.useWorkspace=()=>({isPending:false,query:{isError:false}});",
 };
 
+env.NativeModal = NativeModal;
 const scope = fileURLToPath(mobile);
+const nativeSource = fileURLToPath(new URL("node_modules/@gorhom/bottom-sheet/src/", mobile));
 const hook = registerHooks({
 	resolve(specifier, context, next) {
-		const ours = context.parentURL?.includes("/apps/mobile/") || context.parentURL?.startsWith("completion:");
+		const ours =
+			context.parentURL?.includes("/apps/mobile/") ||
+			context.parentURL?.startsWith("completion:") ||
+			context.parentURL?.includes("/@gorhom/bottom-sheet/src/");
 		if (!ours) return next(specifier, context);
+		if (context.parentURL?.includes("bottomSheetModalProvider/BottomSheetModalProvider")) {
+			if (specifier === "../../contexts") specifier = "modal-contexts";
+			if (specifier === "../bottomSheetHostingContainer") specifier = "hosting-container";
+		}
+		if (context.parentURL?.includes("/src/ui/overlays")) {
+			if (specifier === "./motion") specifier = "overlay-motion";
+			if (specifier === "./theme") specifier = "overlay-theme";
+			if (specifier === "./text") specifier = "overlay-text";
+		}
+		if (specifier === "./provider-state" && context.parentURL?.includes("/features/ai/provider-editor"))
+			specifier = "provider-state";
 		if (specifier === "./messages" && context.parentURL.includes("assistant/chat-view")) specifier = "messages-stub";
 		if (specifier === "./hooks" && context.parentURL.includes("workspace/shell")) specifier = "workspace-hooks";
 		if (specifier in mocks) return { shortCircuit: true, url: `completion:${specifier}` };
@@ -231,7 +317,11 @@ const hook = registerHooks({
 				format: "commonjs",
 				source: `const E=globalThis.__completion;${mocks[url.slice(11)]}`,
 			};
-		if (url.startsWith("file:") && fileURLToPath(url).startsWith(scope) && /\.[jt]sx?$/.test(url))
+		if (
+			url.startsWith("file:") &&
+			(fileURLToPath(url).startsWith(scope) || url.includes("/@gorhom/bottom-sheet/src/")) &&
+			/\.[jt]sx?$/.test(url)
+		)
 			return {
 				shortCircuit: true,
 				format: "commonjs",
@@ -246,6 +336,8 @@ const hook = registerHooks({
 });
 const { LetterAssistantScreen } = requireMobile("./src/features/assistant/assistant-screen.tsx");
 const { useLetterAssistantDocument } = requireMobile("./src/features/assistant/document.ts");
+const { ProposedEditsCaption } = requireMobile("./src/features/assistant/page-marks.tsx");
+const { ModelSheet, ProviderGate } = requireMobile("./src/features/assistant/provider.tsx");
 const { ChatView } = requireMobile("./src/features/assistant/chat-view.tsx");
 const { CoachSheet } = requireMobile("./src/features/workspace/coach-sheet.tsx");
 const { WorkspaceScreen } = requireMobile("./src/features/workspace/shell.tsx");
@@ -256,12 +348,29 @@ const { letterAdapter, resumeAdapter } = requireMobile("./src/draft/adapters.ts"
 const { sampleResumeData } = requireMobile("@reactive-resume/schema/resume/sample");
 const { createDraftStore } = requireMobile("./src/draft/store.ts");
 
+env.Sheet = requireMobile("./src/ui/overlays.tsx").Sheet;
+env.SetupSheet = requireMobile("./src/features/ai/provider-editor.tsx").AIProviderSetupSheet;
+const ModalQueue = requireMobile(
+	`${nativeSource}components/bottomSheetModalProvider/BottomSheetModalProvider.tsx`,
+).default;
+const modalConstants = requireMobile(`${nativeSource}components/bottomSheetModal/constants.ts`);
+env.defaultStack = modalConstants.DEFAULT_STACK_BEHAVIOR;
+env.modalStatus = modalConstants.MODAL_STATUS;
+
 function mount(Component, props = {}) {
 	const owners = new Map();
 	let seen;
 	function render(node, path) {
 		if (Array.isArray(node)) return node.map((v, i) => render(v, `${path}/${v?.key ?? i}`));
 		if (!node || typeof node !== "object") return node;
+		if (node.type?.context) {
+			const context = node.type.context,
+				previous = context.value;
+			context.value = node.props.value;
+			const rendered = render(node.props.children, `${path}/context`);
+			context.value = previous;
+			return { ...node, rendered };
+		}
 		if (typeof node.type === "function") {
 			const id = `${path}/${node.type.name}:${node.key ?? ""}`;
 			seen.add(id);
@@ -302,7 +411,10 @@ function mount(Component, props = {}) {
 function elements(node) {
 	if (!node || typeof node !== "object") return [];
 	if (Array.isArray(node)) return node.flatMap(elements);
-	return [node, ...elements(typeof node.type === "function" ? node.rendered : node.props.children)];
+	return [
+		node,
+		...elements(typeof node.type === "function" || node.type?.context ? node.rendered : node.props.children),
+	];
 }
 const find = (owner, type, predicate = () => true) => {
 	const found = elements(owner.tree).find((n) => n.type === type && predicate(n.props));
@@ -403,6 +515,8 @@ async function check(name, run, timed = false) {
 	env.toasts = [];
 	env.resumeStore = null;
 	env.scope = "server/account-a";
+	env.realSheets = false;
+	env.providers.providers = [];
 	env.providers.hasAIProvider = true;
 	env.threadError = null;
 	env.threads = [];
@@ -451,6 +565,50 @@ await check(
 				false,
 			);
 			invalid.unmount();
+		}
+	},
+);
+await check(
+	"Assistant navigation survives unbound global router and preserves another document's selected thread",
+	() => {
+		const caption = mount(ProposedEditsCaption, { resumeId: "resume-a", pending: 1 });
+		find(caption, "Button", (p) => p.label === "Review").onPress();
+		assert.deepEqual(env.calls.at(-1), ["push", "/builder/resume-a/assistant"]);
+		caption.unmount();
+		const models = mount(ModelSheet, { open: true, onClose() {}, providers: [], onChoose() {} });
+		find(models, "ListRow", (p) => p.title === "Connect another…").onPress();
+		assert.deepEqual(env.calls.at(-1), ["push", "/settings/ai-providers"]);
+		models.unmount();
+		env.providers.hasAIProvider = false;
+		const gate = mount(ProviderGate, {
+			providers: env.providers,
+			threadsError: null,
+			loading: false,
+			onRetry() {},
+			notSetUp: "Unavailable",
+		});
+		find(gate, "Button", (p) => p.label === "Open AI settings").onPress();
+		assert.deepEqual(env.calls.at(-1), ["push", "/settings/ai-providers"]);
+		gate.unmount();
+		env.providers.hasAIProvider = true;
+		for (const [target, documentPath, assistantPath] of [
+			[thread("letter-chosen", { coverLetterId: "letter-b" }), "/letter/letter-b/write", "/letter/letter-b/assistant"],
+			[
+				thread("resume-chosen", { coverLetterId: null, workingResumeId: "resume-b" }),
+				"/builder/resume-b/write",
+				"/builder/resume-b/assistant",
+			],
+		]) {
+			env.threads = [target];
+			const screen = mount(LetterAssistantScreen, { letterId: "letter-a" });
+			press(screen, "Past conversations");
+			screen.render();
+			find(screen, "ListRow", (p) => p.title === target.title).onPress();
+			assert.deepEqual(env.calls.slice(-2), [
+				["replace", documentPath],
+				["push", { pathname: assistantPath, params: { thread: target.id } }],
+			]);
+			screen.unmount();
 		}
 	},
 );
@@ -745,7 +903,7 @@ await check(
 			elements(sheet.tree)
 				.filter((n) => n.type === "ListRow")
 				.map((n) => n.props.title),
-			["job-latest", "job-earlier"],
+			["New conversation", "job-latest", "job-earlier"],
 		);
 		find(sheet, "ListRow", (p) => p.title === "job-earlier").onPress();
 		sheet.render();
@@ -776,10 +934,100 @@ await check(
 		sheet.props.open = true;
 		env.providers.hasAIProvider = false;
 		sheet.render();
-		assert.equal(has(sheet, ChatView), false);
+		assert.equal(find(sheet, ChatView).disabled, true);
 		sheet.unmount();
 	},
 );
+await check("Workspace conversations remain readable without a provider; empty history offers a way back", () => {
+	env.providers.hasAIProvider = false;
+	env.threads = [
+		thread("job", { scope: "application", applicationId: "app-a", coverLetterId: null }),
+		thread("other", { scope: "application", applicationId: "app-b", coverLetterId: null }),
+	];
+	env.saved.set("job", {
+		thread: {},
+		messages: [{ id: "old", role: "assistant", parts: [{ type: "text", text: "Earlier reply" }] }],
+		isReadOnly: false,
+	});
+	const sheet = mount(CoachSheet, {
+		application: { id: "app-a", company: "Northwind" },
+		tab: "apply",
+		open: true,
+		onClose() {},
+	});
+	press(sheet, "Conversations");
+	sheet.render();
+	find(sheet, "ListRow", (p) => p.title === "job").onPress();
+	sheet.render();
+	assert.equal(find(sheet, ChatView).threadId, "job");
+	assert.equal(find(sheet, ChatView).disabled, true, "history must not allow sends without a usable provider");
+	assert.equal(find(sheet, "MessageView").message.parts[0].text, "Earlier reply");
+	press(sheet, "Conversations");
+	env.threads = [];
+	sheet.render();
+	find(sheet, "ListRow", (p) => p.title === "New conversation").onPress();
+	sheet.render();
+	find(sheet, "Button", (p) => p.label === "Connect");
+	assert.equal(
+		env.calls.some((c) => c[0] === "send" || c[0] === "start"),
+		false,
+	);
+	sheet.unmount();
+});
+await check(
+	"Nested provider setup keeps Coach presented through installed modal queue, then closes only itself",
+	async () => {
+		env.realSheets = true;
+		env.providers.hasAIProvider = false;
+		env.nativeCalls = [];
+		env.nativeRecords.clear();
+		let closed = 0;
+		const screen = mount(() =>
+			jsx(ModalQueue, {
+				children: jsx(CoachSheet, {
+					application: { id: "app-a", company: "Northwind" },
+					tab: "apply",
+					open: true,
+					onClose: () => {
+						closed++;
+					},
+				}),
+			}),
+		);
+		await settle(screen);
+		find(screen, "Button", (p) => p.label === "Connect").onPress();
+		await settle(screen);
+		find(screen, "TextField", (p) => p.label === "API key");
+		assert.equal(
+			env.nativeCalls.some(([event]) => event === "minimize"),
+			false,
+			"presenting setup must not minimize the parent Coach",
+		);
+		assert.equal(closed, 0);
+		const setupId = env.nativeCalls.filter(([event]) => event === "present").at(-1)[1];
+		env.nativeRecords.get(setupId).dismiss();
+		await settle(screen);
+		assert.equal(closed, 0, "closing setup must not close Coach");
+		find(screen, "Button", (p) => p.label === "Connect");
+		assert.equal(has(screen, "TextField"), false);
+		screen.unmount();
+		env.realSheets = false;
+	},
+);
+
+await check("Document assistant history stays readable without a provider and sending stays disabled", () => {
+	env.providers.hasAIProvider = false;
+	env.threads = [thread("chosen")];
+	env.saved.set("chosen", { thread: {}, messages: [], isReadOnly: false });
+	const screen = mount(LetterAssistantScreen, { letterId: "letter-a", threadId: "chosen" });
+	press(screen, "Past conversations");
+	screen.render();
+	find(screen, "ListRow", (p) => p.title === "chosen").onPress();
+	screen.render();
+	assert.equal(find(screen, ChatView).threadId, "chosen");
+	assert.equal(find(screen, ChatView).disabled, true);
+	screen.unmount();
+});
 await check(
 	"Workspace mounts no second tablist and fills real company/role plus countdown, unread and saved badges",
 	() => {
