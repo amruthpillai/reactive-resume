@@ -62,12 +62,24 @@ function fetchFont(src: string, signal: AbortSignal): Promise<Response> {
 	});
 }
 
+/** Downloads a font file's bytes from its source, trying the gstatic mirror when Google's host fails. */
+export const downloadFont = (src: string): Promise<Uint8Array> =>
+	fetchFont(src, AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS))
+		.then((response) => response.arrayBuffer())
+		.then((buffer) => new Uint8Array(buffer));
+
+let readFont = downloadFont;
+
+/** Replaces how font files are read, e.g. with a persistent cache around `downloadFont` (the mobile app). */
+export function configureFontReader(reader: (src: string) => Promise<Uint8Array>) {
+	readFont = reader;
+	cache.clear();
+}
+
 const load = (src: string) => {
 	let bytes = cache.get(src);
 	if (!bytes) {
-		bytes = fetchFont(src, AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS))
-			.then((response) => response.arrayBuffer())
-			.then((buffer) => prepareFontBytes(new Uint8Array(buffer)));
+		bytes = readFont(src).then(prepareFontBytes);
 		// A failed download may succeed next time.
 		bytes.catch(() => cache.delete(src));
 		cache.set(src, bytes);

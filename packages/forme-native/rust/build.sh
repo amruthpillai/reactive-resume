@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")"
+CBINDGEN_VERSION=0.29.4
+if [[ "$(cbindgen --version 2>/dev/null || true)" != "cbindgen $CBINDGEN_VERSION" ]]; then
+  echo "Install cbindgen $CBINDGEN_VERSION: cargo install cbindgen --version $CBINDGEN_VERSION --locked" >&2
+  exit 1
+fi
 export IPHONEOS_DEPLOYMENT_TARGET=17.4
 export ANDROID_NDK_HOME="${ANDROID_NDK_HOME:-$HOME/Library/Android/sdk/ndk/28.2.13676358}"
 export ANDROID_HOME="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
