@@ -43,6 +43,49 @@ const ENRICHED_TAGS = new Set([
 ]);
 const RENAMED: Record<string, string> = { strong: "b", em: "i", del: "s", strike: "s" };
 
+const INLINE = new Set(["span", "b", "strong", "i", "em", "u", "s", "del", "strike", "mark", "font", "a", "code"]);
+
+/** The marks an inline `style` declares: bold, italic, underline and strikethrough, as the native normaliser reads. */
+function styleMarks(style: string): string[] {
+	const marks: string[] = [];
+	if (/font-weight\s*:\s*(bold|bolder|[6-9]00)\b/i.test(style)) marks.push("b");
+	if (/font-style\s*:\s*(italic|oblique)\b/i.test(style)) marks.push("i");
+	const decoration = /text-decoration(?:-line)?\s*:\s*([^;]*)/i.exec(style)?.[1] ?? "";
+	if (/underline/i.test(decoration)) marks.push("u");
+	if (/line-through/i.test(decoration)) marks.push("s");
+	return marks;
+}
+
+/**
+ * Turns CSS-encoded marks (`<span style="font-weight:700">`, Google Docs' `font-style:italic`, `text-decoration`)
+ * into tags before attributes are stripped, so editing one character doesn't drop them. A `<b>`/`<strong>` styled
+ * `font-weight: normal` (Google Docs' wrapper) is not bold and is removed.
+ */
+function styleMarksToTags(html: string): string {
+	const open: Record<string, string[][]> = {};
+	return html.replaceAll(
+		/<(\/?)([a-z][a-z0-9]*)(\s[^>]*)?>/gi,
+		(match, close: string, rawName: string, attributes = "") => {
+			const name = rawName.toLowerCase();
+			if (!INLINE.has(name)) return match;
+			const stack = (open[name] ??= []);
+			if (close) {
+				const [drop, ...marks] = stack.pop() ?? [""];
+				return `${marks
+					.map((mark) => `</${mark}>`)
+					.reverse()
+					.join("")}${drop === "drop" ? "" : match}`;
+			}
+			const style = /\sstyle\s*=\s*("([^"]*)"|'([^']*)')/i.exec(attributes);
+			const css = style ? (style[2] ?? style[3] ?? "") : "";
+			const normal = (name === "b" || name === "strong") && /font-weight\s*:\s*(normal|[1-4]00)\b/i.test(css);
+			const marks = styleMarks(css).filter((mark) => !(mark === "b" && (name === "b" || name === "strong")));
+			stack.push([normal ? "drop" : "", ...marks]);
+			return `${normal ? "" : match}${marks.map((mark) => `<${mark}>`).join("")}`;
+		},
+	);
+}
+
 /**
  * Converts resume HTML into the editor's internal `<html>…</html>` form. The wrapper makes both platforms use their
  * own parser: iOS treats short unwrapped fragments (under 13 characters, like `<p>Hi</p>`) as literal text, and the
@@ -53,7 +96,7 @@ export function toEnrichedHtml(html: string): string {
 	let body = html.trim();
 	if (!body) return "<html>\n<p></p>\n</html>";
 	if (!body.includes("<")) body = `<p>${encode(body)}</p>`;
-	body = body
+	body = styleMarksToTags(body)
 		// TipTap wraps list items in paragraphs; the editor's items hold text directly.
 		.replaceAll(/<li(\s[^>]*)?>\s*<p(\s[^>]*)?>([\s\S]*?)<\/p>\s*<\/li>/gi, "<li>$3</li>")
 		.replaceAll(/<(\/?)([a-z][a-z0-9]*)(\s[^>]*)?(\/?)>/gi, (_match, close: string, name: string, attributes = "") => {

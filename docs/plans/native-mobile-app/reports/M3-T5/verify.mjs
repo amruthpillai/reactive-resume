@@ -36,6 +36,7 @@ import {
 	replaceLine,
 	toEnrichedHtml,
 } from "../../../../../apps/mobile/src/features/write/rich-text.ts";
+import { claimUpload, commitUpload } from "../../../../../apps/mobile/src/features/write/upload.ts";
 
 // immer resolves from the mobile app, as in the app bundle.
 const { produce } = createRequire(new URL("../../../../../apps/mobile/package.json", import.meta.url))("immer");
@@ -378,6 +379,78 @@ await check("review 4: a link set while its prompt has focus is saved; init echo
 	// Toolbar marks while focused write as before.
 	session.focus();
 	assert.equal(session.change("<html>\n<p><b>Remote</b></p>\n</html>"), "<p><b>Remote</b></p>");
+});
+
+// Second review round.
+
+await check("review 5: CSS-encoded bold, italic, underline and strikethrough become editor tags", () => {
+	assert.equal(
+		toEnrichedHtml('<p><span style="font-weight:700">Bold</span> <span style="font-style: italic">it</span></p>'),
+		"<html>\n<p><b>Bold</b> <i>it</i></p>\n</html>",
+	);
+	assert.equal(
+		toEnrichedHtml('<p><span style="text-decoration: underline line-through; color: red">both</span></p>'),
+		"<html>\n<p><u><s>both</s></u></p>\n</html>",
+	);
+	assert.equal(
+		toEnrichedHtml('<p><span style="font-weight: bold; font-style: italic"><span style="text-decoration-line: underline">nested</span> out</span> plain</p>'),
+		"<html>\n<p><b><i><u>nested</u> out</i></b> plain</p>\n</html>",
+	);
+	// Google Docs wraps pasted text in a non-bold <b>; that wrapper isn't bold.
+	assert.equal(
+		toEnrichedHtml('<b style="font-weight:normal;" id="docs-internal-guid-1"><p><span style="font-weight:700">Real</span> text</p></b>'),
+		"<html>\n<p><b>Real</b> text</p>\n</html>",
+	);
+	assert.equal(toEnrichedHtml('<p><span style="color: red">no marks</span></p>'), "<html>\n<p>no marks</p>\n</html>");
+	// Editing one character keeps the converted marks in what's written.
+	const stored = '<p><span style="font-weight:700">Bold</span> text</p>';
+	const session = createRichTextSession(stored);
+	assert.equal(session.markup, "<html>\n<p><b>Bold</b> text</p>\n</html>");
+	session.change(session.markup);
+	session.focus();
+	assert.equal(session.change("<html>\n<p><b>Bold</b> texts</p>\n</html>"), "<p><b>Bold</b> texts</p>");
+});
+
+await check("review 6: an upload writes only to the resume and account it started in", async () => {
+	let resumeId = "A";
+	let scope = "server/user";
+	let release;
+	const context = {
+		resumeId: () => resumeId,
+		scope: () => new Promise((resolve) => (release = () => resolve(scope))),
+	};
+	const claim = claimUpload(context);
+	release();
+	const owner = await claim;
+	assert.deepEqual(owner, { resumeId: "A", scope: "server/user" });
+
+	// Navigating to B while the account scope is read at completion: A's result must not land on B.
+	const writes = [];
+	const stale = commitUpload(owner, context, () => writes.push("A→?"));
+	resumeId = "B";
+	release();
+	assert.equal(await stale, false);
+
+	// Back on A, but another account signed in during the upload.
+	resumeId = "A";
+	scope = "server/other";
+	const otherAccount = commitUpload(owner, context, () => writes.push("A→other"));
+	release();
+	assert.equal(await otherAccount, false);
+
+	// Same resume, same account: written.
+	scope = "server/user";
+	const current = commitUpload(owner, context, () => writes.push("A→A"));
+	release();
+	assert.equal(await current, true);
+	assert.deepEqual(writes, ["A→A"]);
+
+	// Navigating while the upload is claimed makes it nobody's.
+	resumeId = "A";
+	const moving = claimUpload(context);
+	resumeId = "B";
+	release();
+	assert.equal(await moving, null);
 });
 
 await drain();
