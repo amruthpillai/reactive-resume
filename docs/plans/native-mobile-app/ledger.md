@@ -31,11 +31,11 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | FIXING  | briefs/W5.md; JS-only                                                               |
+| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | REVIEW  | briefs/W5.md; JS-only                                                               |
 | M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | REVIEW  | briefs/W5.md; JS-only                                                               |
 | M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | RUNNING | briefs/W3.md; JS-only                                                               |
 | M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | MERGED  | briefs/W4.md; JS-only                                                               |
-| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | RUNNING | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
+| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | REVIEW  | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
 | M4-T1 Design                                  | Claude Code | d44db267 | mobile/M4-T1      | RUNNING | briefs/W4.md; JS-only                                                               |
 | M4-T2 Check                                   | Codex       | 9d918731 | mobile/M4-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
 | M5-T3 Board, calendar, insights               | Claude Code | 6ada4717 | mobile/M5-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
@@ -188,3 +188,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M7-T2 FIXED 5 (+ ATS Original page view via pdf-pages). Its branch merged `mobile/M6-T3` commits 06157e9d9/2a4e878cf; merge order: M6-T3 (after its fix round) then M7-T2.
 - 2026-10-17: M4-T3 merged (FIXED 5, 38 scenarios).
 - 2026-10-17: M3-T1 session hardening done (Codex review `9fae76e4`). Launched M4-T1, M4-T2, M5-T3. Pending coordinator items: session-based redirect in `app/index.tsx` (no Documents flash when signed out); confirm before discarding unsynced edits from the session-expired sheet.
+- 2026-10-17: M6-T2 done (review `195d8e34`; voice transcription via REST multipart). M6-T3 FIXED 6; second review by `cce125a4`. M4-T2 told not to merge M7-T2; temporary copy of the pdf-check adapter to dedupe at merge.
