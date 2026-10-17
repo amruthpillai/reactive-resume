@@ -9,12 +9,14 @@ on:
         default: false
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   prebuilt:
     runs-on: macos-15
     timeout-minutes: 60
+    outputs:
+      tag: ${{ steps.artifact.outputs.tag }}
     env:
       CARGO_BUILD_JOBS: "4"
     steps:
@@ -24,13 +26,14 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version-file: .nvmrc
-      - uses: android-actions/setup-android@v3
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
         with:
           packages: ndk;28.2.13676358
       - name: Install pinned Rust tools
         working-directory: packages/forme-native/rust
         run: |
-          rustup show active-toolchain
+          rustup toolchain install 1.95.0 --profile minimal \
+            --target aarch64-apple-ios,aarch64-apple-ios-sim,aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
           cargo install cbindgen --version 0.29.4 --locked
           cargo install cargo-ndk --version 4.1.2 --locked
       - name: Build both platforms and regenerate notices
@@ -71,13 +74,24 @@ jobs:
           path: ${{ runner.temp }}/forme-native/
           if-no-files-found: error
           retention-days: 30
+
+  publish:
+    needs: prebuilt
+    if: inputs.publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.prebuilt.outputs.tag }}
+          path: ${{ runner.temp }}/forme-native
       - name: Publish once (never overwrite release assets)
-        if: inputs.publish
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          TAG: ${{ steps.artifact.outputs.tag }}
-          ARCHIVE: ${{ steps.artifact.outputs.archive }}
-          MANIFEST: ${{ steps.artifact.outputs.manifest }}
+          TAG: ${{ needs.prebuilt.outputs.tag }}
+          ARTIFACT_DIR: ${{ runner.temp }}/forme-native
         run: |
-          gh release create "$TAG" "$ARCHIVE" "$MANIFEST" --target "$GITHUB_SHA" --title "$TAG" --notes "Native Forme binaries. Review and commit prebuilt.json before EAS Build." --prerelease
+          gh release create "$TAG" "$ARTIFACT_DIR/$TAG.tar.gz" "$ARTIFACT_DIR/prebuilt.json" --target "$GITHUB_SHA" --title "$TAG" --notes "Native Forme binaries. Review and commit prebuilt.json before EAS Build." --prerelease

@@ -106,3 +106,15 @@ node packages/forme-native/scripts/fetch-prebuilt.mjs --platform ios --manifest 
 - EAS intentionally fails until publication and reviewed pinning, then M8-T2's pre-install hook wiring. No question or owner input blocks this local-only deliverable.
 - Ordinary local native builds are unchanged. Binaries remain ignored; generated header has no diff. No `apps/mobile`, package manifest, root manifest, lockfile, ledger or unrelated source changes.
 - `paseo.json` remains the original untracked file. All build/check/commit processes were collected before handoff; no background task remains.
+
+## Review fixes: blocker and notes 1–2
+
+- Workflow-level permission is now `contents: read`. The macOS `prebuilt` job inherits it, including dependency build scripts and setup actions. A separate Ubuntu `publish` job has `needs: prebuilt`, `if: inputs.publish` and job-level `contents: write`; its only steps download the uploaded artifact and invoke `gh release create`. It does not check out source, set up Node/Rust/Android or execute build code. Only the artifact tag crosses the job-output boundary; archive/manifest paths are reconstructed in the fresh publish runner's artifact directory.
+- `android-actions/setup-android` is pinned to `9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407`, with `# v3.2.2`. Verified using upstream `git ls-remote`: both `refs/tags/v3` and `refs/tags/v3.2.2` resolve to this commit.
+- Replaced implicit `rustup show active-toolchain` installation with explicit `rustup toolchain install 1.95.0 --profile minimal --target aarch64-apple-ios,aarch64-apple-ios-sim,aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android`. Temporary assertions compare the version, profile and all five targets against `rust/rust-toolchain.toml`.
+
+Revalidation: `actionlint .github/workflows/mobile-forme-native.yml`, scoped Oxfmt, `pnpm lint:agent` and `git diff --check` pass. The existing `/tmp/m8-t2a-check.mjs` dry-run harness passes again with real binaries: both native installs without Cargo, all 12 files preserved byte-for-byte, checksum/source/version rejection, incomplete/unexpected/symlink archive rejection, failure cleanup and deterministic notices.
+
+A temporary Ruby/YAML check rejects the pre-fix workflow specifically for its writable build token and accepts the corrected permission/job boundaries. It also verifies the action SHA and explicit toolchain targets, packages a real archive with its release URL, and executes the exact publish shell against a local `gh` stub to assert archive/manifest arguments without creating a release. Test-audit gate: these assertions protect the public workflow permission and artifact handoff contracts; renderer checks cannot detect token privilege escalation. No production test seam or committed unit suite was added.
+
+No remote workflow, toolchain installation, upload, release or push was performed during the fix round. Native source/binaries and app/package manifests were unchanged; only workflow and this report changed.
