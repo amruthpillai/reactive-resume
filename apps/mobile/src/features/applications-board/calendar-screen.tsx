@@ -49,6 +49,7 @@ function ApplicationCalendar() {
 	const { t, i18n } = useLingui();
 	const { colors, radius, size, space } = useTheme();
 	const tablet = useIsTablet();
+	const [width, setWidth] = useState(0);
 	const query = useApplications();
 	const userTime = useUserTime();
 	const now = useNow();
@@ -307,8 +308,8 @@ function ApplicationCalendar() {
 	);
 
 	return (
-		<>
-			{tablet ? (
+		<View style={{ flex: 1 }} onLayout={(event) => setWidth(event.nativeEvent.layout.width)}>
+			{tablet && width >= size.panel * 2 + space.s6 + space.s4 * 2 ? (
 				<View style={{ flex: 1, flexDirection: "row", gap: space.s6, paddingHorizontal: space.s4 }}>
 					<ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: space.s4 }}>
 						{grid}
@@ -359,7 +360,7 @@ function ApplicationCalendar() {
 			{editing?.kind === "follow-up" ? (
 				<FollowUpSheet application={editing.application} open={editorOpen} onClose={() => setEditorOpen(false)} />
 			) : null}
-		</>
+		</View>
 	);
 }
 

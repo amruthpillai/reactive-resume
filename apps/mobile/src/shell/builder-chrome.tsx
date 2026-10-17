@@ -199,7 +199,11 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 									}
 								>
 									{modals.map((name) => (
-										<Stack.Screen key={name} name={name} options={{ presentation: "modal" }} />
+										<Stack.Screen
+											key={name}
+											name={name}
+											options={{ presentation: "modal", headerShown: name !== "assistant" }}
+										/>
 									))}
 								</Stack>
 							</View>
