@@ -1,6 +1,7 @@
 import { createHmac, randomUUID } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createRouterClient } from "@orpc/server";
+import { eq } from "drizzle-orm";
 import { Pool } from "pg";
 import { auth } from "@reactive-resume/auth/config";
 import { db, withDatabasePool } from "@reactive-resume/db/client";
@@ -30,6 +31,110 @@ describe.skipIf(!process.env.OAUTH_TEST_DATABASE_URL)("account wrapper ownership
 		await pool?.end();
 		await admin?.query(`DROP SCHEMA IF EXISTS ${schemaName} CASCADE`);
 		await admin?.end();
+	});
+
+	it("reads only the authenticated profile, ignoring supplied identity and excluding private columns", async () => {
+		await withDatabasePool(pool, async () => {
+			const [owner, other] = await db
+				.insert(schema.user)
+				.values([
+					{
+						id: "profile-owner",
+						name: "Profile owner",
+						email: "profile@example.test",
+						username: "profile-owner",
+						displayUsername: "ProfileOwner",
+						timezone: "Europe/Berlin",
+						role: "admin",
+						banReason: "Private",
+					},
+					{
+						id: "profile-other",
+						name: "Other",
+						email: "other-profile@example.test",
+						username: "profile-other",
+						displayUsername: "ProfileOther",
+					},
+				])
+				.returning();
+			if (!owner || !other) throw new Error("Missing profile fixtures");
+			const client = createRouterClient(authRouter, {
+				context: {
+					locale: "en-US",
+					reqHeaders: new Headers(),
+					resHeaders: new Headers(),
+					authentication: {
+						user: { ...owner, name: "Stale session name" },
+						method: "bearer",
+						permissions: ["read", "write", "delete"],
+					},
+				},
+			});
+			const suppliedIdentity = { userId: other.id };
+			await expect(Reflect.apply(client.getProfile, undefined, [suppliedIdentity])).resolves.toEqual({
+				id: owner.id,
+				name: owner.name,
+				username: owner.username,
+				displayUsername: owner.displayUsername,
+				image: null,
+				email: owner.email,
+				emailVerified: false,
+				timezone: "Europe/Berlin",
+			});
+			const anonymous = createRouterClient(authRouter, {
+				context: {
+					locale: "en-US",
+					reqHeaders: new Headers(),
+					resHeaders: new Headers(),
+				},
+			});
+			await expect(anonymous.getProfile()).rejects.toMatchObject({ code: "UNAUTHORIZED" });
+		});
+	});
+
+	it("persists a validated timezone through the account bridge without changing another user", async () => {
+		await withDatabasePool(pool, async () => {
+			const [owner, other] = await db
+				.insert(schema.user)
+				.values([
+					{
+						id: "timezone-owner",
+						name: "Timezone owner",
+						email: "timezone@example.test",
+						username: "timezone-owner",
+						displayUsername: "TimezoneOwner",
+					},
+					{
+						id: "timezone-other",
+						name: "Other",
+						email: "other-timezone@example.test",
+						username: "timezone-other",
+						displayUsername: "TimezoneOther",
+					},
+				])
+				.returning();
+			if (!owner || !other) throw new Error("Missing timezone fixtures");
+			const client = createRouterClient(authRouter, {
+				context: {
+					locale: "en-US",
+					reqHeaders: new Headers(),
+					resHeaders: new Headers(),
+					authentication: { user: owner, method: "bearer", permissions: ["read", "write", "delete"] },
+				},
+			});
+			await expect(client.updateProfile({ timezone: "Asia/Kolkata" })).resolves.toEqual({ status: true });
+			const [saved] = await db
+				.select({ timezone: schema.user.timezone })
+				.from(schema.user)
+				.where(eq(schema.user.id, owner.id));
+			expect(saved?.timezone).toBe("Asia/Kolkata");
+			await expect(client.updateProfile({ timezone: "Not/A_Timezone" })).rejects.toMatchObject({ code: "BAD_REQUEST" });
+			const [untouched] = await db
+				.select({ timezone: schema.user.timezone })
+				.from(schema.user)
+				.where(eq(schema.user.id, other.id));
+			expect(untouched?.timezone).toBe("UTC");
+		});
 	});
 
 	it("confines concurrent account calls to their authenticated users, despite another user's cookie", async () => {

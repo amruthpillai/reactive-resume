@@ -1,27 +1,209 @@
 import type { ThemePreference } from "@/ui";
+import type { Locale } from "@reactive-resume/utils/locale";
 import { useLingui } from "@lingui/react/macro";
-import { RouteStub } from "@/components/route-stub";
-import { Segmented, Text, setThemePreference, useThemePreference } from "@/ui";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { DevSettings, View } from "react-native";
+import { localeSchema } from "@reactive-resume/utils/locale";
+import { timezoneSchema } from "@reactive-resume/utils/timezone";
+import { client, orpc } from "@/api/client";
+import { SettingsGroup, SettingsPage } from "@/features/settings/layout";
+import { localeMap } from "@/features/settings/locale-names";
+import { useProfile } from "@/features/settings/queries";
+import { getDeviceLocale, getLocalePreference, setLocalePreference } from "@/i18n";
+import {
+	Banner,
+	ConfirmDialog,
+	ListRow,
+	Segmented,
+	Sheet,
+	Text,
+	TextField,
+	setThemePreference,
+	showToast,
+	useTheme,
+	useThemePreference,
+} from "@/ui";
 
 export default function PreferencesScreen() {
-	const { t } = useLingui();
+	const { t, i18n } = useLingui();
 	const theme = useThemePreference();
-
+	const { space } = useTheme();
+	const profile = useProfile();
+	const queryClient = useQueryClient();
+	const [locale, setLocale] = useState(getLocalePreference);
+	const [picker, setPicker] = useState<"language" | "timezone" | null>(null);
+	const [search, setSearch] = useState("");
+	const [changingLanguage, setChangingLanguage] = useState(false);
+	const [restart, setRestart] = useState(false);
+	const deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+	const timezone = useMutation({
+		mutationKey: ["settings", "timezone"],
+		mutationFn: async (value: string) => {
+			const result = await client.auth.updateProfile({ timezone: value });
+			if (!result.status) throw new Error("Timezone update rejected");
+		},
+		onSuccess: async () => {
+			setPicker(null);
+			await queryClient.invalidateQueries({ queryKey: orpc.auth.getProfile.key() });
+		},
+		onError: () => showToast({ message: t`Couldn't save the timezone.` }),
+	});
+	const languageName = (value: Locale) => i18n._(localeMap[value]);
+	const languages = localeSchema.options.map((value) => ({ value, label: languageName(value) }));
+	const matchingLanguages = languages.filter(({ value, label }) =>
+		`${value} ${label}`.toLowerCase().includes(search.trim().toLowerCase()),
+	);
+	// shortcut: Hermes without timezone enumeration offers device/saved zones plus validated IANA text entry.
+	const zones = [
+		...new Set([
+			"UTC",
+			deviceTimezone,
+			...(profile.data ? [profile.data.timezone] : []),
+			...(typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : []),
+		]),
+	].sort();
+	const matches = zones.filter((zone) => zone.toLowerCase().includes(search.trim().toLowerCase()));
+	const enteredZone = search.trim();
+	const chooseLanguage = async (value: Locale | null) => {
+		setChangingLanguage(true);
+		try {
+			const needsRestart = await setLocalePreference(value);
+			setLocale(value);
+			setPicker(null);
+			setRestart(needsRestart);
+		} catch {
+			showToast({ message: t`Couldn't change the language. Try again.` });
+		} finally {
+			setChangingLanguage(false);
+		}
+	};
+	const openPicker = (value: "language" | "timezone") => {
+		setSearch("");
+		setPicker(value);
+	};
 	return (
-		<RouteStub title={t`Preferences`}>
-			<Text variant="caption" color="ink2">
-				{t`Appearance`}
-			</Text>
+		<SettingsPage title={t`Preferences`}>
+			<Text variant="caption" color="ink2">{t`Appearance`}</Text>
 			<Segmented<ThemePreference>
 				label={t`Theme`}
 				value={theme}
-				onChange={setThemePreference}
+				onChange={(value) => {
+					try {
+						setThemePreference(value);
+					} catch {
+						showToast({ message: t`Couldn't save the theme. Try again.` });
+					}
+				}}
 				options={[
 					{ value: "system", label: t`System` },
 					{ value: "light", label: t`Light` },
 					{ value: "dark", label: t`Dark` },
 				]}
 			/>
-		</RouteStub>
+			<Text variant="callout" color="ink3">{t`Resumes always render on white paper, whatever the theme.`}</Text>
+			<SettingsGroup title={t`Language`} note={t`Interface only. Each resume sets its own language in Design.`}>
+				<ListRow
+					title={t`Language`}
+					subtitle={locale ? languageName(locale) : t`System`}
+					leading="translate"
+					chevron
+					onPress={() => openPicker("language")}
+				/>
+			</SettingsGroup>
+			<SettingsGroup title={t`Timezone`} note={t`Interview times, reminders and schedules in Career use it.`}>
+				<ListRow
+					title={t`Timezone`}
+					subtitle={profile.data?.timezone ?? (profile.isPending ? t`Loading…` : t`Unavailable`)}
+					leading="clock"
+					chevron
+					disabled={!profile.data || timezone.isPending}
+					onPress={() => openPicker("timezone")}
+				/>
+				{profile.isError ? (
+					<Banner
+						tone="danger"
+						message={t`Couldn't load your timezone.`}
+						action={{ label: t`Try again`, onPress: () => void profile.refetch() }}
+					/>
+				) : null}
+			</SettingsGroup>
+			<Sheet
+				open={picker !== null}
+				onClose={() => setPicker(null)}
+				title={picker === "language" ? t`Language` : t`Timezone`}
+				detents={[0.9]}
+			>
+				<View style={{ paddingHorizontal: space.s4 }}>
+					<TextField
+						label={picker === "language" ? t`Search languages` : t`Search timezones`}
+						value={search}
+						onChangeText={setSearch}
+						autoCapitalize="none"
+						autoCorrect={false}
+						returnKeyType="search"
+					/>
+				</View>
+				{picker === "language" ? (
+					<>
+						<ListRow
+							title={t`System`}
+							subtitle={languageName(getDeviceLocale())}
+							selected={locale === null}
+							disabled={changingLanguage}
+							onPress={() => void chooseLanguage(null)}
+						/>
+						{matchingLanguages.map(({ value, label }) => (
+							<ListRow
+								key={value}
+								title={label}
+								subtitle={value}
+								selected={locale === value}
+								disabled={changingLanguage}
+								onPress={() => void chooseLanguage(value)}
+							/>
+						))}
+						{matchingLanguages.length === 0 ? <Text color="ink3">{t`No language matches.`}</Text> : null}
+					</>
+				) : (
+					<>
+						{deviceTimezone !== profile.data?.timezone ? (
+							<ListRow
+								title={t`Use this device's timezone (${deviceTimezone})`}
+								disabled={timezone.isPending}
+								onPress={() => timezone.mutate(deviceTimezone)}
+							/>
+						) : null}
+						{matches.map((zone) => (
+							<ListRow
+								key={zone}
+								title={zone}
+								selected={zone === profile.data?.timezone}
+								disabled={timezone.isPending}
+								onPress={() => timezone.mutate(zone)}
+							/>
+						))}
+						{!zones.includes(enteredZone) && timezoneSchema.safeParse(enteredZone).success ? (
+							<ListRow title={enteredZone} disabled={timezone.isPending} onPress={() => timezone.mutate(enteredZone)} />
+						) : null}
+						{matches.length === 0 && !timezoneSchema.safeParse(enteredZone).success ? (
+							<Text color="ink3">{t`No timezone matches.`}</Text>
+						) : null}
+					</>
+				)}
+			</Sheet>
+			<ConfirmDialog
+				open={restart}
+				title={t`Restart to change text direction`}
+				message={t`Your language is saved. Restart Reactive Resume to apply the new left-to-right or right-to-left layout.`}
+				confirmLabel={__DEV__ ? t`Reload now` : t`OK`}
+				cancelLabel={t`Later`}
+				onCancel={() => setRestart(false)}
+				onConfirm={() => {
+					setRestart(false);
+					if (__DEV__) DevSettings.reload();
+				}}
+			/>
+		</SettingsPage>
 	);
 }
