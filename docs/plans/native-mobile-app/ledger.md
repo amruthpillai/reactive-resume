@@ -21,8 +21,8 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M1-T2 pdf ./native, forme-native hardening    | Codex       | 41501e1a | mobile/M1-T2      | MERGED  | briefs/M1.md                                                                        |
 | M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
 | M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | FIXING  | briefs/W2.md                                                                        |
-| M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | RUNNING | briefs/W2.md                                                                        |
-| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | RUNNING | briefs/W2.md                                                                        |
+| M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | REVIEW  | briefs/W2.md                                                                        |
+| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | FIXING  | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | MERGED  | briefs/W2.md                                                                        |
 | M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
@@ -31,8 +31,11 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | MERGED  | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | MERGED  | briefs/W5.md; JS-only                                                               |
-| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | RUNNING | briefs/W5.md; JS-only                                                               |
-| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | RUNNING | briefs/W5.md; JS-only                                                               |
+| M6-T3 Assistant                               | Claude Code | ef5fd84e | mobile/M6-T3      | REVIEW  | briefs/W5.md; JS-only                                                               |
+| M7-T2 Public viewer, ATS checker, search      | Claude Code | 24e6e28a | mobile/M7-T2      | FIXING  | briefs/W5.md; JS-only                                                               |
+| M3-T5 Builder Write                           | Claude Code | 90783b15 | mobile/M3-T5      | RUNNING | briefs/W3.md; JS-only                                                               |
+| M4-T3 Share, export and history               | Codex       | c3212ffa | mobile/M4-T3      | REVIEW  | briefs/W4.md; JS-only                                                               |
+| M6-T2 Application workspace tabs              | Claude Code | 18422245 | mobile/M6-T2      | RUNNING | briefs/W5.md; JS-only, Coach seam for M6-T3                                         |
 
 ## Gates
 
@@ -171,3 +174,9 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M6-T1 merged (FIXED 6, 33 scenarios).
 - 2026-10-17: M3-T4 merged (FIXED 7, second review NO BLOCKERS; 361 pdf tests pass on the integration branch). M3-T1 done but blocked on mounting `SessionGate` in `app/_layout.tsx`: approved, plus atomic server+token snapshot in `api/client.ts`, offline account scope, sign-out draft cleanup and https-only servers. Coordinator accepts the single redirect URI `https://rxresu.me/auth/native-callback` for every server and browser-based guest login (two taps) for v1.
 - 2026-10-17: M5-T2 merged (FIXED 6, 13 scenarios). Pending for M3-T1's sign-out cleanup: also clear unsaved application notes (kv keys scoped by server+account in `features/application-detail/notes-queue.ts`).
+- 2026-10-17: Launched M3-T5, M4-T3, M6-T2 (JS-only). Eight builders active; JS-only tasks do not compile native code, so CPU/disk stay manageable.
+- 2026-10-17: M2-T1 FIXED 5. Found that Hermes lacks `Intl.PluralRules` (every Lingui plural crashes on iOS launch). Coordinator approved `@formatjs/intl-pluralrules` plus its strict Hermes prerequisites as an addition to §1.4; M2-T1 adds them in `src/polyfills.ts` and records an Intl capability matrix.
+- 2026-10-17: M4-T3 done (review `5ed4c4c0`); M7-T2 done (review `7f77db95`). Coordinator integration list (after M2-T2): mount `DocumentMenu({ id })` in builder chrome; tablet search as a form sheet; ATS entry point beside Search; M6-T3 honours `?thread=`/`?ask=` on the assistant route.
+- 2026-10-17: M6-T3 done (review `cce125a4`). Integration for the coordinator: Page tab swaps `draft.data` for `useMarkedResumeData(id, draft.data).data` and renders `ProposedEditsCaption`; M3-T2 `onCopiedForJob` opens `routes.assistant(id)` with `prepare=1`; M6-T2 Coach seam renders `ChatView`.
+- 2026-10-17: M2-T2 done (review `b952f6f3`). Coordinator decisions: the document menu opens from the document name with a caret (mockup) rather than a separate ⋯ button; letters get the mockup's Write / Page / Design panes, so M4-T4 adds a `page` letter pane (`routes.ts` + `letter/[id]/page.tsx`, tablet page, `onShare`). Coordinator follow-ups: rename root `Stack.Screen` `applications/[id]/[tab]` → `applications/[id]` with `headerShown: false`; Android tab-stack headers sit one status-bar height low under a banner (fix in M8-T1).
+- 2026-10-17: M7-T2 review `7f77db95`: 5 blockers (ATS response shape, quadratic HTML tokenizer, stale pending import across servers, download temp files, slug search).
