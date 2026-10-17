@@ -24,8 +24,8 @@ import { attachmentPart, refreshThreads, transcriptOf, useAssistantChat } from "
 import { FileChip, MessageView } from "./messages";
 import { isProposeEdits, publishProposals, toProposals } from "./proposals";
 import { createRequestLane, recoverRun } from "./recovery";
-import { client, orpc } from "@/api/client";
-import { useSession } from "@/auth/session";
+import { client, orpc, SessionChangedError } from "@/api/client";
+import { getAccountScope, useSession } from "@/auth/session";
 import { Button, Icon, Text, showToast, useTheme } from "@/ui";
 
 export type { ChatAttachment, MessageContext } from "./chat";
@@ -34,7 +34,7 @@ export type { AssistantDocument } from "./document";
 export type ChatViewProps = {
 	/** The conversation, or null for a new one: the first message (or attachment) creates it through `createThread`. */
 	threadId: string | null;
-	createThread: () => Promise<string>;
+	createThread: (scope: string) => Promise<string>;
 	/** The first message created this conversation; show it from now on (pass it back as `threadId`). */
 	onThreadCreated: (id: string) => void;
 	/** Read at send time: the chips apply to the next message. */
@@ -71,20 +71,40 @@ const MAX_TOTAL_BYTES = 100 * 1024 * 1024;
 
 /** One conversation (or a new one), its change sets and questions, and the composer. */
 export function ChatView(props: ChatViewProps) {
+	useSession();
+	const scope = getAccountScope();
+	return scope ? <ScopedChatView key={scope} {...props} scope={scope} /> : null;
+}
+
+type ScopedChatViewProps = ChatViewProps & { scope: string };
+
+function ScopedChatView(props: ScopedChatViewProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const [prompt, setPrompt] = useState<Prompt | null>(null);
 	const [starting, setStarting] = useState(false);
 	const draft = useRef<string | null>(null);
 	const creating = useRef<Promise<string> | null>(null);
+	const mounted = useRef(true);
+	useEffect(() => {
+		mounted.current = true;
+		return () => {
+			mounted.current = false;
+		};
+	}, []);
+	const checkCurrent = () => {
+		if (!mounted.current || getAccountScope() !== props.scope) throw new SessionChangedError();
+	};
 
 	// A conversation exists from its first message or attachment; one created for an attachment is reused.
 	const ensureThread = (): Promise<string> => {
+		checkCurrent();
 		if (props.threadId) return Promise.resolve(props.threadId);
 		if (draft.current) return Promise.resolve(draft.current);
 		creating.current ??= props
-			.createThread()
+			.createThread(props.scope)
 			.then((id) => {
+				checkCurrent();
 				draft.current = id;
 				return id;
 			})
@@ -100,6 +120,7 @@ export function ChatView(props: ChatViewProps) {
 		setStarting(true);
 		try {
 			const id = await ensureThread();
+			checkCurrent();
 			setPrompt({ threadId: id, text, attachments });
 			draft.current = null;
 			props.onThreadCreated(id);
@@ -156,7 +177,7 @@ function Empty({ render, send }: EmptyProps) {
 	return render?.(send) ?? null;
 }
 
-type SessionProps = Omit<ChatViewProps, "threadId" | "prompt"> & {
+type SessionProps = Omit<ScopedChatViewProps, "threadId" | "prompt"> & {
 	threadId: string;
 	prompt: Prompt | null;
 	onPromptDelivered: () => void;
@@ -167,10 +188,13 @@ function Session(props: SessionProps) {
 	const { space } = useTheme();
 	const session = useSession();
 	const [fresh] = useState(() => props.prompt !== null);
-	const options = orpc.agent.threads.get.queryOptions({ input: { id: props.threadId } });
+	const options = orpc.agent.threads.get.queryOptions({
+		input: { id: props.threadId },
+		context: { scope: props.scope },
+	});
 	const thread = useQuery({
 		...options,
-		queryKey: [...options.queryKey, session.server],
+		queryKey: [...options.queryKey, props.scope],
 		enabled: !fresh && session.status === "signed-in",
 		refetchOnMount: "always",
 	});
@@ -219,6 +243,8 @@ function Conversation(props: ConversationProps) {
 		initialMessages: props.initialMessages,
 		context: props.context,
 		onFinish: refresh,
+		scope: props.scope,
+		beforeSend: props.context.document ? document?.flush : undefined,
 	});
 	const { messages, sendMessage, setMessages, status, error, clearError, regenerate, addToolOutput, resumeStream } =
 		chat;
@@ -278,7 +304,7 @@ function Conversation(props: ConversationProps) {
 
 	const stopReply = () => {
 		setStopped(true);
-		void client.agent.messages.stop({ threadId }).catch(() => undefined);
+		void client.agent.messages.stop({ threadId }, { context: { scope: props.scope } }).catch(() => undefined);
 		void lane.cancel();
 	};
 
@@ -288,8 +314,13 @@ function Conversation(props: ConversationProps) {
 		recoverRun({
 			isCurrent,
 			reload: async () => {
-				const options = orpc.agent.threads.get.queryOptions({ input: { id: threadId } });
-				const latest = await queryClient.fetchQuery({ ...options, staleTime: 0 }).catch(() => null);
+				const options = orpc.agent.threads.get.queryOptions({
+					input: { id: threadId },
+					context: { scope: props.scope },
+				});
+				const latest = await queryClient
+					.fetchQuery({ ...options, queryKey: [...options.queryKey, props.scope], staleTime: 0 })
+					.catch(() => null);
 				return latest && { messages: latest.messages as UIMessage[], active: Boolean(latest.thread.activeRunId) };
 			},
 			apply: (saved) => {
@@ -345,19 +376,22 @@ function Conversation(props: ConversationProps) {
 	// Kept after the assistant closes: Page marks them while they're pending.
 	const documentId = document?.id;
 	useEffect(() => {
-		if (documentId) publishProposals(documentId, proposals);
-	}, [documentId, proposals]);
+		if (documentId && document?.kind === "resume") publishProposals(documentId, proposals);
+	}, [documentId, document?.kind, proposals]);
 
 	const record = (message: UIMessage, part: ToolPart, changed: readonly Proposal[], next: EditStatus) => {
 		setStatuses((current) => new Map([...current, ...changed.map((proposal) => [proposal.id, next] as const)]));
 		if (!part.toolCallId) return;
 		void client.agent.messages
-			.setEditStatus({
-				threadId,
-				messageId: message.id,
-				toolCallId: part.toolCallId,
-				edits: changed.map((proposal) => ({ id: proposal.id, status: next })),
-			})
+			.setEditStatus(
+				{
+					threadId,
+					messageId: message.id,
+					toolCallId: part.toolCallId,
+					edits: changed.map((proposal) => ({ id: proposal.id, status: next })),
+				},
+				{ context: { scope: props.scope } },
+			)
 			.then(() => refreshThreads(queryClient))
 			.catch(() => undefined);
 	};
@@ -506,7 +540,7 @@ function errorText(error: unknown, fallback: string) {
 
 type Upload = ChatAttachment & { size: number; busy?: boolean };
 
-type ComposerProps = Pick<ChatViewProps, "chips" | "privacy" | "placeholder"> & {
+type ComposerProps = Pick<ScopedChatViewProps, "chips" | "privacy" | "placeholder" | "scope"> & {
 	streaming: boolean;
 	disabled: boolean;
 	ensureThread: () => Promise<string>;
@@ -581,12 +615,15 @@ function Composer(props: ComposerProps) {
 		// One file at a time: only one base64 copy is in memory at once.
 		for (const { asset, key } of files) {
 			try {
-				const attachment = await client.agent.attachments.create({
-					threadId,
-					filename: asset.name,
-					mediaType: asset.mimeType ?? "application/octet-stream",
-					data: await new File(asset.uri).base64(),
-				});
+				const attachment = await client.agent.attachments.create(
+					{
+						threadId,
+						filename: asset.name,
+						mediaType: asset.mimeType ?? "application/octet-stream",
+						data: await new File(asset.uri).base64(),
+					},
+					{ context: { scope: props.scope } },
+				);
 				setAttachments((current) =>
 					current.map((item) =>
 						item.id === key

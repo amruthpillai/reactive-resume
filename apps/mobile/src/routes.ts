@@ -43,6 +43,8 @@ export const routes = {
 	history: (id: string) => `/builder/${segment(id)}/history` as const,
 	assistant: (id: string) => `/builder/${segment(id)}/assistant` as const,
 
+	letterAssistant: (id: string) => `/letter/${segment(id)}/assistant` as const,
+
 	// Cover letter editor
 	letter: (id: string, pane: LetterPane = "write") => `/letter/${segment(id)}/${pane}` as const,
 };

@@ -9,19 +9,19 @@ import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { WORKSPACE_TABS } from "@reactive-resume/schema/career";
 import { CoachSheet } from "./coach-sheet";
 import { useSavedItems, useWorkspace } from "./hooks";
 import { currentInterview, minutesUntil } from "./logic";
-import { tabLabel } from "./parts";
 import { useNow, useUserTime } from "@/features/application-detail/hooks";
 import { InterviewSheet } from "@/features/application-detail/interview-sheet";
 import { applicationError } from "@/features/applications/error";
 import { useApplication } from "@/features/applications/queries";
 import { getStageColor, getStageLabel } from "@/features/applications/stages";
 import { routes } from "@/routes";
+import { useWorkspaceChrome } from "@/shell/workspace-chrome";
 import { Banner, Button, EmptyState, Screen, Text, useTheme } from "@/ui";
 
 export type WorkspaceSearch = { version?: string; speak?: boolean; story?: string };
@@ -134,13 +134,7 @@ export function WorkspaceScreen({ tab, children }: WorkspaceScreenProps) {
 				contentContainerStyle={{ padding: space.s4, gap: space.s4, paddingBottom: space.s12 }}
 			>
 				<Header application={application} onAskCoach={() => setCoach(true)} />
-				<TabStrip
-					current={tab}
-					saved={saved.data}
-					interview={interview}
-					now={now}
-					onSelect={(next) => router.replace(workspaceHref(id, next))}
-				/>
+				<TabBadges saved={saved.data} interview={interview} now={now} />
 				{blocked ? (
 					<View style={{ gap: space.s3 }}>
 						{waiting ? (
@@ -208,6 +202,7 @@ function Header({ application, onAskCoach }: HeaderProps) {
 	const { colors, space } = useTheme();
 	const router = useRouter();
 	const { day } = useUserTime();
+	useWorkspaceChrome({ title: application.company, subtitle: application.role });
 	const role = application.role;
 	const company = application.company;
 	const meta = [
@@ -253,18 +248,16 @@ function Header({ application, onAskCoach }: HeaderProps) {
 	);
 }
 
-type TabStripProps = {
-	current: WorkspaceTab;
+type TabBadgesProps = {
 	saved: SavedItem[] | undefined;
 	interview: InterviewTimelineEntry | undefined;
 	now: Date;
-	onSelect: (tab: WorkspaceTab) => void;
 };
 
-/** The seven tabs, scrolling sideways on phones, with the countdown, unread and saved-count badges. */
-function TabStrip({ current, saved, interview, now, onSelect }: TabStripProps) {
+/** WorkspaceChrome owns the one visible tab strip; keep its countdown, unread and saved-count badges. */
+function TabBadges({ saved, interview, now }: TabBadgesProps) {
 	const { t } = useLingui();
-	const { colors, radius, size, space } = useTheme();
+	const { colors, radius, space } = useTheme();
 	const minutes = interview ? minutesUntil(new Date(interview.at), now) : null;
 	// Messages shows the newest read message: it waits for a decision while its changes aren't applied.
 	const newestReply = saved?.find((item) => item.data.kind === "reply");
@@ -286,58 +279,26 @@ function TabStrip({ current, saved, interview, now, onSelect }: TabStripProps) {
 		plain: { background: "transparent", text: "ink2" },
 	} as const;
 
-	return (
-		<ScrollView
-			horizontal
-			showsHorizontalScrollIndicator={false}
-			accessibilityRole="tablist"
-			accessibilityLabel={t`Application workspace tabs`}
-			contentContainerStyle={{ gap: space.s1 }}
-			style={{ marginHorizontal: -space.s4, paddingHorizontal: space.s4, flexGrow: 0 }}
-		>
-			{WORKSPACE_TABS.map((tab) => {
-				const active = tab === current;
+	useWorkspaceChrome({
+		badges: Object.fromEntries(
+			WORKSPACE_TABS.map((tab) => {
 				const extra = badge(tab);
 				const palette = extra ? badgeColors[extra.tone as keyof typeof badgeColors] : null;
-				return (
-					<Pressable
-						key={tab}
-						accessibilityRole="tab"
-						accessibilityState={{ selected: active }}
-						accessibilityLabel={extra ? `${tabLabel(tab)}, ${extra.text}` : tabLabel(tab)}
-						onPress={() => !active && onSelect(tab)}
-						style={({ pressed }) => ({
-							minHeight: size.hit,
-							flexDirection: "row",
-							alignItems: "center",
-							gap: space.s1,
-							paddingHorizontal: space.s3,
-							borderRadius: radius.rPill,
-							backgroundColor: active ? colors.ink : pressed ? colors.press : "transparent",
-						})}
-					>
-						<Text variant="label" color={active ? "bg" : "ink2"}>
-							{tabLabel(tab)}
-						</Text>
-						{extra && palette ? (
-							<View
-								style={{
-									minWidth: 18,
-									paddingHorizontal: space.s1,
-									borderRadius: radius.rPill,
-									alignItems: "center",
-									backgroundColor: palette.background,
-								}}
-							>
-								<Text variant="micro" color={active && extra.tone === "plain" ? "bg" : palette.text}>
-									{extra.text}
-								</Text>
-							</View>
-						) : null}
-					</Pressable>
-				);
-			})}
-			<View style={{ width: space.s4 }} />
-		</ScrollView>
-	);
+				return [
+					tab,
+					extra && palette ? (
+						<View
+							key={tab}
+							style={{ paddingHorizontal: space.s1, borderRadius: radius.rPill, backgroundColor: palette.background }}
+						>
+							<Text variant="micro" color={palette.text}>
+								{extra.text}
+							</Text>
+						</View>
+					) : null,
+				];
+			}),
+		),
+	});
+	return null;
 }

@@ -1,7 +1,7 @@
 import type { LetterPane } from "@/routes";
 import type { PaneTab } from "@/shell/builder-chrome";
 import { useLingui } from "@lingui/react/macro";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import PageScreen from "./page";
 import { LetterConflictSheet, useLetterDraftOwner, useLetterStore } from "@/draft";
@@ -11,15 +11,20 @@ import { LetterShareSheet } from "@/features/letters/share";
 import { routes } from "@/routes";
 import { BuilderChrome, useBuilderChrome } from "@/shell/builder-chrome";
 import { useKeyCommands } from "@/shell/key-commands";
+import { IconButton } from "@/ui";
 
 /** Fills the chrome from the draft once for every pane: name and save status. ⌘Z / ⇧⌘Z undo and redo. */
-function DraftChrome() {
+function DraftChrome({ id }: { id: string }) {
 	const { t } = useLingui();
 	const name = useLetterStore((state) => state.document?.name);
 	const status = useLetterStore((state) => state.status);
 	const locked = useLetterStore((state) => state.locked);
 	const retry = useLetterStore((state) => state.retry);
-	useBuilderChrome({ title: name, save: name ? { status, locked, onRetry: retry } : undefined });
+	useBuilderChrome({
+		title: name,
+		save: name ? { status, locked, onRetry: retry } : undefined,
+		actions: <IconButton icon="sparkle" label={t`Assistant`} onPress={() => router.push(routes.letterAssistant(id))} />,
+	});
 	useKeyCommands([
 		{ id: "undo", input: "z", title: t`Undo`, run: () => useLetterStore.getState().undo() },
 		{ id: "redo", input: "z", shift: true, title: t`Redo`, run: () => useLetterStore.getState().redo() },
@@ -60,8 +65,9 @@ export default function LetterLayout() {
 			page={<PageScreen />}
 			title={t`Cover letter`}
 			onShare={() => setSharing(true)}
+			modals={["assistant"]}
 		>
-			<DraftChrome />
+			<DraftChrome id={id} />
 			<LetterConflictSheet />
 			<LetterShareSheet id={id} open={sharing} onClose={() => setSharing(false)} />
 		</BuilderChrome>
