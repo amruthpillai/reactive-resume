@@ -82,3 +82,12 @@ Local validation:
 - M6-T4: 13 provider/settings scenarios — passed.
 
 Android worker `a3f01913-0a85-4e3c-8f12-9ac68aa5d46c` notified for coordinated release rebundle/live verification. Native presentation, keyboard/back behavior, and activity-recreation verification remain device-worker work; Node harness is not native proof or CI. No native build, push, deployment, catalog, ledger, manifest, or lockfile edits performed here.
+
+
+## Review correction: read-only Retry
+
+Review of `f6d2c3030` found Retry bypassed the composer's readiness guard: after a failed reply, removing/disabling the usable provider still allowed Retry to call `regenerate` or resend a tool continuation. The shared Conversation Retry handler now returns before clearing the error or scheduling a request when read-only; its button also disables using the same effective read-only flag (server read-only or caller disabled).
+
+The existing completion harness now fails a real Chat request, changes workspace provider readiness to unavailable, invokes Retry directly, and asserts no second request plus a disabled button. Restoring readiness enables Retry and produces the actual streamed answer. Before the fix, the scenario failed with two send requests instead of one; afterward it passes. This exercises the owner handler rather than merely asserting its visual prop. Composer, starters, Continue, and question-action rendering were inspected for the same exposed readiness bypass; no additional exposed action found. No broad refactor or production-only test seam.
+
+Local mobile typecheck, repository lint/format, package boundaries, and full M6-T3 harness pass (17 transport + 24 completion scenarios); whitespace check passes. No native rebuild, catalog, ledger, dependency, or manifest edits. Final native verification remains with device workers. Reviewer short ID `e6efb014` did not resolve through the agent messaging tool; parent notified to forward the final SHA for the narrow recheck.

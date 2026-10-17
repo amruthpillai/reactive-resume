@@ -297,6 +297,7 @@ function Conversation(props: ConversationProps) {
 
 	// A failed continuation (after an answer) is sent again as it was; regenerating would drop the answer.
 	const retry = () => {
+		if (readOnly) return;
 		clearError();
 		const continuation = lastAssistantMessageIsCompleteWithToolCalls({ messages });
 		void lane.run(() => (continuation ? sendMessage() : regenerate()));
@@ -506,7 +507,14 @@ function Conversation(props: ConversationProps) {
 							</Text>
 						</View>
 						<View style={{ flexDirection: "row", gap: space.s2 }}>
-							<Button size="sm" variant="secondary" icon="arrow-clockwise" label={t`Retry`} onPress={retry} />
+							<Button
+								size="sm"
+								variant="secondary"
+								icon="arrow-clockwise"
+								label={t`Retry`}
+								disabled={readOnly}
+								onPress={retry}
+							/>
 							{props.onSwitchModel ? (
 								<Button size="sm" variant="ghost" label={t`Switch model`} onPress={props.onSwitchModel} />
 							) : null}
