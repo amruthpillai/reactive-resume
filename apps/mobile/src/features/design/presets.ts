@@ -79,12 +79,12 @@ export function applyMargins(metadata: WritableDraft<Metadata>, id: MarginId) {
 
 export const TEXT_SIZE = { min: 9, max: 12.5, step: 0.5 } as const;
 
-/** Sets the body size and scales the heading with it, keeping their ratio. */
-export function applyTextSize(metadata: WritableDraft<Metadata>, size: number) {
+/** Sets the body size and scales the heading with it, keeping their ratio within the schema's 6–24pt bounds. */
+export function applyTextSize(metadata: WritableDraft<Pick<Metadata, "typography">>, size: number) {
 	const { body, heading } = metadata.typography;
 	const ratio = body.fontSize > 0 ? heading.fontSize / body.fontSize : 1.4;
 	body.fontSize = size;
-	heading.fontSize = Math.round(size * ratio * 2) / 2;
+	heading.fontSize = Math.min(24, Math.max(6, Math.round(size * ratio * 2) / 2));
 }
 
 /** Eight accents, all readable on white. Hex values are resume colours, not app tokens; names live with the UI. */

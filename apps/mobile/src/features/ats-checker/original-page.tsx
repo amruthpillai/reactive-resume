@@ -26,9 +26,10 @@ export function OriginalPage({ uri }: OriginalPageProps) {
 		void (async () => {
 			try {
 				const document = await pdfPages.open(new Uint8Array(await new File(uri).arrayBuffer()));
+				if (!active) return void pdfPages.close(document.id).catch(() => {});
 				id = document.id;
 				const first = document.pages[0];
-				if (!active || !first) return;
+				if (!first) return;
 				const scale = Math.min(6, (width * PixelRatio.get()) / first.width);
 				const indices = document.pages.slice(0, MAX_PAGES).map((_, index) => index);
 				const images = await pdfPages.rasterize(document.id, indices, scale);

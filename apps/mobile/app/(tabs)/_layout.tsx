@@ -6,7 +6,7 @@ import { View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
 import { routes } from "@/routes";
-import { AppStrip, BannerAbove, useAppBanners } from "@/shell/app-banner";
+import { AppStrip, BannerAbove } from "@/shell/app-banner";
 import { AppSidebar, PhoneTabBar } from "@/shell/app-tabs";
 import { useKeyCommands } from "@/shell/key-commands";
 import { useIsTablet } from "@/shell/use-is-tablet";
@@ -14,8 +14,8 @@ import { useTheme } from "@/ui";
 
 /**
  * Five tabs: Documents, Applications, the raised "+" (opens New as a modal), Career, Settings. Phone: the bottom tab
- * bar. Tablet: the 240 pt sidebar. The offline strip (from the network state) and any `setAppBanner` banners sit
- * under the status bar above every tab. Screens end at the top of the keyboard.
+ * bar. Tablet: the 240 pt sidebar. The offline strip (from the network state) sits under the status bar above every
+ * tab. Screens end at the top of the keyboard.
  */
 export default function TabsLayout() {
 	const router = useRouter();
@@ -24,20 +24,7 @@ export default function TabsLayout() {
 	const insets = useSafeAreaInsets();
 	const network = useNetworkState();
 	const offline = network.isConnected === false || network.isInternetReachable === false;
-	const banners = [...useAppBanners()];
 	const { colors } = useTheme();
-	if (offline) {
-		banners.unshift([
-			"offline",
-			<AppStrip
-				key="offline"
-				tone="info"
-				icon="cloud-slash"
-				message={t`Offline. Edits are saved on this device and sync when you reconnect.`}
-			/>,
-		]);
-	}
-	const hasBanners = banners.length > 0;
 	useKeyCommands(
 		[
 			{ id: "search", input: "k", title: t`Search`, run: () => router.push(routes.search()) },
@@ -48,16 +35,18 @@ export default function TabsLayout() {
 
 	return (
 		<View style={{ flex: 1, backgroundColor: colors.bg }}>
-			{hasBanners ? (
+			{offline ? (
 				<View style={{ paddingTop: insets.top, paddingStart: insets.left, paddingEnd: insets.right }}>
-					{banners.map(([key, banner]) => (
-						<View key={key}>{banner}</View>
-					))}
+					<AppStrip
+						tone="info"
+						icon="cloud-slash"
+						message={t`Offline. Edits are saved on this device and sync when you reconnect.`}
+					/>
 				</View>
 			) : null}
 			{/* Under a banner the status bar is already cleared, so the tabs' headers must not pad it again. */}
-			<SafeAreaInsetsContext value={hasBanners ? { ...insets, top: 0 } : insets}>
-				<BannerAbove value={hasBanners}>
+			<SafeAreaInsetsContext value={offline ? { ...insets, top: 0 } : insets}>
+				<BannerAbove value={offline}>
 					<KeyboardAvoidingView behavior="padding" automaticOffset style={{ flex: 1 }}>
 						<Tabs
 							tabBar={(props) => (tablet ? <AppSidebar {...props} /> : <PhoneTabBar {...props} />)}

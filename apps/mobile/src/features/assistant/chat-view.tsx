@@ -5,6 +5,7 @@ import type { ChatAttachment, MessageContext } from "./chat";
 import type { AssistantDocument } from "./document";
 import type { EditStatus, ProposalHandlers } from "./messages";
 import type { ToolPart } from "./proposals";
+import type { SavedThread } from "./recovery";
 import type { IconName } from "@/ui";
 import type { Proposal } from "@reactive-resume/resume/proposals";
 import type { UIMessage } from "ai";
@@ -295,18 +296,21 @@ function Conversation(props: ConversationProps) {
 		sendPrompt(props.prompt);
 	}, [props.prompt]);
 
-	// A failed continuation (after an answer) is sent again as it was; regenerating would drop the answer.
-	const retry = () => {
-		if (readOnly) return;
-		clearError();
-		const continuation = lastAssistantMessageIsCompleteWithToolCalls({ messages });
-		void lane.run(() => (continuation ? sendMessage() : regenerate()));
-	};
-
 	const stopReply = () => {
 		setStopped(true);
 		void client.agent.messages.stop({ threadId }, { context: { scope: props.scope } }).catch(() => undefined);
 		void lane.cancel();
+	};
+
+	const reloadThread = async (): Promise<SavedThread | null> => {
+		const options = orpc.agent.threads.get.queryOptions({
+			input: { id: threadId },
+			context: { scope: props.scope },
+		});
+		const latest = await queryClient
+			.fetchQuery({ ...options, queryKey: [...options.queryKey, props.scope], staleTime: 0 })
+			.catch(() => null);
+		return latest && { messages: latest.messages as UIMessage[], active: Boolean(latest.thread.activeRunId) };
 	};
 
 	// Follows a reply the connection lost, only while no other request is open; it checks it is still current after
@@ -314,16 +318,7 @@ function Conversation(props: ConversationProps) {
 	const followRun = (isCurrent: () => boolean) =>
 		recoverRun({
 			isCurrent,
-			reload: async () => {
-				const options = orpc.agent.threads.get.queryOptions({
-					input: { id: threadId },
-					context: { scope: props.scope },
-				});
-				const latest = await queryClient
-					.fetchQuery({ ...options, queryKey: [...options.queryKey, props.scope], staleTime: 0 })
-					.catch(() => null);
-				return latest && { messages: latest.messages as UIMessage[], active: Boolean(latest.thread.activeRunId) };
-			},
+			reload: reloadThread,
 			apply: (saved) => {
 				clearError();
 				setMessages(saved);
@@ -333,6 +328,26 @@ function Conversation(props: ConversationProps) {
 			if (isCurrent()) refreshThreads(queryClient);
 		});
 	const recover = useEffectEvent(() => void lane.runIfIdle(followRun));
+
+	// Leaving the document or posting out makes every send start fresh (the server takes only a new message then), so an
+	// answer can't continue the reply, nor can Retry send such a continuation again. The coach's chips don't do that.
+	const fresh = document !== null && (!props.context.document || !props.context.posting);
+	const continuationBlocked = fresh && lastAssistantMessageIsCompleteWithToolCalls({ messages });
+
+	// A reply the connection lost may still run on the server, which refuses a second one: Retry follows it as recovery
+	// does. Only with no run left is the message sent again: a failed continuation (after an answer) as it was,
+	// since regenerating would drop the answer.
+	const retry = () => {
+		if (readOnly || continuationBlocked) return;
+		clearError();
+		void lane.run(async (isCurrent) => {
+			const latest = await reloadThread();
+			if (!isCurrent()) return;
+			if (latest?.active) return followRun(isCurrent);
+			const continuation = lastAssistantMessageIsCompleteWithToolCalls({ messages });
+			await (continuation ? sendMessage() : regenerate());
+		});
+	};
 
 	// A reply still running when the conversation opened is followed until it finishes (resume needs Redis). Only the
 	// state at opening counts: a later refresh of the thread never starts a second stream. Leaving aborts every request.
@@ -465,11 +480,14 @@ function Conversation(props: ConversationProps) {
 						streaming={streaming && index === messages.length - 1}
 						readOnly={readOnly}
 						proposals={handlers}
-						onAnswer={(toolCallId, answer) =>
-							// The answer's automatic continuation is a request too: it waits for anything open to end.
-							void lane.run(async () => {
-								await addToolOutput({ tool: "ask_user_question", toolCallId, output: answer } as never);
-							})
+						onAnswer={
+							fresh
+								? null
+								: (toolCallId, answer) =>
+										// The answer's automatic continuation is a request too: it waits for anything open to end.
+										void lane.run(async () => {
+											await addToolOutput({ tool: "ask_user_question", toolCallId, output: answer } as never);
+										})
 						}
 					/>
 				))}
@@ -506,13 +524,18 @@ function Conversation(props: ConversationProps) {
 								</Trans>
 							</Text>
 						</View>
+						{continuationBlocked ? (
+							<Text variant="callout" color="dangerText">
+								<Trans>Context is left out, so reply with a new message instead.</Trans>
+							</Text>
+						) : null}
 						<View style={{ flexDirection: "row", gap: space.s2 }}>
 							<Button
 								size="sm"
 								variant="secondary"
 								icon="arrow-clockwise"
 								label={t`Retry`}
-								disabled={readOnly}
+								disabled={readOnly || continuationBlocked}
 								onPress={retry}
 							/>
 							{props.onSwitchModel ? (

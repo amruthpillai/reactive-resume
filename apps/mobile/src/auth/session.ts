@@ -68,10 +68,9 @@ const refreshMarkerKey = (server: string) => storeKey("refreshing", server);
 // Refresh this long before the access token expires, so a request never leaves with a token about to lapse.
 const expirySkewSeconds = 60;
 const refreshTimeout = 20_000;
+const revokeTimeout = 5_000;
 
 let session: Session = { status: "loading", server: DEFAULT_SERVER };
-// Whether the user ever picked a server (a sign-in completed). First launch shows the server picker.
-let serverChosen = false;
 let tokens: Tokens | null = null;
 // The signed-in account, `JSON.stringify([server, sub])` (the draft store's scope). Kept through `expired`, so signing
 // out from there still clears that account's drafts; cleared on sign-out.
@@ -215,11 +214,6 @@ export function rejectCredentials(used: Credentials): Promise<void> {
 	});
 }
 
-/** False until a sign-in has completed on this device: the signed-out screen is then the server picker. */
-export function hasChosenServer(): boolean {
-	return serverChosen;
-}
-
 let restoring: Promise<void> | null = null;
 
 /**
@@ -238,7 +232,6 @@ async function readStoredSession(): Promise<void> {
 	try {
 		const storedServer = await SecureStore.getItemAsync(serverKey);
 		const server = storedServer && isAllowedServer(storedServer) ? storedServer : DEFAULT_SERVER;
-		serverChosen = server === storedServer;
 		const stored = await SecureStore.getItemAsync(tokensKey(server));
 		tokens = stored ? (JSON.parse(stored) as Tokens) : null;
 		accountScope = scopeOf(server, tokens?.accessToken);
@@ -285,7 +278,11 @@ export async function signIn(server: string): Promise<boolean> {
 	const origin = new URL(server).origin;
 	if (!isAllowedServer(origin)) throw new Error("The app needs an https server.");
 	const attempt = ++attempts;
-	const next = await authorize(origin);
+	// A cancelled or superseded attempt resolves false, even if its discovery or exchange failed meanwhile.
+	const next = await authorize(origin, attempt).catch((error: unknown) => {
+		if (attempt !== attempts) return null;
+		throw error;
+	});
 	if (!next) return false;
 	return transition(async () => {
 		// Sign-out (or a newer sign-in) started after this attempt: its tokens must not bring the session back.
@@ -296,7 +293,6 @@ export async function signIn(server: string): Promise<boolean> {
 		await SecureStore.setItemAsync(tokensKey(origin), JSON.stringify(next));
 		await SecureStore.setItemAsync(serverKey, origin);
 		await SecureStore.deleteItemAsync(refreshMarkerKey(origin));
-		serverChosen = true;
 		tokens = next;
 		accountScope = scopeOf(origin, next.accessToken);
 		changeIdentity();
@@ -313,8 +309,8 @@ class SignInError extends Error {
 	}
 }
 
-/** Discovery, DCR, PKCE in the system browser and the code exchange. Null when the user cancels. */
-async function authorize(origin: string): Promise<Tokens | null> {
+/** Discovery, DCR, PKCE in the system browser and the code exchange. Null when the user cancels or `attempt` is stale. */
+async function authorize(origin: string, attempt: number): Promise<Tokens | null> {
 	const discovery = await discover(origin);
 	const clientId = await registerClient(origin, discovery);
 	const request = new AuthSession.AuthRequest({
@@ -332,9 +328,11 @@ async function authorize(origin: string): Promise<Tokens | null> {
 		verifier: request.codeVerifier ?? "",
 		redirect: request.redirectUri,
 	};
+	// Cancelled (or superseded) during discovery or registration: never open the browser.
+	if (attempt !== attempts) return null;
 	// iOS 17.4+: an https redirect completes through ASWebAuthenticationSession's `.https` callback.
 	const result = await request.promptAsync(discovery, { preferUniversalLinks: true });
-	if (result.type === "cancel" || result.type === "dismiss") return null;
+	if (result.type === "cancel" || result.type === "dismiss" || attempt !== attempts) return null;
 	if (result.type !== "success" && result.type !== "error") throw new SignInError(`authorization_${result.type}`);
 
 	// Parsed here, by hand and from the query only, rather than trusting expo-auth-session's URL parsing.
@@ -380,41 +378,30 @@ const toTokens = (response: AuthSession.TokenResponse, previousRefreshToken?: st
 	expiresAt: response.expiresIn ? response.issuedAt + response.expiresIn : undefined,
 });
 
-/** Closes the browser of a sign-in in progress; `signIn` then resolves false. */
+/** Cancels the sign-in in progress: closes its browser and invalidates the attempt; `signIn` then resolves false. */
 export function cancelSignIn(): void {
+	attempts++;
 	WebBrowser.dismissAuthSession();
-}
-
-/** Removes another feature's account data on sign-out. Gets the departing account's scope; may throw to abort. */
-export type SignOutCleanup = (scope: string) => void | Promise<void>;
-
-const signOutCleanups = new Set<SignOutCleanup>();
-
-/**
- * Registers account-scoped cleanup to run on sign-out (in-memory queues, caches). Returns the unregister function.
- * Data on disk under a known prefix is also swept by `scopedStoragePrefixes`, even if its feature never loaded.
- */
-export function registerSignOutCleanup(cleanup: SignOutCleanup): () => void {
-	signOutCleanups.add(cleanup);
-	return () => signOutCleanups.delete(cleanup);
 }
 
 // kv-store prefixes other features keep per account (`<prefix><scope>:<id>`): application notes (M5-T2) and Career
 // workspace drafts (M6-T2). Resume and letter drafts are cleared by the draft runtime.
 const scopedStoragePrefixes = ["reactive-resume:application-notes:", "reactive-resume:career-draft:"];
 
-/** Best-effort revocation of a refresh token on `server`. */
+/** Best-effort revocation of a refresh token on `server`, given up after `revokeTimeout`. */
 async function revoke(server: string, refreshToken: string | undefined): Promise<void> {
 	if (!refreshToken) return;
-	await Promise.all([discover(server), getClientId(server)])
-		.then(([discovery, clientId]) => {
+	await Promise.race([
+		Promise.all([discover(server), getClientId(server)]).then(([discovery, clientId]) => {
 			if (!clientId || !discovery.revocationEndpoint) return;
 			return AuthSession.revokeAsync(
 				{ clientId, token: refreshToken, tokenTypeHint: AuthSession.TokenTypeHint.RefreshToken },
 				discovery,
 			);
-		})
-		.catch(() => null);
+		}),
+		// A revocation endpoint that never answers must not hold sign-out (and the transition queue).
+		new Promise<void>((resolve) => setTimeout(resolve, revokeTimeout)),
+	]).catch(() => null);
 }
 
 /** Sign-out finished, but some of the account's data on this device could not be removed. */
@@ -427,8 +414,8 @@ export class SignOutCleanupError extends AggregateError {
 
 /**
  * Signs out the current account, after any queued refresh, and invalidates every sign-in still in the browser.
- * Against a snapshot of that account only: revokes its refresh token (best effort), clears its local data (drafts,
- * application notes, Career drafts, registered cleanups), then deletes its tokens. The server and its registered
+ * Against a snapshot of that account only: revokes its refresh token (best effort, bounded), clears its local data
+ * (drafts, application notes, Career drafts), then deletes its tokens. The server and its registered
  * client are kept. Access tokens already issued stay valid until they expire (at most an hour).
  * Credentials are always removed and the session always ends signed out; a cleanup that fails does not stop the others
  * and is reported afterwards as a `SignOutCleanupError`.
@@ -459,7 +446,6 @@ export function signOut(): Promise<void> {
 				for (const key of Storage.getAllKeysSync())
 					if (prefixes.some((prefix) => key.startsWith(prefix))) Storage.removeItemSync(key);
 			});
-			for (const cleanup of signOutCleanups) await attempt(() => cleanup(scope));
 		}
 
 		try {

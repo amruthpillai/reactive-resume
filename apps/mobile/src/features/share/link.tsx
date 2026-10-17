@@ -11,6 +11,7 @@ import { formatTimeSince, normalizeSlug, summarizeViews, validSlug } from "./mod
 import { client, orpc } from "@/api/client";
 import { getServer } from "@/auth/session";
 import { useResumeStore } from "@/draft";
+import { resume as draftResume } from "@/draft/runtime";
 import { useDocumentOperations } from "@/features/documents/queries";
 import {
 	Banner,
@@ -61,7 +62,7 @@ export function LinkTab({ resume, offline }: LinkProps) {
 			const current = await flushResume(resume.id);
 			if (cancelled()) return;
 			await client.resume.update({ id: resume.id, slug: value, expectedUpdatedAt: current.updatedAt });
-			await useResumeStore.getState().open(resume.id);
+			await draftResume.refresh();
 		}),
 	);
 
@@ -109,7 +110,7 @@ export function LinkTab({ resume, offline }: LinkProps) {
 			await flushResume(resume.id);
 			if (remove) await client.resume.removePassword({ id: resume.id });
 			else await client.resume.setPassword({ id: resume.id, password });
-			await useResumeStore.getState().open(resume.id);
+			await draftResume.refresh();
 		});
 		if (success) {
 			setDialog(null);

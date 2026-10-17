@@ -1,7 +1,7 @@
 import type { LetterPane } from "@/routes";
 import type { PaneTab } from "@/shell/builder-chrome";
 import { useLingui } from "@lingui/react/macro";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter, useGlobalSearchParams, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import PageScreen from "./page";
 import { LetterConflictSheet, useLetterDraftOwner, useLetterStore } from "@/draft";
@@ -40,7 +40,9 @@ function DraftChrome({ id }: { id: string }) {
 export default function LetterLayout() {
 	const { t } = useLingui();
 	const { id } = useLocalSearchParams<{ id: string }>();
-	const [sharing, setSharing] = useState(false);
+	// `?version=` (Applications' "What you sent") opens History on that version; it's the child route's param.
+	const { version } = useGlobalSearchParams<{ version?: string }>();
+	const [sharing, setSharing] = useState(!!version);
 	// The one owner of the letter draft; panes and the tablet page subscribe with `useLetterStore()`.
 	useLetterDraftOwner(id);
 	// One editor visit: late server work from another visit never touches this draft, and leaving or switching letters
@@ -70,7 +72,7 @@ export default function LetterLayout() {
 		>
 			<DraftChrome id={id} />
 			<LetterConflictSheet />
-			<LetterShareSheet id={id} open={sharing} onClose={() => setSharing(false)} />
+			<LetterShareSheet id={id} open={sharing} onClose={() => setSharing(false)} version={version} />
 		</BuilderChrome>
 	);
 }

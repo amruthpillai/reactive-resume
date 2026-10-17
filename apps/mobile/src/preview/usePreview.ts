@@ -65,7 +65,10 @@ export function usePreview(data: ResumeData | null, template?: Template, options
 	}, []);
 
 	useEffect(() => {
-		if (!job.data) return;
+		if (!job.data) {
+			worker.current?.cancel();
+			return;
+		}
 		let active = true;
 		void worker.current
 			?.schedule({

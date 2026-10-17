@@ -110,6 +110,7 @@ ui.showToast = (options) => {
 	return id;
 };
 ui.dismissToast = (id) => toasts.delete(id);
+ui.toastLifetime = (ms) => ms;
 const appState = {
 	addEventListener(_name, callback) {
 		listeners.add(callback);

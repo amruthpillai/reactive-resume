@@ -40,13 +40,21 @@ export const routes = {
 	entry: (id: string, section: string, item: string) =>
 		`/builder/${segment(id)}/entry/${segment(section)}/${segment(item)}` as const,
 	share: (id: string) => `/builder/${segment(id)}/share` as const,
-	history: (id: string) => `/builder/${segment(id)}/history` as const,
+	/** `version` opens History on that version, read-only (Applications' "What you sent"). */
+	history: (id: string, version?: string) =>
+		version
+			? (`/builder/${segment(id)}/history?version=${segment(version)}` as const)
+			: (`/builder/${segment(id)}/history` as const),
 	assistant: (id: string) => `/builder/${segment(id)}/assistant` as const,
 
 	letterAssistant: (id: string) => `/letter/${segment(id)}/assistant` as const,
 
 	// Cover letter editor
-	letter: (id: string, pane: LetterPane = "write") => `/letter/${segment(id)}/${pane}` as const,
+	/** `version` opens Share & export's History on that version, read-only (Applications' "What you sent"). */
+	letter: (id: string, pane: LetterPane = "write", version?: string) =>
+		version
+			? (`/letter/${segment(id)}/${pane}?version=${segment(version)}` as const)
+			: (`/letter/${segment(id)}/${pane}` as const),
 };
 
 export type AppHref = ReturnType<(typeof routes)[keyof typeof routes]>;

@@ -20,7 +20,6 @@ const listeners = new Set();
 let session = { status: "signed-out", server: "https://fixture.invalid" };
 let segments = [];
 let ready = true;
-let chosen = true;
 const scopedRouter = { replace: (href) => calls.push(href) };
 const modules = {
 	react: React,
@@ -39,7 +38,6 @@ const modules = {
 	"./session": {
 		useSession: () => session,
 		getSession: () => session,
-		hasChosenServer: () => chosen,
 		subscribeIdentity: () => () => {},
 		subscribeSession: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
 	},
@@ -64,7 +62,6 @@ const render = () => React.act(() => root.render(React.createElement(SessionGate
 
 await mount();
 assert.deepEqual(calls.splice(0), ["/sign-in"], "recreated signed-out root redirects without global-router crash");
-chosen = false;
 await mount();
 assert.deepEqual(calls.splice(0), ["/sign-in"], "first launch opens sign-in with default server");
 // The launch route must agree with SessionGate before any server has been chosen.

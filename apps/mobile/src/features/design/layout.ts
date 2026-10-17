@@ -112,7 +112,8 @@ export function deletePage(layout: WritableDraft<Layout>, page: number) {
 	const target = layout.pages[page === 0 ? 1 : 0];
 	if (!removed || !target) return;
 	target.main.push(...removed.main);
-	target.sidebar.push(...removed.sidebar);
+	// Full-width pages hide their sidebar, so its sections join main, as setFullWidth does.
+	(target.fullWidth ? target.main : target.sidebar).push(...removed.sidebar);
 	layout.pages.splice(page, 1);
 }
 

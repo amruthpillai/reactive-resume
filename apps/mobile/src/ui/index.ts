@@ -43,11 +43,12 @@ export {
 	dismissToast,
 	showToast,
 	toast,
+	toastLifetime,
 	type ConfirmDialogProps,
 	type SheetProps,
 	type ToastOptions,
 } from "./overlays";
 export { SortableList, type SortableItemInfo, type SortableListProps } from "./sortable";
-export { haptics, useIsWide, useReducedMotion } from "./motion";
+export { haptics, useReducedMotion } from "./motion";
 export { Screen, Text, type ScreenProps, type TextProps, type TextVariant } from "./text";
 export { setThemePreference, useTheme, useThemePreference, type Theme, type ThemePreference } from "./theme";

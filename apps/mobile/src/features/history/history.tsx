@@ -4,10 +4,11 @@ import { t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 import { client, orpc } from "@/api/client";
-import { useResumeStore } from "@/draft";
+import { getDraftScope, useResumeStore } from "@/draft";
 import { useDocumentOperations } from "@/features/documents/queries";
 import { flushResume } from "@/features/share/document";
 import { usePreview } from "@/preview/usePreview";
@@ -57,7 +58,10 @@ export function HistoryPanel({ resume, offline }: HistoryProps) {
 		...orpc.resume.listVersions.queryOptions({ input: { resumeId: resume.id } }),
 		enabled: !offline,
 	});
-	const [selected, setSelected] = useState<Version | null>(null);
+	// `?version=` (Applications' "What you sent") shows that version until the user picks another.
+	const { version: openVersion } = useLocalSearchParams<{ version?: string }>();
+	const [picked, setSelected] = useState<Version | null | undefined>(undefined);
+	const selected = picked === undefined ? (list.data?.find((item) => item.id === openVersion) ?? null) : picked;
 	const [menu, setMenu] = useState<Version | null>(null);
 	const [mode, setMode] = useState<"menu" | "rename" | "delete">("menu");
 	const [name, setName] = useState("");
@@ -81,10 +85,14 @@ export function HistoryPanel({ resume, offline }: HistoryProps) {
 		if (!selected || resume.isLocked) return;
 		if (
 			await operations.run(async () => {
+				const scope = await getDraftScope();
 				await flushResume(resume.id);
-				// The server writes "Before restore" before changing data. Reopen resets the draft baseline and undo.
+				// The server writes "Before restore" before changing data. Reopen resets the draft baseline and undo,
+				// but only if the user is still on this resume in the same account; otherwise their open draft stays.
 				await client.resume.restoreVersion({ resumeId: resume.id, versionId: selected.id });
-				await useResumeStore.getState().open(resume.id);
+				const sameScope = (await getDraftScope()) === scope;
+				if (sameScope && useResumeStore.getState().document?.id === resume.id)
+					await useResumeStore.getState().open(resume.id);
 			})
 		) {
 			setSelected(null);

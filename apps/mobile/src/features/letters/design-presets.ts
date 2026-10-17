@@ -35,14 +35,6 @@ export function applyFontPairing(metadata: WritableDraft<Metadata>, id: FontPair
 
 export const TEXT_SIZE = { min: 9, max: 12.5, step: 0.5 } as const;
 
-/** Sets the body size and scales the heading with it, keeping their ratio. */
-export function applyTextSize(metadata: WritableDraft<Metadata>, size: number) {
-	const { body, heading } = metadata.typography;
-	const ratio = body.fontSize > 0 ? heading.fontSize / body.fontSize : 1.4;
-	body.fontSize = size;
-	heading.fontSize = Math.round(size * ratio * 2) / 2;
-}
-
 /** Page margins in points. "Normal" is the default. */
 export const MARGINS = {
 	narrow: { marginX: 10, marginY: 8 },

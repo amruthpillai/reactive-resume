@@ -31,7 +31,8 @@ type MessageViewProps = {
 	streaming: boolean;
 	readOnly: boolean;
 	proposals: ProposalHandlers | null;
-	onAnswer: (toolCallId: string, answer: string) => void;
+	/** Null while an answer can't continue the reply (context left out): the question asks for a new message instead. */
+	onAnswer: ((toolCallId: string, answer: string) => void) | null;
 };
 
 export function MessageView({ message, streaming, readOnly, proposals, onAnswer }: MessageViewProps) {
@@ -305,7 +306,7 @@ function ToolPartView({ part, message, streaming, readOnly, proposals, onAnswer 
 	}
 }
 
-type QuestionCardProps = { part: ToolPart; readOnly: boolean; onAnswer: (toolCallId: string, answer: string) => void };
+type QuestionCardProps = Pick<MessageViewProps, "readOnly" | "onAnswer"> & { part: ToolPart };
 
 /** The assistant asks before writing anything the document doesn't say: an info-soft card with its choices. */
 function QuestionCard({ part, readOnly, onAnswer }: QuestionCardProps) {
@@ -330,7 +331,11 @@ function QuestionCard({ part, readOnly, onAnswer }: QuestionCardProps) {
 				<Text variant="callout" color="infoText">
 					<Trans>You answered: {answer}</Trans>
 				</Text>
-			) : readOnly || !toolCallId ? null : (
+			) : readOnly || !toolCallId ? null : !onAnswer ? (
+				<Text variant="callout" color="infoText">
+					<Trans>Context is left out, so reply with a new message instead.</Trans>
+				</Text>
+			) : (
 				<>
 					{choices.length > 0 ? (
 						<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>

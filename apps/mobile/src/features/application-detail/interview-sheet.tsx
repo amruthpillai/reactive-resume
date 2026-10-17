@@ -35,6 +35,7 @@ import {
 	Segmented,
 	Sheet,
 	showToast,
+	toastLifetime,
 	Switch,
 	Text,
 	TextArea,
@@ -246,7 +247,7 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 					releaseReminder(interview.id);
 					void invalidate();
 				});
-		}, UNDO_MS);
+		}, toastLifetime(UNDO_MS));
 		showToast({
 			message: t`Interview deleted`,
 			duration: UNDO_MS,

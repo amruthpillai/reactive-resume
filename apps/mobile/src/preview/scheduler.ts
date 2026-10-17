@@ -51,12 +51,17 @@ export class PreviewScheduler {
 		}
 	}
 
-	dispose() {
-		this.disposed = true;
+	/** Drops waiting work and makes any in-flight result stale; a running native render finishes untouched. */
+	cancel() {
 		this.latest++;
 		clearTimeout(this.timer);
 		this.timer = undefined;
 		this.pending?.resolve(null);
 		this.pending = undefined;
+	}
+
+	dispose() {
+		this.disposed = true;
+		this.cancel();
 	}
 }

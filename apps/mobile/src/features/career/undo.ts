@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { AppState } from "react-native";
-import { dismissToast, showToast } from "@/ui";
+import { dismissToast, showToast, toastLifetime } from "@/ui";
 
 type UndoOptions = { message: string; commit: () => Promise<unknown>; restore: () => void; failed: () => void };
 
@@ -22,7 +22,7 @@ export function withUndo({ message, commit, restore, failed }: UndoOptions) {
 				});
 		else restore();
 	};
-	const timer = setTimeout(() => finish(true), 6000);
+	const timer = setTimeout(() => finish(true), toastLifetime(6000));
 	const listener = AppState.addEventListener("change", (state) => {
 		if (state === "background") finish(true);
 	});

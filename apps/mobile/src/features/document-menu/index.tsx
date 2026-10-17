@@ -6,6 +6,7 @@ import { View } from "react-native";
 import { EnrichedTextInput } from "react-native-enriched-html";
 import { client } from "@/api/client";
 import { resumeFieldFocus, useResumeStore } from "@/draft";
+import { resume as draftResume } from "@/draft/runtime";
 import { useNewDocuments } from "@/features/documents/new-documents";
 import { useDocumentOperations } from "@/features/documents/queries";
 import { flushResume } from "@/features/share/document";
@@ -42,9 +43,6 @@ export function DocumentMenu({ id, inChrome = false }: DocumentMenuProps) {
 		const task = operations.run(action);
 		pending.current = task;
 		if (await task) setPanel(null);
-	};
-	const sync = async () => {
-		await useResumeStore.getState().open(id);
 	};
 	const openMenu = () => {
 		setName(resume?.name ?? "");
@@ -104,7 +102,8 @@ export function DocumentMenu({ id, inChrome = false }: DocumentMenuProps) {
 										void run(async () => {
 											if (!resume.isLocked) await flushResume(id);
 											await client.documents.setLocked({ type: "resume", id, isLocked: !resume.isLocked });
-											await sync();
+											// Metadata-only change: refresh keeps undo history and skips a draft that is no longer this resume.
+											await draftResume.refresh();
 										})
 									}
 								/>

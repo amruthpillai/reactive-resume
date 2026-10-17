@@ -43,15 +43,17 @@ async function flushLetter(id: string) {
 	return document;
 }
 
+type LetterShareSheetProps = { id: string; open: boolean; onClose: () => void; version?: string | undefined };
 /**
  * Share & export for letters (builder.html L7): Download and History. Letters have no public link. Opened from
- * Share in the letter chrome; the letter layout owns the draft, so this only subscribes.
+ * Share in the letter chrome; the letter layout owns the draft, so this only subscribes. `version` opens History on
+ * that version, read-only.
  */
-export function LetterShareSheet({ id, open, onClose }: { id: string; open: boolean; onClose: () => void }) {
+export function LetterShareSheet({ id, open, onClose, version }: LetterShareSheetProps) {
 	const { t } = useLingui();
 	const { space } = useTheme();
 	const letter = useLetterStore((state) => (state.document?.id === id ? state.document : null));
-	const [tab, setTab] = useState<"download" | "history">("download");
+	const [tab, setTab] = useState<"download" | "history">(version ? "history" : "download");
 	const network = useNetworkState();
 	const offline = network.isConnected === false || network.isInternetReachable === false;
 
@@ -72,7 +74,7 @@ export function LetterShareSheet({ id, open, onClose }: { id: string; open: bool
 				) : tab === "download" ? (
 					<LetterDownload letter={letter} offline={offline} />
 				) : (
-					<LetterHistory letter={letter} offline={offline} />
+					<LetterHistory letter={letter} offline={offline} version={version} />
 				)}
 			</View>
 		</Sheet>
@@ -266,8 +268,9 @@ function versionTitle(version: Version) {
 	}
 }
 
+type LetterHistoryProps = { letter: LetterDocument; offline: boolean; version?: string | undefined };
 /** History: sessions, named and sent versions, restore points; a version shows read-only before Restore. */
-function LetterHistory({ letter, offline }: { letter: LetterDocument; offline: boolean }) {
+function LetterHistory({ letter, offline, version: openVersion }: LetterHistoryProps) {
 	const { t, i18n } = useLingui();
 	const { space } = useTheme();
 	const operations = useDocumentOperations();
@@ -275,7 +278,9 @@ function LetterHistory({ letter, offline }: { letter: LetterDocument; offline: b
 		...orpc.coverLetters.listVersions.queryOptions({ input: { id: letter.id } }),
 		enabled: !offline,
 	});
-	const [selected, setSelected] = useState<Version | null>(null);
+	// `version` (Applications' "What you sent") shows that version until the user picks another.
+	const [picked, setSelected] = useState<Version | null | undefined>(undefined);
+	const selected = picked === undefined ? (list.data?.find((item) => item.id === openVersion) ?? null) : picked;
 	const [menu, setMenu] = useState<Version | null>(null);
 	const [mode, setMode] = useState<"menu" | "rename" | "delete">("menu");
 	const [name, setName] = useState("");

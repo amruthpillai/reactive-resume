@@ -12,6 +12,7 @@ import { describeNextStep, getNextStep } from "./next-step";
 import { useApplicationMutations, useApplications } from "./queries";
 import { CLOSED_REASONS, getClosedReasonLabel, getStageColor, getStageLabel, PIPELINE } from "./stages";
 import { useSession } from "@/auth/session";
+import { useUserTime } from "@/features/application-detail/hooks";
 import { ApplicationsViewFrame } from "@/features/applications-board/views";
 import { routes } from "@/routes";
 import {
@@ -51,6 +52,7 @@ function ApplicationsList() {
 	const { t, i18n } = useLingui();
 	const { colors, space, radius, size } = useTheme();
 	const query = useApplications();
+	const { timeZone } = useUserTime();
 	const { bulkUpdate, bulkDelete } = useApplicationMutations();
 	const [search, setSearch] = useState("");
 	const [tag, setTag] = useState("");
@@ -318,7 +320,7 @@ function ApplicationsList() {
 						</Pressable>
 					)}
 					renderItem={({ item }) => {
-						const next = describeNextStep(getNextStep(item), item, i18n.locale);
+						const next = describeNextStep(getNextStep(item), item, i18n.locale, timeZone);
 						return (
 							<View
 								style={{

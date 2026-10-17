@@ -181,7 +181,7 @@ type ProposalCardProps = {
  */
 function ProposalCard({ reply, application, now, readOnly }: ProposalCardProps) {
 	const { t, i18n } = useLingui();
-	const { when, day } = useUserTime();
+	const { when, day, timeZone } = useUserTime();
 	const queryClient = useQueryClient();
 	const invalidate = useInvalidateApplications();
 	const session = useSession();
@@ -195,7 +195,8 @@ function ProposalCard({ reply, application, now, readOnly }: ProposalCardProps) 
 	const selected = applied ? applied.changes : ticked;
 	const contact = application.contacts[0]?.name.split(" ")[0];
 	const current =
-		application.followUpNote || describeNextStep(getNextStep(application, now), application, i18n.locale).title;
+		application.followUpNote ||
+		describeNextStep(getNextStep(application, now), application, i18n.locale, timeZone).title;
 	const from = getStageLabel(application.status);
 
 	const describe = (change: (typeof changes)[number]) => {

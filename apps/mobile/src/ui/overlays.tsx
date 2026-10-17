@@ -500,6 +500,9 @@ let screenReader = false;
 void AccessibilityInfo.isScreenReaderEnabled().then((value) => (screenReader = value));
 AccessibilityInfo.addEventListener("screenReaderChanged", (value) => (screenReader = value));
 
+/** How long a toast with this requested duration actually stays: screen readers get twice as long. */
+export const toastLifetime = (ms: number) => ms * (screenReader ? 2 : 1);
+
 export function dismissToast(id: number) {
 	clearToastTimer(id);
 	emitToasts(toasts.filter((toast) => toast.id !== id));
@@ -516,7 +519,7 @@ export function showToast(options: ToastOptions): number {
 	for (const toast of toasts) clearToastTimer(toast.id);
 	emitToasts([{ ...options, id }]);
 	AccessibilityInfo.announceForAccessibility(options.message);
-	const duration = (options.duration ?? (hasAction ? 6000 : 4000)) * (screenReader ? 2 : 1);
+	const duration = toastLifetime(options.duration ?? (hasAction ? 6000 : 4000));
 	toastTimers.set(
 		id,
 		setTimeout(() => dismissToast(id), duration),

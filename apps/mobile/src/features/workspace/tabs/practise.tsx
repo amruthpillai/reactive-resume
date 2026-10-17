@@ -216,6 +216,8 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 	// are then.
 	const audioRef = useRef(audio);
 	const keepRef = useRef(voice.settings.keep);
+	// Bumped by each new transcription and by switching mode, so a slower, older result can't land over newer input.
+	const generation = useRef(0);
 	useEffect(() => {
 		keepRef.current = voice.settings.keep;
 	});
@@ -235,6 +237,7 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 
 	const send = async (recording: Recording) => {
 		if (!transcriber) return;
+		const run = ++generation.current;
 		setStep({ name: "transcribing" });
 		try {
 			const result = await transcribe({
@@ -243,7 +246,7 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 				model: transcriber.model,
 				applicationId,
 			});
-			if (!alive.current) return;
+			if (!alive.current || run !== generation.current) return;
 			setAnswer(result.text);
 			setSpoken({ id: result.id, text: result.text, seconds: recording.seconds });
 			setStep({ name: "idle" });
@@ -257,7 +260,7 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 			audioRef.current = next;
 			setAudio(next);
 		} catch {
-			if (alive.current) setStep({ name: "error" });
+			if (alive.current && run === generation.current) setStep({ name: "error" });
 		}
 	};
 
@@ -301,7 +304,8 @@ function Session({ applicationId, interviewId, questions, voice, initialMode, st
 	};
 	const chooseMode = (next: Mode) => {
 		if (next === "typed" && step.name === "recording") void recorder.cancel();
-		if (next === "typed") setStep({ name: "idle" });
+		generation.current++;
+		if (next === "typed" || step.name === "transcribing") setStep({ name: "idle" });
 		setMode(next);
 	};
 	const nextQuestion = () => {

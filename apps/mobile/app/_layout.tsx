@@ -13,6 +13,7 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { restoreSession } from "@/auth/session";
 import { SessionGate } from "@/auth/session-gate";
+import { useOpenReminder } from "@/features/reminders/open";
 import { i18n, initI18n } from "@/i18n";
 import { Toaster, useReducedMotion, useTheme } from "@/ui";
 import { fontAssets } from "@/ui/fonts";
@@ -47,6 +48,7 @@ function RootStack() {
 	const { t } = useLingui();
 	const navigationTheme = useNavigationTheme();
 	const reduced = useReducedMotion();
+	useOpenReminder();
 
 	return (
 		<ThemeProvider value={navigationTheme}>

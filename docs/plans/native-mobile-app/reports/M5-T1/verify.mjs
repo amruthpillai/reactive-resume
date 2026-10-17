@@ -77,6 +77,8 @@ const mockSources = {
  "expo-document-picker": "exports.getDocumentAsync=globalThis.__m5.pick;",
  "expo-file-system": "exports.File=globalThis.__m5.File;exports.Paths={cache:{toString:()=> 'cache',list:()=>globalThis.__m5.cacheFiles()}};",
  "expo-sharing": "exports.isAvailableAsync=async()=>true;exports.shareAsync=globalThis.__m5.share;",
+ "@/features/reminders": "exports.syncReminders=async()=>{};",
+ "@/features/application-detail/hooks": "exports.useUserTime=()=>({timeZone:'UTC'});",
  "@/ui": ui.map((name) => `exports.${name}=${JSON.stringify(name)};`).join("") + "exports.useTheme=()=>({colors:{},space:{s2:8,s3:12,s4:16,s12:48},radius:{rPill:999},size:{hit:44,icon:{meta:16}}});",
 };
 const feature = fileURLToPath(new URL("src/features/applications/", mobile));

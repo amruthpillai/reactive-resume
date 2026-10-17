@@ -1,6 +1,6 @@
 import type { IconName } from "@/ui";
 import type { ReactNode } from "react";
-import { createContext, use, useSyncExternalStore } from "react";
+import { createContext, use } from "react";
 import { View } from "react-native";
 import { Icon, Text, useReducedMotion, useTheme } from "@/ui";
 
@@ -23,36 +23,6 @@ export function useTabStackOptions(cleared = false) {
 		headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
 		unstable_nativeProps: { headerConfig: { disableTopInsetApplication } },
 	};
-}
-
-/** Well-known keys; any string works. The tab shell shows every banner that is set, in the order they were first set. */
-export type AppBannerKey = "session" | "guest" | (string & {});
-
-let banners: ReadonlyMap<string, ReactNode> = new Map();
-const listeners = new Set<() => void>();
-
-/**
- * Shows a banner under the status bar on every tab (session expired, guest), or hides it with `null`. Setting the same
- * key again replaces it in place. Callable from anywhere, including outside React. The offline strip is built in.
- *
- * @example setAppBanner("session", <AppStrip tone="warn" icon="warning" message={t`Your session ended…`} action={…} />)
- */
-export function setAppBanner(key: AppBannerKey, banner: ReactNode | null) {
-	const next = new Map(banners);
-	if (banner === null || banner === undefined) next.delete(key);
-	else next.set(key, banner);
-	banners = next;
-	for (const listener of listeners) listener();
-}
-
-const subscribe = (listener: () => void) => {
-	listeners.add(listener);
-	return () => listeners.delete(listener);
-};
-
-/** The banners the tab shell renders. */
-export function useAppBanners() {
-	return useSyncExternalStore(subscribe, () => banners);
 }
 
 type AppStripProps = {

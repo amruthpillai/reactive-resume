@@ -19,6 +19,7 @@ import Animated, {
 import { scheduleOnRN } from "react-native-worklets";
 import { keepPending, pendingAfterError, stageAt } from "./board";
 import { ApplicationsViewFrame } from "./views";
+import { useUserTime } from "@/features/application-detail/hooks";
 import { CloseSheet, MarkAppliedSheet } from "@/features/application-detail/sheets";
 import { applicationError } from "@/features/applications/error";
 import { describeNextStep, getNextStep } from "@/features/applications/next-step";
@@ -540,7 +541,8 @@ function BoardCard({ application, onMove }: BoardCardProps) {
 	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const { space } = useTheme();
-	const next = describeNextStep(getNextStep(application), application, i18n.locale);
+	const { timeZone } = useUserTime();
+	const next = describeNextStep(getNextStep(application), application, i18n.locale, timeZone);
 	return (
 		<Card>
 			<Pressable

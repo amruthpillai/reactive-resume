@@ -13,7 +13,6 @@ import {
 	MARGINS,
 	TEXT_SIZE,
 	applyFontPairing,
-	applyTextSize,
 	hexToRgba,
 	isValidHex,
 	matchFontPairing,
@@ -25,6 +24,7 @@ import { useResumes } from "./queries";
 import { relinkLetter } from "./save";
 import { relinked } from "./write";
 import { useLetterStore } from "@/draft";
+import { applyTextSize } from "@/features/design/presets";
 import { routes } from "@/routes";
 import { Button, IconButton, ListRow, Segmented, SelectSheet, Switch, Text, TextField, useTheme } from "@/ui";
 

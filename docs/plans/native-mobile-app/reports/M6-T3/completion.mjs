@@ -877,6 +877,101 @@ await check("Removing document context permits chat without saving a conflicting
 	assert.equal(sent[1].context.document, false);
 	screen.unmount();
 });
+await check("Retry after a lost connection follows the run still active on the server instead of sending again", async () => {
+	env.threads = [thread("chosen")];
+	env.saved.set("chosen", { thread: {}, messages: [], isReadOnly: false });
+	env.sendError = new Error("Network request failed");
+	const reloads = [];
+	const fetchQuery = env.queryClient.fetchQuery;
+	env.queryClient.fetchQuery = async (options) => {
+		if (options.queryKey[0] !== "thread") return null;
+		reloads.push(options.input.id);
+		// The run is still going when Retry looks, then finishes with the reply the connection lost.
+		return reloads.length === 1
+			? { thread: { activeRunId: "run-1" }, messages: [] }
+			: {
+					thread: { activeRunId: null },
+					messages: [
+						{ id: "u1", role: "user", parts: [{ type: "text", text: "Tighten it" }] },
+						{ id: "a1", role: "assistant", parts: [{ type: "text", text: "Saved answer" }] },
+					],
+				};
+	};
+	try {
+		const screen = mount(LetterAssistantScreen, { letterId: "letter-a", threadId: "chosen" });
+		find(screen, "TextInput").onChangeText("Tighten it");
+		screen.render();
+		find(screen, "Pressable", (p) => p.accessibilityLabel === "Send").onPress();
+		await settle(screen);
+		assert.equal(env.calls.filter((c) => c[0] === "send").length, 1);
+		env.sendError = null;
+		find(screen, "Button", (p) => p.label === "Retry").onPress();
+		await settle(screen);
+		assert.equal(
+			env.calls.filter((c) => c[0] === "send").length,
+			1,
+			"Retry must not send while the server still runs the reply",
+		);
+		assert.deepEqual(reloads, ["chosen", "chosen"]);
+		assert.equal(find(screen, "MessageView", (p) => p.message.role === "assistant").message.parts[0].text, "Saved answer");
+		assert.equal(
+			elements(screen.tree).some((n) => n.props?.label === "Retry"),
+			false,
+			"the saved reply replaces the error",
+		);
+		screen.unmount();
+	} finally {
+		env.queryClient.fetchQuery = fetchQuery;
+	}
+});
+await check("Removing letter context disables inline answers and Retry of their continuation; new messages still send", async () => {
+	env.threads = [thread("chosen")];
+	const question = {
+		type: "tool-ask_user_question",
+		toolCallId: "q1",
+		state: "input-available",
+		input: { question: "Which role?", choices: ["Engineer"] },
+	};
+	env.saved.set("chosen", {
+		thread: {},
+		messages: [
+			{ id: "u1", role: "user", parts: [{ type: "text", text: "Tailor it" }] },
+			{ id: "a1", role: "assistant", parts: [{ type: "step-start" }, question] },
+		],
+		isReadOnly: false,
+	});
+	env.sendError = new Error("Network request failed");
+	const screen = mount(LetterAssistantScreen, { letterId: "letter-a", threadId: "chosen" });
+	const answer = () => find(screen, "MessageView", (p) => p.message.role === "assistant").onAnswer;
+	answer()("q1", "Engineer");
+	await settle(screen);
+	const continued = env.calls.filter((c) => c[0] === "send");
+	assert.equal(continued.length, 1);
+	assert.equal(continued[0][1].message.role, "assistant", "the answer's continuation failed");
+	assert.equal(find(screen, "Button", (p) => p.label === "Retry").disabled, false);
+	env.sendError = null;
+	elements(screen.tree)
+		.find((n) => n.type?.name === "ContextChip" && n.props.label === "Letter A")
+		.props.onRemove();
+	screen.render();
+	const retry = find(screen, "Button", (p) => p.label === "Retry");
+	assert.equal(retry.disabled, true);
+	retry.onPress();
+	await settle(screen);
+	assert.equal(env.calls.filter((c) => c[0] === "send").length, 1, "a continuation cannot go without its context");
+	assert.equal(answer(), null);
+	assert.ok(
+		elements(screen.tree).some((n) => n.rendered === "Context is left out, so reply with a new message instead."),
+	);
+	find(screen, "TextInput").onChangeText("Engineer, please");
+	screen.render();
+	find(screen, "Pressable", (p) => p.accessibilityLabel === "Send").onPress();
+	await settle(screen);
+	const sent = env.calls.filter((c) => c[0] === "send").at(-1);
+	assert.equal(sent[1].message.role, "user");
+	assert.equal(sent[1].context.document, false);
+	screen.unmount();
+});
 await check(
 	"Workspace coach reopens application-only history, creates application scope, fixes context and tab, obeys provider gate",
 	async () => {

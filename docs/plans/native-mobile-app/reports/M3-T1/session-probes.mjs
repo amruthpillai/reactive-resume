@@ -338,13 +338,14 @@ await check("7. if the old tokens cannot be deleted, the marker stays and a rest
 	assert.equal(refreshCount(), 1, "the spent token was not resent after the restart");
 });
 
-await check("8. a sign-in still in the browser when sign-out finishes never commits; its tokens are revoked", async () => {
+await check("8. a sign-in still in the browser when sign-out finishes never commits or exchanges its code", async () => {
 	const session = await load(++instance);
 	await session.restoreSession();
 	await signInAs(session, "user-a", 1);
 	const gate = deferred();
 	probe.prompt = gate.promise;
 	probe.exchange = () => tokenResponse(jwt("user-b", 1), "refresh-user-b-1");
+	const before = probe.log.length;
 	const pending = session.signIn(origin);
 	await new Promise((resolve) => setTimeout(resolve, 10));
 	await session.signOut();
@@ -353,10 +354,10 @@ await check("8. a sign-in still in the browser when sign-out finishes never comm
 	assert.equal(session.getSession().status, "signed-out");
 	assert.equal(await session.getAccessToken(), null);
 	assert.equal([...probe.store.keys()].filter((name) => name.startsWith("tokens.")).length, 0);
-	assert.ok(probe.log.includes("revoke refresh-user-b-1"), "the late tokens were revoked");
+	assert.ok(!probe.log.slice(before).some((line) => line.startsWith("exchange ")), "the stale code was not exchanged");
 });
 
-await check("9. sign-out sweeps application notes and Career drafts of that account and runs registered cleanups", async () => {
+await check("9. sign-out sweeps application notes and Career drafts of that account", async () => {
 	const session = await load(++instance);
 	await session.restoreSession();
 	await signInAs(session, "user-a", 1);
@@ -366,14 +367,11 @@ await check("9. sign-out sweeps application notes and Career drafts of that acco
 		probe.kv.set(`reactive-resume:application-notes:${scope}:app-1`, "notes");
 		probe.kv.set(`reactive-resume:career-draft:${scope}:story-1`, "draft");
 	}
-	const cleaned = [];
-	session.registerSignOutCleanup((scope) => void cleaned.push(scope));
 	await session.signOut();
 	assert.deepEqual([...probe.kv.keys()].sort(), [
 		`reactive-resume:application-notes:${theirs}:app-1`,
 		`reactive-resume:career-draft:${theirs}:story-1`,
 	]);
-	assert.deepEqual(cleaned, [mine]);
 });
 
 await check("10. failing cleanups do not stop sign-out: credentials go, the session ends, errors are reported", async () => {
@@ -383,17 +381,11 @@ await check("10. failing cleanups do not stop sign-out: credentials go, the sess
 	const mine = JSON.stringify([origin, "user-a"]);
 	probe.kv.set(`reactive-resume:application-notes:${mine}:app-1`, "notes");
 	probe.draftsFail = true;
-	const ran = [];
-	session.registerSignOutCleanup(() => {
-		throw new Error("queue cleanup failed");
-	});
-	session.registerSignOutCleanup((scope) => void ran.push(scope));
-	await assert.rejects(session.signOut(), (error) => error.name === "SignOutCleanupError" && error.errors.length === 2);
+	await assert.rejects(session.signOut(), (error) => error.name === "SignOutCleanupError" && error.errors.length === 1);
 	assert.equal(session.getSession().status, "signed-out");
 	assert.equal(await session.getAccessToken(), null);
 	assert.equal([...probe.store.keys()].filter((name) => name.startsWith("tokens.")).length, 0, "tokens deleted");
 	assert.equal(probe.kv.size, 0, "the other cleanups still ran");
-	assert.deepEqual(ran, [mine]);
 	session = await load(++instance);
 	await session.restoreSession();
 	assert.equal(session.getSession().status, "signed-out", "a restart stays signed out");
@@ -413,6 +405,22 @@ await check("11. invalid_client during refresh expires the session even if forge
 	await session.getAccessToken().catch(() => null);
 	assert.equal(session.getSession().status, "expired");
 	assert.equal(await session.getAccessToken(), null);
+});
+
+await check("12. Cancel while the browser is open invalidates the attempt even if its redirect still arrives", async () => {
+	const session = await load(++instance);
+	await session.restoreSession();
+	const gate = deferred();
+	probe.prompt = gate.promise;
+	probe.exchange = () => tokenResponse(jwt("user-b", 1), "refresh-user-b-1");
+	const before = probe.log.length;
+	const pending = session.signIn(origin);
+	await new Promise((resolve) => setTimeout(resolve, 10));
+	session.cancelSignIn();
+	gate.resolve();
+	assert.equal(await pending, false);
+	assert.equal(session.getSession().status, "signed-out");
+	assert.ok(!probe.log.slice(before).some((line) => line.startsWith("exchange ")), "the cancelled code was not exchanged");
 });
 
 console.log(`${passed} session probes passed`);

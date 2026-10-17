@@ -1,7 +1,6 @@
-import type { LetterDocument, ResumeDocument } from "./types";
 import { useEffect, useRef } from "react";
 import { nativeEnvironment } from "./native";
-import { resume, letter, useResumeStore, useLetterStore } from "./runtime";
+import { resume, letter, useResumeStore } from "./runtime";
 import { useSession } from "@/auth/session";
 export { useResumeStore, useLetterStore, clearDraftsFor, getDraftScope } from "./runtime";
 
@@ -55,55 +54,11 @@ export const useResumeDraftOwner = (id: string) => useDraftOwner(id, resume);
 /** The letter equivalent of `useResumeDraftOwner`, called only by `app/letter/[id]/_layout.tsx`. */
 export const useLetterDraftOwner = (id: string) => useDraftOwner(id, letter);
 
-/** Owner and store in one, for screens outside the builder layouts. Inside them, use `useResumeStore()`. */
-export function useResumeDraft(id: string) {
-	useDraftOwner(id, resume);
-	return useResumeStore();
-}
-
-/** Owner and store in one, for screens outside the letter layout. Inside it, use `useLetterStore()`. */
-export function useLetterDraft(id: string) {
-	useDraftOwner(id, letter);
-	return useLetterStore();
-}
-
-export const useUpdateResumeData = () => useResumeStore((state) => state.update);
-export const useUpdateLetterData = () => useLetterStore((state) => state.update);
-export const useResumeData = () => useResumeStore((state) => state.data);
-export const useLetterData = () => useLetterStore((state) => state.data);
 export const useIsResumeLocked = () => useResumeStore((state) => state.locked);
-export const useIsLetterLocked = () => useLetterStore((state) => state.locked);
-export const usePatchResume = () => useResumeStore((state) => state.updateDocument);
-export const usePatchLetter = () => useLetterStore((state) => state.updateDocument);
-
-export function useCurrentResume(): ResumeDocument {
-	const document = useResumeStore((state) => state.document);
-	if (!document) throw new Error("Open a resume before rendering the editor.");
-	return document;
-}
-
-export function useCurrentLetter(): LetterDocument {
-	const document = useLetterStore((state) => state.document);
-	if (!document) throw new Error("Open a letter before rendering the editor.");
-	return document;
-}
 
 // Native rich-text focus is separate from TextInput.State; wire these to every editor's onFocus/onBlur.
 export const resumeFieldFocus = { onFocus: resume.focus, onBlur: () => void resume.blur() };
 export const letterFieldFocus = { onFocus: letter.focus, onBlur: () => void letter.blur() };
-
-/** `open` owns the SSE subscription. This hook offers an explicit refresh on screen focus/mount. */
-export function useResumeUpdateSubscription() {
-	useEffect(() => {
-		void resume.refresh().catch(() => {});
-	}, []);
-}
-
-export function useLetterUpdateSubscription() {
-	useEffect(() => {
-		void letter.refresh().catch(() => {});
-	}, []);
-}
 
 export type { ResumeDraftStore, LetterDraftStore, SaveStatus, ConflictChoice, UpdateOptions } from "./types";
 export { DraftConflictSheet, ResumeConflictSheet, LetterConflictSheet } from "./conflict-sheet";

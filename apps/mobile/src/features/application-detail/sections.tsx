@@ -157,7 +157,7 @@ export function NextStepCard({ application, onOpenInterview }: SectionProps & In
 	const [followUpOpen, setFollowUpOpen] = useState(false);
 	const [reminderOpen, setReminderOpen] = useState(false);
 	const step = getNextStep(application);
-	const text = describeNextStep(step, application, locale);
+	const text = describeNextStep(step, application, locale, timeZone);
 	const interview = step.kind === "interview" ? step.interview : null;
 	const dated = step.kind === "interview" || step.kind === "follow-up";
 	const target = interview ? interviewReminder(application, interview) : followUpReminder(application);
@@ -272,7 +272,7 @@ export function WhatYouSent({ application }: SectionProps) {
 	const resume = documents.data?.find((item) => item.type === "resume" && item.id === application.resumeId);
 	const letter = documents.data?.find((item) => item.type === "letter" && item.id === application.coverLetterId);
 	const date = utcDay(sentOn(application));
-	const { resumeId, coverLetterId } = application;
+	const { resumeId, coverLetterId, sentResumeVersionId, sentCoverLetterVersionId } = application;
 
 	const writeLetter = () =>
 		createLetter.mutate(
@@ -295,23 +295,27 @@ export function WhatYouSent({ application }: SectionProps) {
 						leading="file-text"
 						title={resume?.name ?? t`Linked resume`}
 						subtitle={
-							application.sentResumeVersionId
+							sentResumeVersionId
 								? application.sentCheckScore !== null
 									? t`Version sent ${date} · Check ${application.sentCheckScore}`
 									: t`Version sent ${date}`
 								: t`Linked · not sent yet`
 						}
 						chevron
-						onPress={() => router.push(routes.builder(resumeId))}
+						onPress={() =>
+							router.push(
+								sentResumeVersionId ? routes.history(resumeId, sentResumeVersionId) : routes.builder(resumeId),
+							)
+						}
 					/>
 				) : null}
 				{coverLetterId ? (
 					<ListRow
 						leading="envelope-simple"
 						title={letter?.name ?? t`Cover letter`}
-						subtitle={application.sentCoverLetterVersionId ? t`Version sent ${date}` : t`Linked · not sent yet`}
+						subtitle={sentCoverLetterVersionId ? t`Version sent ${date}` : t`Linked · not sent yet`}
 						chevron
-						onPress={() => router.push(routes.letter(coverLetterId))}
+						onPress={() => router.push(routes.letter(coverLetterId, "write", sentCoverLetterVersionId ?? undefined))}
 					/>
 				) : null}
 			</Card>

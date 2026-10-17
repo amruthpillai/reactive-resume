@@ -32,6 +32,8 @@ const sized = produce(defaultResumeData.metadata, (m) => { m.typography.body.fon
 assert.equal(sized.typography.body.fontSize, 12); assert.equal(sized.typography.heading.fontSize, 17);
 const dense = produce(defaultResumeData.metadata, (m) => applyDensity(m, "compact"));
 assert.equal(matchDensity(dense), "compact");
+const capped = produce(defaultResumeData.metadata, (m) => { m.typography.body.fontSize = 9; m.typography.heading.fontSize = 20; applyTextSize(m, 12.5); });
+assert.equal(capped.typography.heading.fontSize, 24);
 ok("text size keeps heading ratio; density round trip");
 const custom = produce(defaultResumeData, (d) => { d.metadata.template = "pikachu"; d.metadata.page.format = "letter"; d.metadata.page.locale = "de-DE"; d.metadata.page.marginX = 40; d.metadata.design.colors.primary = "rgba(1, 2, 3, 1)"; d.metadata.layout.sidebarWidth = 45; d.metadata.stylesheet = { mode: "semantic", source: { languageVersion: 1, text: "x{}" } }; });
 const reset = produce(custom, (d) => resetDesign(d.metadata));
@@ -96,6 +98,8 @@ next = produce(layout, (d) => deletePage(d, 0));
 assert.equal(next.pages.length, 1); assert.deepEqual(next.pages[0]!.main, ["projects", "summary", "experience", "hidden1", "education"]);
 next = produce({ ...layout, pages: [layout.pages[0]!] }, (d) => deletePage(d, 0));
 assert.equal(next.pages.length, 1);
+next = produce(layout, (d) => { d.pages[1]!.fullWidth = true; deletePage(d, 0); });
+assert.deepEqual(next.pages[0]!.sidebar, []); assert.deepEqual(next.pages[0]!.main.slice(-2), ["skills", "languages"]);
 ok("full width moves sidebar to main; delete page keeps sections; last page stays");
 const data = produce(defaultResumeData, (d) => { d.summary.content = "<p>Hi</p>"; d.sections.skills.items.push({ id: "s", hidden: false, name: "  ", proficiency: "", level: 0, keywords: [], icon: "", options: {} } as never); });
 assert.equal(isVisibleSection("summary", data), true); assert.equal(isVisibleSection("skills", data), false); assert.equal(isVisibleSection("nope", data), false);

@@ -2,6 +2,7 @@ import type { Application } from "./types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/api/client";
 import { getServer, useSession } from "@/auth/session";
+import { syncReminders } from "@/features/reminders";
 
 /** Same unfiltered list for list, board, calendar and detail; isolated by server. */
 export const applicationsListQueryOptions = (server = getServer()) => {
@@ -46,6 +47,10 @@ export function useApplicationMutations() {
 	const onSettled = () => {
 		void invalidate();
 	};
+	// Deleted or closed applications need nothing, so their reminders on this device go (syncing to no targets).
+	const cancelReminders = (ids: string[]) => {
+		for (const id of ids) void syncReminders(id, []).catch(() => {});
+	};
 	const create = useMutation({ ...orpc.applications.create.mutationOptions(), onSettled });
 	const update = useMutation({
 		...orpc.applications.update.mutationOptions(),
@@ -69,11 +74,28 @@ export function useApplicationMutations() {
 		onError: (_error, _input, context) => {
 			if (context?.previous) queryClient.setQueryData(context.listKey, context.previous);
 		},
+		onSuccess: (_data, input) => {
+			if (input.status === "closed") cancelReminders([input.id]);
+		},
 		onSettled,
 	});
-	const remove = useMutation({ ...orpc.applications.delete.mutationOptions(), onSettled });
-	const bulkUpdate = useMutation({ ...orpc.applications.bulkUpdate.mutationOptions(), onSettled });
-	const bulkDelete = useMutation({ ...orpc.applications.bulkDelete.mutationOptions(), onSettled });
+	const remove = useMutation({
+		...orpc.applications.delete.mutationOptions(),
+		onSuccess: (_data, input) => cancelReminders([input.id]),
+		onSettled,
+	});
+	const bulkUpdate = useMutation({
+		...orpc.applications.bulkUpdate.mutationOptions(),
+		onSuccess: (_data, input) => {
+			if (input.status === "closed") cancelReminders(input.ids);
+		},
+		onSettled,
+	});
+	const bulkDelete = useMutation({
+		...orpc.applications.bulkDelete.mutationOptions(),
+		onSuccess: (_data, input) => cancelReminders(input.ids),
+		onSettled,
+	});
 	const importCsv = useMutation({ ...orpc.applications.import.mutationOptions(), onSettled });
 	return { create, update, remove, bulkUpdate, bulkDelete, importCsv };
 }
