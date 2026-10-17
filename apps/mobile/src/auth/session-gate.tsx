@@ -106,7 +106,11 @@ function SessionExpiredSheet() {
 					variant="ghost"
 					size="lg"
 					fullWidth
-					onPress={() => void signOut().catch(() => showToast({ message: t`Couldn't sign out. Try again.` }))}
+					onPress={() =>
+						void signOut().catch(() =>
+							showToast({ message: t`Signed out, but some data on this device couldn't be removed.` }),
+						)
+					}
 				/>
 			</View>
 		</Sheet>

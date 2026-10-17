@@ -51,7 +51,12 @@ globalThis.__probeModules = {
 	"expo-web-browser": { dismissAuthSession: () => {} },
 	react: { useSyncExternalStore: () => null },
 	"react-native": { Platform: { OS: "ios" } },
-	"@/draft/runtime": { clearDraftsFor: (scope) => probe.log.push(`clear-drafts ${scope}`) },
+	"@/draft/runtime": {
+		clearDraftsFor: (scope) => {
+			if (probe.draftsFail) throw new Error("SQLite cleanup failed");
+			probe.log.push(`clear-drafts ${scope}`);
+		},
+	},
 	"expo-auth-session": {
 		TokenError,
 		TokenTypeHint: { RefreshToken: "refresh_token" },
@@ -118,6 +123,7 @@ const reset = () => {
 	probe.failSet = null;
 	probe.failDelete = null;
 	probe.prompt = null;
+	probe.draftsFail = false;
 	probe.log.length = 0;
 	probe.metadata = goodMetadata();
 	probe.redirect = (state) => `me.rxresu:/cb?code=code-1&state=${state}&iss=${encodeURIComponent(issuer)}`;
@@ -134,7 +140,7 @@ const deferred = () => {
 let passed = 0;
 const only = process.env.ONLY?.split(",");
 const check = async (name, fn) => {
-	if (only && !only.includes(name[0])) return;
+	if (only && !only.includes(name.split(".")[0])) return;
 	reset();
 	await fn();
 	passed++;
@@ -368,6 +374,45 @@ await check("9. sign-out sweeps application notes and Career drafts of that acco
 		`reactive-resume:career-draft:${theirs}:story-1`,
 	]);
 	assert.deepEqual(cleaned, [mine]);
+});
+
+await check("10. failing cleanups do not stop sign-out: credentials go, the session ends, errors are reported", async () => {
+	let session = await load(++instance);
+	await session.restoreSession();
+	await signInAs(session, "user-a", 1);
+	const mine = JSON.stringify([origin, "user-a"]);
+	probe.kv.set(`reactive-resume:application-notes:${mine}:app-1`, "notes");
+	probe.draftsFail = true;
+	const ran = [];
+	session.registerSignOutCleanup(() => {
+		throw new Error("queue cleanup failed");
+	});
+	session.registerSignOutCleanup((scope) => void ran.push(scope));
+	await assert.rejects(session.signOut(), (error) => error.name === "SignOutCleanupError" && error.errors.length === 2);
+	assert.equal(session.getSession().status, "signed-out");
+	assert.equal(await session.getAccessToken(), null);
+	assert.equal([...probe.store.keys()].filter((name) => name.startsWith("tokens.")).length, 0, "tokens deleted");
+	assert.equal(probe.kv.size, 0, "the other cleanups still ran");
+	assert.deepEqual(ran, [mine]);
+	session = await load(++instance);
+	await session.restoreSession();
+	assert.equal(session.getSession().status, "signed-out", "a restart stays signed out");
+});
+
+await check("11. invalid_client during refresh expires the session even if forgetting the client fails", async () => {
+	let session = await load(++instance);
+	await session.restoreSession();
+	await signInAs(session, "user-a", 1);
+	expireStoredToken();
+	session = await load(++instance);
+	await session.restoreSession();
+	probe.refresh = async () => {
+		throw new TokenError("invalid_client");
+	};
+	probe.failDelete = "client.";
+	await session.getAccessToken().catch(() => null);
+	assert.equal(session.getSession().status, "expired");
+	assert.equal(await session.getAccessToken(), null);
 });
 
 console.log(`${passed} session probes passed`);

@@ -358,7 +358,8 @@ async function authorize(origin: string): Promise<Tokens | null> {
 		);
 		return toTokens(response);
 	} catch (error) {
-		if (error instanceof AuthSession.TokenError && error.code === "invalid_client") await forgetClient(origin);
+		if (error instanceof AuthSession.TokenError && error.code === "invalid_client")
+			await forgetClient(origin).catch(() => null);
 		throw error;
 	}
 }
@@ -406,35 +407,66 @@ async function revoke(server: string, refreshToken: string | undefined): Promise
 		.catch(() => null);
 }
 
+/** Sign-out finished, but some of the account's data on this device could not be removed. */
+export class SignOutCleanupError extends AggregateError {
+	constructor(errors: unknown[]) {
+		super(errors, "Signed out, but some local data could not be removed.");
+		this.name = "SignOutCleanupError";
+	}
+}
+
 /**
  * Signs out the current account, after any queued refresh, and invalidates every sign-in still in the browser.
  * Against a snapshot of that account only: revokes its refresh token (best effort), clears its local data (drafts,
  * application notes, Career drafts, registered cleanups), then deletes its tokens. The server and its registered
- * client are kept. Access tokens already issued stay valid until they expire (at most an hour). Throws, still signed
- * in, when local data cannot be cleared.
+ * client are kept. Access tokens already issued stay valid until they expire (at most an hour).
+ * Credentials are always removed and the session always ends signed out; a cleanup that fails does not stop the others
+ * and is reported afterwards as a `SignOutCleanupError`.
  */
 export function signOut(): Promise<void> {
 	attempts++;
 	return transition(async () => {
 		const departing = { server: session.server, tokens, scope: accountScope, account: identity };
+		const errors: unknown[] = [];
+		const attempt = async (step: () => unknown) => {
+			try {
+				await step();
+			} catch (error) {
+				errors.push(error);
+			}
+		};
+
 		await revoke(departing.server, departing.tokens?.refreshToken);
-		if (departing.scope) {
-			const { scope } = departing;
-			// Imported here: the draft runtime imports the API client, which imports this module.
-			const { clearDraftsFor } = await import("@/draft/runtime");
-			clearDraftsFor(scope);
-			const prefixes = scopedStoragePrefixes.map((prefix) => `${prefix}${scope}:`);
-			for (const key of Storage.getAllKeysSync())
-				if (prefixes.some((prefix) => key.startsWith(prefix))) Storage.removeItemSync(key);
-			for (const cleanup of signOutCleanups) await cleanup(scope);
+		const { scope } = departing;
+		if (scope) {
+			await attempt(async () => {
+				// Imported here: the draft runtime imports the API client, which imports this module.
+				const { clearDraftsFor } = await import("@/draft/runtime");
+				clearDraftsFor(scope);
+			});
+			await attempt(() => {
+				const prefixes = scopedStoragePrefixes.map((prefix) => `${prefix}${scope}:`);
+				for (const key of Storage.getAllKeysSync())
+					if (prefixes.some((prefix) => key.startsWith(prefix))) Storage.removeItemSync(key);
+			});
+			for (const cleanup of signOutCleanups) await attempt(() => cleanup(scope));
 		}
-		await SecureStore.deleteItemAsync(tokensKey(departing.server));
-		await SecureStore.deleteItemAsync(refreshMarkerKey(departing.server));
-		if (identity !== departing.account) return;
-		tokens = null;
-		accountScope = null;
-		changeIdentity();
-		setSession({ status: "signed-out", server: departing.server });
+
+		try {
+			await SecureStore.deleteItemAsync(tokensKey(departing.server));
+			await SecureStore.deleteItemAsync(refreshMarkerKey(departing.server));
+		} catch (error) {
+			errors.push(error);
+			// The tokens may still be on disk: a marker makes the next launch expire them instead of signing back in.
+			await SecureStore.setItemAsync(refreshMarkerKey(departing.server), "signed-out").catch(() => null);
+		}
+		if (identity === departing.account) {
+			tokens = null;
+			accountScope = null;
+			changeIdentity();
+			setSession({ status: "signed-out", server: departing.server });
+		}
+		if (errors.length > 0) throw new SignOutCleanupError(errors);
 	});
 }
 
@@ -502,8 +534,13 @@ async function refreshAccessToken(account: number, refreshToken: string): Promis
 		return next.accessToken;
 	} catch (error) {
 		// No answer, an error answer, or a store that would not keep the result: fail closed and ask for a new sign-in.
-		if (error instanceof AuthSession.TokenError && error.code === "invalid_client") await forgetClient(server);
-		await expire(account);
+		try {
+			if (error instanceof AuthSession.TokenError && error.code === "invalid_client") await forgetClient(server);
+		} catch {
+			// Re-registration then waits for the next invalid_client; the session must still end.
+		} finally {
+			await expire(account);
+		}
 		return null;
 	}
 }
