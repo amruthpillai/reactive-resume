@@ -1,0 +1,343 @@
+// The frame around every workspace tab, ported from apps/web/src/features/career/workspace/shell.tsx: header, tab
+// strip with badges, the read-only banner for a saved version, loading and failure states, the Coach sheet and the
+// interview editor. The context column (next step, what you sent, notes) is the Details screen on mobile.
+import type { SavedItem } from "./hooks";
+import type { Application } from "@/features/applications/types";
+import type { InterviewTimelineEntry } from "@reactive-resume/schema/applications/data";
+import type { WorkspaceTab } from "@reactive-resume/schema/career";
+import type { ReactNode } from "react";
+import { useLingui } from "@lingui/react/macro";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
+import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { WORKSPACE_TABS } from "@reactive-resume/schema/career";
+import { CoachSheet } from "./coach-sheet";
+import { useSavedItems, useWorkspace } from "./hooks";
+import { currentInterview, minutesUntil } from "./logic";
+import { tabLabel } from "./parts";
+import { useNow, useUserTime } from "@/features/application-detail/hooks";
+import { InterviewSheet } from "@/features/application-detail/interview-sheet";
+import { applicationError } from "@/features/applications/error";
+import { useApplication } from "@/features/applications/queries";
+import { getStageColor, getStageLabel } from "@/features/applications/stages";
+import { routes } from "@/routes";
+import { Banner, Button, EmptyState, Screen, Text, useTheme } from "@/ui";
+
+export type WorkspaceSearch = { version?: string; speak?: boolean; story?: string };
+
+/** What every tab receives: the application, and a saved version to show read-only ("Open in Prepare"). */
+export type WorkspaceTabProps = {
+	application: Application;
+	/** A saved item opened from Saved: the tab shows it read-only with "Back to current". */
+	version: SavedItem | undefined;
+	/** The next interview still to come, or the most recent one if it just ended. */
+	interview: InterviewTimelineEntry | undefined;
+	/** Practise: open with Speak selected. */
+	speak: boolean;
+	/** Practise: a story from Knowledge to practise. */
+	story: string | undefined;
+	now: Date;
+	go: (tab: WorkspaceTab, search?: WorkspaceSearch) => void;
+	/** Opens the interview editor for a new round. */
+	addInterview: () => void;
+};
+
+const archiveKinds = {
+	fit: "fit",
+	apply: "answers",
+	prepare: "briefing",
+	practise: "practice",
+	debrief: "debrief",
+	messages: "reply",
+	saved: null,
+} satisfies Record<WorkspaceTab, SavedItem["data"]["kind"] | null>;
+
+/** `/applications/<id>/<tab>?version=…&speak=1&story=…` */
+export function workspaceHref(id: string, tab: WorkspaceTab, search: WorkspaceSearch = {}) {
+	const query = [
+		search.version ? `version=${encodeURIComponent(search.version)}` : "",
+		search.speak ? "speak=1" : "",
+		search.story ? `story=${encodeURIComponent(search.story)}` : "",
+	].filter(Boolean);
+	return `${routes.application(id, tab)}${query.length > 0 ? `?${query.join("&")}` : ""}` as const;
+}
+
+type WorkspaceScreenProps = { tab: WorkspaceTab; children: (props: WorkspaceTabProps) => ReactNode };
+
+export function WorkspaceScreen({ tab, children }: WorkspaceScreenProps) {
+	const { t } = useLingui();
+	const { space } = useTheme();
+	const router = useRouter();
+	const params = useLocalSearchParams<{ id: string; version?: string; speak?: string; story?: string }>();
+	const id = params.id;
+	const now = useNow();
+	const query = useApplication(id);
+	const saved = useSavedItems(id);
+	const workspace = useWorkspace(id);
+	const [coach, setCoach] = useState(false);
+	const [addingInterview, setAddingInterview] = useState(false);
+	const application = query.data;
+
+	if (query.isPending)
+		return (
+			<Screen>
+				<ActivityIndicator />
+			</Screen>
+		);
+	if (!application)
+		return (
+			<Screen>
+				<EmptyState
+					icon="warning-circle"
+					title={t`This application couldn't be opened.`}
+					message={query.error ? applicationError(query.error) : undefined}
+					action={{ label: t`Try again`, onPress: () => void query.refetch() }}
+				/>
+				<Button
+					variant="secondary"
+					label={t`Back to applications`}
+					onPress={() => router.replace(routes.applications())}
+				/>
+			</Screen>
+		);
+
+	const interview = currentInterview(application.activity, now);
+	const version = params.version ? saved.data?.find((item) => item.id === params.version) : undefined;
+	const archived = params.version !== undefined;
+	const archiveUnavailable = archived && (!version || version.data.kind !== archiveKinds[tab]);
+	const waiting = saved.isPending || (!archived && tab !== "saved" && workspace.isPending);
+	const failed =
+		(saved.isError && saved.data === undefined) ||
+		(!archived && tab !== "saved" && workspace.query.isError && workspace.query.data === undefined);
+	const blocked = waiting || failed || archiveUnavailable;
+	const go = (next: WorkspaceTab, search: WorkspaceSearch = {}) => router.push(workspaceHref(id, next, search));
+	const backToCurrent = () => router.replace(workspaceHref(id, tab));
+	const props: WorkspaceTabProps = {
+		application,
+		version,
+		interview,
+		now,
+		go,
+		speak: params.speak === "1",
+		story: params.story,
+		addInterview: () => setAddingInterview(true),
+	};
+
+	return (
+		<View style={{ flex: 1 }}>
+			<Stack.Screen options={{ title: application.company }} />
+			<KeyboardAwareScrollView
+				bottomOffset={space.s6}
+				keyboardShouldPersistTaps="handled"
+				contentInsetAdjustmentBehavior="automatic"
+				contentContainerStyle={{ padding: space.s4, gap: space.s4, paddingBottom: space.s12 }}
+			>
+				<Header application={application} onAskCoach={() => setCoach(true)} />
+				<TabStrip
+					current={tab}
+					saved={saved.data}
+					interview={interview}
+					now={now}
+					onSelect={(next) => router.replace(workspaceHref(id, next))}
+				/>
+				{blocked ? (
+					<View style={{ gap: space.s3 }}>
+						{waiting ? (
+							<View accessibilityRole="progressbar" style={{ flexDirection: "row", gap: space.s2 }}>
+								<ActivityIndicator />
+								<Text color="ink2">{archived ? t`Loading saved version…` : t`Loading workspace…`}</Text>
+							</View>
+						) : (
+							<Banner
+								tone="danger"
+								message={
+									failed
+										? archived
+											? t`This saved version couldn't be loaded.`
+											: t`This workspace couldn't be loaded.`
+										: version
+											? t`This saved version belongs to a different tab. Open it from Saved.`
+											: t`This saved version is no longer available.`
+								}
+							/>
+						)}
+						<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
+							{failed ? (
+								<Button
+									variant="secondary"
+									label={t`Try again`}
+									onPress={() => {
+										void saved.refetch();
+										if (!archived) void workspace.query.refetch();
+									}}
+								/>
+							) : null}
+							{archived ? <Button variant="secondary" label={t`Back to current`} onPress={backToCurrent} /> : null}
+						</View>
+					</View>
+				) : (
+					<>
+						{version ? (
+							<Banner
+								tone="info"
+								icon="clock-counter-clockwise"
+								message={t`You're looking at a saved version. It can't be edited.`}
+								action={{ label: t`Back to current`, onPress: backToCurrent }}
+							/>
+						) : null}
+						{children(props)}
+					</>
+				)}
+			</KeyboardAwareScrollView>
+			<CoachSheet application={application} tab={tab} open={coach} onClose={() => setCoach(false)} />
+			<InterviewSheet
+				application={application}
+				interview={null}
+				open={addingInterview}
+				onClose={() => setAddingInterview(false)}
+			/>
+		</View>
+	);
+}
+
+type HeaderProps = { application: Application; onAskCoach: () => void };
+
+function Header({ application, onAskCoach }: HeaderProps) {
+	const { t } = useLingui();
+	const { colors, space } = useTheme();
+	const router = useRouter();
+	const { day } = useUserTime();
+	const role = application.role;
+	const company = application.company;
+	const meta = [
+		application.location,
+		application.status !== "saved" && application.appliedAt ? t`Applied ${day(application.appliedAt)}` : "",
+	].filter(Boolean);
+
+	return (
+		<View style={{ gap: space.s3 }}>
+			<View style={{ gap: space.s1 }}>
+				<Text variant="heading" accessibilityRole="header">
+					{t`${role} · ${company}`}
+				</Text>
+				<View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: space.s2 }}>
+					<View
+						style={{
+							width: 8,
+							height: 8,
+							borderRadius: 4,
+							backgroundColor: getStageColor(application.status, colors),
+						}}
+					/>
+					<Text variant="callout">{getStageLabel(application.status)}</Text>
+					{meta.map((item) => (
+						<Text key={item} variant="callout" color="ink2">
+							· {item}
+						</Text>
+					))}
+				</View>
+			</View>
+			<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
+				<Button icon="sparkle" label={t`Ask the coach`} onPress={onAskCoach} />
+				{application.status === "offer" ? (
+					<Button
+						variant="secondary"
+						icon="scales"
+						label={t`Compare offers`}
+						onPress={() => router.push(routes.career("offers"))}
+					/>
+				) : null}
+			</View>
+		</View>
+	);
+}
+
+type TabStripProps = {
+	current: WorkspaceTab;
+	saved: SavedItem[] | undefined;
+	interview: InterviewTimelineEntry | undefined;
+	now: Date;
+	onSelect: (tab: WorkspaceTab) => void;
+};
+
+/** The seven tabs, scrolling sideways on phones, with the countdown, unread and saved-count badges. */
+function TabStrip({ current, saved, interview, now, onSelect }: TabStripProps) {
+	const { t } = useLingui();
+	const { colors, radius, size, space } = useTheme();
+	const minutes = interview ? minutesUntil(new Date(interview.at), now) : null;
+	// Messages shows the newest read message: it waits for a decision while its changes aren't applied.
+	const newestReply = saved?.find((item) => item.data.kind === "reply");
+	const unread =
+		newestReply?.data.kind === "reply" && newestReply.data.changes.length > 0 && !newestReply.data.applied ? 1 : 0;
+	const badge = (tab: WorkspaceTab) => {
+		if (tab === "prepare" && minutes !== null && minutes > 0 && minutes < 7 * 24 * 60) {
+			const hours = Math.round(minutes / 60);
+			return { tone: minutes <= 60 ? "warn" : "accent", text: minutes <= 60 ? t`${minutes} min` : t`${hours} h` };
+		}
+		if (tab === "messages" && unread > 0) return { tone: "info", text: String(unread) };
+		if (tab === "saved" && (saved?.length ?? 0) > 0) return { tone: "plain", text: String(saved?.length) };
+		return null;
+	};
+	const badgeColors = {
+		warn: { background: colors.warnSoft, text: "warnText" },
+		accent: { background: colors.accentSoft, text: "accentText" },
+		info: { background: colors.infoSoft, text: "infoText" },
+		plain: { background: "transparent", text: "ink2" },
+	} as const;
+
+	return (
+		<ScrollView
+			horizontal
+			showsHorizontalScrollIndicator={false}
+			accessibilityRole="tablist"
+			accessibilityLabel={t`Application workspace tabs`}
+			contentContainerStyle={{ gap: space.s1 }}
+			style={{ marginHorizontal: -space.s4, paddingHorizontal: space.s4, flexGrow: 0 }}
+		>
+			{WORKSPACE_TABS.map((tab) => {
+				const active = tab === current;
+				const extra = badge(tab);
+				const palette = extra ? badgeColors[extra.tone as keyof typeof badgeColors] : null;
+				return (
+					<Pressable
+						key={tab}
+						accessibilityRole="tab"
+						accessibilityState={{ selected: active }}
+						accessibilityLabel={extra ? `${tabLabel(tab)}, ${extra.text}` : tabLabel(tab)}
+						onPress={() => !active && onSelect(tab)}
+						style={({ pressed }) => ({
+							minHeight: size.hit,
+							flexDirection: "row",
+							alignItems: "center",
+							gap: space.s1,
+							paddingHorizontal: space.s3,
+							borderRadius: radius.rPill,
+							backgroundColor: active ? colors.ink : pressed ? colors.press : "transparent",
+						})}
+					>
+						<Text variant="label" color={active ? "bg" : "ink2"}>
+							{tabLabel(tab)}
+						</Text>
+						{extra && palette ? (
+							<View
+								style={{
+									minWidth: 18,
+									paddingHorizontal: space.s1,
+									borderRadius: radius.rPill,
+									alignItems: "center",
+									backgroundColor: palette.background,
+								}}
+							>
+								<Text variant="micro" color={active && extra.tone === "plain" ? "bg" : palette.text}>
+									{extra.text}
+								</Text>
+							</View>
+						) : null}
+					</Pressable>
+				);
+			})}
+			<View style={{ width: space.s4 }} />
+		</ScrollView>
+	);
+}

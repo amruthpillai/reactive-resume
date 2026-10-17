@@ -136,6 +136,6 @@ export async function shareIcs(event: CalendarEvent, fileName: string) {
 	}
 	if (!(await Sharing.isAvailableAsync())) throw new Error("Sharing unavailable");
 	const file = new File(Paths.cache, fileName);
-	file.write(buildIcs(event));
+	await file.write(buildIcs(event));
 	await Sharing.shareAsync(file.uri, { mimeType: "text/calendar", UTI: "com.apple.ical.ics" });
 }
