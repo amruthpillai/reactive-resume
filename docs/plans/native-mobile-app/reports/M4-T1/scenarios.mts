@@ -2,25 +2,27 @@
 //   cp ../../docs/plans/native-mobile-app/reports/M4-T1/scenarios.mts .m4t1.mts && node ../../node_modules/.pnpm/tsx@*/node_modules/tsx/dist/cli.mjs .m4t1.mts; rm .m4t1.mts
 import assert from "node:assert/strict";
 import { produce } from "immer";
+import { createDraftStore } from "./src/draft/store.ts";
+import { writeTo } from "./src/features/design/write.ts";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
-import { ACCENTS, contrastOnWhite, darkenForWhite, MIN_CONTRAST, hexToRgba, rgbaToHex, parseColorInput, resetDesign, applyTextSize, matchDensity, applyDensity, TEMPLATES, matchesFilter } from "./src/features/design/presets.ts";
+import { ACCENTS, contrastOver, darkenForWhite, MIN_CONTRAST, hexToRgba, rgbaToHex, parseColorInput, resetDesign, applyTextSize, matchDensity, applyDensity, TEMPLATES, matchesFilter } from "./src/features/design/presets.ts";
 import { dropAt, moveSection, moveToEnd, moveToNewPage, setFullWidth, deletePage, isVisibleSection } from "./src/features/design/layout.ts";
 
 let n = 0; const ok = (name: string) => console.log(`ok ${++n} ${name}`);
 
 // Colour contrast
-for (const a of ACCENTS) assert.ok(contrastOnWhite(a.hex) >= MIN_CONTRAST, a.label);
+for (const hex of ACCENTS) assert.ok(contrastOver(hex) >= MIN_CONTRAST, hex);
 ok("all 8 accents >= 4.5:1 on white");
 for (const hex of ["#FFFF00", "#A0E0A0", "#7FDBFF", "#FFFFFF", "#3E6B4F"]) {
 	const dark = darkenForWhite(hex);
-	assert.ok(contrastOnWhite(dark) >= 4.6, `${hex} -> ${dark} ${contrastOnWhite(dark)}`);
-	console.log(`   ${hex} ${contrastOnWhite(hex).toFixed(2)}:1 -> ${dark} ${contrastOnWhite(dark).toFixed(2)}:1`);
+	assert.ok(contrastOver(dark) >= 4.6, `${hex} -> ${dark} ${contrastOver(dark)}`);
+	console.log(`   ${hex} ${contrastOver(hex).toFixed(2)}:1 -> ${dark} ${contrastOver(dark).toFixed(2)}:1`);
 }
 assert.equal(darkenForWhite("#3E6B4F"), "#3E6B4F");
 ok("darkenForWhite reaches >= 4.6:1 and keeps readable colours");
 assert.equal(rgbaToHex(hexToRgba("#3e6b4f")), "#3E6B4F");
 assert.equal(parseColorInput("3E6B4F"), "rgba(62, 107, 79, 1)");
-assert.equal(parseColorInput("rgba(1, 2, 3, 0.5)"), "rgba(1, 2, 3, 0.5)");
+assert.equal(parseColorInput("rgba(1,2,3,.5)"), "rgba(1, 2, 3, 0.5)");
 assert.equal(parseColorInput("#12345"), null);
 assert.equal(parseColorInput("red"), null);
 ok("hex/rgba round trip and colour input parsing");
@@ -98,4 +100,71 @@ ok("full width moves sidebar to main; delete page keeps sections; last page stay
 const data = produce(defaultResumeData, (d) => { d.summary.content = "<p>Hi</p>"; d.sections.skills.items.push({ id: "s", hidden: false, name: "  ", proficiency: "", level: 0, keywords: [], icon: "", options: {} } as never); });
 assert.equal(isVisibleSection("summary", data), true); assert.equal(isVisibleSection("skills", data), false); assert.equal(isVisibleSection("nope", data), false);
 ok("visibility: summary with content, skills with blank names hidden");
+// Review 3: colour input rejects out-of-range channels and alpha
+for (const bad of ["rgba(999, 0, 0, 1)", "rgb(256, 0, 0)", "rgba(0, 0, 0, 1.5)", "rgba(0, 0, 0, 2)", "rgba(-1, 0, 0, 1)"])
+	assert.equal(parseColorInput(bad), null, bad);
+assert.equal(parseColorInput("rgb(255, 255, 255)"), "rgba(255, 255, 255, 1)");
+assert.equal(parseColorInput("rgba(0, 0, 0, 0)"), "rgba(0, 0, 0, 0)");
+ok("colour input: channels 0–255, alpha 0–1, canonical rgba");
+
+// Review 4: contrast composites alpha over the page background
+assert.ok(Math.abs(contrastOver("rgba(0, 0, 0, 1)") - 21) < 0.01);
+assert.ok(contrastOver("rgba(0, 0, 0, 0.01)") < 1.1, String(contrastOver("rgba(0, 0, 0, 0.01)")));
+assert.ok(contrastOver("rgba(62, 107, 79, 0.3)") < MIN_CONTRAST);
+assert.ok(Math.abs(contrastOver("#3E6B4F", "rgba(255, 255, 255, 1)") - contrastOver("#3E6B4F")) < 1e-9);
+assert.ok(contrastOver("#3E6B4F", "rgba(0, 0, 0, 1)") < contrastOver("#3E6B4F"));
+assert.ok(Math.abs(contrastOver("#3E6B4F", "rgba(0, 0, 0, 0)") - contrastOver("#3E6B4F")) < 1e-9);
+ok("contrast: 0.01 alpha black ≈ 1:1, not 21:1; background counts; transparent background = white paper");
+
+// Review 2: stepper taps are separate undo steps; slider drags coalesce (real draft store)
+const memory = new Map<string, string>();
+const doc = { id: "r1", isLocked: false, updatedAt: 1, data: structuredClone(defaultResumeData) };
+type Doc = typeof doc;
+const { store } = createDraftStore<Doc, Doc["data"]>(
+	{
+		kind: "resume",
+		delay: 60_000,
+		read: async () => structuredClone(doc),
+		data: (d) => d.data,
+		withData: (d, data) => ({ ...d, data }),
+		merge: (_saved, _submitted, current) => current,
+		matches: (a, b) => JSON.stringify(a.data) === JSON.stringify(b.data),
+		version: (d) => d.updatedAt,
+		parse: (value) => value as Doc,
+		save: async (d) => d,
+		copy: async () => {},
+		isConflict: () => false,
+	},
+	{
+		storage: {
+			getItemSync: (key) => memory.get(key) ?? null,
+			setItemSync: (key, value) => void memory.set(key, value),
+			removeItemSync: (key) => memory.delete(key),
+			getAllKeysSync: () => [...memory.keys()],
+		},
+		scope: async () => "scenario",
+		online: () => true,
+		focused: () => false,
+	},
+);
+await store.getState().open("r1");
+const write = writeTo((recipe, options) => store.getState().update(recipe, options));
+const marginY = () => store.getState().data!.metadata.page.marginY;
+const start = marginY();
+// Stepper callers pass discrete = true for every −/+ tap.
+write("page.marginY", (d) => void (d.metadata.page.marginY = start + 1), true);
+write("page.marginY", (d) => void (d.metadata.page.marginY = start + 2), true);
+store.getState().undo();
+assert.equal(marginY(), start + 1);
+store.getState().undo();
+assert.equal(marginY(), start);
+// A slider drag: many continuous writes, one undo step.
+const size = () => store.getState().data!.metadata.typography.body.fontSize;
+const before = size();
+for (const value of [9.5, 10, 10.5, 11]) write("size", (d) => void (d.metadata.typography.body.fontSize = value));
+assert.equal(size(), 11);
+store.getState().undo();
+assert.equal(size(), before);
+ok("two stepper taps undo one at a time; a four-move slider drag undoes in one step");
+
 console.log(`all ${n} scenarios passed`);
