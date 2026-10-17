@@ -43,6 +43,19 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 2. The ATS line "checked on the server and not stored" holds after verification. The coordinator checked `packages/api/src/features/resume/checks.ts:49-72`: `checkPdf` extracts in memory with no storage or DB writes, and its OpenAPI description says "stores nothing". **Constraint:** any future change to `/pdf-checks` must keep that true, or the copy must change.
 3. All the DS3c phone-only adaptations are approved: press-and-hold template preview, offline PDF download with a banner, locked banners with Unlock, proposed-edit markings persisting on Page, and an always-visible ⋯ for deleting versions and conversations.
 
+## Store identity (owner, 2026-10-17)
+
+- App name: **Reactive Resume**
+- iOS bundle ID: **me.rxresu.app**
+- Android package: **me.rxresu.app**
+- Apple Team ID: **654ASRW868**. AASA `appID` = `654ASRW868.me.rxresu.app`.
+- Accounts: the owner has a verified Apple Developer account and a verified Google Play Console account, both fees paid.
+- Still needed before M8:
+  - an Expo account for EAS Build/Submit
+  - an App Store Connect API key, or an Apple ID login during `eas submit`
+  - a Google Play service-account JSON with release-manager access
+  - the Play app-signing SHA-256 for `assetlinks.json` (available after the first upload to Play)
+
 ## Log
 
 - 2026-10-17: Plan committed. M0 spikes and DS1 launched.
@@ -95,3 +108,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: Owner will review all mockups after the DS3b fixes (G2b pending). Server tasks SVa/SVb/SVc launched in parallel, as §4 allows.
 - 2026-10-17: All four DS3 parts are merged with their DS4 fixes. `mockups/all.html` is final for G2b.
 - 2026-10-17: G2b approved by the owner. `decisions.md` frozen (G1). **M1 on hold at the owner's request; do not launch it until the owner says so.** SVa, SVb and SVc are still running.
+- 2026-10-17: SVb and SVc done; Claude reviews `5a2b4b38` and `c29b7098` running. SVa unblocked (two narrow ownership exceptions approved). The mockup server is stopped.
