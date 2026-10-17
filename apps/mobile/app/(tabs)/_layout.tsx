@@ -6,8 +6,9 @@ import { View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
 import { routes } from "@/routes";
-import { AppStrip, useAppBanners } from "@/shell/app-banner";
+import { AppStrip, BannerAbove, useAppBanners } from "@/shell/app-banner";
 import { AppSidebar, PhoneTabBar } from "@/shell/app-tabs";
+import { useKeyCommands } from "@/shell/key-commands";
 import { useIsTablet } from "@/shell/use-is-tablet";
 import { useTheme } from "@/ui";
 
@@ -36,6 +37,10 @@ export default function TabsLayout() {
 		]);
 	}
 	const hasBanners = banners.length > 0;
+	useKeyCommands([
+		{ id: "search", input: "k", title: t`Search`, run: () => router.push(routes.search()) },
+		{ id: "new", input: "n", title: t`New`, run: () => router.push(routes.new()) },
+	]);
 
 	return (
 		<View style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -48,27 +53,29 @@ export default function TabsLayout() {
 			) : null}
 			{/* Under a banner the status bar is already cleared, so the tabs' headers must not pad it again. */}
 			<SafeAreaInsetsContext value={hasBanners ? { ...insets, top: 0 } : insets}>
-				<KeyboardAvoidingView behavior="padding" automaticOffset style={{ flex: 1 }}>
-					<Tabs
-						tabBar={(props) => (tablet ? <AppSidebar {...props} /> : <PhoneTabBar {...props} />)}
-						screenOptions={{ headerShown: false, tabBarPosition: tablet ? "left" : "bottom" }}
-					>
-						<Tabs.Screen name="documents" options={{ title: t`Documents` }} />
-						<Tabs.Screen name="applications" options={{ title: t`Applications` }} />
-						<Tabs.Screen
-							name="create"
-							options={{ title: t`New` }}
-							listeners={{
-								tabPress: (event) => {
-									event.preventDefault();
-									router.push(routes.new());
-								},
-							}}
-						/>
-						<Tabs.Screen name="career" options={{ title: t`Career` }} />
-						<Tabs.Screen name="settings" options={{ title: t`Settings` }} />
-					</Tabs>
-				</KeyboardAvoidingView>
+				<BannerAbove value={hasBanners}>
+					<KeyboardAvoidingView behavior="padding" automaticOffset style={{ flex: 1 }}>
+						<Tabs
+							tabBar={(props) => (tablet ? <AppSidebar {...props} /> : <PhoneTabBar {...props} />)}
+							screenOptions={{ headerShown: false, tabBarPosition: tablet ? "left" : "bottom" }}
+						>
+							<Tabs.Screen name="documents" options={{ title: t`Documents` }} />
+							<Tabs.Screen name="applications" options={{ title: t`Applications` }} />
+							<Tabs.Screen
+								name="create"
+								options={{ title: t`New` }}
+								listeners={{
+									tabPress: (event) => {
+										event.preventDefault();
+										router.push(routes.new());
+									},
+								}}
+							/>
+							<Tabs.Screen name="career" options={{ title: t`Career` }} />
+							<Tabs.Screen name="settings" options={{ title: t`Settings` }} />
+						</Tabs>
+					</KeyboardAvoidingView>
+				</BannerAbove>
 			</SafeAreaInsetsContext>
 		</View>
 	);

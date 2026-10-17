@@ -10,6 +10,7 @@ import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppStrip } from "./app-banner";
 import { Bar, BarItem } from "./app-tabs";
+import { useKeyCommands } from "./key-commands";
 import { createSlot } from "./slot";
 import { TopBar } from "./top-bar";
 import { useIsTablet } from "./use-is-tablet";
@@ -134,6 +135,17 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 		router.replace(next.href);
 	};
 
+	// Hardware keyboard: ⌘1, ⌘2, ⌘3 (⌘4 on phone) switch to the panes in the order shown.
+	const shownPanes = tablet ? panes.filter(({ pane }) => tabletPanes.includes(pane)) : panes;
+	useKeyCommands(
+		shownPanes.map((pane, index) => ({
+			id: `pane-${pane.pane}`,
+			input: String(index + 1),
+			title: pane.label,
+			run: () => switchPane(pane),
+		})),
+	);
+
 	// On iOS a modal slides over the pane, so its tabs stay underneath. On Android it fills the screen like a push.
 	const underModal = Platform.OS === "ios" && !!current && modals.includes(current);
 	const barPane = currentPane ?? (underModal ? activePane : undefined);
@@ -148,9 +160,7 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 			<Segmented
 				label={t`Editor mode`}
 				value={activePane.pane}
-				options={panes
-					.filter(({ pane }) => tabletPanes.includes(pane))
-					.map(({ pane, label, icon }) => ({ value: pane, label, icon }))}
+				options={shownPanes.map(({ pane, label, icon }) => ({ value: pane, label, icon }))}
 				onChange={(value) => {
 					const next = panes.find(({ pane }) => pane === value);
 					if (next) switchPane(next);

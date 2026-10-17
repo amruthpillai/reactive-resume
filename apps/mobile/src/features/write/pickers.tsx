@@ -178,7 +178,7 @@ export function ColorPickerSheet({ open, title, value, allowDefault, onClose, on
 					<Pressable
 						accessibilityRole="radio"
 						accessibilityLabel={t`Default`}
-						accessibilityState={{ selected: !value }}
+						accessibilityState={{ checked: !value }}
 						onPress={() => onChange("")}
 						style={{
 							width: size.hit,
@@ -198,7 +198,7 @@ export function ColorPickerSheet({ open, title, value, allowDefault, onClose, on
 						key={color}
 						accessibilityRole="radio"
 						accessibilityLabel={color}
-						accessibilityState={{ selected: value === color }}
+						accessibilityState={{ checked: value === color }}
 						onPress={() => onChange(color)}
 						style={{
 							width: size.hit,

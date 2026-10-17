@@ -313,6 +313,13 @@ export function NewDocument() {
 										disabled={busy}
 										onPress={() => void create("sample")}
 									/>
+									<Button
+										label={t`Check a PDF with the ATS checker`}
+										icon="list-checks"
+										variant="ghost"
+										disabled={busy}
+										onPress={() => router.replace(routes.atsChecker())}
+									/>
 									{documents.isError && (
 										<Banner
 											tone="danger"

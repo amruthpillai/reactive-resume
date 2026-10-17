@@ -1,14 +1,6 @@
 import { Stack } from "expo-router";
-import { useTheme } from "@/ui";
+import { useTabStackOptions } from "@/shell/app-banner";
 
 export default function DocumentsLayout() {
-	const { colors, type } = useTheme();
-	return (
-		<Stack
-			screenOptions={{
-				headerLargeTitle: true,
-				headerLargeTitleStyle: { fontFamily: type.largeIOS.fontFamily, color: colors.ink },
-			}}
-		/>
-	);
+	return <Stack screenOptions={useTabStackOptions()} />;
 }
