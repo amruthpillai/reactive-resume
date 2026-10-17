@@ -100,17 +100,15 @@ const punctuationFallbackFonts = {
 	sansSerif: "Noto Sans",
 } as const;
 
-// Self-hosting option (#3377): when `NEXT_PUBLIC_WEB_FONT_BASE_URL` is set,
-// the default jsDelivr CDN URLs for the "web" type fonts are repointed to the
-// operator's own host. This lets privacy-conscious / offline self-hosters avoid
-// the external CDN entirely. The mirrored assets must keep the same
-// `<font>/<file>.woff` path layout as the jsDelivr `gh/bitmaks/cm-web-fonts`
-// source. When unset, behaviour is unchanged.
+// Server-only mirror for the five Computer Modern families. Preserve the upstream
+// font/<family>/<file>.woff layout. Google URLs and font-picker previews stay unchanged.
+// NEXT_PUBLIC_ does not expose this value to Vite's browser bundles.
 const WEB_FONT_CDN_PREFIX = "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest";
 const WEB_FONT_BASE_URL = (
 	typeof process !== "undefined" ? process.env.NEXT_PUBLIC_WEB_FONT_BASE_URL : undefined
-)?.replace(/\/$/, "");
+)?.replace(/\/+$/, "");
 
+/** Repoints Computer Modern files to the mirror, preserving other font hosts. */
 const rewriteWebFontUrl = (url: string): string => {
 	if (!WEB_FONT_BASE_URL) return url;
 	if (url.startsWith(WEB_FONT_CDN_PREFIX)) {
@@ -199,14 +197,13 @@ export function getWebFont(family: string) {
 	return webFontMap.get(family);
 }
 
+/** Resolves a font file with weight/style fallbacks and the optional Computer Modern mirror. */
 export function getWebFontSource(family: string, weight: FontWeight = "400", italic = false) {
 	const webFont = getWebFont(family);
 	if (!webFont) return null;
 
 	const key = `${weight}${italic ? "italic" : ""}` as FontFileWeight;
-	return rewriteWebFontUrl(
-		webFont.files[key] ?? (italic ? webFont.files[weight] : undefined) ?? webFont.preview,
-	);
+	return rewriteWebFontUrl(webFont.files[key] ?? (italic ? webFont.files[weight] : undefined) ?? webFont.preview);
 }
 
 export function sortFontWeights<T extends string>(fontWeights: T[]): T[] {
