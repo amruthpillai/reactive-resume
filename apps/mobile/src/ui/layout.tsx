@@ -5,7 +5,7 @@ import type { DimensionValue, LayoutChangeEvent, StyleProp, ViewStyle } from "re
 import { useLingui } from "@lingui/react/macro";
 import { Image } from "expo-image";
 import { Children, cloneElement, isValidElement, useEffect, useState } from "react";
-import { Platform, Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View, useWindowDimensions } from "react-native";
 import Animated, {
 	cancelAnimation,
 	Easing,
@@ -70,10 +70,39 @@ export function ListRow({
 	divider,
 }: ListRowProps) {
 	const { colors, size, space } = useTheme();
+	const { fontScale } = useWindowDimensions();
+	const stacked = fontScale > 1.3;
 	const tone: ColorToken = destructive ? "dangerText" : accent ? "accentText" : "ink";
 	// ink3 is too light on selectedFill (tokens.md §1); secondary text uses ink2 there.
 	const quiet: ColorToken = selected ? "ink2" : "ink3";
 	const pressable = !!onPress || !!onLongPress;
+	const leadingGraphic =
+		typeof leading === "string" ? (
+			<Icon name={leading as IconName} size={size.icon.row} color={colors[tone === "ink" ? "ink2" : tone]} />
+		) : (
+			leading
+		);
+	const indicators = (
+		<>
+			{selected && !trailing && !chevron ? <Icon name="check" size={size.icon.row} color={colors.accentText} /> : null}
+			{chevron ? <Icon name="caret-right" size={size.icon.meta} color={colors.ink3} /> : null}
+			{external ? <Icon name="arrow-square-out" size={size.icon.meta} color={colors.ink3} /> : null}
+		</>
+	);
+	const accessory = (
+		<>
+			{value ? (
+				<Text
+					color={quiet}
+					numberOfLines={stacked ? undefined : 1}
+					style={stacked ? undefined : { flexShrink: 1, maxWidth: "50%" }}
+				>
+					{value}
+				</Text>
+			) : null}
+			{trailing}
+		</>
+	);
 
 	return (
 		<Pressable
@@ -93,9 +122,9 @@ export function ListRow({
 			android_ripple={pressable ? { color: colors.press } : undefined}
 			style={({ pressed }) => ({
 				minHeight: subtitle ? size.row + space.s3 : android ? size.row + space.s1 : size.row,
-				flexDirection: "row",
-				alignItems: "center",
-				gap: android ? space.s4 : space.s3,
+				flexDirection: stacked ? "column" : "row",
+				alignItems: stacked ? "stretch" : "center",
+				gap: stacked ? space.s2 : android ? space.s4 : space.s3,
 				paddingVertical: space.s2,
 				paddingStart: space.s4,
 				paddingEnd: android ? space.s4 : space.s3,
@@ -109,18 +138,24 @@ export function ListRow({
 						position: "absolute",
 						top: 0,
 						end: 0,
-						start: leading ? space.s4 + size.icon.row + space.s3 : space.s4,
+						start: leading && !stacked ? space.s4 + size.icon.row + space.s3 : space.s4,
 						height: StyleSheet.hairlineWidth,
 						backgroundColor: colors.line,
 					}}
 				/>
 			) : null}
-			{typeof leading === "string" ? (
-				<Icon name={leading as IconName} size={size.icon.row} color={colors[tone === "ink" ? "ink2" : tone]} />
+			{stacked ? (
+				leading || chevron || external || (selected && !trailing) ? (
+					<View style={{ flexDirection: "row", alignItems: "center", gap: space.s2 }}>
+						{leadingGraphic}
+						<View style={{ flex: 1 }} />
+						{indicators}
+					</View>
+				) : null
 			) : (
-				leading
+				leadingGraphic
 			)}
-			<View style={{ flex: 1, gap: 1 }}>
+			<View style={{ flex: stacked ? undefined : 1, minWidth: 0, gap: 1 }}>
 				<Text variant="bodyLarge" color={tone}>
 					{title}
 				</Text>
@@ -129,16 +164,16 @@ export function ListRow({
 						{subtitle}
 					</Text>
 				) : null}
+				{stacked && (value || trailing) ? (
+					<View style={{ alignItems: "flex-start", gap: space.s1, paddingTop: space.s1 }}>{accessory}</View>
+				) : null}
 			</View>
-			{value ? (
-				<Text color={quiet} numberOfLines={1} style={{ flexShrink: 1, maxWidth: "50%" }}>
-					{value}
-				</Text>
-			) : null}
-			{trailing}
-			{selected && !trailing && !chevron ? <Icon name="check" size={size.icon.row} color={colors.accentText} /> : null}
-			{chevron ? <Icon name="caret-right" size={size.icon.meta} color={colors.ink3} /> : null}
-			{external ? <Icon name="arrow-square-out" size={size.icon.meta} color={colors.ink3} /> : null}
+			{!stacked && (
+				<>
+					{accessory}
+					{indicators}
+				</>
+			)}
 		</Pressable>
 	);
 }
@@ -277,9 +312,15 @@ export function EmptyState({ icon, title, message, action, secondaryAction }: Em
 					{message}
 				</Text>
 			) : null}
-			{action ? <Button label={action.label} onPress={action.onPress} /> : null}
+			{action ? (
+				<View style={{ alignSelf: "center" }}>
+					<Button label={action.label} onPress={action.onPress} />
+				</View>
+			) : null}
 			{secondaryAction ? (
-				<Button variant="ghost" label={secondaryAction.label} onPress={secondaryAction.onPress} />
+				<View style={{ alignSelf: "center" }}>
+					<Button variant="ghost" label={secondaryAction.label} onPress={secondaryAction.onPress} />
+				</View>
 			) : null}
 		</View>
 	);

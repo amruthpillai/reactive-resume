@@ -15,7 +15,7 @@ import { client } from "@/api/client";
 import { useLetterStore, useResumeStore } from "@/draft";
 import { useApplications } from "@/features/applications/queries";
 import { routes } from "@/routes";
-import { Banner, Button, ListRow, Switch, Text, TextField, useTheme } from "@/ui";
+import { Banner, Button, ListRow, SelectSheet, Switch, Text, TextField, useTheme } from "@/ui";
 
 type DownloadProps = { resume: ResumeDocument; offline: boolean };
 export function DownloadTab({ resume, offline }: DownloadProps) {
@@ -108,20 +108,6 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 					message={t`You're offline. Download PDF uses this device. Other formats and linked letters need a connection. Fonts and images must already be cached.`}
 				/>
 			)}
-			{formats.map((item) => (
-				<ListRow
-					key={item.id}
-					title={item.label}
-					subtitle={`${item.description} (.${item.id})`}
-					selected={format === item.id}
-					leading={item.id === "pdf" ? "file-pdf" : "file-text"}
-					disabled={busy || (offline && item.id !== "pdf")}
-					onPress={() => {
-						setFormat(item.id);
-						setError(null);
-					}}
-				/>
-			))}
 			<TextField
 				label={t`File name`}
 				value={name}
@@ -130,6 +116,42 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 				editable={!busy}
 				trailing={<Text color="ink3">.{format}</Text>}
 				helper={t`Recruiters see this name. Your name plus “Resume” works well.`}
+			/>
+			{error && <Banner tone="danger" message={error} />}
+			<Button
+				label={busy ? t`Preparing file…` : format === "pdf" ? t`Share PDF` : t`Download ${format.toUpperCase()}`}
+				icon="export"
+				fullWidth
+				loading={busy}
+				disabled={!name.trim() || (offline && format !== "pdf") || (offline && withLetter)}
+				onPress={() => void download(format)}
+			/>
+			{((error && format !== "pdf") || (offline && (format !== "pdf" || withLetter))) && (
+				<Button
+					label={t`Share PDF instead`}
+					variant="secondary"
+					disabled={busy || !name.trim()}
+					onPress={() => {
+						setWithLetter(false);
+						setFormat("pdf");
+						void download("pdf", false, false);
+					}}
+				/>
+			)}
+			<SelectSheet
+				label={t`File format`}
+				value={format}
+				placeholder={formats.find((item) => item.id === format)?.label}
+				options={(offline ? formats.filter((item) => item.id === "pdf") : formats).map((item) => ({
+					value: item.id,
+					label: item.label,
+					description: `${item.description} (.${item.id})`,
+				}))}
+				disabled={busy}
+				onChange={(value) => {
+					setFormat(value);
+					setError(null);
+				}}
 			/>
 			{linked?.coverLetterId && (
 				<ListRow
@@ -151,7 +173,6 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 					action={{ label: t`Retry`, onPress: () => void applications.refetch() }}
 				/>
 			)}
-			{error && <Banner tone="danger" message={error} />}
 			{issues > 0 && (
 				<Text color="ink2">
 					{plural(issues, {
@@ -159,24 +180,6 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 						other: "Check has # things to review. You can still download.",
 					})}
 				</Text>
-			)}
-			<Button
-				label={busy ? t`Preparing file…` : t`Download ${format.toUpperCase()}`}
-				icon="download-simple"
-				loading={busy}
-				disabled={!name.trim() || (offline && format !== "pdf") || (offline && withLetter)}
-				onPress={() => void download(format)}
-			/>
-			{error && format !== "pdf" && (
-				<Button
-					label={t`Download PDF instead`}
-					variant="secondary"
-					disabled={busy}
-					onPress={() => {
-						setWithLetter(false);
-						void download("pdf", false, false);
-					}}
-				/>
 			)}
 			<Button
 				label={t`Print`}

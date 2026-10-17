@@ -16,6 +16,7 @@ import {
 	View,
 } from "react-native";
 import Animated, { FadeIn, FadeInDown, FadeOut, FadeOutDown } from "react-native-reanimated";
+import { Button } from "./button";
 import { haptics, useIsWide, useReducedMotion } from "./motion";
 import { useWindowSafeAreaInsets } from "./safe-area";
 import { Text } from "./text";
@@ -29,6 +30,8 @@ export const InSheetContext = createContext(false);
 export type SheetProps = {
 	open: boolean;
 	onClose: () => void;
+	/** Block incidental dismissal while an explicit save is in flight. */
+	dismissible?: boolean | undefined;
 	title?: string | undefined;
 	/**
 	 * Heights as fractions of the screen (`0.5`) or `"content"` to fit. Defaults to `["content"]`. A content-sized
@@ -87,6 +90,7 @@ function BottomSheet({
 	headerStart,
 	headerEnd,
 	padded = true,
+	dismissible = true,
 }: SheetProps) {
 	const nested = use(InSheetContext);
 	const { colors, radius, shadows, size, space } = useTheme();
@@ -132,7 +136,13 @@ function BottomSheet({
 			ref.current?.present();
 			return;
 		}
-		if (wantsOpen.current) onClose();
+		if (wantsOpen.current) {
+			if (dismissible) onClose();
+			else {
+				presented.current = true;
+				ref.current?.present();
+			}
+		}
 	};
 
 	const renderFooter = footer
@@ -163,6 +173,7 @@ function BottomSheet({
 			// Keep the sheet's controls individually reachable by VoiceOver instead of one adjustable group.
 			accessible={false}
 			onDismiss={onDismiss}
+			enablePanDownToClose={dismissible}
 			onChange={(index) => {
 				// A detent change after the sheet is up, not the first appearance.
 				if (index >= 0 && detentIndex.current >= 0 && index !== detentIndex.current) haptics.selection();
@@ -208,7 +219,7 @@ function BottomSheet({
 					appearsOnIndex={0}
 					disappearsOnIndex={-1}
 					opacity={1}
-					pressBehavior="close"
+					pressBehavior={dismissible ? "close" : "none"}
 					style={[backdrop.style, { backgroundColor: colors.scrimSheet }]}
 				/>
 			)}
@@ -217,7 +228,7 @@ function BottomSheet({
 			<InSheetContext.Provider value>
 				<BottomSheetScrollView
 					accessibilityViewIsModal
-					onAccessibilityEscape={onClose}
+					onAccessibilityEscape={dismissible ? onClose : undefined}
 					keyboardShouldPersistTaps="handled"
 					contentContainerStyle={bodyStyle}
 				>
@@ -228,7 +239,17 @@ function BottomSheet({
 	);
 }
 
-function FormSheet({ open, onClose, title, children, footer, headerStart, headerEnd, padded = true }: SheetProps) {
+function FormSheet({
+	open,
+	onClose,
+	title,
+	children,
+	footer,
+	headerStart,
+	headerEnd,
+	padded = true,
+	dismissible = true,
+}: SheetProps) {
 	const { colors, radius, shadows, size, space } = useTheme();
 	const { width, height } = useWindowDimensions();
 
@@ -237,7 +258,7 @@ function FormSheet({ open, onClose, title, children, footer, headerStart, header
 			visible={open}
 			transparent
 			animationType="fade"
-			onRequestClose={onClose}
+			onRequestClose={dismissible ? onClose : undefined}
 			statusBarTranslucent
 			navigationBarTranslucent
 			supportedOrientations={["portrait", "landscape"]}
@@ -246,10 +267,10 @@ function FormSheet({ open, onClose, title, children, footer, headerStart, header
 				behavior={Platform.OS === "ios" ? "padding" : undefined}
 				style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.scrimSheet }}
 			>
-				<Pressable accessible={false} onPress={onClose} style={StyleSheet.absoluteFill} />
+				<Pressable accessible={false} onPress={dismissible ? onClose : undefined} style={StyleSheet.absoluteFill} />
 				<View
 					accessibilityViewIsModal
-					onAccessibilityEscape={onClose}
+					onAccessibilityEscape={dismissible ? onClose : undefined}
 					style={{
 						width: Math.min(size.formSheet, width - space.s6 * 2),
 						maxHeight: height - space.s12 * 2,
@@ -287,6 +308,65 @@ function FormSheet({ open, onClose, title, children, footer, headerStart, header
 				</View>
 			</KeyboardAvoidingView>
 		</Modal>
+	);
+}
+
+type EditorSheetProps = Omit<SheetProps, "open" | "dismissible"> & { dirty: boolean; pending: boolean };
+
+/** Keep the form owner mounted while a native dismissal asks whether to discard its edits. */
+export function EditorSheet({
+	dirty,
+	pending,
+	onClose,
+	children,
+	footer,
+	detents = [0.9],
+	...props
+}: EditorSheetProps) {
+	const { t } = useLingui();
+	const { space } = useTheme();
+	const [visible, setVisible] = useState(true);
+	const [confirm, setConfirm] = useState(false);
+	const reopen = () => {
+		setConfirm(false);
+		setVisible(true);
+	};
+	const close = () => {
+		if (pending) return;
+		if (!dirty) return onClose();
+		setVisible(false);
+		setConfirm(true);
+	};
+	return (
+		<>
+			<Sheet
+				{...props}
+				open={visible || pending}
+				onClose={close}
+				dismissible={!pending}
+				detents={detents}
+				footer={
+					<View style={{ gap: space.s2 }}>
+						{footer}
+						<Button label={t`Cancel`} variant="ghost" disabled={pending} onPress={close} />
+					</View>
+				}
+			>
+				{children}
+			</Sheet>
+			<ConfirmDialog
+				open={confirm && !pending}
+				title={t`Discard changes?`}
+				message={t`You have unsaved changes.`}
+				confirmLabel={t`Discard`}
+				cancelLabel={t`Keep editing`}
+				destructive
+				onConfirm={() => {
+					if (!pending) onClose();
+				}}
+				onCancel={reopen}
+			/>
+		</>
 	);
 }
 

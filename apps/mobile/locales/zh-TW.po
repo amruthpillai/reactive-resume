@@ -197,7 +197,7 @@ msgstr "{0, plural, one {對於 # 日} other {# 天}}"
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, other {知識庫 · # 個事實}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {求職信（#）} other {求職信（#）}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {求職信（#）} other {求職信（#）}}"
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {#當天沒有回覆} other {#天沒有回复}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {履歷（#）} other {履歷（#）}}"
@@ -1228,7 +1228,7 @@ msgstr "阿爾巴尼亞語"
 msgid "All"
 msgstr "全部"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "全部({0})"
@@ -1903,13 +1903,11 @@ msgstr "軟體可以讀取您的履歷嗎？"
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "將語言改為…"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "更改照片"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "選擇時間"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "請選擇版本以繼續。返回不會關閉此面板。"
@@ -2204,6 +2210,10 @@ msgstr "清潔"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "清除"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "背景"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "無法確認匯入。在重試之前檢查應徵紀錄以避免重複。
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "無法確認儲存。在重試之前檢查應徵紀錄以避免重複。"
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "無法保存。再試一次。"
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "無法儲存。你的文字還在這裡；再試一次。"
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "無法安排面試。"
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "幣別"
 msgid "Current filters"
 msgstr "目前的篩選條件"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "親愛的招募團隊，"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "回顧"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "不同的貨幣或支付週期。不計算金錢差額。"
 msgid "Direction"
 msgstr "方向"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "捨棄"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "捨棄變更？"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "下載 PDF"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "下載 PDF 代替"
 
@@ -3567,6 +3592,10 @@ msgstr "草稿 · 僅使用你的履歷"
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "草稿·僅使用您的履歷和職位發布"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "欄位被移除"
 msgid "File attached"
 msgstr "所附文件"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "文件太大。選擇最大 10 MB 的檔案。"
@@ -4372,6 +4405,10 @@ msgstr "隱藏條款又回來了"
 msgid "Hide {title} from the page"
 msgstr "從頁面中隱藏 {title}"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "從頁面隱藏"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "已儲存面試"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "面試已儲存。提醒時間已經過去了。"
 
@@ -4831,7 +4872,8 @@ msgstr "只保留一個地址，讓軟體不必猜要用哪一個。"
 msgid "Keep both"
 msgstr "保留兩者"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "繼續編輯"
 
@@ -5450,7 +5492,6 @@ msgstr "邊距非常窄"
 msgid "Margins set to {minimum} pt"
 msgstr "邊距設定為 {minimum} pt"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "型號：{label}"
 msgid "More"
 msgstr "更多"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "更多選擇"
@@ -5671,11 +5716,6 @@ msgstr "移動選定的應徵紀錄"
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "移動到"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "移至{0}"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "下一步：{note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "下一步：{note}。新增今日提醒。"
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "開啟清單"
 msgid "Open the schedule"
 msgstr "開啟排程"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "開啟工作區"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "準備簡報"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "準備一份履歷"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "上一頁"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "上次的 PDF 結果，可能與目前草稿不同。"
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "請返回文件並重新開啟，或重試連線。"
 msgid "Review"
 msgstr "審查"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "檢視檢查結果"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "已儲存到「已儲存」 · 練習"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "正在儲存職缺。關閉此面板不會取消儲存。"
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "分享 CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "分享 PNG"
@@ -8492,6 +8562,10 @@ msgstr "顯示已關閉"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "顯示已結束的應徵紀錄"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "階段"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "階段維持為「{stage}」"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "階段"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "這份履歷受密碼保護"
 msgid "This resume isn't shared right now."
 msgstr "這份履歷目前尚未分享。"
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "此次儲存可能仍會完成。請等待完成後再進行其他變更。"
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "此保存的描述被剪裁或不完整。準備文件之前先進行審查。"
@@ -10146,6 +10212,10 @@ msgstr "正在解鎖…"
 msgid "Unnamed key"
 msgstr "未命名的金鑰"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "使用 A4 或美式信紙尺寸，讓版面在重新轉譯後依然保�
 msgid "Use AI for PDF imports"
 msgstr "使用 AI 匯入 PDF"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "使用對方版本"
 msgid "Use these answers"
 msgstr "使用這些回答"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "使用此裝置的時區（{deviceTimezone}）"
@@ -10339,6 +10417,10 @@ msgstr "使用此事實"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "使用該提供者"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "查看職位申請"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "查看職缺發布"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "您回答：{answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "您可以繼續編輯。當您重新上線時變更同步。下載和共享需要連接。"
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "您在登入完成前取消了登入。"
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "您先前忘記過這項，所以沒有再次儲存。"
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "您有尚未儲存的變更。"
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "兩分鐘自我介紹"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD（選填）"

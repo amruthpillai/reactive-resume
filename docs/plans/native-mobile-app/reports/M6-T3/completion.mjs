@@ -1,5 +1,6 @@
 // UI integration scenarios extend M6-T3: shipped handlers, real Chat, proposal helpers and DraftStore.
 // Native views and I/O are replaced at their boundaries; no device build or production test seam.
+// Run: node --import ./apps/server/node_modules/tsx/dist/loader.mjs docs/plans/native-mobile-app/reports/M6-T3/completion.mjs
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { createRequire, registerHooks } from "node:module";
@@ -273,6 +274,7 @@ const mocks = {
 		"exports.useIsWide=()=>false;exports.useReducedMotion=()=>false;exports.haptics={selection(){},warning(){},success(){}};",
 	"overlay-theme": "exports.useTheme=()=>E.theme;",
 	"overlay-text": "exports.Text='Text';",
+	"overlay-button": "exports.Button='Button';",
 	"messages-stub": "exports.MessageView='MessageView';exports.FileChip='FileChip';",
 	"workspace-hooks":
 		"exports.useSavedItems=()=>({data:E.savedItems,isPending:false});exports.useWorkspace=()=>({isPending:false,query:{isError:false}});",
@@ -296,6 +298,7 @@ const hook = registerHooks({
 			if (specifier === "./motion") specifier = "overlay-motion";
 			if (specifier === "./theme") specifier = "overlay-theme";
 			if (specifier === "./text") specifier = "overlay-text";
+			if (specifier === "./button") specifier = "overlay-button";
 		}
 		if (specifier === "./provider-state" && context.parentURL?.includes("/features/ai/provider-editor"))
 			specifier = "provider-state";

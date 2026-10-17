@@ -252,7 +252,7 @@ function ChromeTopBar() {
 				<AppStrip
 					tone="warn"
 					icon="cloud-slash"
-					message={t`You can keep editing. Changes sync when you're back online. Download and Share need a connection.`}
+					message={t`You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images.`}
 				/>
 			) : null}
 			{slots.banner}

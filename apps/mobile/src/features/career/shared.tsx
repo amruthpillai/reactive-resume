@@ -1,9 +1,8 @@
 import type { SwitchProps } from "@/ui";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { useState } from "react";
 import { Pressable, View } from "react-native";
-import { Banner, Button, ConfirmDialog, Sheet, Skeleton, Switch, Text, useTheme } from "@/ui";
+import { Banner, Button, Skeleton, Switch, Text, useTheme } from "@/ui";
 
 type SectionProps = { title: string; children: ReactNode };
 export function Section({ title, children }: SectionProps) {
@@ -69,45 +68,4 @@ export function SwitchRow(props: SwitchProps) {
 	);
 }
 
-type EditorSheetProps = { title: string; dirty: boolean; pending: boolean; onClose: () => void; children: ReactNode };
-/** Keep form state mounted while native dismissal asks whether to discard it. */
-export function EditorSheet({ title, dirty, pending, onClose, children }: EditorSheetProps) {
-	const { t } = useLingui();
-	const [visible, setVisible] = useState(true);
-	const [confirm, setConfirm] = useState(false);
-	const reopen = () => {
-		setConfirm(false);
-		setVisible(true);
-	};
-	const close = () => {
-		if (!dirty && !pending) return onClose();
-		setVisible(false);
-		setConfirm(true);
-	};
-	return (
-		<>
-			<Sheet
-				open={visible}
-				onClose={close}
-				title={title}
-				detents={[0.9]}
-				footer={<Button label={t`Cancel`} variant="ghost" onPress={close} />}
-			>
-				{children}
-			</Sheet>
-			<ConfirmDialog
-				open={confirm}
-				title={pending ? t`Saving…` : t`Discard changes?`}
-				message={
-					pending
-						? t`This save may still finish. Wait for it before making another change.`
-						: t`You have unsaved changes.`
-				}
-				confirmLabel={pending ? t`Keep editing` : t`Discard`}
-				cancelLabel={t`Keep editing`}
-				onConfirm={pending ? reopen : onClose}
-				onCancel={reopen}
-			/>
-		</>
-	);
-}
+export { EditorSheet } from "@/ui";

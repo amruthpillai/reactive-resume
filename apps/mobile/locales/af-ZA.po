@@ -197,7 +197,7 @@ msgstr "{0, plural, one {Vir # dag} other {Vir # dae}}"
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, one {Kennis · # feit} other {Kennis · # feite}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {Brief (#)} other {Briewe (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {Brief (#)} other {Briewe (#)}}"
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {Geen antwoord in # dag nie} other {Geen antwoord in # dae nie}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {CV (#)} other {CV’s (#)}}"
@@ -1228,7 +1228,7 @@ msgstr "Albanees"
 msgid "All"
 msgstr "Almal"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "Almal ({0})"
@@ -1903,13 +1903,11 @@ msgstr "Kan sagteware jou CV lees?"
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "Verander taal na…"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "Verander foto"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "Kies 'n tyd"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "Kies 'n weergawe om voort te gaan. Terug sal nie hierdie blad toemaak nie."
@@ -2204,6 +2210,10 @@ msgstr "Sober"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "Vee uit"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "Konteks"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "Kon nie die invoer bevestig nie. Gaan aansoeke na voordat jy weer probee
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "Kon nie die stoor bevestig nie. Gaan aansoeke na voordat jy weer probeer om 'n duplikaat te vermy."
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "Kon nie stoor nie. Probeer weer."
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "Kon nie stoor nie. Jou teks is nog hier; probeer weer."
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "Kon nie die onderhoud skeduleer nie."
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "Geldeenheid"
 msgid "Current filters"
 msgstr "Huidige filters"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "Geagte huurspan,"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "Nabespreking"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "Verskillende geldeenhede of betaalperiodes. Geen geldverskil word bereke
 msgid "Direction"
 msgstr "Rigting"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "Gooi weg"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "Verwerp veranderinge?"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "Laai PDF af"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "Laai eerder PDF af"
 
@@ -3567,6 +3592,10 @@ msgstr "Draft · gebruik slegs jou CV"
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "Draft · gebruik slegs jou CV en die posplasing"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "Veld verwyder"
 msgid "File attached"
 msgstr "Lêer aangeheg"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "Lêer is te groot. Kies 'n lêer tot 10 MB."
@@ -4372,6 +4405,10 @@ msgstr "Versteekte terme is terug"
 msgid "Hide {title} from the page"
 msgstr "Versteek {title} van die bladsy"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "Versteek van bladsy"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "Onderhoud bewaar"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "Onderhoud gestoor. Die herinneringstyd is reeds verby."
 
@@ -4831,7 +4872,8 @@ msgstr "Hou by een adres, sodat sagteware nie hoef te raai watter een om te gebr
 msgid "Keep both"
 msgstr "Hou albei"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "Hou aan wysig"
 
@@ -5450,7 +5492,6 @@ msgstr "Marges is baie smal"
 msgid "Margins set to {minimum} pt"
 msgstr "Marges gestel op {minimum} pt"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "Model: {label}"
 msgid "More"
 msgstr "Meer"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "Meer opsies"
@@ -5671,11 +5716,6 @@ msgstr "Skuif gekose aansoeke"
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "Skuif na"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "Skuif na {0}"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "Volgende stap: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "Volgende stap: {note}. Voeg 'n herinnering by Vandag."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "Maak die lys oop"
 msgid "Open the schedule"
 msgstr "Maak die skedule oop"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "Maak werkruimte oop"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "Berei 'n oorsig voor"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "Berei 'n CV voor"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "Vorige bladsy"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "Vorige PDF resultaat. Dit pas dalk nie by jou huidige konsep nie."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "Keer terug na Dokumente en maak dit weer oop, of probeer weer die verbin
 msgid "Review"
 msgstr "Hersien"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "Hersien Kontrole"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "Bewaar in Gestoor · Oefening"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "Stoor die werk. Die sluiting van hierdie blad kanselleer nie die stoor nie."
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "Deel CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Deel PNG"
@@ -8492,6 +8562,10 @@ msgstr "Skou gesluit"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "Wys geslote aansoeke"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "Fase"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "Fase bly {stage}"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "Stadiums"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "Hierdie CV is met 'n wagwoord beskerm"
 msgid "This resume isn't shared right now."
 msgstr "Hierdie CV word nie nou gedeel nie."
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "Hierdie stoor kan nog steeds voltooi word. Wag daarvoor voordat jy nog 'n verandering aanbring."
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "Hierdie gestoorde beskrywing is geknip of onvolledig. Hersien voordat u dokumente voorberei."
@@ -10146,6 +10212,10 @@ msgstr "Ontsluit tans …"
 msgid "Unnamed key"
 msgstr "Naamlose sleutel"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "Gebruik A4 of US Letter sodat die uitleg oorleef wanneer dit weer weerge
 msgid "Use AI for PDF imports"
 msgstr "Gebruik KI vir PDF invoere"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "Gebruik hulle s'n"
 msgid "Use these answers"
 msgstr "Gebruik hierdie antwoorde"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "Gebruik hierdie toestel se tydsone ({deviceTimezone})"
@@ -10339,6 +10417,10 @@ msgstr "Gebruik hierdie feit"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "Gebruik hierdie verskaffer"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "Bekyk werksaansoek"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "Bekyk posplasing"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "Jy het geantwoord: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "Jy kan aanhou redigeer. Veranderinge sinkroniseer wanneer jy weer aanlyn is. Aflaai en deel benodig 'n verbinding."
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "Jy het die aanmelding gekanselleer voordat dit voltooi is."
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "Jy het dit voorheen vergeet, so dit is nie weer bewaar nie."
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "Jy het ongestoorde veranderinge."
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "Jou inleiding van twee minute"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD (opsioneel)"

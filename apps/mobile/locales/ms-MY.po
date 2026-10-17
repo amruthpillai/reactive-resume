@@ -197,7 +197,7 @@ msgstr "{0, plural, one {Untuk hari #} other {Untuk # hari}}"
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, other {Pengetahuan · # fakta}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {Surat (#)} other {Surat (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {Surat (#)} other {Surat (#)}}"
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {Tiada balasan dalam # hari} other {Tiada balasan dalam # hari}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {Resume (#)} other {Resume (#)}}"
@@ -1228,7 +1228,7 @@ msgstr "Albanian"
 msgid "All"
 msgstr "Semua"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "Semua ({0})"
@@ -1903,13 +1903,11 @@ msgstr "Bolehkah perisian membaca resume anda?"
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "Tukar bahasa kepada…"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "Tukar foto"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "Pilih masa"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "Pilih versi untuk meneruskan. Butang Kembali tidak menutup panel ini."
@@ -2204,6 +2210,10 @@ msgstr "Bersih"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "Kosongkan"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "Konteks"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "Tidak dapat mengesahkan import. Sahkan Permohonan sebelum mencuba semula
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "Tidak dapat mengesahkan simpanan. Sahkan Permohonan sebelum mencuba semula untuk mengelakkan pendua."
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "Tidak dapat menyimpan. Cuba lagi."
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "Tidak dapat menyimpan. Teks anda masih ada di sini; cuba lagi."
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "Tidak dapat menjadualkan temu duga."
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "Mata wang"
 msgid "Current filters"
 msgstr "Penapis semasa"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "Pasukan pengambilan yang dihormati,"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "Ulasan"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "Mata wang yang berbeza atau tempoh pembayaran. Tiada perbezaan wang diki
 msgid "Direction"
 msgstr "Arah"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "Buang"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "Buang perubahan?"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "Muat turun PDF"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "Muat turun PDF sebaliknya"
 
@@ -3567,6 +3592,10 @@ msgstr "Draf · hanya menggunakan resume anda"
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "Draf · hanya menggunakan resume anda dan siaran kerja"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "Medan dialih keluar"
 msgid "File attached"
 msgstr "Fail dilampirkan"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "Fail terlalu besar. Pilih fail sehingga 10 MB."
@@ -4372,6 +4405,10 @@ msgstr "Istilah tersembunyi telah kembali"
 msgid "Hide {title} from the page"
 msgstr "Sembunyikan {title} daripada halaman"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "Sembunyikan daripada halaman"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "Temu duga disimpan"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "Temu bual disimpan. Masa peringatan telah pun berlalu."
 
@@ -4831,7 +4872,8 @@ msgstr "Kekalkan satu alamat sahaja, supaya perisian tidak perlu meneka yang man
 msgid "Keep both"
 msgstr "Simpan kedua-duanya"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "Teruskan menyunting"
 
@@ -5450,7 +5492,6 @@ msgstr "Margin sangat sempit"
 msgid "Margins set to {minimum} pt"
 msgstr "Margin ditetapkan kepada {minimum} pt"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "Model: {label}"
 msgid "More"
 msgstr "Lagi"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "Lebih banyak pilihan"
@@ -5671,11 +5716,6 @@ msgstr "Pindahkan permohonan yang dipilih"
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "Pindah ke"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "Beralih ke {0}"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "Langkah seterusnya: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "Langkah seterusnya: {note}. Menambah peringatan pada Hari ini."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "Buka senarai"
 msgid "Open the schedule"
 msgstr "Buka jadual"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "Buka ruang kerja"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "Sediakan taklimat"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "Sediakan resume"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "Halaman sebelumnya"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "Hasil PDF sebelumnya. Ia mungkin tidak sepadan dengan draf semasa anda."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "Kembali ke Dokumen dan buka semula, atau cuba semula sambungan."
 msgid "Review"
 msgstr "Semakan"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "Lihat Semakan"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "Disimpan ke Disimpan · Latihan"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "Menyelamatkan kerja. Menutup panel ini tidak membatalkan simpanan."
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "Kongsi CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Kongsi PNG"
@@ -8492,6 +8562,10 @@ msgstr "Tunjukkan ditutup"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "Tunjukkan permohonan tertutup"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "Peringkat"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "Peringkat kekal {stage}"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "peringkat"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "Resume ini dilindungi kata laluan"
 msgid "This resume isn't shared right now."
 msgstr "Resume ini tidak dikongsi sekarang."
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "Simpanan ini mungkin masih selesai. Tunggu sebelum membuat perubahan lain."
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "Perihalan yang disimpan ini dipotong atau tidak lengkap. Semak sebelum menyediakan dokumen."
@@ -10146,6 +10212,10 @@ msgstr "Membuka kunci…"
 msgid "Unnamed key"
 msgstr "Kunci tanpa nama"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "Gunakan A4 atau US Letter supaya susun atur kekal walaupun diberi render
 msgid "Use AI for PDF imports"
 msgstr "Gunakan AI untuk import PDF."
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "Gunakan versi mereka"
 msgid "Use these answers"
 msgstr "Gunakan jawapan ini"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "Gunakan zon waktu peranti ini ({deviceTimezone})"
@@ -10339,6 +10417,10 @@ msgstr "Gunakan fakta ini"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "Gunakan pembekal ini"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "Lihat permohonan kerja"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "Lihat siaran kerja"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "Anda menjawab: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "Anda boleh terus mengedit. Perubahan disegerakkan apabila anda kembali dalam talian. Muat turun dan Kongsi memerlukan sambungan."
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "Anda membatalkan log masuk sebelum ia selesai."
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "Anda telah melupakan ini sebelum ini, jadi ia tidak disimpan semula."
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "Anda mempunyai perubahan yang belum disimpan."
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "Pengenalan diri dua minit anda"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD (pilihan)"

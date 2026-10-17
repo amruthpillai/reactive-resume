@@ -197,7 +197,7 @@ msgstr "{0, plural, one {# 日の場合} other {# 日間}}"
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, other {ナレッジ · #件の事実}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {カバーレター (#)} other {カバーレター (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {カバーレター (#)} other {カバーレター (#)}}
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {# 日経過しても返信がありません} other {#日経過しても返信がありません}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {レジュメ（#）} other {レジュメ（#）}}"
@@ -1228,7 +1228,7 @@ msgstr "アルバニア語"
 msgid "All"
 msgstr "全て"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "すべて ({0})"
@@ -1903,13 +1903,11 @@ msgstr "ソフトウェアはあなたの履歴書を読み取ることができ
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "言語を…に変更します"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "写真を変更する"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "時間を選択してください"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "続行するにはバージョンを選択してください。 「戻る」ボタンではこのパネルは閉じません。"
@@ -2204,6 +2210,10 @@ msgstr "シンプル"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "クリア"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "コンテキスト"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "インポートが確認できませんでした。重複を避けるた
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "保存が確認できませんでした。重複を避けるために、再試行する前に応募を確認してください。"
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "保存できませんでした。もう一度やり直してください
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "保存できませんでした。あなたのテキストはまだここにあります。もう一度やり直してください。"
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "面接の予定を立てることができませんでした。"
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "通貨"
 msgid "Current filters"
 msgstr "現在のフィルター"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "採用チームの皆様"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "振り返り"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "通貨や支払い期間が異なります。金額の差額は計算さ
 msgid "Direction"
 msgstr "方向"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "破棄"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "変更を破棄しますか？"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "PDF をダウンロード"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "代わりにPDFをダウンロードしてください"
 
@@ -3567,6 +3592,10 @@ msgstr "下書き · 履歴書のみを使用します"
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "下書き · 履歴書と求人情報のみを使用します"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "フィールドが削除されました"
 msgid "File attached"
 msgstr "添付ファイル"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "ファイルが大きすぎます。最大 10 MB のファイルを選択します。"
@@ -4372,6 +4405,10 @@ msgstr "隠された用語が戻ってきました"
 msgid "Hide {title} from the page"
 msgstr "{title} をページから非表示にする"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "ページから隠す"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "面接を保存しました"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "面接が保存されました。通知時間はすでに過ぎています。"
 
@@ -4831,7 +4872,8 @@ msgstr "アドレスは 1 つだけにして、ソフトウェアがどれを使
 msgid "Keep both"
 msgstr "両方とも保管しておいてください"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "編集を続ける"
 
@@ -5450,7 +5492,6 @@ msgstr "余白が非常に狭い"
 msgid "Margins set to {minimum} pt"
 msgstr "マージンを {minimum} ポイントに設定"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "モデル: {label}"
 msgid "More"
 msgstr "もっと見る"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "その他のオプション"
@@ -5671,11 +5716,6 @@ msgstr "選択した応募を移動する"
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "移動先"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "{0} に移動"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "次のステップ: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "次のステップ: {note}。 今日 にリマインダーを追加します。"
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "リストを開く"
 msgid "Open the schedule"
 msgstr "スケジュールを開く"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "ワークスペースを開く"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "ブリーフィングを用意"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "履歴書を準備する"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "前のページへ"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "前回の PDF の結果。現在のドラフトと一致しない可能性があります。"
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "書類 に戻って再度開くか、接続を再試行してくださ�
 msgid "Review"
 msgstr "レビュー"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "チェック結果を確認"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "「保存済み」に保存しました · 練習"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "今ジョブを保存しています。このパネルを閉じても保存はキャンセルされません。"
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "CSVを共有する"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "PNGを共有する"
@@ -8492,6 +8562,10 @@ msgstr "ショーは終了しました"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "終了した応募を表示する"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "ステージ"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "ステージは{stage}のまま"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "ステージ"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "この履歴書はパスワードで保護されています"
 msgid "This resume isn't shared right now."
 msgstr "この履歴書は現在共有されていません。"
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "この保存はまだ終了する可能性があります。別の変更を行う前に、それを待ってください。"
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "この保存された説明は切り取られているか、不完全です。書類を準備する前に確認してください。"
@@ -10146,6 +10212,10 @@ msgstr "ロックを解除中…"
 msgid "Unnamed key"
 msgstr "名前のないキー"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "A4またはUSレターを使用すると、再描画してもレイア�
 msgid "Use AI for PDF imports"
 msgstr "PDF のインポートに AI を使用する"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "彼らのものを使用してください"
 msgid "Use these answers"
 msgstr "この回答を使用"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "このデバイスのタイムゾーン ({deviceTimezone}) を使用します"
@@ -10339,6 +10417,10 @@ msgstr "この事実を利用して"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "このプロバイダーを使用する"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "求人応募を見る"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "求人情報を見る"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "あなたは答えました: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "編集を続けることができます。オンラインに戻ると変更が同期されます。ダウンロードと共有には接続が必要です。"
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "完了する前にサインインをキャンセルしました。"
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "以前に忘れさせた内容のため、再保存しませんでした。"
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "未保存の変更があります。"
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "2分間の自己紹介"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD（任意）"

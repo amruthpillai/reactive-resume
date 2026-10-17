@@ -197,7 +197,7 @@ msgstr "{0, plural, one {För # dag} other {För # dagar}}"
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, one {Kunskap · # faktum} other {Kunskap · # fakta}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {Följebrev (#)} other {Följebrev (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {Följebrev (#)} other {Följebrev (#)}}"
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {Inget svar på dagen #} other {Inget svar på # dagar}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {CV (#)} other {CV (#)}}"
@@ -1228,7 +1228,7 @@ msgstr "Albanska"
 msgid "All"
 msgstr "Alla"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "Alla ({0})"
@@ -1903,13 +1903,11 @@ msgstr "Kan programvara läsa ditt CV?"
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "Ändra språk till…"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "Byt foto"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "Välj en tid"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "Välj en version för att fortsätta. Back kommer inte att stänga detta ark."
@@ -2204,6 +2210,10 @@ msgstr "Ren"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "Rensa"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "Sammanhang"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "Det gick inte att bekräfta importen. Kontrollera jobbansökningar innan
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "Kunde inte bekräfta lagringen. Kontrollera jobbansökningar innan du försöker igen för att undvika en dubblett."
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "Det gick inte att spara. Försök igen."
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "Det gick inte att spara. Din text finns fortfarande kvar; försök igen."
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "Det gick inte att schemalägga intervjun."
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "Valuta"
 msgid "Current filters"
 msgstr "Aktuella filter"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "Kära anställningsteam,"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "Utvärdering"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "Olika valutor eller betalningsperioder. Ingen skillnad i pengar beräkna
 msgid "Direction"
 msgstr "Riktning"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "Släng"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "Släng ändringarna?"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "Ladda ner PDF"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "Ladda ner PDF istället"
 
@@ -3567,6 +3592,10 @@ msgstr "Utkast · använder endast ditt CV"
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "Utkast · använder endast ditt CV och platsannonsen"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "Fältet har tagits bort"
 msgid "File attached"
 msgstr "Fil bifogad"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "Filen är för stor. Välj en fil upp till 10 MB."
@@ -4372,6 +4405,10 @@ msgstr "Dolda termer är tillbaka"
 msgid "Hide {title} from the page"
 msgstr "Dölj {title} från sidan"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "Dölj från sidan"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "Intervjun sparad"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "Intervjun sparad. Påminnelsetiden har redan passerat."
 
@@ -4831,7 +4872,8 @@ msgstr "Håll dig till en enda adress, så att programvara inte behöver gissa v
 msgid "Keep both"
 msgstr "Behåll båda"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "Fortsätt redigera"
 
@@ -5450,7 +5492,6 @@ msgstr "Marginalerna är mycket smala"
 msgid "Margins set to {minimum} pt"
 msgstr "Marginaler inställda på {minimum} pt"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "Modell: {label}"
 msgid "More"
 msgstr "Mer"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "Fler alternativ"
@@ -5671,11 +5716,6 @@ msgstr "Flytta valda jobbansökningar"
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "Flytta till"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "Flytta till {0}"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "Nästa steg: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "Nästa steg: {note}. Lägger till en påminnelse i I dag."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "Öppna listan"
 msgid "Open the schedule"
 msgstr "Öppna schemat"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "Öppna arbetsytan"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "Förbered en genomgång"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "Förbered en meritförteckning"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "Föregående sida"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "Tidigare PDF-resultat. Det kanske inte motsvarar ditt nuvarande utkast."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "Gå tillbaka till Dokument och öppna den igen, eller försök att anslu
 msgid "Review"
 msgstr "Recension"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "Granska Kontroll"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "Sparat i fliken Sparad · Övning"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "Sparar jobbet. Att stänga det här arket avbryter inte lagringen."
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "Dela CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Dela PNG"
@@ -8492,6 +8562,10 @@ msgstr "Visa stängd"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "Visa stängda jobbansökningar"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "Fas"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "Fasen förblir {stage}"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "Etapper"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "Det här CV:t är lösenordsskyddat"
 msgid "This resume isn't shared right now."
 msgstr "Denna meritförteckning delas inte just nu."
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "Denna lagring kan fortfarande avslutas. Vänta innan du gör en ny ändring."
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "Den här sparade beskrivningen är beskuren eller ofullständig. Granska innan du förbereder dokument."
@@ -10146,6 +10212,10 @@ msgstr "Låser upp..."
 msgid "Unnamed key"
 msgstr "Namnlös nyckel"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "Använd A4 eller US Letter så att layouten överlever att renderas om."
 msgid "Use AI for PDF imports"
 msgstr "Använd AI för PDF-importer"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "Använd deras"
 msgid "Use these answers"
 msgstr "Använd de här svaren"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "Använd enhetens tidszon ({deviceTimezone})"
@@ -10339,6 +10417,10 @@ msgstr "Använd detta faktum"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "Använd denna leverantör"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "Se jobbansökan"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "Se platsannonsen"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "Du svarade: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "Du kan fortsätta redigera. Ändringar synkroniseras när du är online igen. Ladda ner och dela behöver en anslutning."
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "Du avbröt inloggningen innan den var klar."
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "Du har glömt det här tidigare, så det sparades inte igen."
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "Du har osparade ändringar."
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "Din presentation på två minuter"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD (valfritt)"

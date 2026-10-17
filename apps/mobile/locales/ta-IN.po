@@ -197,7 +197,7 @@ msgstr "{0, plural, one {# நாளுக்கு} other {# நாட்கள
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, one {அறிவுத் தளம் · # உண்மை} other {அறிவுத் தளம் · # உண்மைகள்}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {கவர் கடிதம் (#)} other {கவர் கடிதங்கள் (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {கவர் கடிதம் (#)} other {கவர�
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {# நாளில் பதில் இல்லை} other {# நாட்களில் பதில் இல்லை}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {ரெஸ்யூம் (#)} other {ரெஸ்யூம்கள் (#)}}"
@@ -1228,7 +1228,7 @@ msgstr "அல்பேனியன்"
 msgid "All"
 msgstr "அனைத்து"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "அனைத்தும் ({0})"
@@ -1903,13 +1903,11 @@ msgstr "மென்பொருள் உங்கள் விண்ணப்�
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "மொழியை… க்கு மாற்றவும்"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "புகைப்படத்தை மாற்றவும்"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "நேரத்தைத் தேர்ந்தெடுக்கவும்"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "தொடர, பதிப்பைத் தேர்ந்தெடுக்கவும். மீண்டும் அழுத்தினால் இந்த பேனல் மூடப்படாது."
@@ -2204,6 +2210,10 @@ msgstr "எளிமை"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "அழி"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "சூழல்"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "இறக்குமதியை உறுதிப்படுத்�
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "சேமிப்பை உறுதிப்படுத்த முடியவில்லை. நகல் உருவாகாமல் இருக்க மீண்டும் முயலும் முன் விண்ணப்பங்களைச் சரிபார்க்கவும்."
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "சேமிக்க முடியவில்லை. மீண்ட
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "சேமிக்க முடியவில்லை. உங்கள் உரை இங்கே உள்ளது; மீண்டும் முயலவும்."
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "நேர்காணலைத் திட்டமிட முடியவில்லை."
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "நாணயம்"
 msgid "Current filters"
 msgstr "தற்போதைய வடிப்பான்கள்"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "அன்புள்ள பணியமர்த்தல் குழ�
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "மீளாய்வு"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "நாணயங்கள் அல்லது சம்பள கால
 msgid "Direction"
 msgstr "திசை"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "நிராகரி"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "மாற்றங்களை நிராகரிக்கவா?"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "PDF-ஐ பதிவிறக்கவும்"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "பதிலாக PDF ஐப் பதிவிறக்கவும்"
 
@@ -3567,6 +3592,10 @@ msgstr "வரைவு · உங்கள் விண்ணப்பத்த�
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "வரைவு · உங்கள் ரெஸ்யூம் மற்றும் வேலை இடுகையை மட்டுமே பயன்படுத்துகிறது"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "புலம் அகற்றப்பட்டது"
 msgid "File attached"
 msgstr "கோப்பு இணைக்கப்பட்டது"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "கோப்பு மிகவும் பெரியதாக உள்ளது. 10 எம்பி வரையிலான கோப்பைத் தேர்ந்தெடுக்கவும்."
@@ -4372,6 +4405,10 @@ msgstr "மறைக்கப்பட்ட விதிமுறைகள் �
 msgid "Hide {title} from the page"
 msgstr "பக்கத்திலிருந்து {title} ஐ மறை"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "பக்கத்திலிருந்து மறை"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "நேர்காணல் சேமிக்கப்பட்டது"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "நேர்காணல் சேமிக்கப்பட்டது. அதன் நினைவூட்டல் நேரம் ஏற்கனவே கடந்த காலத்தில் உள்ளது."
 
@@ -4831,7 +4872,8 @@ msgstr "ஒரே ஒரு முகவரியை மட்டும் வ�
 msgid "Keep both"
 msgstr "இரண்டையும் வைத்திருங்கள்"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "தொடர்ந்து திருத்து"
 
@@ -5450,7 +5492,6 @@ msgstr "விளிம்புகள் மிகவும் குறுக�
 msgid "Margins set to {minimum} pt"
 msgstr "விளிம்புகள் {minimum} pt என அமைக்கப்பட்டது"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "மாடல்: {label}"
 msgid "More"
 msgstr "மேலும்"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "மேலும் விருப்பங்கள்"
@@ -5671,11 +5716,6 @@ msgstr "தேர்ந்தெடுக்கப்பட்ட வேலை �
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "இதற்கு நகர்த்தவும்"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "{0} க்கு நகர்த்தவும்"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "அடுத்த படி: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "அடுத்த படி: {note}. இன்றுக்கு நினைவூட்டலைச் சேர்க்கிறது."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "பட்டியலைத் திறக்கவும்"
 msgid "Open the schedule"
 msgstr "அட்டவணையைத் திற"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "பணியிடத்தைத் திற"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "சுருக்கக் குறிப்பைத் தயாரி"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "ரெஸ்யூமே தயார் செய்யவும்"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "முந்தைய பக்கம்"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "முந்தைய PDF முடிவு. இது உங்கள் தற்போதைய வரைவோடு பொருந்தாமல் இருக்கலாம்."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "ஆவணங்கள் க்கு திரும்பி அதை
 msgid "Review"
 msgstr "மதிப்பாய்வு"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "சரிபார்ப்பை மதிப்பாய்வு செய்"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "‘சேமிக்கப்பட்டது’ · பயிற்சி பகுதியில் சேமிக்கப்பட்டது"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "வேலை விண்ணப்பத்தை சேமிக்கிறது. இந்த பேனலை மூடுவது சேமிப்பை ரத்து செய்யாது."
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "பங்கு CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "பங்கு PNG"
@@ -8492,6 +8562,10 @@ msgstr "காட்சி மூடப்பட்டது"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "மூடப்பட்ட வேலை விண்ணப்பங்களைக் காட்டு"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "நிலை"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "நிலை {stage}-ஆகவே இருக்கும்"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "நிலைகள்"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "இந்த ரெஸ்யூம் கடவுச்சொல்ல�
 msgid "This resume isn't shared right now."
 msgstr "இந்த ரெஸ்யூம் தற்போது பகிரப்படவில்லை."
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "சேமிப்பு இன்னும் முடியும். மற்றொரு மாற்றத்தை செய்வதற்கு முன் அது முடிவடையும் வரை காத்திருங்கள்."
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "இந்தச் சேமிக்கப்பட்ட விளக்கம் கிளிப் செய்யப்பட்டது அல்லது முழுமையடையவில்லை. ஆவணங்களைத் தயாரிப்பதற்கு முன் மதிப்பாய்வு செய்யவும்."
@@ -10146,6 +10212,10 @@ msgstr "திறக்கிறது…"
 msgid "Unnamed key"
 msgstr "பெயரிடப்படாத விசை"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "தளவமைப்பு மீண்டும் காட்டப�
 msgid "Use AI for PDF imports"
 msgstr "PDF இறக்குமதிகளுக்கு AI ஐப் பயன்படுத்தவும்"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "அவர்களின் பதிப்பைப் பயன்ப�
 msgid "Use these answers"
 msgstr "இந்தப் பதில்களைப் பயன்படுத்து"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "இந்தச் சாதனத்தின் நேர மண்டலத்தைப் பயன்படுத்தவும் ({deviceTimezone})"
@@ -10339,6 +10417,10 @@ msgstr "இந்த உண்மையைப் பயன்படுத்த�
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "இந்த வழங்குநரைப் பயன்படுத்தவும்"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "வேலை விண்ணப்பத்தைப் பார்க�
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "வேலை இடுகையைப் பார்க்கவும்"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "நீங்கள் பதிலளித்தீர்கள்: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "நீங்கள் தொடர்ந்து திருத்தலாம். நீங்கள் மீண்டும் ஆன்லைனில் இருக்கும்போது மாற்றங்கள் ஒத்திசைக்கப்படும். பதிவிறக்கம் செய்து பகிர்வதற்கு இணைப்பு தேவை."
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "முடிவடைவதற்கு முன்பே நீங்�
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "இதை முன்பே மறக்கச் செய்தீர்கள், எனவே மீண்டும் சேமிக்கப்படவில்லை."
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "உங்களிடம் சேமிக்கப்படாத மாற்றங்கள் உள்ளன."
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "உங்கள் இரண்டு நிமிட அறிமுகம்"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD (விரும்பினால்)"

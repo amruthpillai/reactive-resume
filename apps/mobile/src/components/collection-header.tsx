@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
-import { I18nManager, Keyboard, TextInput, View } from "react-native";
+import { I18nManager, Keyboard, TextInput, View, useWindowDimensions } from "react-native";
 import { Icon, IconButton, Text, useTheme } from "@/ui";
 
 type CollectionHeaderProps = {
@@ -27,12 +27,21 @@ export function CollectionHeader({
 	const { t } = useLingui();
 	const { colors, radius, size, space, type } = useTheme();
 	const [searching, setSearching] = useState(false);
+	const { fontScale } = useWindowDimensions();
+	const stacked = fontScale > 1.3;
 	return (
-		<View style={{ minHeight: size.hit, flexDirection: "row", alignItems: "center", gap: space.s2 }}>
+		<View
+			style={{
+				minHeight: size.hit,
+				flexDirection: stacked ? "column" : "row",
+				alignItems: stacked ? "stretch" : "center",
+				gap: space.s2,
+			}}
+		>
 			{searching ? (
 				<View
 					style={{
-						flex: 1,
+						flex: stacked ? undefined : 1,
 						flexDirection: "row",
 						alignItems: "center",
 						gap: space.s2,
@@ -79,16 +88,30 @@ export function CollectionHeader({
 				</View>
 			) : (
 				<>
-					<Text variant="display" accessibilityRole="header" style={{ flex: 1 }}>
+					<Text
+						variant={stacked ? "title" : "display"}
+						accessibilityRole="header"
+						style={{ flex: stacked ? undefined : 1 }}
+					>
 						{title}
 					</Text>
-					<IconButton
-						icon="magnifying-glass"
-						label={searchLabel}
-						disabled={disabled}
-						onPress={() => setSearching(true)}
-					/>
-					{actions}
+					<View
+						style={{
+							flexDirection: "row",
+							flexWrap: "wrap",
+							alignItems: "center",
+							gap: space.s2,
+							alignSelf: stacked ? "flex-end" : undefined,
+						}}
+					>
+						<IconButton
+							icon="magnifying-glass"
+							label={searchLabel}
+							disabled={disabled}
+							onPress={() => setSearching(true)}
+						/>
+						{actions}
+					</View>
 				</>
 			)}
 		</View>

@@ -114,6 +114,7 @@ export function BarItem({ label, icon, focused, onPress, badge, badgeTone = "acc
 				justifyContent: "center",
 				gap: space.s0,
 				paddingVertical: space.s1,
+				paddingHorizontal: space.s0,
 				backgroundColor: pressed && !android ? colors.press : "transparent",
 			})}
 		>
@@ -155,7 +156,7 @@ export function BarItem({ label, icon, focused, onPress, badge, badgeTone = "acc
 					<Icon name="plus" color={colors.onAccent} size={size.icon.row} />
 				</View>
 			)}
-			<Text variant="micro" color={focused ? "ink" : "ink2"} numberOfLines={1}>
+			<Text variant="micro" color={focused ? "ink" : "ink2"} align="center" style={{ alignSelf: "stretch" }}>
 				{label}
 			</Text>
 		</Pressable>

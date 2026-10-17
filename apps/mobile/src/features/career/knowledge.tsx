@@ -1,24 +1,27 @@
 import { useLingui } from "@lingui/react/macro";
 import { Stack } from "expo-router";
 import { useState } from "react";
+import { useWindowDimensions } from "react-native";
 import { Facts } from "./facts";
 import { useCareerQueries } from "./hooks";
 import { Preferences } from "./preferences";
 import { LoadState } from "./shared";
 import { Stories } from "./stories";
 import { useSession } from "@/auth/session";
-import { Screen, SelectSheet, Text } from "@/ui";
+import { Screen, Segmented, Text } from "@/ui";
 
 export function KnowledgeScreen() {
 	const { t } = useLingui();
 	const [tab, setTab] = useState("facts");
+	const { fontScale } = useWindowDimensions();
 	const session = useSession();
 	const { profile } = useCareerQueries();
 	return (
 		<Screen>
 			<Stack.Screen options={{ title: t`Knowledge` }} />
 			<Text color="ink3">{t`Your facts, stories and preferences. Editing Knowledge sends nothing to an AI connection.`}</Text>
-			<SelectSheet
+			<Segmented
+				orientation={fontScale > 1.3 ? "vertical" : "horizontal"}
 				label={t`Knowledge`}
 				value={tab}
 				onChange={setTab}

@@ -603,6 +603,84 @@ await check(
 		await a.state().close();
 	},
 );
+await check("cold-start pending catalog reopens exact saved text without server access and isolates accounts", async () => {
+	for (const delay of [500, 800]) {
+		const author = fixture({ delay });
+		await author.state().open("draft");
+		author.online(false);
+		author.state().updateDocument((document) => {
+			document.name = "Local title";
+		});
+		author.state().update((data) => {
+			data.name = "Exact offline text — 日本語";
+		});
+		await author.state().close();
+		const cold = fixture({ delay, disk: author.disk });
+		cold.online(false);
+		cold.adapter.read = async () => {
+			throw Error("Offline");
+		};
+		const documents = await cold.draft.listPending();
+		assert.deepEqual(documents.map(({ id, name }) => ({ id, name })), [{ id: "draft", name: "Local title" }]);
+		assert.equal(cold.state().document, null, "listing does not open an editor");
+		await cold.state().open(documents[0].id);
+		assert.equal(cold.state().data.name, "Exact offline text — 日本語");
+		await cold.state().close();
+		for (const owner of ["local/user-b", "another-server/user-a", null]) {
+			cold.owner(owner);
+			assert.deepEqual(await cold.draft.listPending(), []);
+		}
+		cold.owner("local/user-a");
+		const oldScope = cold.env.scope;
+		let reads = 0;
+		cold.env.scope = async () => (++reads === 1 ? "local/user-a" : "local/user-b");
+		assert.deepEqual(await cold.draft.listPending(), [], "account changed while listing: old results stay hidden");
+		cold.env.scope = oldScope;
+	}
+});
+await check("pending catalog tracks failed disk persistence, successful replay and same-account cleanup", async () => {
+	const f = fixture();
+	let visible = [];
+	const stop = f.draft.subscribePending(() => {
+		void f.draft.listPending().then((documents) => {
+			visible = documents;
+		});
+	});
+	await f.state().open("draft");
+	f.online(false);
+	const set = f.env.storage.setItemSync;
+	f.env.storage.setItemSync = () => {
+		throw Error("Disk full");
+	};
+	f.state().update((data) => {
+		data.name = "Memory draft";
+	});
+	await f.state().close();
+	await drain();
+	assert.equal(f.disk.size, 0);
+	assert.equal(visible[0].data.name, "Memory draft", "existing memory fallback remains discoverable");
+	await f.state().open(visible[0].id);
+	assert.equal(f.state().data.name, "Memory draft");
+	f.env.storage.setItemSync = set;
+	await f.state().close();
+	f.online(true);
+	await f.draft.replay();
+	await drain();
+	assert.equal(f.remote().data.name, "Memory draft");
+	assert.deepEqual(visible, [], "successful replay removes recovery entry without remount");
+	await f.state().open("draft");
+	f.online(false);
+	f.state().update((data) => {
+		data.name = "Clear me";
+	});
+	await f.state().flush();
+	await drain();
+	assert.equal(visible.length, 1);
+	f.draft.clearDraftsFor("local/user-a");
+	await drain();
+	assert.deepEqual(visible, [], "clearing current account removes same-account snapshot");
+	stop();
+});
 mock.timers.reset();
 console.log(`${passed} draft boundary scenarios passed`);
 
@@ -804,6 +882,39 @@ await check("real letter adapter revisions, body+design edits, restart dates and
 	assert.equal(letterInputs.at(-1).expectedRevision, 4);
 	assert.equal(letterRemote.content, "Local");
 	await s().close();
+});
+await check("pending catalog validates stored resume/letter schemas and skips corrupt records only in current scope", async () => {
+	for (const [adapter, document, edit, text] of [
+		[resumeAdapter, baseResume(), (data) => { data.basics.name = "Recovered resume"; }, (data) => data.basics.name],
+		[letterAdapter, clone(letterRemote), (data) => { data.content = "Recovered letter"; }, (data) => data.content],
+	]) {
+		const f = fixture();
+		if (adapter.kind === "resume") resumeRemote = document;
+		else letterRemote = document;
+		const author = createDraftStore(adapter, f.env);
+		await author.store.getState().open(document.id);
+		f.online(false);
+		author.store.getState().update(edit);
+		await author.store.getState().close();
+		const key = [...f.disk.keys()][0];
+		const saved = JSON.parse(f.disk.get(key));
+		const prefix = key.slice(0, -document.id.length);
+		f.disk.set(`${prefix}broken-json`, "{bad JSON");
+		const malformed = clone(saved);
+		malformed.document = { ...malformed.document, id: "bad-schema", ...(adapter.kind === "resume" ? { data: {} } : { content: 42 }) };
+		malformed.baseline.id = "bad-schema";
+		f.disk.set(`${prefix}bad-schema`, JSON.stringify(malformed));
+		f.disk.set(`${prefix}wrong-id`, JSON.stringify(saved));
+		const otherKey = key.replace(encodeURIComponent("local/user-a"), encodeURIComponent("local/user-b"));
+		f.disk.set(otherKey, "{another account's corrupt JSON");
+		const cold = createDraftStore(adapter, f.env);
+		const pending = await cold.listPending();
+		assert.deepEqual(pending.map(({ id }) => id), [document.id]);
+		assert.deepEqual([...f.disk.keys()], [key, otherKey], "existing corrupt-record cleanup stays account scoped");
+		await cold.store.getState().open(pending[0].id);
+		assert.equal(text(cold.store.getState().data), adapter.kind === "resume" ? "Recovered resume" : "Recovered letter");
+		await cold.store.getState().close();
+	}
 });
 hook.deregister();
 delete globalThis.__m3t3client;
@@ -1100,6 +1211,87 @@ await check("public sign-out cleanup removes resume and letter queues only for t
 	assert.deepEqual([...queueDisk.keys()], [otherKey]);
 	assert.equal(runtime.useResumeStore.getState().document, null);
 	assert.equal(runtime.useLetterStore.getState().document, null);
+});
+// Drive the production discovery hook across React's render/effect/unmount boundary; native transport stays simulated.
+await check("Documents recovery hook hides old sessions immediately and ignores late same-account/unmounted results", async () => {
+	const accountScope = await runtime.getDraftScope();
+	let currentScope = accountScope;
+	let session = { status: "signed-in", server };
+	let snapshot;
+	let dependencies;
+	let nextEffect;
+	let cleanup;
+	let updates = 0;
+	globalThis.__m3t3pending = {
+		react: {
+			useState: (initial) => {
+				if (snapshot === undefined) snapshot = initial;
+				return [snapshot, (value) => { snapshot = value; updates++; }];
+			},
+			useEffect: (effect, next) => {
+				if (!dependencies || next.some((value, index) => !Object.is(value, dependencies[index])))
+					nextEffect = () => { cleanup?.(); cleanup = effect(); dependencies = next; };
+			},
+		},
+		session: {
+			useSession: () => session,
+			getSession: () => session,
+			getAccountScope: () => currentScope,
+		},
+	};
+	const hook = registerHooks({
+		resolve(specifier, context, next) {
+			if (context.parentURL?.endsWith("/features/documents/pending.ts")) {
+				if (specifier === "react") return { url: "m3t3-pending:react", shortCircuit: true };
+				if (specifier === "@/auth/session") return { url: "m3t3-pending:session", shortCircuit: true };
+				if (specifier === "@/draft/runtime") return next(new URL("../../../../../apps/mobile/src/draft/runtime.ts", import.meta.url).href, context);
+			}
+			return next(specifier, context);
+		},
+		load(url, context, next) {
+			if (url.startsWith("m3t3-pending:")) {
+				const key = url.slice("m3t3-pending:".length);
+				return { format: "commonjs", source: Object.keys(globalThis.__m3t3pending[key]).map((name) => `exports.${name}=globalThis.__m3t3pending.${key}.${name};`).join(""), shortCircuit: true };
+			}
+			return next(url, context);
+		},
+	});
+	const { usePendingDocuments } = await import("../../../../../apps/mobile/src/features/documents/pending.ts");
+	const render = () => {
+		const result = usePendingDocuments();
+		const effect = nextEffect;
+		nextEffect = null;
+		effect?.();
+		return result;
+	};
+	await runtime.useResumeStore.getState().open("real-resume");
+	await drain();
+	callbacks.network({ isConnected: false, isInternetReachable: false });
+	runtime.useResumeStore.getState().update((data) => { data.basics.name = "Recovery hook text"; });
+	await runtime.useResumeStore.getState().close();
+	assert.deepEqual(render(), []);
+	await drain();
+	assert.deepEqual(render(), [{ type: "resume", id: "real-resume", name: "Resume" }]);
+	session = { status: "signed-out", server };
+	currentScope = null;
+	assert.deepEqual(render(), [], "sign-out hides old metadata before effects or network work");
+	runtime.clearDraftsFor(accountScope);
+	session = { status: "signed-in", server };
+	currentScope = accountScope;
+	assert.deepEqual(render(), [], "new session for same account cannot reuse pre-sign-out snapshot");
+	await drain();
+	assert.deepEqual(render(), []);
+	await runtime.useResumeStore.getState().open("real-resume");
+	runtime.useResumeStore.getState().update((data) => { data.basics.name = "Unmounted text"; });
+	await runtime.useResumeStore.getState().flush();
+	const beforeUnmount = updates;
+	cleanup?.();
+	await drain();
+	assert.equal(updates, beforeUnmount, "late list cannot set state after unmount");
+	runtime.clearDraftsFor(accountScope);
+	runtime.resume.suspend();
+	hook.deregister();
+	delete globalThis.__m3t3pending;
 });
 runtimeHook.deregister();
 delete globalThis.__m3t3runtime;

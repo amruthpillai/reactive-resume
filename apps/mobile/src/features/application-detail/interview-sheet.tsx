@@ -2,7 +2,7 @@ import type { Application } from "@/features/applications/types";
 import type { InterviewKind, InterviewTimelineEntry } from "@reactive-resume/schema/applications/data";
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Linking, View } from "react-native";
 import { interviewDetailsSchema } from "@reactive-resume/schema/applications/data";
 import { generateId } from "@reactive-resume/utils/string";
@@ -30,10 +30,10 @@ import {
 import {
 	Button,
 	Chip,
+	EditorSheet,
 	IconButton,
 	ListRow,
 	Segmented,
-	Sheet,
 	showToast,
 	toastLifetime,
 	Switch,
@@ -126,18 +126,7 @@ type InterviewSheetProps = {
 
 /** Schedule or edit an interview: type, wall-clock time in the interview's timezone, people, and a local reminder. */
 export function InterviewSheet({ application, interview, open, onClose }: InterviewSheetProps) {
-	const { t } = useLingui();
-	return (
-		<Sheet
-			open={open}
-			onClose={onClose}
-			detents={[0.92]}
-			title={interview ? t`Edit interview` : t`Schedule an interview`}
-		>
-			{/* Remounts per opening, so each one starts from the stored interview. */}
-			{open ? <InterviewForm application={application} interview={interview} onClose={onClose} /> : null}
-		</Sheet>
-	);
+	return open ? <InterviewForm application={application} interview={interview} onClose={onClose} /> : null;
 }
 
 type InterviewFormProps = Omit<InterviewSheetProps, "open">;
@@ -150,7 +139,9 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 	const mutations = useDetailMutations(application.id);
 	const invalidate = useInvalidateApplications();
 	const reminders = useReminders(application.id);
-	const [draft, setDraft] = useState(() => (interview ? draftFrom(interview, userZone) : emptyDraft(userZone)));
+	const [initial] = useState(() => (interview ? draftFrom(interview, userZone) : emptyDraft(userZone)));
+	const [draft, setDraft] = useState(initial);
+	const saving = useRef(false);
 	const [zonePicker, setZonePicker] = useState(false);
 	const [zoneQuery, setZoneQuery] = useState("");
 	const existingLead = interview
@@ -159,7 +150,9 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 	const [remind, setRemind] = useState<{ on: boolean; lead: number } | null>(null);
 	const reminder = remind ?? { on: existingLead !== null, lead: existingLead ?? DEFAULT_LEAD };
 
-	const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((current) => ({ ...current, [key]: value }));
+	const set = <K extends keyof Draft>(key: K, value: Draft[K]) => {
+		if (!saving.current) setDraft((current) => ({ ...current, [key]: value }));
+	};
 	const setPerson = (id: string, patch: Partial<Participant>) =>
 		set(
 			"participants",
@@ -184,6 +177,9 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 	});
 	const peopleInvalid = details.error?.issues.some((issue) => issue.path[0] === "participants") ?? false;
 	const pending = mutations.addInterview.isPending || mutations.updateInterview.isPending;
+	const dirty =
+		JSON.stringify(draft) !== JSON.stringify(initial) ||
+		(remind !== null && (remind.on !== (existingLead !== null) || remind.lead !== (existingLead ?? DEFAULT_LEAD)));
 	const lengths = LENGTHS.includes(draft.durationMinutes)
 		? LENGTHS
 		: [...LENGTHS, draft.durationMinutes].sort((a, b) => a - b);
@@ -205,30 +201,42 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 	};
 
 	const save = async () => {
-		if (!at || !details.success || pending) return;
+		if (!at || !details.success || pending || saving.current) return;
+		saving.current = true;
 		const input = { id: application.id, at: at.toISOString(), ...details.data };
+		let saved: Application;
+		let entryId: string | undefined;
 		try {
 			if (interview) {
-				const saved = await mutations.updateInterview.mutateAsync({ ...input, entryId: interview.id });
-				onClose();
-				await applyReminder(saved, interview.id);
+				saved = await mutations.updateInterview.mutateAsync({ ...input, entryId: interview.id });
+				entryId = interview.id;
 			} else {
 				const known = new Set(application.activity.map((entry) => entry.id));
-				const saved = await mutations.addInterview.mutateAsync(input);
-				onClose();
-				const added = saved.activity.find((entry) => entry.type === "interview" && !known.has(entry.id));
-				if (added) await applyReminder(saved, added.id);
+				saved = await mutations.addInterview.mutateAsync(input);
+				entryId = saved.activity.find((entry) => entry.type === "interview" && !known.has(entry.id))?.id;
 			}
-			showToast({ message: t`Interview saved` });
 		} catch {
-			showToast({ message: interview ? t`Couldn't update the interview.` : t`Couldn't schedule the interview.` });
+			saving.current = false;
+			showToast({
+				message: interview
+					? t`Couldn't update the interview.`
+					: t`Could not confirm the save. Check the application before retrying to avoid a duplicate.`,
+			});
+			return;
+		}
+		onClose();
+		showToast({ message: t`Interview saved` });
+		try {
+			if (entryId) await applyReminder(saved, entryId);
+		} catch {
+			showToast({ message: t`Interview saved. Couldn't update its reminder.` });
 		}
 	};
 
 	// Hidden at once and committed when the undo toast ends, so Undo keeps the round's identity and history.
 	// ponytail: the commit lives in a JS timer; if the app is killed first, the interview simply stays.
 	const remove = () => {
-		if (!interview) return;
+		if (!interview || saving.current) return;
 		const key = applicationDetailQueryKey(application.id);
 		queryClient.setQueryData<Application>(key, (current) =>
 			current ? { ...current, activity: current.activity.filter((entry) => entry.id !== interview.id) } : current,
@@ -263,208 +271,233 @@ function InterviewForm({ application, interview, onClose }: InterviewFormProps) 
 	};
 
 	return (
-		<View style={{ gap: space.s4, paddingHorizontal: space.s4 }}>
-			<Text color="ink2">
-				{application.role} · {application.company}
-			</Text>
-
-			<View style={{ gap: space.s2 }}>
-				<Text variant="callout" color="ink2">
-					{t`Type`}
-				</Text>
-				<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
-					{KINDS.map((kind) => (
-						<Chip
-							key={kind}
-							label={interviewTypeLabel(kind)}
-							selected={draft.kind === kind}
-							onPress={() => set("kind", kind)}
-						/>
-					))}
-				</View>
-			</View>
-
-			<View style={{ flexDirection: "row", gap: space.s4 }}>
-				<WallClockField label={t`Date`} mode="date" value={draft.date} onChange={(date) => set("date", date)} />
-				<WallClockField
-					label={t`Time · ${draft.timezone}`}
-					mode="time"
-					value={draft.time}
-					onChange={(time) => set("time", time)}
-					error={at ? undefined : t`This time does not exist in the selected timezone. Choose another time.`}
+		<EditorSheet
+			onClose={onClose}
+			dirty={dirty}
+			pending={pending}
+			detents={[0.92]}
+			title={interview ? t`Edit interview` : t`Schedule an interview`}
+			footer={
+				<Button
+					size="lg"
+					fullWidth
+					label={t`Save interview`}
+					loading={pending}
+					disabled={!at || !details.success}
+					onPress={() => void save()}
 				/>
-			</View>
-
-			<View style={{ gap: space.s2 }}>
-				<Text variant="callout" color="ink2">
-					{t`Length · minutes`}
+			}
+		>
+			<View style={{ gap: space.s4 }}>
+				<Text color="ink2">
+					{application.role} · {application.company}
 				</Text>
-				<Segmented
-					label={t`Length in minutes`}
-					value={String(draft.durationMinutes)}
-					options={lengths.map((minutes) => ({ value: String(minutes), label: String(minutes) }))}
-					onChange={(minutes) => set("durationMinutes", Number(minutes))}
-				/>
-			</View>
 
-			{zonePicker || draft.timezone !== userZone ? (
 				<View style={{ gap: space.s2 }}>
-					<TextField
-						label={t`Interview timezone`}
-						value={zoneQuery}
-						onChangeText={setZoneQuery}
-						placeholder={draft.timezone.replaceAll("_", " ")}
-						autoCapitalize="none"
-						autoCorrect={false}
-					/>
-					{query ? (
-						<View>
-							{(zones.length > 0 || !isTimeZone(zoneQuery.trim()) ? zones : [zoneQuery.trim()]).map((zone) => (
-								<ListRow
-									key={zone}
-									title={zone.replaceAll("_", " ")}
-									selected={zone === draft.timezone}
-									onPress={() => {
-										set("timezone", zone);
-										setZoneQuery("");
-									}}
-								/>
-							))}
-						</View>
-					) : null}
-					{at && draft.timezone !== userZone ? (
-						<Text variant="callout" color="ink3">
-							{t`${draft.time} in ${draft.timezone} is ${when(at)} in your timezone (${userZone}).`}
-						</Text>
-					) : null}
-				</View>
-			) : (
-				<View style={{ gap: space.s1 }}>
-					<Text variant="callout" color="ink3">
-						{t`Shown in your timezone.`}
+					<Text variant="callout" color="ink2">
+						{t`Type`}
 					</Text>
-					<Button variant="link" label={t`Interview is in another timezone`} onPress={() => setZonePicker(true)} />
-				</View>
-			)}
-
-			<TextField
-				label={t`Location`}
-				value={draft.location}
-				maxLength={500}
-				placeholder={t`Video link, office address, or phone number`}
-				autoCapitalize="none"
-				onChangeText={(location) => set("location", location)}
-			/>
-
-			<View style={{ gap: space.s3 }}>
-				<Text variant="label">{t`Who you'll meet`}</Text>
-				{draft.participants.map((person, index) => (
-					<View key={person.id} style={{ gap: space.s2 }}>
-						<View style={{ flexDirection: "row", alignItems: "flex-end", gap: space.s2 }}>
-							<View style={{ flex: 1 }}>
-								<TextField
-									label={t`Name of person ${index + 1}`}
-									value={person.name}
-									maxLength={200}
-									onChangeText={(name) => setPerson(person.id, { name })}
-								/>
-							</View>
-							<IconButton
-								icon="x"
-								label={t`Remove person ${index + 1}`}
-								onPress={() =>
-									set(
-										"participants",
-										draft.participants.filter((item) => item.id !== person.id),
-									)
-								}
+					<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
+						{KINDS.map((kind) => (
+							<Chip
+								key={kind}
+								label={interviewTypeLabel(kind)}
+								selected={draft.kind === kind}
+								onPress={() => set("kind", kind)}
 							/>
-						</View>
+						))}
+					</View>
+				</View>
+
+				<View style={{ flexDirection: "row", gap: space.s4 }}>
+					<WallClockField
+						label={t`Date`}
+						mode="date"
+						value={draft.date}
+						disabled={pending}
+						onChange={(date) => set("date", date)}
+					/>
+					<WallClockField
+						label={t`Time · ${draft.timezone}`}
+						mode="time"
+						disabled={pending}
+						value={draft.time}
+						onChange={(time) => set("time", time)}
+						error={at ? undefined : t`This time does not exist in the selected timezone. Choose another time.`}
+					/>
+				</View>
+
+				<View style={{ gap: space.s2 }}>
+					<Text variant="callout" color="ink2">
+						{t`Length · minutes`}
+					</Text>
+					<Segmented
+						label={t`Length in minutes`}
+						value={String(draft.durationMinutes)}
+						options={lengths.map((minutes) => ({ value: String(minutes), label: String(minutes) }))}
+						onChange={(minutes) => set("durationMinutes", Number(minutes))}
+					/>
+				</View>
+
+				{zonePicker || draft.timezone !== userZone ? (
+					<View style={{ gap: space.s2 }}>
 						<TextField
-							label={t`Role`}
-							value={person.role}
-							maxLength={200}
-							onChangeText={(role) => setPerson(person.id, { role })}
-						/>
-						<TextField
-							label={t`Profile link (optional)`}
-							value={person.profileUrl}
-							maxLength={2048}
-							keyboardType="url"
+							label={t`Interview timezone`}
+							value={zoneQuery}
+							onChangeText={setZoneQuery}
+							placeholder={draft.timezone.replaceAll("_", " ")}
 							autoCapitalize="none"
 							autoCorrect={false}
-							onChangeText={(profileUrl) => setPerson(person.id, { profileUrl })}
 						/>
+						{query ? (
+							<View>
+								{(zones.length > 0 || !isTimeZone(zoneQuery.trim()) ? zones : [zoneQuery.trim()]).map((zone) => (
+									<ListRow
+										key={zone}
+										title={zone.replaceAll("_", " ")}
+										selected={zone === draft.timezone}
+										onPress={() => {
+											set("timezone", zone);
+											setZoneQuery("");
+										}}
+									/>
+								))}
+							</View>
+						) : null}
+						{at && draft.timezone !== userZone ? (
+							<Text variant="callout" color="ink3">
+								{t`${draft.time} in ${draft.timezone} is ${when(at)} in your timezone (${userZone}).`}
+							</Text>
+						) : null}
 					</View>
-				))}
-				{peopleInvalid ? (
-					<Text variant="callout" color="dangerText">
-						{t`Profile links must be public HTTPS addresses.`}
+				) : (
+					<View style={{ gap: space.s1 }}>
+						<Text variant="callout" color="ink3">
+							{t`Shown in your timezone.`}
+						</Text>
+						<Button variant="link" label={t`Interview is in another timezone`} onPress={() => setZonePicker(true)} />
+					</View>
+				)}
+
+				<TextField
+					label={t`Location`}
+					editable={!pending}
+					value={draft.location}
+					maxLength={500}
+					placeholder={t`Video link, office address, or phone number`}
+					autoCapitalize="none"
+					onChangeText={(location) => set("location", location)}
+				/>
+
+				<View style={{ gap: space.s3 }}>
+					<Text variant="label">{t`Who you'll meet`}</Text>
+					{draft.participants.map((person, index) => (
+						<View key={person.id} style={{ gap: space.s2 }}>
+							<View style={{ flexDirection: "row", alignItems: "flex-end", gap: space.s2 }}>
+								<View style={{ flex: 1 }}>
+									<TextField
+										label={t`Name of person ${index + 1}`}
+										editable={!pending}
+										value={person.name}
+										maxLength={200}
+										onChangeText={(name) => setPerson(person.id, { name })}
+									/>
+								</View>
+								<IconButton
+									icon="x"
+									label={t`Remove person ${index + 1}`}
+									disabled={pending}
+									onPress={() =>
+										set(
+											"participants",
+											draft.participants.filter((item) => item.id !== person.id),
+										)
+									}
+								/>
+							</View>
+							<TextField
+								label={t`Role`}
+								editable={!pending}
+								value={person.role}
+								maxLength={200}
+								onChangeText={(role) => setPerson(person.id, { role })}
+							/>
+							<TextField
+								label={t`Profile link (optional)`}
+								editable={!pending}
+								value={person.profileUrl}
+								maxLength={2048}
+								keyboardType="url"
+								autoCapitalize="none"
+								autoCorrect={false}
+								onChangeText={(profileUrl) => setPerson(person.id, { profileUrl })}
+							/>
+						</View>
+					))}
+					{peopleInvalid ? (
+						<Text variant="callout" color="dangerText">
+							{t`Profile links must be public HTTPS addresses.`}
+						</Text>
+					) : null}
+					<Button
+						variant="ghost"
+						icon="user-plus"
+						label={t`Add a person`}
+						disabled={pending || draft.participants.length >= 20}
+						onPress={() =>
+							set("participants", [...draft.participants, { id: generateId(), name: "", role: "", profileUrl: "" }])
+						}
+					/>
+					<Text variant="callout" color="ink3">
+						{t`Public HTTPS profile links are optional and only used if Web research is on.`}
 					</Text>
-				) : null}
-				<Button
-					variant="ghost"
-					icon="user-plus"
-					label={t`Add a person`}
-					disabled={draft.participants.length >= 20}
-					onPress={() =>
-						set("participants", [...draft.participants, { id: generateId(), name: "", role: "", profileUrl: "" }])
-					}
+				</View>
+
+				<TextArea
+					label={t`What they asked you to prepare`}
+					editable={!pending}
+					value={draft.notes}
+					maxLength={5000}
+					minLines={3}
+					onChangeText={(notes) => set("notes", notes)}
 				/>
-				<Text variant="callout" color="ink3">
-					{t`Public HTTPS profile links are optional and only used if Web research is on.`}
-				</Text>
-			</View>
 
-			<TextArea
-				label={t`What they asked you to prepare`}
-				value={draft.notes}
-				maxLength={5000}
-				minLines={3}
-				onChangeText={(notes) => set("notes", notes)}
-			/>
-
-			<View style={{ gap: space.s2 }}>
-				<ListRow
-					title={t`Remind me on this device`}
-					subtitle={t`Only this device schedules the notification.`}
-					trailing={
-						<Switch
-							label={t`Remind me on this device`}
-							value={reminder.on}
-							onValueChange={(on) => setRemind({ ...reminder, on })}
+				<View style={{ gap: space.s2 }}>
+					<ListRow
+						title={t`Remind me on this device`}
+						subtitle={t`Only this device schedules the notification.`}
+						trailing={
+							<Switch
+								label={t`Remind me on this device`}
+								disabled={pending}
+								value={reminder.on}
+								onValueChange={(on) => setRemind({ ...reminder, on })}
+							/>
+						}
+					/>
+					{reminder.on ? (
+						<Segmented
+							label={t`Before interview`}
+							value={String(reminder.lead)}
+							options={REMINDER_LEADS.map((lead) => ({ value: String(lead), label: leadLabel(lead) }))}
+							onChange={(lead) => {
+								if (!saving.current) setRemind({ ...reminder, lead: Number(lead) });
+							}}
 						/>
-					}
-				/>
-				{reminder.on ? (
-					<Segmented
-						label={t`Before interview`}
-						value={String(reminder.lead)}
-						options={REMINDER_LEADS.map((lead) => ({ value: String(lead), label: leadLabel(lead) }))}
-						onChange={(lead) => setRemind({ ...reminder, lead: Number(lead) })}
+					) : null}
+				</View>
+
+				{interview ? (
+					<Button
+						variant="danger"
+						fullWidth
+						icon="trash"
+						label={t`Delete interview`}
+						disabled={pending}
+						onPress={remove}
 					/>
 				) : null}
 			</View>
-
-			<Button
-				size="lg"
-				fullWidth
-				label={t`Save interview`}
-				loading={pending}
-				disabled={!at || !details.success}
-				onPress={() => void save()}
-			/>
-			{interview ? (
-				<Button
-					variant="danger"
-					fullWidth
-					icon="trash"
-					label={t`Delete interview`}
-					disabled={pending}
-					onPress={remove}
-				/>
-			) : null}
-			<Button variant="secondary" fullWidth label={t`Cancel`} onPress={onClose} />
-		</View>
+		</EditorSheet>
 	);
 }

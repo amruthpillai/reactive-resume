@@ -197,7 +197,7 @@ msgstr "{0, plural, one {На день #} other {На # днів}}"
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, one {Знання · # факт} few {Знання · # факти} many {Знання · # фактів} other {Знання · # факту}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {Лист (#)} few {Листи (#)} many {Листи (#)} other {Листи (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {Лист (#)} few {Листи (#)} many {Листи (#)
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {Немає відповіді протягом # дня} other {Немає відповіді протягом # днів}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {Резюме (#)} few {Резюме (#)} many {Резюме (#)} other {Резюме (#)}}"
@@ -1228,7 +1228,7 @@ msgstr "Албанська"
 msgid "All"
 msgstr "все"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "Усі ({0})"
@@ -1903,13 +1903,11 @@ msgstr "Чи може програмне забезпечення прочита
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "Змінити мову на…"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "Змінити фото"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "Виберіть час"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "Виберіть версію, щоб продовжити. Назад не закриє цей аркуш."
@@ -2204,6 +2210,10 @@ msgstr "Лаконічний"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "Очистити"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "Контекст"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "Не вдалося підтвердити імпорт. Перевір�
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "Не вдалося підтвердити збереження. Перевірте заявки перед повторною спробою, щоб уникнути дублювання."
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "Не вдалося зберегти. Спробуйте знову."
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "Не вдалося зберегти. Ваш текст все ще тут; спробуйте ще раз."
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "Не вдалося запланувати співбесіду."
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "Валюта"
 msgid "Current filters"
 msgstr "Поточні фільтри"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "Шановна команда найму!"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "Розбір"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "Різні валюти або періоди оплати. Грошов
 msgid "Direction"
 msgstr "Напрямок"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "Відкинути"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "Відкинути зміни?"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "Завантажити в PDF"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "Натомість завантажте PDF"
 
@@ -3567,6 +3592,10 @@ msgstr "Чернетка · використовує лише ваше резю�
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "Чернетка · використовує лише ваше резюме та оголошення про роботу"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "Поле видалено"
 msgid "File attached"
 msgstr "Файл додається"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "Файл завеликий. Виберіть файл до 10 Мб."
@@ -4372,6 +4405,10 @@ msgstr "Приховані умови повертаються"
 msgid "Hide {title} from the page"
 msgstr "Приховати {title} на сторінці"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "Сховати зі сторінки"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "Співбесіду збережено"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "Інтерв'ю збережено. Час нагадування вже минув."
 
@@ -4831,7 +4872,8 @@ msgstr "Залиште одну адресу, щоб програмі не до�
 msgid "Keep both"
 msgstr "Тримайте обидва"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "Продовжити редагування"
 
@@ -5450,7 +5492,6 @@ msgstr "Поля дуже вузькі"
 msgid "Margins set to {minimum} pt"
 msgstr "Поля встановлено на {minimum} пт"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "Модель: {label}"
 msgid "More"
 msgstr "більше"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "Більше варіантів"
@@ -5671,11 +5716,6 @@ msgstr "Перемістити вибрані заявки"
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "Перемістити до"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "Перейти до {0}"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "Наступний крок: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "Наступний крок: {note}. Додає нагадування до Сьогодні."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "Відкрийте список"
 msgid "Open the schedule"
 msgstr "Відкрити розклад"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "Відкрити робочий простір"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "Підготувати брифінг"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "Підготуйте резюме"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "Попередня сторінка"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "Попередній результат PDF. Він може не відповідати вашій поточній чернетці."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "Поверніться до Документи і знову відкр�
 msgid "Review"
 msgstr "огляд"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "Переглянути Перевірку"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "Додано до збереженого · Тренування"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "Збереження вакансії. Закриття цієї панелі не скасовує збереження."
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "Поділитися CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Поділитися PNG"
@@ -8492,6 +8562,10 @@ msgstr "Шоу закрито"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "Показати закриті заявки"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "Етап"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "Етап залишається «{stage}»"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "Етапи"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "Це резюме захищене паролем"
 msgid "This resume isn't shared right now."
 msgstr "Це резюме зараз не публікується."
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "Це збереження ще може завершитися. Зачекайте, перш ніж вносити наступні зміни."
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "Цей збережений опис обрізаний або неповний. Огляд перед підготовкою документів."
@@ -10146,6 +10212,10 @@ msgstr "Розблокування…"
 msgid "Unnamed key"
 msgstr "Безіменний ключ"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "Використовуйте A4 або US Letter, щоб макет зб
 msgid "Use AI for PDF imports"
 msgstr "Використовуйте AI для імпорту PDF"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "Використовуйте їхні"
 msgid "Use these answers"
 msgstr "Використати ці відповіді"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "Використовувати часовий пояс цього пристрою ({deviceTimezone})"
@@ -10339,6 +10417,10 @@ msgstr "Використовуйте цей факт"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "Використовуйте цього провайдера"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "Переглянути заяву на роботу"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "Переглянути оголошення про роботу"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "Ви відповіли: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "Ви можете продовжувати редагування. Зміни синхронізуються, коли ви знову в мережі. Для завантаження та обміну потрібне з’єднання."
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "Ви скасували вхід до його завершення."
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "Раніше ви забули це, тому повторно не збережено."
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "У вас є незбережені зміни."
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "Ваша двохвилинна самопрезентація"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD (необов’язково)"

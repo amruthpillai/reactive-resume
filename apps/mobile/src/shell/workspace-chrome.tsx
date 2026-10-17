@@ -1,7 +1,8 @@
 import type { ApplicationTab } from "@/routes";
-import type { ReactNode } from "react";
+import type { ComponentRef, ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
 import { useRouter, useGlobalSearchParams, useLocalSearchParams, useNavigation } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { SafeAreaInsetsContext, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -10,7 +11,7 @@ import { createSlot } from "./slot";
 import { TopBar } from "./top-bar";
 import { useIsTablet } from "./use-is-tablet";
 import { routes } from "@/routes";
-import { Text, useTheme } from "@/ui";
+import { IconButton, Text, useTheme } from "@/ui";
 
 /** What workspace tabs put into the application chrome with `useWorkspaceChrome`. */
 export type WorkspaceChromeSlots = {
@@ -63,6 +64,22 @@ function Frame({ children }: { children: ReactNode }) {
 	// The tab is the child route's param, so the layout reads it globally.
 	const { tab } = useGlobalSearchParams<{ tab?: string }>();
 	const { colors, size, space } = useTheme();
+	const scroll = useRef<ComponentRef<typeof ScrollView>>(null);
+	const tabLayouts = useRef<Partial<Record<ApplicationTab, { x: number; width: number }>>>({});
+	const [viewport, setViewport] = useState(0);
+	const [contentWidth, setContentWidth] = useState(0);
+	const [offset, setOffset] = useState(0);
+	const overflow = contentWidth > viewport + 1;
+	const revealActive = () => {
+		const layout = isWorkspaceTab(tab) ? tabLayouts.current[tab] : undefined;
+		if (layout && viewport > 0)
+			scroll.current?.scrollTo({
+				x: Math.min(Math.max(0, contentWidth - viewport), Math.max(0, layout.x - (viewport - layout.width) / 2)),
+				animated: false,
+			});
+	};
+
+	useEffect(revealActive, [tab, viewport, contentWidth]);
 
 	if (!isWorkspaceTab(tab)) return <View style={{ flex: 1 }}>{children}</View>;
 
@@ -93,6 +110,8 @@ function Frame({ children }: { children: ReactNode }) {
 			/>
 			<View
 				style={{
+					flexDirection: "row",
+					alignItems: "center",
 					paddingLeft: insets.left,
 					paddingRight: insets.right,
 					backgroundColor: colors.surface,
@@ -100,10 +119,23 @@ function Frame({ children }: { children: ReactNode }) {
 					borderBottomColor: colors.line,
 				}}
 			>
+				{overflow && (
+					<IconButton
+						icon="caret-left"
+						label={t`Previous workspace tabs`}
+						disabled={offset <= 1}
+						onPress={() => scroll.current?.scrollTo({ x: Math.max(0, offset - viewport), animated: false })}
+					/>
+				)}
 				<ScrollView
+					ref={scroll}
 					horizontal
-					showsHorizontalScrollIndicator={false}
+					style={{ flex: 1 }}
 					accessibilityRole="tablist"
+					onLayout={(event) => setViewport(event.nativeEvent.layout.width)}
+					onContentSizeChange={setContentWidth}
+					onScroll={(event) => setOffset(event.nativeEvent.contentOffset.x)}
+					scrollEventThrottle={32}
 					contentContainerStyle={{ paddingHorizontal: space.s3, gap: space.s1 }}
 				>
 					{WORKSPACE_TABS.map((name) => {
@@ -113,6 +145,10 @@ function Frame({ children }: { children: ReactNode }) {
 								key={name}
 								accessibilityRole="tab"
 								accessibilityState={{ selected: active }}
+								onLayout={(event) => {
+									tabLayouts.current[name] = event.nativeEvent.layout;
+									if (active) revealActive();
+								}}
 								onPress={() => !active && router.replace(routes.application(id, name))}
 								style={({ pressed }) => ({
 									flexDirection: "row",
@@ -133,6 +169,16 @@ function Frame({ children }: { children: ReactNode }) {
 						);
 					})}
 				</ScrollView>
+				{overflow && (
+					<IconButton
+						icon="caret-right"
+						label={t`Next workspace tabs`}
+						disabled={offset + viewport >= contentWidth - 1}
+						onPress={() =>
+							scroll.current?.scrollTo({ x: Math.min(contentWidth - viewport, offset + viewport), animated: false })
+						}
+					/>
+				)}
 			</View>
 			{slots.banner}
 			<KeyboardAvoidingView

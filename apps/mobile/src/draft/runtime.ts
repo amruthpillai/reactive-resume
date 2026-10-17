@@ -1,4 +1,5 @@
 import type { DraftAdapter } from "./store";
+import type { PendingDocument } from "./types";
 import { letterAdapter, resumeAdapter } from "./adapters";
 import { nativeEnvironment, watchDraft } from "./native";
 import { createDraftStore } from "./store";
@@ -87,3 +88,24 @@ export function clearDraftsFor(scope: string) {
 }
 
 export const getDraftScope = nativeEnvironment.scope;
+
+/** Current account's recoverable drafts; never fetches a server document or refreshes credentials. */
+export async function listPendingDrafts(): Promise<PendingDocument[]> {
+	const scope = await getDraftScope();
+	if (!scope) return [];
+	const [resumes, letters] = await Promise.all([resume.listPending(), letter.listPending()]);
+	if ((await getDraftScope()) !== scope) return [];
+	return [
+		...resumes.map(({ id, name }) => ({ type: "resume" as const, id, name })),
+		...letters.map(({ id, name }) => ({ type: "letter" as const, id, name })),
+	];
+}
+
+export function subscribePendingDrafts(listener: () => void) {
+	const stopResume = resume.subscribePending(listener);
+	const stopLetter = letter.subscribePending(listener);
+	return () => {
+		stopResume();
+		stopLetter();
+	};
+}

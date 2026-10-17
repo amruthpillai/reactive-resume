@@ -69,3 +69,6 @@ export type DraftStore<TDocument, TData> = DraftState<TDocument, TData> & DraftA
 export type ResumeDraftStore = DraftStore<ResumeDocument, ResumeDocument["data"]>;
 /** A letter's editable fields (recipient, content, style…) sit on the document itself, so its data is the document. */
 export type LetterDraftStore = DraftStore<LetterDocument, LetterDocument>;
+
+/** Navigation metadata only; authored content remains owned by its draft store. */
+export type PendingDocument = { type: "resume" | "letter"; id: string; name: string };

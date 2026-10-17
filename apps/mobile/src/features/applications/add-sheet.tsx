@@ -12,15 +12,17 @@ import { getStageLabel } from "./stages";
 import { client, orpc } from "@/api/client";
 import { getServer, useSession } from "@/auth/session";
 import { AIProviderSetupSheet, useHasAIProvider } from "@/features/ai/providers";
+import { WallClockField } from "@/features/application-detail/date-field";
 import { routes } from "@/routes";
 import {
 	Banner,
 	Button,
 	ChipInput,
+	ConfirmDialog,
+	EditorSheet,
 	ListRow,
 	Segmented,
 	SelectSheet,
-	Sheet,
 	Text,
 	TextArea,
 	TextField,
@@ -42,7 +44,7 @@ const today = () => {
 	return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 };
 
-/** Mounted only while open: cancel reads and discard transient input when dismissed. */
+/** Mounted until an explicit close/discard; unmounting cancels transient posting requests. */
 export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 	const router = useRouter();
 	const { t } = useLingui();
@@ -67,7 +69,8 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 	const [sourceUrl, setSourceUrl] = useState("");
 	const [description, setDescription] = useState("");
 	const [stage, setStage] = useState<"saved" | "applied" | "interview">("saved");
-	const [stageDate, setStageDate] = useState(today);
+	const [initialDate] = useState(today);
+	const [stageDate, setStageDate] = useState(initialDate);
 	const [resumeId, setResumeId] = useState("");
 	const [letterId, setLetterId] = useState("");
 	const [tags, setTags] = useState<string[]>([]);
@@ -76,6 +79,8 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 	const [notes, setNotes] = useState("");
 	const [setup, setSetup] = useState(false);
 	const [review, setReview] = useState(false);
+	const [detailsOpen, setDetailsOpen] = useState(false);
+	const [confirmSearchExit, setConfirmSearchExit] = useState(false);
 	const [busy, setBusy] = useState<"read" | "fill" | "search" | "save" | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const lock = useRef(false);
@@ -191,14 +196,54 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 			onClose();
 			router.push(routes.applicationDetails(id));
 		});
+	const dirty = !!(
+		input ||
+		query ||
+		parsed ||
+		company ||
+		role ||
+		location ||
+		salary ||
+		source ||
+		sourceUrl ||
+		description ||
+		stage !== "saved" ||
+		stageDate !== initialDate ||
+		resumeId ||
+		letterId ||
+		tags.length ||
+		followUpDate ||
+		followUpNote ||
+		notes
+	);
+	const openSearchSettings = () => {
+		if (lock.current) return;
+		onClose();
+		router.push("/settings/ai-web-access");
+	};
 	const docs = documents.data ?? [];
 	return (
 		<>
-			<Sheet open onClose={onClose} title={review ? t`Review job details` : t`Save a job`} detents={[0.9]}>
-				<View style={{ padding: space.s4, gap: space.s4 }}>
+			<EditorSheet
+				onClose={onClose}
+				dirty={dirty}
+				pending={busy === "save"}
+				title={review ? t`Review job details` : t`Save a job`}
+				footer={
+					<>
+						{review ? (
+							<Button label={t`Save job`} fullWidth loading={busy === "save"} disabled={!ready} onPress={save} />
+						) : null}
+						{busy === "read" || busy === "search" || busy === "fill" ? (
+							<Button label={t`Cancel request`} variant="ghost" onPress={() => controller.current?.abort()} />
+						) : null}
+					</>
+				}
+			>
+				<View style={{ gap: space.s4 }}>
 					{error && <Banner tone="danger" message={error} />}
 					{busy === "save" && (
-						<Banner tone="info" message={t`Saving the job. Closing this sheet does not cancel the save.`} />
+						<Banner tone="info" message={t`Saving the job. Wait for confirmation before making another change.`} />
 					)}
 					{!review ? (
 						<>
@@ -293,9 +338,11 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 								<Button
 									label={t`Set up web search`}
 									variant="link"
+									disabled={!!busy}
 									onPress={() => {
-										onClose();
-										router.push("/settings/ai-web-access");
+										if (lock.current) return;
+										if (dirty) setConfirmSearchExit(true);
+										else openSearchSettings();
 									}}
 								/>
 							)}
@@ -336,20 +383,26 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 									}
 								/>
 							)}
+							{!detailsOpen && (!validUrl || !validFollowUp) ? (
+								<Banner
+									tone="danger"
+									message={
+										!validUrl
+											? t`Use an http or https job posting link before saving.`
+											: t`Choose a valid follow-up date before saving.`
+									}
+									action={{ label: t`Show details`, onPress: () => setDetailsOpen(true) }}
+								/>
+							) : null}
+							{(parsed?.postingSource.truncated || description.length > 20_000) && (
+								<Banner
+									tone="warn"
+									message={t`Description is clipped to 20,000 characters. Review it before preparing.`}
+									action={detailsOpen ? undefined : { label: t`Show details`, onPress: () => setDetailsOpen(true) }}
+								/>
+							)}
 							<TextField label={t`Company`} value={company} onChangeText={setCompany} editable={!busy} />
 							<TextField label={t`Role / title`} value={role} onChangeText={setRole} editable={!busy} />
-							<TextField label={t`Location`} value={location} onChangeText={setLocation} editable={!busy} />
-							<TextField label={t`Salary range`} value={salary} onChangeText={setSalary} editable={!busy} />
-							<TextField label={t`Source`} value={source} onChangeText={setSource} editable={!busy} />
-							<TextField
-								label={t`Job posting link`}
-								value={sourceUrl}
-								onChangeText={setSourceUrl}
-								editable={!busy}
-								autoCapitalize="none"
-								keyboardType="url"
-								error={!validUrl ? t`Use an http or https link.` : undefined}
-							/>
 							<SelectSheet
 								label={t`Stage`}
 								value={stage}
@@ -361,95 +414,121 @@ export function AddApplicationSheet({ onClose }: AddApplicationSheetProps) {
 								disabled={!!busy}
 							/>
 							{stage !== "saved" && (
-								<TextField
+								<WallClockField
 									label={t`Application date`}
-									helper={t`YYYY-MM-DD`}
+									mode="date"
 									value={stageDate}
-									onChangeText={setStageDate}
-									editable={!busy}
+									onChange={setStageDate}
+									disabled={!!busy}
 									error={!validDate ? t`Enter a valid date.` : undefined}
 								/>
 							)}
-							{documents.isError && (
-								<Button label={t`Retry loading documents`} onPress={() => void documents.refetch()} />
-							)}
-							<SelectSheet
-								label={t`Resume`}
-								value={resumeId}
-								options={[
-									{ value: "", label: t`None` },
-									...docs.filter((doc) => doc.type === "resume").map((doc) => ({ value: doc.id, label: doc.name })),
-								]}
-								onChange={setResumeId}
-								disabled={!!busy}
-							/>
-							{stage !== "saved" && (
-								<SelectSheet
-									label={t`Cover letter submitted (optional)`}
-									value={letterId}
-									options={[
-										{ value: "", label: t`None` },
-										...docs.filter((doc) => doc.type === "letter").map((doc) => ({ value: doc.id, label: doc.name })),
-									]}
-									onChange={setLetterId}
-									disabled={!!busy}
-								/>
-							)}
-							<ChipInput
-								label={t`Tags`}
-								values={tags}
-								onChange={(values) => {
-									if (!lock.current) setTags(values);
-								}}
-							/>
-							<TextField
-								label={t`Follow-up date`}
-								helper={t`YYYY-MM-DD (optional)`}
-								value={followUpDate}
-								onChangeText={setFollowUpDate}
-								editable={!busy}
-								error={!validFollowUp ? t`Enter a valid date.` : undefined}
-							/>
-							<TextField
-								label={t`Follow-up note`}
-								value={followUpNote}
-								onChangeText={setFollowUpNote}
-								editable={!busy}
-							/>
-							<TextArea label={t`Notes`} value={notes} onChangeText={setNotes} editable={!busy} />
-							<TextArea
-								label={t`Saved description`}
-								value={description}
-								onChangeText={setDescription}
-								editable={!busy}
-							/>
-							{(parsed?.postingSource.truncated || description.length > 20_000) && (
-								<Banner
-									tone="warn"
-									message={t`Description is clipped to 20,000 characters. Review it before preparing.`}
-								/>
-							)}
-							{parsed?.requirements.length ? <Text color="ink2">{parsed.requirements.join(" · ")}</Text> : null}
 							<Button
-								label={t`Fill empty fields with AI`}
+								label={detailsOpen ? t`Hide details` : t`More details`}
 								variant="secondary"
-								disabled={!!busy || !description.trim() || description.length > 20_000 || !providers.hasAIProvider}
-								loading={busy === "fill"}
-								onPress={fill}
+								disabled={!!busy}
+								onPress={() => setDetailsOpen((value) => !value)}
 							/>
-							{!providers.hasAIProvider && (
-								<Button label={t`Connect AI provider`} variant="link" onPress={() => setSetup(true)} />
-							)}
-							<Button label={t`Save job`} fullWidth loading={busy === "save"} disabled={!ready} onPress={save} />
+							{detailsOpen ? (
+								<View style={{ gap: space.s4 }}>
+									<TextField label={t`Location`} value={location} onChangeText={setLocation} editable={!busy} />
+									<TextField label={t`Salary range`} value={salary} onChangeText={setSalary} editable={!busy} />
+									<TextField label={t`Source`} value={source} onChangeText={setSource} editable={!busy} />
+									<TextField
+										label={t`Job posting link`}
+										value={sourceUrl}
+										onChangeText={setSourceUrl}
+										editable={!busy}
+										autoCapitalize="none"
+										keyboardType="url"
+										error={!validUrl ? t`Use an http or https link.` : undefined}
+									/>
+
+									{documents.isError && (
+										<Button label={t`Retry loading documents`} onPress={() => void documents.refetch()} />
+									)}
+									<SelectSheet
+										label={t`Resume`}
+										value={resumeId}
+										options={[
+											{ value: "", label: t`None` },
+											...docs.filter((doc) => doc.type === "resume").map((doc) => ({ value: doc.id, label: doc.name })),
+										]}
+										onChange={setResumeId}
+										disabled={!!busy}
+									/>
+									{stage !== "saved" && (
+										<SelectSheet
+											label={t`Cover letter submitted (optional)`}
+											value={letterId}
+											options={[
+												{ value: "", label: t`None` },
+												...docs
+													.filter((doc) => doc.type === "letter")
+													.map((doc) => ({ value: doc.id, label: doc.name })),
+											]}
+											onChange={setLetterId}
+											disabled={!!busy}
+										/>
+									)}
+									<ChipInput
+										label={t`Tags`}
+										values={tags}
+										onChange={(values) => {
+											if (!lock.current) setTags(values);
+										}}
+									/>
+									<WallClockField
+										label={t`Follow-up date`}
+										mode="date"
+										clearable
+										value={followUpDate}
+										onChange={setFollowUpDate}
+										disabled={!!busy}
+										error={!validFollowUp ? t`Enter a valid date.` : undefined}
+									/>
+									<TextField
+										label={t`Follow-up note`}
+										value={followUpNote}
+										onChangeText={setFollowUpNote}
+										editable={!busy}
+									/>
+									<TextArea label={t`Notes`} value={notes} onChangeText={setNotes} editable={!busy} />
+									<TextArea
+										label={t`Saved description`}
+										value={description}
+										onChangeText={setDescription}
+										editable={!busy}
+									/>
+
+									{parsed?.requirements.length ? <Text color="ink2">{parsed.requirements.join(" · ")}</Text> : null}
+									<Button
+										label={t`Fill empty fields with AI`}
+										variant="secondary"
+										disabled={!!busy || !description.trim() || description.length > 20_000 || !providers.hasAIProvider}
+										loading={busy === "fill"}
+										onPress={fill}
+									/>
+									{!providers.hasAIProvider && (
+										<Button label={t`Connect AI provider`} variant="link" onPress={() => setSetup(true)} />
+									)}
+								</View>
+							) : null}
 							<Button label={t`Back to posting`} variant="ghost" disabled={!!busy} onPress={() => setReview(false)} />
 						</>
 					)}
-					{busy === "read" || busy === "search" || busy === "fill" ? (
-						<Button label={t`Cancel request`} variant="ghost" onPress={() => controller.current?.abort()} />
-					) : null}
-					<Button label={t`Cancel`} variant="ghost" disabled={busy === "save"} onPress={onClose} />
 				</View>
-			</Sheet>
+			</EditorSheet>
+			<ConfirmDialog
+				open={confirmSearchExit && !busy}
+				title={t`Discard changes?`}
+				message={t`Your unsaved job details will be discarded before opening web search settings.`}
+				confirmLabel={t`Discard`}
+				cancelLabel={t`Keep editing`}
+				destructive
+				onConfirm={openSearchSettings}
+				onCancel={() => setConfirmSearchExit(false)}
+			/>
 			<AIProviderSetupSheet open={setup} onClose={() => setSetup(false)} />
 		</>
 	);

@@ -1,7 +1,8 @@
 import { useLingui } from "@lingui/react/macro";
 import DateTimePicker, { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import { useState } from "react";
 import { Platform, Pressable, View } from "react-native";
-import { Text, useTheme } from "@/ui";
+import { Button, Text, useTheme } from "@/ui";
 
 type WallClockFieldProps = {
 	label: string;
@@ -10,6 +11,8 @@ type WallClockFieldProps = {
 	value: string;
 	onChange: (value: string) => void;
 	error?: string | undefined;
+	clearable?: boolean;
+	disabled?: boolean;
 };
 
 const pad = (value: number) => String(value).padStart(2, "0");
@@ -31,9 +34,10 @@ const fromPickerDate = (mode: "date" | "time", date: Date) =>
 		: `${pad(date.getHours())}:${pad(date.getMinutes())}`;
 
 /** A date or time field on the system picker: compact inline on iOS, the picker dialog on Android. */
-export function WallClockField({ label, mode, value, onChange, error }: WallClockFieldProps) {
+export function WallClockField({ label, mode, value, onChange, error, clearable, disabled }: WallClockFieldProps) {
 	const { t, i18n } = useLingui();
 	const { colors, radius, size, space } = useTheme();
+	const [selection, setSelection] = useState<Date | null>(null);
 	const pickerValue = toPickerDate(mode, value);
 	const shown = !value
 		? mode === "date"
@@ -48,31 +52,51 @@ export function WallClockField({ label, mode, value, onChange, error }: WallCloc
 			<Text variant="callout" color="ink2">
 				{label}
 			</Text>
-			{Platform.OS === "ios" ? (
+			{Platform.OS === "ios" && (value || selection) ? (
 				<View style={{ alignItems: "flex-start" }}>
 					<DateTimePicker
 						accessibilityLabel={label}
-						value={pickerValue}
+						value={selection ?? pickerValue}
 						mode={mode}
-						display="compact"
+						display={selection ? "spinner" : "compact"}
+						disabled={!!disabled}
 						onChange={(event, date) => {
-							if (event.type === "set" && date) onChange(fromPickerDate(mode, date));
+							if (event.type !== "set" || !date || disabled) return;
+							if (selection) setSelection(date);
+							else onChange(fromPickerDate(mode, date));
 						}}
 					/>
+					{selection ? (
+						<>
+							<Button
+								label={mode === "date" ? t`Use this date` : t`Use this time`}
+								disabled={disabled}
+								onPress={() => {
+									onChange(fromPickerDate(mode, selection));
+									setSelection(null);
+								}}
+							/>
+							<Button label={t`Cancel`} variant="ghost" disabled={disabled} onPress={() => setSelection(null)} />
+						</>
+					) : null}
 				</View>
 			) : (
 				<Pressable
 					accessibilityRole="button"
 					accessibilityLabel={`${label}, ${shown}`}
+					accessibilityState={{ disabled: !!disabled }}
+					disabled={disabled}
 					onPress={() =>
-						DateTimePickerAndroid.open({
-							value: pickerValue,
-							mode,
-							is24Hour: true,
-							onChange: (event, date) => {
-								if (event.type === "set" && date) onChange(fromPickerDate(mode, date));
-							},
-						})
+						Platform.OS === "ios"
+							? setSelection(pickerValue)
+							: DateTimePickerAndroid.open({
+									value: pickerValue,
+									mode,
+									is24Hour: true,
+									onChange: (event, date) => {
+										if (event.type === "set" && date && !disabled) onChange(fromPickerDate(mode, date));
+									},
+								})
 					}
 					style={{
 						minHeight: size.input,
@@ -89,6 +113,9 @@ export function WallClockField({ label, mode, value, onChange, error }: WallCloc
 					</Text>
 				</Pressable>
 			)}
+			{clearable && value ? (
+				<Button label={t`Clear date`} variant="link" disabled={disabled} onPress={() => onChange("")} />
+			) : null}
 			{error ? (
 				<Text variant="callout" color="dangerText">
 					{error}

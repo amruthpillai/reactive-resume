@@ -41,6 +41,7 @@ import {
 	Icon,
 	IconButton,
 	ListRow,
+	SelectSheet,
 	showToast,
 	Text,
 	TextArea,
@@ -67,7 +68,7 @@ export function Section({ title, children }: SectionBlockProps) {
 
 type StageStepperProps = SectionProps & { onMarkApplied: () => void };
 
-/** The five stages as a stepper, the time in this stage, and Move to the next one. */
+/** Read-only progress, the time in this stage, and an explicit stage picker. */
 export function StageStepper({ application, onMarkApplied }: StageStepperProps) {
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
@@ -79,7 +80,6 @@ export function StageStepper({ application, onMarkApplied }: StageStepperProps) 
 			: (application.status as Application["status"]);
 	const closed = status === "closed";
 	const reached = PIPELINE.indexOf(status);
-	const next = PIPELINE[reached + 1];
 	const now = useNow();
 	const days = Math.max(0, Math.floor((now.getTime() - stageSince(application)) / 86_400_000));
 	const move = (stage: Application["status"]) => {
@@ -96,16 +96,13 @@ export function StageStepper({ application, onMarkApplied }: StageStepperProps) 
 
 	return (
 		<View style={{ gap: space.s3 }}>
-			<View accessibilityRole="tablist" accessibilityLabel={t`Stages`} style={{ flexDirection: "row", gap: space.s1 }}>
+			<View
+				accessible
+				accessibilityLabel={t`Current stage: ${getStageLabel(status)}`}
+				style={{ flexDirection: "row", gap: space.s1 }}
+			>
 				{PIPELINE.map((stage, index) => (
-					<Pressable
-						key={stage}
-						accessibilityRole="tab"
-						accessibilityState={{ selected: stage === status }}
-						accessibilityLabel={getStageLabel(stage)}
-						onPress={() => move(stage)}
-						style={{ flex: 1, gap: space.s1, minHeight: 44, justifyContent: "center" }}
-					>
+					<View key={stage} style={{ flex: 1, gap: space.s1, minHeight: 44, justifyContent: "center" }}>
 						<View
 							style={{
 								height: 6,
@@ -113,30 +110,27 @@ export function StageStepper({ application, onMarkApplied }: StageStepperProps) 
 								backgroundColor: !closed && index <= reached ? getStageColor(stage, colors) : colors.line,
 							}}
 						/>
-						<Text variant="micro" color={stage === status ? "ink" : "ink3"} numberOfLines={1}>
+						<Text variant="micro" color={stage === status ? "ink" : "ink3"}>
 							{getStageLabel(stage)}
 						</Text>
-					</Pressable>
+					</View>
 				))}
 			</View>
-			<View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: space.s2 }}>
-				<View style={{ flexDirection: "row", alignItems: "center", gap: space.s2, flexShrink: 1 }}>
-					<View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: getStageColor(status, colors) }} />
-					<Text variant="label">{getStageLabel(status)}</Text>
-					<Text color="ink3">
-						{closed ? "" : plural(days, { 0: "· since today", one: "· for # day", other: "· for # days" })}
-					</Text>
-				</View>
-				{next && !closed ? (
-					<Button
-						size="sm"
-						variant="secondary"
-						icon="arrow-right"
-						label={status === "saved" ? t`Mark as applied` : t`Move to ${getStageLabel(next)}`}
-						onPress={() => move(next)}
-					/>
-				) : null}
+			<View style={{ flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: space.s2 }}>
+				<View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: getStageColor(status, colors) }} />
+				<Text variant="label">{getStageLabel(status)}</Text>
+				<Text color="ink3">
+					{closed ? "" : plural(days, { 0: "· since today", one: "· for # day", other: "· for # days" })}
+				</Text>
 			</View>
+			<SelectSheet
+				appearance="row"
+				label={t`Change stage`}
+				value={status}
+				options={PIPELINE.map((stage) => ({ value: stage, label: getStageLabel(stage) }))}
+				disabled={update.isPending || closed}
+				onChange={move}
+			/>
 		</View>
 	);
 }
@@ -152,12 +146,25 @@ function stageSince(application: Application) {
 /** NEXT STEP: what the application needs, with reminder, calendar and edit actions for dated steps. */
 export function NextStepCard({ application, onOpenInterview }: SectionProps & InterviewOpener) {
 	const { t } = useLingui();
+	const router = useRouter();
 	const { colors, space } = useTheme();
 	const { locale, timeZone, when, time, day } = useUserTime();
 	const [followUpOpen, setFollowUpOpen] = useState(false);
 	const [reminderOpen, setReminderOpen] = useState(false);
 	const step = getNextStep(application);
 	const text = describeNextStep(step, application, locale, timeZone);
+	const followUpDue = step.kind === "no-reply" || (step.kind === "follow-up" && step.overdue);
+	const tab = step.kind === "interview" ? "prepare" : followUpDue ? "messages" : workspaceTabFor(application);
+	const actionLabel = followUpDue
+		? t`Draft a follow-up`
+		: {
+				fit: t`Prepare application`,
+				apply: t`Review application`,
+				prepare: t`Prepare for interview`,
+				debrief: t`Debrief interview`,
+				messages: t`Prepare a reply`,
+				saved: t`View saved work`,
+			}[tab];
 	const interview = step.kind === "interview" ? step.interview : null;
 	const dated = step.kind === "interview" || step.kind === "follow-up";
 	const target = interview ? interviewReminder(application, interview) : followUpReminder(application);
@@ -200,18 +207,24 @@ export function NextStepCard({ application, onOpenInterview }: SectionProps & In
 							) : null}
 						</View>
 					</View>
+					<Button
+						fullWidth
+						icon="arrow-right"
+						label={actionLabel}
+						onPress={() => router.push(routes.application(application.id, tab))}
+					/>
 					{step.kind !== "closed" ? (
 						<View style={{ flexDirection: "row", flexWrap: "wrap", gap: space.s2 }}>
 							{interview ? (
 								<Button size="sm" variant="secondary" label={t`Edit`} onPress={() => onOpenInterview(interview)} />
-							) : (
+							) : application.status !== "saved" ? (
 								<Button
 									size="sm"
 									variant="secondary"
 									label={t`Schedule an interview`}
 									onPress={() => onOpenInterview(null)}
 								/>
-							)}
+							) : null}
 							{dated ? (
 								<>
 									<Button

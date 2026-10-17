@@ -5,17 +5,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { reminderTargets, useUserTime } from "./hooks";
 import { InterviewSheet } from "./interview-sheet";
-import {
-	Attachments,
-	Contacts,
-	Facts,
-	NextStepCard,
-	Notes,
-	StageStepper,
-	Timeline,
-	WhatYouSent,
-	workspaceTabFor,
-} from "./sections";
+import { Attachments, Contacts, Facts, NextStepCard, Notes, StageStepper, Timeline, WhatYouSent } from "./sections";
 import { CloseSheet, MarkAppliedSheet, PostingSheet } from "./sheets";
 import { useSession } from "@/auth/session";
 import { applicationError } from "@/features/applications/error";
@@ -122,12 +112,6 @@ export function ApplicationDetail({ id }: ApplicationDetailProps) {
 			)}
 
 			<NextStepCard application={application} onOpenInterview={openInterview} />
-			<Button
-				fullWidth
-				icon="arrow-right"
-				label={t`Open workspace`}
-				onPress={() => router.push(routes.application(application.id, workspaceTabFor(application)))}
-			/>
 			<WhatYouSent application={application} />
 			<Facts application={application} />
 			<Contacts application={application} />

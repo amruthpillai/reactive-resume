@@ -38,6 +38,7 @@ export {
 } from "./layout";
 export {
 	ConfirmDialog,
+	EditorSheet,
 	Sheet,
 	Toaster,
 	dismissToast,

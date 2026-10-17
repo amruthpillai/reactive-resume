@@ -32,15 +32,9 @@ export default function SettingsScreen() {
 			</SettingsGroup>
 			<SettingsGroup>
 				<ListRow
-					title={t`Account`}
-					leading="user-circle"
-					chevron
-					onPress={() => router.push(routes.settings("account"))}
-				/>
-				<ListRow
 					title={t`Preferences`}
 					leading="circle-half"
-					trailing={<Text color="ink3">{appearance}</Text>}
+					value={appearance}
 					chevron
 					onPress={() => router.push(routes.settings("preferences"))}
 				/>

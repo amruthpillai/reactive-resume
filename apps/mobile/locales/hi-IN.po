@@ -197,7 +197,7 @@ msgstr "{0, plural, one {# दिन के लिए} other {# दिनों 
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, one {ज्ञानकोश · # तथ्य} other {ज्ञानकोश · # तथ्य}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {पत्र (#)} other {पत्र (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {पत्र (#)} other {पत्र (#)}}"
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {# दिन में कोई उत्तर नहीं} other {# दिनों में कोई उत्तर नहीं}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {रेज़्यूमे (#)} other {रेज़्यूमे (#)}}"
@@ -1228,7 +1228,7 @@ msgstr "अल्बानियाई"
 msgid "All"
 msgstr "सभी"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "सभी ({0})"
@@ -1903,13 +1903,11 @@ msgstr "क्या सॉफ़्टवेयर आपका बायोड
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "भाषा बदलें…"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "छवि बदलो"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "एक समय चुनें"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "जारी रखने के लिए एक संस्करण चुनें. बैक इस पैनल को बंद नहीं करेगा."
@@ -2204,6 +2210,10 @@ msgstr "साफ़"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "साफ़ करें"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "प्रसंग"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "आयात की पुष्टि नहीं हो सकी. �
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "सहेजे जाने की पुष्टि नहीं की जा सकी. डुप्लिकेट से बचने के लिए पुनः प्रयास करने से पहले आवेदन सत्यापित करें।"
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "सहेजा नहीं जा सका. पुनः प्रय
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "सहेजा नहीं जा सका. आपका पाठ अभी भी यहाँ है; पुनः प्रयास करें।"
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "साक्षात्कार शेड्यूल नहीं किया जा सका."
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "मुद्रा"
 msgid "Current filters"
 msgstr "वर्तमान फ़िल्टर"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "प्रिय भर्ती टीम,"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "समीक्षा"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "विभिन्न मुद्राएँ या भुगतान
 msgid "Direction"
 msgstr "दिशा"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "फेंको"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "बदलाव छोड़ दें?"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "PDF डाउनलोड करें"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "इसके बजाय PDF डाउनलोड करें"
 
@@ -3567,6 +3592,10 @@ msgstr "ड्राफ्ट · केवल आपके बायोडाट
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "ड्राफ्ट · केवल आपके बायोडाटा और नौकरी पोस्टिंग का उपयोग करता है"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "फ़ील्ड हटा दिया गया"
 msgid "File attached"
 msgstr "फाइल संलग्न"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "फ़ाइल बहुत बड़ी है। 10 एमबी तक की फ़ाइल चुनें."
@@ -4372,6 +4405,10 @@ msgstr "छुपे हुए शब्द वापस आ गए हैं"
 msgid "Hide {title} from the page"
 msgstr "पृष्ठ से {title} छिपाएँ"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "पेज से छिपाएँ"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "साक्षात्कार सहेजा गया"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "साक्षात्कार सहेजा गया. अनुस्मारक समय पहले ही बीत चुका है."
 
@@ -4831,7 +4872,8 @@ msgstr "एक ही पता रखें, ताकि सॉफ़्टव
 msgid "Keep both"
 msgstr "दोनों रखें"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "संपादन जारी रखें"
 
@@ -5450,7 +5492,6 @@ msgstr "मार्जिन बहुत संकीर्ण हैं"
 msgid "Margins set to {minimum} pt"
 msgstr "मार्जिन {minimum} pt पर सेट है"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "मॉडल: {label}"
 msgid "More"
 msgstr "अधिक"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "अधिक विकल्प"
@@ -5671,11 +5716,6 @@ msgstr "चयनितआवेदन को स्थानांतरित 
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "स्थानांतरित करें"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "{0} पर जाएँ"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "अगला चरण: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "अगला चरण: {note}. आज के लिए एक अनुस्मारक जोड़ता है."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "सूची खोलें"
 msgid "Open the schedule"
 msgstr "शेड्यूल खोलें"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "वर्कस्पेस खोलें"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "ब्रीफ़िंग तैयार करें"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "एक बायोडाटा तैयार करें"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "पिछला पृष्ठ"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "पिछला PDF परिणाम. यह आपके वर्तमान ड्राफ्ट से मेल नहीं खा सकता है।"
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "दस्तावेज़ पर लौटकर इसे फिर �
 msgid "Review"
 msgstr "समीक्षा"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "जाँच की समीक्षा करें"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "\"सहेजे गए\" में सहेजा गया · अभ्यास"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "नौकरी बचा रहा हूँ. इस पैनल को बंद करने से सेव रद्द नहीं होता."
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "साझा करें CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "पीएनजी साझा करें"
@@ -8492,6 +8562,10 @@ msgstr "दिखाएँ बंद"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "बंद आवेदन दिखाएँ"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "चरण"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "चरण {stage} ही रहेगा"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "चरणों"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "यह रेज़्यूमे पासवर्ड से सु�
 msgid "This resume isn't shared right now."
 msgstr "यह बायोडाटा अभी साझा नहीं किया गया है."
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "सहेजने की यह प्रक्रिया अभी भी पूरी हो सकती है। दूसरा बदलाव करने से पहले इसकी प्रतीक्षा करें।"
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "यह सहेजा गया विवरण काट दिया गया है या अधूरा है। दस्तावेज़ तैयार करने से पहले समीक्षा करें."
@@ -10146,6 +10212,10 @@ msgstr "अनलॉक हो रहा है..."
 msgid "Unnamed key"
 msgstr "अनाम कुंजी"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "A4 या US Letter इस्तेमाल करें ताकि �
 msgid "Use AI for PDF imports"
 msgstr "PDF आयात के लिए AI का उपयोग करें"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "उनका उपयोग करें"
 msgid "Use these answers"
 msgstr "ये जवाब उपयोग करें"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "इस डिवाइस के समयक्षेत्र का उपयोग करें ({deviceTimezone})"
@@ -10339,6 +10417,10 @@ msgstr "इस तथ्य का प्रयोग करें"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "इस प्रदाता का उपयोग करें"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "नौकरी आवेदन देखें"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "नौकरी पोस्टिंग देखें"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "आपने उत्तर दिया: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "आप संपादन जारी रख सकते हैं. जब आप वापस ऑनलाइन होते हैं तो सिंक बदल जाता है। डाउनलोड और साझा करने के लिए कनेक्शन की आवश्यकता है।"
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "आपने साइन इन पूरा होने से पह
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "आपने इसे पहले भुला दिया था, इसलिए इसे दोबारा सहेजा नहीं गया।"
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "आपके पास सहेजे नहीं गए परिवर्तन हैं."
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "आपका दो मिनट का परिचय"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD (वैकल्पिक)"

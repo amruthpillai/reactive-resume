@@ -41,8 +41,11 @@ let session = { server: "https://fixture.invalid", status: "signed-in" },
 	fail = false,
 	holding = null;
 let applications = [];
+let sheetWide = false;
 const account = { id: "fixture-account", timezone: "Europe/Berlin", emailVerified: true };
 const react = {
+	createContext: (value) => ({ value }),
+	use: (context) => context.value,
 	createElement: (type, props, ...children) => ({
 		type,
 		props: { ...props, ...(children.length ? { children } : {}) },
@@ -103,7 +106,7 @@ const ui = Object.fromEntries(
 		"TextField",
 	].map((key) => [key, key]),
 );
-ui.useTheme = () => ({ space: { s1: 4, s2: 8, s3: 12, s4: 16, s6: 24 }, size: { panel: 400 } });
+ui.useTheme = () => ({ colors: {}, radius: {}, shadows: { e3: {} }, space: { s1: 4, s2: 8, s3: 12, s4: 16, s6: 24 }, size: { panel: 400 } });
 ui.showToast = (options) => {
 	const id = toasts.size + 1;
 	toasts.set(id, options);
@@ -166,10 +169,17 @@ const mocks = {
 		AppState: appState,
 		Platform: { OS: "ios" },
 		View: "View",
+		Pressable: "Pressable",
+		StyleSheet: { hairlineWidth: 1 },
+		AccessibilityInfo: { isScreenReaderEnabled: async () => false, addEventListener() {} },
 		ScrollView: "ScrollView",
-		useWindowDimensions: () => ({ width: 390 }),
+		Modal: "Modal",
+		KeyboardAvoidingView: "KeyboardAvoidingView",
+		useWindowDimensions: () => ({ width: 390, height: 844 }),
 	},
 	"@/ui": ui,
+	"@gorhom/bottom-sheet": { BottomSheetModal: "BottomSheetModal", BottomSheetBackdrop: "BottomSheetBackdrop", BottomSheetScrollView: "BottomSheetScrollView" },
+	"react-native-reanimated": {},
 	"@/auth/session": { useSession: () => session, getServer: () => session.server },
 	"@/api/client": { client: rpc, orpc: apiPath() },
 	"@tanstack/react-query": {
@@ -216,6 +226,14 @@ function load(path) {
 		target: "es2022",
 	}).code;
 	const localRequire = (name) => {
+		if (path.endsWith("/application-detail/interview-sheet.tsx") && name === "./hooks") return mocks["interview-hooks"];
+		if (path.endsWith("/ui/overlays.tsx")) {
+			if (name === "./button") return { Button: "Button" };
+			if (name === "./theme") return { useTheme: ui.useTheme };
+			if (name === "./text") return { Text: "Text" };
+			if (name === "./motion") return { useIsWide: () => sheetWide, haptics: { selection() {} } };
+			if (name === "./safe-area") return { useWindowSafeAreaInsets: () => ({ top: 0, bottom: 34, left: 0, right: 0 }) };
+		}
 		if (mocks[name]) return mocks[name];
 		if (name === "@reactive-resume/utils/timezone") return load("packages/utils/src/timezone.ts");
 		if (name === "@reactive-resume/schema/career") return load("packages/schema/src/career.ts");
@@ -236,6 +254,7 @@ function load(path) {
 		{
 			Date: FixedDate,
 			Intl,
+			URL,
 			console,
 			setTimeout: later,
 			clearTimeout: (id) => timers.delete(id),
@@ -590,23 +609,148 @@ await check("server switch cancels delayed removal instead of writing to another
 	owner.unmount();
 	session = { ...session, server: "https://fixture.invalid" };
 });
+const overlays = load("apps/mobile/src/ui/overlays.tsx");
+ui.EditorSheet = overlays.EditorSheet;
 const { EditorSheet } = load("apps/mobile/src/features/career/shared.tsx");
 await check("native sheet dismissal requires discard or restores editor", () => {
 	let closed = 0;
 	const owner = mount(EditorSheet, { title: "Fixture", dirty: true, pending: false, onClose: () => closed++ });
-	find(owner, "Sheet").onClose();
+	find(owner, overlays.Sheet).onClose();
 	owner.render();
 	assert.equal(closed, 0);
-	assert.equal(find(owner, "ConfirmDialog").open, true);
-	find(owner, "ConfirmDialog").onCancel();
+	assert.equal(find(owner, overlays.ConfirmDialog).open, true);
+	owner.props.pending = true; owner.render();
+	assert.equal(find(owner, overlays.Sheet).open, true);
+	assert.equal(find(owner, overlays.ConfirmDialog).open, false);
+	find(owner, overlays.ConfirmDialog).onConfirm(); assert.equal(closed, 0);
+	owner.props.pending = false; owner.render();
+	find(owner, overlays.ConfirmDialog).onCancel();
 	owner.render();
-	assert.equal(find(owner, "Sheet").open, true);
-	find(owner, "Sheet").onClose();
+	assert.equal(find(owner, overlays.Sheet).open, true);
+	find(owner, overlays.Sheet).onClose();
 	owner.render();
-	find(owner, "ConfirmDialog").onConfirm();
+	find(owner, overlays.ConfirmDialog).onConfirm();
 	assert.equal(closed, 1);
 	owner.unmount();
+	const saving = mount(EditorSheet, { title: "Fixture", dirty: true, pending: true, onClose: () => closed++ });
+	assert.equal(find(saving, overlays.Sheet).dismissible, false);
+	find(saving, overlays.Sheet).onClose();
+	saving.render();
+	assert.equal(find(saving, overlays.Sheet).open, true);
+	assert.equal(find(saving, overlays.ConfirmDialog).open, false);
+	assert.equal(closed, 1, "Pending save must not offer Discard or close its owner");
+	saving.unmount();
 });
+await check("pending sheet blocks native dismissal and restores a late phone dismissal", () => {
+	let closed = 0, presented = 0;
+	const wrapper = overlays.Sheet({ open: true, dismissible: false, onClose: () => closed++ });
+	const owner = mount(wrapper.type, wrapper.props);
+	assert.equal(owner.tree.props.enablePanDownToClose, false);
+	assert.equal(owner.tree.props.backdropComponent({}).props.pressBehavior, "none");
+	assert.equal(find(owner, "BottomSheetScrollView").onAccessibilityEscape, undefined);
+	owner.tree.props.ref.current = { present: () => presented++ };
+	owner.tree.props.onDismiss();
+	assert.equal(presented, 1, "Dismissal that began before save must restore pending form"); assert.equal(closed, 0);
+	owner.unmount();
+	sheetWide = true;
+	try {
+		const tabletWrapper = overlays.Sheet({ open: true, dismissible: false, onClose: () => closed++ });
+		const tablet = mount(tabletWrapper.type, tabletWrapper.props);
+		assert.equal(tablet.tree.props.onRequestClose, undefined);
+		assert.equal(find(tablet, "Pressable").onPress, undefined); tablet.unmount();
+	} finally { sheetWide = false; }
+});
+const { WallClockField } = load("apps/mobile/src/features/application-detail/date-field.tsx");
+await check("optional native date starts empty, can cancel, choose unchanged default and clear", () => {
+	let value = "";
+	const owner = mount(WallClockField, { label: "Follow-up date", mode: "date", clearable: true, value, onChange: (next) => { value = next; owner.props.value = next; } });
+	assert.equal(nodes(owner.tree).some((node) => node.type === "DateTimePicker"), false);
+	find(owner, "Pressable").onPress(); owner.render();
+	assert.equal(value, "", "Opening a picker must not silently set an optional date");
+	click(owner, "Cancel"); assert.equal(value, "");
+	find(owner, "Pressable").onPress(); owner.render();
+	click(owner, "Use this date"); assert.equal(value, "2026-10-17", "Today can be chosen without moving the picker");
+	click(owner, "Clear date"); assert.equal(value, ""); owner.unmount();
+});
+await check("native calendar dates retain selected day across device timezones and disabled fields cannot edit", () => {
+	const previous = process.env.TZ;
+	try {
+		for (const timezone of ["Pacific/Honolulu", "Europe/Berlin", "Pacific/Kiritimati"]) {
+			process.env.TZ = timezone;
+			let value = "2026-10-25";
+			const owner = mount(WallClockField, { label: "Application date", mode: "date", value, onChange: (next) => { value = next; } });
+			const picker = find(owner, "DateTimePicker");
+			assert.equal(picker.value.getFullYear(), 2026); assert.equal(picker.value.getMonth(), 9); assert.equal(picker.value.getDate(), 25);
+			picker.onChange({ type: "set" }, new Date(2026, 9, 27, 0, 30)); assert.equal(value, "2026-10-27");
+			owner.props.disabled = true; owner.render();
+			find(owner, "DateTimePicker").onChange({ type: "set" }, new Date(2026, 9, 28)); assert.equal(value, "2026-10-27"); owner.unmount();
+		}
+	} finally { if (previous === undefined) delete process.env.TZ; else process.env.TZ = previous; }
+});
+
+const reminderSchedule = load("apps/mobile/src/features/reminders/schedule.ts");
+let interviewPending = false, reminderFails = false, savedInterview;
+const interviewMutation = {
+	get isPending() { return interviewPending; },
+	async mutateAsync(input) {
+		calls.push(["interview.save", input]); interviewPending = true;
+		try { if (holding) await holding; if (fail) throw new Error("Synthetic save failure"); return savedInterview; }
+		finally { interviewPending = false; }
+	},
+};
+mocks["interview-hooks"] = {
+	useUserTime: () => ({ timeZone: "Europe/Berlin", when: () => "time" }),
+	useDetailMutations: () => ({ addInterview: interviewMutation, updateInterview: interviewMutation }),
+	interviewTypeLabel: (value) => value,
+	isInterview: (entry) => entry.type === "interview",
+	interviewReminder: (application, entry) => ({ applicationId: application.id, entryId: entry.id }),
+	leadLabel: String,
+};
+mocks["@/features/reminders"] = {
+	...reminderSchedule,
+	holdReminder() {}, releaseReminder() {},
+	useReminders: () => ({ leadFor: () => null, turnOff: async () => {}, turnOn: async () => { if (reminderFails) throw new Error("Notification failure"); return "scheduled"; } }),
+};
+Object.assign(mocks["@/features/applications/queries"], { useInvalidateApplications: () => async () => {}, applicationDetailQueryKey: (id) => [id] });
+const { InterviewSheet } = load("apps/mobile/src/features/application-detail/interview-sheet.tsx");
+await check("interview edits survive dismiss and Keep editing; pending save cannot submit twice", async () => {
+	calls.length = 0; let closed = 0;
+	const interview = { id: "round", type: "interview", at: new Date("2026-10-25T01:30:00Z"), kind: "technical", timezone: "Europe/Berlin", durationMinutes: 45, location: "Video", notes: "Stored notes", audience: "panel", participants: [{ name: "Sam", role: "Lead", profileUrl: "https://example.org/sam" }] };
+	const application = { id: "application", role: "Engineer", company: "Fictional", activity: [interview] };
+	savedInterview = application;
+	const wrapper = mount(InterviewSheet, { open: true, application, interview, onClose: () => closed++ });
+	const owner = mount(wrapper.tree.type, wrapper.tree.props);
+	edit(owner, "Location", "Office"); edit(owner, "Name of person 1", "Alex"); edit(owner, "Role", "Manager");
+	find(owner, "TextArea", "What they asked you to prepare").onChangeText("Edited notes"); owner.render();
+	const guard = mount(owner.tree.type, owner.tree.props);
+	find(guard, overlays.Sheet).onClose(); guard.render(); assert.equal(closed, 0); assert.equal(find(guard, overlays.ConfirmDialog).open, true);
+	find(guard, overlays.ConfirmDialog).onCancel(); guard.render(); assert.equal(find(guard, overlays.Sheet).open, true);
+	owner.render(); assert.equal(find(owner, "TextField", "Location").value, "Office"); assert.equal(find(owner, "TextField", "Name of person 1").value, "Alex"); assert.equal(find(owner, "TextArea", "What they asked you to prepare").value, "Edited notes");
+	let release; holding = new Promise((resolve) => { release = resolve; });
+	const save = nodes(owner.tree.props.footer).find((node) => node.props.label === "Save interview").props.onPress;
+	save(); save(); owner.render(); await tick();
+	assert.equal(owner.tree.props.pending, true); assert.equal(calls.filter(([name]) => name === "interview.save").length, 1);
+	find(owner, "TextField", "Location").onChangeText("Too late"); owner.render(); assert.equal(find(owner, "TextField", "Location").value, "Office");
+	const payload = calls.find(([name]) => name === "interview.save")[1];
+	assert.equal(payload.at, "2026-10-25T01:30:00.000Z", "Unchanged overlap clock time must preserve stored instant"); assert.equal(payload.audience, "panel"); assert.equal(payload.participants[0].profileUrl, "https://example.org/sam");
+	release(); holding = null; await tick(); assert.equal(closed, 1);
+	guard.unmount(); owner.unmount(); wrapper.unmount();
+});
+await check("interview transport failure retains edits; reminder failure reports saved status", async () => {
+	let closed = 0; const application = { id: "application", role: "Engineer", company: "Fictional", activity: [] };
+	const wrapper = mount(InterviewSheet, { open: true, application, interview: null, onClose: () => closed++ });
+	const owner = mount(wrapper.tree.type, wrapper.tree.props);
+	edit(owner, "Location", "Video room");
+	fail = true; nodes(owner.tree.props.footer).find((node) => node.props.label === "Save interview").props.onPress(); await tick(); fail = false; owner.render();
+	assert.equal(closed, 0); assert.equal(find(owner, "TextField", "Location").value, "Video room");
+	assert.ok([...toasts.values()].at(-1).message.includes("avoid a duplicate"));
+	nodes(owner.tree).find((node) => node.props.title === "Remind me on this device").props.trailing.props.onValueChange(true); owner.render();
+	savedInterview = { ...application, activity: [{ id: "new-round", type: "interview" }] }; reminderFails = true;
+	nodes(owner.tree.props.footer).find((node) => node.props.label === "Save interview").props.onPress(); await tick(); reminderFails = false;
+	assert.equal(closed, 1); assert.equal([...toasts.values()].at(-1).message, "Interview saved. Couldn't update its reminder.");
+	owner.unmount(); wrapper.unmount();
+});
+
 await check("queued preferences cannot cross same-origin account changes", async () => {
 	calls.length = 0;
 	let release;

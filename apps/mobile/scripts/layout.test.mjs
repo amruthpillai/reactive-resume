@@ -26,7 +26,8 @@ const router = {
 	push: (href) => calls.push(href),
 	navigate: (href) => calls.push(href),
 };
-const tag = (parts, ...values) => parts.reduce((text, part, index) => text + part + (values[index] ?? ""), "");
+const tag = (parts, ...values) =>
+	Array.isArray(parts) ? parts.reduce((text, part, index) => text + part + (values[index] ?? ""), "") : parts.message;
 const routes = {
 	documents: () => "/documents",
 	trash: () => "/documents/trash",
@@ -283,6 +284,187 @@ for (const width of [650, 380, 650]) {
 	panel = history();
 	assert.equal(panel.props.style.flexDirection, width >= 540 ? "row-reverse" : "column");
 }
+
+// Large text must reflow chrome without taking scrolling content or row titles out of reach.
+const render = (component, props = {}) => {
+	cursor = 0;
+	effects = [];
+	const tree = component(props);
+	for (const effect of effects) effect();
+	return tree;
+};
+react.useRef = (initial) => react.useState({ current: initial })[0];
+react.useCallback = (callback) => callback;
+native.StyleSheet = { hairlineWidth: 1 };
+const animation = {
+	View: "Animated.View",
+	useSharedValue: (initial) => ({ get: () => initial, set() {} }),
+	useAnimatedStyle: () => ({}),
+	withTiming: (value) => value,
+};
+const componentFixtures = {
+	"./button": ui,
+	"./icon": ui,
+	"./motion": ui,
+	"./pressable": { FeedbackPressable: "Pressable" },
+	"./text": ui,
+	"expo-image": { Image: "Image" },
+	"react-native-reanimated": animation,
+};
+const { CollectionHeader } = load("components/collection-header.tsx");
+const { ListRow } = load("ui/layout.tsx", componentFixtures);
+const { Segmented } = load("ui/fields.tsx", {
+	...componentFixtures,
+	"./layout": { ListRow },
+	"./overlays": { InSheetContext: {}, Sheet: "Sheet" },
+	"@gorhom/bottom-sheet": { BottomSheetTextInput: "TextInput" },
+});
+const { BarItem } = load("shell/app-tabs.tsx");
+const { KnowledgeScreen } = load("features/career/knowledge.tsx", {
+	"./facts": { Facts: "Facts" },
+	"./stories": { Stories: "Stories" },
+	"./preferences": { Preferences: "Preferences" },
+	"./shared": { LoadState: "LoadState" },
+	"./hooks": { useCareerQueries: () => ({ profile: {} }) },
+	"@/auth/session": { useSession: () => ({ server: "fixture" }) },
+	"@/ui": { ...ui, Screen: "Screen", Segmented: "Segmented" },
+});
+native.FlatList = "FlatList";
+const documentQuery = { data: [], isError: false, refetch() {} };
+const { DocumentsLibrary } = load("features/documents/library.tsx", {
+	"./document-sheets": { DocumentSheets: "DocumentSheets" },
+	"./filter": load("features/documents/filter.ts"),
+	"./new-documents": {},
+	"./pending": { usePendingDocuments: () => [] },
+	"./queries": { useDocuments: () => documentQuery, useDocumentOperations: () => ({ busy: false }) },
+	"./thumbnail": { Thumbnail: "Thumbnail" },
+	"@/api/client": { client: {}, orpc: { documents: { counts: { queryOptions: () => ({ queryKey: [] }) } } } },
+	"@/auth/session": { useSession: () => ({ status: "signed-in", server: "fixture" }) },
+	"@/components/collection-header": { CollectionHeader: "CollectionHeader" },
+	"@tanstack/react-query": { useQuery: () => ({ data: { trash: 0 }, refetch() {} }) },
+	"expo-haptics": {},
+	"expo-router": { ...mocks["expo-router"], useFocusEffect() {} },
+	"@lingui/core/macro": { plural: (count, options) => options[count === 1 ? "one" : "other"].replace("#", count) },
+	"react-native-gesture-handler/ReanimatedSwipeable": {},
+	"@/ui": { ...ui, Screen: "Screen", ListRow: "ListRow", Chip: "Chip", Banner: "Banner" },
+});
+for (const fontScale of [1, 1.95, 3.12]) {
+	window = { width: 320, height: 568, fontScale };
+	hooks.length = 0;
+	const header = render(CollectionHeader, {
+		title: "Documents",
+		searchLabel: "Search documents",
+		placeholder: "Search",
+		value: "",
+		onChangeText() {},
+		actions: element("NewDocument", {}),
+	});
+	assert.equal(header.props.style.flexDirection, fontScale > 1.3 ? "column" : "row");
+	assert.ok(nodes(header).some((node) => node.type === "NewDocument"));
+	const row = render(ListRow, {
+		title: "Preferences",
+		value: "System",
+		leading: "circle-half",
+		chevron: true,
+		trailing: element("Switch", {}),
+	});
+	const title = nodes(row).find((node) => node.props.children?.includes("Preferences"));
+	const content = nodes(row).find((node) => node.props.children?.includes(title));
+	assert.equal(row.props.style({ pressed: false }).flexDirection, fontScale > 1.3 ? "column" : "row");
+	if (fontScale > 1.3) {
+		assert.equal(row.props.style({ pressed: false }).alignItems, "stretch", "Large row titles need full width");
+		assert.equal(
+			nodes(content).some((node) => node.type === "Icon"),
+			false,
+		);
+		const leading = nodes(row).find((node) => node.props.name === "circle-half");
+		const band = nodes(row).find((node) => node.props.children?.includes(leading));
+		assert.ok(nodes(band).some((node) => node.props.name === "caret-right"));
+	}
+	assert.equal(
+		nodes(content).some((node) => node.type === "Switch"),
+		fontScale > 1.3,
+	);
+	const values = nodes(row).filter((node) => node.props.children?.includes("System"));
+	assert.equal(values.length, 1);
+	if (fontScale > 1.3) assert.equal(values[0].props.numberOfLines, undefined);
+	hooks.length = 0;
+	const knowledge = render(KnowledgeScreen);
+	const choice = nodes(knowledge).find((node) => node.type === "Segmented");
+	assert.ok(choice, "Three Knowledge choices must remain inline");
+	const segments = render(Segmented, choice.props);
+	assert.equal(segments.props.style.flexDirection, fontScale > 1.3 ? "column" : "row");
+	for (const label of ["Documents", "Applications", "Career", "Settings"]) {
+		const item = render(BarItem, { label, icon: "file-text", focused: false, onPress() {} });
+		const text = nodes(item).find((node) => node.props.children?.includes(label));
+		assert.equal(text.props.numberOfLines, undefined, "Navigation labels must wrap instead of ellipsizing");
+		assert.equal(item.props.accessibilityLabel, label);
+	}
+	for (const isError of [false, true]) {
+		hooks.length = 0;
+		documentQuery.isError = isError;
+		const library = render(DocumentsLibrary);
+		const list = nodes(library).find((node) => node.type === "FlatList");
+		const chrome = list.props.ListHeaderComponent;
+		assert.ok(nodes(chrome).some((node) => node.type === "CollectionHeader"));
+		assert.equal(
+			nodes(chrome).some((node) => node.type === "Banner"),
+			isError,
+		);
+		if (fontScale > 1.3) {
+			const sort = nodes(chrome).find((node) => node.type === "ListRow" && node.props.title === "Sort");
+			assert.ok(sort, "Large-text sort must fit a bounded row");
+			assert.equal(sort.props.value, "Last edited");
+			for (const strip of nodes(chrome).filter((node) => node.type === "ScrollView" && node.props.horizontal))
+				assert.equal(nodes(strip).includes(sort), false, "Sort must not clip inside horizontal chip strip");
+			sort.props.onPress();
+			const updated = nodes(render(DocumentsLibrary)).find((node) => node.type === "FlatList");
+			assert.equal(
+				nodes(updated.props.ListHeaderComponent).find((node) => node.type === "ListRow" && node.props.title === "Sort")
+					.props.value,
+				"Name",
+			);
+		}
+	}
+}
+
+// A direct link to a later workspace tab must reveal its selection and offer overflow navigation.
+hooks.length = 0;
+let selectedTab = "saved";
+const scrolled = [];
+const { WorkspaceChrome } = load("shell/workspace-chrome.tsx", {
+	"./slot": { createSlot: () => ({ Provider: "SlotProvider", useSlot: () => ({}) }) },
+	"./top-bar": { TopBar: "TopBar" },
+	"@reactive-resume/schema/career": {
+		WORKSPACE_TABS: ["fit", "apply", "prepare", "practise", "debrief", "messages", "saved"],
+	},
+	"expo-router": {
+		...mocks["expo-router"],
+		useNavigation: () => ({ canGoBack: () => false }),
+		useLocalSearchParams: () => ({ id: "fictional" }),
+		useGlobalSearchParams: () => ({ tab: selectedTab }),
+	},
+});
+const frame = WorkspaceChrome({ children: null }).props.children[0];
+let workspace = render(frame.type, frame.props);
+const strip = () => nodes(workspace).find((node) => node.type === "ScrollView");
+strip().props.ref.current = { scrollTo: (value) => scrolled.push(value.x) };
+strip().props.onLayout({ nativeEvent: { layout: { width: 280 } } });
+strip().props.onContentSizeChange(840, 44);
+workspace = render(frame.type, frame.props);
+for (const [index, tab] of nodes(workspace)
+	.filter((node) => node.type === "Pressable")
+	.entries()) {
+	tab.props.onLayout({ nativeEvent: { layout: { x: index * 120, width: 120 } } });
+}
+assert.equal(scrolled.at(-1), 560, "Later tab must be visible after its first measurement");
+strip().props.onScroll({ nativeEvent: { contentOffset: { x: 560 } } });
+workspace = render(frame.type, frame.props);
+assert.ok(nodes(workspace).some((node) => node.props.label === "Previous workspace tabs" && !node.props.disabled));
+assert.ok(nodes(workspace).some((node) => node.props.label === "Next workspace tabs" && node.props.disabled));
+selectedTab = "apply";
+workspace = render(frame.type, frame.props);
+assert.equal(scrolled.at(-1), 40, "Changing route must reveal the selected tab again");
 console.log(
-	"PASS safe areas, measured Screen viewport, Duo rail navigation/targets, tablet sidebar, responsive editor modes, history split, measured PDF pages",
+	"PASS safe areas, measured Screen viewport, Duo rail navigation/targets, tablet sidebar, responsive editor modes, history split, measured PDF pages, large-text chrome/rows/navigation, workspace selection and overflow",
 );

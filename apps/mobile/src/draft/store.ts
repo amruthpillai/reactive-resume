@@ -54,6 +54,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 	let durable = true;
 	// A full/unwritable disk must not discard the in-memory draft on navigation or account changes.
 	const pending = new Map<string, Record<D>>();
+	const pendingListeners = new Set<() => void>();
 	let generation = 0;
 	let editing = false;
 	let deferred: D | null = null;
@@ -101,6 +102,16 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 		history();
 	}
 
+	function notifyPending() {
+		for (const listener of pendingListeners) listener();
+	}
+
+	function removeStored(storageKey: string) {
+		env.storage.removeItemSync(storageKey);
+		pending.delete(storageKey);
+		notifyPending();
+	}
+
 	function persist() {
 		clearTimeout(persistenceTimer);
 		persistenceTimer = undefined;
@@ -114,6 +125,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 			// Keep the in-memory draft and expose failure; never claim it is safe on disk.
 			store.setState({ status: "error" });
 		}
+		notifyPending();
 	}
 
 	function schedulePersistence() {
@@ -203,8 +215,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 				else {
 					clearTimeout(persistenceTimer);
 					persistenceTimer = undefined;
-					env.storage.removeItemSync(key());
-					pending.delete(key());
+					removeStored(key());
 				}
 			} else if (adapter.version(remote) > adapter.version(record.baseline)) {
 				store.setState({ conflict: { remote }, locked: remote.isLocked, status: "error" });
@@ -325,8 +336,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 					publish(active.document);
 					if (dirty) persist();
 					else {
-						env.storage.removeItemSync(key());
-						pending.delete(key());
+						removeStored(key());
 						store.setState({ status: "saved" });
 					}
 					if (!env.online()) break;
@@ -382,8 +392,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 						scope ?? "",
 					);
 				if (!(await currentOwner()) || record !== active) return;
-				env.storage.removeItemSync(key());
-				pending.delete(key());
+				removeStored(key());
 				record = { baseline: remote, document: remote, sessionId: active.sessionId };
 				dirty = false;
 				deferred = null;
@@ -446,8 +455,7 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 				if ((await env.scope()) !== owner || visit !== queueGeneration) return;
 				await adapter.save(queued.document, queued.baseline, queued.sessionId, false, owner);
 				if (visit !== queueGeneration) return;
-				env.storage.removeItemSync(storageKey);
-				pending.delete(storageKey);
+				removeStored(storageKey);
 			} catch {
 				/* Conflicts, locked documents and failures stay queued until opened. */
 			}
@@ -477,16 +485,42 @@ export function createDraftStore<D extends Document, T>(adapter: DraftAdapter<D,
 		store.setState(emptyState);
 	}
 
+	/** Read the same validated queue as open/replay, including writes retained after a disk failure. */
+	async function listPending(): Promise<D[]> {
+		const owner = await env.scope();
+		if (!owner) return [];
+		const documents: D[] = [];
+		for (const storageKey of new Set([...env.storage.getAllKeysSync(), ...pending.keys()])) {
+			if (!storageKey.startsWith(prefix(owner))) continue;
+			try {
+				const queued = readStored(storageKey);
+				if (queued) documents.push(queued.document);
+			} catch {
+				/* An unreadable entry must not hide other recoverable drafts. */
+			}
+		}
+		return (await env.scope()) === owner ? documents : [];
+	}
+
 	function clearDraftsFor(owner: string) {
 		queueGeneration++;
 		if (scope === owner) reset();
-		for (const storageKey of pending.keys()) if (storageKey.startsWith(prefix(owner))) pending.delete(storageKey);
-		for (const storageKey of env.storage.getAllKeysSync())
-			if (storageKey.startsWith(prefix(owner))) env.storage.removeItemSync(storageKey);
+		try {
+			for (const storageKey of pending.keys()) if (storageKey.startsWith(prefix(owner))) pending.delete(storageKey);
+			for (const storageKey of env.storage.getAllKeysSync())
+				if (storageKey.startsWith(prefix(owner))) env.storage.removeItemSync(storageKey);
+		} finally {
+			notifyPending();
+		}
 	}
 
 	return {
 		store,
+		listPending,
+		subscribePending: (listener: () => void) => {
+			pendingListeners.add(listener);
+			return () => pendingListeners.delete(listener);
+		},
 		refresh,
 		replay,
 		blur,

@@ -21,7 +21,7 @@ export function ShareScreen({ id, history = false }: ShareScreenProps) {
 	const session = useSession();
 	const network = useNetworkState();
 	const offline = network.isConnected === false || network.isInternetReachable === false;
-	const [tab, setTab] = useState<"link" | "download" | "history">(history ? "history" : "link");
+	const [tab, setTab] = useState<"link" | "download" | "history">(history ? "history" : "download");
 	return (
 		<SafeAreaProvider>
 			<SafeAreaView edges={["bottom", "left", "right"]} style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -32,8 +32,8 @@ export function ShareScreen({ id, history = false }: ShareScreenProps) {
 						value={tab}
 						onChange={setTab}
 						options={[
-							{ value: "link", label: t`Link` },
 							{ value: "download", label: t`Download` },
+							{ value: "link", label: t`Link` },
 							{ value: "history", label: t`History` },
 						]}
 					/>

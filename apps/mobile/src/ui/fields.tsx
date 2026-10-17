@@ -358,6 +358,7 @@ export type SegmentedProps<T extends string> = {
 	onChange: (value: T) => void;
 	/** The accessible name of the group. */
 	label?: string | undefined;
+	orientation?: "horizontal" | "vertical";
 };
 
 type SegmentProps = {
@@ -365,9 +366,10 @@ type SegmentProps = {
 	icon?: IconName | undefined;
 	active: boolean;
 	onPress: () => void;
+	stacked: boolean;
 };
 
-function Segment({ label, icon, active, onPress }: SegmentProps) {
+function Segment({ label, icon, active, onPress, stacked }: SegmentProps) {
 	const { colors, motion, radius, shadows, size, space } = useTheme();
 	const shown = useSharedValue(active ? 1 : 0);
 
@@ -386,13 +388,14 @@ function Segment({ label, icon, active, onPress }: SegmentProps) {
 			// 40 pt inside the track's 2 pt padding; the slop brings the target to 44.
 			hitSlop={{ top: space.s0, bottom: space.s0 }}
 			style={{
-				flex: 1,
+				flex: stacked ? undefined : 1,
 				minHeight: size.hit - space.s0 * 2,
 				flexDirection: "row",
 				alignItems: "center",
 				justifyContent: "center",
 				gap: space.s1 + space.s0,
 				paddingHorizontal: space.s3,
+				paddingVertical: stacked ? space.s2 : undefined,
 			}}
 		>
 			<Animated.View
@@ -418,15 +421,22 @@ function Segment({ label, icon, active, onPress }: SegmentProps) {
 	);
 }
 
-export function Segmented<T extends string>({ value, options, onChange, label }: SegmentedProps<T>) {
+export function Segmented<T extends string>({
+	value,
+	options,
+	onChange,
+	label,
+	orientation = "horizontal",
+}: SegmentedProps<T>) {
 	const { colors, radius, space } = useTheme();
+	const stacked = orientation === "vertical";
 
 	return (
 		<View
 			accessibilityRole="radiogroup"
 			accessibilityLabel={label}
 			style={{
-				flexDirection: "row",
+				flexDirection: stacked ? "column" : "row",
 				gap: space.s0,
 				padding: space.s0,
 				borderRadius: radius.rLg,
@@ -439,6 +449,7 @@ export function Segmented<T extends string>({ value, options, onChange, label }:
 					label={option.label}
 					icon={option.icon}
 					active={option.value === value}
+					stacked={stacked}
 					onPress={() => {
 						if (option.value === value) return;
 						haptics.selection();

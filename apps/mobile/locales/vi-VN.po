@@ -197,7 +197,7 @@ msgstr "{0, plural, one {Đối với ngày #} other {Trong những ngày #}}"
 msgid "{0, plural, one {Knowledge · # fact} other {Knowledge · # facts}}"
 msgstr "{0, plural, other {Kiến thức · # dữ kiện}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "letter").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "letter").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Letter (#)} other {Letters (#)}}"
 msgstr "{0, plural, one {Thư xin việc (#)} other {Thư xin việc (#)}}"
@@ -207,7 +207,7 @@ msgstr "{0, plural, one {Thư xin việc (#)} other {Thư xin việc (#)}}"
 msgid "{0, plural, one {No reply in # day} other {No reply in # days}}"
 msgstr "{0, plural, one {Không có phản hồi trong ngày #} other {Không có phản hồi sau # ngày}}"
 
-#. placeholder {0}: all.filter((document) => document.type === "resume").length
+#. placeholder {0}: [...all, ...recoverable].filter((document) => document.type === "resume").length
 #: src/features/documents/library.tsx
 msgid "{0, plural, one {Resume (#)} other {Resumes (#)}}"
 msgstr "{0, plural, one {Sơ yếu lý lịch (#)} other {Sơ yếu lý lịch (#)}}"
@@ -1228,7 +1228,7 @@ msgstr "Tiếng Albania"
 msgid "All"
 msgstr "Tất cả"
 
-#. placeholder {0}: all.length
+#. placeholder {0}: all.length + recoverable.length
 #: src/features/documents/library.tsx
 msgid "All ({0})"
 msgstr "Tất cả ({0})"
@@ -1903,13 +1903,11 @@ msgstr "Phần mềm có đọc được sơ yếu lý lịch của bạn không
 #: app/(auth)/sign-in.tsx
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
-#: src/features/application-detail/interview-sheet.tsx
+#: src/features/application-detail/date-field.tsx
 #: src/features/application-detail/sheets.tsx
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/list-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/ats-checker/checker.tsx
-#: src/features/career/shared.tsx
 #: src/features/check/parser.tsx
 #: src/features/check/writing.tsx
 #: src/features/search/search-screen.tsx
@@ -1965,6 +1963,10 @@ msgstr "Thay đổi ngôn ngữ thành…"
 #: src/features/settings/profile.tsx
 msgid "Change photo"
 msgstr "Thay đổi ảnh"
+
+#: src/features/application-detail/sections.tsx
+msgid "Change stage"
+msgstr ""
 
 #: src/features/application-detail/sections.tsx
 #: src/features/applications-board/calendar-screen.tsx
@@ -2146,6 +2148,10 @@ msgstr ""
 msgid "Choose a time"
 msgstr "Chọn thời gian"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Choose a valid follow-up date before saving."
+msgstr ""
+
 #: src/draft/conflict-sheet.tsx
 msgid "Choose a version to continue. Back will not close this sheet."
 msgstr "Chọn một phiên bản để tiếp tục. Nhấn Back sẽ không đóng bảng này."
@@ -2204,6 +2210,10 @@ msgstr "Gọn gàng"
 #: src/features/write/date-field.tsx
 msgid "Clear"
 msgstr "Xóa"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Clear date"
+msgstr ""
 
 #: src/features/applications/list-screen.tsx
 #: src/features/documents/library.tsx
@@ -2485,6 +2495,11 @@ msgstr ""
 msgid "Context"
 msgstr "Bối cảnh"
 
+#: src/features/assistant/chat-view.tsx
+#: src/features/assistant/messages.tsx
+msgid "Context is left out, so reply with a new message instead."
+msgstr ""
+
 #: app/(auth)/server.tsx
 #: src/features/applications-board/calendar-screen.tsx
 #: src/features/assistant/chat-view.tsx
@@ -2588,6 +2603,10 @@ msgstr "Không thể xác nhận quá trình nhập. Kiểm tra Hồ sơ ứng t
 #: src/features/applications/add-sheet.tsx
 msgid "Could not confirm the save. Check Applications before retrying to avoid a duplicate."
 msgstr "Không thể xác nhận việc lưu. Kiểm tra Hồ sơ ứng tuyển trước khi thử lại để tránh trùng lặp."
+
+#: src/features/application-detail/interview-sheet.tsx
+msgid "Could not confirm the save. Check the application before retrying to avoid a duplicate."
+msgstr ""
 
 #. placeholder {0}: unresolved.join(", ")
 #: src/features/write/hooks.ts
@@ -2893,10 +2912,6 @@ msgstr "Không thể lưu. Hãy thử lại."
 msgid "Couldn't save. Your text is still here; try again."
 msgstr "Không thể lưu. Văn bản của bạn vẫn còn ở đây; thử lại."
 
-#: src/features/application-detail/interview-sheet.tsx
-msgid "Couldn't schedule the interview."
-msgstr "Không thể lên lịch phỏng vấn."
-
 #: src/features/ai/report-content.tsx
 msgid "Couldn't send the report. Your text is kept; try again."
 msgstr ""
@@ -3101,6 +3116,11 @@ msgstr "Tiền tệ"
 msgid "Current filters"
 msgstr "Bộ lọc hiện tại"
 
+#. placeholder {0}: getStageLabel(status)
+#: src/features/application-detail/sections.tsx
+msgid "Current stage: {0}"
+msgstr ""
+
 #: src/features/design/advanced.tsx
 #: src/features/design/style-groups.tsx
 #: src/features/letters/design.tsx
@@ -3207,6 +3227,10 @@ msgstr "Kính gửi đội ngũ tuyển dụng,"
 #: src/shell/workspace-chrome.tsx
 msgid "Debrief"
 msgstr "Tổng kết"
+
+#: src/features/application-detail/sections.tsx
+msgid "Debrief interview"
+msgstr ""
 
 #: src/features/design/controls.tsx
 msgid "Decrease {label}"
@@ -3413,12 +3437,14 @@ msgstr "Tiền tệ hoặc kỳ lương khác nhau. Sự khác biệt trong ti�
 msgid "Direction"
 msgstr "Hướng"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
 #: src/features/letters/write.tsx
+#: src/ui/overlays.tsx
 msgid "Discard"
 msgstr "Loại bỏ"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Discard changes?"
 msgstr "Hủy các thay đổi?"
 
@@ -3531,7 +3557,6 @@ msgid "Download PDF"
 msgstr "Tải xuống PDF"
 
 #: src/features/letters/share.tsx
-#: src/features/share/download.tsx
 msgid "Download PDF instead"
 msgstr "Thay vào đó hãy tải xuống PDF"
 
@@ -3567,6 +3592,10 @@ msgstr "Bản nháp · chỉ sử dụng sơ yếu lý lịch của bạn"
 #: src/features/letters/write.tsx
 msgid "Draft · uses only your resume and the posting"
 msgstr "Bản nháp · chỉ sử dụng sơ yếu lý lịch của bạn và tin tuyển dụng"
+
+#: src/features/application-detail/sections.tsx
+msgid "Draft a follow-up"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Draft a follow-up email"
@@ -3984,6 +4013,10 @@ msgstr "Đã xóa trường"
 msgid "File attached"
 msgstr "Tệp đính kèm"
 
+#: src/features/share/download.tsx
+msgid "File format"
+msgstr ""
+
 #: src/features/documents/import-file.ts
 msgid "File is too large. Choose a file up to 10 MB."
 msgstr "Tệp quá lớn. Chọn tệp có dung lượng tối đa 10 MB."
@@ -4372,6 +4405,10 @@ msgstr "Điều khoản ẩn đã trở lại"
 msgid "Hide {title} from the page"
 msgstr "Ẩn {title} khỏi trang"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Hide details"
+msgstr ""
+
 #: src/features/write/entry-sheet.tsx
 msgid "Hide from page"
 msgstr "Ẩn khỏi trang"
@@ -4679,6 +4716,10 @@ msgid "Interview saved"
 msgstr "Đã lưu buổi phỏng vấn"
 
 #: src/features/application-detail/interview-sheet.tsx
+msgid "Interview saved. Couldn't update its reminder."
+msgstr ""
+
+#: src/features/application-detail/interview-sheet.tsx
 msgid "Interview saved. The reminder time has already passed."
 msgstr "Cuộc phỏng vấn đã được lưu. Thời gian nhắc nhở của nó đã là quá khứ."
 
@@ -4831,7 +4872,8 @@ msgstr "Chỉ để một địa chỉ, để phần mềm không phải đoán 
 msgid "Keep both"
 msgstr "Giữ cả hai"
 
-#: src/features/career/shared.tsx
+#: src/features/applications/add-sheet.tsx
+#: src/ui/overlays.tsx
 msgid "Keep editing"
 msgstr "Tiếp tục chỉnh sửa"
 
@@ -5450,7 +5492,6 @@ msgstr "Biên độ rất hẹp"
 msgid "Margins set to {minimum} pt"
 msgstr "Lề được đặt thành {minimum} pt"
 
-#: src/features/application-detail/sections.tsx
 #: src/features/application-detail/sheets.tsx
 #: src/features/workspace/tabs/apply.tsx
 msgid "Mark as applied"
@@ -5572,6 +5613,10 @@ msgstr "Mô hình: {label}"
 msgid "More"
 msgstr "Thêm"
 
+#: src/features/applications/add-sheet.tsx
+msgid "More details"
+msgstr ""
+
 #: src/features/write/entry-fields.tsx
 msgid "More options"
 msgstr "Nhiều lựa chọn hơn"
@@ -5671,11 +5716,6 @@ msgstr "Di chuyển các hồ sơ ứng tuyển đã chọn"
 #: src/features/design/layout-screen.tsx
 msgid "Move to"
 msgstr "Chuyển đến"
-
-#. placeholder {0}: getStageLabel(next)
-#: src/features/application-detail/sections.tsx
-msgid "Move to {0}"
-msgstr "Di chuyển đến {0}"
 
 #: src/features/workspace/tabs/messages.tsx
 msgid "Move to {stage}"
@@ -5897,6 +5937,10 @@ msgstr "Bước tiếp theo: {note}"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Next step: {note}. Adds a reminder to Today."
 msgstr "Bước tiếp theo: {note}. Thêm lời nhắc vào Hôm nay."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Next workspace tabs"
+msgstr ""
 
 #: src/features/ai/provider-list.tsx
 msgid "No AI provider yet"
@@ -6472,7 +6516,6 @@ msgstr "Mở danh sách"
 msgid "Open the schedule"
 msgstr "Mở lịch trình"
 
-#: src/features/application-detail/detail-screen.tsx
 #: src/features/career/today.tsx
 msgid "Open workspace"
 msgstr "Mở không gian làm việc"
@@ -6936,8 +6979,20 @@ msgid "Prepare a briefing"
 msgstr "Chuẩn bị bản tóm tắt"
 
 #: src/features/application-detail/sections.tsx
+msgid "Prepare a reply"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
 msgid "Prepare a resume"
 msgstr "Chuẩn bị một bản lý lịch"
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare application"
+msgstr ""
+
+#: src/features/application-detail/sections.tsx
+msgid "Prepare for interview"
+msgstr ""
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Prepare me for the interview"
@@ -6993,6 +7048,10 @@ msgstr "Trang trước"
 #: src/features/check/parser.tsx
 msgid "Previous PDF result. It may not match your current draft."
 msgstr "Kết quả PDF trước đó. Nó có thể không khớp với bản nháp hiện tại của bạn."
+
+#: src/shell/workspace-chrome.tsx
+msgid "Previous workspace tabs"
+msgstr ""
 
 #: src/features/design/advanced.tsx
 msgid "Primary Color"
@@ -7776,6 +7835,10 @@ msgstr "Quay lại Tài liệu và mở lại hoặc thử lại kết nối."
 msgid "Review"
 msgstr "Ôn tập"
 
+#: src/features/application-detail/sections.tsx
+msgid "Review application"
+msgstr ""
+
 #: src/features/share/download.tsx
 msgid "Review Check"
 msgstr "Xem lại kết quả kiểm tra"
@@ -8072,11 +8135,10 @@ msgid "Saved to Saved · Practice"
 msgstr "Đã lưu vào Đã lưu · Luyện tập"
 
 #: src/features/applications/add-sheet.tsx
-msgid "Saving the job. Closing this sheet does not cancel the save."
-msgstr "Lưu hồ sơ ứng tuyển. Việc đóng bảng này sẽ không hủy việc lưu."
+msgid "Saving the job. Wait for confirmation before making another change."
+msgstr ""
 
 #: src/features/career/preferences.tsx
-#: src/features/career/shared.tsx
 #: src/features/settings/profile.tsx
 #: src/shell/builder-chrome.tsx
 msgid "Saving…"
@@ -8417,6 +8479,14 @@ msgstr "Chia sẻ CSV"
 msgid "Share data with {0}?"
 msgstr ""
 
+#: src/features/share/download.tsx
+msgid "Share PDF"
+msgstr ""
+
+#: src/features/share/download.tsx
+msgid "Share PDF instead"
+msgstr ""
+
 #: src/features/applications-board/insights-screen.tsx
 msgid "Share PNG"
 msgstr "Chia sẻ PNG"
@@ -8492,6 +8562,10 @@ msgstr "Hiển thị đã đóng"
 #: src/features/applications/list-screen.tsx
 msgid "Show closed applications"
 msgstr "Hiển thị các hồ sơ ứng tuyển đã đóng"
+
+#: src/features/applications/add-sheet.tsx
+msgid "Show details"
+msgstr ""
 
 #: src/features/write/section-sheet.tsx
 msgid "Show heading"
@@ -8874,10 +8948,6 @@ msgstr "Giai đoạn"
 #: src/features/workspace/tabs/messages.tsx
 msgid "Stage stays {stage}"
 msgstr "Giai đoạn giữ nguyên {stage}"
-
-#: src/features/application-detail/sections.tsx
-msgid "Stages"
-msgstr "Giai đoạn"
 
 #: src/features/write/date-field.tsx
 msgid "Start"
@@ -9766,10 +9836,6 @@ msgstr "Sơ yếu lý lịch này được bảo vệ bằng mật khẩu"
 msgid "This resume isn't shared right now."
 msgstr "Sơ yếu lý lịch này hiện không được chia sẻ."
 
-#: src/features/career/shared.tsx
-msgid "This save may still finish. Wait for it before making another change."
-msgstr "Quá trình lưu có thể vẫn hoàn tất. Đợi nó hoàn tất trước khi thực hiện thay đổi khác."
-
 #: src/features/application-detail/sheets.tsx
 msgid "This saved description is clipped or incomplete. Review before preparing documents."
 msgstr "Mô tả đã lưu này bị cắt bớt hoặc không đầy đủ. Xem xét trước khi chuẩn bị hồ sơ."
@@ -10146,6 +10212,10 @@ msgstr "Đang mở khóa…"
 msgid "Unnamed key"
 msgstr "Khóa chưa đặt tên"
 
+#: src/features/documents/library.tsx
+msgid "Unsynced on this device"
+msgstr ""
+
 #: src/features/write/entry-screen.tsx
 #: src/features/write/outline.tsx
 msgid "Untitled"
@@ -10260,6 +10330,10 @@ msgstr "Sử dụng khổ A4 hoặc US Letter để bố cục không bị lỗi
 msgid "Use AI for PDF imports"
 msgstr "Sử dụng AI để nhập PDF"
 
+#: src/features/applications/add-sheet.tsx
+msgid "Use an http or https job posting link before saving."
+msgstr ""
+
 #: src/features/application-detail/sections.tsx
 #: src/features/applications/add-sheet.tsx
 msgid "Use an http or https link."
@@ -10328,6 +10402,10 @@ msgstr "Dùng bản của họ"
 msgid "Use these answers"
 msgstr "Dùng các câu trả lời này"
 
+#: src/features/application-detail/date-field.tsx
+msgid "Use this date"
+msgstr ""
+
 #: app/(tabs)/settings/preferences.tsx
 msgid "Use this device's timezone ({deviceTimezone})"
 msgstr "Sử dụng múi giờ của thiết bị này ({deviceTimezone})"
@@ -10339,6 +10417,10 @@ msgstr "Sử dụng thông tin này"
 #: src/features/ai/provider-editor.tsx
 msgid "Use this provider"
 msgstr "Sử dụng nhà cung cấp này"
+
+#: src/features/application-detail/date-field.tsx
+msgid "Use this time"
+msgstr ""
 
 #: src/features/ats-checker/messages.ts
 msgid "Use your editor's normal bullet list, so stray glyphs do not land mid-sentence."
@@ -10444,6 +10526,10 @@ msgstr "Xem đơn xin việc"
 #: src/features/application-detail/detail-screen.tsx
 msgid "View posting"
 msgstr "Xem tin tuyển dụng"
+
+#: src/features/application-detail/sections.tsx
+msgid "View saved work"
+msgstr ""
 
 #: src/features/career/facts.tsx
 msgid "View source"
@@ -10795,8 +10881,8 @@ msgid "You answered: {answer}"
 msgstr "Bạn đã trả lời: {answer}"
 
 #: src/shell/builder-chrome.tsx
-msgid "You can keep editing. Changes sync when you're back online. Download and Share need a connection."
-msgstr "Bạn có thể tiếp tục chỉnh sửa. Đồng bộ hóa các thay đổi khi bạn trực tuyến trở lại. Tải xuống và chia sẻ cần có kết nối."
+msgid "You can keep editing. Changes sync when you're back online. PDF sharing works with cached fonts and images."
+msgstr ""
 
 #: src/features/workspace/tabs/apply.tsx
 msgid "You can keep up to 30 application questions."
@@ -10815,7 +10901,7 @@ msgstr "Bạn đã hủy đăng nhập trước khi hoàn tất."
 msgid "You forgot this before, so it wasn't saved again."
 msgstr "Trước đây bạn đã cho quên điều này, nên nó không được lưu lại."
 
-#: src/features/career/shared.tsx
+#: src/ui/overlays.tsx
 msgid "You have unsaved changes."
 msgstr "Bạn có những thay đổi chưa được lưu."
 
@@ -11077,10 +11163,9 @@ msgid "Your two-minute introduction"
 msgstr "Phần giới thiệu hai phút của bạn"
 
 #: src/features/applications/add-sheet.tsx
-msgid "YYYY-MM-DD"
-msgstr "YYYY-MM-DD"
+msgid "Your unsaved job details will be discarded before opening web search settings."
+msgstr ""
 
-#: src/features/applications/add-sheet.tsx
 #: src/features/applications/csv-sheet.tsx
 msgid "YYYY-MM-DD (optional)"
 msgstr "YYYY-MM-DD (tùy chọn)"
