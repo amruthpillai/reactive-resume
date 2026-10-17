@@ -42,7 +42,8 @@ export function redirectSystemPath({
 	const fallback = initial ? "/" : null;
 	const result = queue.then(async () => {
 		try {
-			if (initial) await restoreSession();
+			// One shared restore: a warm link that lands during launch waits for it instead of reading a half-loaded server.
+			await restoreSession();
 			await initI18n();
 			const current = getServer();
 			// The allowlist depends on the restored/current session, not the session when the intent was queued.

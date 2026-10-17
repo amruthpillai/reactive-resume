@@ -123,7 +123,16 @@ try {
 	assert.deepEqual(state.events, []);
 
 	const reset = (options = {}) => Object.assign(state, { server: "https://rxresu.me", token: "fixture-token", choices: [], events: [], signIn: null, tokenRead: null }, options);
-	const open = (path, initial = false) => redirectSystemPath({ path, initial });
+	// Warm links also await the shared launch restore (single-flight in session.ts, a no-op once launch finished);
+	// drop that call so warm assertions keep checking only what the link itself did.
+	const open = (path, initial = false) => {
+		const result = redirectSystemPath({ path, initial });
+		if (initial || typeof result === "string" || result === null) return result;
+		return result.then((value) => {
+			state.events = state.events.filter(([kind]) => kind !== "restore");
+			return value;
+		});
+	};
 	reset();
 	assert.equal(await open("https://rxresu.me/alex/cv", true), "/r/alex/cv");
 	assert.deepEqual(state.events, [["restore"], ["token"]]);
