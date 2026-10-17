@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Søknader som skal eksporteres: {0}."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} redigeringer utført"
@@ -1167,7 +1168,6 @@ msgstr "AI-tilkobling"
 msgid "AI connections are unavailable."
 msgstr "AI-tilkoblinger er ikke tilgjengelige."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI-tilkoblinger kunne ikke lastes."
@@ -1451,10 +1451,6 @@ msgstr "Søknaden er oppdatert"
 msgid "Application views"
 msgstr "Søknadsvisninger"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Faner i søknadens arbeidsområde"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Stigende"
 msgid "Ask"
 msgstr "Spørre"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Spør om denne søknaden…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Spør om ditt neste karrieresteg…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Spør om jobbsøket ditt, eller ta med en prestasjon du vil forklare bedre. Svarene bruker det som er slått på nedenfor, og sier hva de bygde på."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Spør om noe om denne jobben"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Spør om hva som helst om denne jobben. Coachen leser stillingsannonsen, notatene dine og det du sendte, og vet at du er på {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Spør eller beskriv en endring..."
 msgid "Aspect Ratio"
 msgstr "Størrelsesforhold"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Assistent"
@@ -2373,7 +2374,6 @@ msgstr "Koble til AI-leverandøren"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Samtalenavn"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Samtaler"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Samtaler om én jobb ligger i arbeidsområdet for den jobben."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Samtaler kunne ikke lastes inn."
 
@@ -2979,6 +2981,7 @@ msgstr "Følgebrev"
 msgid "Cover letter — {0}"
 msgstr "Følgebrev - {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Slette «{0}»?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Slett {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Redigere"
 msgid "Edit {0}: {1}"
 msgstr "Rediger {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Redigering utført"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Orddeling"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Jeg kan se dette brevet og stillingsannonsen fra {company}. Forslagene vises som endringer du kan godta én om gangen."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Jeg kan se dette brevet. Forslagene vises som endringer du kan godta én om gangen."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Jeg kan se denne CVen og {company} stillingsannonsen. Forslag kommer tilbake som endringer du kan godta én etter én."
 
@@ -4808,6 +4821,10 @@ msgstr "Hold deg til to eller tre skriftfamilier. Hver ekstra skrift er en ny sj
 msgid "Keep together"
 msgstr "Hold sammen"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Beholder de mest spesifikke delene"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Beholdt som den er"
@@ -4901,6 +4918,10 @@ msgstr "Legg teksten horisontalt. Roterte tekstpartier blir ofte droppet eller f
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Utforming"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Leder med hvorfor du passer"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Hoved"
 msgid "Make default"
 msgstr "Gjør til standard"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Gjør det mer spesifikt"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Gjør det kortere"
@@ -5288,6 +5314,10 @@ msgstr "Gjør det kortere"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Gjør plass til neste trinn."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Gjør åpningen sterkere"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Ny søknad"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Ny samtale"
 
@@ -6335,6 +6366,10 @@ msgstr "Åpne i editoren"
 msgid "Open in Offers"
 msgstr "Åpne i Tilbud"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Åpne brev"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Åpne den offentlige siden"
@@ -6381,13 +6416,13 @@ msgstr "Åpne arbeidsområde"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Åpner samtalen…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Åpner filen"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Åpner brevet…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Hentet {0} ved hjelp av {1}. Hentetiden fastslår ikke opprinnelsesfrisk
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Lagre historie"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Lagre følgebrevet før du eksporterer det."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Lagre dokumentet før du sender."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Sender denne PDF til din konfigurerte AI-leverandør i stedet for å lese tekstlaget."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Sender meldingen din, denne søknaden (stillingsannonse, notater, sendte dokumenter) og Kunnskap som er slått på, til {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Sender meldingen din, tidligere meldinger, denne jobbsøknaden (stillingsannonsen, notater og sendte dokumenter) og aktivert informasjon fra Kunnskap til {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Kontrollene er mekaniske. Dette spør en språkmodell om hvordan en lese
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Coachen husker ingenting fra meldingene dine."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Veilederen er ikke satt opp på denne serveren. Den som administrerer serveren, må angi ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Coachen er ikke satt opp på denne serveren. Den som drifter den, må angi ENCRYPTION_SECRET. Kunnskap, Tilbud og søknadene dine fungerer uten."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Treneren trenger en AI-tilkobling. Ingenting sendes før du spør."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Coachen foreslår hvert faktum i chatten. Ingenting lagres før du godtar."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Treneren leser stillingsannonsen, notatene dine og det du sendte, og vet at du er på {tabName}-fanen. Samtalen vises i «Assistent»."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Prøv {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Understrek lenker"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Bruk serverversjon"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Bruk seks Hex-sifre, som #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Bruk Angre i CV-editoren for å angre tidligere endringer."
@@ -10188,6 +10226,10 @@ msgstr "Brukes når {connected} ikke kan lese en side. Ingen konto nødvendig."
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Brukernavn"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Bruker fakta fra CV-en din"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Du er frakoblet. Prøv igjen når du kobler til igjen."
 msgid "You're up to date"
 msgstr "Du er oppdatert"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

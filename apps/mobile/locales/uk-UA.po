@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Заявок для експорту: {0}."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "Застосовано змін: {0}"
@@ -1167,7 +1168,6 @@ msgstr "Підключення до AI"
 msgid "AI connections are unavailable."
 msgstr "Підключення до AI недоступні."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "Не вдалося завантажити підключення ШІ."
@@ -1451,10 +1451,6 @@ msgstr "Заявку оновлено"
 msgid "Application views"
 msgstr "Подання заявок"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Вкладки робочого простору заявки"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Висхідний"
 msgid "Ask"
 msgstr "Запитуйте"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Запитайте про цю заявку…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Запитайте про наступний крок у кар’єрі…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Запитайте про свій пошук або принесіть досягнення, яке хочете пояснити краще. Відповіді використовують те, що ввімкнено нижче, і вказують, на що спиралися."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Запитайте будь-що про цю роботу"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Запитайте будь-що про цю вакансію. Коуч читає оголошення, ваші нотатки й надіслане та знає, що ви на вкладці «{tabName}»."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Запитайте або опишіть зміну…"
 msgid "Aspect Ratio"
 msgstr "Пропорції"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "помічник"
@@ -2373,7 +2374,6 @@ msgstr "Підключіть постачальника AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Назва розмови"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Розмови"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Розмови про конкретну вакансію зберігаються в її робочому просторі."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Не вдалося завантажити розмови."
 
@@ -2979,6 +2981,7 @@ msgstr "Супровідний лист"
 msgid "Cover letter — {0}"
 msgstr "Супровідний лист — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Видалити «{0}»?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Видалити {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Редагувати"
 msgid "Edit {0}: {1}"
 msgstr "Редагувати {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Редагування застосовано"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Розділення слів"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Я бачу цей лист і вакансію компанії {company}. Пропозиції відображаються як зміни, які можна приймати по одній."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Я бачу цей лист. Пропозиції відображаються як зміни, які можна приймати по одній."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Я бачу це резюме та оголошення про роботу {company}. Пропозиції повертаються як правки, які можна прийняти одну за одною."
 
@@ -4808,6 +4821,10 @@ msgstr "Обмежтеся двома-трьома гарнітурами. Ко�
 msgid "Keep together"
 msgstr "Тримайтеся разом"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Зберігає найбільш специфічні частини"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Зберігся як є"
@@ -4901,6 +4918,10 @@ msgstr "Розташуйте текст горизонтально. Поверн
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Макет"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Підказує, чому ви підходите"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Основний блок"
 msgid "Make default"
 msgstr "Зробити типовим"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Зробіть це більш конкретним"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Зробіть його коротшим"
@@ -5288,6 +5314,10 @@ msgstr "Зробіть його коротшим"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Звільніть місце для наступного кроку."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Зробіть отвір міцнішим"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Нова заявка"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Нова розмова"
 
@@ -6335,6 +6366,10 @@ msgstr "Відкрийте вхідний редактор"
 msgid "Open in Offers"
 msgstr "Відкрити в Пропозиціях"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Відкрити лист"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Відкрийте публічну сторінку"
@@ -6381,13 +6416,13 @@ msgstr "Відкрити робочий простір"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Відкриття розмови…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Відкриття файлу"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Відкриваємо лист…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Отримано {0} за допомогою {1}. Час пошуку н
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Зберегти розповідь"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Збережіть супровідний лист перед його експортом."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Збережіть документ перед надсиланням."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Надсилає цей PDF вашому налаштованому постачальнику штучного інтелекту замість читання його текстового шару."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Надсилає ваше повідомлення, цю заявку (оголошення, нотатки, надіслані документи) та ввімкнені Знання до {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Надсилає ваше повідомлення, попередні повідомлення, цю заявку на роботу (вакансію, нотатки й надіслані документи) та ввімкнені дані з розділу «Знання» до {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Чеки механічні. Це запитує мовну модель
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Коуч нічого не запам’ятовує з ваших повідомлень."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Консультанта не налаштовано на цьому сервері. Адміністратор сервера має задати ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Коуча не налаштовано на цьому сервері. Адміністратор має встановити ENCRYPTION_SECRET. Знання, Пропозиції та ваші заявки працюють і без нього."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Тренеру потрібне підключення AI. Нічого не буде надіслано, доки ви не попросите."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Коуч пропонує кожен факт у чаті. Нічого не зберігається без вашої згоди."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Помічник читає оголошення, ваші нотатки й надіслані матеріали та знає, що ви на вкладці {tabName}. Чат доступний у Помічнику."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Спробуйте {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Підкресліть посилання"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Використовувати серверну версію"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Використайте шість цифр Hex, як-от #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Щоб скасувати попередні зміни, скористайтеся дією Скасувати в редакторі."
@@ -10188,6 +10226,10 @@ msgstr "Використовується, коли {connected} не може п�
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Ім'я користувача"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Використовує факти з вашого резюме"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Ви офлайн. Повторіть спробу, коли відно�
 msgid "You're up to date"
 msgstr "Нічого нового"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

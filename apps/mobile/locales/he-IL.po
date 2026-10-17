@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} מועמדויות לייצוא."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "הוחלו {0} עריכות"
@@ -1167,7 +1168,6 @@ msgstr "חיבור AI"
 msgid "AI connections are unavailable."
 msgstr "חיבורי AI אינם זמינים."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "לא ניתן היה לטעון חיבורי AI."
@@ -1451,10 +1451,6 @@ msgstr "המועמדות עודכנה"
 msgid "Application views"
 msgstr "תצוגות מועמדויות"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "לשוניות סביבת העבודה למועמדות"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "עולה"
 msgid "Ask"
 msgstr "לִשְׁאוֹל"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "שאל על המועמדות הזו…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "שאל על הצעד הבא בקריירה שלך…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "שאל על החיפוש שלך, או הבא הישג שתרצה להסביר טוב יותר. התשובות משתמשות במה שמופעל למטה ומציינות על מה הן התבססו."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "שאל כל דבר על העבודה הזו"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "שאל כל דבר על המשרה הזו. המאמן קורא את המודעה, את ההערות שלך ואת מה ששלחת, ויודע שאתה בלשונית {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "שאל, או תאר שינוי..."
 msgid "Aspect Ratio"
 msgstr "יחס גובה־רוחב"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "עוֹזֵר"
@@ -2373,7 +2374,6 @@ msgstr "חבר ספק AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "שם השיחה"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "שיחות"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "שיחות על משרה מסוימת נמצאות בסביבת העבודה שלה."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "לא ניתן היה לטעון שיחות."
 
@@ -2979,6 +2981,7 @@ msgstr "מכתב מקדים"
 msgid "Cover letter — {0}"
 msgstr "מכתב נלווה - {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "למחוק את ״{0}״?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "מחק את {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "לַעֲרוֹך"
 msgid "Edit {0}: {1}"
 msgstr "ערוך {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "העריכה הוחלה"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "פיסוק במילים"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "יש לי גישה למכתב הזה ולמודעת המשרה של {company}. ההצעות מוצגות כשינויים שאפשר לאשר אחד־אחד."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "יש לי גישה למכתב הזה. ההצעות מוצגות כשינויים שאפשר לאשר אחד־אחד."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "אני רואה את קורות החיים האלה ואת המודעה של {company}. ההצעות יופיעו כעריכות שתוכל לקבל בנפרד."
 
@@ -4808,6 +4821,10 @@ msgstr "הישאר עם שתיים עד שלוש משפחות גופנים. כל
 msgid "Keep together"
 msgstr "להישאר יחד"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "שומר על החלקים הספציפיים ביותר"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "נשמר כמו שהוא"
@@ -4901,6 +4918,10 @@ msgstr "סדר את הטקסט אופקית. קטעי טקסט מסובבים נ
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "פריסה"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "מוביל עם למה אתה מתאים"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "ראשי"
 msgid "Make default"
 msgstr "הגדר כברירת מחדל"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "תעשה את זה יותר ספציפי"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "תעשה את זה קצר יותר"
@@ -5288,6 +5314,10 @@ msgstr "תעשה את זה קצר יותר"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "פנה מקום לשלב הבא."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "הפוך את הפתח לחזק יותר"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "מועמדות חדשה"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "שיחה חדשה"
 
@@ -6335,6 +6366,10 @@ msgstr "פתח את העורך ב"
 msgid "Open in Offers"
 msgstr "פתח ב\"הצעות\""
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "פתיחת המכתב"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "פתח את הדף הציבורי"
@@ -6381,13 +6416,13 @@ msgstr "פתח סביבת עבודה"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "פותחים את השיחה…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "פתיחת הקובץ"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "המכתב נפתח…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "אוחזר {0} באמצעות {1}. זמן השליפה אינו קובע
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "שמור סיפור"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "שמור את המכתב המקדים לפני ייצוא שלו."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "יש לשמור את המסמך לפני השליחה."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "שולח את ה-PDF הזה לספק ה-AI המוגדר שלך במקום לקרוא את שכבת הטקסט שלו."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "שולח את ההודעה שלך, את המועמדות הזו (מודעה, הערות, מסמכים שנשלחו) ואת מה שמופעל במאגר הידע אל {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "שולח את ההודעה שלך, הודעות קודמות, המועמדות הזו (מודעת המשרה, הערות ומסמכים שנשלחו) ומידע מופעל ממאגר הידע אל {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "הבדיקות הן מכניות. זה שואל מודל שפה כיצד
 msgid "The coach doesn't remember anything from your messages."
 msgstr "המאמן לא זוכר שום דבר מההודעות שלך."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "המאמן לא הוגדר בשרת הזה. מנהל השרת צריך להגדיר את ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "המאמן לא מוגדר בשרת הזה. מי שמפעיל אותו צריך להגדיר את ENCRYPTION_SECRET. מאגר הידע, ההצעות והמועמדויות שלך עובדים גם בלעדיו."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "המאמן צריך חיבור AI. שום דבר לא נשלח עד שאתה מבקש."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "המאמן מציע כל עובדה בצ'אט. שום דבר לא נשמר עד שתסכים."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "המאמן קורא את פרסום המשרה, ההערות שלך ומה ששלחת, ויודע שאתה ב-{tabName}. הצ'אט מגיע עם ה-עוזר."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "נסה את {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "קו תחתון של קישורים"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "השתמש בגרסת השרת"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "יש להשתמש בשש ספרות הקסדצימליות, כמו #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "השתמש בביטול בעורך כדי לבטל שינויים קודמים."
@@ -10188,6 +10226,10 @@ msgstr "משמש כאשר {connected} אינו יכול לקרוא דף. אין 
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "שם משתמש"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "משתמש בעובדות מתוך קורות החיים שלך"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "אתה לא מקוון. נסה שוב כשתתחבר מחדש."
 msgid "You're up to date"
 msgstr "הכול מעודכן"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

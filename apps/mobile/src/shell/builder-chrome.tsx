@@ -3,7 +3,7 @@ import type { IconName } from "@/ui";
 import type { Href } from "expo-router";
 import type { ReactNode } from "react";
 import { useLingui } from "@lingui/react/macro";
-import { router, Stack, useNavigation, useSegments } from "expo-router";
+import { useRouter, Stack, useNavigation, useSegments } from "expo-router";
 import { createContext, use, useEffect, useState } from "react";
 import { ActivityIndicator, Platform, Pressable, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
@@ -110,6 +110,7 @@ export function BuilderChrome<T extends string>(props: BuilderChromeProps<T>) {
 }
 
 function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, modals = [] }: BuilderChromeProps<T>) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const tablet = useIsTablet();
 	const navigation = useNavigation();
@@ -127,7 +128,7 @@ function Frame<T extends string>({ panes, tabletPanes, page, title, onShare, mod
 	const redirect = tablet && currentPane && !tabletPanes.includes(currentPane.pane) ? firstTabletPane : undefined;
 	useEffect(() => {
 		if (redirect) router.replace(redirect.href);
-	}, [redirect]);
+	}, [redirect, router]);
 
 	const switchPane = (next: PaneTab<T>) => {
 		if (next.pane === currentPane?.pane) return;

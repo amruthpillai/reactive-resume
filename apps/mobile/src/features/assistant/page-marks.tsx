@@ -1,6 +1,6 @@
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { View } from "react-native";
 import { routes } from "@/routes";
 import { Button, Icon, Text, useTheme } from "@/ui";
@@ -14,6 +14,7 @@ type ProposedEditsCaptionProps = { resumeId: string; pending: number };
  * Render it over the page when `useMarkedResumeData(...).pending > 0`.
  */
 export function ProposedEditsCaption({ resumeId, pending }: ProposedEditsCaptionProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, radius, space } = useTheme();
 	if (pending === 0) return null;

@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "エクスポートするジョブ 応募: {0}。"
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} 編集が適用されました"
@@ -1167,7 +1168,6 @@ msgstr "AI接続"
 msgid "AI connections are unavailable."
 msgstr "AI接続を利用できません。"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI 接続をロードできませんでした。"
@@ -1451,10 +1451,6 @@ msgstr "応募を更新しました"
 msgid "Application views"
 msgstr "応募ビュー"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "応募のワークスペース タブ"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "昇順"
 msgid "Ask"
 msgstr "聞く"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "この応募について質問…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "キャリアの次のステップについて質問…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "就職活動について質問したり、うまく説明したい実績を持ち込んだりしてください。回答は下でオンになっている情報を使い、何に基づいたかを示します。"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "この仕事について何でも聞いてください"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "この求人について何でも質問してください。コーチは求人情報、あなたのメモ、送信した内容を読み、あなたが{tabName}を開いていることを把握しています。"
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "変更について尋ねたり、説明したりしてください…"
 msgid "Aspect Ratio"
 msgstr "アスペクト比"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "アシスタント"
@@ -2373,7 +2374,6 @@ msgstr "AI プロバイダーを接続する"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "会話の名前"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "会話"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "1つの求人に関する会話は、その求人のワークスペースにあります。"
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "会話を読み込めませんでした。"
 
@@ -2979,6 +2981,7 @@ msgstr "カバーレター"
 msgid "Cover letter — {0}"
 msgstr "カバーレター — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "「{0}」を削除しますか？"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0}を削除"
 
@@ -3618,6 +3622,7 @@ msgstr "編集"
 msgid "Edit {0}: {1}"
 msgstr "{0} を編集: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "編集が適用されました"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "ハイフネーション"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "このカバーレターと{company}の求人情報を参照できます。提案は編集案として表示され、1件ずつ承認できます。"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "このカバーレターを参照できます。提案は編集案として表示され、1件ずつ承認できます。"
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "このレジュメと {company} の求人情報が表示されます。提案は編集として返され、1 つずつ受け入れることができます。"
 
@@ -4808,6 +4821,10 @@ msgstr "フォントは2〜3種類に抑えてください。追加するフォ�
 msgid "Keep together"
 msgstr "一緒に"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "最も具体的な部分を保持します"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "そのままにしておきます"
@@ -4901,6 +4918,10 @@ msgstr "テキストは横書きで配置してください。回転したテキ
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "レイアウト"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "あなたが適合する理由を導きます"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "メイン"
 msgid "Make default"
 msgstr "デフォルトにする"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "より具体的にする"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "短くしてください"
@@ -5288,6 +5314,10 @@ msgstr "短くしてください"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "次のステップに向けて整理しましょう。"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "開口部を強くする"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "新規申請"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "新しい会話"
 
@@ -6335,6 +6366,10 @@ msgstr "エディターで開く"
 msgid "Open in Offers"
 msgstr "「オファー」で開く"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "カバーレターを開く"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "公開ページを開く"
@@ -6381,13 +6416,13 @@ msgstr "ワークスペースを開く"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "会話を開いています…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "ファイルを開く"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "カバーレターを開いています…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{1} を使用して {0} を取得しました。取得時間は、オリ
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "ストーリーを保存"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "カバーレターをエクスポートする前に保存してください。"
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "送信する前にドキュメントを保存してください。"
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "テキスト レイヤーを読み取る代わりに、この PDF を構成済みの AI プロバイダーに送信します。"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "あなたのメッセージ、この応募（求人情報、メモ、送信したドキュメント）、オンになっているナレッジを{connection}に送信します。"
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "メッセージ、過去のメッセージ、この応募の情報（求人情報、メモ、送付済みの書類）、およびナレッジで有効にした情報を{label}に送信します。"
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "チェックは機械式です。これにより、読者がリストの
 msgid "The coach doesn't remember anything from your messages."
 msgstr "コーチはあなたのメッセージから何も記憶しません。"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "このサーバーではコーチが設定されていません。サーバーの管理者がENCRYPTION_SECRETを設定する必要があります。"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "このサーバーではコーチが設定されていません。運営者がENCRYPTION_SECRETを設定する必要があります。ナレッジ、オファー、応募はこれがなくても使えます。"
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "コーチには AI 接続が必要です。問い合わせるまで何も送信されません。"
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "コーチはチャットで事実を1つずつ提案します。あなたが同意するまで何も保存されません。"
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "コーチは求人情報、メモ、送信内容を読み、現在のタブが{tabName}であることを把握します。チャットはアシスタントとともに利用可能になります。"
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "{suggestion} をお試しください"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "リンクに下線を引く"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "サーバーのバージョンを使用する"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "#3E6B4F のように16進数6桁で入力してください。"
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "以前の変更を取り消すには、エディターの「元に戻す」を使ってください。"
@@ -10188,6 +10226,10 @@ msgstr "{connected} がページを読み取れない場合に使用されます
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "ユーザー名"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "履歴書の事実を使用する"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "オフラインです。再接続時にもう一度お試しください
 msgid "You're up to date"
 msgstr "すべて確認済みです"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

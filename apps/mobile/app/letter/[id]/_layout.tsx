@@ -1,7 +1,7 @@
 import type { LetterPane } from "@/routes";
 import type { PaneTab } from "@/shell/builder-chrome";
 import { useLingui } from "@lingui/react/macro";
-import { router, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import PageScreen from "./page";
 import { LetterConflictSheet, useLetterDraftOwner, useLetterStore } from "@/draft";
@@ -15,6 +15,7 @@ import { IconButton } from "@/ui";
 
 /** Fills the chrome from the draft once for every pane: name and save status. ⌘Z / ⇧⌘Z undo and redo. */
 function DraftChrome({ id }: { id: string }) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const name = useLetterStore((state) => state.document?.name);
 	const status = useLetterStore((state) => state.status);

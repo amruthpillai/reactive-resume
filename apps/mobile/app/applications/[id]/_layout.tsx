@@ -1,5 +1,5 @@
 import { useLingui } from "@lingui/react/macro";
-import { router, Stack, useNavigation } from "expo-router";
+import { useRouter, Stack, useNavigation } from "expo-router";
 import { Platform } from "react-native";
 import { routes } from "@/routes";
 import { isWorkspaceTab, WorkspaceChrome } from "@/shell/workspace-chrome";
@@ -10,6 +10,7 @@ import { IconButton } from "@/ui";
  * (`details`) with a plain header of its own.
  */
 export default function ApplicationLayout() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const navigation = useNavigation();
 	const leave = () => (navigation.canGoBack() ? navigation.goBack() : router.replace(routes.applications()));

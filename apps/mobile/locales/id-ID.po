@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "{0} lamaran pekerjaan yang akan diekspor."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} suntingan diterapkan"
@@ -1167,7 +1168,6 @@ msgstr "Koneksi AI"
 msgid "AI connections are unavailable."
 msgstr "Koneksi AI tidak tersedia."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "Koneksi AI tidak dapat dimuat."
@@ -1451,10 +1451,6 @@ msgstr "Lamaran diperbarui"
 msgid "Application views"
 msgstr "Tampilan lamaran"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Tab ruang kerja lamaran"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Naik"
 msgid "Ask"
 msgstr "Bertanya"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Tanyakan tentang lamaran ini…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Tanyakan tentang langkah karier Anda berikutnya…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Tanyakan tentang pencarian Anda, atau bawa pencapaian yang ingin Anda jelaskan dengan lebih baik. Jawaban memakai apa yang diaktifkan di bawah dan menyebutkan apa yang menjadi dasarnya."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Tanyakan apa pun tentang pekerjaan ini"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Tanyakan apa saja tentang pekerjaan ini. Coach membaca lowongan, catatan Anda, dan apa yang Anda kirim, serta tahu bahwa Anda sedang di {tabName}."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Tanyakan, atau jelaskan perubahan…"
 msgid "Aspect Ratio"
 msgstr "Rasio Aspek"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Asisten"
@@ -2373,7 +2374,6 @@ msgstr "Hubungkan penyedia AI"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Nama percakapan"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Percakapan"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Percakapan tentang satu pekerjaan ada di ruang kerjanya."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Percakapan tidak dapat dimuat."
 
@@ -2979,6 +2981,7 @@ msgstr "Surat Lamaran"
 msgid "Cover letter — {0}"
 msgstr "Surat lamaran — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "Hapus “{0}”?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "Hapus {0}"
 
@@ -3618,6 +3622,7 @@ msgstr "Edit"
 msgid "Edit {0}: {1}"
 msgstr "Sunting {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Pengeditan diterapkan"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Pemisahan kata dengan tanda hubung"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Saya dapat melihat surat ini dan lowongan kerja dari {company}. Saran ditampilkan sebagai perubahan yang dapat Anda terima satu per satu."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Saya dapat melihat surat ini. Saran ditampilkan sebagai perubahan yang dapat Anda terima satu per satu."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Saya dapat melihat CV ini dan lowongan {company}. Saran muncul kembali sebagai hasil edit yang dapat Anda terima satu per satu."
 
@@ -4808,6 +4821,10 @@ msgstr "Batasi hingga dua atau tiga keluarga font. Setiap font tambahan adalah p
 msgid "Keep together"
 msgstr "Tetap bersatu"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Menyimpan bagian yang paling spesifik"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Tetap apa adanya"
@@ -4901,6 +4918,10 @@ msgstr "Tata teks secara horizontal. Teks yang diputar sering hilang atau salah 
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Tata Letak"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Pimpin dengan alasan mengapa Anda cocok"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Utama"
 msgid "Make default"
 msgstr "Jadikan default"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Buatlah lebih spesifik"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Buatlah lebih pendek"
@@ -5288,6 +5314,10 @@ msgstr "Buatlah lebih pendek"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Berikan ruang untuk langkah berikutnya."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Buat pembukaannya lebih kuat"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Lamaran Baru"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Percakapan baru"
 
@@ -6335,6 +6366,10 @@ msgstr "Buka di editor"
 msgid "Open in Offers"
 msgstr "Buka di Penawaran"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Buka surat"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Buka halaman publik"
@@ -6381,13 +6416,13 @@ msgstr "Buka ruang kerja"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Membuka percakapan…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Membuka file"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Membuka surat…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "Mengambil {0} menggunakan {1}. Waktu pengambilan tidak menentukan kesega
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Simpan cerita"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Simpan surat lamaran sebelum mengekspornya."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Simpan dokumen sebelum mengirim."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Kirimkan PDF ini ke penyedia AI yang Anda konfigurasikan alih-alih membaca lapisan teksnya."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Mengirim pesan Anda, lamaran ini (lowongan, catatan, dokumen terkirim), dan Pengetahuan yang diaktifkan ke {connection}."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Mengirim pesan Anda, pesan sebelumnya, lamaran kerja ini (lowongan, catatan, dan dokumen yang telah dikirim), serta informasi Pengetahuan yang diaktifkan ke {label}."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Pemeriksaannya bersifat mekanis. Ini menanyakan model bahasa bagaimana r
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Coach tidak mengingat apa pun dari pesan Anda."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Pelatih belum disiapkan di server ini. Pengelola server perlu mengatur ENCRYPTION_SECRET."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Coach belum diatur di server ini. Pengelolanya perlu mengatur ENCRYPTION_SECRET. Pengetahuan, Penawaran, dan lamaran Anda tetap berfungsi tanpanya."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Pelatih memerlukan koneksi AI. Tidak ada yang dikirim sampai Anda memintanya."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Coach mengusulkan setiap fakta di chat. Tidak ada yang disimpan sampai Anda setuju."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Pelatih membaca lowongan, catatan Anda, dan apa yang Anda kirimkan, dan mengetahui bahwa Anda ada di {tabName}. Obrolan tiba dengan Asisten."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Coba {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Garis bawahi tautan"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Gunakan versi server"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "Gunakan enam digit heksadesimal, seperti #3E6B4F."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Gunakan Membuka pembuat untuk membatalkan perubahan sebelumnya."
@@ -10188,6 +10226,10 @@ msgstr "Digunakan ketika {connected} tidak dapat membaca halaman. Tidak diperluk
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Nama Pengguna"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Menggunakan fakta dari resume Anda"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Anda sedang luring. Coba lagi saat Anda tersambung kembali."
 msgid "You're up to date"
 msgstr "Semua sudah terbaru"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { useQueryClient } from "@tanstack/react-query";
-import { router, useRootNavigationState, useSegments } from "expo-router";
+import { useRootNavigationState, useRouter, useSegments } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 import { hostOf } from "./auth-header";
@@ -20,6 +20,8 @@ import { Banner, Button, Sheet, showToast, useTheme } from "@/ui";
  */
 export function SessionGate() {
 	const { t } = useLingui();
+	// Bind to this root; Android recreation can unbind the previous root's global router during cleanup.
+	const router = useRouter();
 	const { status } = useSession();
 	const segments = useSegments();
 	const navigationReady = !!useRootNavigationState()?.key;
@@ -55,7 +57,7 @@ export function SessionGate() {
 			if (!where.current.inAuth) router.replace(routes.signIn());
 			showToast({ message: t`Signed out of ${hostOf(server)}. Your documents are still there.` });
 		});
-	}, [t]);
+	}, [router, t]);
 
 	useEffect(() => {
 		const before = previous.current;
@@ -65,7 +67,7 @@ export function SessionGate() {
 		if (status === "signed-out" && !inAuth && !signedOutNow)
 			router.replace(hasChosenServer() ? routes.signIn() : routes.server());
 		else if (status === "signed-in" && inAuth) router.replace(routes.documents());
-	}, [navigationReady, status, inAuth, atCallback]);
+	}, [navigationReady, status, inAuth, atCallback, router]);
 
 	return status === "expired" ? <SessionExpiredSheet /> : null;
 }

@@ -1,6 +1,6 @@
 import type { WriteSection } from "./model";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { SECTION_TITLES } from "./fields";
 import { edit, useDeleteEntry, useEntry, useWriteData } from "./hooks";
@@ -29,6 +29,7 @@ type EntrySheetProps = {
 
 /** Entry options: Hide from page / Show on page, Duplicate, Move to… (section, page, new section, new page), Delete. */
 export function EntrySheet({ resumeId, section, entryId, open, onClose, onGone }: EntrySheetProps) {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const entry = useEntry(section.id, entryId);
 	const deleteEntry = useDeleteEntry();

@@ -1,5 +1,6 @@
+import type { ImperativeRouter } from "expo-router";
 import { useLingui } from "@lingui/react/macro";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useRouter, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
@@ -11,7 +12,8 @@ import { DEFAULT_SERVER, useSession } from "@/auth/session";
 import { routes } from "@/routes";
 import { Button, Card, Icon, ListRow, Screen, Text, TextField, useTheme } from "@/ui";
 
-const continueTo = (server: string) => router.push({ pathname: routes.signIn(), params: { server } });
+const continueTo = (server: string, router: ImperativeRouter) =>
+	router.push({ pathname: routes.signIn(), params: { server } });
 
 /** AU1 (server picker); with `?custom=1`, AU2/AU3 (another server). */
 export default function ServerScreen() {
@@ -20,6 +22,7 @@ export default function ServerScreen() {
 }
 
 function ServerPicker() {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, size, space } = useTheme();
 	const { server } = useSession();
@@ -72,7 +75,7 @@ function ServerPicker() {
 				fullWidth
 				onPress={() =>
 					choice === "default"
-						? continueTo(DEFAULT_SERVER)
+						? continueTo(DEFAULT_SERVER, router)
 						: router.push({ pathname: routes.server(), params: { custom: "1" } })
 				}
 			/>
@@ -89,6 +92,7 @@ type Check =
 const checkDelay = 600;
 
 function CustomServer() {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const { colors, space } = useTheme();
 	const insets = useSafeAreaInsets();
@@ -184,7 +188,7 @@ function CustomServer() {
 							size="lg"
 							fullWidth
 							disabled={!ready}
-							onPress={() => ready && continueTo(check.origin)}
+							onPress={() => ready && continueTo(check.origin, router)}
 						/>
 					</View>
 				</View>

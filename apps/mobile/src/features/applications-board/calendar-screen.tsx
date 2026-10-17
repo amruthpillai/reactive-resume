@@ -3,7 +3,7 @@ import type { Application } from "@/features/applications/types";
 import type { InterviewTimelineEntry } from "@reactive-resume/schema/applications/data";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import {
@@ -382,6 +382,7 @@ type EventCardProps = { event: CalendarEvent; onEdit: (editing: Editing) => void
 
 /** One interview or follow-up: tap to edit it, or open its application. */
 function EventCard({ event, onEdit }: EventCardProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { colors, space } = useTheme();
 	const userTime = useUserTime();

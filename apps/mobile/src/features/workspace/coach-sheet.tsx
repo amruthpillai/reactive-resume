@@ -91,6 +91,7 @@ function ApplicationCoach({ application, tab }: ApplicationCoachProps) {
 			</View>
 			<ProviderGate
 				providers={providers}
+				readOnly={history || threadId !== null}
 				threadsError={threads.error}
 				loading={threads.isPending}
 				onRetry={() => {
@@ -107,6 +108,7 @@ function ApplicationCoach({ application, tab }: ApplicationCoachProps) {
 					/>
 				) : history ? (
 					<View>
+						<ListRow title={t`New conversation`} leading="note-pencil" onPress={() => open("new")} />
 						{list.map((thread) => (
 							<ListRow
 								key={thread.id}
@@ -142,6 +144,7 @@ function ApplicationCoach({ application, tab }: ApplicationCoachProps) {
 						}}
 						context={context}
 						document={null}
+						disabled={!providers.hasAIProvider}
 						connection={label}
 						privacy={privacy}
 						placeholder={t`Ask about this application…`}

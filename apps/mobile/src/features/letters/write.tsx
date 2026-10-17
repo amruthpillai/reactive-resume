@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { plural, t } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { ORPCError } from "@orpc/client";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Keyboard, ScrollView, View } from "react-native";
 import { coverLetterTextToHtml, defaultCoverLetterSignOff, greetingName } from "@reactive-resume/resume/cover-letter";
@@ -747,6 +747,7 @@ function LengthSection({ words }: { words: number }) {
 
 /** DESIGN: what the letter looks like, and where to change it. */
 function DesignNote({ letter }: { letter: LetterDocument }) {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const summary = designSummary(letter.style.metadata, i18n, (pairing) => t`${pairing} type`);
 	return (

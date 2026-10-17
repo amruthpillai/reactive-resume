@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "待导出申请：{0}份。"
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} 编辑已应用"
@@ -1167,7 +1168,6 @@ msgstr "AI 连接"
 msgid "AI connections are unavailable."
 msgstr "AI 连接不可用。"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "无法加载 AI 连接。"
@@ -1451,10 +1451,6 @@ msgstr "申请已更新"
 msgid "Application views"
 msgstr "申请视图"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "申请工作区选项卡"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "升序"
 msgid "Ask"
 msgstr "问"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "询问有关此申请的问题…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "询问您职业生涯的下一步…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "询问您的求职情况，或带来一项想讲得更清楚的成就。回答会使用下方已开启的内容，并说明依据了什么。"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "询问有关这份工作的任何问题"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "关于这份工作，尽管问。教练会阅读职位公告、您的备注和您发送的内容，并知道您正在“{tabName}”页。"
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "询问或描述更改..."
 msgid "Aspect Ratio"
 msgstr "宽高比"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "助手"
@@ -2373,7 +2374,6 @@ msgstr "连接AI提供商"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "对话名称"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "对话"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "关于某个职位的对话保存在其工作区中。"
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "无法加载对话。"
 
@@ -2979,6 +2981,7 @@ msgstr "求职信"
 msgid "Cover letter — {0}"
 msgstr "求职信 — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "删除“{0}”？"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "删除{0}"
 
@@ -3618,6 +3622,7 @@ msgstr "编辑"
 msgid "Edit {0}: {1}"
 msgstr "编辑{0}：{1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "编辑已应用"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "连字符"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "我可以查看这封求职信和 {company} 的招聘信息。建议会以修改项的形式显示，你可以逐一接受。"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "我可以查看这封求职信。建议会以修改项的形式显示，你可以逐一接受。"
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "我可以看到这份简历和 {company} 职位发布。建议以编辑形式返回，您可以一一接受。"
 
@@ -4808,6 +4821,10 @@ msgstr "字体最多保留两三种。每多一种字体，就多一次映射出
 msgid "Keep together"
 msgstr "保持团结"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "保留最具体的部分"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "保持原样"
@@ -4901,6 +4918,10 @@ msgstr "将文字水平排列。旋转的文字段落常常会丢失或错位。
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "布局"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "引导您了解适合的原因"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "主界面"
 msgid "Make default"
 msgstr "设为默认"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "使其更具体"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "让它更短"
@@ -5288,6 +5314,10 @@ msgstr "让它更短"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "为下一步腾出空间。"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "让开口更坚固"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "新申请"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "新对话"
 
@@ -6335,6 +6366,10 @@ msgstr "打开编辑器"
 msgid "Open in Offers"
 msgstr "在“录用通知”中打开"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "打开求职信"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "打开公共页面"
@@ -6381,13 +6416,13 @@ msgstr "打开工作区"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "打开对话…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "打开文件"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "正在打开求职信…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "使用 {1} 检索 {0}。检索时间并不能确定来源的新鲜度。
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "保存故事"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "导出之前保存求职信。"
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "请在发送前保存文档。"
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "将此 PDF 发送到您配置的 AI 提供商，而不是读取其文本层。"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "将您的消息、此申请（职位公告、备注、已发送的文档）和已开启的知识库内容发送给 {connection}。"
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "将你的消息、历史消息、此次求职申请的信息（招聘信息、备注和已发送的文档）以及知识库中已启用的信息发送给 {label}。"
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "检查是机械的。这会询问语言模型读者对您的列表条目
 msgid "The coach doesn't remember anything from your messages."
 msgstr "教练不会从您的消息中记住任何内容。"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "此服务器尚未配置教练。服务器管理员需要设置 ENCRYPTION_SECRET。"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "此服务器尚未设置教练。服务器管理员需要设置 ENCRYPTION_SECRET。知识库、录用通知和您的申请无需它也能使用。"
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "教练需要AI连接。在您询问之前，不会发送任何内容。"
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "教练会在聊天中逐条提出事实。在您同意之前不会保存任何内容。"
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "教练会读取招聘信息、备注和已发送的内容，并知道您位于{tabName}。聊天功能将随助手一起提供。"
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "尝试{suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "下划线链接"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "使用服务器版本"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "请输入六位 Hex 数字，例如 #3E6B4F。"
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "使用编辑器的“撤销”取消之前的更改。"
@@ -10188,6 +10226,10 @@ msgstr "当{connected}无法读取页面时使用。无需帐户。"
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "用户名"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "使用简历中的事实"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "您已离线。重新连接后重试。"
 msgid "You're up to date"
 msgstr "已全部看完"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

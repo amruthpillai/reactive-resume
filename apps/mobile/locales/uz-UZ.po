@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "Eksport qilish uchun {0} ish ilovalari."
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} ta tahrir qo'llanildi"
@@ -1167,7 +1168,6 @@ msgstr "AI ulanishi"
 msgid "AI connections are unavailable."
 msgstr "AI ulanishlari mavjud emas."
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "AI ulanishlarni yuklab boʻlmadi."
@@ -1451,10 +1451,6 @@ msgstr "Ariza yangilandi"
 msgid "Application views"
 msgstr "Arizalar koʻrinishlari"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "Ariza ish maydoni varaqlari"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "Ko'tarilish"
 msgid "Ask"
 msgstr "So'rang"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "Bu ariza haqida so'rang…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "Karyerangizdagi keyingi qadam haqida so'rang…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "Qidiruvingiz haqida so'rang yoki yaxshiroq tushuntirmoqchi bo'lgan yutug'ingizni keltiring. Javoblar quyida yoqilgan narsalardan foydalanadi va nimaga tayanganini aytadi."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "Bu ish haqida biror narsa so'rang"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "Bu ish haqida istalgan narsani so'rang. Murabbiy e'lonni, eslatmalaringizni va yuborganlaringizni o'qiydi hamda siz “{tabName}” bo'limida ekaningizni biladi."
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "Oʻzgarishlarni soʻrang yoki tavsiflang…"
 msgid "Aspect Ratio"
 msgstr "Tomonlar nisbati"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "Yordamchi"
@@ -2373,7 +2374,6 @@ msgstr "AI provayderini ulang"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "Suhbat nomi"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "Suhbatlar"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "Bitta ish haqidagi suhbatlar uning ish maydonida saqlanadi."
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "Suhbatlar yuklanmadi."
 
@@ -2979,6 +2981,7 @@ msgstr "Xat"
 msgid "Cover letter — {0}"
 msgstr "Muqova xati — {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "“{0}” o‘chirilsinmi?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0}-ni o'chirib tashlang"
 
@@ -3618,6 +3622,7 @@ msgstr "Tahrirlash"
 msgid "Edit {0}: {1}"
 msgstr "Tahrirlash {0}: {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "Tahrirlash qo'llanildi"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "Bog'lovchi chiziq"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "Bu xatni va {company} kompaniyasining ish e’lonini ko‘ra olaman. Takliflar birma-bir qabul qilishingiz mumkin bo‘lgan tahrirlar sifatida ko‘rsatiladi."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "Bu xatni ko‘ra olaman. Takliflar birma-bir qabul qilishingiz mumkin bo‘lgan tahrirlar sifatida ko‘rsatiladi."
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "Men ushbu rezyume va {company} ish e'lonini ko'ra olaman. Takliflar tahrir sifatida qaytadi, siz birma-bir qabul qilishingiz mumkin."
 
@@ -4808,6 +4821,10 @@ msgstr "Ikki yoki uchta shrift oilasi bilan cheklaning. Har bir qoʻshimcha shri
 msgid "Keep together"
 msgstr "Birgalikda bo'ling"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "Eng aniq qismlarni saqlaydi"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "Xuddi shunday saqlangan"
@@ -4901,6 +4918,10 @@ msgstr "Matnni gorizontal joylashtiring. Aylantirilgan qismlar koʻpincha yoʻqo
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "Maketi"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "Siz nima uchun mos ekanligingizni aytadi"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "Asosiy"
 msgid "Make default"
 msgstr "Standart qilish"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "Buni aniqroq qiling"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "Uni qisqartiring"
@@ -5288,6 +5314,10 @@ msgstr "Uni qisqartiring"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "Keyingi qadam uchun joy ajrating."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "Ochilishni kuchliroq qiling"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "Yangi ariza"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "Yangi suhbat"
 
@@ -6335,6 +6366,10 @@ msgstr "In muharririni oching"
 msgid "Open in Offers"
 msgstr "Takliflarda ochish"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "Xatni ochish"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "Umumiy sahifani oching"
@@ -6381,13 +6416,13 @@ msgstr "Ish maydonini ochish"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "Suhbat ochilmoqda…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "Faylni ochish"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "Xat ochilmoqda…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{1} yordamida {0} olindi. Qabul qilish vaqti kelib chiqishining yangilig
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "Hikoyani saqlash"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "Motivatsion xatini eksport qilishdan oldin saqlang."
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "Yuborishdan oldin hujjatni saqlang."
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "Ushbu PDF matn qatlamini oʻqish oʻrniga sozlangan AI provayderingizga yuboradi."
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "Xabaringizni, ushbu arizani (e'lon, eslatmalar, yuborilgan hujjatlar) va yoqilgan Bilimlarni {connection}ga yuboradi."
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "Xabaringizni, oldingi xabarlarni, ushbu ish arizasini (e’lon, qaydlar va yuborilgan hujjatlar) hamda Bilim bo‘limidagi yoqilgan ma’lumotlarni {label} xizmatiga yuboradi."
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "Tekshirishlar mexanik. Bu til modelidan o'quvchi sizning ro'yxatdagi yoz
 msgid "The coach doesn't remember anything from your messages."
 msgstr "Murabbiy xabarlaringizdan hech narsani eslab qolmaydi."
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "Bu serverda murabbiy sozlanmagan. Server boshqaruvchisi ENCRYPTION_SECRET qiymatini belgilashi kerak."
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "Murabbiy bu serverda sozlanmagan. Serverni boshqaruvchi ENCRYPTION_SECRET qiymatini o'rnatishi kerak. Bilimlar, Takliflar va arizalaringiz busiz ham ishlaydi."
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "Murabbiyga AI ulanishi kerak. Siz so'ramaguningizcha hech narsa yuborilmaydi."
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "Murabbiy har bir faktni chatda taklif qiladi. Siz rozi bo'lmaguningizcha hech narsa saqlanmaydi."
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "Murabbiy ish haqidagi e'lonni, eslatmalaringizni va nima yuborganingizni o'qiydi va {tabName} da ekanligingizni biladi. Chat Yordamchi bilan keladi."
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "Sinab ko‘ring: {suggestion}"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "Havolalar tagiga chizish"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "Server versiyasidan foydalaning"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "#3E6B4F kabi oltita Hex raqamidan foydalaning."
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "Oldingi oʻzgarishlarni bekor qilish uchun quruvchining Bekor qilish dan foydalaning."
@@ -10188,6 +10226,10 @@ msgstr "{connected} sahifani oʻqiy olmasa ishlatiladi. Hisob kerak emas."
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "Foydalanuvchi nomi"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "Sizning rezyumeingizdagi faktlardan foydalanadi"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "Siz oflaynsiz. Qayta ulanganda qayta urinib ko'ring."
 msgid "You're up to date"
 msgstr "Yangi narsa yo'q"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

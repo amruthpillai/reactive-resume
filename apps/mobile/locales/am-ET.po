@@ -281,6 +281,7 @@ msgid "{0} applications to export."
 msgstr "ወደ ውጭ የሚላኩ {0} የስራ መተግበሪያዎች።"
 
 #. placeholder {0}: proposals.length
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "{0} edits applied"
 msgstr "{0} አርትዖቶች ተተግብረዋል።"
@@ -1167,7 +1168,6 @@ msgstr "AI ግንኙነት"
 msgid "AI connections are unavailable."
 msgstr "AI ግንኙነቶች አይገኙም።"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 msgid "AI connections couldn't be loaded."
 msgstr "የAI ግንኙነቶች ሊጫኑ አልቻሉም።"
@@ -1451,10 +1451,6 @@ msgstr "ማመልከቻው ተዘምኗል"
 msgid "Application views"
 msgstr "የማመልከቻ እይታዎች"
 
-#: src/features/workspace/shell.tsx
-msgid "Application workspace tabs"
-msgstr "የማመልከቻ የስራ ቦታ ትሮች"
-
 #: app/(tabs)/_layout.tsx
 #: src/features/applications-board/views.tsx
 #: src/features/applications/list-screen.tsx
@@ -1548,6 +1544,10 @@ msgstr "ወደ ላይ መውጣት"
 msgid "Ask"
 msgstr "ጠይቅ"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "Ask about this application…"
+msgstr "ስለዚህ ማመልከቻ ይጠይቁ…"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "Ask about your next career step…"
 msgstr "ስለ ቀጣዩ የሙያ እርምጃዎ ይጠይቁ…"
@@ -1557,8 +1557,8 @@ msgid "Ask about your search, or bring an accomplishment you want to explain bet
 msgstr "ስለ ፍለጋዎ ይጠይቁ፣ ወይም በተሻለ ሊያስረዱት የሚፈልጉትን ስኬት ይዘው ይምጡ። መልሶች ከታች የበራውን ይጠቀማሉ፣ በምን ላይ እንደተመሠረቱም ይገልጻሉ።"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Ask anything about this job"
-msgstr "ስለዚህ ሥራ ማንኛውንም ነገር ይጠይቁ"
+msgid "Ask anything about this job. The coach reads the posting, your notes and what you sent, and knows you're on {tabName}."
+msgstr "ስለዚህ ሥራ ማንኛውንም ይጠይቁ። አሰልጣኙ የሥራ ማስታወቂያውን፣ ማስታወሻዎችዎን እና የላኩትን ያነባል፣ በ{tabName} ላይ እንዳሉም ያውቃል።"
 
 #: src/features/career/preferences.tsx
 msgid "Ask first"
@@ -1596,6 +1596,7 @@ msgstr "ለውጡን ይጠይቁ ወይም ይግለጹ…"
 msgid "Aspect Ratio"
 msgstr "የመገናኛ መጠን"
 
+#: app/letter/[id]/_layout.tsx
 #: src/features/assistant/assistant-screen.tsx
 msgid "Assistant"
 msgstr "ረዳት"
@@ -2373,7 +2374,6 @@ msgstr "AI አቅራቢን ያገናኙ"
 
 #: src/features/assistant/provider.tsx
 #: src/features/check/writing.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "Connect an AI provider"
@@ -2485,6 +2485,7 @@ msgid "Conversation name"
 msgstr "የውይይት ስም"
 
 #: src/features/assistant/coach-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations"
 msgstr "ውይይቶች"
 
@@ -2493,6 +2494,7 @@ msgid "Conversations about one job live in its workspace."
 msgstr "ስለ አንድ ሥራ የሚደረጉ ውይይቶች በራሱ የሥራ ቦታ ውስጥ ይቀመጣሉ።"
 
 #: src/features/assistant/assistant-screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Conversations couldn't load."
 msgstr "ውይይቶች ሊጫኑ አልቻሉም።"
 
@@ -2979,6 +2981,7 @@ msgstr "ማመልከቻ ደብዳቤ"
 msgid "Cover letter — {0}"
 msgstr "የሽፋን ደብዳቤ - {0}"
 
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
@@ -3193,6 +3196,7 @@ msgstr "“{0}” ይሰረዝ?"
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "Delete {0}"
 msgstr "{0} ሰርዝ"
 
@@ -3618,6 +3622,7 @@ msgstr "አርትዕ"
 msgid "Edit {0}: {1}"
 msgstr "አርትዕ {0}፡ {1}"
 
+#: src/features/assistant/document.ts
 #: src/features/assistant/proposals.ts
 msgid "Edit applied"
 msgstr "አርትዕ ተተግብሯል።"
@@ -4415,6 +4420,14 @@ msgid "Hyphenation"
 msgstr "ሰረዝ"
 
 #: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter and the {company} posting. Suggestions come back as edits you can accept one by one."
+msgstr "ይህን ደብዳቤ እና የ{company} የሥራ ማስታወቂያ ማየት እችላለሁ። ጥቆማዎች አንድ በአንድ መቀበል የሚችሉት ማሻሻያዎች ሆነው ይቀርባሉ።"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "I can see this letter. Suggestions come back as edits you can accept one by one."
+msgstr "ይህን ደብዳቤ ማየት እችላለሁ። ጥቆማዎች አንድ በአንድ መቀበል የሚችሉት ማሻሻያዎች ሆነው ይቀርባሉ።"
+
+#: src/features/assistant/assistant-screen.tsx
 msgid "I can see this resume and the {company} posting. Suggestions come back as edits you can accept one by one."
 msgstr "ይህን የስራ ልምድ ማስረጃ እና {company} የስራ ማስታወቂያን ማየት እችላለሁ። ጥቆማዎች እንደ አርትዖቶች አንድ በአንድ መቀበል ይችላሉ።"
 
@@ -4808,6 +4821,10 @@ msgstr "ወደ ሁለት ወይም ሶስት ቤተሰቦች ይገደቡ። እ
 msgid "Keep together"
 msgstr "አንድ ላይ ቆይ"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Keeps the most specific parts"
+msgstr "በጣም ልዩ የሆኑትን ክፍሎች ያቆያል"
+
 #: src/features/check/screen.tsx
 msgid "Kept as it is"
 msgstr "እንዳለ ተይዟል።"
@@ -4901,6 +4918,10 @@ msgstr "ጽሁፉን በአግድም ያስቀምጡ። የተሽከረከሩ �
 #: src/features/design/design-pane.tsx
 msgid "Layout"
 msgstr "አቀማመጥ"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Leads with why you fit"
+msgstr "ለምን እንደሚመጥኑ ይመራል።"
 
 #: src/features/career/offers.tsx
 msgid "Learning budget"
@@ -5281,6 +5302,11 @@ msgstr "ዋና"
 msgid "Make default"
 msgstr "ነባሪ አድርግ"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make it more specific"
+msgstr "የበለጠ ግልጽ ያድርጉት"
+
+#: src/features/assistant/assistant-screen.tsx
 #: src/features/write/improve.tsx
 msgid "Make it shorter"
 msgstr "አጭር ያድርጉት"
@@ -5288,6 +5314,10 @@ msgstr "አጭር ያድርጉት"
 #: src/features/career/today.tsx
 msgid "Make room for the next step."
 msgstr "ለቀጣዩ ደረጃ ቦታ ይስጡ."
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Make the opening stronger"
+msgstr "መክፈቻውን የበለጠ ጠንካራ ያድርጉት"
 
 #: src/features/ats-checker/messages.ts
 msgid "Make the visible text and the destination match."
@@ -5731,6 +5761,7 @@ msgstr "አዲስ ማመልከቻ"
 #: src/features/assistant/assistant-screen.tsx
 #: src/features/assistant/coach-screen.tsx
 #: src/features/assistant/threads.tsx
+#: src/features/workspace/coach-sheet.tsx
 msgid "New conversation"
 msgstr "አዲስ ውይይት"
 
@@ -6335,6 +6366,10 @@ msgstr "አርታዒውን ይክፈቱ"
 msgid "Open in Offers"
 msgstr "በቅናሾች ውስጥ ክፈት"
 
+#: src/features/assistant/assistant-screen.tsx
+msgid "Open letter"
+msgstr "ደብዳቤውን ክፈት"
+
 #: src/features/share/link.tsx
 msgid "Open public page"
 msgstr "ይፋዊ ገጹን ይክፈቱ"
@@ -6381,13 +6416,13 @@ msgstr "የሥራ ቦታውን ክፈት"
 msgid "OpenDocument"
 msgstr "OpenDocument"
 
-#: src/features/assistant/assistant-screen.tsx
-msgid "Opening the conversation…"
-msgstr "ውይይቱን በመክፈት ላይ…"
-
 #: src/features/ats-checker/checker.tsx
 msgid "Opening the file"
 msgstr "ፋይሉን በመክፈት ላይ"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Opening the letter…"
+msgstr "ደብዳቤው እየተከፈተ ነው…"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Opening the resume…"
@@ -7602,6 +7637,7 @@ msgstr "{1} በመጠቀም የተገኘ {0}። የመልሶ ማግኛ ጊዜ �
 #: src/features/share/download.tsx
 #: src/features/share/link.tsx
 #: src/features/share/screen.tsx
+#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/write/picture-screen.tsx
 #: src/preview/page.tsx
@@ -7879,6 +7915,10 @@ msgstr "ታሪኩን አስቀምጥ"
 #: src/features/share/download.tsx
 msgid "Save the cover letter before exporting it."
 msgstr "የሽፋን ደብዳቤውን ወደ ውጭ ከመላክዎ በፊት ያስቀምጡ።"
+
+#: src/features/assistant/chat.ts
+msgid "Save the document before sending."
+msgstr "ከመላክዎ በፊት ሰነዱን ያስቀምጡ።"
 
 #: src/features/ats-checker/messages.ts
 msgid "Save the file with every page upright."
@@ -8158,8 +8198,8 @@ msgid "Sends this PDF to your configured AI provider instead of reading its text
 msgstr "ይህን PDF የጽሑፍ ንብርብሩን ከማንበብ ይልቅ ወደ የተዋቀረው የAI አቅራቢዎ ይልካል።"
 
 #: src/features/workspace/coach-sheet.tsx
-msgid "Sends your message, this application (posting, notes, documents sent) and Knowledge that's switched on to {connection}."
-msgstr "መልዕክትዎን፣ ይህን ማመልከቻ (የሥራ ማስታወቂያ፣ ማስታወሻዎች፣ የተላኩ ሰነዶች) እና የበራውን እውቀት ወደ {connection} ይልካል።"
+msgid "Sends your message, earlier messages, this application (posting, notes, documents sent) and Knowledge that's switched on to {label}."
+msgstr "መልዕክትዎን፣ የቀድሞ መልዕክቶችን፣ ይህን የሥራ ማመልከቻ (የሥራ ማስታወቂያ፣ ማስታወሻዎች እና የተላኩ ሰነዶች) እና የነቃውን የእውቀት መረጃ ወደ {label} ይልካል።"
 
 #. placeholder {0}: provider?.label
 #. placeholder {1}: provider?.model
@@ -9163,21 +9203,17 @@ msgstr "ቼኮች ሜካኒካል ናቸው። ይህ አንድ አንባቢ ለ
 msgid "The coach doesn't remember anything from your messages."
 msgstr "አሰልጣኙ ከመልዕክቶችዎ ምንም ነገር አያስታውስም።"
 
+#: src/features/workspace/coach-sheet.tsx
+msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET."
+msgstr "አሰልጣኙ በዚህ አገልጋይ ላይ አልተዋቀረም። አገልጋዩን የሚያስተዳድረው ሰው ENCRYPTION_SECRET ማዋቀር አለበት።"
+
 #: src/features/assistant/coach-screen.tsx
 msgid "The coach isn't set up on this server. Whoever runs it needs to set ENCRYPTION_SECRET. Knowledge, Offers and your applications work without it."
 msgstr "አሰልጣኙ በዚህ አገልጋይ ላይ አልተዋቀረም። የሚያስተዳድረው ሰው ENCRYPTION_SECRETን ማዘጋጀት አለበት። እውቀት፣ ቅናሾች እና ማመልከቻዎችዎ ያለሱ ይሠራሉ።"
 
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach needs an AI connection. Nothing is sent until you ask."
-msgstr "አሰልጣኙ የAI ግንኙነት ያስፈልገዋል። እስኪጠይቁ ድረስ ምንም ነገር አይላክም።"
-
 #: src/features/career/preferences.tsx
 msgid "The coach proposes each fact in the chat. Nothing is saved until you agree."
 msgstr "አሰልጣኙ እያንዳንዱን እውነታ በውይይቱ ውስጥ ያቀርባል። እርስዎ እስኪስማሙ ድረስ ምንም ነገር አይቀመጥም።"
-
-#: src/features/workspace/coach-sheet.tsx
-msgid "The coach reads the posting, your notes and what you sent, and knows you're on {tabName}. Chat arrives with the Assistant."
-msgstr "አሰልጣኙ የስራ ማስታወቂያውን፣ ማስታወሻዎን እና የላኩትን ያነባል እና በ{tabName} ላይ መሆንዎን ያውቃል። ውይይት ከረዳት ጋር ይመጣል።"
 
 #: src/features/career/preferences.tsx
 msgid "The coach saves facts you state, and tells you. You can undo."
@@ -9815,7 +9851,6 @@ msgstr "{suggestion}ን ይሞክሩ"
 #: src/features/letters/write.tsx
 #: src/features/public/public-resume.tsx
 #: src/features/settings/api-keys.tsx
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/parts.tsx
 #: src/features/workspace/shell.tsx
 #: src/features/workspace/tabs/practise.tsx
@@ -9930,6 +9965,7 @@ msgstr "አገናኞችን አስምር"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 #: src/features/application-detail/interview-sheet.tsx
+#: src/features/assistant/document.ts
 #: src/features/assistant/messages.tsx
 #: src/features/assistant/proposals.ts
 #: src/features/career/undo.ts
@@ -10140,6 +10176,8 @@ msgstr "የአገልጋይ ሥሪትን ተጠቀም"
 msgid "Use six hex digits, like #3E6B4F."
 msgstr "እንደ #3E6B4F ያሉ ስድስት የሄክሳዴሲማል አሃዞችን ይጠቀሙ።"
 
+#: src/features/assistant/document.ts
+#: src/features/assistant/proposals.ts
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
 msgstr "ቀደም ያሉ ለውጦችን ለመቀልበስ ግንበኛውን ቀልብስ ይጠቀሙ።"
@@ -10188,6 +10226,10 @@ msgstr "{connected} ገጽ ማንበብ በማይችልበት ጊዜ ጥቅም �
 #: src/features/write/fields.ts
 msgid "Username"
 msgstr "የተጠቃሚ ስም"
+
+#: src/features/assistant/assistant-screen.tsx
+msgid "Uses facts from your resume"
+msgstr "ከመመዝገቢያዎ ውስጥ እውነታዎችን ይጠቀማል"
 
 #: src/features/assistant/assistant-screen.tsx
 msgid "Uses the linked application"
@@ -10698,7 +10740,6 @@ msgstr "ከመስመር ውጭ ነዎት። እንደገና ሲገናኙ እን�
 msgid "You're up to date"
 msgstr "ሁሉንም አይተዋል"
 
-#: src/features/workspace/coach-sheet.tsx
 #: src/features/workspace/tabs/debrief.tsx
 #: src/features/workspace/tabs/practise.tsx
 msgid "your AI connection"

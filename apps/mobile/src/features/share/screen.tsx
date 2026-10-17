@@ -1,6 +1,6 @@
 import { useLingui } from "@lingui/react/macro";
 import { useNetworkState } from "expo-network";
-import { Stack, router } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,6 +14,7 @@ import { Banner, Button, Segmented, Skeleton, useTheme } from "@/ui";
 
 type ShareScreenProps = { id: string; history?: boolean };
 export function ShareScreen({ id, history = false }: ShareScreenProps) {
+	const router = useRouter();
 	const { t } = useLingui();
 	const { space, colors, size } = useTheme();
 	const draft = useShareDocument(id);

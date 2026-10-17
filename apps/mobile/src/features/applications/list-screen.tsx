@@ -1,7 +1,7 @@
 import type { ApplicationSort } from "./list";
 import type { ApplicationClosedReason, ApplicationStatus } from "@reactive-resume/schema/applications/data";
 import { useLingui } from "@lingui/react/macro";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Pressable, SectionList, View } from "react-native";
 import { AddApplicationSheet } from "./add-sheet";
@@ -41,10 +41,12 @@ export function ApplicationsListScreen() {
 	);
 }
 function SignedOut() {
+	const router = useRouter();
 	const { t } = useLingui();
 	return <Button label={t`Sign in to view applications`} onPress={() => router.push(routes.signIn())} />;
 }
 function ApplicationsList() {
+	const router = useRouter();
 	const { t, i18n } = useLingui();
 	const { colors, space, radius, size } = useTheme();
 	const query = useApplications();
