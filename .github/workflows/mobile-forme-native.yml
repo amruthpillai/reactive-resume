@@ -1,0 +1,83 @@
+name: Mobile Forme Native
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish an immutable release asset after building (otherwise workflow artifact only)
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  prebuilt:
+    runs-on: macos-15
+    timeout-minutes: 60
+    env:
+      CARGO_BUILD_JOBS: "4"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: ndk;28.2.13676358
+      - name: Install pinned Rust tools
+        working-directory: packages/forme-native/rust
+        run: |
+          rustup show active-toolchain
+          cargo install cbindgen --version 0.29.4 --locked
+          cargo install cargo-ndk --version 4.1.2 --locked
+      - name: Build both platforms and regenerate notices
+        run: |
+          export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358"
+          bash packages/forme-native/rust/build.sh
+          node packages/forme-native/scripts/notices.mjs
+          git diff --exit-code -- packages/forme-native/THIRD_PARTY_NOTICES.md packages/forme-native/ios/include/forme_native.h
+      - name: Package content-addressed binaries
+        id: artifact
+        env:
+          RELEASE_BASE: https://github.com/${{ github.repository }}/releases/download
+        run: |
+          node packages/forme-native/scripts/artifact.mjs pack "$RUNNER_TEMP/forme-native" "$RELEASE_BASE" > "$RUNNER_TEMP/forme-native-build.json"
+          node --input-type=module <<'JS'
+          import { appendFileSync, readFileSync } from 'node:fs';
+          const build = JSON.parse(readFileSync(`${process.env.RUNNER_TEMP}/forme-native-build.json`));
+          appendFileSync(process.env.GITHUB_OUTPUT, `tag=${build.tag}\narchive=${build.archive}\nmanifest=${build.manifest}\n`);
+          JS
+      - name: Verify fetch without Cargo
+        env:
+          MANIFEST: ${{ steps.artifact.outputs.manifest }}
+        run: |
+          node --input-type=module <<'JS'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import { pathToFileURL } from 'node:url';
+          const manifest = JSON.parse(readFileSync(process.env.MANIFEST));
+          const build = JSON.parse(readFileSync(`${process.env.RUNNER_TEMP}/forme-native-build.json`));
+          manifest.artifacts[0].url = pathToFileURL(build.archive).href;
+          writeFileSync(`${process.env.RUNNER_TEMP}/local-prebuilt.json`, JSON.stringify(manifest));
+          JS
+          node_bin="$(command -v node)"
+          PATH=/usr/bin:/bin "$node_bin" packages/forme-native/scripts/fetch-prebuilt.mjs --platform android --manifest "$RUNNER_TEMP/local-prebuilt.json"
+          PATH=/usr/bin:/bin "$node_bin" packages/forme-native/scripts/fetch-prebuilt.mjs --platform ios --manifest "$RUNNER_TEMP/local-prebuilt.json"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.artifact.outputs.tag }}
+          path: ${{ runner.temp }}/forme-native/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish once (never overwrite release assets)
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ steps.artifact.outputs.tag }}
+          ARCHIVE: ${{ steps.artifact.outputs.archive }}
+          MANIFEST: ${{ steps.artifact.outputs.manifest }}
+        run: |
+          gh release create "$TAG" "$ARCHIVE" "$MANIFEST" --target "$GITHUB_SHA" --title "$TAG" --notes "Native Forme binaries. Review and commit prebuilt.json before EAS Build." --prerelease
