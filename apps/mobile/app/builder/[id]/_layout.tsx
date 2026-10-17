@@ -1,38 +1,52 @@
 import type { BuilderPane } from "@/routes";
+import type { PaneTab } from "@/shell/builder-chrome";
 import { useLingui } from "@lingui/react/macro";
-import { Stack, useLocalSearchParams } from "expo-router";
-import { View } from "react-native";
-import { PaneBackButton, PaneBar } from "@/components/pane-bar";
+import { router, useLocalSearchParams } from "expo-router";
+import PageScreen from "./page";
+import { ResumeConflictSheet, useResumeDraftOwner, useResumeStore } from "@/draft";
 import { routes } from "@/routes";
+import { BuilderChrome, useBuilderChrome } from "@/shell/builder-chrome";
 
-const panes = new Set(["write", "page", "design", "check"]);
+/** Fills the chrome from the draft once for every pane: name, save status, Public badge. */
+function DraftChrome() {
+	const name = useResumeStore((state) => state.document?.name);
+	const shared = useResumeStore((state) => state.document?.isPublic);
+	const status = useResumeStore((state) => state.status);
+	const locked = useResumeStore((state) => state.locked);
+	const retry = useResumeStore((state) => state.retry);
+	useBuilderChrome({ title: name, save: name ? { status, locked, onRetry: retry } : undefined, shared });
+	return null;
+}
 
-/** Resume builder: Write, Page, Design and Check panes, plus entry, share, history and assistant on top. */
+/**
+ * Resume builder. Phone: Write, Page, Design and Check as bottom tabs. Tablet: the Write / Design / Check panel with
+ * the Page screen beside it. Entry and history push inside the editor; Share and the assistant open as modals.
+ */
 export default function BuilderLayout() {
 	const { t } = useLingui();
 	const { id } = useLocalSearchParams<{ id: string }>();
+	// The one owner of the draft for the whole builder: panes, the tablet page and pushed screens only subscribe, so
+	// switching panes or rotating never reopens the draft or resets undo.
+	useResumeDraftOwner(id);
+
+	const panes: PaneTab<BuilderPane>[] = [
+		{ pane: "write", label: t`Write`, icon: "pencil-simple", href: routes.builder(id, "write") },
+		{ pane: "page", label: t`Page`, icon: "file-text", href: routes.builder(id, "page") },
+		{ pane: "design", label: t`Design`, icon: "palette", href: routes.builder(id, "design") },
+		{ pane: "check", label: t`Check`, icon: "list-checks", href: routes.builder(id, "check") },
+	];
 
 	return (
-		<View style={{ flex: 1 }}>
-			<Stack
-				screenOptions={({ route }) => ({
-					animation: "none",
-					...(panes.has(route.name) ? { headerLeft: () => <PaneBackButton /> } : {}),
-				})}
-			>
-				<Stack.Screen name="entry/[section]/[item]" options={{ animation: "default" }} />
-				<Stack.Screen name="share" options={{ presentation: "modal" }} />
-				<Stack.Screen name="history" options={{ animation: "default" }} />
-				<Stack.Screen name="assistant" options={{ presentation: "modal" }} />
-			</Stack>
-			<PaneBar<BuilderPane>
-				panes={[
-					{ pane: "write", label: t`Write`, icon: "pencil-simple", href: routes.builder(id, "write") },
-					{ pane: "page", label: t`Page`, icon: "file-text", href: routes.builder(id, "page") },
-					{ pane: "design", label: t`Design`, icon: "palette", href: routes.builder(id, "design") },
-					{ pane: "check", label: t`Check`, icon: "check-circle", href: routes.builder(id, "check") },
-				]}
-			/>
-		</View>
+		<BuilderChrome
+			panes={panes}
+			tabletPanes={["write", "design", "check"]}
+			page={<PageScreen />}
+			title={t`Resume`}
+			onShare={() => router.push(routes.share(id))}
+			modals={["share", "assistant"]}
+		>
+			<DraftChrome />
+			<ResumeConflictSheet />
+		</BuilderChrome>
 	);
 }
