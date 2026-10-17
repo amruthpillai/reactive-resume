@@ -145,7 +145,7 @@ msgstr "{0, plural, one {# jour de bureau par semaine} other {# jours de bureau 
 #. placeholder {0}: result?.pageCount ?? 1
 #: src/features/letters/page.tsx
 msgid "{0, plural, one {# page} other {# pages}}"
-msgstr ""
+msgstr "{0, plural, one {# page} many {# pages} other {# pages}}"
 
 #. placeholder {0}: proposals.length
 #: src/features/assistant/messages.tsx
@@ -594,7 +594,7 @@ msgstr "{sections, plural, one {Section #} other {Sections #}}"
 
 #: src/features/letters/share.tsx
 msgid "{sender}-Cover-Letter"
-msgstr ""
+msgstr "{sender}-Lettre-de-motivation"
 
 #: src/features/assistant/messages.tsx
 msgid "{skipped, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -618,7 +618,7 @@ msgstr "{supported} étayés, {partial} partiellement étayés, {missing} sans p
 
 #: src/features/letters/design.tsx
 msgid "{textSize} pt"
-msgstr ""
+msgstr "{textSize} pt"
 
 #: src/features/write/section-sheet.tsx
 msgid "{title} cleared"
@@ -1993,7 +1993,7 @@ msgstr "Vérifiez un PDF"
 
 #: src/features/documents/new-document.tsx
 msgid "Check a PDF with the ATS checker"
-msgstr ""
+msgstr "Vérifier un PDF avec le vérificateur ATS"
 
 #: src/features/ats-checker/checker.tsx
 msgid "Check a sample file"
@@ -2591,7 +2591,7 @@ msgstr "Impossible de vérifier ou d'enregistrer cette adresse. Réessayez."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't check your AI providers."
-msgstr ""
+msgstr "Impossible de vérifier vos fournisseurs d'IA."
 
 #: src/features/documents/queries.ts
 msgid "Couldn't complete this action. Try again."
@@ -2716,7 +2716,7 @@ msgstr "Impossible de charger votre adresse publique."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't load your resumes."
-msgstr ""
+msgstr "Impossible de charger vos CVs."
 
 #: app/(tabs)/settings/preferences.tsx
 msgid "Couldn't load your timezone."
@@ -2830,7 +2830,7 @@ msgstr "Impossible d'enregistrer le fuseau horaire."
 
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
-msgstr ""
+msgstr "Impossible d'enregistrer vos modifications, la rédaction n'a donc pas démarré. Rien n'a changé sur la page."
 
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
@@ -2982,7 +2982,7 @@ msgstr "Lettre de motivation — {0}"
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
-msgstr ""
+msgstr "Impossible de charger la lettre de motivation."
 
 #: src/features/application-detail/sections.tsx
 msgid "Cover letter file"
@@ -3188,7 +3188,7 @@ msgstr "Supprimer"
 #. placeholder {0}: menu ? versionTitle(menu) : ""
 #: src/features/letters/share.tsx
 msgid "Delete “{0}”?"
-msgstr ""
+msgstr "Supprimer « {0} » ?"
 
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
@@ -3308,7 +3308,7 @@ msgstr "Densité"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Dependency type"
-msgstr ""
+msgstr "Type de dépendance"
 
 #: src/features/applications/list-screen.tsx
 msgid "Descending"
@@ -3456,7 +3456,7 @@ msgstr "Télécharger {0}"
 
 #: src/features/letters/share.tsx
 msgid "Download both PDFs"
-msgstr ""
+msgstr "Télécharger les deux PDF"
 
 #: src/features/letters/share.tsx
 msgid "Download failed."
@@ -3464,7 +3464,7 @@ msgstr "Le téléchargement a échoué."
 
 #: src/features/letters/share.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file."
-msgstr ""
+msgstr "Le téléchargement ouvre le menu de partage du système. Choisissez un fournisseur de stockage pour enregistrer le fichier."
 
 #: src/features/share/download.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file. A linked letter opens as a second file."
@@ -3818,7 +3818,7 @@ msgstr "Tous les jours"
 
 #: src/features/letters/share.tsx
 msgid "Every editing session adds a version automatically. Named versions are kept until you delete them. Restoring saves the current state first."
-msgstr ""
+msgstr "Chaque session d'édition ajoute automatiquement une version. Les versions nommées sont conservées jusqu'à leur suppression. La restauration enregistre d'abord l'état actuel."
 
 #: src/features/check/issues.ts
 msgid "Every entry has dates in a form systems read, in order, and none in the future."
@@ -4287,7 +4287,7 @@ msgstr "Aidez-moi à inscrire « {0} » dans mon CV, uniquement lorsque mon ex
 
 #: src/features/letters/design.tsx
 msgid "Hex"
-msgstr ""
+msgstr "Hex"
 
 #: src/features/design/advanced.tsx
 #: src/features/write/entry-fields.tsx
@@ -4329,7 +4329,7 @@ msgstr "Masquer la clé"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Hide licence"
-msgstr ""
+msgstr "Masquer la licence"
 
 #: src/features/design/advanced.tsx
 msgid "Hide Link Underline"
@@ -4693,7 +4693,7 @@ msgstr "Japonais"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "JavaScript"
-msgstr ""
+msgstr "JavaScript"
 
 #: src/features/search/search-screen.tsx
 msgid "Job"
@@ -4876,7 +4876,7 @@ msgstr "Langues"
 
 #: src/features/letters/design.tsx
 msgid "Larger text"
-msgstr ""
+msgstr "Texte plus grand"
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -4993,7 +4993,7 @@ msgstr "Page de lettre"
 #. placeholder {0}: page.index + 1
 #: src/features/letters/page.tsx
 msgid "Letter page {0}"
-msgstr ""
+msgstr "Page {0} de la lettre"
 
 #: src/features/search/search-screen.tsx
 msgid "Letters"
@@ -5012,7 +5012,7 @@ msgstr "Niveau"
 #: app/(tabs)/settings/index.tsx
 #: app/(tabs)/settings/licences.tsx
 msgid "Licences"
-msgstr ""
+msgstr "Licences"
 
 #: src/features/ats-checker/messages.ts
 msgid "Ligatures can drop letters out of words such as \"workflow\"."
@@ -5160,7 +5160,7 @@ msgstr "Chargement des conversations…"
 
 #: src/features/letters/page.tsx
 msgid "Loading cover letter…"
-msgstr ""
+msgstr "Chargement de la lettre de motivation…"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Loading Knowledge before you send…"
@@ -5392,7 +5392,7 @@ msgstr "Marqué comme lu"
 
 #: src/features/letters/design.tsx
 msgid "Match “{resumeName}”"
-msgstr ""
+msgstr "Harmoniser avec « {resumeName} »"
 
 #: src/features/applications/csv-sheet.tsx
 msgid "Match columns"
@@ -5686,7 +5686,7 @@ msgstr "Étroit"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Native & fonts"
-msgstr ""
+msgstr "Code natif et polices"
 
 #: src/features/ai/provider-list.tsx
 msgid "Needs attention"
@@ -5842,7 +5842,7 @@ msgstr "Aucune conversation sur ce document pour l'instant."
 
 #: src/features/letters/write.tsx
 msgid "No date"
-msgstr ""
+msgstr "Sans date"
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -6510,7 +6510,7 @@ msgstr "Page {currentPage} de {0}"
 
 #: src/features/letters/design.tsx
 msgid "Page format"
-msgstr ""
+msgstr "Format de page"
 
 #: src/features/assistant/messages.tsx
 msgid "Page reading didn't finish."
@@ -7069,7 +7069,7 @@ msgstr "Lisez-le pour moi"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Read licence"
-msgstr ""
+msgstr "Lire la licence"
 
 #: src/features/applications/add-sheet.tsx
 #: src/features/career/today.tsx
@@ -7229,7 +7229,7 @@ msgstr "Rectangle (pleine largeur)"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 msgid "Redo"
-msgstr ""
+msgstr "Rétablir"
 
 #: src/features/write/fields.ts
 msgid "References"
@@ -8566,7 +8566,7 @@ msgstr "Petits chiffres, mais qui méritent d'être remarqués."
 
 #: src/features/letters/design.tsx
 msgid "Smaller text"
-msgstr ""
+msgstr "Texte plus petit"
 
 #: src/features/check/issues.ts
 msgid "Some application systems ask for one before you can apply."
@@ -9388,7 +9388,7 @@ msgstr "Pensée…"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Third-party software notices. Select a dependency to read its licence."
-msgstr ""
+msgstr "Mentions relatives aux logiciels tiers. Sélectionnez une dépendance pour lire sa licence."
 
 #: src/features/application-detail/detail-screen.tsx
 #: src/features/workspace/shell.tsx
@@ -9534,7 +9534,7 @@ msgstr "Cette lettre a changé ailleurs"
 
 #: src/features/letters/write.tsx
 msgid "This letter is locked. Unlock it in Documents to edit."
-msgstr ""
+msgstr "Cette lettre est verrouillée. Déverrouillez-la dans Documents pour la modifier."
 
 #: src/features/letters/write.tsx
 msgid "This letter keeps its recipient as written."
@@ -10109,7 +10109,7 @@ msgstr "Utiliser la valeur par défaut"
 
 #: src/features/letters/write.tsx
 msgid "Use details from “{resumeName}”"
-msgstr ""
+msgstr "Utiliser les informations de « {resumeName} »"
 
 #: src/features/career/facts.tsx
 msgid "Use for all applications"
@@ -10138,7 +10138,7 @@ msgstr "Utiliser la version du serveur"
 
 #: src/features/letters/design.tsx
 msgid "Use six hex digits, like #3E6B4F."
-msgstr ""
+msgstr "Utilisez six chiffres hexadécimaux, comme #3E6B4F."
 
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
@@ -10219,7 +10219,7 @@ msgstr "Vérification du mot de passe..."
 
 #: src/features/letters/share.tsx
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx
@@ -10665,7 +10665,7 @@ msgstr "Vous êtes hors ligne. Le téléchargement PDF utilise cet appareil. Les
 
 #: src/features/letters/share.tsx
 msgid "You're offline. Download PDF uses this device. Other formats need a connection. Fonts and images must already be cached."
-msgstr ""
+msgstr "Vous êtes hors ligne. Le téléchargement PDF utilise cet appareil. Les autres formats nécessitent une connexion. Les polices et les images doivent déjà être en cache."
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx

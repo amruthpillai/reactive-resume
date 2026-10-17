@@ -145,7 +145,7 @@ msgstr "{0, plural, one {週#日出社} other {週#日出社}}"
 #. placeholder {0}: result?.pageCount ?? 1
 #: src/features/letters/page.tsx
 msgid "{0, plural, one {# page} other {# pages}}"
-msgstr ""
+msgstr "{0, plural, other {# ページ}}"
 
 #. placeholder {0}: proposals.length
 #: src/features/assistant/messages.tsx
@@ -594,7 +594,7 @@ msgstr "{sections, plural, one {#セクション} other {# セクション}}"
 
 #: src/features/letters/share.tsx
 msgid "{sender}-Cover-Letter"
-msgstr ""
+msgstr "{sender}-カバーレター"
 
 #: src/features/assistant/messages.tsx
 msgid "{skipped, plural, one {# edit couldn't be placed: its text changed. Ask again to redo it.} other {# edits couldn't be placed: their text changed. Ask again to redo them.}}"
@@ -618,7 +618,7 @@ msgstr "根拠あり{supported}件、一部根拠あり{partial}件、根拠未�
 
 #: src/features/letters/design.tsx
 msgid "{textSize} pt"
-msgstr ""
+msgstr "{textSize} pt"
 
 #: src/features/write/section-sheet.tsx
 msgid "{title} cleared"
@@ -1993,7 +1993,7 @@ msgstr "PDFを確認してください"
 
 #: src/features/documents/new-document.tsx
 msgid "Check a PDF with the ATS checker"
-msgstr ""
+msgstr "ATSチェッカーでPDFをチェック"
 
 #: src/features/ats-checker/checker.tsx
 msgid "Check a sample file"
@@ -2591,7 +2591,7 @@ msgstr "このアドレスを確認または保存できませんでした。も
 
 #: src/features/letters/write.tsx
 msgid "Couldn't check your AI providers."
-msgstr ""
+msgstr "AI プロバイダーを確認できませんでした。"
 
 #: src/features/documents/queries.ts
 msgid "Couldn't complete this action. Try again."
@@ -2716,7 +2716,7 @@ msgstr "パブリック アドレスを読み込めませんでした。"
 
 #: src/features/letters/write.tsx
 msgid "Couldn't load your resumes."
-msgstr ""
+msgstr "レジュメを読み込めませんでした。"
 
 #: app/(tabs)/settings/preferences.tsx
 msgid "Couldn't load your timezone."
@@ -2830,7 +2830,7 @@ msgstr "タイムゾーンを保存できませんでした。"
 
 #: src/features/letters/write.tsx
 msgid "Couldn't save your changes, so drafting didn't start. Nothing on the page changed."
-msgstr ""
+msgstr "変更を保存できなかったため、下書きの作成を開始しませんでした。ページの内容は変更されていません。"
 
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
@@ -2982,7 +2982,7 @@ msgstr "カバーレター — {0}"
 #: src/features/letters/share.tsx
 #: src/features/letters/write.tsx
 msgid "Cover letter could not be loaded."
-msgstr ""
+msgstr "カバーレターを読み込めませんでした。"
 
 #: src/features/application-detail/sections.tsx
 msgid "Cover letter file"
@@ -3188,7 +3188,7 @@ msgstr "削除"
 #. placeholder {0}: menu ? versionTitle(menu) : ""
 #: src/features/letters/share.tsx
 msgid "Delete “{0}”?"
-msgstr ""
+msgstr "「{0}」を削除しますか？"
 
 #. placeholder {0}: title(thread)
 #: src/features/assistant/coach-screen.tsx
@@ -3308,7 +3308,7 @@ msgstr "密度"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Dependency type"
-msgstr ""
+msgstr "依存関係の種類"
 
 #: src/features/applications/list-screen.tsx
 msgid "Descending"
@@ -3456,7 +3456,7 @@ msgstr "{0}をダウンロード"
 
 #: src/features/letters/share.tsx
 msgid "Download both PDFs"
-msgstr ""
+msgstr "両方のPDFをダウンロード"
 
 #: src/features/letters/share.tsx
 msgid "Download failed."
@@ -3464,7 +3464,7 @@ msgstr "ダウンロードに失敗しました。"
 
 #: src/features/letters/share.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file."
-msgstr ""
+msgstr "ダウンロードするとシステムの共有メニューが開きます。保存先のストレージプロバイダーを選んでください。"
 
 #: src/features/share/download.tsx
 msgid "Download opens the system share sheet. Choose a storage provider to save the file. A linked letter opens as a second file."
@@ -3818,7 +3818,7 @@ msgstr "毎日"
 
 #: src/features/letters/share.tsx
 msgid "Every editing session adds a version automatically. Named versions are kept until you delete them. Restoring saves the current state first."
-msgstr ""
+msgstr "編集セッションごとにバージョンが自動追加されます。名前を付けたバージョンは削除するまで保持されます。復元時には、まず現在の状態が保存されます。"
 
 #: src/features/check/issues.ts
 msgid "Every entry has dates in a form systems read, in order, and none in the future."
@@ -4287,7 +4287,7 @@ msgstr "私の経験が裏付ける場合に限り、私のレジュメに「{0}
 
 #: src/features/letters/design.tsx
 msgid "Hex"
-msgstr ""
+msgstr "Hex"
 
 #: src/features/design/advanced.tsx
 #: src/features/write/entry-fields.tsx
@@ -4329,7 +4329,7 @@ msgstr "キーを隠す"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Hide licence"
-msgstr ""
+msgstr "ライセンスを隠す"
 
 #: src/features/design/advanced.tsx
 msgid "Hide Link Underline"
@@ -4693,7 +4693,7 @@ msgstr "日本語"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "JavaScript"
-msgstr ""
+msgstr "JavaScript"
 
 #: src/features/search/search-screen.tsx
 msgid "Job"
@@ -4876,7 +4876,7 @@ msgstr "語学"
 
 #: src/features/letters/design.tsx
 msgid "Larger text"
-msgstr ""
+msgstr "文字を大きく"
 
 #: src/features/document-menu/index.tsx
 #: src/features/documents/library.tsx
@@ -4993,7 +4993,7 @@ msgstr "レターページ"
 #. placeholder {0}: page.index + 1
 #: src/features/letters/page.tsx
 msgid "Letter page {0}"
-msgstr ""
+msgstr "カバーレター {0} ページ目"
 
 #: src/features/search/search-screen.tsx
 msgid "Letters"
@@ -5012,7 +5012,7 @@ msgstr "レベル"
 #: app/(tabs)/settings/index.tsx
 #: app/(tabs)/settings/licences.tsx
 msgid "Licences"
-msgstr ""
+msgstr "ライセンス"
 
 #: src/features/ats-checker/messages.ts
 msgid "Ligatures can drop letters out of words such as \"workflow\"."
@@ -5160,7 +5160,7 @@ msgstr "会話を読み込んでいます…"
 
 #: src/features/letters/page.tsx
 msgid "Loading cover letter…"
-msgstr ""
+msgstr "カバーレターを読み込み中…"
 
 #: src/features/assistant/coach-screen.tsx
 msgid "Loading Knowledge before you send…"
@@ -5392,7 +5392,7 @@ msgstr "既読にしました"
 
 #: src/features/letters/design.tsx
 msgid "Match “{resumeName}”"
-msgstr ""
+msgstr "「{resumeName}」に合わせる"
 
 #: src/features/applications/csv-sheet.tsx
 msgid "Match columns"
@@ -5686,7 +5686,7 @@ msgstr "狭い"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Native & fonts"
-msgstr ""
+msgstr "ネイティブコードとフォント"
 
 #: src/features/ai/provider-list.tsx
 msgid "Needs attention"
@@ -5842,7 +5842,7 @@ msgstr "この文書に関する会話はまだありません。"
 
 #: src/features/letters/write.tsx
 msgid "No date"
-msgstr ""
+msgstr "日付なし"
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -6510,7 +6510,7 @@ msgstr "ページ {currentPage}/{0}"
 
 #: src/features/letters/design.tsx
 msgid "Page format"
-msgstr ""
+msgstr "ページ形式"
 
 #: src/features/assistant/messages.tsx
 msgid "Page reading didn't finish."
@@ -7069,7 +7069,7 @@ msgstr "代わりに読む"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Read licence"
-msgstr ""
+msgstr "ライセンスを読む"
 
 #: src/features/applications/add-sheet.tsx
 #: src/features/career/today.tsx
@@ -7229,7 +7229,7 @@ msgstr "長方形（全幅）"
 #: app/builder/[id]/_layout.tsx
 #: app/letter/[id]/_layout.tsx
 msgid "Redo"
-msgstr ""
+msgstr "やり直す"
 
 #: src/features/write/fields.ts
 msgid "References"
@@ -8566,7 +8566,7 @@ msgstr "数字は小さいですが、注目に値します。"
 
 #: src/features/letters/design.tsx
 msgid "Smaller text"
-msgstr ""
+msgstr "文字を小さく"
 
 #: src/features/check/issues.ts
 msgid "Some application systems ask for one before you can apply."
@@ -9388,7 +9388,7 @@ msgstr "考え…"
 
 #: app/(tabs)/settings/licences.tsx
 msgid "Third-party software notices. Select a dependency to read its licence."
-msgstr ""
+msgstr "サードパーティソフトウェアの通知です。依存関係を選ぶとライセンスを読めます。"
 
 #: src/features/application-detail/detail-screen.tsx
 #: src/features/workspace/shell.tsx
@@ -9534,7 +9534,7 @@ msgstr "このカバーレターは別の場所で変更されました"
 
 #: src/features/letters/write.tsx
 msgid "This letter is locked. Unlock it in Documents to edit."
-msgstr ""
+msgstr "このカバーレターはロックされています。編集するには書類でロックを解除してください。"
 
 #: src/features/letters/write.tsx
 msgid "This letter keeps its recipient as written."
@@ -10109,7 +10109,7 @@ msgstr "デフォルトを使用"
 
 #: src/features/letters/write.tsx
 msgid "Use details from “{resumeName}”"
-msgstr ""
+msgstr "「{resumeName}」の情報を使う"
 
 #: src/features/career/facts.tsx
 msgid "Use for all applications"
@@ -10138,7 +10138,7 @@ msgstr "サーバーのバージョンを使用する"
 
 #: src/features/letters/design.tsx
 msgid "Use six hex digits, like #3E6B4F."
-msgstr ""
+msgstr "#3E6B4F のように16進数6桁で入力してください。"
 
 #: src/features/check/actions.ts
 msgid "Use the builder's Undo to undo earlier changes."
@@ -10219,7 +10219,7 @@ msgstr "パスワードを確認しています..."
 
 #: src/features/letters/share.tsx
 msgid "Version"
-msgstr ""
+msgstr "バージョン"
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx
@@ -10665,7 +10665,7 @@ msgstr "オフラインです。ダウンロード PDF はこのデバイスを�
 
 #: src/features/letters/share.tsx
 msgid "You're offline. Download PDF uses this device. Other formats need a connection. Fonts and images must already be cached."
-msgstr ""
+msgstr "オフラインです。PDFのダウンロードはこのデバイスで行います。他の形式には接続が必要です。フォントと画像は事前にキャッシュされている必要があります。"
 
 #: src/features/history/history.tsx
 #: src/features/letters/share.tsx
