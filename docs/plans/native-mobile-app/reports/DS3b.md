@@ -129,3 +129,51 @@ The rest of Builder §5 is in `design.html` (DS3c): Design, Check, Share, Downlo
   - No interactive element in a device frame was under 44 pt without a hit-area extension, except the page lines noted above.
 - **Screenshots** were reviewed for C1, W1, W3, W8, W10, W13, W14, E1, E3, E4, E7, E8, E9, E11, E13, L1, L3, L6, P2, P3, P5, M5, T1, T2, T3 and T5, in light and dark, iOS and Android.
 - **oxfmt:** `oxfmt --check` on `builder.html` passes. It was run with the repo-identical `.oxfmtrc.json` from the main checkout, because this worktree has no `node_modules`.
+
+## DS4 fix round
+
+Merged `mobile/native-app` first. `builder.html` now defines and uses the `tokens.md` names: `lineStrong`, `paperInk`, `paperLine`, `paperAccent`, `paperWarn`, `paperWarnSoft`, `pageSelectFill`, `pageSelectLine`, `pageIssueFill` and `pageProposalFill`. The owner's wording “Synced changes made elsewhere.” is applied in E10.
+
+New in this round:
+
+- E14, a shared colour picker.
+- New states in E3, E4, E6, M4, W7, W10, L1, L3, L4, L6, L7 and L8.
+- The letter section was rewritten. The body is now separate from the greeting and sign-off, and the page shows the composed recipient block.
+
+| # | Finding | Result |
+| --- | --- | --- |
+| 1 | E3/E6 Website and link label editing | FIXED. A label (tag) button sits in the link field; it is hidden while “Show link in title” is on, as in web `URLInput`. New states: E3 “Website label” (Basics has no Show link in title) and E6 “Label”, each with the Label sheet. |
+| 2 | E1/E4 icon, border and shadow colour pickers | FIXED. New E14 colour picker: the 16 web presets plus Custom (square, hue, opacity, hex). It has Icon colour, Border Color and Shadow Color states. E1 and E4 rows open it. |
+| 3 | E4 arbitrary ratio, radius in pt | FIXED. Aspect Ratio is a numeric field plus a slider (0.5–2.5), and the presets only fill it. Border Radius is a pt field plus a slider. Widths show pt. |
+| 4 | E4 no-photo and upload failure | FIXED. New E4 states: “No photo” (“No photo. Most ATS ignore photos; some regions expect one.” with Add), and “Upload failed” (web error copy with Retry; the previous photo is kept). |
+| 5 | W3 sort-by-date partial failure | FIXED. New W7 state “Sort by date: partly sorted” with web's warning naming the entries left at the end. The note explains the behaviour. |
+| 6 | W10 hidden-entry “Show on page” | FIXED. New W10 state “Options, hidden entry”. |
+| 7 | M4 public address, password and private variants | FIXED. M4 has states Public, Public with a password, and Private. The public address is shown and is tappable. Row order follows web. |
+| 8 | W8 “Text” vs “Summary” | FIXED. The custom-section type is labelled Summary. |
+| 9 | L1 freeform recipient | FIXED. New L1 state “Freeform letter”: a rich-text Recipient with “This letter keeps its recipient as written.”, and the old body keeps its own framing. |
+| 10 | L1/L6 resume picker and No resume | FIXED. New L1 states “Resume picker” and “No resume” (“Your name and contact details come from a resume.”, own-design summary). New L6 state “No resume linked” with web copy. |
+| 11 | L1 copied FROM invents editable fields | FIXED. The copied state now only switches the toggle off and shows web's description. No editors appear. |
+| 12 | L1/L4/T5 body contains greeting and signature | FIXED. Greeting field, body (paragraphs only) and Sign-off field are now separate, with web's “Clear the greeting or sign-off…” hint. |
+| 13 | L1 custom or cleared sign-off and Use default | FIXED. New L4 states: “Custom sign-off” (“Best,” with Use default) and “Greeting cleared” (empty field, omitted on the page). |
+| 14 | L3 resume-only, posting-only and neither | FIXED. L3 offer states for posting + resume, resume only (Draft from your resume), posting only, and nothing linked (only Write it myself). Streaming states show each disclosure (“Draft · uses only …”). |
+| 15 | L5/T5 recipient and date block on the page | FIXED. A shared `letterPage()` draws the sender header, the recipient (name, company), the date, greeting, body, sign-off and signature. L5, L6, L7 and T5 use it. |
+| 16 | L7 History actions; autosaves with menus | FIXED. Name field plus Save, named-version menu (Rename…, Delete) and delete confirm. “Viewing a version” shows the read-only page with Restore this version and Back to now, and “Restored” shows the Before-restore toast. Only named versions have ⋯. Rows are full-width ≥44 pt buttons. |
+| 17 | L7 download failure | FIXED. New L7 state “Download failed”: web's “The Word file couldn't be generated…” banner with Try again and Download PDF instead. |
+| 18 | L8 Saving and Not saved · Retry | FIXED. New L8 states Saving and Not saved (status Retry plus a toast with web's letter copy). |
+| 19 | Letters lack the Assistant entry | FIXED. The phone letter bar has ✦ (opens the DS3c Assistant), as web `letter-bar.tsx`. |
+| 20 | T5 resume chrome | FIXED. The tablet bar takes a `letter` mode: letter name, Write / Design only, Share without the Public badge. |
+| 21 | T5 missing FROM | FIXED. T5 panel includes From (resume plus the live/copied switch). |
+| 22 | P4 dark Try again contrast | FIXED. The button on paper uses `paper` background and a `paperInk` border and text, so it is the same in both themes. `.paper-scope` maps ink, line and sunken to the paper tokens. |
+| 23 | Control boundaries under 3:1 | FIXED. Inputs, checkboxes, switch off, slider knob, outline buttons, keyword fields, custom fields, swatches, rich-text fields and Android segmented controls use `lineStrong`. Decorative dashed outlines and chips keep `line2`, as tokens.md allows. |
+| 24 | Document-name target 36 pt | FIXED. The name button's hit area is a centred 44 pt band (`::after`), including W13. |
+| 25 | Tag and keyword remove 38 pt wide | FIXED. The hit extension is widened to 44 pt. |
+| 26 | Improve 40 pt high | FIXED. Removed the 32 pt override; `.btn.sm` (36 pt plus 4 pt above and below) reaches 44 pt. |
+| 27 | E13 Arabic Done 43.2 pt | FIXED. The toolbar Done has a minimum width of 48 pt. |
+| 28 | L7 version buttons 40.6 pt | FIXED. Each version row's button fills the row (≥ 44 pt, `.li > button.grow`). |
+| 29 | P1/P2 page targets at 60% | FIXED. `snapRegions()` gives each line the band to the midpoint of its neighbours' gaps, then grows any band under 44 pt into neighbours that stay ≥ 44 pt. When that is impossible (60% zoom on phone), lines are not targets: one page-sized “Zoom in to select a line” button zooms to Fit around the tap. The selection fill and outline use `pageSelectFill` and `pageSelectLine`. |
+
+**Checks:**
+
+- Playwright, light/dark × iPhone/Android/Tablet, every state of every frame: 0 errors.
+- A stricter pass measured every enabled button's effective hit area, including `::after` extensions, in device pt, for every state. Nothing is under 44 pt. The only readings below 44 pt were alert buttons caught mid-way through the d2 pop-in scale animation; they are 44 pt at rest.
+- `oxfmt --check` passes.

@@ -20,6 +20,16 @@
 				--sunken: oklch(0.952 0.006 95);
 				--line: oklch(0.9 0.006 95);
 				--line-2: oklch(0.82 0.008 95);
+				--line-strong: #888680; /* lineStrong (tokens.md): control boundaries, ≥ 3:1 */
+				--paper-ink: #1c1b15; /* paperInk: text drawn on the white page, both themes */
+				--paper-line: #dfdeda; /* paperLine */
+				--paper-accent: #337344; /* paperAccent */
+				--paper-warn: #d29922; /* paperWarn */
+				--paper-warn-soft: #fcedcd; /* paperWarnSoft */
+				--page-select-fill: #3373441f; /* pageSelectFill */
+				--page-select-line: #337344; /* pageSelectLine */
+				--page-issue-fill: #d2992238; /* pageIssueFill */
+				--page-proposal-fill: #3373441f; /* pageProposalFill */
 				--ink: oklch(0.22 0.01 95);
 				--ink-2: oklch(0.42 0.01 95);
 				--ink-3: oklch(0.53 0.01 95);
@@ -63,6 +73,7 @@
 				--sunken: oklch(0.145 0.006 95);
 				--line: oklch(0.29 0.007 95);
 				--line-2: oklch(0.4 0.008 95);
+				--line-strong: #73726c;
 				--ink: oklch(0.95 0.005 95);
 				--ink-2: oklch(0.79 0.008 95);
 				--ink-3: oklch(0.67 0.008 95);
@@ -90,17 +101,12 @@
 			}
 			/* The page is paper in both themes, so anything drawn on it uses the light token values. */
 			.paper-scope {
-				--ink: oklch(0.22 0.01 95);
-				--ink-2: oklch(0.42 0.01 95);
-				--ink-3: oklch(0.53 0.01 95);
-				--line: oklch(0.9 0.006 95);
-				--accent: oklch(0.5 0.1 150);
-				--accent-soft: oklch(0.94 0.035 150);
-				--accent-text: oklch(0.42 0.1 150);
-				--danger-text: oklch(0.48 0.17 27);
-				--warn: oklch(0.72 0.14 80);
-				--warn-text: oklch(0.48 0.1 70);
-				--sunken: oklch(0.952 0.006 95);
+				--ink: var(--paper-ink);
+				--ink-2: var(--paper-ink);
+				--ink-3: var(--paper-ink);
+				--line: var(--paper-line);
+				--sunken: var(--paper-line);
+				color: var(--paper-ink);
 			}
 			@media (prefers-reduced-motion: reduce) {
 				:root {
@@ -539,7 +545,7 @@
 				color: var(--ink);
 			}
 			.btn.outline {
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				color: var(--ink);
 				background: var(--raised);
 			}
@@ -755,7 +761,11 @@
 			.ebar .namebtn::after {
 				content: "";
 				position: absolute;
-				inset: -8px -4px 0;
+				left: -4px;
+				right: -4px;
+				top: 50%;
+				height: 44px;
+				margin-top: -22px;
 			} /* with the status line below, the name's hit area is 44pt tall */
 			.ebar .name b {
 				font-weight: 600;
@@ -1424,6 +1434,84 @@
 				color: var(--ink-3);
 				font-size: 14px;
 			}
+			.li > button.grow {
+				min-height: 44px;
+				align-self: stretch;
+				display: grid;
+				align-content: center;
+			}
+			.viewbar {
+				position: absolute;
+				z-index: 9;
+				left: 12px;
+				right: 12px;
+				bottom: 66px;
+				display: grid;
+				gap: 8px;
+				padding: 12px;
+				border-radius: 12px;
+				background: var(--ink);
+				color: var(--bg);
+				font-size: 13px;
+				box-shadow: var(--shadow-3);
+			}
+			.viewbar .btn.ghost {
+				color: var(--bg);
+				text-decoration: underline;
+			}
+			.swgrid {
+				display: grid;
+				grid-template-columns: repeat(8, 1fr);
+				gap: 0;
+				background: var(--sunken);
+				border-radius: 10px;
+				padding: 4px;
+			}
+			.swgrid button {
+				height: 44px;
+				display: grid;
+				place-items: center;
+			}
+			.swgrid button span {
+				width: 26px;
+				height: 26px;
+				border-radius: 50%;
+			}
+			.swgrid button[aria-pressed="true"] span {
+				outline: 2px solid var(--ink);
+				outline-offset: 2px;
+			}
+			.sv {
+				height: 180px;
+				border-radius: 10px;
+				position: relative;
+				background:
+					linear-gradient(to top, var(--paper-ink), transparent), linear-gradient(to right, var(--paper), var(--hue));
+			}
+			.sv .knob,
+			.hue .knob {
+				position: absolute;
+				width: 26px;
+				height: 26px;
+				margin: -13px 0 0 -13px;
+				border-radius: 50%;
+				border: 3px solid var(--paper);
+				box-shadow: var(--shadow-2);
+			}
+			.hue {
+				height: 14px;
+				border-radius: 7px;
+				position: relative;
+				margin: 15px 0;
+			}
+			.hue .knob {
+				top: 50%;
+			}
+			.hue::after {
+				content: "";
+				position: absolute;
+				inset: -15px 0;
+			} /* 44pt drag target */
 			.li.danger {
 				color: var(--danger-text);
 			}
@@ -1539,7 +1627,7 @@
 				align-items: center;
 				gap: 8px;
 				padding: 0 12px;
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				border-radius: 10px;
 				background: var(--raised);
 				font-size: 16px;
@@ -1608,7 +1696,7 @@
 				width: 22px;
 				height: 22px;
 				border-radius: 6px;
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--line-strong);
 				display: grid;
 				place-items: center;
 				flex: none;
@@ -1625,7 +1713,7 @@
 				width: 51px;
 				height: 31px;
 				border-radius: 16px;
-				background: var(--line-2);
+				background: var(--line-strong);
 				position: relative;
 				flex: none;
 				transition: background-color var(--d2) var(--ease);
@@ -1651,7 +1739,7 @@
 			.and .sw {
 				width: 52px;
 				height: 32px;
-				border: 2px solid var(--line-2);
+				border: 2px solid var(--line-strong);
 				background: var(--sunken);
 			}
 			.and .sw::after {
@@ -1707,7 +1795,7 @@
 				border-radius: 50%;
 				background: var(--paper);
 				box-shadow: var(--shadow-2);
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 			}
 			.slider .ticks {
 				display: flex;
@@ -1748,7 +1836,7 @@
 			}
 			.and .segc {
 				background: none;
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				border-radius: 22px;
 				padding: 0;
 				gap: 0;
@@ -1759,7 +1847,7 @@
 				min-height: 42px;
 			}
 			.and .segc button + button {
-				border-inline-start: 1px solid var(--line-2);
+				border-inline-start: 1px solid var(--line-strong);
 			}
 			.and .segc button[aria-pressed="true"] {
 				background: var(--accent-soft);
@@ -1771,7 +1859,7 @@
 				flex-wrap: wrap;
 				gap: 6px;
 				padding: 8px;
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				border-radius: 10px;
 				background: var(--raised);
 				align-items: center;
@@ -1797,7 +1885,7 @@
 			.kw .k button::after {
 				content: "";
 				position: absolute;
-				inset: -6px -4px;
+				inset: -6px -7px;
 			} /* 44pt hit */
 			.kw .ph {
 				color: var(--ink-3);
@@ -1820,14 +1908,14 @@
 				width: 22px;
 				height: 22px;
 				border-radius: 50%;
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				flex: none;
 			}
 			.cfield {
 				display: flex;
 				align-items: center;
 				gap: 2px;
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				border-radius: 10px;
 				background: var(--raised);
 				padding-inline-end: 2px;
@@ -1865,7 +1953,7 @@
 				margin-inline-end: -10px;
 			}
 			.rte {
-				border: 1px solid var(--line-2);
+				border: 1px solid var(--line-strong);
 				border-radius: 10px;
 				background: var(--raised);
 				padding: 10px 12px 12px 12px;
@@ -1937,6 +2025,7 @@
 			}
 			.rtebar .done {
 				flex: none;
+				min-width: 48px;
 				min-height: 44px;
 				padding: 0 14px;
 				font-weight: 600;
@@ -2210,13 +2299,12 @@
 			}
 			.mark-old {
 				text-decoration: line-through;
-				color: var(--danger-text);
+				color: var(--paper-ink);
 			}
 			.mark-new {
-				background: var(--accent-soft);
-				color: var(--accent-text);
-				border-radius: 0.4cqw;
-				padding: 0 0.4cqw;
+				background: var(--page-proposal-fill);
+				border-bottom: 2px dashed var(--page-select-line);
+				color: var(--paper-ink);
 			}
 			.hit {
 				position: absolute;
@@ -2224,8 +2312,27 @@
 				right: 2%;
 				border-radius: 4px;
 			}
+			.hit {
+				z-index: 1;
+			}
+			.line-sel {
+				position: absolute;
+				left: 2%;
+				right: 2%;
+				border-radius: 4px;
+				outline: 2px solid var(--page-select-line);
+				outline-offset: 2px;
+				background: var(--page-select-fill);
+				pointer-events: none;
+				animation: outline-in var(--d1) var(--ease);
+			}
+			.zoomhit {
+				position: absolute;
+				inset: 0;
+				z-index: 2;
+			}
 			.hit.sel {
-				outline: 2px solid var(--accent);
+				outline: 2px solid var(--page-select-line);
 				outline-offset: 2px;
 				animation: outline-in var(--d1) var(--ease);
 			}
@@ -2369,6 +2476,9 @@
 			}
 			.failure .btn {
 				font-size: 15px;
+				background: var(--paper);
+				color: var(--paper-ink);
+				border: 1px solid var(--paper-ink);
 			}
 			.lost {
 				position: sticky;
@@ -2815,6 +2925,10 @@
 					'<path d="M229.66,58.34l-32-32a8,8,0,0,0-11.32,0l-96,96A8,8,0,0,0,88,128v32a8,8,0,0,0,8,8h32a8,8,0,0,0,5.66-2.34l96-96A8,8,0,0,0,229.66,58.34ZM124.69,152H104V131.31l64-64L188.69,88ZM200,76.69,179.31,56,192,43.31,212.69,64ZM224,128v80a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h80a8,8,0,0,1,0,16H48V208H208V128a8,8,0,0,1,16,0Z"/>',
 				"note-pencil:fill":
 					'<path d="M224,128v80a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h80a8,8,0,0,1,0,16H48V208H208V128a8,8,0,0,1,16,0Zm5.66-58.34-96,96A8,8,0,0,1,128,168H96a8,8,0,0,1-8-8V128a8,8,0,0,1,2.34-5.66l96-96a8,8,0,0,1,11.32,0l32,32A8,8,0,0,1,229.66,69.66Zm-17-5.66L192,43.31,179.31,56,200,76.69Z"/>',
+				option:
+					'<path d="M232,192a8,8,0,0,1-8,8H160.94a15.92,15.92,0,0,1-14.31-8.84L95.06,88H32a8,8,0,0,1,0-16H95.06a15.92,15.92,0,0,1,14.31,8.84L160.94,184H224A8,8,0,0,1,232,192ZM152,88h72a8,8,0,0,0,0-16H152a8,8,0,0,0,0,16Z"/>',
+				"option:fill":
+					'<path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM200,176H152.94a15.92,15.92,0,0,1-14.31-8.84L103.06,96H56a8,8,0,0,1,0-16h47.06a15.92,15.92,0,0,1,14.31,8.84L152.94,160H200a8,8,0,0,1,0,16Zm0-80H152a8,8,0,0,1,0-16h48a8,8,0,0,1,0,16Z"/>',
 				palette:
 					'<path d="M200.77,53.89A103.27,103.27,0,0,0,128,24h-1.07A104,104,0,0,0,24,128c0,43,26.58,79.06,69.36,94.17A32,32,0,0,0,136,192a16,16,0,0,1,16-16h46.21a31.81,31.81,0,0,0,31.2-24.88,104.43,104.43,0,0,0,2.59-24A103.28,103.28,0,0,0,200.77,53.89Zm13,93.71A15.89,15.89,0,0,1,198.21,160H152a32,32,0,0,0-32,32,16,16,0,0,1-21.31,15.07C62.49,194.3,40,164,40,128a88,88,0,0,1,87.09-88h.9a88.35,88.35,0,0,1,88,87.25A88.86,88.86,0,0,1,213.81,147.6ZM140,76a12,12,0,1,1-12-12A12,12,0,0,1,140,76ZM96,100A12,12,0,1,1,84,88,12,12,0,0,1,96,100Zm0,56a12,12,0,1,1-12-12A12,12,0,0,1,96,156Zm88-56a12,12,0,1,1-12-12A12,12,0,0,1,184,100Z"/>',
 				"palette:fill":
@@ -2823,6 +2937,10 @@
 					'<path d="M227.32,28.68a16,16,0,0,0-15.66-4.08l-.15,0L19.57,82.84a16,16,0,0,0-2.49,29.8L102,154l41.3,84.87A15.86,15.86,0,0,0,157.74,248q.69,0,1.38-.06a15.88,15.88,0,0,0,14-11.51l58.2-191.94c0-.05,0-.1,0-.15A16,16,0,0,0,227.32,28.68ZM157.83,231.85l-.05.14,0-.07-40.06-82.3,48-48a8,8,0,0,0-11.31-11.31l-48,48L24.08,98.25l-.07,0,.14,0L216,40Z"/>',
 				"paper-plane-tilt:fill":
 					'<path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z"/>',
+				password:
+					'<path d="M48,56V200a8,8,0,0,1-16,0V56a8,8,0,0,1,16,0Zm92,54.5L120,117V96a8,8,0,0,0-16,0v21L84,110.5a8,8,0,0,0-5,15.22l20,6.49-12.34,17a8,8,0,1,0,12.94,9.4l12.34-17,12.34,17a8,8,0,1,0,12.94-9.4l-12.34-17,20-6.49A8,8,0,0,0,140,110.5ZM246,115.64A8,8,0,0,0,236,110.5L216,117V96a8,8,0,0,0-16,0v21l-20-6.49a8,8,0,0,0-4.95,15.22l20,6.49-12.34,17a8,8,0,1,0,12.94,9.4l12.34-17,12.34,17a8,8,0,1,0,12.94-9.4l-12.34-17,20-6.49A8,8,0,0,0,246,115.64Z"/>',
+				"password:fill":
+					'<path d="M224,48H32A16,16,0,0,0,16,64V192a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48Zm-19.42,94.71a8,8,0,1,1-13,9.41L184,141.61l-7.63,10.51a8,8,0,1,1-13-9.41l7.64-10.5-12.36-4a8,8,0,1,1,5-15.21L176,117V104a8,8,0,0,1,16,0v13l12.35-4a8,8,0,0,1,5,15.21l-12.36,4Zm-72,0a8,8,0,1,1-13,9.41L112,141.61l-7.63,10.51a8,8,0,1,1-13-9.41l7.64-10.5-12.36-4a8,8,0,1,1,5-15.21L104,117V104a8,8,0,0,1,16,0v13l12.35-4a8,8,0,1,1,5,15.21l-12.36,4ZM64,88v80a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"/>',
 				"pencil-simple":
 					'<path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"/>',
 				"pencil-simple:fill":
@@ -2871,6 +2989,9 @@
 				stop: '<path d="M200,40H56A16,16,0,0,0,40,56V200a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,160H56V56H200V200Z"/>',
 				"stop:fill":
 					'<path d="M216,56V200a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40H200A16,16,0,0,1,216,56Z"/>',
+				tag: '<path d="M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63Zm-96,96L48,132.69V48h84.69L232,147.31ZM96,84A12,12,0,1,1,84,72,12,12,0,0,1,96,84Z"/>',
+				"tag:fill":
+					'<path d="M243.31,136,144,36.69A15.86,15.86,0,0,0,132.69,32H40a8,8,0,0,0-8,8v92.69A15.86,15.86,0,0,0,36.69,144L136,243.31a16,16,0,0,0,22.63,0l84.68-84.68a16,16,0,0,0,0-22.63ZM84,96A12,12,0,1,1,96,84,12,12,0,0,1,84,96Z"/>',
 				"text-align-left":
 					'<path d="M32,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H40A8,8,0,0,1,32,64Zm8,48H168a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16Zm176,24H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm-48,40H40a8,8,0,0,0,0,16H168a8,8,0,0,0,0-16Z"/>',
 				"text-align-left:fill":
@@ -2926,10 +3047,6 @@
 					'<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm-8-80V80a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,172Z"/>',
 				"warning-circle:fill":
 					'<path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"/>',
-				"wifi-slash":
-					'<path d="M213.92,210.62a8,8,0,1,1-11.84,10.76l-52-57.15a60,60,0,0,0-57.41,7.24,8,8,0,1,1-9.42-12.93A75.43,75.43,0,0,1,128,144c1.28,0,2.55,0,3.82.1L104.9,114.49A108,108,0,0,0,61,135.31,8,8,0,0,1,49.73,134,8,8,0,0,1,51,122.77a124.27,124.27,0,0,1,41.71-21.66L69.37,75.4a155.43,155.43,0,0,0-40.29,24A8,8,0,0,1,18.92,87,171.87,171.87,0,0,1,58,62.86L42.08,45.38A8,8,0,1,1,53.92,34.62ZM128,192a12,12,0,1,0,12,12A12,12,0,0,0,128,192ZM237.08,87A172.3,172.3,0,0,0,106,49.4a8,8,0,1,0,2,15.87A158.33,158.33,0,0,1,128,64a156.25,156.25,0,0,1,98.92,35.37A8,8,0,0,0,237.08,87ZM195,135.31a8,8,0,0,0,11.24-1.3,8,8,0,0,0-1.3-11.24,124.25,124.25,0,0,0-51.73-24.2A8,8,0,1,0,150,114.24,108.12,108.12,0,0,1,195,135.31Z"/>',
-				"wifi-slash:fill":
-					'<path d="M213.92,210.62a8,8,0,1,1-11.84,10.76l-33.67-37-28.1,33.88A15.93,15.93,0,0,1,128,224h0a15.93,15.93,0,0,1-12.31-5.77L11.65,92.8A15.65,15.65,0,0,1,8.11,80.91,15.93,15.93,0,0,1,14.28,70.1,188.26,188.26,0,0,1,46.6,50.35l-4.29-4.72a8.22,8.22,0,0,1,.13-11.38,8,8,0,0,1,11.48.37Zm34-129.71a15.93,15.93,0,0,0-6.17-10.81A186.67,186.67,0,0,0,128,32a191,191,0,0,0-42.49,4.75,4,4,0,0,0-2,6.59L186,156.07a4,4,0,0,0,6-.14L244.35,92.8A15.65,15.65,0,0,0,247.89,80.91Z"/>',
 				x: '<path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/>',
 				"x:fill":
 					'<path d="M208,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM181.66,170.34a8,8,0,0,1-11.32,11.32L128,139.31,85.66,181.66a8,8,0,0,1-11.32-11.32L116.69,128,74.34,85.66A8,8,0,0,1,85.66,74.34L128,116.69l42.34-42.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/>',
@@ -3245,6 +3362,29 @@
 					<div class="pr"><b>Pixel Forge Interactive</b><span>Bellevue, WA</span></div><div class="pr"><span>Game Developer</span><span>June 2020 – February 2022</span></div>
 					<ul><li>Core developer on 'Starbound Odyssey,' a sci-fi roguelike that achieved 500K+ sales on Steam</li></ul></div>`;
 			}
+			/* Tap regions on the page. Each line owns the space up to the midpoint of the gap to its neighbours. A region
+			   under 44 pt grows equally into its neighbours while they stay at 44 pt or more. If that is impossible at this
+			   zoom, the page has no line targets: one tap zooms to Fit around the tap point, then lines are selectable. */
+			function snapRegions(pageH) {
+				const min = (44 / pageH) * 100;
+				const r = HITS.map((h, i) => {
+					const prev = HITS[i - 1];
+					const next = HITS[i + 1];
+					return [prev ? (prev.top + prev.h + h.top) / 2 : 0, next ? (h.top + h.h + next.top) / 2 : 100];
+				});
+				for (let i = 0; i < r.length; i++) {
+					const need = min - (r[i][1] - r[i][0]);
+					if (need <= 0) continue;
+					const up = i > 0 ? Math.min(need / 2, r[i - 1][1] - r[i - 1][0] - min) : 0;
+					const down = i < r.length - 1 ? Math.min(need - up, r[i + 1][1] - r[i + 1][0] - min) : 0;
+					if (up < 0 || down < 0 || up + down < need - 0.01) return null;
+					r[i][0] -= up;
+					if (i > 0) r[i - 1][1] -= up;
+					r[i][1] += down;
+					if (i < r.length - 1) r[i + 1][0] += down;
+				}
+				return r;
+			}
 			function pageBox({ n = 1, width, sel = null, mode = "image", dim = false }) {
 				let inner;
 				if (mode === "skeleton")
@@ -3255,8 +3395,20 @@
 				else if (n === 2) inner = page2HTML();
 				else if (n >= 3)
 					inner = `<div class="ptxt"><h6>Volunteer</h6><div class="pr"><b>Code.org Game Development Workshops</b><span>2021 – Present</span></div><p>Taught weekend game-making workshops to 120 students.</p></div>`;
-				else
-					inner = `<img src="assets/onyx.jpg" alt="" />${width < 200 ? "" : HITS.map((h) => `<button class="hit${sel === h.key ? " sel" : ""}" style="top:${h.top}%;height:${h.h}%" aria-label="Select ${h.section}: ${h.title}"></button>`).join("")}`;
+				else {
+					const regions = width < 200 ? null : snapRegions((width * 297) / 210);
+					const lineSel = HITS.find((h) => h.key === sel);
+					inner = `<img src="assets/onyx.jpg" alt="" />${lineSel ? `<span class="line-sel" style="top:${lineSel.top}%;height:${lineSel.h}%"></span>` : ""}${
+						width < 200
+							? ""
+							: regions
+								? HITS.map(
+										(h, i) =>
+											`<button class="hit" style="top:${regions[i][0]}%;height:${regions[i][1] - regions[i][0]}%" aria-label="Select ${h.section}: ${h.title}" aria-pressed="${sel === h.key}"></button>`,
+									).join("")
+								: `<button class="zoomhit" aria-label="Zoom in to select a line"></button>`
+					}`;
+				}
 				return `<div class="pagewrap" style="width:${width}px"><div class="page paper-scope${dim ? " dim" : ""}" role="img" aria-label="Resume page ${n}">${inner}</div></div>`;
 			}
 			function zoomBar({ pct = "Fit", pages = "Page 1 of 2", style = "" } = {}) {
@@ -3495,27 +3647,41 @@
 				group: "menu",
 				kind: "write",
 				title: "Details",
-				desc: "Resume details: Template, Language, Length, Sharing, Created, Last edited.",
-				render: () =>
+				desc: "Resume details: Created, Last edited, Template, Language, Length and Sharing, with the public address when the link is on.",
+				states: [
+					["public", "Public"],
+					["password", "Public, with a password"],
+					["private", "Private"],
+				],
+				render: (s) =>
 					builder({
+						bar: { pub: s !== "private" },
 						body: `<div class="panel">${outlineHTML()}</div>`,
 						overlay: sheet({
 							detent: 470,
 							title: "Resume details",
 							right: sheetClose(),
 							body: `<div class="list">${[
+								["Created", "3 March 2026"],
+								["Last edited", "2 minutes ago"],
 								["Template", "Onyx"],
 								["Language", "English (United States)"],
 								["Length", "2 pages"],
-								["Sharing", "Public"],
-								["Created", "3 Mar 2026"],
-								["Last edited", "Today, 9:38"],
 							]
 								.map(([k, v]) => `<div class="li"><span class="grow">${k}</span><span class="val">${v}</span></div>`)
-								.join("")}</div>`,
+								.join("")}
+								<div class="li" style="align-items:flex-start;padding:10px 12px"><span class="grow">Sharing</span><span style="display:grid;justify-items:end;text-align:end;max-width:62%">${
+									s === "private"
+										? '<span class="val">Private. Only you can see it.</span>'
+										: `<span class="val">${s === "password" ? "Public, with a password" : "Public"}</span><button class="link small" style="font-family:var(--font-mono);font-weight:500;text-decoration:none">rxresu.me/marcuschen/senior-game-developer</button>`
+								}</span></div></div>`,
 						}),
 					}),
-				notes: { "Sheet detents": "Fit to content. Read-only." },
+				notes: {
+					"Sheet detents": "Fit to content. Read-only.",
+					Gestures:
+						"The public address opens the shared resume in the browser (in-app browser tab); long-press copies it.",
+				},
 			});
 			add({
 				id: "M5",
@@ -3634,7 +3800,7 @@
 				const name = custom ? "Earlier experience" : skills ? "Skills" : "Experience";
 				const row = (icon, label, extra = "", cls = "") =>
 					`<button class="li ${cls}">${ic(icon, 20)}<span class="grow">${label}</span>${extra}</button>`;
-				const sw = (on) => `<span class="sw${on ? " on" : ""}" role="switch" aria-checked="${on}"></span>`;
+				const sw = (on) => `<span class="sw${on ? " on" : ""}" aria-hidden="true"></span>`;
 				return sheet({
 					detent: "full",
 					title: name,
@@ -3670,7 +3836,7 @@
 				render: (s) => builder({ body: `<div class="panel">${outlineHTML()}</div>`, overlay: secSheet(s) }),
 				notes: {
 					Gestures:
-						"Tap a row; switches toggle in place and keep the sheet open. Rows with › push a sub-page inside the sheet.",
+						"Tap a row; switch rows are the 48 pt switch target (role switch on the row) and keep the sheet open. Rows with › push a sub-page inside the sheet.",
 					"Sheet detents": "Full (the list is 15 rows). Swipe down closes.",
 					Motion: "Sub-pages push inside the sheet over d2. Reduced motion: cross-fade.",
 				},
@@ -3791,13 +3957,20 @@
 				states: [
 					["clear", "Cleared"],
 					["delete", "Custom deleted"],
+					["sortfail", "Sort by date: partly sorted"],
 				],
 				render: (s) =>
 					builder({
 						body: `<div class="panel">${outlineHTML({ open: s === "clear" ? [] : ["experience"], zero: s === "clear" ? "experience" : null, gone: s === "delete" ? "earlier" : null })}</div>`,
-						overlay: toast(s === "clear" ? "Experience cleared" : "Earlier experience deleted", "Undo"),
+						overlay:
+							s === "sortfail"
+								? `<div class="toast" role="status" style="bottom:70px;background:var(--warn-soft);color:var(--warn-text)">${ic("warning", 20)}<span class="grow">Could not sort these items; they stayed at the end: Untitled, Mobile Games Studio.</span></div>`
+								: toast(s === "clear" ? "Experience cleared" : "Earlier experience deleted", "Undo"),
 					}),
-				notes: { Gestures: "Undo restores the section and its entries in place. Toast lasts 6 s." },
+				notes: {
+					Gestures:
+						"Undo restores the section and its entries in place. Toast lasts 6 s. Sort by date (W3) sorts entries it can read; entries with no or unreadable dates stay at the end, in their old order, and the warning toast names them (no Undo: nothing was lost).",
+				},
 			});
 			const ALL_SECTIONS = [
 				"summary",
@@ -3849,10 +4022,7 @@
 											...ALL_SECTIONS.filter((k) => k !== "summary"),
 											"summary",
 										]
-											.map(
-												(k) =>
-													`<button class="tile">${ic(SECTION_ICON[k], 20)}${k === "summary" ? "Text" : title(k)}</button>`,
-											)
+											.map((k) => `<button class="tile">${ic(SECTION_ICON[k], 20)}${title(k)}</button>`)
 											.join("")}</div>`,
 									}),
 					}),
@@ -3889,6 +4059,7 @@
 				states: [
 					["menu", "Options"],
 					["move", "Move to…"],
+					["hiddenmenu", "Options, hidden entry"],
 					["deleted", "Deleted · Undo"],
 				],
 				render: (s) => {
@@ -3910,8 +4081,9 @@
 									<div class="list" style="margin-top:12px"><button class="li">${ic("square-split-horizontal", 20)}<span class="grow">New page</span></button></div>`,
 							}),
 						});
-					const m = `<div class="scrim clear"></div><div class="menu" role="menu" aria-label="Entry options" style="right:12px;top:${DEV[S.device].top + 56 + 316}px">
-						<button class="mi">${ic("eye-slash", 20)}<span class="grow">Hide from page</span></button>
+					const hid = s === "hiddenmenu";
+					const m = `<div class="scrim clear"></div><div class="menu" role="menu" aria-label="Entry options" style="right:12px;top:${DEV[S.device].top + 56 + (hid ? 316 + 198 - 210 : 316)}px">
+						<button class="mi">${ic(hid ? "eye" : "eye-slash", 20)}<span class="grow">${hid ? "Show on page" : "Hide from page"}</span></button>
 						<button class="mi">${ic("copy", 20)}<span class="grow">Duplicate</span></button>
 						<button class="mi">${ic("arrows-left-right", 20)}<span class="grow">Move to…</span>${ic("caret-right", 16)}</button><hr/>
 						<button class="mi danger">${ic("trash", 20)}<span class="grow">Delete</span></button></div>`;
@@ -4008,11 +4180,30 @@
 					? `<div class="field"><label>${label || "Date"}</label><button class="input" style="width:100%">${ic("calendar-blank", 18)}<span class="grow" style="text-align:start">${start}</span></button></div>`
 					: `<div class="field"><label>${label || "Dates"}</label><div class="two"><button class="input">${ic("calendar-blank", 18)}<span class="grow" style="text-align:start">${start}</span></button><button class="input ${present ? "dis" : ""}">${end || '<span class="ph">End</span>'}</button></div>
 						<button class="check-row"><span class="cb${present ? " on" : ""}">${present ? ic("check", 14) : ""}</span>Present</button></div>`;
-			const linkFld = ({ url = "cascadestudios.example", inline = true, err = "" } = {}) =>
-				`<div class="field"><label>Link</label><div class="input${err ? " err" : ""}">${ic("link-simple-horizontal", 18)}<span class="${url ? "grow" : "ph grow"}">${url || "example.com"}</span></div>${err ? `<p class="ferr">${ic("warning-circle", 16)}${err}</p>` : ""}
-					<button class="check-row"><span class="cb${inline ? " on" : ""}">${inline ? ic("check", 14) : ""}</span>Show link in title</button></div>`;
+			const linkFld = ({
+				url = "cascadestudios.example",
+				inline = true,
+				err = "",
+				label = "",
+				title = "Link",
+				noInline = false,
+			} = {}) =>
+				`<div class="field"><label>${title}</label><div class="input${err ? " err" : ""}">${ic(title === "Website" ? "globe" : "link-simple-horizontal", 18)}<span class="${url ? "grow" : "ph grow"}">${url || "example.com"}</span>${
+					inline && !noInline
+						? ""
+						: `<button class="ib" aria-label="Add a label to the URL" style="color:var(--${label ? "accent-text" : "ink-2"})">${ic("tag", 20)}</button>`
+				}</div>${label && !(inline && !noInline) ? `<p class="fhint">Shows as “${label}”.</p>` : ""}${err ? `<p class="ferr">${ic("warning-circle", 16)}${err}</p>` : ""}
+					${noInline ? "" : `<button class="check-row"><span class="cb${inline ? " on" : ""}">${inline ? ic("check", 14) : ""}</span>Show link in title</button>`}</div>`;
+			const labelSheet = (value) =>
+				sheet({
+					detent: 300,
+					title: "Label",
+					left: `<button class="tb">Cancel</button>`,
+					right: doneBtn(),
+					body: `<div class="form" style="padding:0">${fld("Label", value, { cls: "focus" })}<p class="fhint">Printed instead of the address. Leave empty to print the address.</p></div>`,
+				});
 			const desc = (items, { focus = false, label = "Description", plain = false } = {}) =>
-				`<div class="field"><label>${label}<button class="btn sm ghost" style="margin-inline-start:auto;min-height:32px">${ic("sparkle", 16)}Improve</button></label><div class="rte${focus ? " focus" : ""}">${plain ? items : `<ul>${items.map((b, n) => `<li>${b}${focus && n === items.length - 1 ? '<span class="caret"></span>' : ""}</li>`).join("")}</ul>`}</div></div>`;
+				`<div class="field"><label>${label}<button class="btn sm ghost" style="margin-inline-start:auto">${ic("sparkle", 16)}Improve</button></label><div class="rte${focus ? " focus" : ""}">${plain ? items : `<ul>${items.map((b, n) => `<li>${b}${focus && n === items.length - 1 ? '<span class="caret"></span>' : ""}</li>`).join("")}</ul>`}</div></div>`;
 			const kw = (list) =>
 				`<div class="field"><label>Keywords</label><div class="kw">${list.map((k) => `<span class="k">${k}<button aria-label="Remove ${k}">${ic("x", 14)}</button></span>`).join("")}<span class="ph">Add keyword</span></div><span class="fhint">Return or comma adds a keyword. Hold to drag.</span></div>`;
 			const moreOpts = (inner, open = true) =>
@@ -4020,7 +4211,7 @@
 			const level = (n) =>
 				`<div class="field slider"><label>Level</label><div class="trk"><span class="fill" style="width:${n * 20}%"></span><span class="knob" style="left:${n * 20}%"></span></div><div class="ticks"><span>${n === 0 ? "Hidden" : `${n} / 5`}</span><span>0 hides the level</span></div></div>`;
 			const iconColour = (icon = "lightning", colour = "var(--accent)") =>
-				`<div class="row-flex"><button class="btn outline" style="flex:1">${ic(icon, 20)}Icon</button><button class="btn outline" style="flex:1"><span class="swatch" style="background:${colour}"></span>Icon colour</button></div>`;
+				`<div class="row-flex"><button class="btn outline" style="flex:1">${ic(icon, 20)}Icon</button><button class="btn outline" style="flex:1" aria-label="Icon colour (opens E14)"><span class="swatch" style="background:${colour}"></span>Icon colour</button></div>`;
 
 			const TYPE_FORMS = {
 				experience: () =>
@@ -4108,6 +4299,7 @@
 					["filled", "Filled"],
 					["errors", "Validation"],
 					["custom", "Custom field link"],
+					["label", "Website label"],
 				],
 				render: (s) => {
 					const err = s === "errors";
@@ -4118,7 +4310,7 @@
 						${fld("Full name", "Marcus Chen")}${fld("Headline", "Frontend Engineer & Interactive Developer")}
 						${fld("Email", err ? "marcus.chen@email" : "marcus.chen@email.com", { cls: err ? "err" : "", icon: ic("envelope-simple", 18), after: err ? `<p class="ferr">${ic("warning-circle", 16)}Add the domain ending, like email.com</p>` : "" })}
 						${fld("Phone", "+1 (555) 291-4756", { icon: ic("phone", 18) })}${fld("Location", "London, UK", { icon: ic("map-pin", 18) })}
-						${fld("Website", err ? "marcuschen" : "marcuschen.dev", { cls: err ? "err" : "", icon: ic("globe", 18), after: err ? `<p class="ferr">${ic("warning-circle", 16)}Enter a web address, like example.com</p>` : "" })}
+						${linkFld({ title: "Website", noInline: true, url: err ? "marcuschen" : "marcuschen.dev", label: err ? "" : "Portfolio", err: err ? "Enter a web address, like example.com" : "" })}
 						<div class="field"><label>Custom fields</label>${cf("game-controller", "itch.io/dkowalski", true, 0)}${cf("star", "Speaks at GDC 2026", false, 1)}</div>
 						<button class="addrow" style="border:1px dashed var(--line-2);justify-content:center">${ic("plus", 18)}Add field</button></div>`;
 					const overlay =
@@ -4130,12 +4322,14 @@
 									right: doneBtn(),
 									body: `<div class="form" style="padding:0">${fld("Link address", "https://itch.io/dkowalski", { cls: "focus" })}<button class="btn ghost" style="justify-self:start;color:var(--danger-text)">Remove link</button></div>`,
 								})
-							: "";
+							: s === "label"
+								? labelSheet("Portfolio")
+								: "";
 					return entryScreen({ back: "Write", del: false, body, overlay });
 				},
 				notes: {
 					Gestures:
-						"Tap the photo row's Edit for Picture (E4). Custom field: icon opens the icon picker (W6); link toggles the link sheet; ↑ moves it up; × removes with Undo.",
+						"Tap the photo row's Edit for Picture (E4). Website: the tag button edits the label printed instead of the address (Basics has no Show link in title). Custom field: icon opens the icon picker (W6); link toggles the link sheet; ↑ moves it up; × removes with Undo.",
 					Keyboard:
 						"Email: email keyboard; Phone: phone pad; Website: URL keyboard. Validation shows after leaving the field, never while typing.",
 					"Sheet detents": "Link sheet fits its content above the keyboard.",
@@ -4154,6 +4348,8 @@
 					["uploading", "Uploading"],
 					["remove", "Remove"],
 					["hidden", "Hidden"],
+					["empty", "No photo"],
+					["failed", "Upload failed"],
 				],
 				render: (s) => {
 					const sl = (label, pct, val) =>
@@ -4164,10 +4360,12 @@
 						<div class="form" style="padding:0">${fld("URL", "https://cdn.rxresu.me/u/…/picture.webp", { icon: ic("link-simple-horizontal", 18) })}
 						<div class="field"><label>Fit</label><div class="segc"><button aria-pressed="true">Cover</button><button aria-pressed="false">Contain</button></div></div>
 						${sl("Size", 22, "128 pt")}
-						<div class="field"><label>Aspect Ratio<span class="muted" style="margin-inline-start:auto;font-weight:500">1.0</span></label><div class="segc"><button aria-pressed="true">Square</button><button aria-pressed="false">Landscape</button><button aria-pressed="false">Portrait</button></div></div>
-						${sl("Border Radius", 12, "12%")}${sl("Border Width", 0, "0")}
-						<div class="row-flex"><span class="grow small">Border Color</span><span class="swatch" style="background:var(--ink)"></span></div>
-						${sl("Shadow Width", 0, "0")}<div class="row-flex"><span class="grow small">Shadow Color</span><span class="swatch" style="background:var(--ink-3)"></span></div>
+						<div class="field"><label>Aspect Ratio</label><div class="row-flex"><div class="input" style="width:88px"><span class="grow">1.2</span></div><div class="slider grow"><div class="trk"><span class="fill" style="width:35%"></span><span class="knob" style="left:35%"></span></div></div></div>
+							<div class="segc"><button aria-pressed="false">Square</button><button aria-pressed="false">Landscape</button><button aria-pressed="false">Portrait</button></div><span class="fhint">0.5 to 2.5. Presets set 1, 1.5 or 0.67.</span></div>
+						<div class="field"><label>Border Radius</label><div class="row-flex"><div class="input" style="width:88px"><span class="grow">12</span><span class="muted">pt</span></div><div class="slider grow"><div class="trk"><span class="fill" style="width:12%"></span><span class="knob" style="left:12%"></span></div></div></div></div>
+						${sl("Border Width", 0, "0 pt")}
+						<button class="li" style="padding:0" aria-label="Border Color (opens E14)"><span class="grow small">Border Color</span><span class="swatch" style="background:var(--ink)"></span>${ic("caret-right", 16)}</button>
+						${sl("Shadow Width", 0, "0 pt")}<button class="li" style="padding:0" aria-label="Shadow Color (opens E14)"><span class="grow small">Shadow Color</span><span class="swatch" style="background:var(--ink-3)"></span>${ic("caret-right", 16)}</button>
 						<div class="field"><label class="muted">Rotation</label><p class="fhint">Rotation isn't supported by PDF rendering.</p></div></div>`;
 					let overlay = "";
 					if (s === "settings" || s === "hidden")
@@ -4208,6 +4406,16 @@
 								`<span class="row-flex">${ic("circle-notch", 16)}Uploading picture…</span>`,
 							),
 						});
+					if (s === "failed")
+						overlay =
+							sheet({ detent: "full", title: "Picture", right: doneBtn(), body: settings }) +
+							`<div class="toast" role="alert" style="bottom:70px;background:var(--danger-soft);color:var(--danger-text)">${ic("warning-circle", 20)}<span class="grow">Failed to upload picture. Please try again.</span><button style="color:var(--danger-text)">Retry</button></div>`;
+					if (s === "empty")
+						return entryScreen({
+							back: "Write",
+							del: false,
+							body: `<div class="form"><div class="row-flex" style="gap:12px"><span class="avatar" style="width:64px;height:64px;border-radius:12px">${ic("camera-plus", 26)}</span><span class="grow small ink2">No photo. Most ATS ignore photos; some regions expect one.</span><button class="btn sm outline">Add</button></div>${fld("Full name", "Marcus Chen")}${fld("Headline", "Frontend Engineer & Interactive Developer")}</div>`,
+						});
 					if (s === "remove")
 						overlay =
 							sheet({ detent: "full", title: "Picture", right: doneBtn(), body: settings }) +
@@ -4224,7 +4432,7 @@
 					"Sheet detents":
 						"Picture opens Full. Source picker: iOS action sheet, Android bottom sheet. Crop is a full-screen modal.",
 					Gestures:
-						"Crop: pan to reposition, pinch or slider to zoom (1–3×). Sliders snap to whole values; long-press a value to type it.",
+						"Crop: pan to reposition, pinch or slider to zoom (1–3×). Size, Aspect Ratio and Border Radius pair a number field (pt, or the ratio) with a slider; presets fill the ratio. Border and Shadow Color open the colour picker (E14). Upload failure keeps the previous photo; Retry re-sends the same cropped file. Add (No photo) opens the source picker.",
 					"iOS / Android":
 						"iOS: PHPicker and the camera; Android: photo picker. Both stream to the same upload endpoint as web.",
 				},
@@ -4258,17 +4466,21 @@
 				desc: "Link with “Show link in title”, as on every entry type that has a website.",
 				states: [
 					["on", "In title"],
+					["label", "Label"],
 					["invalid", "Invalid"],
 					["empty", "Empty"],
 				],
 				render: (s) =>
 					entryScreen({
 						back: "Projects",
-						body: `<div class="form">${fld("Name", "Echoes of the Void (Indie Game)")}${linkFld(s === "invalid" ? { url: "echoes of the void", inline: true, err: "Enter a web address, like example.com" } : s === "empty" ? { url: "", inline: false } : { url: "echoesofthevoid.example" })}<p class="fhint">${s === "on" ? "The title prints as a link; the address is not printed separately." : ""}</p></div>`,
+						body: `<div class="form">${fld("Name", "Echoes of the Void (Indie Game)")}${linkFld(s === "invalid" ? { url: "echoes of the void", inline: true, err: "Enter a web address, like example.com" } : s === "empty" ? { url: "", inline: false } : s === "label" ? { url: "echoesofthevoid.example", inline: false, label: "Play the demo" } : { url: "echoesofthevoid.example" })}<p class="fhint">${s === "on" ? "The title prints as a link; the address is not printed separately." : ""}</p></div>`,
+						overlay: s === "label" ? labelSheet("Play the demo") : "",
 					}),
 				notes: {
 					Keyboard:
 						"URL keyboard; https:// is added on save if missing. Show link in title is disabled while the link is empty.",
+					Gestures:
+						"The tag button in the field edits the Label, printed instead of the address. It is hidden while Show link in title is on, because the title is the link text then (web URLInput).",
 				},
 			});
 			add({
@@ -4439,7 +4651,7 @@
 							body: `<div class="form">${fld("Position", "Senior Game Developer")}${desc(BULLETS, { focus: true })}</div>`,
 						});
 					const msg = {
-						tab: "Synced changes made in another tab.",
+						tab: "Synced changes made elsewhere.",
 						agent: "This resume was updated by an AI agent.",
 						sharing: "This resume's sharing settings changed elsewhere.",
 						restored: "Restored changes that hadn't been saved yet.",
@@ -4540,6 +4752,69 @@
 					})}</div>`,
 				notes: {
 					Keyboard: "Arabic keyboard; mixed Latin terms (Unreal Engine 5) keep LTR runs inside the RTL paragraph.",
+				},
+			});
+			/* Resume data, not UI tokens: the colour presets the web picker offers (components/input/color-picker.tsx). */
+			const COLOR_PRESETS = [
+				"rgba(0, 0, 0, 1)",
+				"rgba(231, 0, 11, 1)",
+				"rgba(245, 73, 0, 1)",
+				"rgba(225, 113, 0, 1)",
+				"rgba(208, 135, 0, 1)",
+				"rgba(94, 165, 0, 1)",
+				"rgba(0, 166, 62, 1)",
+				"rgba(0, 153, 102, 1)",
+				"rgba(0, 146, 184, 1)",
+				"rgba(0, 132, 209, 1)",
+				"rgba(21, 93, 252, 1)",
+				"rgba(79, 57, 246, 1)",
+				"rgba(127, 34, 254, 1)",
+				"rgba(200, 0, 222, 1)",
+				"rgba(230, 0, 118, 1)",
+				"rgba(69, 85, 108, 1)",
+			];
+			add({
+				id: "E14",
+				group: "editors",
+				kind: "entry",
+				title: "Colour picker",
+				desc: "One shared picker for Icon colour (Skills, Interests, Profiles), Border Color and Shadow Color (Picture): the 16 web presets, then Custom with a saturation square, hue, opacity and hex.",
+				states: [
+					["icon", "Icon colour"],
+					["border", "Border Color"],
+					["shadow", "Shadow Color"],
+				],
+				render: (s) => {
+					const sel = s === "icon" ? 6 : s === "border" ? 0 : 15;
+					const hue = COLOR_PRESETS[sel];
+					const body = `<p class="cap" style="padding-top:0">Presets</p>
+						<div class="swgrid">${COLOR_PRESETS.map((col, i) => `<button aria-label="Use color ${col}" aria-pressed="${i === sel}"><span style="background:${col}"></span></button>`).join("")}</div>
+						<p class="cap">Custom</p>
+						<div class="sv" style="--hue:${hue}"><span class="knob" style="left:88%;top:30%;background:${hue}"></span></div>
+						<div class="hue" style="background:linear-gradient(to right, ${COLOR_PRESETS.slice(1, 15).join(", ")})"><span class="knob" style="left:${(sel / 15) * 100}%;background:${hue}"></span></div>
+						<div class="hue" style="background:linear-gradient(to right, transparent, ${hue}), var(--sunken)"><span class="knob" style="left:96%;background:${hue}"></span></div>
+						<div class="row-flex"><span class="swatch" style="width:44px;height:44px;border-radius:10px;background:${hue}"></span><div class="input grow"><span class="grow" style="font-family:var(--font-mono)">${hue}</span></div></div>
+						${s === "icon" ? `<button class="btn ghost" style="justify-self:start">Use the template's colour</button>` : ""}`;
+					const back = s === "icon" ? "Skills" : "Picture";
+					return entryScreen({
+						back,
+						body: `<div class="form">${s === "icon" ? TYPE_FORMS.skills() : fld("Full name", "Marcus Chen")}</div>`,
+						overlay: sheet({
+							detent: "full",
+							title: s === "icon" ? "Icon colour" : s === "border" ? "Border Color" : "Shadow Color",
+							left: `<button class="tb">Cancel</button>`,
+							right: doneBtn(),
+							body,
+						}),
+					});
+				},
+				notes: {
+					"Sheet detents":
+						"Full; the picker needs the height for the square. On tablet it is a popover anchored to the swatch.",
+					Gestures:
+						"Tap a preset; drag in the square for saturation and brightness, along the bars for hue and opacity; or type a hex. Done applies, Cancel keeps the old colour. Swatches and bars are 44 pt tall targets.",
+					"iOS / Android":
+						"Same custom picker on both (reanimated sliders); not the system colour well, so presets and opacity match web.",
 				},
 			});
 			/* ===== Page ===== */
@@ -4691,14 +4966,24 @@
 			});
 
 			/* ===== Cover letter ===== */
+			const LETTER_NAME = "Letter for Northwind Labs";
 			const letterBar = (save = "saved") =>
-				`<header class="ebar"><button class="ib" aria-label="Back to Documents">${backIcon()}</button><div class="name"><button class="namebtn"><b><span class="trunc">Letter for Northwind Labs</span>${ic("caret-down", 14)}</b></button>${saveStatus(save)}</div><button class="ib" aria-label="Share">${ic("export", 22)}</button></header>`;
+				`<header class="ebar"><button class="ib" aria-label="Back to Documents">${backIcon()}</button><div class="name"><button class="namebtn" aria-haspopup="menu"><b><span class="trunc">${LETTER_NAME}</span>${ic("caret-down", 14)}</b></button>${saveStatus(save)}</div><button class="ib" aria-label="Open AI assistant">${ic("sparkle", 22)}</button><button class="ib" aria-label="Share">${ic("export", 22)}</button></header>`;
 			const letterFrame = ({ body, tab = "write", overlay = "", save = "saved", kb = false, toolbar = "" }) =>
 				`<div class="scr">${statusBar()}${letterBar(save)}<div class="body">${body}</div>${kb ? toolbar + keyboard() : editorTabs(tab, { letter: true }) + homeBar()}${overlay}</div>`;
 			const lsec = (t, inner, aside = "") =>
 				`<section style="display:grid;gap:10px;padding:16px;border-bottom:1px solid var(--line)"><div class="row-flex"><h5 class="cap" style="padding:0;flex:1">${t}</h5>${aside}</div>${inner}</section>`;
-			const LETTER_BODY = `<p>Dear Ms. Ortega,</p><p>I'm writing about the Senior Unity Engineer role. At Cascade Studios I lead combat and AI systems for an Unreal Engine 5 title, and I built editor tools that cut level iteration time by 40%.</p><p>Northwind Labs' work on accessible co-op games is why I'm applying: I'd bring the same care for tools and feel to your team.</p><p>Kind regards,<br/>Marcus Chen</p>`;
-			function forSec(state) {
+			/* The body field holds only the paragraphs; greeting and sign-off are their own fields (structured letters). */
+			const LETTER_PARAS = `<p>I'm writing about the Senior Unity Engineer role. At Cascade Studios I lead combat and AI systems for an Unreal Engine 5 title, and I built editor tools that cut level iteration time by 40%.</p><p>Northwind Labs' work on accessible co-op games is why I'm applying: I'd bring the same care for tools and feel to your team.</p>`;
+			const OLD_PARAS = `<p>I'm applying for the Senior Unity Engineer role. I lead combat and AI systems at Cascade Studios and build the editor tools our designers use every day.</p>`;
+			/* The letter as it prints: sender header, recipient block and date, greeting, body, sign-off and signature. */
+			function letterPage(width, { paras = LETTER_PARAS, signOff = "Kind regards," } = {}) {
+				return `<div class="pagewrap" style="width:${width}px"><div class="page paper-scope" role="img" aria-label="Letter page 1"><div class="ptxt">
+					<div style="font-family:var(--font-display);font-size:5cqw;font-weight:600">Marcus Chen</div><p>marcus.chen@email.com · +1 (555) 291-4756 · London, UK</p>
+					<div class="lt" style="padding:5% 0 0"><div>Ms. Ortega<br/>Northwind Labs</div><div>17 October 2026</div><div>Dear Ms. Ortega,</div>${paras}<div>${signOff}<br/>Marcus Chen</div></div>
+				</div></div></div>`;
+			}
+			function forSec(state = "linked") {
 				if (state === "none")
 					return lsec(
 						"For",
@@ -4709,18 +4994,33 @@
 					`<div class="li" style="padding:0">${ic("briefcase", 20)}<span class="grow"><b>Senior Unity Engineer</b><span class="small muted">Northwind Labs · Applied</span></span><button class="btn sm secondary">Change</button></div>`,
 				);
 			}
-			const toSec = () =>
-				lsec(
+			function toSec(state = "linked") {
+				if (state === "freeform")
+					return lsec(
+						"To",
+						`<div class="field"><label>Recipient</label><div class="rte" style="min-height:64px">Hiring Manager<br/>Northwind Labs<br/>12 Harbour Street, Lisbon</div></div><p class="fhint">This letter keeps its recipient as written.</p>`,
+					);
+				if (state === "none")
+					return lsec(
+						"To",
+						`<div class="form" style="padding:0">${fld("Name or team", "", { ph: "Hiring team" })}<div class="two">${fld("Company", "")}${fld("Date", "17 Oct 2026")}</div><p class="fhint">The greeting follows the name.</p></div>`,
+					);
+				return lsec(
 					"To",
 					`<div class="form" style="padding:0">${fld("Name or team", "Ms. Ortega")}<div class="two">${fld("Company", "Northwind Labs")}${fld("Date", "17 Oct 2026")}</div><p class="fhint">Filled from the application. The greeting follows the name.</p></div>`,
 				);
-			const fromSec = (linked = true) =>
-				lsec(
+			}
+			function fromSec(state = "linked") {
+				const resume = state === "noresume" ? "No resume" : RESUME;
+				const pickerRow = `<div class="field"><label>Resume</label><button class="input" style="width:100%" aria-haspopup="listbox">${ic("file-text", 18)}<span class="grow" style="text-align:start">${resume}</span>${ic("caret-down", 16)}</button></div>`;
+				if (state === "noresume")
+					return lsec("From", `${pickerRow}<p class="fhint">Your name and contact details come from a resume.</p>`);
+				const linked = state === "linked";
+				return lsec(
 					"From",
-					`<div class="field"><label>Resume</label><button class="input" style="width:100%">${ic("file-text", 18)}<span class="grow" style="text-align:start">${RESUME}</span>${ic("caret-down", 16)}</button></div>
-					<button class="toggle-row"><span class="grow" style="display:grid"><span>Use details from “${RESUME}”</span><span class="small muted">${linked ? "Linked. Name, email, phone and city update when the resume does." : "Off. The letter keeps its own copy of your details."}</span></span><span class="sw${linked ? " on" : ""}" role="switch" aria-checked="${linked}"></span></button>
-					${linked ? "" : `<div class="form" style="padding:0">${fld("Full name", "Marcus Chen")}${fld("Email", "marcus.chen@email.com")}</div>`}`,
+					`${pickerRow}<button class="toggle-row" role="switch" aria-checked="${linked}"><span class="grow" style="display:grid"><span>Use details from “${RESUME}”</span><span class="small muted">${linked ? "Linked. Name, email, phone and city update when the resume does." : "Off. The letter keeps its own copy of your details."}</span></span><span class="sw${linked ? " on" : ""}"></span></button>`,
 				);
+			}
 			function lengthSec(words = 214) {
 				const msg =
 					words < 180
@@ -4732,67 +5032,125 @@
 				return lsec(
 					"Length",
 					`<div style="position:relative;height:14px;border-radius:7px;background:var(--sunken)"><span style="position:absolute;left:${(180 / 450) * 100}%;width:${(140 / 450) * 100}%;top:0;bottom:0;background:var(--accent-soft);border-radius:4px"></span><span style="position:absolute;left:${pct}%;top:-3px;width:4px;height:20px;border-radius:2px;background:var(--${words > 320 ? "warn" : "accent"})"></span></div>
-					<p class="small ${words > 320 ? "" : "ink2"}" style="${words > 320 ? "color:var(--warn-text)" : ""}">${msg}</p><p class="fhint">Most recruiters read 180–320 words. The shaded band shows the range.</p>`,
+					<p class="small" style="color:var(--${words > 320 ? "warn-text" : "ink-2"})">${msg}</p><p class="fhint">Most recruiters read 180–320 words. The shaded band shows the range.</p>`,
 					`<span class="small muted">${words} words</span>`,
 				);
 			}
-			const designSec = (own = false) =>
+			const designSec = (state = "inherit") =>
 				lsec(
 					"Design",
-					`<p class="small ink2">${own ? "Its own design (Onyx, Editorial type, Forest)." : "Matches the resume (Onyx, Editorial type, Forest)."} <button class="link small">Change it in Design.</button></p>`,
+					`<p class="small ink2">${state === "inherit" ? "Matches the resume (Onyx, Editorial type, Forest)." : "Its own design (Onyx, Editorial type, Forest)."} <button class="link small">Change it in Design.</button></p>`,
 				);
-			function bodySec(state) {
-				const greet = `<div class="two">${fld("Greeting", "Dear Ms. Ortega,", { after: '<button class="link xs" style="justify-self:start">Use default</button>' })}${fld("Sign-off", "Kind regards,")}</div>`;
-				if (state === "empty")
-					return lsec(
+			const framing = (field, value, overridden) =>
+				`<div class="field"><label>${field}${overridden ? '<button class="btn sm ghost" style="margin-inline-start:auto">Use default</button>' : ""}</label><div class="input${value ? "" : " focus"}">${value ? `<span class="grow">${value}</span>` : '<span class="caret"></span>'}</div></div>`;
+			const FRAMING_HINT =
+				'<p class="fhint">Clear the greeting or sign-off to omit it. Clearing the sign-off also removes the automatic signature.</p>';
+			const DISCLOSE = {
+				both: "Draft · uses only your resume and the posting",
+				resume: "Draft · uses only your resume",
+				posting: "Draft · uses only the posting",
+			};
+			function bodySec(state = "filled", ctx = "both") {
+				const offer = {
+					both: "Start typing, or draft from what we know: the Northwind Labs posting and your resume.",
+					resume: "Start typing, or draft from what we know: your resume.",
+					posting: "Start typing, or draft from what we know: the Northwind Labs posting.",
+					neither: "Start typing. To draft one, link a resume or an application first.",
+				}[ctx];
+				const draftLabel = ctx === "resume" ? "Draft from your resume" : "Draft from the posting";
+				const wrap = (inner) =>
+					lsec(
 						"Letter",
-						`<div class="suggest"><p class="small ink2">Start typing, or draft from what we know: the Northwind Labs posting and your resume.</p><div class="row-flex" style="flex-wrap:wrap"><button class="btn primary">${ic("sparkle", 18)}Draft from the posting</button><button class="btn secondary">Write it myself</button></div></div>`,
+						`${framing("Greeting", "Dear Ms. Ortega,", false)}${inner}${framing("Sign-off", "Kind regards,", false)}${FRAMING_HINT}`,
+					);
+				if (state === "empty")
+					return wrap(
+						`<div class="suggest"><p class="small ink2">${offer}</p><div class="row-flex" style="flex-wrap:wrap">${ctx === "neither" ? "" : `<button class="btn primary">${ic("sparkle", 18)}${draftLabel}</button>`}<button class="btn secondary">Write it myself</button></div></div>`,
 					);
 				if (state === "noai")
-					return lsec(
-						"Letter",
-						`<div class="suggest"><p class="small ink2">Start typing, or draft from what we know: the Northwind Labs posting and your resume.</p><div class="row-flex"><button class="btn primary" disabled style="opacity:.5">${ic("sparkle", 18)}Draft from the posting</button><button class="btn secondary">Write it myself</button></div><p class="fhint">Drafting needs an AI provider. <button class="link small">Open AI settings</button></p></div>`,
+					return wrap(
+						`<div class="suggest"><p class="small ink2">${offer}</p><div class="row-flex"><button class="btn secondary">Write it myself</button></div><p class="fhint">Drafting needs an AI provider. <button class="link small">Open AI settings</button></p></div>`,
 					);
 				if (state === "streaming")
-					return lsec(
-						"Letter",
-						`<p class="row-flex xs muted">${ic("sparkle", 14)}Draft · uses only your resume and the posting</p><div class="rte" style="min-height:200px"><p>Dear Ms. Ortega,</p><p>I'm writing about the Senior Unity Engineer role. At Cascade Studios I lead combat and AI systems for an Unreal Engine 5 title, and I built editor<span class="caret"></span></p></div><button class="btn secondary" style="justify-self:start">${ic("stop", 18)}Stop</button>`,
+					return wrap(
+						`<p class="row-flex xs muted">${ic("sparkle", 14)}${DISCLOSE[ctx]}</p><div class="rte" style="min-height:160px"><p>I'm writing about the Senior Unity Engineer role. At Cascade Studios I lead combat and AI systems for an Unreal Engine 5 title, and I built editor<span class="caret"></span></p></div><button class="btn secondary" style="justify-self:start">${ic("stop", 18)}Stop</button>`,
 					);
 				if (state === "ready")
-					return lsec(
-						"Letter",
-						`<p class="row-flex xs muted">${ic("sparkle", 14)}Draft · uses only your resume and the posting</p><div class="rte" style="background:var(--accent-soft)">${LETTER_BODY}</div><div class="row-flex" style="flex-wrap:wrap"><button class="btn sm primary">Keep</button><button class="btn sm secondary">Shorter</button><button class="btn sm secondary">More personal</button><button class="btn sm ghost" style="color:var(--danger-text)">Discard</button></div>`,
+					return wrap(
+						`<p class="row-flex xs muted">${ic("sparkle", 14)}${DISCLOSE[ctx]}</p><div class="rte" style="background:var(--accent-soft)">${LETTER_PARAS}</div><div class="row-flex" style="flex-wrap:wrap"><button class="btn sm primary">Keep</button><button class="btn sm secondary">Shorter</button><button class="btn sm secondary">More personal</button><button class="btn sm ghost" style="color:var(--danger-text)">Discard</button></div>`,
 					);
 				if (state === "failed")
-					return lsec(
-						"Letter",
+					return wrap(
 						`<div class="banner danger">${ic("warning-circle", 20)}<span class="txt">Drafting stopped: OpenAI didn't respond. Nothing on the page changed.</span></div><div class="row-flex"><button class="btn sm secondary">Try again</button><button class="btn sm ghost">Dismiss</button></div>`,
 					);
-				return lsec("Letter", `${greet}<div class="rte">${LETTER_BODY}</div>`);
+				if (state === "freeform")
+					return lsec(
+						"Letter",
+						`<div class="rte">${OLD_PARAS}<p>Kind regards,<br/>Marcus Chen</p></div><p class="fhint">Written before greeting and sign-off fields existed, so they stay inside the text.</p>`,
+					);
+				if (state === "custom")
+					return lsec(
+						"Letter",
+						`${framing("Greeting", "Dear Ms. Ortega,", false)}<div class="rte">${LETTER_PARAS}</div>${framing("Sign-off", "Best,", true)}${FRAMING_HINT}`,
+					);
+				if (state === "cleared")
+					return lsec(
+						"Letter",
+						`${framing("Greeting", "", true)}<div class="rte">${LETTER_PARAS}</div>${framing("Sign-off", "Kind regards,", false)}${FRAMING_HINT}`,
+					);
+				return wrap(`<div class="field"><label>Letter body</label><div class="rte">${LETTER_PARAS}</div></div>`);
 			}
+			const resumePicker = () =>
+				sheet({
+					detent: "half",
+					title: "Resume",
+					right: sheetClose(),
+					body: `<div class="list"><button class="li"><span class="grow">No resume</span></button>${[
+						RESUME,
+						"Unity Engineer, Northwind Labs",
+						"Technical Artist",
+						"Engine Programmer",
+					]
+						.map(
+							(n, i) =>
+								`<button class="li${i === 0 ? " sel" : ""}" role="option" aria-selected="${i === 0}">${ic("file-text", 20)}<span class="grow">${n}</span>${i === 0 ? ic("check", 20) : ""}</button>`,
+						)
+						.join(
+							"",
+						)}</div><p class="fhint" style="padding:8px 4px">A letter that takes a resume for the first time also takes its details and design.</p>`,
+				});
 			add({
 				id: "L1",
 				group: "letter",
 				kind: "letter",
 				title: "Letter · Write",
-				desc: "For (linked application), To, From (linked resume, live or copied), Letter with greeting and sign-off, the 180–320 word guide, and the design summary.",
+				desc: "For (linked application), To, From (linked resume, live or copied), then Letter with greeting, body and sign-off as separate fields, the 180–320 word guide and the design summary. Older freeform letters keep a rich-text recipient.",
 				states: [
 					["top", "For · To · From"],
 					["body", "Letter · Length"],
 					["copied", "From copied"],
 					["none", "No application"],
+					["noresume", "No resume"],
+					["picker", "Resume picker"],
+					["freeform", "Freeform letter"],
 				],
 				render: (s) => {
-					const body =
-						s === "body"
-							? `${bodySec("filled")}${lengthSec(214)}${designSec()}`
-							: `${forSec(s === "none" ? "none" : "linked")}${s === "none" ? lsec("To", `<div class="form" style="padding:0">${fld("Name or team", "", { ph: "Hiring team" })}<div class="two">${fld("Company", "")}${fld("Date", "17 Oct 2026")}</div><p class="fhint">The greeting follows the name.</p></div>`) : toSec()}${fromSec(s !== "copied")}`;
-					return letterFrame({ body: `<div class="panel">${body}</div>` });
+					let body;
+					if (s === "body") body = `${bodySec("filled")}${lengthSec(214)}${designSec()}`;
+					else if (s === "freeform") body = `${forSec()}${toSec("freeform")}${fromSec()}${bodySec("freeform")}`;
+					else if (s === "noresume") body = `${forSec()}${toSec()}${fromSec("noresume")}${designSec("own")}`;
+					else
+						body = `${forSec(s === "none" ? "none" : "linked")}${toSec(s === "none" ? "none" : "linked")}${fromSec(s === "copied" ? "copied" : "linked")}`;
+					return letterFrame({
+						body: `<div class="panel">${body}</div>`,
+						overlay: s === "picker" ? resumePicker() : "",
+					});
 				},
 				notes: {
 					Gestures:
-						"Change opens the application picker (L2). The From switch links or copies details; turning it off shows the copied fields. Design summary links to the Design tab.",
-					Keyboard: "Name or team, Company and Date use the text keyboard; Date opens a date picker sheet.",
+						"Change opens the application picker (L2). Resume opens the resume picker; No resume unlinks details and design (the letter keeps its own design, L6). The switch links or copies the sender details: off keeps a hidden copy, so nothing new to edit appears. Design summary links to the Design tab.",
+					Keyboard:
+						"Name or team, Company and Date use the text keyboard; Date opens a date picker sheet. Greeting and Sign-off are plain text; the body is rich text (L4).",
 				},
 			});
 			add({
@@ -4807,7 +5165,7 @@
 				],
 				render: (s) =>
 					letterFrame({
-						body: `<div class="panel">${forSec("linked")}${toSec()}</div>`,
+						body: `<div class="panel">${forSec()}${toSec()}</div>`,
 						overlay: sheet({
 							detent: "half",
 							title: "Application",
@@ -4829,19 +5187,41 @@
 				group: "letter",
 				kind: "letter",
 				title: "AI draft",
-				desc: "Draft from the posting streams into the body; Stop keeps nothing. Then Keep, Shorter, More personal or Discard. No provider and failure states.",
+				desc: "The empty body offers a draft from whatever is linked: posting and resume, resume only, posting only, or neither (no draft). The draft says what it used. Then Keep, Shorter, More personal or Discard; failure and no-provider states.",
 				states: [
-					["empty", "Offer"],
-					["streaming", "Streaming"],
+					["both", "Offer · posting + resume"],
+					["resume", "Offer · resume only"],
+					["posting", "Offer · posting only"],
+					["neither", "Nothing linked"],
+					["noai", "No AI provider"],
+					["streaming", "Streaming · both"],
+					["streamResume", "Streaming · resume only"],
+					["streamPosting", "Streaming · posting only"],
 					["ready", "Draft ready"],
 					["failed", "Failed"],
-					["noai", "No AI provider"],
 				],
-				render: (s) =>
-					letterFrame({ body: `<div class="panel">${bodySec(s)}${s === "ready" ? lengthSec(214) : ""}</div>` }),
+				render: (s) => {
+					const map = {
+						both: ["empty", "both"],
+						resume: ["empty", "resume"],
+						posting: ["empty", "posting"],
+						neither: ["empty", "neither"],
+						noai: ["noai", "both"],
+						streaming: ["streaming", "both"],
+						streamResume: ["streaming", "resume"],
+						streamPosting: ["streaming", "posting"],
+						ready: ["ready", "both"],
+						failed: ["failed", "both"],
+					}[s];
+					const ctx = map[1];
+					const head = `${forSec(ctx === "both" || ctx === "posting" ? "linked" : "none")}${fromSec(ctx === "both" || ctx === "resume" ? "linked" : "noresume")}`;
+					return letterFrame({
+						body: `<div class="panel" data-scroll="end">${head}${bodySec(map[0], ctx)}${s === "ready" ? lengthSec(214) : ""}</div>`,
+					});
+				},
 				notes: {
 					Gestures:
-						"Stop ends streaming and leaves the page unchanged. Keep accepts (toast “Draft kept. Edit anything you like.”). Shorter / More personal re-draft. Discard restores the previous text.",
+						"Draft from the posting (an application is linked) or Draft from your resume (only a resume). With neither linked only Write it myself is offered. Stop ends streaming and leaves the page unchanged. Keep accepts (toast “Draft kept. Edit anything you like.”). Shorter / More personal re-draft. Discard restores the previous text.",
 					Motion:
 						"Text streams in as it arrives, no per-word animation. Reduced motion: “Drafting…” replaces the blinking caret.",
 					Keyboard: "Keyboard is dismissed while drafting; tapping the body during a draft asks to Stop first.",
@@ -4851,10 +5231,12 @@
 				id: "L4",
 				group: "letter",
 				kind: "letter",
-				title: "Letter body editing and length",
-				desc: "Rich text body with the toolbar above the keyboard; the length guide follows the word count.",
+				title: "Letter body, greeting and sign-off",
+				desc: "Rich-text body with the toolbar above the keyboard. Greeting and sign-off default from the recipient and locale; an edited one offers Use default; a cleared one is omitted from the page.",
 				states: [
 					["typing", "Typing"],
+					["custom", "Custom sign-off"],
+					["cleared", "Greeting cleared"],
 					["long", "Getting long"],
 					["short", "Short"],
 				],
@@ -4863,13 +5245,17 @@
 						return letterFrame({
 							kb: true,
 							toolbar: rteBar({ on: [], improve: false }),
-							body: `<div class="panel" data-scroll="end">${lsec("Letter", `<div class="rte focus">${LETTER_BODY.replace("Kind regards,", 'Kind regards,<span class="caret"></span>')}</div>`, '<span class="small muted">214 words</span>')}</div>`,
+							body: `<div class="panel" data-scroll="end">${lsec("Letter", `${framing("Greeting", "Dear Ms. Ortega,", false)}<div class="rte focus">${LETTER_PARAS.replace("your team.</p>", 'your team.<span class="caret"></span></p>')}</div>`, '<span class="small muted">214 words</span>')}</div>`,
 						});
+					if (s === "custom" || s === "cleared")
+						return letterFrame({ body: `<div class="panel" data-scroll="end">${forSec()}${bodySec(s)}</div>` });
 					return letterFrame({ body: `<div class="panel">${lengthSec(s === "long" ? 386 : 142)}${designSec()}</div>` });
 				},
 				notes: {
 					Keyboard:
-						"Same toolbar as resume rich text, without Improve. Word count updates as you type (debounced 300 ms).",
+						"Same toolbar as resume rich text, without Improve. Word count updates as you type (debounced 300 ms). Greeting and Sign-off use the plain keyboard.",
+					Gestures:
+						"Use default appears only when the field differs from its default and restores it. Clearing the sign-off also drops the automatic signature on the page.",
 				},
 			});
 			add({
@@ -4877,11 +5263,11 @@
 				group: "letter",
 				kind: "letter",
 				title: "Letter · Page",
-				desc: "The letter page, rendered on the device with the matching resume's header.",
+				desc: "The letter as it prints, rendered on the device: sender header, recipient block and date from To, greeting, body, sign-off and signature.",
 				render: () =>
 					letterFrame({
 						tab: "page",
-						body: `<div class="canvas"><div class="pcap">Page 1</div><div class="pagewrap" style="width:${pageW()}px"><div class="page paper-scope"><div class="ptxt"><div style="font-family:var(--font-display);font-size:5cqw;font-weight:600">Marcus Chen</div><p class="muted">marcus.chen@email.com · +1 (555) 291-4756 · London, UK</p><div class="lt" style="padding:6% 0 0">${LETTER_BODY}</div></div></div></div></div>${zoomBar({ pages: "Page 1 of 1" })}`,
+						body: `<div class="canvas"><div class="pcap">Page 1</div>${letterPage(pageW())}</div>${zoomBar({ pages: "Page 1 of 1" })}`,
 					}),
 				notes: { Gestures: "Same zoom as the resume Page. No line selection on letters (one body field)." },
 			});
@@ -4890,34 +5276,35 @@
 				group: "letter",
 				kind: "letter",
 				title: "Letter · Design",
-				desc: "Inherit the resume's design (Matching the resume) or keep its own; when own, Template, Type, Color and Page open the resume design controls (design.html).",
+				desc: "Inherit the resume's design (Matching the resume) or keep its own; when own, Template, Type, Color and Page open the resume design controls (design.html). With no resume linked, the letter always has its own.",
 				states: [
 					["inherit", "Matching the resume"],
 					["own", "Own design"],
+					["noresume", "No resume linked"],
 				],
 				render: (s) => {
-					const own = s === "own";
+					const own = s !== "inherit";
+					const rows = `<div class="list" style="margin-top:8px">${[
+						["Template", "Onyx"],
+						["Type", "Editorial"],
+						["Color", "Forest"],
+						["Page", "A4"],
+					]
+						.map(
+							([k, v]) =>
+								`<button class="li"><span class="grow">${k}</span><span class="val">${v}</span>${ic("caret-right", 16)}</button>`,
+						)
+						.join("")}</div>`;
+					const top =
+						s === "noresume"
+							? `<p class="small ink2">Choose a resume in Write to match its design. Until then, the letter has its own.</p>`
+							: `<button class="toggle-row" role="switch" aria-checked="${!own}"><span class="grow" style="display:grid"><span>Matching the resume</span><span class="small muted">${own ? "The letter keeps a design of its own." : "Template, type and colors follow the resume, so the pair always matches."}</span></span><span class="sw${own ? "" : " on"}"></span></button>`;
 					const sh = sheet({
 						detent: "half",
 						title: "Design",
-						body: `<button class="toggle-row"><span class="grow" style="display:grid"><span>Matching the resume</span><span class="small muted">${own ? "The letter keeps a design of its own." : "Template, type and colors follow the resume, so the pair always matches."}</span></span><span class="sw${own ? "" : " on"}" role="switch" aria-checked="${!own}"></span></button>
-							${
-								own
-									? `<div class="list" style="margin-top:8px">${[
-											["Template", "Onyx"],
-											["Type", "Editorial"],
-											["Color", "Forest"],
-											["Page", "A4"],
-										]
-											.map(
-												([k, v]) =>
-													`<button class="li"><span class="grow">${k}</span><span class="val">${v}</span>${ic("caret-right", 16)}</button>`,
-											)
-											.join("")}</div>`
-									: `<button class="btn outline" style="margin-top:8px;width:100%">Change the resume's design</button>`
-							}`,
+						body: `${top}${own ? rows : `<button class="btn outline" style="margin-top:8px;width:100%">Change the resume's design</button>`}`,
 					});
-					return `<div class="scr">${statusBar()}${letterBar()}<div class="body"><div class="canvas" style="padding-bottom:0"><div class="pagewrap" style="width:${pageW() - 60}px"><div class="page paper-scope"><div class="ptxt"><div class="lt">${LETTER_BODY}</div></div></div></div></div></div>${editorTabs("design", { letter: true })}${homeBar()}${sh}</div>`;
+					return `<div class="scr">${statusBar()}${letterBar()}<div class="body"><div class="canvas" style="padding-bottom:0">${letterPage(pageW() - 60)}</div></div>${editorTabs("design", { letter: true })}${homeBar()}${sh}</div>`;
 				},
 				notes: {
 					"Sheet detents": "Half over the page, like the resume Design sheet (design.html); Full on drag.",
@@ -4925,111 +5312,160 @@
 						"Switch off: the letter keeps the current design as its own (toast). Rows push the same controls as resume Design.",
 				},
 			});
+			const letterHistory = ({ menu = false } = {}) =>
+				`<div class="row-flex" style="margin-bottom:12px"><div class="input grow"><span class="ph grow">Name this version, e.g. Sent to Lumen</span></div><button class="btn secondary">Save</button></div>
+				<div class="list" aria-label="Versions"><div class="li"><span class="grow"><b>Now</b><span class="small muted">The letter as it is</span></span></div>
+					<div class="li"><button class="grow" style="text-align:start"><span class="row-flex" style="gap:4px">${ic("bookmark-simple", 14)}Sent to Northwind Labs</span><span class="small muted">14 Oct, 18:20</span></button><button class="ib" aria-label="Options for Sent to Northwind Labs" ${menu ? 'aria-expanded="true"' : ""}>${ic("dots-three", 20)}</button></div>
+					${[
+						["Today, 9:12", "Edited on this phone"],
+						["Yesterday, 21:40", "Edited on web"],
+						["15 Oct, 10:05", "Before restore"],
+					]
+						.map(
+							([t, d]) =>
+								`<div class="li"><button class="grow" style="text-align:start"><span>${t}</span><span class="small muted">${d}</span></button></div>`,
+						)
+						.join("")}
+				</div><p class="fhint" style="padding:8px 4px">Every editing session adds a version automatically. Only named versions have a menu (Rename…, Delete); tap any version to view it on the page.</p>`;
+			const FORMATS = [
+				["file-pdf", "PDF", ".pdf", "Looks exactly like the page. Use it for applications and email."],
+				["files", "Resume + letter", "2 files", `This letter and “${RESUME}” as two PDFs, named to match.`],
+				["file-text", "Word", ".docx", "For portals or recruiters who ask for Word. Layout is simplified."],
+				["file-text", "OpenDocument", ".odt", "For LibreOffice and other open-source editors. Layout is simplified."],
+				["file-text", "Markdown", ".md", "Plain text with headings. Paste into application forms and notes."],
+				["code", "JSON", ".json", "A backup of this letter. Imports back into Reactive Resume as a letter."],
+			];
 			add({
 				id: "L7",
 				group: "letter",
 				kind: "letter",
 				title: "Letter · Share & export",
-				desc: "Download (PDF, Resume + letter, Word, OpenDocument, Markdown, JSON) with file name, and History.",
+				desc: "Download (PDF, Resume + letter, Word, OpenDocument, Markdown, JSON) with file name, preparing and failure; History with naming, rename/delete for named versions, read-only view on the page, Restore and Back to now.",
 				states: [
 					["download", "Download"],
-					["busy", "Generating"],
+					["busy", "Preparing"],
+					["failed", "Download failed"],
 					["history", "History"],
+					["menu", "Named version menu"],
+					["delete", "Delete version"],
+					["viewing", "Viewing a version"],
+					["restored", "Restored"],
 				],
 				render: (s) => {
-					const tabs = `<div class="segc" style="margin-bottom:12px"><button aria-pressed="${s !== "history"}">Download</button><button aria-pressed="${s === "history"}">History</button></div>`;
-					const fmt = (icon, l, ext, d, on = false) =>
-						`<button class="li${on ? " sel" : ""}" role="radio" aria-checked="${on}" style="align-items:flex-start;padding:10px 12px">${ic(icon, 22)}<span class="grow"><span>${l} <span class="muted small">${ext}</span></span><span class="small muted" style="font-weight:400">${d}</span></span>${on ? ic("check", 20) : ""}</button>`;
-					const dl = `${tabs}<div class="list">${fmt("file-pdf", "PDF", ".pdf", "The letter as it is", true)}${fmt("files", "Resume + letter", "2 files", `This letter and “${RESUME}” as two PDFs, named to match.`)}${fmt("file-text", "Word", ".docx", "Editable in Microsoft Word.")}${fmt("file-text", "OpenDocument", ".odt", "LibreOffice and Google Docs.")}${fmt("file-text", "Markdown", ".md", "Plain text with formatting.")}${fmt("code", "JSON", ".json", "A backup of this letter. Imports back into Reactive Resume as a letter.")}</div>
-						<div class="field" style="margin-top:12px"><label>File name</label><div class="input"><span class="grow">Marcus-Chen-Cover-Letter</span><span class="muted">.pdf</span></div><span class="fhint">Recruiters see this name. Your name plus “Cover Letter” works well.</span></div>`;
-					const hist = `${tabs}<div class="list"><div class="li"><span class="grow"><b>Now</b><span class="small muted">The letter as it is</span></span></div>${[
-						["Sent to Northwind Labs", "14 Oct, 18:20"],
-						["Today, 9:12", "Edited on this phone"],
-						["Yesterday, 21:40", "Edited on web"],
-					]
-						.map(
-							([t, d]) =>
-								`<div class="li"><button class="grow" style="text-align:start"><span>${t}</span><span class="small muted">${d}</span></button><button class="ib" aria-label="Options for ${t}">${ic("dots-three", 20)}</button></div>`,
-						)
-						.join(
-							"",
-						)}</div><p class="fhint" style="padding:8px 4px">Named versions are kept until you delete them. Tapping a version previews it on the page with Back to now and Restore this version (as the resume History, design.html).</p>`;
-					return letterFrame({
-						body: `<div class="panel">${forSec("linked")}</div>`,
-						overlay: sheet({
-							detent: "full",
-							title: "Share & export",
-							right: sheetClose(),
-							body: s === "history" ? hist : dl,
-							foot:
-								s === "history"
-									? ""
-									: `<button class="btn primary" ${s === "busy" ? "disabled" : ""}>${s === "busy" ? `${ic("circle-notch", 18)}Generating your PDF...` : `${ic("download-simple", 18)}Download PDF`}</button>`,
-						}),
+					if (s === "viewing" || s === "restored")
+						return letterFrame({
+							tab: "page",
+							body: `<div class="canvas"><div class="pcap">${s === "viewing" ? `<span class="capchip accent">${ic("clock-counter-clockwise", 14)}14 Oct, 18:20 · read-only</span>` : "Page 1"}</div>${letterPage(pageW(), s === "viewing" ? { paras: OLD_PARAS } : {})}</div>${
+								s === "viewing"
+									? `<div class="viewbar" role="status"><span class="row-flex" style="font-weight:600">${ic("clock-counter-clockwise", 18)}Viewing 14 Oct, 18:20 · Sent to Northwind Labs · read-only</span><span class="row-flex"><button class="btn sm primary">Restore this version</button><button class="btn sm ghost">Back to now</button></span></div>`
+									: zoomBar({ pages: "Page 1 of 1" })
+							}`,
+							overlay:
+								s === "restored"
+									? toast(
+											"Restored the version from 14 Oct, 18:20. Your previous state is saved as “Before restore”.",
+											"",
+											70,
+										)
+									: "",
+						});
+					const hist = s === "history" || s === "menu" || s === "delete";
+					const tabs = `<div class="segc" style="margin-bottom:12px"><button aria-pressed="${!hist}">Download</button><button aria-pressed="${hist}">History</button></div>`;
+					const selId = s === "failed" ? "Word" : "PDF";
+					const fmt = ([icon, l, ext, d]) =>
+						`<button class="li${l === selId ? " sel" : ""}" role="radio" aria-checked="${l === selId}" style="align-items:flex-start;padding:10px 12px">${ic(icon, 22)}<span class="grow"><span>${l} <span class="muted small">${ext}</span>${l === "PDF" ? ' <span class="badge accent">Best for applying</span>' : ""}</span><span class="small muted" style="font-weight:400">${d}</span></span>${l === selId ? ic("check", 20) : ""}</button>`;
+					const fail =
+						s === "failed"
+							? `<div class="banner danger" role="alert" style="margin-top:12px">${ic("warning-circle", 20)}<span class="txt">The Word file couldn't be generated. Try again, or download PDF instead.</span></div>`
+							: "";
+					const dl = `${tabs}<div class="list">${FORMATS.map(fmt).join("")}</div>
+						<div class="field" style="margin-top:12px"><label>File name</label><div class="input"><span class="grow">Marcus-Chen-Cover-Letter</span><span class="muted">${s === "failed" ? ".docx" : ".pdf"}</span></div><span class="fhint">Recruiters see this name. Your name plus “Cover Letter” works well.</span></div>${fail}`;
+					const foot = hist
+						? ""
+						: s === "failed"
+							? `<button class="btn primary">${ic("arrows-clockwise", 18)}Try again</button><button class="btn secondary">Download PDF instead</button>`
+							: `<button class="btn primary" ${s === "busy" ? "disabled" : ""}>${s === "busy" ? `${ic("circle-notch", 18)}Preparing PDF file…` : `${ic("download-simple", 18)}Download PDF`}</button>`;
+					let overlay = sheet({
+						detent: "full",
+						title: "Share & export",
+						right: sheetClose(),
+						body: hist ? `${tabs}${letterHistory({ menu: s === "menu" })}` : dl,
+						foot,
 					});
+					if (s === "menu")
+						overlay += `<div class="menu" role="menu" style="right:24px;top:${DEV[S.device].top + 300}px;width:200px;z-index:45"><button class="mi">${ic("pencil-simple", 20)}<span class="grow">Rename…</span></button><button class="mi danger">${ic("trash", 20)}<span class="grow">Delete</span></button></div>`;
+					if (s === "delete")
+						overlay += alertBox({
+							title: "Delete “Sent to Northwind Labs”?",
+							body: "Named versions are kept until you delete them. This can't be undone.",
+							actions: [["Cancel"], ["Delete", "danger b"]],
+						});
+					return letterFrame({ body: `<div class="panel">${forSec()}</div>`, overlay });
 				},
 				notes: {
-					"Sheet detents": "Full. Downloads hand the file to the iOS share sheet or Android Sharesheet.",
+					"Sheet detents":
+						"Full. Downloads hand the file to the iOS share sheet or Android Sharesheet. Viewing a version closes the sheet and shows the page read-only with the bar.",
 					Gestures:
-						"Pick a format, edit the name, Download. Resume + letter shares two files in one share sheet. Failure shows “Download failed.” with Retry in a toast.",
+						"Pick a format, edit the name, Download. Resume + letter shares two files in one share sheet. A failed non-PDF export offers Try again or Download PDF instead. History: type a name and Save to name Now (toast “Saved “…””). Rename… opens a prompt (“Rename version”). Restore saves the current state as “Before restore” first, so it can be undone from History.",
 				},
 			});
 			add({
 				id: "L8",
 				group: "letter",
 				kind: "letter",
-				title: "Letter menu, locked and changed elsewhere",
-				desc: "Letter document menu (Rename…, Duplicate, Lock editing, Move to Trash), the locked note, and the “Changed elsewhere · Reload” status.",
+				title: "Letter menu, save states, locked and changed elsewhere",
+				desc: "Letter document menu (Rename…, Duplicate, Lock editing, Move to Trash), Saving and Not saved · Retry, the locked note, and “Changed elsewhere · Reload”.",
 				states: [
 					["menu", "Menu"],
+					["saving", "Saving"],
+					["notsaved", "Not saved"],
 					["locked", "Locked"],
 					["changed", "Changed elsewhere"],
 				],
 				render: (s) => {
+					const panel = `<div class="panel">${forSec()}${toSec()}</div>`;
 					if (s === "menu")
 						return letterFrame({
-							body: `<div class="panel">${forSec("linked")}${toSec()}</div>`,
+							body: panel,
 							overlay: sheet({
 								detent: 320,
-								title: "Letter for Northwind Labs",
+								title: LETTER_NAME,
 								right: sheetClose(),
 								body: `<div class="list"><button class="li">${ic("pencil-simple", 20)}<span class="grow">Rename…</span></button><button class="li">${ic("copy", 20)}<span class="grow">Duplicate</span></button><button class="li">${ic("lock", 20)}<span class="grow">Lock editing</span></button></div><div class="list" style="margin-top:10px"><button class="li danger">${ic("trash", 20)}<span class="grow">Move to Trash</span></button></div>`,
 							}),
 						});
+					if (s === "saving") return letterFrame({ save: "saving", body: panel });
+					if (s === "notsaved")
+						return letterFrame({
+							save: "failed",
+							body: panel,
+							overlay: toast("Couldn't save your changes. Try again before continuing.", "Retry"),
+						});
 					if (s === "locked")
 						return letterFrame({
 							save: "locked",
-							body: `<div class="panel"><div style="padding:12px 16px 0"><div class="banner info">${ic("lock", 20)}<span class="txt">This letter is locked. Unlock it from its menu to edit.</span></div></div>${forSec("linked").replace("Change</button>", "Change</button>").replace('class="btn sm secondary"', 'class="btn sm secondary" disabled style="opacity:.5"')}${toSec().replaceAll('class="input "', 'class="input dis"')}</div>`,
+							body: `<div class="panel"><div style="padding:12px 16px 0"><div class="banner info">${ic("lock", 20)}<span class="txt">This letter is locked. Unlock it from its menu to edit.</span></div></div>${forSec().replace('class="btn sm secondary"', 'class="btn sm secondary" disabled style="opacity:.5"')}${toSec().replaceAll('class="input "', 'class="input dis"')}</div>`,
 						});
 					return letterFrame({
 						save: "changed",
-						body: `<div class="panel">${forSec("linked")}${toSec()}</div>`,
+						body: panel,
 						overlay: toast("Your name changed on the resume. The letter updated too."),
 					});
 				},
 				notes: {
 					Gestures:
-						"Reload fetches the newer letter and drops local edits after a confirm. Linked sender details update silently with an info toast.",
+						"Retry (status or toast) re-sends the save. Reload fetches the newer letter and drops local edits after a confirm. Linked sender details update silently with an info toast.",
 				},
 			});
 
 			/* ===== Tablet ===== */
-			const tabletFrame = ({ left, right, overlay = "", save = "saved", mode = "write" }) =>
+			const tabletFrame = ({ left, right, overlay = "", save = "saved", mode = "write", letter = false }) =>
 				`<div class="scr">${statusBar()}
 					<header class="ebar" style="height:60px;padding:0 12px"><button class="ib" aria-label="Back to Documents">${backIcon()}</button>
-						<div class="name" style="flex:none;max-width:320px"><button class="namebtn"><b><span class="trunc">${RESUME}</span>${ic("caret-down", 14)}</b></button>${saveStatus(save)}</div>
-						<span class="grow" style="display:flex;justify-content:center"><span class="modesw" role="tablist" aria-label="Editor mode">${[
-							["write", "pencil-simple", "Write"],
-							["design", "palette", "Design"],
-							["check", "list-checks", "Check"],
-						]
-							.map(
-								([v, i, l]) =>
-									`<button aria-pressed="${mode === v}">${ic(i, 18, mode === v)}${l}${v === "check" ? '<span class="badge warn num">3</span>' : ""}</button>`,
-							)
-							.join("")}</span></span>
+						<div class="name" style="flex:none;max-width:320px"><button class="namebtn"><b><span class="trunc">${letter ? LETTER_NAME : RESUME}</span>${ic("caret-down", 14)}</b></button>${saveStatus(save)}</div>
+						<span class="grow" style="display:flex;justify-content:center"><span class="modesw" role="tablist" aria-label="Editor mode">${[["write", "pencil-simple", "Write"], ["design", "palette", "Design"], ...(letter ? [] : [["check", "list-checks", "Check"]])].map(([v, i, l]) => `<button aria-pressed="${mode === v}">${ic(i, 18, mode === v)}${l}${v === "check" ? '<span class="badge warn num">3</span>' : ""}</button>`).join("")}</span></span>
 						<button class="ib" aria-label="History">${ic("clock-counter-clockwise", 22)}</button><button class="ib" aria-label="Open AI assistant">${ic("sparkle", 22)}</button>
-						<button class="btn sm outline">${ic("export", 18)}Share<span class="badge accent">Public</span></button><button class="btn sm primary" style="margin-inline-start:8px">${ic("download-simple", 18)}Download PDF</button>
+						<button class="btn sm outline">${ic("export", 18)}Share${letter ? "" : '<span class="badge accent">Public</span>'}</button><button class="btn sm primary" style="margin-inline-start:8px">${ic("download-simple", 18)}Download PDF</button>
 					</header>
 					<div class="split"><div class="left">${left}</div><div class="right">${right}</div></div>${homeBar()}${overlay}</div>`;
 			const tabletCanvas = (sel = null, extra = "") =>
@@ -5138,12 +5574,13 @@
 				kind: "tablet",
 				tablet: true,
 				title: "Tablet · Cover letter",
-				desc: "Letter form in the panel, letter page beside it; Write / Design in the bar (no Check).",
+				desc: "Letter chrome (letter name, Write / Design, no Public badge, since letters have no public link). Panel: For, To, From with the resume and the live/copied switch, Letter with greeting, body and sign-off, Length. Letter page beside it.",
 				render: () =>
 					tabletFrame({
-						left: `<div class="panel">${forSec("linked")}${toSec()}${bodySec("filled")}${lengthSec(214)}</div>`,
-						right: `<div class="canvas"><div class="pcap">Page 1</div><div class="pagewrap" style="width:520px"><div class="page paper-scope"><div class="ptxt"><div style="font-family:var(--font-display);font-size:5cqw;font-weight:600">Marcus Chen</div><p class="muted">marcus.chen@email.com · London, UK</p><div class="lt" style="padding:6% 0 0">${LETTER_BODY}</div></div></div></div></div>${zoomBar({ pages: "Page 1 of 1" })}`,
-					}).replace(/<button aria-pressed="false">.{0,400}?Check<span class="badge warn num">3<\/span><\/button>/, ""),
+						letter: true,
+						left: `<div class="panel">${forSec()}${toSec()}${fromSec()}${bodySec("filled")}${lengthSec(214)}</div>`,
+						right: `<div class="canvas"><div class="pcap">Page 1</div>${letterPage(520)}</div>${zoomBar({ pages: "Page 1 of 1" })}`,
+					}),
 				notes: {},
 			});
 
