@@ -22,7 +22,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M8-T2a forme-native EAS prebuilt binaries     | Codex       | 95836666 | mobile/M8-T2a     | MERGED  | Pulled forward; briefs/W6.md                                                        |
 | M2-T1 UI primitives                           | Claude Code | 753a4fa6 | mobile/M2-T1      | FIXING  | briefs/W2.md                                                                        |
 | M2-T2 Shells                                  | Claude Code | 7d3d3910 | mobile/M2-T2      | FIXING  | briefs/W2.md                                                                        |
-| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | REVIEW  | briefs/W2.md                                                                        |
+| M3-T1 Sign-in                                 | Claude Code | 34e99492 | mobile/M3-T1      | FIXING  | briefs/W2.md                                                                        |
 | M3-T3 Draft store and saving                  | Codex       | 0b29757e | mobile/M3-T3      | MERGED  | briefs/W2.md                                                                        |
 | M3-T4 Preview pipeline                        | Codex       | 0387aa1b | mobile/M3-T4      | MERGED  | briefs/W2.md                                                                        |
 | M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
@@ -189,3 +189,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M4-T3 merged (FIXED 5, 38 scenarios).
 - 2026-10-17: M3-T1 session hardening done (Codex review `9fae76e4`). Launched M4-T1, M4-T2, M5-T3. Pending coordinator items: session-based redirect in `app/index.tsx` (no Documents flash when signed out); confirm before discarding unsynced edits from the session-expired sheet.
 - 2026-10-17: M6-T2 done (review `195d8e34`; voice transcription via REST multipart). M6-T3 FIXED 6; second review by `cce125a4`. M4-T2 told not to merge M7-T2; temporary copy of the pdf-check adapter to dedupe at merge.
+- 2026-10-17: M3-T1 review `9fae76e4`: 5 security blockers (issuer mix-up, cross-account 401 retry, unserialized session transitions, refresh-token replay after a lost response, cached data across accounts).
