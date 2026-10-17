@@ -28,7 +28,7 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 | M6-T4 AI settings                             | Codex       | ab5919d5 | mobile/M6-T4      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
 | M7-T1 Settings                                | Codex       | 71830ab2 | mobile/M7-T1      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
 | M5-T1 Applications list and add flow          | Codex       | 18332b0c | mobile/M5-T1      | MERGED  | briefs/W3.md; pulled forward, JS-only                                               |
-| M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | RUNNING | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
+| M3-T2 Documents library and trash             | Codex       | 365a0d70 | mobile/M3-T2      | MERGED  | briefs/W3.md; JS-only, thumbnail seam for M3-T4                                     |
 | M5-T2 Application detail                      | Claude Code | 4262ae08 | mobile/M5-T2      | RUNNING | briefs/W4.md; JS-only                                                               |
 | M6-T1 Career Today, Knowledge, Offers         | Codex       | 452d143f | mobile/M6-T1      | FIXING  | briefs/W5.md; JS-only                                                               |
 
@@ -163,3 +163,4 @@ Written only by the coordinator. Status values: TODO, RUNNING, REVIEW, FIXING, B
 - 2026-10-17: M3-T2 review `17746a44`: NO BLOCKERS; five parity notes in a fix round. Disk reached 3.9 GB free; coordinator deleted the S1–S3, M1-T1 and M3-T3 simulators/AVDs and `/tmp/m1t1` (18 GB free after). Owner AVDs (`Pixel_10`, `WieBitte_Test_API34`) untouched.
 - 2026-10-17: M2-T1 done (60 screenshots; three Sheet bugs and one dialog bug fixed on device). Notes for later waves: long sheets need fractional detents; Hermes lacks `Intl.DisplayNames` (language pickers need a names table); easing tokens are not yet Reanimated worklets. Codex review `42672668` running. M6-T1 done; Claude review `2d6b4e18` running.
 - 2026-10-17: M6-T1 review `2d6b4e18`: 3 blockers (manual fact payload, notice period erased on invalid input, missing plurals). Coordinator accepts Track behind Undo (mobile delays `trackOpportunity`; web tracks then deletes on Undo). M2-T1 review moved to `gpt-6-astra` after `gpt-6.1-sol`/`gpt-6-sol` capacity errors.
+- 2026-10-17: M3-T2 merged (FIXED 5). Thumbnail seam awaits M3-T4.
