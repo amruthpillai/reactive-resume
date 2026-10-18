@@ -2,7 +2,8 @@ import type { TextItem } from "pdfjs-dist/types/src/display/api";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
 import * as forme from "@formepdf/core";
-import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
+import { encode } from "fast-png";
+import { getDocument, OPS } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { act } from "react";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { renderResume } from "../../forme/render";
@@ -52,11 +53,13 @@ async function render(data = fixture()) {
 			Array.from({ length: document.numPages }, async (_, index) => {
 				const page = await document.getPage(index + 1);
 				const content = await page.getTextContent();
+				const operators = await page.getOperatorList();
 				return {
 					items: content.items.filter((item): item is TextItem => "str" in item && Boolean(item.str.trim())),
 					styles: content.styles,
 					width: page.getViewport({ scale: 1 }).width,
 					height: page.getViewport({ scale: 1 }).height,
+					images: operators.fnArray.filter((operation) => operation === OPS.paintImageXObject).length,
 					links: (await page.getAnnotations()).flatMap((annotation) =>
 						typeof annotation.url === "string" ? [annotation.url] : [],
 					),
@@ -85,11 +88,12 @@ describe("Persian Wall Street template (#3520)", () => {
 				if (!item) throw new Error(`Missing PDF text: ${value}`);
 				return item;
 			};
-			const name = find(data.basics.name);
+			const name = find(data.basics.name.toUpperCase());
 			expect(page.styles[name.fontName]?.fontFamily).toBe("sans-serif");
 			for (const title of ["Experience", "Education", "Projects", "Skills"]) {
-				expect(page.styles[find(title).fontName]?.fontFamily).toBe("sans-serif");
+				expect(page.styles[find(title.toUpperCase()).fontName]?.fontFamily).toBe("sans-serif");
 			}
+			expect(name.transform[5] - find("EXPERIENCE").transform[5]).toBeLessThan(100);
 			const experience = data.sections.experience.items[0];
 			const education = data.sections.education.items[0];
 			const skill = data.sections.skills.items[0];
@@ -120,6 +124,48 @@ describe("Persian Wall Street template (#3520)", () => {
 			}
 		},
 	);
+
+	it("wraps a long identity and contact line without losing links or crossing page margins", async () => {
+		const data = fixture();
+		data.basics.name = "Alexandra Catherine Montgomery-Wellington";
+		data.basics.email = "alexandra.catherine.montgomery-wellington@financial-advisory.example.com";
+		data.basics.website = { url: "https://example.com/research-and-investment-advisory", label: "Investment research" };
+		const pages = await render(data);
+		expect(pages).toHaveLength(1);
+		const page = pages[0];
+		if (!page) throw new Error("Missing first page");
+		expect(
+			page.items
+				.map((item) => item.str)
+				.join("")
+				.replaceAll(/\s/g, ""),
+		).toContain(data.basics.name.toUpperCase().replaceAll(/\s/g, ""));
+		expect(page.links).toContain(`mailto:${data.basics.email}`);
+		expect(page.links).toContain(data.basics.website.url);
+		for (const item of page.items) {
+			expect(item.transform[4]).toBeGreaterThanOrEqual(29.9);
+			expect(item.transform[4] + item.width).toBeLessThanOrEqual(page.width - 29.9);
+		}
+	});
+
+	it("keeps an explicitly enabled photo beside the compact letterhead", async () => {
+		const data = fixture();
+		data.picture.hidden = false;
+		data.picture.size = 48;
+		data.picture.url = `data:image/png;base64,${Buffer.from(
+			encode({ width: 1, height: 1, data: new Uint8Array([0, 0, 0, 255]), channels: 4 }),
+		).toString("base64")}`;
+		const pages = await render(data);
+		expect(pages).toHaveLength(1);
+		const page = pages[0];
+		if (!page) throw new Error("Missing first page");
+		expect(page.images).toBe(1);
+		const name = page.items.find((item) => item.str === data.basics.name.toUpperCase());
+		const section = page.items.find((item) => item.str === "EXPERIENCE");
+		if (!name || !section) throw new Error("Missing letterhead or first section");
+		expect(name.transform[5] - section.transform[5]).toBeLessThan(100);
+		expect(name.transform[4] + name.width).toBeLessThan(page.width - 30 - data.picture.size);
+	});
 
 	it("prints every overflowing entry without losing the final section", async () => {
 		const data = fixture();

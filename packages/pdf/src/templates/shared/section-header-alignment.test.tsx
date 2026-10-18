@@ -94,7 +94,7 @@ describe.each(["persian", "onyx"] as const)("%s section heading direction", (tem
 			data.sections.education.title = "Education";
 			const items = await renderText(data);
 			for (const title of ["Experience", "Education"]) {
-				const heading = findText(items, title);
+				const heading = findText(items, template === "persian" ? title.toUpperCase() : title);
 				if (locale === "ar-SA") {
 					expect(heading.transform[4] + heading.width, `${title}, icons hidden: ${hideSectionIcons}`).toBeGreaterThan(
 						530,

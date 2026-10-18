@@ -2,7 +2,7 @@ import type { TemplatePageProps } from "../../document";
 import type { Style } from "../../forme/style-types";
 import type { TemplateColorRoles, TemplateStyleSlots } from "../shared/types";
 import { useMemo } from "react";
-import { Page, StyleSheet } from "#react-pdf-renderer";
+import { Page, StyleSheet, View } from "#react-pdf-renderer";
 import { useRender } from "../../context";
 import { useRenderedSectionIds, useResolvedNode } from "../../semantic/context";
 import { semanticNodeKeys } from "../../semantic/node-keys";
@@ -32,16 +32,18 @@ import { createIconSlot, useTemplateBase } from "../shared/template-base";
 type PersianStyles = Omit<TemplateStyleSlots, "page"> & {
 	page: Style;
 	header: Style;
+	headerIdentity: Style;
 	headerName: Style;
 	headerHeadline: Style;
 	contactList: Style;
 	contactItem: Style;
+	contactText: Style;
 	picture: Style;
 };
 
 type PersianHeaderProps = { styles: PersianStyles };
 
-/** A traditional Wall Street resume with a centered identity and thin section rules. */
+/** Compact Wall Street typography: a centered letterhead, uppercase sections and restrained rules. */
 export function PersianPage({ page, pageSize, pageMinHeightStyle, showHeader, pageNumber }: TemplatePageProps) {
 	const data = useRender();
 	const pageNodeKey = semanticNodeKeys.page(pageNumber);
@@ -61,7 +63,7 @@ export function PersianPage({ page, pageSize, pageMinHeightStyle, showHeader, pa
 		>
 			<TemplateProvider pageNodeKey={pageNodeKey} styles={styles} colors={colors}>
 				{showHeader && <Header styles={styles} />}
-				<SemanticRegionView region="main" style={{ rowGap: metrics.gapY(3) }}>
+				<SemanticRegionView region="main" style={{ rowGap: metrics.gapY(1.5) }}>
 					{sections.map((section) => (
 						<Section key={section} section={section} placement="main" />
 					))}
@@ -75,18 +77,25 @@ function Header({ styles }: PersianHeaderProps) {
 	const { basics, picture } = useRender();
 	return (
 		<SemanticHeaderView style={styles.header}>
+			<View style={styles.headerIdentity}>
+				<Heading style={styles.headerName}>{basics.name}</Heading>
+				{basics.headline && <Text style={styles.headerHeadline}>{basics.headline}</Text>}
+				<SemanticContactListView style={styles.contactList}>
+					<PhoneContactItem phone={basics.phone} style={styles.contactItem} textStyle={styles.contactText} />
+					<EmailContactItem email={basics.email} style={styles.contactItem} textStyle={styles.contactText} />
+					<WebsiteContactItem website={basics.website} style={styles.contactItem} textStyle={styles.contactText} />
+					<LocationContactItem location={basics.location} style={styles.contactItem} textStyle={styles.contactText} />
+					{basics.customFields.map((field) => (
+						<CustomFieldContactItem
+							key={field.id}
+							field={field}
+							style={styles.contactItem}
+							textStyle={styles.contactText}
+						/>
+					))}
+				</SemanticContactListView>
+			</View>
 			{hasTemplatePicture(picture) && <SemanticHeaderPicture src={picture.url} style={styles.picture} />}
-			<Heading style={styles.headerName}>{basics.name}</Heading>
-			{basics.headline && <Text style={styles.headerHeadline}>{basics.headline}</Text>}
-			<SemanticContactListView style={styles.contactList}>
-				<PhoneContactItem phone={basics.phone} style={styles.contactItem} />
-				<EmailContactItem email={basics.email} style={styles.contactItem} />
-				<WebsiteContactItem website={basics.website} style={styles.contactItem} />
-				<LocationContactItem location={basics.location} style={styles.contactItem} />
-				{basics.customFields.map((field) => (
-					<CustomFieldContactItem key={field.id} field={field} style={styles.contactItem} />
-				))}
-			</SemanticContactListView>
 		</SemanticHeaderView>
 	);
 }
@@ -101,19 +110,33 @@ function usePersianTemplate() {
 				...base.page,
 				paddingHorizontal: metrics.page.paddingHorizontal,
 				paddingVertical: metrics.page.paddingVertical,
-				rowGap: metrics.gapY(3),
+				rowGap: metrics.gapY(1.5),
 			},
-			header: { alignItems: "center", rowGap: metrics.gapY(0.25) },
+			header: {
+				flexDirection: r.row,
+				alignItems: "flex-start",
+				columnGap: metrics.gapX(2),
+				borderBottomWidth: 1,
+				borderBottomColor: foreground,
+				paddingBottom: metrics.gapY(1),
+			},
+			headerIdentity: {
+				flex: 1,
+				minWidth: 0,
+				alignItems: "center",
+				rowGap: metrics.gapY(0.35),
+			},
 			headerName: {
-				fontSize: metadata.typography.heading.fontSize * 2.0734,
-				fontWeight: "400",
+				fontSize: metadata.typography.heading.fontSize * 1.85,
+				fontWeight: metadata.typography.heading.fontWeights[0] ?? "400",
 				lineHeight: headerNameLineHeight,
+				letterSpacing: r.rtl ? 0 : metadata.typography.heading.fontSize * 0.075,
+				textTransform: "uppercase",
 				textAlign: "center",
+				maxWidth: "100%",
 			},
 			headerHeadline: {
-				fontSize: metadata.typography.heading.fontSize * 1.2,
-				fontWeight: base.bold.fontWeight,
-				lineHeight: 1.05,
+				fontSize: metadata.typography.body.fontSize,
 				textAlign: "center",
 			},
 			contactList: {
@@ -121,17 +144,26 @@ function usePersianTemplate() {
 				flexWrap: "wrap",
 				justifyContent: "center",
 				rowGap: metrics.gapY(0.125),
-				columnGap: metrics.gapX(0.75),
+				columnGap: metrics.gapX(1.5),
 			},
-			contactItem: { flexDirection: r.row, alignItems: "center", columnGap: metrics.gapX(0.2) },
-			section: { flexDirection: "column", rowGap: metrics.gapY(0.25) },
+			contactItem: {
+				flexDirection: r.row,
+				alignItems: "center",
+				columnGap: metrics.gapX(0.2),
+				maxWidth: "100%",
+			},
+			contactText: { fontSize: metadata.typography.body.fontSize * 0.875, flexShrink: 1 },
+			section: { flexDirection: "column", rowGap: metrics.gapY(0.5) },
 			sectionHeading: {
-				borderBottomWidth: 0.398,
+				fontSize: metadata.typography.heading.fontSize * 0.8,
+				letterSpacing: r.rtl ? 0 : metadata.typography.heading.fontSize * 0.045,
+				textTransform: "uppercase",
+				borderBottomWidth: 0.5,
 				borderBottomColor: foreground,
 				paddingBottom: metrics.gapY(0.125),
 				textAlign: r.sectionHeadingTextAlign,
 			},
-			sectionItems: { rowGap: metrics.itemGapY },
+			sectionItems: { rowGap: metrics.itemGapY * 0.75 },
 			item: { rowGap: metrics.gapY(0.125) },
 			levelContainer: { width: "100%" },
 			levelItem: { borderColor: primary },
