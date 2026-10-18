@@ -5,6 +5,7 @@ vi.mock("@reactive-resume/utils/monorepo.node", () => ({ findWorkspaceRoot: () =
 beforeEach(() => {
 	vi.resetModules();
 	for (const name of [
+		"APP_REVISION",
 		"WEB_ACCESS_PROVIDER",
 		"WEB_ACCESS_API_KEY",
 		"WEB_ACCESS_API_URL",
@@ -17,6 +18,19 @@ beforeEach(() => {
 		"STORAGE_HEALTHCHECK_TIMEOUT_MS",
 	])
 		vi.stubEnv(name, undefined);
+});
+
+describe("application revision", () => {
+	it.each([undefined, "", "a".repeat(40)])("accepts an unset or full Git commit SHA (%s)", async (revision) => {
+		vi.stubEnv("APP_REVISION", revision);
+		expect((await import("./server")).env.APP_REVISION).toBe(revision || undefined);
+	});
+
+	it.each(["abc1234", "g".repeat(40)])("rejects invalid revision %s", async (revision) => {
+		vi.stubEnv("APP_REVISION", revision);
+		vi.spyOn(console, "error").mockImplementation(() => {});
+		await expect(import("./server")).rejects.toThrow("Invalid environment variables");
+	});
 });
 afterEach(() => {
 	vi.unstubAllEnvs();

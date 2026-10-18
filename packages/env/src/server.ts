@@ -56,6 +56,10 @@ export const env = createEnv({
 		// Application
 		CLOUDFLARE: z.stringbool().default(false),
 		APP_URL: z.url({ protocol: /https?/ }),
+		APP_REVISION: z
+			.string()
+			.regex(/^[a-f0-9]{40}$/)
+			.optional(),
 		WEB_FONT_BASE_URL: z
 			.url({ protocol: /^https?$/ })
 			.refine((value) => !/[?#]/.test(value), "Font base URL must not contain a query string or fragment")

@@ -37,7 +37,7 @@ jobs:
       VERCEL_ENV: production
     steps:
       - if: ${{ vars.USE_BLACKSMITH != 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
       - if: ${{ vars.USE_BLACKSMITH == 'true' }}
@@ -45,12 +45,12 @@ jobs:
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
       - name: Cache Turbo artifacts
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: .turbo/cache
           key: ${{ runner.os }}-${{ runner.arch }}-turbo-${{ github.workflow }}-${{ hashFiles('pnpm-lock.yaml', '.nvmrc') }}-${{ github.sha }}
@@ -99,14 +99,14 @@ jobs:
     timeout-minutes: 10
     steps:
       - if: ${{ vars.USE_BLACKSMITH != 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           persist-credentials: false
       - if: ${{ vars.USE_BLACKSMITH == 'true' }}
         uses: useblacksmith/checkout@v1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
       - name: Smoke-test dedicated deployment

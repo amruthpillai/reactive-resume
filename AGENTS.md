@@ -41,7 +41,7 @@ This block is written and re-added by `turbo` before repository-scoped commands 
 
 ## Overview
 
-Reactive Resume is a free, open-source resume builder for creating, importing, exporting, and sharing resumes, cover letters, and job applications. It is a TypeScript pnpm monorepo managed by Turborepo, with two apps: `apps/web` (React 19 SPA with TanStack Router, TanStack Query, Tailwind CSS, and Vite) and `apps/server` (Hono / Node.js). oRPC connects browser workflows to server business logic; Better Auth handles authentication; Drizzle accesses PostgreSQL. Forme renders PDFs in the browser and on the server.
+Reactive Resume is a free, open-source resume builder for creating, importing, exporting, and sharing resumes, cover letters, and job applications. It is a TypeScript pnpm monorepo managed by Turborepo, with three apps: `apps/web` (React 19 SPA with TanStack Router, TanStack Query, Tailwind CSS, and Vite), `apps/server` (Hono / Node.js), and `apps/mobile` (Expo / React Native iOS and Android app with the native Forme renderer from `packages/forme-native`). oRPC connects browser workflows to server business logic; Better Auth handles authentication; Drizzle accesses PostgreSQL. Forme renders PDFs in the browser and on the server.
 
 The production Docker image runs a single Node.js process on port 3000; `apps/server` mounts the API/auth/MCP/static routes and serves the built web app. On Vercel, the `frontend` service serves static assets through its CDN and the `backend` service runs the same Hono application in a Node.js Function.
 
@@ -49,7 +49,7 @@ Internal packages are source-consumed through `package.json` export maps pointin
 
 ## Setup
 
-Prerequisites: **Node.js 24** (`.nvmrc`, root `engines`, and Dockerfile), **pnpm 12.11.2** (root `packageManager`; pnpm self-manages to this version), and **Docker with Docker Compose** for local infrastructure. The Dockerfile's `ARG PNPM_VERSION` chooses its base image, not the project's pnpm version. Start your Docker daemon before running Compose.
+Prerequisites: **Node.js 24** (`.nvmrc`, root `engines`, and Dockerfile), **pnpm 12.14.0** (root `packageManager`; pnpm self-manages to this version), and **Docker with Docker Compose** for local infrastructure. The Dockerfile's `ARG PNPM_VERSION` chooses its base image, not the project's pnpm version. Start your Docker daemon before running Compose.
 
 Shared dependency versions live in the default `catalog` in `pnpm-workspace.yaml`. Use `catalog:` in workspace manifests when that shared range applies; keep intentional exact pins and peer dependency ranges explicit.
 
@@ -97,6 +97,7 @@ Where each concern lives, and where new code for it goes:
 | Area                                                                                            | Owner                                                                                                                                                            |
 | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Web routes, loaders, user-facing workflows                                                      | `apps/web/src/routes`, `apps/web/src/features` (file-based; never hand-edit `routeTree.gen.ts`)                                                                  |
+| Native mobile screens and workflows                                                             | `apps/mobile/app` (Expo Router), `apps/mobile/src/features`; native Forme engine in `packages/forme-native`                                                      |
 | Server HTTP routes/adapters, startup checks, static handlers, MCP transport, OpenAPI/well-known | `apps/server/src/{http,rpc,mcp,openapi,static,startup}`                                                                                                          |
 | Authenticated API contracts + business logic                                                    | `packages/api/src/features/*` (oRPC routers, DTOs, rate limiting; aggregated at `@reactive-resume/api/routers` for `/api/rpc`)                                   |
 | Auth                                                                                            | `packages/auth` (Better Auth config/helpers/types; `apps/server/src/http/auth.ts` delegates to `auth.handler`)                                                   |
@@ -123,6 +124,12 @@ Narrow cross-cutting helpers go in `packages/utils` only after checking no domai
 - Browser-only preview code: `apps/web/src/features/resume/preview`. Public PDF viewer: `apps/web/src/features/resume/public`. Keep PDF.js/canvas code in these features, not in `packages/pdf`.
 - oRPC client: `apps/web/src/libs/orpc/client.ts` calls `/api/rpc` with credentials included. `apps/web/src/libs/orpc/fetch.ts` stages large request bodies through Blob on Vercel.
 - For React components with explicit props, use a named props type (e.g. `type FooProps = {...}` with `function Foo(props: FooProps)`) rather than inline object annotations, especially with more than one field or with generics.
+
+## Native mobile app
+
+- **Feature parity is required.** The web app and the native mobile app must always offer the same user-facing features. A change that adds, removes, or changes a feature in `apps/web` must make the matching change in `apps/mobile` in the same work, and the reverse. Share logic through workspace packages (`packages/api`, `packages/schema`, `packages/resume`, `packages/pdf`) rather than duplicating it. An exception forced by store policy (for example, the hidden iOS Donate row) needs the owner's explicit decision and a note in `docs/contributing/mobile-release-handoff.md`.
+- **Over-the-air update or new store build.** The runtime version uses an Expo fingerprint (`apps/mobile/fingerprint.config.js`). JavaScript, styling, copy, translation, and bundled-asset changes ship as an EAS Update: a stable Docker release publishes it to the `production` channel automatically, and no store submission is needed. A change to native code needs a new store build: native dependencies or config plugins, permissions or entitlements, `app.config.ts` native fields (icon, splash, schemes, associated domains), Expo SDK upgrades, `apps/mobile/patches`, or Forme native sources and `packages/forme-native/scripts/prebuilt.json`. Run `eas fingerprint:compare --build-id <last store build>` from `apps/mobile` to check. A changed fingerprint means a new store build. Release steps: `docs/contributing/mobile-release-handoff.md` → **Releasing a new version**.
+- Old binaries and old OTA bundles stay in use for weeks. Keep API changes backward compatible, and deploy the backend before releasing mobile changes that depend on it. Never bump the runtime version to force an incompatible update onto old binaries.
 
 ## Package boundaries
 

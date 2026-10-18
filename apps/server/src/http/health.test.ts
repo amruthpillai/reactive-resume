@@ -4,7 +4,7 @@ const { execute, healthcheck, ping, env } = vi.hoisted(() => ({
 	execute: vi.fn(),
 	healthcheck: vi.fn(),
 	ping: vi.fn(),
-	env: { STORAGE_HEALTHCHECK_TIMEOUT_MS: 5_000 },
+	env: { STORAGE_HEALTHCHECK_TIMEOUT_MS: 5_000, APP_REVISION: undefined as string | undefined },
 }));
 
 vi.mock("@reactive-resume/db/client", () => ({ db: { execute } }));
@@ -19,12 +19,23 @@ beforeEach(() => {
 	healthcheck.mockResolvedValue({ status: "healthy" });
 	ping.mockResolvedValue("PONG");
 	env.STORAGE_HEALTHCHECK_TIMEOUT_MS = 5_000;
+	env.APP_REVISION = undefined;
 });
 
 afterEach(() => {
 	vi.useRealTimers();
 	vi.restoreAllMocks();
 });
+
+it.each([undefined, "a".repeat(40)])(
+	"reports the running image's commit, or null when unknown (%s)",
+	async (revision) => {
+		env.APP_REVISION = revision;
+		const response = await handleHealth();
+		expect(response.headers.get("cache-control")).toBe("no-store");
+		expect((await response.json()).revision).toBe(revision ?? null);
+	},
+);
 
 describe("health check timeouts", () => {
 	beforeEach(() => {

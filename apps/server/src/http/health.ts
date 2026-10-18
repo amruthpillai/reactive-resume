@@ -72,6 +72,7 @@ export async function handleHealth() {
 	const checks = {
 		service: "reactive-resume",
 		version: appVersion,
+		revision: env.APP_REVISION ?? null,
 		status,
 		timestamp: new Date().toISOString(),
 		uptime: `${process.uptime().toFixed(2)}s`,
@@ -84,5 +85,8 @@ export async function handleHealth() {
 		console.warn("[Healthcheck]", { route: "/api/health", database, storage, ...(redis ? { redis } : {}) });
 	}
 
-	return Response.json(checks, { status: checks.status === "unhealthy" ? 503 : 200 });
+	return Response.json(checks, {
+		status: checks.status === "unhealthy" ? 503 : 200,
+		headers: { "Cache-Control": "no-store" },
+	});
 }
