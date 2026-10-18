@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 # Base image only; pnpm self-manages to the packageManager version.
-ARG PNPM_VERSION=11.21.0
+ARG PNPM_VERSION=12.14.0
 ARG NODE_VERSION=24
 
 FROM ghcr.io/pnpm/pnpm:${PNPM_VERSION} AS dev

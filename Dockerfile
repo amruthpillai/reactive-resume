@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1.7
 
 # Base image only; pnpm self-manages to the `packageManager` version in package.json.
-ARG PNPM_VERSION=12.9.1
+ARG PNPM_VERSION=12.14.0
 ARG NODE_VERSION=24
-ARG TURBO_VERSION=2.11.7
+ARG TURBO_VERSION=2.11.9
 
 FROM ghcr.io/pnpm/pnpm:${PNPM_VERSION} AS base
 
@@ -44,6 +44,9 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store,sharing=locked \
     pnpm install --prod --frozen-lockfile
 
 FROM node:${NODE_VERSION}-slim AS runtime
+
+ARG APP_REVISION
+ENV APP_REVISION=${APP_REVISION}
 
 LABEL maintainer="amruthpillai"
 LABEL org.opencontainers.image.licenses="MIT"

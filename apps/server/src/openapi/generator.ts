@@ -71,13 +71,17 @@ const healthResponseSchema = {
 	properties: {
 		service: { type: "string", enum: ["reactive-resume"] },
 		version: { type: "string", description: "The running application's build version." },
+		revision: {
+			anyOf: [{ type: "string", pattern: "^[a-f0-9]{40}$" }, { enum: [null] }],
+			description: "The full Git commit embedded in the running Docker image, or null when unknown.",
+		},
 		status: { type: "string", enum: ["healthy", "unhealthy"] },
 		timestamp: { type: "string", format: "date-time" },
 		uptime: { type: "string" },
 		database: healthDependencySchema,
 		storage: healthDependencySchema,
 	},
-	required: ["service", "version", "status", "timestamp", "uptime", "database", "storage"],
+	required: ["service", "version", "revision", "status", "timestamp", "uptime", "database", "storage"],
 } satisfies OpenAPI.SchemaObject;
 
 export async function generateOpenApiSpec({ appUrl, version }: GenerateOpenApiSpecOptions) {

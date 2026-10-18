@@ -83,7 +83,7 @@ jobs:
     steps:
       - name: Checkout Repository
         if: ${{ vars.USE_BLACKSMITH != 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Checkout Repository (Blacksmith)
         if: ${{ vars.USE_BLACKSMITH == 'true' }}
@@ -150,6 +150,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
+          build-args: APP_REVISION=${{ steps.source.outputs.sha }}
 
       - name: Build and Push by Digest (Blacksmith)
         id: build-blacksmith
@@ -180,6 +181,10 @@ jobs:
     timeout-minutes: 45
     runs-on: ${{ vars.USE_BLACKSMITH == 'true' && 'blacksmith-2vcpu-ubuntu-2404' || 'ubuntu-latest' }}
 
+    outputs:
+      sha: ${{ steps.version.outputs.sha }}
+      mobile_channel: ${{ steps.mobile.outputs.channel }}
+
     env:
       DEPLOY: ${{ secrets.SSH_KEY != '' && secrets.SSH_HOST != '' && secrets.SSH_USER != '' }}
       PURGE_CLOUDFLARE: ${{ secrets.CLOUDFLARE_ZONE_ID != '' && secrets.CLOUDFLARE_API_TOKEN != '' }}
@@ -193,7 +198,7 @@ jobs:
     steps:
       - name: Checkout Repository
         if: ${{ vars.USE_BLACKSMITH != 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with: &checkout-package-json
           sparse-checkout: |
             package.json
@@ -351,10 +356,13 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
       - name: Install Cosign
-        uses: sigstore/cosign-installer@v3
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+        with:
+          cosign-release: v3.1.3
 
       - name: Sign image with Cosign
-        run: cosign sign --yes ${{ steps.registries.outputs.ghcr_image }}@${{ steps.published.outputs.ghcr_digest }}
+        # Preserve signatures readable by existing Cosign 2 clients after the CLI 3 upgrade.
+        run: cosign sign --yes --new-bundle-format=false --use-signing-config=false ${{ steps.registries.outputs.ghcr_image }}@${{ steps.published.outputs.ghcr_digest }}
 
       - name: Inspect image
         run: docker buildx imagetools inspect ${{ steps.registries.outputs.ghcr_image }}:${{ steps.published.outputs.final_tag }}
@@ -398,10 +406,11 @@ jobs:
           args=()
           for tag in $TAGS; do args+=(--tag "$DOCKER_IMAGE:${tag#"$GHCR_IMAGE:"}"); done
           docker buildx imagetools create "${args[@]}" "$GHCR_IMAGE@$DIGEST"
-          cosign sign --yes "$DOCKER_IMAGE@$DIGEST"
+          cosign sign --yes --new-bundle-format=false --use-signing-config=false "$DOCKER_IMAGE@$DIGEST"
           docker buildx imagetools inspect "$DOCKER_IMAGE:${{ steps.published.outputs.final_tag }}"
 
       - name: Redeploy Stack
+        id: deploy
         if: ${{ needs.mode.outputs.release == 'true' && steps.version.outputs.prerelease != 'true' && env.DEPLOY == 'true' }}
         uses: appleboy/ssh-action@v1
         with:
@@ -432,3 +441,110 @@ jobs:
           fi
 
           echo "Cloudflare cache purged successfully."
+
+      - name: Select mobile update channel
+        id: mobile
+        env:
+          RELEASE: ${{ needs.mode.outputs.release }}
+          NIGHTLY: ${{ needs.mode.outputs.nightly }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
+          DEPLOYED: ${{ steps.deploy.outcome }}
+          COMMIT_SHA: ${{ steps.version.outputs.sha }}
+        run: |
+          set -euo pipefail
+          if [[ "$RELEASE" == "true" && "$PRERELEASE" != "true" ]]; then
+            if [[ "$DEPLOYED" != "success" ]]; then
+              echo "::notice::Production mobile update skipped: backend deployment did not run."
+              exit 0
+            fi
+            channel=production
+          else
+            if [[ "$NIGHTLY" == "true" && "$COMMIT_SHA" != "$(git ls-remote --exit-code origin refs/heads/main | cut -f1)" ]]; then
+              echo "::notice::Preview mobile update skipped: a newer main commit exists."
+              exit 0
+            fi
+            channel=preview
+          fi
+          echo "channel=$channel" >> "$GITHUB_OUTPUT"
+
+  mobile-update:
+    needs: merge
+    if: ${{ !cancelled() && needs.merge.result == 'success' && needs.merge.outputs.mobile_channel != '' }}
+    runs-on: ${{ vars.USE_BLACKSMITH == 'true' && 'blacksmith-2vcpu-ubuntu-2404' || 'ubuntu-latest' }}
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    concurrency:
+      group: mobile-update-${{ needs.merge.outputs.mobile_channel }}
+      cancel-in-progress: true
+    env:
+      EXPO_NO_TELEMETRY: "1"
+      UPDATE_CHANNEL: ${{ needs.merge.outputs.mobile_channel }}
+      COMMIT_SHA: ${{ needs.merge.outputs.sha }}
+
+    steps:
+      - name: Check Expo publishing credential
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [[ -z "$EXPO_TOKEN" ]]; then
+            echo "::error::Add the EXPO_TOKEN Actions secret with access to the reactive-resume Expo project."
+            exit 1
+          fi
+
+      - name: Checkout Repository
+        if: ${{ vars.USE_BLACKSMITH != 'true' }}
+        uses: actions/checkout@v7
+        with: &checkout-mobile-update
+          ref: ${{ needs.merge.outputs.sha }}
+          persist-credentials: false
+
+      - name: Checkout Repository (Blacksmith)
+        if: ${{ vars.USE_BLACKSMITH == 'true' }}
+        uses: useblacksmith/checkout@v1
+        with: *checkout-mobile-update
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck mobile app
+        run: pnpm --filter mobile typecheck
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v9
+        with:
+          eas-version: 25.2.0
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Wait for matching production backend
+        if: env.UPDATE_CHANNEL == 'production'
+        run: |
+          set -euo pipefail
+          matches=0
+          for attempt in $(seq 1 60); do
+            if curl --fail --silent --show-error --max-time 10 \
+              -H 'Cache-Control: no-cache' "https://rxresu.me/api/health?revision=$COMMIT_SHA&probe=$attempt" \
+              | jq --exit-status --arg sha "$COMMIT_SHA" \
+                '.service == "reactive-resume" and .status == "healthy" and .revision == $sha' > /dev/null; then
+              matches=$((matches + 1))
+              if [[ "$matches" -ge 3 ]]; then exit 0; fi
+            else
+              matches=0
+            fi
+            sleep 5
+          done
+          echo "::error::Production backend did not become healthy at commit $COMMIT_SHA; mobile update withheld."
+          exit 1
+
+      - name: Publish matching mobile update
+        working-directory: apps/mobile
+        run: eas update --channel "$UPDATE_CHANNEL" --environment "$UPDATE_CHANNEL" --message "Docker $COMMIT_SHA" --non-interactive

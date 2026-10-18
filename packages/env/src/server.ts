@@ -56,6 +56,10 @@ export const env = createEnv({
 		// Application
 		CLOUDFLARE: z.stringbool().default(false),
 		APP_URL: z.url({ protocol: /https?/ }),
+		APP_REVISION: z
+			.string()
+			.regex(/^[a-f0-9]{40}$/)
+			.optional(),
 		ROOT_RESUME_ID: z
 			.string()
 			.trim()

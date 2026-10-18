@@ -67,6 +67,35 @@ SSH redeployment requires `SSH_KEY`, `SSH_HOST`, and `SSH_USER`; Cloudflare purg
 `CLOUDFLARE_ZONE_ID` and `CLOUDFLARE_API_TOKEN`. Each integration is skipped if any required
 secret is missing. Dispatch does not create a Git tag, GitHub release, or version bump.
 
+## Native mobile updates
+
+After successful GHCR publishing, `mobile-update` checks out the same full commit and
+publishes an EAS Update using the `EXPO_TOKEN` Actions secret. The token must have access
+to Expo account `reactive-resume` and project `5830280e-e1ba-45b7-b9c9-ba048fa3bd4d`.
+Missing credentials fail the mobile job without undoing the published Docker image.
+
+- Current-main nightlies, manual canaries, and prereleases publish to the `preview` channel
+  using the `preview` EAS environment. Superseded main builds skip mobile publishing.
+- Stable promotions publish to `production` using the `production` EAS environment only
+  when the SSH redeploy step succeeded. Before publishing, three consecutive probes of
+  `https://rxresu.me/api/health` must identify this service, report healthy, and match the
+  full source commit. Official Docker builds embed `APP_REVISION` for that check.
+- Each channel cancels superseded mobile jobs independently; Docker image builds remain
+  unaffected. Publishing and deployment are separate operations, so a failed mobile job
+  can leave the backend ahead. Fix the failure and rerun the release workflow.
+
+The app uses `expo-updates` with fingerprint runtime compatibility. Generated native
+projects and local Forme build output are excluded; the Rust sources and reviewed
+prebuilt pin are included. Native changes need a new compatible store build; publishing
+an OTA update alone cannot upgrade native code. JavaScript and asset changes are checked
+at launch, downloaded in the background, and applied on the next restart.
+
+Before first use, add `EXPO_TOKEN`, create preview/production EAS channels, and distribute
+new builds with these channels and update configuration. Existing binaries without
+`expo-updates` cannot receive OTA updates. See [mobile release handoff](../contributing/mobile-release-handoff.md#over-the-air-updates)
+for setup, rollback, and remaining verification. Keep APIs compatible with older clients
+and self-hosted servers; runtime fingerprints only protect the JavaScript/native boundary.
+
 Manual canaries build, publish, merge, and sign images in enabled registries without
 running production integrations:
 

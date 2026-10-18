@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Checkout Repository
         if: ${{ vars.USE_BLACKSMITH != 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # The Crowdin action runs in a container that cannot reach the git mirror mount, so copy its objects.
       - name: Checkout Repository (Blacksmith)
@@ -29,7 +29,7 @@ jobs:
           dissociate: true
 
       - name: Sync Translations from Crowdin
-        uses: crowdin/github-action@v2
+        uses: crowdin/github-action@v3
         with:
           download_translations: true
           export_only_approved: true
