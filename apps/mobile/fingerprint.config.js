@@ -3,10 +3,10 @@ module.exports = {
 	ignorePaths: [
 		"ios",
 		"android",
-		"../../packages/forme-native/ios/FormeNative.xcframework",
+		"../../packages/forme-native/ios/FormeNative.xcframework/**",
 		"../../packages/forme-native/ios/include/forme_native.h",
-		"../../packages/forme-native/android/src/main/jniLibs",
-		"../../packages/forme-native/rust/target",
+		"../../packages/forme-native/android/src/main/jniLibs/**",
+		"../../packages/forme-native/rust/target/**",
 	],
 	extraSources: [
 		{ type: "dir", filePath: "../../packages/forme-native/rust", reasons: ["Forme native engine"] },
