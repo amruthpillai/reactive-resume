@@ -21,7 +21,7 @@ const font = await readFile(new URL("../../assets/fonts/HankenGrotesk-Regular.tt
 const fontReads: Record<string, number> = {};
 const fixture = structuredClone(sampleResumeData);
 fixture.picture.url = `data:image/jpeg;base64,${picture.toString("base64")}`;
-const output = new URL("../../../../docs/plans/native-mobile-app/reports/M3-T4/", import.meta.url);
+const output = new URL("../../reports/parity/", import.meta.url);
 await mkdir(output, { recursive: true });
 
 type Extracted = { pages: number; text: string[] };

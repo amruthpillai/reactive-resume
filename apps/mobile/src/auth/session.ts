@@ -5,7 +5,7 @@
  * Sign-in (M3-T1) is OAuth 2.1 authorization code + PKCE (S256) in the system browser, against any server:
  * - Discovery from `<server>/.well-known/oauth-authorization-server`; dynamic client registration once per server,
  *   with `client_id` cached in SecureStore by server origin. Re-register only when the token endpoint answers
- *   `invalid_client`. Body in docs/plans/native-mobile-app/reports/S3.md §1.
+ *   `invalid_client`.
  * - Send `resource=<server origin>` (RFC 8707) on authorize, token and refresh requests. Without it the server issues
  *   an opaque access token that `/api/rpc` rejects.
  * - The redirect is `https://rxresu.me/auth/native-callback` for every server (the app's associated domain, through

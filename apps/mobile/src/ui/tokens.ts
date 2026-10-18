@@ -1,5 +1,5 @@
-// Desk & Paper tokens for React Native, copied from docs/plans/native-mobile-app/mockups/tokens.md (D4) without
-// changes to names or values. Screens use these and nothing else; ask the coordinator to add a missing token there.
+// Desk & Paper tokens for React Native.
+// Screens use these and nothing else; add a missing token here rather than hard-coding a value.
 import { Easing, Platform } from "react-native";
 
 export type ColorScheme = "light" | "dark";

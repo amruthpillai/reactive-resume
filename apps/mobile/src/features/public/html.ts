@@ -1,6 +1,6 @@
 // A resume's rich text as plain blocks for native <Text>. The owner's HTML is never rendered as markup: only
 // formatting tags and plain links survive, everything else keeps just its text (web: public/rich-text.tsx). Pure, so
-// `docs/plans/native-mobile-app/reports/M7-T2/verify.mjs` runs it in Node.
+// Node scripts can run it.
 
 export type Run = {
 	text: string;

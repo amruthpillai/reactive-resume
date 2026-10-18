@@ -1,4 +1,4 @@
-// Ranking for the search screen. Pure, so `docs/plans/native-mobile-app/reports/M7-T2/verify.mjs` runs it in Node.
+// Ranking for the search screen. Pure, so Node scripts can run it.
 
 export type Searchable = {
 	/** What the row shows first; matches here rank highest. */

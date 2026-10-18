@@ -15,7 +15,7 @@ Launch the dev build on a dedicated device with Metro on 8086, then open:
 
 The host binds only `127.0.0.1:18086`. On Android, use your own emulator serial: `adb -s <serial> reverse tcp:18086 tcp:18086` (and reverse Metro 8086 too).
 
-`page.tsx` conditionally requires the development tools in a top-level `__DEV__` branch. Metro removes that branch before collecting release dependencies; neither `device.ts` nor any other parity module appears in the iOS/Android production source maps. Device checks local data-URI decoding, server-relative image loading, rejection above 12 MB, font preload, real native render/subset and first/last-page OS rasterization. It posts each PDF to the host. Look for 18 PASS rows per platform in `docs/plans/native-mobile-app/reports/M3-T4/{ios,android}-parity.json` and the completion banner. Free-form must report at least two engine calls; template repair passes are counted too.
+`page.tsx` conditionally requires the development tools in a top-level `__DEV__` branch. Metro removes that branch before collecting release dependencies; neither `device.ts` nor any other parity module appears in the iOS/Android production source maps. Device checks local data-URI decoding, server-relative image loading, rejection above 12 MB, font preload, real native render/subset and first/last-page OS rasterization. It posts each PDF to the host. Look for 18 PASS rows per platform in `apps/mobile/reports/parity/{ios,android}-parity.json` and the completion banner. Free-form must report at least two engine calls; template repair passes are counted too.
 
 Close the host and Metro, then shut down/delete only your own simulator and AVD. No dependency, WebView or production testing endpoint is installed.
 
