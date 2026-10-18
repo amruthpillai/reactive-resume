@@ -1,0 +1,95 @@
+---
+title: "Mirror Computer Modern fonts"
+description: "Serve Computer Modern font files from your own host for server-generated PDFs, and understand which font requests remain external."
+---
+
+Set `WEB_FONT_BASE_URL` when you want the Node.js server to fetch Computer Modern font files from a
+mirror you control. You need a running Reactive Resume instance and an HTTP(S) server that can serve static files.
+
+<Warning>
+  This setting does not make font loading offline or Google-free. It covers only five Computer Modern families in
+  server-generated PDFs. The other catalog families, including Noto fallback fonts, keep their Google URLs. Browser PDF
+  rendering and font-picker previews keep all their original URLs, even for Computer Modern fonts.
+</Warning>
+
+## 1. Prepare the mirror
+
+Copy the `font/` directory from the `bitmaks/cm-web-fonts` source used by your release's
+`packages/fonts/src/webfontlist.json` to your static file server. Keep the directory names, filenames and case:
+
+```text
+cm/
+└── font/
+    ├── Bright/
+    ├── Concrete/
+    ├── Sans/
+    ├── Serif/
+    └── Typewriter/
+```
+
+These directories supply Computer Modern Bright, Concrete, Sans, Serif and Typewriter. Mirror every referenced
+weight and italic file, not only the preview font. The app does not bundle these files or populate your mirror.
+Keep the upstream license notices with your mirror.
+
+For example, with a base URL of `https://fonts.example.com/cm`, this original URL:
+
+```text
+https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/font/Bright/cmunbmr.woff
+```
+
+becomes:
+
+```text
+https://fonts.example.com/cm/font/Bright/cmunbmr.woff
+```
+
+Use an absolute HTTP(S) URL without a query string or fragment. Surrounding whitespace and trailing slashes are removed. Do not include
+the `font/` segment in the base URL: the resolver appends it. Use an address reachable from the app server; inside
+Docker, `localhost` refers to the app container itself. The mirror must serve font bytes without a login page.
+
+## 2. Configure the deployment
+
+```dotenv
+WEB_FONT_BASE_URL="https://fonts.example.com/cm"
+```
+
+| Deployment      | Where to set it                                                              | Apply the change                                                                      |
+| --------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Docker Compose  | The app's `.env` file, loaded through `env_file`.                            | Run `docker compose up -d` to recreate the app container. No image rebuild is needed. |
+| Kubernetes      | The app's environment Secret or ConfigMap.                                   | Restart the app deployment so the new pods read it.                                   |
+| Source checkout | Root `.env` for the production server, or `.env.local` for `pnpm dev`.       | Restart the server or development command.                                            |
+| Vercel          | The project's environment variables for the intended deployment environment. | Redeploy the backend.                                                                 |
+
+The server validates the URL at startup. An unset or empty value preserves the original URLs. Remove the variable
+and restart or redeploy to return to the default CDN.
+
+Set this value before starting the server. The server PDF entry supplies it to the font loader; the shared font
+catalog does not read environment variables. This setting is not exposed to the Vite browser app; rebuilding the
+web app does not enable browser mirroring.
+The Cloudflare Workers deployment is not covered by this Node.js server setup.
+
+## 3. Check delivery
+
+From the app server's network, request a mirrored file:
+
+```bash
+curl --fail --output /dev/null https://fonts.example.com/cm/font/Bright/cmunbmr.woff
+```
+
+Then generate a PDF through the server for a resume using Computer Modern Bright. Check the mirror's access logs
+for requests to `font/Bright/`. Repeat with any other Computer Modern families you use. A missing weight or italic
+file can fail PDF rendering; the mirror is not retried against the original CDN.
+
+Server-to-server font fetches do not require CORS headers. If another browser application also uses your mirror,
+configure that host to allow its origin and serve the appropriate font content type. CORS headers alone do not
+enable this setting in Reactive Resume's browser app.
+
+External Google requests can still occur for punctuation, symbols, emoji or language fallback fonts, even when
+the chosen heading and body fonts are Computer Modern. Browser network requests to the original font hosts are
+also expected with the current implementation.
+
+## Related pages
+
+- [Environment variables](/self-hosting/environment-variables#font-mirror): the setting's default and URL constraints.
+- [Self-hosting with Docker](/self-hosting/docker): configure the application container.
+- [Customizing typography](/guides/customizing-typography): choose heading and body fonts.

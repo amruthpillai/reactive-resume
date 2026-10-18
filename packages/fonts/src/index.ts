@@ -180,6 +180,7 @@ export function getWebFont(family: string) {
 	return webFontMap.get(family);
 }
 
+/** Resolves a catalog font file with weight/style fallbacks. */
 export function getWebFontSource(family: string, weight: FontWeight = "400", italic = false) {
 	const webFont = getWebFont(family);
 	if (!webFont) return null;

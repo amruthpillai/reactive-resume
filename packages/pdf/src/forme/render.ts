@@ -37,6 +37,8 @@ export type RenderResumeInput = {
 	renderOptions?: ResumeRenderOptions | undefined;
 	resolveSectionTitle?: SectionTitleResolver | undefined;
 	readImage?: ((source: string) => Promise<Uint8Array>) | undefined;
+	/** Computer Modern mirror supplied by the server entry; browser callers leave it unset. */
+	webFontBaseUrl?: string | undefined;
 };
 
 export type RenderedResume = {
@@ -212,6 +214,7 @@ export function renderResume(engine: FormeEngine, input: RenderResumeInput): Pro
 			resolveSectionTitle: input.resolveSectionTitle,
 		}),
 		input.readImage,
+		input.webFontBaseUrl,
 	);
 }
 
@@ -223,10 +226,11 @@ export async function renderResumeElement(
 	engine: FormeEngine,
 	element: ReactElement,
 	readImage?: (source: string) => Promise<Uint8Array>,
+	webFontBaseUrl?: string,
 ): Promise<RenderedResume> {
 	const data = (element.props as { data?: ResumeData }).data;
 	// Font downloads start first: they're the largest wait, and the tree needs only the icons.
-	const fontsLoaded = loadFonts(data ? resumeFontRequests(data) : []);
+	const fontsLoaded = loadFonts(data ? resumeFontRequests(data) : [], webFontBaseUrl);
 	await loadIcons();
 	const tree = renderHostTree(element);
 	const [{ fonts, warnings: fontWarnings, missing }, { images, warnings: imageWarnings }] = await Promise.all([

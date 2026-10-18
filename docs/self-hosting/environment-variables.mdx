@@ -47,6 +47,23 @@ turn on an optional feature.
 | `SERVER_PORT`    | `3001`                    | Port the server listens on when `NODE_ENV` is not `production`, which is the local development setup. Ignored by the image.                                       |
 | `ROOT_RESUME_ID` | unset                     | Shows one public resume at `/` instead of the home page. See [Show one resume at your root address](/self-hosting/examples#show-one-resume-at-your-root-address). |
 
+## Font mirror
+
+| Variable            | Default | Description                                                                                                                                                                                                        |
+| ------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `WEB_FONT_BASE_URL` | unset   | Absolute HTTP(S) base URL for the five Computer Modern families during server-side PDF rendering, for example `https://fonts.example.com/cm`. No query string or fragment. Unset or empty keeps the original URLs. |
+
+Preserve the upstream `font/<family>/<file>.woff` paths below this base URL. Set the variable before the server starts;
+restart or redeploy after changes. No web rebuild is needed for this server-side setting.
+
+<Warning>
+  This server-only variable is not exposed to the Vite browser app. Browser PDF rendering and font-picker previews still
+  use their original URLs. Google-hosted families and fallback fonts are not rewritten, including during server
+  rendering. This setting does not provide offline or Google-free font loading.
+</Warning>
+
+See [Mirror Computer Modern fonts](/self-hosting/fonts) for the asset layout, deployment settings and verification.
+
 ## Database
 
 | Variable                 | Default        | Description                                                                                                                                                                                                    |

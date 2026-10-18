@@ -1,5 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { getFont, getPdfFallbackFontFamilies, resolveBoldFontWeight, resolveLegacyFontAlias } from "./index";
+
+it("keeps catalog sources independent of the server mirror environment", async () => {
+	vi.stubEnv("WEB_FONT_BASE_URL", "https://fonts.example.com/cm");
+	try {
+		vi.resetModules();
+		const { getWebFontSource, getWebFont } = await import("./index");
+		const original = "https://cdn.jsdelivr.net/gh/bitmaks/cm-web-fonts@latest/font/Bright/cmunbmr.woff";
+		expect(getWebFontSource("Computer Modern Bright")).toBe(original);
+		expect(getWebFontSource("Computer Modern Bright", "100")).toBe(original);
+		expect(getWebFont("Computer Modern Bright")?.preview).toBe(original);
+		expect(getWebFontSource("Roboto")).toMatch(/^https:\/\/fonts\.gstatic\.com\//);
+	} finally {
+		vi.unstubAllEnvs();
+	}
+});
 
 describe("getPdfFallbackFontFamilies", () => {
 	it("uses separate fonts for arrows and other text symbols", () => {

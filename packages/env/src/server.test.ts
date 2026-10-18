@@ -13,6 +13,7 @@ beforeEach(() => {
 		"AI_API_KEY",
 		"AI_BASE_URL",
 		"REDIS_URL",
+		"WEB_FONT_BASE_URL",
 		"STORAGE_HEALTHCHECK_TIMEOUT_MS",
 	])
 		vi.stubEnv(name, undefined);
@@ -20,6 +21,28 @@ beforeEach(() => {
 afterEach(() => {
 	vi.unstubAllEnvs();
 	vi.restoreAllMocks();
+});
+
+describe("web font mirror configuration", () => {
+	it.each([undefined, "", "https://fonts.example.com", "https://fonts.example.com/cm/", "http://localhost:8080"])(
+		"accepts %s",
+		async (value) => {
+			vi.stubEnv("WEB_FONT_BASE_URL", value);
+			expect((await import("./server")).env.WEB_FONT_BASE_URL).toBe(value || undefined);
+		},
+	);
+
+	it.each([
+		"not a url",
+		"/fonts",
+		"ftp://fonts.example.com",
+		"https://fonts.example.com?key=value",
+		"https://fonts.example.com#fonts",
+	])("rejects %s", async (value) => {
+		vi.stubEnv("WEB_FONT_BASE_URL", value);
+		vi.spyOn(console, "error").mockImplementation(() => {});
+		await expect(import("./server")).rejects.toThrow("Invalid environment variables");
+	});
 });
 
 describe("server web access configuration", () => {
