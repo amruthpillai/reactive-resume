@@ -140,8 +140,10 @@ eas fingerprint:compare --build-id <EAS build ID of the current store binary>
 3. Build both platforms:
 
    ```sh
-   eas build --profile production --platform all
+   EXPO_NO_CAPABILITY_SYNC=1 eas build --profile production --platform all
    ```
+
+   Always set `EXPO_NO_CAPABILITY_SYNC=1` for iOS builds and `eas credentials`. The app has no native Sign in with Apple entitlement (Apple sign-in runs through the web flow with Services ID `me.rxresu.web`), so capability sync tries to turn Sign in with Apple off for App ID `me.rxresu`. Apple refuses because the Services ID uses that App ID as its primary app, and turning it off would break Apple sign-in. Manage capabilities manually in the Apple developer console.
 
 4. Submit the latest builds. Use `--auto-submit` on the build command to combine steps 3 and 4.
 
@@ -150,7 +152,7 @@ eas fingerprint:compare --build-id <EAS build ID of the current store binary>
    eas submit --profile production --platform android --latest
    ```
 
-   The `submit` paths in `eas.json` point at credential files on the owner's machine. Supply them locally or in CI, never commit them. The Play service-account JSON was missing at the last release; until it exists, download the AAB from EAS and upload it in Play Console manually.
+   Both platforms submit with keys stored in EAS credentials, so submission also works from CI: the App Store Connect API key for iOS, and the Google service-account key (scoped to this app with release-to-testing permission in Play Console) for Android. `eas.json` holds no credential paths. Never commit credential files.
 
 5. **App Store Connect:** wait for processing, test through TestFlight, create the new app version, attach the build, write "What's New", and submit for review. Release manually or automatically after approval.
 6. **Play Console:** the build lands in the `internal` track as a draft. Roll it out to testers, then promote it to production with release notes. Use a staged rollout for risky changes.
@@ -172,9 +174,9 @@ Distribution is store-only. No IPA, AAB, or APK is attached to GitHub Releases. 
 
 Earlier builds are superseded. Local IPA/AAB/inspection outputs and evidence are under `/tmp/rxresu-store-artifacts`; listing verification is under `/tmp/reactive-resume-listing-audit`. These are temporary local evidence, not durable build storage. Retrieve store artifacts through EAS links if local files disappear. The inspection APK is debug-signed solely for inspection; it does not prove Play-installed identity or behavior.
 
-EAS project is `reactive-resume/reactive-resume`, ID `5830280e-e1ba-45b7-b9c9-ba048fa3bd4d`. Versions are remote with production auto-increment; do not reset counters to 4/5 when rebuilding. Signing capability synchronization failed during setup; builds succeeded using `EXPO_NO_CAPABILITY_SYNC=1` after Apple capabilities were configured separately. This workaround does not provision missing capabilities.
+EAS project is `reactive-resume/reactive-resume`, ID `5830280e-e1ba-45b7-b9c9-ba048fa3bd4d`. Versions are remote with production auto-increment; do not reset counters to 4/5 when rebuilding. Capability sync must stay disabled with `EXPO_NO_CAPABILITY_SYNC=1` (see [Releasing a new version](#releasing-a-new-version)); Apple capabilities are configured manually. The flag does not provision missing capabilities.
 
-`apps/mobile/eas.json` contains machine-local credential paths. iOS upload used an existing developer API key, while distribution signing required an approved Admin team key. Android's configured service-account JSON was absent, so AAB upload was done manually. On another machine/CI, supply approved protected credentials and update paths; never commit credential files. Expo Doctor passed 20/20 after adding direct `expo-asset` dependency.
+`apps/mobile/eas.json` holds no credential paths; submission keys live in EAS credentials. iOS upload used an existing developer API key, while distribution signing required an approved Admin team key. Android's first AAB upload was done manually; later submissions use the Google service-account key stored in EAS credentials. Never commit credential files. Expo Doctor passed 20/20 after adding direct `expo-asset` dependency.
 
 Forme native artifacts are published and checksum-pinned in `packages/forme-native/scripts/prebuilt.json`; EAS pre-install fetches them. A source/ABI change needs matching published prebuilts and checksum updates. Do not replace the pin with an unverified download or assume package version alone identifies native content.
 
