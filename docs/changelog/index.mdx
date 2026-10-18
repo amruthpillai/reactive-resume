@@ -4,6 +4,40 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v6.0.4" description="18th October 2026">
+
+## Highlights
+
+- **Native apps for iOS and Android join the project.** Build resumes and cover letters, track applications, prepare for interviews and use Career coaching from a native interface. Drafts recover after interruptions, and PDF sharing works offline with cached fonts and images. The apps are available to build from source; store distribution still has release gates to complete. [d3ae545b2](https://github.com/reactive-resume/reactive-resume/commit/d3ae545b2)
+- **Meet Persian, a Wall Street-inspired template.** A single-column layout with a centred header and ruled section headings gives your resume a classic look. Keep your existing fonts and choose whether to show a photo. Thanks to @zenojor. [71377ecd2](https://github.com/reactive-resume/reactive-resume/commit/71377ecd2)
+- **Chinese, Japanese and Korean previews load more reliably.** Font downloads now continue while data is arriving, even on slow connections, and Noto CJK families load fewer files. Thanks to @NotSleeply for reporting [#3627](https://github.com/reactive-resume/reactive-resume/issues/3627). [ef0c187eb](https://github.com/reactive-resume/reactive-resume/commit/ef0c187eb)
+
+## Resume Builder & Sharing
+
+- Fixed right-to-left section-heading alignment and corrected British English spelling. [45c2d845d](https://github.com/reactive-resume/reactive-resume/commit/45c2d845d)
+- Prevented API clients from setting or removing a share password while a resume is locked. Thanks to @iwmywn. [8da9d9da4](https://github.com/reactive-resume/reactive-resume/commit/8da9d9da4)
+
+## Mobile & Accounts
+
+- Added native sign-in, app links, interview reminders and account settings, alongside controls to review data sharing, report generated content and block shared-resume authors on your device. [d3ae545b2](https://github.com/reactive-resume/reactive-resume/commit/d3ae545b2)
+- Added compatible mobile update channels so installed builds can receive JavaScript and asset updates after the matching backend is deployed. Native changes still require a new app build. [d3ae545b2](https://github.com/reactive-resume/reactive-resume/commit/d3ae545b2)
+
+## Translations
+
+- Completed new web and mobile messages across every supported translation locale, including data-sharing notices, content reports and app-opening instructions. [038030793](https://github.com/reactive-resume/reactive-resume/commit/038030793)
+
+## Self-Hosting & Integrations
+
+- Added a [Cloudron community package](https://github.com/reactive-resume/reactive-resume/tree/main/cloudron) using the official image, with automatic PostgreSQL, Redis, email and single-sign-on configuration. [30ded0c5a](https://github.com/reactive-resume/reactive-resume/commit/30ded0c5a), [c2de72520](https://github.com/reactive-resume/reactive-resume/commit/c2de72520), [7d272a0d8](https://github.com/reactive-resume/reactive-resume/commit/7d272a0d8)
+- Added `WEB_FONT_BASE_URL` for serving Computer Modern fonts from your own mirror during server-side PDF rendering. Browser font requests and Google-hosted font families keep their existing sources. Thanks to @denggl123. [94f384aa5](https://github.com/reactive-resume/reactive-resume/commit/94f384aa5)
+- Allowed storage health checks more time to complete on slower installations. [d84852161](https://github.com/reactive-resume/reactive-resume/commit/d84852161)
+- Published integration discovery documents and included agent skills in Docker images so connected apps can find the available integrations. [aaf37a0d0](https://github.com/reactive-resume/reactive-resume/commit/aaf37a0d0), [59fbc2a34](https://github.com/reactive-resume/reactive-resume/commit/59fbc2a34)
+- Added the content-report database migration, applied through the normal startup migration workflow. Deploy the server and web app together before using the new native reporting flows. [d3ae545b2](https://github.com/reactive-resume/reactive-resume/commit/d3ae545b2)
+
+**Full Changelog**: [v6.0.3...v6.0.4](https://github.com/reactive-resume/reactive-resume/compare/v6.0.3...v6.0.4)
+
+</Update>
+
 <Update label="v6.0.3" description="14th October 2026">
 
 ## Highlights
