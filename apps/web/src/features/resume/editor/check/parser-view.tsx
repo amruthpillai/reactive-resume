@@ -4,6 +4,7 @@ import type { ExtractedDocument, ResumeSemantics } from "@reactive-resume/resume
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
+import { columnSegments } from "@reactive-resume/resume/ats-pdf";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { cn } from "@reactive-resume/utils/style";
 import { useEditorStore } from "../store";
@@ -129,13 +130,33 @@ function ParsedText({ parsed, issues }: { parsed: Parsed; issues: readonly Check
 		},
 	];
 
-	// Lines grouped under the headings a parser recognised, in the order it reads them.
-	const headingAt = new Map(semantics.headings.map((heading) => [heading.lineIndex, heading.text]));
+	// Lines grouped under the headings a parser recognised, in the order it reads them. One extracted
+	// line can fuse several columns, so a line holding a heading is read in column-separated pieces:
+	// each recognised piece starts a group, and every other piece still shows as a line — collapsing
+	// the line to one heading hid every other column on it.
+	const headingsAt = new Map<number, string[]>();
+	for (const heading of semantics.headings) {
+		const line = headingsAt.get(heading.lineIndex) ?? [];
+		line.push(heading.text);
+		headingsAt.set(heading.lineIndex, line);
+	}
 	const groups: { heading: string | null; lines: string[] }[] = [{ heading: null, lines: [] }];
 	doc.lines.forEach((line, index) => {
-		const heading = headingAt.get(index);
-		if (heading !== undefined) groups.push({ heading, lines: [] });
-		else groups.at(-1)?.lines.push(line.text);
+		const lineHeadings = headingsAt.get(index);
+		if (lineHeadings === undefined) {
+			groups.at(-1)?.lines.push(line.text);
+			return;
+		}
+		const pending = [...lineHeadings];
+		for (const segment of columnSegments(line)) {
+			const headingIndex = pending.indexOf(segment.text.trim());
+			if (headingIndex !== -1) {
+				pending.splice(headingIndex, 1);
+				groups.push({ heading: segment.text.trim(), lines: [] });
+			} else if (segment.text.trim().length > 0) {
+				groups.at(-1)?.lines.push(segment.text);
+			}
+		}
 	});
 
 	return (
