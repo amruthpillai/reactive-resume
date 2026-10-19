@@ -7,7 +7,13 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { getDocument, OPS } from "pdfjs-dist/legacy/build/pdf.mjs";
 import { createElement } from "react";
-import { analyzePdfResume, harvestPdfDocument, PDF_OPS } from "@reactive-resume/resume/ats-pdf";
+import {
+	analyzePdfResume,
+	buildExtractedDocument,
+	buildResumeSemantics,
+	harvestPdfDocument,
+	PDF_OPS,
+} from "@reactive-resume/resume/ats-pdf";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
 import { ResumeDocument } from "./document";
 import { renderToBuffer } from "./forme/testing";
@@ -82,6 +88,28 @@ describe("a resume rendered by this app", () => {
 		expect(raw.operatorsAvailable).toBe(true);
 		expect(report.findings.map((finding) => finding.code)).toEqual([]);
 		expect(report.score).toBe(100);
+	});
+
+	/**
+	 * Regression guard for #3642: with a section split into columns, every cell's bold lead-in
+	 * shares a baseline and looked like a heading. "What a parser reads" consumed each of those
+	 * rows under just the last cell's name, so the other columns' text vanished from the view.
+	 */
+	it("keeps every cell of a multi-column section in the text a parser sees", { timeout: 60_000 }, async () => {
+		const data = structuredClone(sampleResumeData);
+		data.sections.skills.columns = 3;
+		const names = data.sections.skills.items.filter((item) => !item.hidden).map((item) => item.name);
+
+		const { raw } = await analyze(await renderResume(data, "onyx"));
+		const doc = buildExtractedDocument(raw);
+		const semantics = buildResumeSemantics(raw, doc, { now: NOW });
+		const headingTexts = semantics.headings.map((heading) => heading.text);
+
+		expect(headingTexts).toContain("Skills");
+		for (const name of names) {
+			expect(headingTexts).not.toContain(name);
+			expect(doc.fullText).toContain(name);
+		}
 	});
 });
 
