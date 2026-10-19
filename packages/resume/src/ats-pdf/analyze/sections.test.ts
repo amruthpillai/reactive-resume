@@ -77,4 +77,52 @@ describe("detectHeadings", () => {
 		expect(headings).toContain("Experience");
 		expect(headings).toContain("Skills");
 	});
+
+	/**
+	 * The cell-twin rule counts only styling guesses: a page whose columns open with a custom
+	 * title beside a recognised one (a sidebar's "My Craft" next to the main column's
+	 * "Experience") still reports the custom title — only a styling guess that shares its
+	 * baseline with another styling guess reads as a grid cell.
+	 */
+	it("keeps a custom section title beside a recognised one", () => {
+		const raw = makeRawExtraction({
+			lines: [
+				{ text: "Ada Lovelace", size: 18 },
+				"ada@example.com · +44 20 7946 0100 · London, UK",
+				{ text: "My Craft", x: 56, y: 200, fontRef: "g_d0_f2" },
+				{ text: "Experience", x: 340, y: 200, fontRef: "g_d0_f2" },
+				{ text: "Built difference engines for the Analytical Society.", x: 56, y: 218 },
+				{ text: "Principal Engineer | Analytical Engines, London", x: 340, y: 218 },
+			],
+		});
+
+		const headings = textsOf(raw);
+		expect(headings).toContain("My Craft");
+		expect(headings).toContain("Experience");
+	});
+
+	/**
+	 * A recognised title does not launder the cells that share its baseline: where a section
+	 * heading lands beside the first row of another section's grid, the cells are still twins
+	 * of each other and are still excluded.
+	 */
+	it("still drops styling-only twins that share a baseline with a recognised title", () => {
+		const raw = makeRawExtraction({
+			lines: [
+				{ text: "Ada Lovelace", size: 18 },
+				"ada@example.com · +44 20 7946 0100 · London, UK",
+				{ text: "Experience", x: 56, y: 200, fontRef: "g_d0_f2" },
+				{ text: "Unity Engine", x: 250, y: 200, fontRef: "g_d0_f2" },
+				{ text: "Unreal Engine", x: 440, y: 200, fontRef: "g_d0_f2" },
+				{ text: "Principal Engineer | Analytical Engines, London", x: 56, y: 218 },
+				{ text: "C#, Editor Tools, Performance Profiling", x: 250, y: 218 },
+				{ text: "C++, Blueprints, UE5 Features", x: 440, y: 218 },
+			],
+		});
+
+		const headings = textsOf(raw);
+		expect(headings).toContain("Experience");
+		expect(headings).not.toContain("Unity Engine");
+		expect(headings).not.toContain("Unreal Engine");
+	});
 });
