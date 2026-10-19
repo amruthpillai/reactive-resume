@@ -58,9 +58,10 @@ export default function SettingsScreen() {
 				/>
 				<ListRow
 					title={t`Join the Discord`}
+					subtitle={t`Resume feedback, product help, and community ideas.`}
 					leading="discord-logo"
 					external
-					onPress={() => openLink("https://discord.gg/aSyA5ZSxpb")}
+					onPress={() => openLink("https://discord.gg/9kAqrGcwn5")}
 				/>
 				<ListRow
 					title={t`Source code on GitHub`}

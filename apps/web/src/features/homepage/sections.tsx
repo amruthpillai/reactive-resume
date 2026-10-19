@@ -286,6 +286,17 @@ export function Support() {
 						</li>
 					))}
 				</ul>
+				<div className="grid max-w-[28em] gap-3 border-t border-line pt-5">
+					<h3 className="font-display text-2xl text-ink">{t`A second pair of eyes.`}</h3>
+					<p className="font-ui text-sm leading-normal text-ink-2">
+						{t`Exchange resume feedback, ask questions, and help shape Reactive Resume with the community.`}
+					</p>
+					<a href="https://discord.gg/jSVSJyWd2k" className={cn(pillLinkClass, "w-fit")}>
+						<Icon name="chat-text" size={18} />
+						{t`Join the Discord community`}
+						<Icon name="arrow-up-right" size={16} />
+					</a>
+				</div>
 			</div>
 
 			<div className="flex w-[min(100%,400px)] flex-col items-center justify-self-center">

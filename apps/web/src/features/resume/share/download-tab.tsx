@@ -336,6 +336,22 @@ export function DownloadTab({ onReview }: DownloadTabProps) {
 				onDownload={() => void download(format)}
 				onDownloadPdf={format === "pdf" ? undefined : () => void download("pdf")}
 			/>
+			{state === "done" && (
+				<div className="grid gap-1.5 rounded-[10px] border border-line p-3 text-[13px] leading-[19px]">
+					<a
+						href="https://discord.gg/9kAqrGcwn5"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="flex items-center gap-2 font-medium text-accent-text underline underline-offset-2 hover:text-accent-hover"
+					>
+						<Icon name="chat-text" size={18} />
+						<Trans>Get resume feedback on Discord</Trans>
+					</a>
+					<p className="text-ink-2">
+						<Trans>Ask the community. Remove personal details before posting.</Trans>
+					</p>
+				</div>
+			)}
 		</div>
 	);
 }

@@ -3,6 +3,7 @@ import type { ResumeDocument } from "@/draft/types";
 import { plural } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useRouter } from "expo-router";
+import { openBrowserAsync } from "expo-web-browser";
 import { useRef, useState } from "react";
 import { View } from "react-native";
 import { lintResumeForAts } from "@reactive-resume/resume/ats";
@@ -15,7 +16,7 @@ import { client } from "@/api/client";
 import { useLetterStore, useResumeStore } from "@/draft";
 import { useApplications } from "@/features/applications/queries";
 import { routes } from "@/routes";
-import { Banner, Button, ListRow, SelectSheet, Switch, Text, TextField, useTheme } from "@/ui";
+import { Banner, Button, ListRow, SelectSheet, Switch, Text, TextField, showToast, useTheme } from "@/ui";
 
 type DownloadProps = { resume: ResumeDocument; offline: boolean };
 export function DownloadTab({ resume, offline }: DownloadProps) {
@@ -31,6 +32,7 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 	const [format, setFormat] = useState<ExportFormat>("pdf");
 	const [name, setName] = useState(safeFileName(t`${resume.data.basics.name || resume.name}-Resume`));
 	const [busy, setBusy] = useState(false);
+	const [exportReady, setExportReady] = useState(false);
 	const active = useRef(false);
 	const [error, setError] = useState<string | null>(null);
 	const formats: { id: ExportFormat; label: string; description: string }[] = [
@@ -56,6 +58,7 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 		if (active.current) return;
 		active.current = true;
 		setBusy(true);
+		setExportReady(false);
 		setError(null);
 		try {
 			if (chosen !== "pdf" || !offline) await flushResume(resume.id);
@@ -93,6 +96,7 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 			}
 			await shareExport(file, chosen);
 			if (letterFile) await shareExport(letterFile, chosen);
+			setExportReady(true);
 		} catch (cause) {
 			setError(cause instanceof Error ? cause.message : t`Couldn't export. Try again.`);
 		} finally {
@@ -126,6 +130,19 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 				disabled={!name.trim() || (offline && format !== "pdf") || (offline && withLetter)}
 				onPress={() => void download(format)}
 			/>
+			{exportReady && (
+				<ListRow
+					title={t`Get resume feedback on Discord`}
+					subtitle={t`Ask the community. Remove personal details before posting.`}
+					leading="discord-logo"
+					external
+					onPress={() => {
+						void openBrowserAsync("https://discord.gg/9kAqrGcwn5").catch(() =>
+							showToast({ message: t`Couldn't open the browser. Try again.` }),
+						);
+					}}
+				/>
+			)}
 			{((error && format !== "pdf") || (offline && (format !== "pdf" || withLetter))) && (
 				<Button
 					label={t`Share PDF instead`}
@@ -151,6 +168,7 @@ export function DownloadTab({ resume, offline }: DownloadProps) {
 				onChange={(value) => {
 					setFormat(value);
 					setError(null);
+					setExportReady(false);
 				}}
 			/>
 			{linked?.coverLetterId && (

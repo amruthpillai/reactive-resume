@@ -188,7 +188,7 @@ export function Faq() {
 					<Trans>
 						9 short answers to what people ask before they start. Anything else, ask on{" "}
 						<a
-							href="https://discord.gg/aSyA5ZSxpb"
+							href="https://discord.gg/jSVSJyWd2k"
 							className="text-accent-text italic underline underline-offset-[3px] transition-colors hover:text-accent-hover"
 						>
 							Discord

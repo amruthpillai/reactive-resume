@@ -139,6 +139,7 @@ const exportBoundary = {
 	printResume: async () => calls.push("print"),
 };
 const { DownloadTab } = load("features/share/download.tsx", {
+	"expo-web-browser": { openBrowserAsync: async (url) => calls.push({ browser: url }) },
 	"@reactive-resume/resume/ats": { lintResumeForAts: () => ({ findings: [] }) },
 	"@reactive-resume/resume/cover-letter": {},
 	"./document": document,
@@ -170,16 +171,39 @@ assert.equal(control(tree, "Share sections").value, "history", "Explicit version
 reset();
 tree = render(DownloadTab, { resume, offline: false });
 assert.equal(control(tree, "File name").value, "Alex Example-Resume");
+const communityInvite = (view) => nodes(view).find((node) => node.props.title === "Get resume feedback on Discord");
+assert.equal(communityInvite(tree), undefined, "No community invitation before an export");
 holdExport = true;
 control(tree, "Share PDF").onPress();
 control(tree, "Share PDF").onPress();
 await settle();
 assert.equal(calls.filter((call) => call?.export).length, 1, "Repeated taps must not duplicate generation");
+assert.equal(
+	communityInvite(render(DownloadTab, { resume, offline: false })),
+	undefined,
+	"No invitation while preparing",
+);
 releaseExport();
 await settle();
 holdExport = false;
 assert.equal(calls.filter((call) => call?.shared === "pdf").length, 1);
 assert.equal(calls.find((call) => call?.export).export.name, "Alex Example-Resume");
+tree = render(DownloadTab, { resume, offline: false });
+assert.ok(communityInvite(tree), "A prepared export offers optional peer feedback");
+assert.equal(
+	calls.some((call) => call?.browser),
+	false,
+	"Export never opens Discord automatically",
+);
+await communityInvite(tree).props.onPress();
+assert.equal(calls.at(-1).browser, "https://discord.gg/9kAqrGcwn5");
+control(tree, "Print").onPress();
+await settle();
+assert.equal(
+	communityInvite(render(DownloadTab, { resume, offline: false })),
+	undefined,
+	"Printing does not trigger an invitation",
+);
 
 reset();
 state = {
@@ -211,6 +235,7 @@ control(tree, "Download DOCX").onPress();
 await settle();
 tree = render(DownloadTab, { resume, offline: false });
 assert.ok(nodes(tree).some((node) => node.props.message === "Export unavailable"));
+assert.equal(communityInvite(tree), undefined, "Failed exports do not trigger an invitation");
 rejectExport = false;
 control(tree, "Share PDF instead").onPress();
 await settle();
