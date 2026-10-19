@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import { expect, it, vi } from "vitest";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
@@ -41,7 +41,12 @@ vi.mock("@reactive-resume/resume/ats-pdf", () => ({
 			if (gap > Math.max(20, 2.5 * Math.max(previous.fontSize, span.fontSize, 1))) groups.push([span]);
 			else current.push(span);
 		}
-		return groups.map((group) => ({ ...line, text: group.map((span) => span.text).join(" "), spans: group }));
+		return groups.map((group) => ({
+			...line,
+			x: Math.min(...group.map((span) => span.x)),
+			text: group.map((span) => span.text).join(" "),
+			spans: group,
+		}));
 	},
 }));
 
@@ -92,19 +97,19 @@ it("shows every column of a line that holds headings", async () => {
 		charCount: 1,
 		lines: [
 			{
+				text: "Experience Skills Education",
+				spans: [
+					{ text: "Experience", x: 30, width: 60, fontSize: 10 },
+					{ text: "Skills", x: 220, width: 40, fontSize: 10 },
+					{ text: "Education", x: 410, width: 60, fontSize: 10 },
+				],
+			},
+			{
 				text: "Unity Engine Unreal Engine Programming Languages",
 				spans: [
 					{ text: "Unity Engine", x: 30, width: 60, fontSize: 10 },
 					{ text: "Unreal Engine", x: 220, width: 60, fontSize: 10 },
 					{ text: "Programming Languages", x: 410, width: 100, fontSize: 10 },
-				],
-			},
-			{
-				text: "Expert Advanced Expert",
-				spans: [
-					{ text: "Expert", x: 30, width: 30, fontSize: 10 },
-					{ text: "Advanced", x: 220, width: 40, fontSize: 10 },
-					{ text: "Expert", x: 410, width: 30, fontSize: 10 },
 				],
 			},
 			{
@@ -117,9 +122,9 @@ it("shows every column of a line that holds headings", async () => {
 		],
 	};
 	mocks.semantics.headings = [
-		{ lineIndex: 0, text: "Unity Engine" },
-		{ lineIndex: 0, text: "Unreal Engine" },
-		{ lineIndex: 0, text: "Programming Languages" },
+		{ lineIndex: 0, text: "Experience" },
+		{ lineIndex: 0, text: "Skills" },
+		{ lineIndex: 0, text: "Education" },
 		{ lineIndex: 2, text: "Unity Certified Expert: Programmer" },
 	];
 	useEditorStore.getState().reset();
@@ -134,10 +139,18 @@ it("shows every column of a line that holds headings", async () => {
 	);
 
 	// Every column piece of a flagged line is on the page — the earlier map kept only the last one.
-	await screen.findByText("▸ UNITY ENGINE");
-	expect(screen.getByText("▸ UNREAL ENGINE")).toBeTruthy();
-	expect(screen.getByText("▸ PROGRAMMING LANGUAGES")).toBeTruthy();
+	await screen.findByText("▸ EXPERIENCE");
+	expect(screen.getByText("▸ SKILLS")).toBeTruthy();
+	expect(screen.getByText("▸ EDUCATION")).toBeTruthy();
+	// The next row's pieces sort back into their columns instead of merging under the last heading.
+	const sectionOf = (heading: string) => {
+		const section = screen.getByText(heading).closest("section");
+		expect(section).not.toBeNull();
+		return within(section as HTMLElement);
+	};
+	expect(sectionOf("▸ EXPERIENCE").getByText("Unity Engine")).toBeTruthy();
+	expect(sectionOf("▸ SKILLS").getByText("Unreal Engine")).toBeTruthy();
+	expect(sectionOf("▸ EDUCATION").getByText("Programming Languages")).toBeTruthy();
 	// A content piece beside a recognised heading still shows as a line, not swallowed by the group.
 	expect(screen.getByText("March 2022")).toBeTruthy();
-	expect(screen.getByText("Expert Advanced Expert")).toBeTruthy();
 });
