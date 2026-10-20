@@ -125,7 +125,7 @@ export function ApplicationList({ applications, showClosed, selectedId, onOpen }
 
 	return (
 		<div className="grid min-w-0 content-start gap-3">
-			<table className="w-full border-collapse text-sm">
+			<table className={cn("w-full border-collapse text-sm", !phone && "table-fixed")}>
 				{!phone && (
 					<thead>
 						<tr className="border-b border-line text-xs text-ink-3">
@@ -135,14 +135,14 @@ export function ApplicationList({ applications, showClosed, selectedId, onOpen }
 								</span>
 							</th>
 							{header("role", t`Role`)}
-							{header("next", t`Next step`)}
-							<th scope="col" className="px-2 text-start font-medium max-lg:hidden">
+							{header("next", t`Next step`, "w-1/4")}
+							<th scope="col" className="w-32 px-2 text-start font-medium max-lg:hidden">
 								<Trans>Stage</Trans>
 							</th>
-							<th scope="col" className="px-2 text-start font-medium">
+							<th scope="col" className="w-20 px-2 text-start font-medium">
 								<Trans>Sent</Trans>
 							</th>
-							{header("updated", t`Updated`, "max-md:hidden")}
+							{header("updated", t`Updated`, "w-28 max-md:hidden")}
 						</tr>
 					</thead>
 				)}
@@ -284,7 +284,7 @@ function ApplicationRow({ application, phone, selected, checked, onCheck, onOpen
 			<td className="px-2">
 				<span className={cn("flex items-center gap-1.5", tone)}>
 					<Icon name={next.icon} size={16} className="shrink-0" />
-					<span className="truncate">{next.title}</span>
+					<span className="min-w-0 truncate">{next.title}</span>
 				</span>
 			</td>
 			<td className="px-2 max-lg:hidden">
