@@ -69,12 +69,12 @@ export function useAuthAccounts() {
 	});
 
 	const getAccountByProviderId = useCallback(
-		(providerId: string) => accounts?.find((account) => account.providerId === providerId),
+		(providerId: AuthProvider | (string & {})) => accounts?.find((account) => account.providerId === providerId),
 		[accounts],
 	);
 
 	const hasAccount = useCallback(
-		(providerId: string) => !!getAccountByProviderId(providerId),
+		(providerId: AuthProvider | (string & {})) => !!getAccountByProviderId(providerId),
 		[getAccountByProviderId],
 	);
 
@@ -92,9 +92,15 @@ export function useAuthProviderActions() {
 	const queryClient = useQueryClient();
 	const link = useCallback(async (provider: AuthProvider) => {
 		const providerName = getProviderName(provider);
-		const toastId = toast.add({ type: "loading", description: t`Linking your ${providerName} account...` });
+		const toastId = toast.add({
+			type: "loading",
+			description: t`Linking your ${providerName} account...`,
+		});
 
-		const { error } = await authClient.linkSocial({ provider, callbackURL: "/dashboard/settings/account" });
+		const { error } = await authClient.linkSocial({
+			provider,
+			callbackURL: "/dashboard/settings/account",
+		});
 
 		if (error) {
 			toast.add({
@@ -114,6 +120,10 @@ export function useAuthProviderActions() {
 		toast.close(toastId);
 	}, []);
 
+	/**
+	 * Unlinks a social account. Better Auth's /unlink-account endpoint expects
+	 * the internal database account ID (`account.id`), not `account.accountId`.
+	 */
 	const unlink = useCallback(
 		async (provider: AuthProvider, accountId: string) => {
 			const providerName = getProviderName(provider);

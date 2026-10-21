@@ -80,7 +80,7 @@ export function SecuritySection() {
 						description={hasAccount(provider) ? <Trans>Connected</Trans> : <Trans>Not connected</Trans>}
 					>
 						{account ? (
-							<Button size="sm" variant="ghost" onClick={() => void unlink(provider, account.accountId)}>
+							<Button size="sm" variant="ghost" onClick={() => void unlink(provider, account.id)}>
 								<Trans>Disconnect</Trans>
 							</Button>
 						) : (
