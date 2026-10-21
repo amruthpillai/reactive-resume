@@ -13,10 +13,19 @@ vi.mock("../ai/service", () => ({ getModel: vi.fn() }));
 vi.mock("../ai-providers/service", () => ({ aiProvidersService: { getDefaultRunnable: vi.fn() } }));
 vi.mock("../resume/service", () => ({ resumeService: { getById: vi.fn(), create: vi.fn() } }));
 vi.mock("../cover-letters/service", () => ({ coverLetterService: { create: vi.fn() } }));
-vi.mock("../web-access/credentials", () => ({ webAccessService: { resolve: vi.fn().mockResolvedValue(null) } }));
+// A copy, so a test can set the server's SearXNG URL.
+vi.mock("@reactive-resume/env/server", async (importOriginal) => ({
+	env: { ...(await importOriginal<typeof import("@reactive-resume/env/server")>()).env },
+}));
+vi.mock("../web-access/credentials", async (importOriginal) => {
+	const { webAccessService } = await importOriginal<typeof import("../web-access/credentials")>();
+	return { webAccessService: { ...webAccessService, resolve: vi.fn().mockResolvedValue(null) } };
+});
+vi.mock("../web-access/regions", () => ({ searchScope: vi.fn(async () => ({ regions: ["AU"], locations: [] })) }));
 vi.mock("./posting", async (importOriginal) => ({
 	...(await importOriginal<typeof import("./posting")>()),
 	fetchJobPosting: vi.fn(),
+	searchJobPostings: vi.fn(),
 }));
 vi.mock("./service", () => ({
 	applicationService: { getById: vi.fn(), setAiResult: vi.fn(), update: vi.fn(), addNote: vi.fn() },
@@ -24,7 +33,8 @@ vi.mock("./service", () => ({
 
 const { aiRouter, generateJson, generatePlainText } = await import("./ai");
 const { aiProvidersService } = await import("../ai-providers/service");
-const { fetchJobPosting } = await import("./posting");
+const { fetchJobPosting, searchJobPostings } = await import("./posting");
+const { env } = await import("@reactive-resume/env/server");
 
 describe("copilot provider-failure translation", () => {
 	const schema = z.object({ summary: z.string() });
@@ -138,5 +148,43 @@ describe("posting import", () => {
 		expect(result.jobDescription).toBe(text.trim().slice(0, 20_000));
 		expect(result.postingSource).toMatchObject({ method: "paste", truncated: true, completeness: "incomplete" });
 		expect(generateText).not.toHaveBeenCalled();
+	});
+});
+
+describe("posting search", () => {
+	const context = {
+		user: {
+			id: "u1",
+			name: "Test",
+			email: "test@example.com",
+			emailVerified: true,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		},
+		locale: "en-US" as const,
+		reqHeaders: new Headers(),
+	};
+	const serverEnv = env as { WEB_SEARCH_SEARXNG_URL?: string };
+	beforeEach(() => {
+		vi.mocked(searchJobPostings).mockReset();
+		delete serverEnv.WEB_SEARCH_SEARXNG_URL;
+	});
+
+	it("searches through the server's SearXNG without a saved web connection", async () => {
+		serverEnv.WEB_SEARCH_SEARXNG_URL = "http://searxng:8080";
+		const found = [{ url: "https://jobs.example.com/designer", title: "Designer", description: "Berlin" }];
+		vi.mocked(searchJobPostings).mockResolvedValue(found);
+		await expect(call(aiRouter.searchPostings, { query: "designer" }, { context })).resolves.toEqual(found);
+		expect(searchJobPostings).toHaveBeenCalledWith(
+			"designer",
+			expect.objectContaining({ connection: null, userId: "u1", regions: ["AU"], locale: "en-US" }),
+		);
+	});
+
+	it("reports search unavailable with neither SearXNG nor a web connection", async () => {
+		await expect(call(aiRouter.searchPostings, { query: "designer" }, { context })).rejects.toMatchObject({
+			code: "SEARCH_UNAVAILABLE",
+		});
+		expect(searchJobPostings).not.toHaveBeenCalled();
 	});
 });

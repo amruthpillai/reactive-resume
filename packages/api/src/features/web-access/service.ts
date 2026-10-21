@@ -222,9 +222,10 @@ export async function readPage(input: string, context: WebAccessContext): Promis
 /**
  * Explicit settings test. Provider operations are independent and never use the built-in fallback. Search is tested
  * against SearXNG when the server sends searches there, and the log names which service each operation tested.
+ * Without a connection, reading is not tested and reports `unavailable`: only the built-in reader serves it.
  */
 export async function probeWebAccess(
-	connection: WebAccessConnection,
+	connection: WebAccessConnection | null,
 	context: { userId: string; signal?: AbortSignal | undefined; region?: string | undefined },
 ) {
 	const signal = deadline(context.signal);
@@ -232,12 +233,13 @@ export async function probeWebAccess(
 	const searxng = env.WEB_SEARCH_SEARXNG_URL;
 	const probe = async (operation: "search" | "read") => {
 		const started = Date.now();
-		const provider = operation === "search" && searxng ? "searxng" : connection.provider;
+		const provider = operation === "search" && searxng ? "searxng" : (connection?.provider ?? "builtin");
 		try {
-			if (operation === "search")
-				await (searxng
-					? searxngSearch("example domain", { baseUrl: searxng, region: context.region, signal })
-					: externalSearch("example domain", { connection, signal, region: context.region }));
+			if (operation === "search" && searxng)
+				await searxngSearch("example domain", { baseUrl: searxng, region: context.region, signal });
+			else if (!connection) throw new WebAccessError("unavailable");
+			else if (operation === "search")
+				await externalSearch("example domain", { connection, signal, region: context.region });
 			else {
 				const url = await assertPublicTarget("https://example.com/", signal);
 				const page = await externalRead(url.toString(), { connection, signal });

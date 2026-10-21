@@ -34,7 +34,13 @@ function assertPersonalKeysAllowed() {
 		throw new ORPCError("PRECONDITION_FAILED", { message: "Credential encryption is not configured." });
 }
 
+/** Search runs through the web connection or, without one, through the operator's SearXNG. Reading needs neither. */
+function canSearch(hasConnection: boolean) {
+	return hasConnection || !!env.WEB_SEARCH_SEARXNG_URL;
+}
+
 export const webAccessService = {
+	canSearch,
 	status: async (userId: string) => {
 		const global = serverConfig();
 		const saved = !global && env.ENCRYPTION_SECRET ? await savedCredential(userId) : undefined;
@@ -45,8 +51,7 @@ export const webAccessService = {
 			provider,
 			managed: !!global,
 			canSave: !global && !!env.ENCRYPTION_SECRET,
-			// An operator's SearXNG serves search without any provider connection.
-			search: provider !== null || !!env.WEB_SEARCH_SEARXNG_URL,
+			search: canSearch(provider !== null),
 			read: true as const,
 		};
 	},

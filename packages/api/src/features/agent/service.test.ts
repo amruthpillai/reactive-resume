@@ -155,7 +155,7 @@ vi.mock("../ai-providers/service", () => ({
 	aiProvidersService: aiProvidersServiceMock,
 }));
 vi.mock("../web-access/credentials", () => ({
-	webAccessService: { resolve: vi.fn(async () => null) },
+	webAccessService: { resolve: vi.fn(async () => null), canSearch: vi.fn(() => false) },
 }));
 vi.mock("../web-access/service", () => ({
 	searchWeb: vi.fn(),
@@ -449,6 +449,14 @@ describe("agentService.messages.send", () => {
 			signal,
 			regions: ["DE", "FR"],
 		});
+
+		// The server's SearXNG gives the assistant web search without a web connection.
+		expect(vi.mocked(buildAgentTools).mock.calls[0]?.[0]).toMatchObject({ externalSearch: false });
+		const { webAccessService } = await import("../web-access/credentials");
+		vi.mocked(webAccessService.canSearch).mockReturnValueOnce(true);
+		await send();
+		expect(webAccessService.canSearch).toHaveBeenLastCalledWith(false);
+		expect(vi.mocked(buildAgentTools).mock.calls[2]?.[0]).toMatchObject({ externalSearch: true });
 	});
 
 	it("persists canonical attachment UI parts, links selected attachments, and appends server-read model parts", async () => {

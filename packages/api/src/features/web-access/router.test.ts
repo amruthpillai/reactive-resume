@@ -10,7 +10,9 @@ vi.mock("../../context", async () => {
 	const { os } = await vi.importActual<typeof import("@orpc/server")>("@orpc/server");
 	return { protectedProcedure: os.$context<{ user: { id: string } }>() };
 });
-vi.mock("./credentials", () => ({ webAccessService: { resolve: vi.fn() } }));
+vi.mock("./credentials", () => ({
+	webAccessService: { resolve: vi.fn(), canSearch: vi.fn((hasConnection: boolean) => hasConnection) },
+}));
 vi.mock("./service", () => ({ probeWebAccess: vi.fn() }));
 vi.mock("./regions", () => ({ searchScope: vi.fn() }));
 
@@ -37,5 +39,30 @@ describe("web connection probe transport", () => {
 			{ provider: "tavily", apiKey: "test-only-key" },
 			expect.objectContaining({ userId: "alice", region: "AU" }),
 		);
+	});
+
+	it("tests the server's SearXNG search without a web connection", async () => {
+		vi.mocked(webAccessService.resolve).mockResolvedValue(null);
+		vi.mocked(webAccessService.canSearch).mockReturnValueOnce(true);
+		vi.mocked(searchScope).mockResolvedValue({ regions: ["AU"], locations: [] });
+		const result = { search: { success: true }, read: { success: false, error: "unavailable" as const } };
+		vi.mocked(probeWebAccess).mockResolvedValue(result);
+		const client = createRouterClient(webAccessRouter, {
+			context: { user: { id: "alice" }, reqHeaders: new Headers() } as never,
+		});
+		await expect(client.test()).resolves.toEqual(result);
+		expect(webAccessService.canSearch).toHaveBeenCalledWith(false);
+		expect(probeWebAccess).toHaveBeenLastCalledWith(null, expect.objectContaining({ userId: "alice", region: "AU" }));
+	});
+
+	it("refuses the test with neither SearXNG nor a web connection", async () => {
+		vi.mocked(webAccessService.resolve).mockResolvedValue(null);
+		vi.mocked(searchScope).mockResolvedValue({ regions: [], locations: [] });
+		vi.mocked(probeWebAccess).mockClear();
+		const client = createRouterClient(webAccessRouter, {
+			context: { user: { id: "alice" }, reqHeaders: new Headers() } as never,
+		});
+		await expect(client.test()).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
+		expect(probeWebAccess).not.toHaveBeenCalled();
 	});
 });

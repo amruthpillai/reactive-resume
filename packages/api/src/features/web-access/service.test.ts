@@ -653,6 +653,13 @@ describe("search through a self-hosted SearXNG", () => {
 			expect.objectContaining({ provider: "exa", operation: "read", outcome: "success" }),
 		);
 	});
+
+	it("tests SearXNG search and reports reading as built-in only without a connection", async () => {
+		const result = await probeWebAccess(null, { userId: "user", region: "AU" });
+		expect(result).toEqual({ search: { success: true }, read: { success: false, error: "unavailable" } });
+		expect(requests.map((request) => [request.provider, request.operation])).toEqual([["searxng", "search"]]);
+		expect(fixtures.direct).not.toHaveBeenCalled();
+	});
 });
 
 describe("public targets and bounded fallback", () => {

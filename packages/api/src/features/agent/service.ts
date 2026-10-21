@@ -766,6 +766,8 @@ function createAgent(input: {
 	};
 	model: ReturnType<typeof getModel>;
 	connection: WebAccessConnection | null;
+	/** Whether web search is available: through the connection, or the server's SearXNG without one. */
+	search: boolean;
 	signal: AbortSignal;
 }) {
 	// One greppable JSON line per tool execution.
@@ -805,7 +807,7 @@ function createAgent(input: {
 	const tools = buildAgentTools({
 		document: document?.kind ?? null,
 		// The career coach searches only when the user switched Web research on for this message.
-		externalSearch: input.connection !== null && (!input.career || input.career.web),
+		externalSearch: input.search && (!input.career || input.career.web),
 		signal: input.signal,
 		handlers: {
 			searchWeb: timedToolHandler("search_web", async (query: string, signal: AbortSignal) => {
@@ -1334,8 +1336,9 @@ export const agentService = {
 							messageRows.filter((row) => row.createdAt > memoryCutoff || row.id === sourceMessageId).map(toMessage)
 						: messages;
 				const connection = await webAccessService.resolve(input.userId);
+				const search = webAccessService.canSearch(connection !== null);
 				const modelMessages = await convertToModelMessages(
-					replay.map((message) => toModelInputMessage(message, runnableProvider, connection !== null)),
+					replay.map((message) => toModelInputMessage(message, runnableProvider, search)),
 				);
 				const attachmentModelParts = buildAttachmentModelParts(await readAttachmentModelInputs(attachmentsForModel));
 
@@ -1381,6 +1384,7 @@ export const agentService = {
 						: {}),
 					posting,
 					connection,
+					search,
 					signal: controller.signal,
 					provider: {
 						provider: runnableProvider.provider,

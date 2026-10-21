@@ -169,7 +169,7 @@ export const aiRouter = {
 			operationId: "searchApplicationPostings",
 			summary: "Search job postings",
 			description:
-				"Searches using the selected Firecrawl, Tavily or Exa connection. Returns up to five public links to review and import. Requires authentication.",
+				"Searches through the server's SearXNG when it has one, otherwise the selected Firecrawl, Tavily or Exa connection. Returns up to five public links to review and import. Requires authentication.",
 			...reserved,
 		})
 		.input(z.object({ query: z.string().trim().min(2).max(500) }))
@@ -184,7 +184,7 @@ export const aiRouter = {
 				webAccessService.resolve(context.user.id),
 				searchScope(context.user.id),
 			]);
-			if (!connection) throw new ORPCError("SEARCH_UNAVAILABLE", { status: 503 });
+			if (!webAccessService.canSearch(connection !== null)) throw new ORPCError("SEARCH_UNAVAILABLE", { status: 503 });
 			try {
 				return await searchJobPostings(input.query, {
 					connection,
