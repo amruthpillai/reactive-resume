@@ -9,15 +9,22 @@ export function parseResponse<T>(schema: z.ZodType<T>, input: unknown): T {
 }
 
 /** Never retain provider error bodies, which can echo credentials and request content. */
-export async function postJson(url: string, headers: Record<string, string>, body: unknown, signal: AbortSignal) {
-	signal.throwIfAborted();
-	const response = await fetch(url, {
-		method: "POST",
-		headers: { "content-type": "application/json", ...headers },
-		body: JSON.stringify(body),
+export function postJson(url: string, headers: Record<string, string>, body: unknown, signal: AbortSignal) {
+	return requestJson(
+		url,
+		{ method: "POST", headers: { "content-type": "application/json", ...headers }, body: JSON.stringify(body) },
 		signal,
-		redirect: "error",
-	});
+	);
+}
+
+/** The GET form of `postJson`, with the same response limits, redirect refusal and error mapping. */
+export function getJson(url: string, headers: Record<string, string>, signal: AbortSignal) {
+	return requestJson(url, { method: "GET", headers: { accept: "application/json", ...headers } }, signal);
+}
+
+async function requestJson(url: string, init: RequestInit, signal: AbortSignal) {
+	signal.throwIfAborted();
+	const response = await fetch(url, { ...init, signal, redirect: "error" });
 	if (!response.ok) {
 		await response.body?.cancel();
 		throw new WebAccessError(

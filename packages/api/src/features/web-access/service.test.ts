@@ -15,13 +15,15 @@ const fixtures = vi.hoisted(() => ({
 	directLocation: "",
 	directDelay: 0,
 	directContentType: "text/html",
+	env: { FLAG_DISABLE_API_RATE_LIMIT: false } as {
+		FLAG_DISABLE_API_RATE_LIMIT: boolean;
+		WEB_SEARCH_SEARXNG_URL?: string;
+	},
 }));
 vi.mock("../../redis", () => ({
 	createRateLimiter: () => ({ limit: fixtures.limit }),
 }));
-vi.mock("@reactive-resume/env/server", () => ({
-	env: { FLAG_DISABLE_API_RATE_LIMIT: false },
-}));
+vi.mock("@reactive-resume/env/server", () => ({ env: fixtures.env }));
 vi.mock("node:dns/promises", () => ({ lookup: vi.fn() }));
 vi.mock("node:dns", () => ({ lookup: vi.fn() }));
 vi.mock("node:https", () => ({
@@ -78,11 +80,13 @@ let delay = 0;
 let searchStatus: number | undefined;
 let onRequest: (() => void) | undefined;
 let respond:
-	| ((request: { provider: string; body: Record<string, unknown> }) => { status?: number; body?: unknown })
+	| ((request: { provider: string; body: Record<string, unknown> }) => { status?: number; body?: unknown } | undefined)
 	| undefined;
 const requests: {
 	provider: string;
 	operation: string;
+	method: string | undefined;
+	url: string;
 	body: Record<string, unknown>;
 	raw: string;
 	auth: string | undefined;
@@ -128,14 +132,16 @@ const readResponse = (provider: WebAccessProvider, content = "# Designer\nAccess
 const server = createServer(async (request, result) => {
 	const chunks: Buffer[] = [];
 	for await (const chunk of request) chunks.push(chunk);
-	const parts = (request.url ?? "").split("/");
+	const parts = (request.url ?? "").split("?", 1)[0]?.split("/") ?? [];
 	const provider = (parts[1] === "v2" ? "firecrawl" : parts[1]) as WebAccessProvider;
 	const operation = parts[2] === "search" ? "search" : "read";
 	const raw = Buffer.concat(chunks).toString();
-	const body = JSON.parse(raw) as Record<string, unknown>;
+	const body = (raw ? JSON.parse(raw) : {}) as Record<string, unknown>;
 	requests.push({
 		provider,
 		operation,
+		method: request.method,
+		url: request.url ?? "",
 		body,
 		raw,
 		auth: request.headers.authorization ?? (request.headers["x-api-key"] as string | undefined),
@@ -231,6 +237,7 @@ beforeEach(() => {
 	fixtures.directLocation = "";
 	fixtures.directDelay = 0;
 	fixtures.directContentType = "text/html";
+	delete fixtures.env.WEB_SEARCH_SEARXNG_URL;
 });
 afterEach(() => {
 	vi.restoreAllMocks();
@@ -550,6 +557,101 @@ describe("connection test region", () => {
 		await probeWebAccess(connection("tavily"), { userId: "user" });
 		const search = requests.find((request) => request.operation === "search");
 		expect(search?.body).not.toHaveProperty("country");
+	});
+});
+
+describe("search through a self-hosted SearXNG", () => {
+	const searxngResults = { results: [{ url: `${URL}#apply`, title: "Designer", content: "Berlin" }], answers: [] };
+	const searxng = () => requests.filter((request) => request.provider === ("searxng" as WebAccessProvider));
+	const language = (request: { url: string }) => new globalThis.URL(request.url, endpoint).searchParams.get("language");
+	beforeEach(() => {
+		fixtures.env.WEB_SEARCH_SEARXNG_URL = `${endpoint}/searxng`;
+		respond = ({ provider }) => (provider === ("searxng" as WebAccessProvider) ? { body: searxngResults } : undefined);
+	});
+
+	it("searches SearXNG without a web connection", async () => {
+		expect(await searchWeb("designer", { userId: "user", connection: null })).toEqual([
+			{ url: URL, title: "Designer", snippet: "Berlin" },
+		]);
+		expect(requests).toHaveLength(1);
+		expect(requests[0]).toMatchObject({ provider: "searxng", operation: "search", method: "GET" });
+		expect(requests[0]?.url).toBe("/searxng/search?q=designer&format=json");
+	});
+
+	it.each(PROVIDERS)("searches SearXNG instead of a saved %s connection", async (provider) => {
+		await searchWeb("designer", context(provider));
+		expect(requests.map((request) => request.provider)).toEqual(["searxng"]);
+		expect(requests[0]?.auth).toBeUndefined();
+	});
+
+	it("searches each region in the user's language through the same fan-out", async () => {
+		respond = ({ provider }) =>
+			provider === ("searxng" as WebAccessProvider) ? { body: searxngResults } : { status: 500 };
+		const results = await searchWeb(
+			"designer",
+			{ userId: "user", connection: null, regions: ["AU", "SG"], locale: "de-DE" },
+			(region) => `designer in ${region}`,
+		);
+		expect(results).toEqual([{ url: URL, title: "Designer", snippet: "Berlin" }]);
+		expect(Object.fromEntries(searxng().map((request) => [language(request), request.url]))).toEqual({
+			"de-AU": "/searxng/search?q=designer+in+AU&format=json&language=de-AU",
+			"de-SG": "/searxng/search?q=designer+in+SG&format=json&language=de-SG",
+		});
+	});
+
+	it("returns no results when SearXNG's engines all fail", async () => {
+		respond = () => ({ body: { results: [], unresponsive_engines: [["google", "timeout"]] } });
+		expect(await searchWeb("designer", { userId: "user", connection: null, regions: ["AU"] })).toEqual([]);
+	});
+
+	it("reports an unreachable SearXNG safely", async () => {
+		respond = () => ({ status: 502 });
+		await expect(searchWeb("designer", { userId: "user", connection: null })).rejects.toMatchObject({
+			reason: "unreachable",
+		});
+	});
+
+	it("rate-limits a SearXNG search once", async () => {
+		vi.stubEnv("NODE_ENV", "production");
+		await searchWeb("designer", { userId: "user", connection: null, regions: ["DE", "FR", "AU"] });
+		expect(searxng()).toHaveLength(3);
+		expect(fixtures.limit).toHaveBeenCalledTimes(1);
+	});
+
+	it("still reads through the saved connection, then the built-in reader", async () => {
+		expect(await readPage(URL, context("exa"))).toMatchObject({ method: "exa" });
+		expect(requests.map((request) => [request.provider, request.operation])).toEqual([["exa", "read"]]);
+		expect(fixtures.direct).not.toHaveBeenCalled();
+
+		requests.length = 0;
+		respond = () => ({ status: 500 });
+		expect(await readPage(URL, context("exa"))).toMatchObject({ method: "builtin", fallbackReason: "unreachable" });
+		expect(requests.map((request) => request.provider)).toEqual(["exa"]);
+		expect(fixtures.direct).toHaveBeenCalledTimes(1);
+	});
+
+	it("reads with the built-in reader when there is no connection", async () => {
+		expect(await readPage(URL, { userId: "user", connection: null })).toMatchObject({ method: "builtin" });
+		expect(requests).toHaveLength(0);
+	});
+
+	it("tests search against SearXNG and reading against the connection", async () => {
+		respond = ({ provider }) => (provider === ("searxng" as WebAccessProvider) ? { status: 503 } : undefined);
+		const result = await probeWebAccess(connection("exa"), { userId: "user", region: "AU" });
+		expect(result).toEqual({ search: { success: false, error: "unreachable" }, read: { success: true } });
+		expect(requests.map((request) => [request.provider, request.operation]).sort()).toEqual([
+			["exa", "read"],
+			["searxng", "search"],
+		]);
+		expect(language(searxng()[0] ?? { url: "" })).toBe("en-AU");
+		expect(console.info).toHaveBeenCalledWith(
+			"[web-access]",
+			expect.objectContaining({ provider: "searxng", operation: "search", outcome: "unreachable" }),
+		);
+		expect(console.info).toHaveBeenCalledWith(
+			"[web-access]",
+			expect.objectContaining({ provider: "exa", operation: "read", outcome: "success" }),
+		);
 	});
 });
 

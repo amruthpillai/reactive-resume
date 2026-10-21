@@ -45,7 +45,8 @@ export const webAccessService = {
 			provider,
 			managed: !!global,
 			canSave: !global && !!env.ENCRYPTION_SECRET,
-			search: provider !== null,
+			// An operator's SearXNG serves search without any provider connection.
+			search: provider !== null || !!env.WEB_SEARCH_SEARXNG_URL,
 			read: true as const,
 		};
 	},

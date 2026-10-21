@@ -11,11 +11,11 @@ API accounts. This guide adds optional keyword search, enhanced page reading and
 | ------------------------ | --------------------------------------------------------------------------------- | --------------------------------------------- |
 | Built-in reader          | Reads supported public pages.                                                     | Active without credentials.                   |
 | Firecrawl, Tavily or Exa | One selected connection supplies search and enhanced reading.                     | Optional keyword search and enhanced reading. |
-| SearXNG                  | Supplies web search results to your self-hosted Firecrawl service.                | Optional alternative search backend.          |
+| SearXNG                  | Searches the web for Reactive Resume directly, or for your self-hosted Firecrawl. | Optional alternative search backend.          |
 | AI provider              | Extracts role, company, salary, requirements and other details from posting text. | AI extraction and other AI features.          |
 
-Reactive Resume calls the selected web service and AI provider separately. Only self-hosted Firecrawl uses SearXNG.
-Assistant web search requires a configured Firecrawl, Tavily or Exa connection. Without one, the assistant can
+Reactive Resume calls the selected web service, SearXNG and the AI provider separately. Assistant web search
+requires a configured Firecrawl, Tavily or Exa connection, or a SearXNG search URL. Without either, the assistant can
 read supplied public URLs with the built-in reader or work from pasted text.
 
 ## 1. Choose shared services or personal keys
@@ -77,9 +77,10 @@ For host-run local development, publish Firecrawl's container port `3002` as hos
 Resume's email preview on `3002`. Add `WEB_ACCESS_PROVIDER="firecrawl"` and
 `WEB_ACCESS_API_URL="http://localhost:3102"` to Reactive Resume's `.env.local`.
 
-## 3. Add SearXNG to self-hosted Firecrawl (optional)
+## 3. Search through SearXNG (optional)
 
-Deploy SearXNG using its official [container installation guide](https://docs.searxng.org/admin/installation-docker.html).
+SearXNG can serve web search in two ways: Reactive Resume can query it directly, or your self-hosted Firecrawl can use
+it as its search backend. Either way, deploy SearXNG using its official [container installation guide](https://docs.searxng.org/admin/installation-docker.html).
 In its `settings.yml`, add `json` to the existing `search.formats` list, keeping other search settings:
 
 ```yaml
@@ -90,7 +91,32 @@ search:
 ```
 
 The [search settings reference](https://docs.searxng.org/admin/settings/settings_search.html) documents these formats.
-Then add the following to **Firecrawl's** environment, using an address reachable from its API and workers:
+
+### Search directly from Reactive Resume
+
+Add the following to **Reactive Resume's** environment, using an address reachable from the Reactive Resume server:
+
+```dotenv
+WEB_SEARCH_SEARXNG_URL="http://searxng:8080"
+```
+
+Use the base URL without `/search`; Reactive Resume appends it and requests JSON. Every web search then goes to SearXNG
+for all users, whether or not they have a web connection. Shared and personal `WEB_ACCESS_*` connections keep working
+beside it. Each of a user's search countries becomes one SearXNG request whose `language` combines the user's
+interface language with that country, such as `en-AU` or `de-SG`, or English with the country when the interface
+language is unknown. Engines that honour the locale favour that country, and the language part also favours pages
+written in that language. A search with no country sends no `language`, so SearXNG uses its own default.
+
+SearXNG only searches. Reading a page still uses the user's or the server's Firecrawl, Tavily or Exa connection, then
+the built-in reader. Some job sites block plain fetches, so keep a provider connection for reading if your users rely
+on those sites. **Test connection** then tests search against SearXNG and reading against that connection.
+
+When every SearXNG engine fails, SearXNG still answers with an empty result list, so searches show no results rather
+than an error. If results stay empty, check SearXNG's logs and the `unresponsive_engines` field of its JSON response.
+
+### Search through self-hosted Firecrawl
+
+Add the following to **Firecrawl's** environment, using an address reachable from its API and workers:
 
 ```dotenv
 SEARXNG_ENDPOINT="http://searxng:8080"
@@ -101,11 +127,13 @@ SEARXNG_ENDPOINT="http://searxng:8080"
 
 Replace `searxng` with your service name or network alias. Use the base URL without `/search`: Firecrawl appends that
 path and requests JSON, as shown in its [SearXNG adapter](https://github.com/firecrawl/firecrawl/blob/v2.11.162/apps/api/src/search/v2/searxng.ts).
-These variables belong to Firecrawl, not Reactive Resume. Your own SearXNG service is used only when Reactive Resume
-connects to your self-hosted Firecrawl.
+These variables belong to Firecrawl, not Reactive Resume.
 
-Restart SearXNG after changing settings, and recreate Firecrawl's services after changing its environment. To check
-JSON output, run this from a host or container that can reach SearXNG, replacing the address as needed:
+### Check JSON output
+
+Restart SearXNG after changing settings, then restart Reactive Resume or recreate Firecrawl's services after changing
+their environment. To check JSON output, run this from a host or container that can reach SearXNG, replacing the
+address as needed:
 
 ```bash
 curl --get 'http://searxng:8080/search' \
@@ -162,7 +190,7 @@ and restart or redeploy it. Keep keys in server configuration or secret storage,
 
 | Symptom                       | Check                                                                                                                                                                                                                 |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No keyword search             | Configure one shared connection or save a personal key in Web access.                                                                                                                                                 |
+| No keyword search             | Configure one shared connection, save a personal key in Web access, or set `WEB_SEARCH_SEARXNG_URL`.                                                                                                                  |
 | Enhanced access fails         | Test search and reading separately. Check provider credentials, quota and service support. For Firecrawl, also check its network address and [self-hosting guide](https://docs.firecrawl.dev/contributing/self-host). |
 | SearXNG returns HTML or `403` | Enable JSON and check proxy/access rules against its [search API](https://docs.searxng.org/dev/search_api.html).                                                                                                      |
 | AI extraction fails           | Check provider billing, key and model access; verify all required [AI variables](/self-hosting/environment-variables#ai-and-redis).                                                                                   |

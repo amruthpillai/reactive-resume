@@ -200,6 +200,8 @@ export const env = createEnv({
 		WEB_ACCESS_PROVIDER: z.enum(["firecrawl", "tavily", "exa"]).optional(),
 		WEB_ACCESS_API_KEY: z.string().trim().min(1).optional(),
 		WEB_ACCESS_API_URL: z.url({ protocol: /^https?$/ }).optional(),
+		// Optional operator-controlled SearXNG that takes over web search only; reading still uses the connection above.
+		WEB_SEARCH_SEARXNG_URL: z.url({ protocol: /^https?$/ }).optional(),
 		AI_PROVIDER: aiProviderSchema.optional(),
 		AI_MODEL: z.string().trim().min(1).optional(),
 		AI_API_KEY: z.string().trim().min(1).optional(),

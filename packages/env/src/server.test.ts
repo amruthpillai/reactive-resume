@@ -9,6 +9,7 @@ beforeEach(() => {
 		"WEB_ACCESS_PROVIDER",
 		"WEB_ACCESS_API_KEY",
 		"WEB_ACCESS_API_URL",
+		"WEB_SEARCH_SEARXNG_URL",
 		"AI_PROVIDER",
 		"AI_MODEL",
 		"AI_API_KEY",
@@ -80,6 +81,44 @@ describe("server web access configuration", () => {
 		vi.stubEnv("WEB_ACCESS_PROVIDER", "firecrawl");
 		vi.stubEnv("WEB_ACCESS_API_URL", "http://firecrawl:3002");
 		expect((await import("./server")).env.WEB_ACCESS_API_KEY).toBeUndefined();
+	});
+});
+
+describe("SearXNG search configuration", () => {
+	it.each(["http://searxng:8080", "https://search.example.com/searxng"])(
+		"accepts %s on its own, including a private operator address",
+		async (url) => {
+			vi.stubEnv("WEB_SEARCH_SEARXNG_URL", url);
+			const { env } = await import("./server");
+			expect(env.WEB_SEARCH_SEARXNG_URL).toBe(url);
+			expect(env.WEB_ACCESS_PROVIDER).toBeUndefined();
+		},
+	);
+	it("accepts it beside a shared web connection", async () => {
+		vi.stubEnv("WEB_SEARCH_SEARXNG_URL", "http://searxng:8080");
+		vi.stubEnv("WEB_ACCESS_PROVIDER", "exa");
+		vi.stubEnv("WEB_ACCESS_API_KEY", "test-key");
+		const { env } = await import("./server");
+		expect(env.WEB_SEARCH_SEARXNG_URL).toBe("http://searxng:8080");
+		expect(env.WEB_ACCESS_PROVIDER).toBe("exa");
+	});
+	it.each(["ftp://searxng:8080", "not a url"])("rejects %s", async (url) => {
+		vi.stubEnv("WEB_SEARCH_SEARXNG_URL", url);
+		vi.spyOn(console, "error").mockImplementation(() => {});
+		await expect(import("./server")).rejects.toThrow("Invalid environment variables");
+	});
+	it("keeps the shared web connection's own validation", async () => {
+		vi.stubEnv("WEB_SEARCH_SEARXNG_URL", "http://searxng:8080");
+		vi.stubEnv("WEB_ACCESS_PROVIDER", "tavily");
+		await expect(import("./server")).rejects.toThrow("Web access requires WEB_ACCESS_PROVIDER");
+	});
+});
+
+describe("unknown variables", () => {
+	it("ignores a variable the schema does not declare", async () => {
+		vi.stubEnv("RR_UNKNOWN_SETTING", "x");
+		const { env } = await import("./server");
+		expect(env).not.toHaveProperty("RR_UNKNOWN_SETTING");
 	});
 });
 
