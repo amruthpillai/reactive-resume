@@ -11,6 +11,7 @@ import { STALE_AGENT_RUN_TTL_MS } from "../agent/runs";
 import { aiProvidersService } from "../ai-providers/service";
 import { readOpenPosting, searchJobPostings } from "../applications/posting";
 import { webAccessService } from "../web-access/credentials";
+import { searchScope } from "../web-access/regions";
 import { generateCareer } from "./generate";
 import { matchPosting } from "./matching";
 import { noticeText } from "./notices";
@@ -150,9 +151,10 @@ type Posting = Awaited<ReturnType<typeof readOpenPosting>>;
  * never read again. Untracked roles are rechecked weekly so saved descriptions do not remain stale forever.
  */
 async function discover(userId: string, query: string) {
-	const connection = await webAccessService.resolve(userId);
+	const [connection, scope] = await Promise.all([webAccessService.resolve(userId), searchScope(userId)]);
 	const signal = AbortSignal.timeout(90_000);
-	const hits = await searchJobPostings(query, { userId, connection, signal });
+	// A background run has no request locale, so the place is named in English.
+	const hits = await searchJobPostings(query, { userId, connection, signal, ...scope });
 	const found = new Map<string, (typeof hits)[number]>();
 	for (const hit of hits) {
 		const url = canonicalOpportunityUrl(hit.url);

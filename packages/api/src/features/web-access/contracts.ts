@@ -60,6 +60,7 @@ export class WebAccessError extends Error {
 export const MAX_PAGE_BYTES = 2_000_000;
 export const MAX_CONTENT_CHARS = 20_000;
 export const MAX_SEARCH_RESULTS = 5;
+export const MAX_SEARCH_QUERY_CHARS = 512;
 export const WEB_ACCESS_DEADLINE_MS = 20_000;
 
 export type ProviderRequest = {

@@ -9,7 +9,7 @@ import { env } from "@reactive-resume/env/server";
 import { rateLimitConfig } from "@reactive-resume/utils/rate-limit";
 import { createRateLimiter } from "../../redis";
 import { abortable, assertPublicTarget, htmlToText, readBuiltinPage } from "./builtin";
-import { MAX_SEARCH_RESULTS, WEB_ACCESS_DEADLINE_MS, WebAccessError } from "./contracts";
+import { MAX_SEARCH_QUERY_CHARS, MAX_SEARCH_RESULTS, WEB_ACCESS_DEADLINE_MS, WebAccessError } from "./contracts";
 import { readExa, searchExa } from "./exa";
 import { readFirecrawl, searchFirecrawl } from "./firecrawl";
 import { readTavily, searchTavily } from "./tavily";
@@ -69,7 +69,7 @@ function log(operation: "search" | "read", provider: string, started: number, ou
 
 function searchInput(query: string) {
 	const input = query.trim();
-	if (!input || input.length > 512) throw new WebAccessError("malformed");
+	if (!input || input.length > MAX_SEARCH_QUERY_CHARS) throw new WebAccessError("malformed");
 	return input;
 }
 
@@ -195,14 +195,15 @@ export async function readPage(input: string, context: WebAccessContext): Promis
 /** Explicit settings test. Provider operations are independent and never use the built-in fallback. */
 export async function probeWebAccess(
 	connection: WebAccessConnection,
-	context: { userId: string; signal?: AbortSignal | undefined },
+	context: { userId: string; signal?: AbortSignal | undefined; region?: string | undefined },
 ) {
 	const signal = deadline(context.signal);
 	await consume(context.userId, signal);
 	const probe = async (operation: "search" | "read") => {
 		const started = Date.now();
 		try {
-			if (operation === "search") await externalSearch("example domain", { connection, signal });
+			if (operation === "search")
+				await externalSearch("example domain", { connection, signal, region: context.region });
 			else {
 				const url = await assertPublicTarget("https://example.com/", signal);
 				const page = await externalRead(url.toString(), { connection, signal });

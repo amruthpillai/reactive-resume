@@ -13,6 +13,7 @@ import { getModel } from "../ai/service";
 import { coverLetterService } from "../cover-letters/service";
 import { resumeService } from "../resume/service";
 import { webAccessService } from "../web-access/credentials";
+import { searchScope } from "../web-access/regions";
 import {
 	fetchJobPosting,
 	isPostingLink,
@@ -179,10 +180,19 @@ export const aiRouter = {
 			RATE_LIMIT_EXCEEDED: { message: "Too many web requests. Try again later.", status: 429 },
 		})
 		.handler(async ({ context, input, signal }) => {
-			const connection = await webAccessService.resolve(context.user.id);
+			const [connection, scope] = await Promise.all([
+				webAccessService.resolve(context.user.id),
+				searchScope(context.user.id),
+			]);
 			if (!connection) throw new ORPCError("SEARCH_UNAVAILABLE", { status: 503 });
 			try {
-				return await searchJobPostings(input.query, { connection, userId: context.user.id, signal });
+				return await searchJobPostings(input.query, {
+					connection,
+					userId: context.user.id,
+					signal,
+					...scope,
+					locale: context.locale,
+				});
 			} catch (error) {
 				signal?.throwIfAborted();
 				if (error instanceof PostingFetchError && error.reason === "rate-limit")

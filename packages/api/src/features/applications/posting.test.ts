@@ -186,6 +186,6 @@ describe("posting retrieval", () => {
 				description: "Berlin",
 			},
 		]);
-		expect(searchWeb).toHaveBeenCalledWith("designer Berlin job posting", context);
+		expect(searchWeb).toHaveBeenCalledWith("designer Berlin job posting", context, expect.any(Function));
 	});
 });

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vite-plus/test";
 import { createRouterClient } from "@orpc/server";
 import { WebAccessError } from "./contracts";
 import { webAccessService } from "./credentials";
+import { searchScope } from "./regions";
 import { webAccessRouter } from "./router";
 import { probeWebAccess } from "./service";
 
@@ -11,14 +12,30 @@ vi.mock("../../context", async () => {
 });
 vi.mock("./credentials", () => ({ webAccessService: { resolve: vi.fn() } }));
 vi.mock("./service", () => ({ probeWebAccess: vi.fn() }));
+vi.mock("./regions", () => ({ searchScope: vi.fn() }));
 
 describe("web connection probe transport", () => {
 	it("reports the shared retrieval limit as HTTP 429 instead of an internal server error", async () => {
 		vi.mocked(webAccessService.resolve).mockResolvedValue({ provider: "tavily", apiKey: "test-only-key" });
+		vi.mocked(searchScope).mockResolvedValue({ regions: [], locations: [] });
 		vi.mocked(probeWebAccess).mockRejectedValue(new WebAccessError("rate-limit"));
 		const client = createRouterClient(webAccessRouter, {
 			context: { user: { id: "alice" }, reqHeaders: new Headers() } as never,
 		});
 		await expect(client.test()).rejects.toMatchObject({ code: "RATE_LIMIT_EXCEEDED", status: 429 });
+	});
+
+	it("probes search in the user's first region", async () => {
+		vi.mocked(webAccessService.resolve).mockResolvedValue({ provider: "tavily", apiKey: "test-only-key" });
+		vi.mocked(searchScope).mockResolvedValue({ regions: ["AU", "DE"], locations: [] });
+		vi.mocked(probeWebAccess).mockResolvedValue({ search: { success: true }, read: { success: true } });
+		const client = createRouterClient(webAccessRouter, {
+			context: { user: { id: "alice" }, reqHeaders: new Headers() } as never,
+		});
+		await client.test();
+		expect(probeWebAccess).toHaveBeenCalledWith(
+			{ provider: "tavily", apiKey: "test-only-key" },
+			expect.objectContaining({ userId: "alice", region: "AU" }),
+		);
 	});
 });

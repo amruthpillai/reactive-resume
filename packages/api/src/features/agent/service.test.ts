@@ -161,6 +161,9 @@ vi.mock("../web-access/service", () => ({
 	searchWeb: vi.fn(),
 	readPage: vi.fn(),
 }));
+vi.mock("../web-access/regions", () => ({
+	searchScope: vi.fn(async () => ({ regions: ["DE", "FR"], locations: ["Berlin"] })),
+}));
 vi.mock("../resume/service", () => ({ resumeService: resumeServiceMock }));
 vi.mock("../cover-letters/service", () => ({
 	coverLetterService: { getById: vi.fn() },
@@ -434,6 +437,18 @@ describe("agentService.messages.send", () => {
 			posting: null,
 		});
 		expect(documentMock.findPosting).toHaveBeenCalledTimes(1);
+
+		// The assistant's web search targets the user's countries and keeps the query as written.
+		const { searchWeb } = await import("../web-access/service");
+		vi.mocked(searchWeb).mockResolvedValue([]);
+		const signal = new AbortController().signal;
+		await vi.mocked(buildAgentTools).mock.calls[0]?.[0].handlers.searchWeb("designer", signal);
+		expect(searchWeb).toHaveBeenCalledWith("designer", {
+			connection: null,
+			userId: "user-1",
+			signal,
+			regions: ["DE", "FR"],
+		});
 	});
 
 	it("persists canonical attachment UI parts, links selected attachments, and appends server-read model parts", async () => {

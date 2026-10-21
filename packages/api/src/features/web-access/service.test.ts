@@ -489,6 +489,70 @@ describe("Tavily country names", () => {
 	});
 });
 
+describe("posting search names the user's country", () => {
+	const postingQuery = async (
+		query: string,
+		scope: { regions: string[]; locale?: string; locations?: string[] },
+	): Promise<unknown> => {
+		await searchJobPostings(query, { ...context("tavily"), ...scope });
+		expect(requests).toHaveLength(Math.max(scope.regions.length, 1));
+		return requests[0]?.body.query;
+	};
+
+	it("adds the region's country in the user's locale", async () => {
+		expect(await postingQuery("designer", { regions: ["AU"], locale: "en-US", locations: [] })).toBe(
+			"designer in Australia job posting",
+		);
+	});
+	it("writes the country in the user's UI language", async () => {
+		expect(await postingQuery("designer", { regions: ["FR"], locale: "de-DE" })).toBe(
+			"designer in Frankreich job posting",
+		);
+	});
+	it("names the country in English when there is no locale", async () => {
+		expect(await postingQuery("designer", { regions: ["DE"] })).toBe("designer in Germany job posting");
+	});
+	it("names each region's own country", async () => {
+		await searchJobPostings("designer", { ...context("tavily"), regions: ["DE", "FR"], locale: "en" });
+		expect(
+			Object.fromEntries(requests.map((request) => [regionOf("tavily", request.body), request.body.query])),
+		).toEqual({ DE: "designer in Germany job posting", FR: "designer in France job posting" });
+	});
+	it.each<[string, { regions: string[]; locale?: string; locations?: string[] }]>([
+		["designer berlin", { regions: ["DE"], locations: ["Berlin"] }],
+		["designer Frankreich", { regions: ["FR"], locale: "de-DE" }],
+		["designer in france", { regions: ["FR"], locale: "de-DE" }],
+		["remote designer", { regions: ["AU"] }],
+		["designer REMOTE", { regions: ["AU"] }],
+		["designer", { regions: ["AU"], locations: ["Remote"] }],
+	])("adds nothing to %j when it names a place or remote work", async (query, scope) => {
+		expect(await postingQuery(query, scope)).toBe(`${query} job posting`);
+	});
+	it("sends the query unchanged when the country would pass the length limit", async () => {
+		const query = "x".repeat(500);
+		expect(await postingQuery(query, { regions: ["AU"], locale: "en" })).toBe(`${query} job posting`);
+	});
+	it("keeps today's query with no regions", async () => {
+		expect(await postingQuery("designer", { regions: [], locale: "en", locations: ["Berlin"] })).toBe(
+			"designer job posting",
+		);
+		expect(requests[0]?.body).not.toHaveProperty("country");
+	});
+});
+
+describe("connection test region", () => {
+	it("probes search in the given region", async () => {
+		await probeWebAccess(connection("tavily"), { userId: "user", region: "AU" });
+		const search = requests.find((request) => request.operation === "search");
+		expect(search?.body.country).toBe("australia");
+	});
+	it("probes search with no region when none is given", async () => {
+		await probeWebAccess(connection("tavily"), { userId: "user" });
+		const search = requests.find((request) => request.operation === "search");
+		expect(search?.body).not.toHaveProperty("country");
+	});
+});
+
 describe("public targets and bounded fallback", () => {
 	it("accepts a maximum-length Applications query including its job intent suffix", async () => {
 		const query = "x".repeat(500);

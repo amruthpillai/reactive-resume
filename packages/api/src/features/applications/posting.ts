@@ -1,7 +1,8 @@
 import type { WebAccessContext } from "../web-access/contracts";
 import { z } from "zod";
+import { countryName } from "@reactive-resume/utils/region";
 import { htmlToText } from "../web-access/builtin";
-import { MAX_CONTENT_CHARS, WebAccessError } from "../web-access/contracts";
+import { MAX_CONTENT_CHARS, MAX_SEARCH_QUERY_CHARS, WebAccessError } from "../web-access/contracts";
 import { readPage, searchWeb } from "../web-access/service";
 
 export { htmlToText } from "../web-access/builtin";
@@ -38,9 +39,30 @@ export const postingSearchResult = z.object({
 	description: z.string().max(5_000).default(""),
 });
 
+type PostingSearchContext = WebAccessContext & { locations?: string[] | undefined };
+
+/**
+ * Each region's query names its country ("designer in Frankreich job posting"), in the user's UI language or English
+ * without one, unless the query already names one of the user's countries or Preferences locations, asks for remote
+ * work, or would pass the search length limit. Naming the place moves Exa's `auto` search to local postings where its
+ * location parameter barely does.
+ */
+function postingQueryFor(query: string, { regions = [], locale = "en", locations = [] }: PostingSearchContext) {
+	const text = query.toLocaleLowerCase();
+	const places = [...regions.flatMap((code) => [countryName(code, locale), countryName(code, "en")]), ...locations];
+	const keep =
+		/remote/i.test(query) ||
+		locations.some((place) => place.trim().toLowerCase() === "remote") ||
+		places.some((place) => place.trim() && text.includes(place.trim().toLocaleLowerCase()));
+	return (region: string) => {
+		const placed = `${query} in ${countryName(region, locale)} job posting`;
+		return keep || placed.length > MAX_SEARCH_QUERY_CHARS ? `${query} job posting` : placed;
+	};
+}
+
 /** Job-specific query intent belongs here, never in the generic retrieval service. */
-export async function searchJobPostings(query: string, context: WebAccessContext) {
-	return (await searchWeb(`${query} job posting`, context))
+export async function searchJobPostings(query: string, { locations, ...context }: PostingSearchContext) {
+	return (await searchWeb(`${query} job posting`, context, postingQueryFor(query, { ...context, locations })))
 		.filter(({ url, title }) => !isListingUrl(url) && !/\b\d[\d,]*\+?\s+(?:[\w-]+\s+){0,4}jobs\b/i.test(title))
 		.map(({ url, title, snippet }) => ({
 			url,

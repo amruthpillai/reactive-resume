@@ -29,6 +29,7 @@ import { coverLetterService } from "../cover-letters/service";
 import { resumeService } from "../resume/service";
 import { getStorageService, inferContentType } from "../storage/service";
 import { webAccessService } from "../web-access/credentials";
+import { searchScope } from "../web-access/regions";
 import { readPage, searchWeb } from "../web-access/service";
 import { isRunAlive, monitorRunCancellation, requestRunCancellation } from "./cancellation";
 import { pruneAgentModelContext } from "./context";
@@ -808,10 +809,13 @@ function createAgent(input: {
 		signal: input.signal,
 		handlers: {
 			searchWeb: timedToolHandler("search_web", async (query: string, signal: AbortSignal) => {
+				// General research searches the user's countries but keeps the query as written.
+				const { regions } = await searchScope(input.userId);
 				const result = await searchWeb(query, {
 					connection: input.connection,
 					userId: input.userId,
 					signal,
+					regions,
 				});
 				for (const resultSource of result) allowedSources.add(resultSource.url);
 				return result;

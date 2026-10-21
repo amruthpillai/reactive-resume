@@ -4,6 +4,7 @@ import { protectedProcedure } from "../../context";
 import { webAccessDto } from "../../dto/web-access";
 import { WebAccessError } from "./contracts";
 import { webAccessService } from "./credentials";
+import { searchScope } from "./regions";
 import { probeWebAccess } from "./service";
 
 const route = { tags: ["Integrations"] };
@@ -63,11 +64,18 @@ export const webAccessRouter = {
 		.input(z.object({}).optional())
 		.output(webAccessDto.test.output)
 		.handler(async ({ context, signal }) => {
-			const connection = await webAccessService.resolve(context.user.id);
+			const [connection, { regions }] = await Promise.all([
+				webAccessService.resolve(context.user.id),
+				searchScope(context.user.id),
+			]);
 			if (!connection)
 				throw new ORPCError("PRECONDITION_FAILED", { message: "No external web connection is configured." });
 			try {
-				return await probeWebAccess(connection, { userId: context.user.id, ...(signal ? { signal } : {}) });
+				return await probeWebAccess(connection, {
+					userId: context.user.id,
+					region: regions[0],
+					...(signal ? { signal } : {}),
+				});
 			} catch (error) {
 				if (!signal?.aborted && error instanceof WebAccessError && error.reason === "rate-limit")
 					throw new ORPCError("RATE_LIMIT_EXCEEDED", {
