@@ -188,6 +188,9 @@ catalogs:
     '@expo/ui':
       specifier: ~58.0.21
       version: 58.0.21
+    '@formatjs/intl-displaynames':
+      specifier: ^7.3.15
+      version: 7.3.15
     '@legendapp/list':
       specifier: 3.6.0
       version: 3.6.0
@@ -387,6 +390,9 @@ importers:
       '@expo/ui':
         specifier: 'catalog:'
         version: 58.0.21(@babel/core@7.29.7(supports-color@7.2.0))(expo@58.0.16)(react-dom@19.3.1(react@19.3.1))(react-native-worklets@0.13.0(@babel/core@7.29.7(supports-color@7.2.0))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@7.2.0))(supports-color@7.2.0))(react-native@0.88.0(@babel/core@7.29.7(supports-color@7.2.0))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@7.2.0))(supports-color@7.2.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@7.2.0))(react@19.3.1)(supports-color@7.2.0))(react-native@0.88.0(@babel/core@7.29.7(supports-color@7.2.0))(@react-native/metro-config@0.88.0(@babel/core@7.29.7(supports-color@7.2.0))(supports-color@7.2.0))(@types/react@19.3.0)(react@19.3.1)(supports-color@7.2.0))(react@19.3.1)
+      '@formatjs/intl-displaynames':
+        specifier: 'catalog:'
+        version: 7.3.15
       '@formatjs/intl-locale':
         specifier: ^5.3.12
         version: 5.3.12
@@ -3620,6 +3626,9 @@ packages:
 
   '@formatjs/fast-memoize@3.1.7':
     resolution: {integrity: sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==}
+
+  '@formatjs/intl-displaynames@7.3.15':
+    resolution: {integrity: sha512-U26iRwxxnD4aZY+aDiSEV5Ym/7Db5S9OxKQ4c3T+WFFIj+DPKEQLh+tC++dMH1SuEa8CSWvPJkpaADa+WHn3qA==}
 
   '@formatjs/intl-getcanonicallocales@3.2.12':
     resolution: {integrity: sha512-THqQLTJUH2z2A7oE1guW8VzpGpsGFxwWZ+l8cI8Bk75xUU8DxtJoLfKl+5a6fYK26GeDWDWE0UbDhE5SwcLoFg==}
@@ -14077,6 +14086,10 @@ snapshots:
   '@formatjs/bigdecimal@0.2.7': {}
 
   '@formatjs/fast-memoize@3.1.7': {}
+
+  '@formatjs/intl-displaynames@7.3.15':
+    dependencies:
+      '@formatjs/intl-localematcher': 0.9.0
 
   '@formatjs/intl-getcanonicallocales@3.2.12': {}
 

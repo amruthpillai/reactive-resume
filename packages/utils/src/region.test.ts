@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vite-plus/test";
+import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 import {
 	countryCodeSchema,
 	countryForTimeZone,
@@ -66,6 +66,18 @@ describe("countryName", () => {
 
 	it("falls back to the code for an invalid locale", () => {
 		expect(countryName("FR", "not a locale")).toBe("FR");
+	});
+
+	describe("on an engine without Intl.DisplayNames, such as Hermes", () => {
+		afterEach(() => {
+			vi.unstubAllGlobals();
+		});
+
+		it("falls back to the code instead of throwing", () => {
+			vi.stubGlobal("Intl", { ...Intl, DisplayNames: undefined });
+			expect(() => countryName("DE", "de-DE")).not.toThrow();
+			expect(countryName("DE", "de-DE")).toBe("DE");
+		});
 	});
 });
 

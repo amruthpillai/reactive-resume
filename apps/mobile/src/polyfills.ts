@@ -60,6 +60,65 @@ import "@formatjs/intl-pluralrules/locale-data/uz.js";
 import "@formatjs/intl-pluralrules/locale-data/vi.js";
 import "@formatjs/intl-pluralrules/locale-data/zh.js";
 import "@formatjs/intl-pluralrules/locale-data/zu.js";
+// Hermes has no Intl.DisplayNames either, and country pickers (search regions) name countries with it; without it
+// they show bare codes such as "DE". Names vary by script and region as well as language, so besides one file per
+// language of apps/mobile/locales, zh-TW needs zh-Hant (traditional characters) and pt-PT its own names. sr-SP
+// catalogs are Cyrillic, which is what sr.js holds. It also installs only when the engine lacks it.
+import "@formatjs/intl-displaynames/polyfill.js";
+import "@formatjs/intl-displaynames/locale-data/af.js";
+import "@formatjs/intl-displaynames/locale-data/am.js";
+import "@formatjs/intl-displaynames/locale-data/ar.js";
+import "@formatjs/intl-displaynames/locale-data/az.js";
+import "@formatjs/intl-displaynames/locale-data/bg.js";
+import "@formatjs/intl-displaynames/locale-data/bn.js";
+import "@formatjs/intl-displaynames/locale-data/ca.js";
+import "@formatjs/intl-displaynames/locale-data/cs.js";
+import "@formatjs/intl-displaynames/locale-data/da.js";
+import "@formatjs/intl-displaynames/locale-data/de.js";
+import "@formatjs/intl-displaynames/locale-data/el.js";
+import "@formatjs/intl-displaynames/locale-data/en.js";
+import "@formatjs/intl-displaynames/locale-data/es.js";
+import "@formatjs/intl-displaynames/locale-data/fa.js";
+import "@formatjs/intl-displaynames/locale-data/fi.js";
+import "@formatjs/intl-displaynames/locale-data/fr.js";
+import "@formatjs/intl-displaynames/locale-data/he.js";
+import "@formatjs/intl-displaynames/locale-data/hi.js";
+import "@formatjs/intl-displaynames/locale-data/hu.js";
+import "@formatjs/intl-displaynames/locale-data/id.js";
+import "@formatjs/intl-displaynames/locale-data/it.js";
+import "@formatjs/intl-displaynames/locale-data/ja.js";
+import "@formatjs/intl-displaynames/locale-data/km.js";
+import "@formatjs/intl-displaynames/locale-data/kn.js";
+import "@formatjs/intl-displaynames/locale-data/ko.js";
+import "@formatjs/intl-displaynames/locale-data/lt.js";
+import "@formatjs/intl-displaynames/locale-data/lv.js";
+import "@formatjs/intl-displaynames/locale-data/ml.js";
+import "@formatjs/intl-displaynames/locale-data/mr.js";
+import "@formatjs/intl-displaynames/locale-data/ms.js";
+import "@formatjs/intl-displaynames/locale-data/ne.js";
+import "@formatjs/intl-displaynames/locale-data/nl.js";
+import "@formatjs/intl-displaynames/locale-data/no.js";
+import "@formatjs/intl-displaynames/locale-data/or.js";
+import "@formatjs/intl-displaynames/locale-data/pl.js";
+import "@formatjs/intl-displaynames/locale-data/pt.js";
+import "@formatjs/intl-displaynames/locale-data/pt-PT.js";
+import "@formatjs/intl-displaynames/locale-data/ro.js";
+import "@formatjs/intl-displaynames/locale-data/ru.js";
+import "@formatjs/intl-displaynames/locale-data/sk.js";
+import "@formatjs/intl-displaynames/locale-data/sl.js";
+import "@formatjs/intl-displaynames/locale-data/sq.js";
+import "@formatjs/intl-displaynames/locale-data/sr.js";
+import "@formatjs/intl-displaynames/locale-data/sv.js";
+import "@formatjs/intl-displaynames/locale-data/ta.js";
+import "@formatjs/intl-displaynames/locale-data/te.js";
+import "@formatjs/intl-displaynames/locale-data/th.js";
+import "@formatjs/intl-displaynames/locale-data/tr.js";
+import "@formatjs/intl-displaynames/locale-data/uk.js";
+import "@formatjs/intl-displaynames/locale-data/uz.js";
+import "@formatjs/intl-displaynames/locale-data/vi.js";
+import "@formatjs/intl-displaynames/locale-data/zh.js";
+import "@formatjs/intl-displaynames/locale-data/zh-Hant.js";
+import "@formatjs/intl-displaynames/locale-data/zu.js";
 
 // `uuid` (v7 ids in @reactive-resume/utils/string) needs a CSPRNG.
 if (typeof globalThis.crypto?.getRandomValues !== "function") {
