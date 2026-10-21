@@ -16,6 +16,7 @@ import { useDebouncedSave } from "../hooks";
 import { CareerLoadError, CareerLoading } from "../load-state";
 import { useCareerTime, useNow } from "../shared";
 import { parseAmount } from "./amount";
+import { SearchRegionsField } from "./search-regions-field";
 import { getOrpcErrorMessage } from "@/libs/error-message";
 import { D2, EASE } from "@/libs/motion";
 import { client, orpc } from "@/libs/orpc/client";
@@ -142,6 +143,13 @@ function PreferencesForm({ initial }: PreferencesFormProps) {
 					value={draft.locations}
 					onChange={(locations) => change({ locations })}
 				/>
+				<div className="sm:col-start-2">
+					<SearchRegionsField
+						value={draft.searchRegions}
+						accountTimeZone={timeZone}
+						onChange={(searchRegions) => change({ searchRegions })}
+					/>
+				</div>
 			</div>
 
 			<div className="grid gap-1.5">
