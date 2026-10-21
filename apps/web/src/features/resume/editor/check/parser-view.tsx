@@ -4,7 +4,6 @@ import type { ExtractedDocument, ResumeSemantics } from "@reactive-resume/resume
 import { t } from "@lingui/core/macro";
 import { Trans } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
-import { columnSegments } from "@reactive-resume/resume/ats-pdf";
 import { Spinner } from "@reactive-resume/ui/components/spinner";
 import { cn } from "@reactive-resume/utils/style";
 import { useEditorStore } from "../store";
@@ -130,52 +129,14 @@ function ParsedText({ parsed, issues }: { parsed: Parsed; issues: readonly Check
 		},
 	];
 
-	// Lines grouped under the headings a parser recognised, in the order it reads them. One extracted
-	// line can fuse several columns, so a line holding a heading is read in column-separated pieces:
-	// each recognised piece starts a group, and every other piece still shows as a line — collapsing
-	// the line to one heading hid every other column on it.
-	const headingsAt = new Map<number, string[]>();
-	for (const heading of semantics.headings) {
-		const line = headingsAt.get(heading.lineIndex) ?? [];
-		line.push(heading.text);
-		headingsAt.set(heading.lineIndex, line);
-	}
+	// Only standalone headings replace a text line; fused columns must retain the full line in reading order.
+	const headingAt = new Map(semantics.headings.map((heading) => [heading.lineIndex, heading.text]));
 	const groups: { heading: string | null; lines: string[] }[] = [{ heading: null, lines: [] }];
-	// Groups the latest heading line opened, with the x each heading piece starts at. A later fused
-	// line with no heading of its own carries the next row of every column, so its pieces sort into
-	// those columns by position — dumping it whole under the last heading hid the rest of the row.
-	let columnGroups: { group: number; x: number }[] = [];
 	doc.lines.forEach((line, index) => {
-		const lineHeadings = headingsAt.get(index);
-		if (lineHeadings === undefined) {
-			const segments = columnSegments(line);
-			if (segments.length === 1 || columnGroups.length < 2) {
-				groups.at(-1)?.lines.push(line.text);
-				return;
-			}
-			for (const segment of segments) {
-				if (segment.text.trim().length === 0) continue;
-				const x = segment.spans[0]?.x ?? segment.x;
-				const column = columnGroups.reduce((nearest, candidate) =>
-					Math.abs(candidate.x - x) < Math.abs(nearest.x - x) ? candidate : nearest,
-				);
-				groups[column.group]?.lines.push(segment.text);
-			}
-			return;
-		}
-		const pending = [...lineHeadings];
-		const nextColumns: { group: number; x: number }[] = [];
-		for (const segment of columnSegments(line)) {
-			const headingIndex = pending.indexOf(segment.text.trim());
-			if (headingIndex !== -1) {
-				pending.splice(headingIndex, 1);
-				nextColumns.push({ group: groups.length, x: segment.spans[0]?.x ?? segment.x });
-				groups.push({ heading: segment.text.trim(), lines: [] });
-			} else if (segment.text.trim().length > 0) {
-				groups.at(-1)?.lines.push(segment.text);
-			}
-		}
-		columnGroups = nextColumns;
+		const heading = headingAt.get(index);
+		if (heading === line.text.trim()) groups.push({ heading, lines: [] });
+		else if (heading !== undefined) groups.push({ heading: null, lines: [line.text] });
+		else groups.at(-1)?.lines.push(line.text);
 	});
 
 	return (

@@ -82,23 +82,14 @@ export function detectHeadings(document: ExtractedDocument): DetectedHeading[] {
 	document.lines.forEach((line, lineIndex) => {
 		// A heading set in its own narrow column shares a baseline with the first line of the
 		// section's content, so the line it lands on has to be read in column-separated pieces.
-		const candidates = columnSegments(line)
-			.map((segment) => ({ segment, normalized: normalizeHeading(segment.text) }))
-			.filter(({ segment, normalized }) => looksLikeHeading(segment, normalized, document));
-		const stylingOnlyCount = candidates.filter(({ normalized }) => !NORMALIZED_HEADINGS.has(normalized)).length;
-
-		for (const { segment, normalized } of candidates) {
-			const sectionType = NORMALIZED_HEADINGS.get(normalized) ?? null;
-			// A section split into columns puts every cell's lead-in on one baseline and each
-			// looks the part. A title recognised by name still counts, and so does a lone
-			// styling guess — a custom title can sit beside a recognised one where a page's
-			// columns open together. Twin styling guesses on a baseline are cells, not titles.
-			if (stylingOnlyCount > 1 && sectionType === null) continue;
+		for (const segment of columnSegments(line)) {
+			const normalized = normalizeHeading(segment.text);
+			if (!looksLikeHeading(segment, normalized, document)) continue;
 
 			headings.push({
 				text: segment.text.trim(),
 				normalized,
-				sectionType,
+				sectionType: NORMALIZED_HEADINGS.get(normalized) ?? null,
 				page: segment.page,
 				lineIndex,
 				fontSize: segment.fontSize,

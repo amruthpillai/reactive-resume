@@ -161,7 +161,7 @@ export type {
 export type { PdfRuleCode };
 export { buildResumeSemantics } from "./analyze/semantics";
 export { PDF_ATS_RULE_CODES } from "./catalog";
-export { buildExtractedDocument, columnSegments } from "./extract";
+export { buildExtractedDocument } from "./extract";
 export { HARVEST_DEFAULTS, harvestPdfDocument } from "./harvest";
 export { surfaceFormsOf } from "./jd/aliases";
 export { matchJobDescription } from "./jd/match";
