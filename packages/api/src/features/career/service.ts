@@ -11,6 +11,7 @@ import {
 	careerProfileDataSchema,
 	careerWorkspaceSchema,
 	EMPTY_WORKSPACE,
+	type CareerProfileData,
 	type CareerWorkspace,
 	type careerFactInputSchema,
 	type careerStoryInputSchema,
@@ -30,6 +31,14 @@ const visible = (column: typeof tables.careerFact.applicationId, applicationId?:
 	applicationId ? or(isNull(column), eq(column, applicationId)) : isNull(column);
 const ownedFact = (id: string, userId: string) =>
 	and(eq(tables.careerFact.id, id), eq(tables.careerFact.userId, userId));
+
+/**
+ * A profile save is a whole-object PUT, and older clients drop fields they don't know. A save that
+ * leaves searchRegions out keeps the stored value; an explicit [] or null replaces it.
+ */
+export function mergeCareerProfile(stored: CareerProfileData, input: CareerProfileData): CareerProfileData {
+	return input.searchRegions === undefined ? { ...input, searchRegions: stored.searchRegions } : input;
+}
 
 export async function requireCareerApplication(input: Owned & { interviewId?: string | null | undefined }) {
 	if (!input.applicationId) {
@@ -289,16 +298,20 @@ export const careerService = {
 		const [row] = await db.select().from(tables.careerProfile).where(eq(tables.careerProfile.userId, userId));
 		return careerProfileDataSchema.parse(row?.data ?? {});
 	},
-	saveProfile: async (userId: string, data: z.infer<typeof careerProfileDataSchema>) => {
-		await db.transaction(async (tx) => {
+	saveProfile: (userId: string, input: CareerProfileData) =>
+		db.transaction(async (tx) => {
 			await lockCareerUser(tx, userId);
+			const [row] = await tx
+				.select({ data: tables.careerProfile.data })
+				.from(tables.careerProfile)
+				.where(eq(tables.careerProfile.userId, userId));
+			const data = mergeCareerProfile(careerProfileDataSchema.parse(row?.data ?? {}), input);
 			await tx
 				.insert(tables.careerProfile)
 				.values({ userId, data })
 				.onConflictDoUpdate({ target: tables.careerProfile.userId, set: { data, updatedAt: new Date() } });
-		});
-		return data;
-	},
+			return data;
+		}),
 	/** Facts the coach can use for an application (or shared ones). `all` lists every scope, for Knowledge. */
 	facts: async (input: Owned & { query?: string | undefined; all?: boolean | undefined }) => {
 		await requireCareerApplication(input);

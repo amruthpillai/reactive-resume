@@ -60,6 +60,19 @@ function resumeData(headline: string) {
 	return data;
 }
 
+describe("mergeCareerProfile", () => {
+	it("carries stored search regions only when the input leaves the key out", async () => {
+		const { mergeCareerProfile } = await import("./service");
+		const stored = careerProfileDataSchema.parse({ searchRegions: ["AU"] });
+		const missing = careerProfileDataSchema.parse({ priorities: "x" });
+
+		expect(mergeCareerProfile(stored, missing)).toEqual({ ...missing, searchRegions: ["AU"] });
+		expect(mergeCareerProfile(stored, { ...missing, searchRegions: [] }).searchRegions).toEqual([]);
+		expect(mergeCareerProfile(stored, { ...missing, searchRegions: null }).searchRegions).toBeNull();
+		expect(mergeCareerProfile(stored, { ...missing, searchRegions: ["DE", "FR"] }).searchRegions).toEqual(["DE", "FR"]);
+	}, 30_000);
+});
+
 // Real PostgreSQL, opt-in only. Every table and FK comes from shipped migrations in a unique schema.
 describe.skipIf(!databaseUrl)("career knowledge, context and data lifecycle", () => {
 	let service: typeof import("./service").careerService;
@@ -608,6 +621,18 @@ describe.skipIf(!databaseUrl)("career knowledge, context and data lifecycle", ()
 			checklist: [1],
 			message: "Thanks for applying.",
 		});
+	});
+
+	it("keeps stored search regions when a save from an older client leaves the key out", async () => {
+		await service.saveProfile("alice", careerProfileDataSchema.parse({ searchRegions: ["AU"] }));
+		const older = careerProfileDataSchema.parse({ priorities: "x" });
+		delete older.searchRegions;
+
+		expect(await service.saveProfile("alice", older)).toMatchObject({ priorities: "x", searchRegions: ["AU"] });
+		expect(await service.profile("alice")).toMatchObject({ priorities: "x", searchRegions: ["AU"] });
+
+		await service.saveProfile("alice", careerProfileDataSchema.parse({ searchRegions: null }));
+		expect((await service.profile("alice")).searchRegions).toBeNull();
 	});
 
 	it("exports source metadata and owned coaching records without credentials, then cascades account deletion", async () => {
