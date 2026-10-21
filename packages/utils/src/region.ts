@@ -30,3 +30,49 @@ export function countryName(code: string, locale: string): string {
 		return code;
 	}
 }
+
+/** The most countries a user can search at once; each is its own provider call. */
+export const MAX_SEARCH_REGIONS = 3;
+
+/** Every code `countryCodeSchema` accepts, sorted, for country pickers. */
+export const SEARCH_REGION_CODES: readonly string[] = [...COUNTRY_CODES].sort();
+
+/** What a search-regions picker shows: its chips, whether they come from a time zone, and a country to save once. */
+export type ShownSearchRegions = { codes: string[]; automatic: boolean; adopt: string | null };
+
+/**
+ * The chips for a stored `searchRegions` value. Automatic (null or absent) shows the account time zone's country,
+ * or while the account is still on UTC the device time zone's, which `adopt` asks the client to save once.
+ */
+export function shownSearchRegions(
+	value: readonly string[] | null | undefined,
+	accountTimeZone: string | null | undefined,
+	deviceTimeZone: string | null | undefined,
+): ShownSearchRegions {
+	if (value) return { codes: [...value], automatic: false, adopt: null };
+	if (accountTimeZone && accountTimeZone !== "UTC") {
+		const code = countryForTimeZone(accountTimeZone);
+		return { codes: code ? [code] : [], automatic: true, adopt: null };
+	}
+	const device = deviceTimeZone ? countryForTimeZone(deviceTimeZone) : null;
+	return { codes: device ? [device] : [], automatic: true, adopt: device };
+}
+
+/** A picker action on the shown chips: add a country, remove one, or return to automatic. */
+export type SearchRegionsAction =
+	| { type: "add"; code: string }
+	| { type: "remove"; code: string }
+	| { type: "automatic" };
+
+/** The `searchRegions` value to save after an action; returns `shown` itself when the action changes nothing. */
+export function nextSearchRegions(shown: string[], action: SearchRegionsAction): string[] | null {
+	switch (action.type) {
+		case "automatic":
+			return null;
+		case "add":
+			if (shown.length >= MAX_SEARCH_REGIONS || shown.includes(action.code)) return shown;
+			return countryCodeSchema.safeParse(action.code).success ? [...shown, action.code] : shown;
+		case "remove":
+			return shown.includes(action.code) ? shown.filter((code) => code !== action.code) : shown;
+	}
+}
