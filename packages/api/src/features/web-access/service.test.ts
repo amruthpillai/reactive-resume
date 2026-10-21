@@ -77,10 +77,14 @@ let responseOverride: unknown;
 let delay = 0;
 let searchStatus: number | undefined;
 let onRequest: (() => void) | undefined;
+let respond:
+	| ((request: { provider: string; body: Record<string, unknown> }) => { status?: number; body?: unknown })
+	| undefined;
 const requests: {
 	provider: string;
 	operation: string;
 	body: Record<string, unknown>;
+	raw: string;
 	auth: string | undefined;
 }[] = [];
 
@@ -127,22 +131,56 @@ const server = createServer(async (request, result) => {
 	const parts = (request.url ?? "").split("/");
 	const provider = (parts[1] === "v2" ? "firecrawl" : parts[1]) as WebAccessProvider;
 	const operation = parts[2] === "search" ? "search" : "read";
+	const raw = Buffer.concat(chunks).toString();
+	const body = JSON.parse(raw) as Record<string, unknown>;
 	requests.push({
 		provider,
 		operation,
-		body: JSON.parse(Buffer.concat(chunks).toString()),
+		body,
+		raw,
 		auth: request.headers.authorization ?? (request.headers["x-api-key"] as string | undefined),
 	});
 	onRequest?.();
 	if (delay) await new Promise((resolve) => setTimeout(resolve, delay));
 	if (result.destroyed) return;
-	result.writeHead(operation === "search" && searchStatus !== undefined ? searchStatus : status, {
+	const custom = respond?.({ provider, body });
+	result.writeHead(custom?.status ?? (operation === "search" && searchStatus !== undefined ? searchStatus : status), {
 		"content-type": "application/json",
 	});
 	result.end(
-		JSON.stringify(responseOverride ?? (operation === "search" ? searchResponse(provider) : readResponse(provider))),
+		JSON.stringify(
+			custom?.body ?? responseOverride ?? (operation === "search" ? searchResponse(provider) : readResponse(provider)),
+		),
 	);
 });
+
+/** Today's search body for "designer", which a search with no regions must send byte for byte. */
+const plainSearchBody = (provider: WebAccessProvider) =>
+	provider === "firecrawl"
+		? { query: "designer", sources: ["web"], limit: 5, timeout: 14_000 }
+		: provider === "tavily"
+			? {
+					query: "designer",
+					max_results: 5,
+					search_depth: "basic",
+					include_answer: false,
+					include_raw_content: false,
+				}
+			: { query: "designer", numResults: 5, type: "auto" };
+const TAVILY_COUNTRIES: Record<string, string> = { AU: "australia", DE: "germany", FR: "france" };
+/** The provider's location field and the value it carries for a country code. */
+const regionField = (provider: WebAccessProvider, code: string): [string, string] =>
+	provider === "exa"
+		? ["userLocation", code]
+		: ["country", provider === "tavily" ? (TAVILY_COUNTRIES[code] ?? "") : code];
+const regionOf = (provider: WebAccessProvider, body: Record<string, unknown>) =>
+	Object.keys(TAVILY_COUNTRIES).find((code) => {
+		const [field, value] = regionField(provider, code);
+		return body[field] === value;
+	});
+const resultsFor = (provider: WebAccessProvider, items: { url: string; title: string }[]) =>
+	provider === "firecrawl" ? { success: true, data: { web: items } } : { results: items };
+const job = (path: string) => ({ url: `https://jobs.example.com/${path}`, title: path });
 
 const connection = (provider: WebAccessProvider): WebAccessConnection => ({
 	provider,
@@ -183,6 +221,7 @@ beforeEach(() => {
 	status = 200;
 	searchStatus = undefined;
 	onRequest = undefined;
+	respond = undefined;
 	responseOverride = undefined;
 	delay = 0;
 	fixtures.limit.mockClear();
@@ -363,6 +402,68 @@ describe.each(PROVIDERS)("%s adapter at shared boundary", (provider) => {
 		expect(fixtures.direct).not.toHaveBeenCalled();
 	});
 
+	it("sends the region in the provider's location field", async () => {
+		await searchWeb("designer", { ...context(provider), regions: ["AU"] });
+		expect(requests).toHaveLength(1);
+		const [field, value] = regionField(provider, "AU");
+		expect(requests[0]?.body).toEqual({ ...plainSearchBody(provider), [field]: value });
+	});
+
+	it.each<[string[] | undefined]>([[[]], [undefined]])("sends today's exact body with regions %j", async (regions) => {
+		await searchWeb(
+			"designer",
+			{
+				...context(provider),
+				...(regions ? { regions } : {}),
+			},
+			(region) => `designer in ${region}`,
+		);
+		expect(requests).toHaveLength(1);
+		expect(requests[0]?.raw).toBe(JSON.stringify(plainSearchBody(provider)));
+	});
+
+	it("searches each region and interleaves deduplicated results in region order, capped at five", async () => {
+		respond = ({ body }) => {
+			const region = regionOf(provider, body);
+			if (region === "DE") return { body: resultsFor(provider, [job("DE1"), job("DE2"), job("shared"), job("DE3")]) };
+			if (region === "FR") return { body: resultsFor(provider, [job("FR1"), job("shared"), job("FR2"), job("FR3")]) };
+			return { status: 400 };
+		};
+		const results = await searchWeb("designer", { ...context(provider), regions: ["DE", "FR"] });
+		expect(requests).toHaveLength(2);
+		expect(results.map((result) => result.title)).toEqual(["DE1", "FR1", "DE2", "shared", "FR2"]);
+	});
+
+	it("keeps the results of a region whose request succeeds when another region's fails", async () => {
+		respond = ({ body }) =>
+			regionOf(provider, body) === "FR" ? { body: resultsFor(provider, [job("FR1"), job("FR2")]) } : { status: 500 };
+		const results = await searchWeb("designer", { ...context(provider), regions: ["DE", "FR"] });
+		expect(requests).toHaveLength(2);
+		expect(results.map((result) => result.title)).toEqual(["FR1", "FR2"]);
+	});
+
+	it("throws the existing failure when every region's request fails", async () => {
+		status = 429;
+		await expect(searchWeb("designer", { ...context(provider), regions: ["DE", "FR"] })).rejects.toMatchObject({
+			reason: "quota",
+		});
+		expect(requests).toHaveLength(2);
+	});
+
+	it("rate-limits a multi-region search once", async () => {
+		vi.stubEnv("NODE_ENV", "production");
+		await searchWeb("designer", { ...context(provider), regions: ["DE", "FR", "AU"] });
+		expect(requests).toHaveLength(3);
+		expect(fixtures.limit).toHaveBeenCalledTimes(1);
+	});
+
+	it("sends each region the query built for it", async () => {
+		await searchWeb("designer", { ...context(provider), regions: ["DE", "FR"] }, (region) => `designer in ${region}`);
+		expect(
+			Object.fromEntries(requests.map((request) => [regionOf(provider, request.body), request.body.query])),
+		).toEqual({ DE: "designer in DE", FR: "designer in FR" });
+	});
+
 	it("probes provider operations independently and never validates through fallback", async () => {
 		searchStatus = 429;
 		const result = await probeWebAccess(connection(provider), {
@@ -373,6 +474,18 @@ describe.each(PROVIDERS)("%s adapter at shared boundary", (provider) => {
 			read: { success: true },
 		});
 		expect(fixtures.direct).not.toHaveBeenCalled();
+	});
+});
+
+describe("Tavily country names", () => {
+	it.each([
+		["CZ", "czech republic"],
+		["SG", "singapore"],
+		["HK", undefined],
+	])("sends %s as Tavily's listed name %j, or no country when Tavily lists none", async (code, country) => {
+		await searchWeb("designer", { ...context("tavily"), regions: [code] });
+		expect(requests[0]?.body.country).toBe(country);
+		if (!country) expect(requests[0]?.body).not.toHaveProperty("country");
 	});
 });
 

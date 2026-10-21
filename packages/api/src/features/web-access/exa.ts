@@ -4,7 +4,7 @@ import { MAX_CONTENT_CHARS, MAX_PAGE_BYTES, WebAccessError } from "./contracts";
 import { normalizeSearch, parseResponse, postJson } from "./transport";
 
 const searchSchema = z.object({ results: z.array(z.unknown()).max(100) });
-export async function searchExa(query: string, { connection, signal }: ProviderRequest) {
+export async function searchExa(query: string, { connection, signal, region }: ProviderRequest) {
 	const response = parseResponse(
 		searchSchema,
 		await postJson(
@@ -12,7 +12,14 @@ export async function searchExa(query: string, { connection, signal }: ProviderR
 			{
 				"x-api-key": connection.apiKey ?? "",
 			},
-			{ query, numResults: 5, type: "auto" },
+			{
+				query,
+				numResults: 5,
+				type: "auto",
+				// Two-letter ISO 3166-1 code: https://exa.ai/docs/reference/search (userLocation).
+				// Measured 2026-10-21: with "auto" it only nudges results, but it is the location signal Exa takes.
+				...(region ? { userLocation: region } : {}),
+			},
 			signal,
 		),
 	);

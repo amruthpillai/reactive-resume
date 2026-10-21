@@ -9,7 +9,7 @@ import { env } from "@reactive-resume/env/server";
 import { rateLimitConfig } from "@reactive-resume/utils/rate-limit";
 import { createRateLimiter } from "../../redis";
 import { abortable, assertPublicTarget, htmlToText, readBuiltinPage } from "./builtin";
-import { WEB_ACCESS_DEADLINE_MS, WebAccessError } from "./contracts";
+import { MAX_SEARCH_RESULTS, WEB_ACCESS_DEADLINE_MS, WebAccessError } from "./contracts";
 import { readExa, searchExa } from "./exa";
 import { readFirecrawl, searchFirecrawl } from "./firecrawl";
 import { readTavily, searchTavily } from "./tavily";
@@ -67,19 +67,55 @@ function log(operation: "search" | "read", provider: string, started: number, ou
 	});
 }
 
-export async function searchWeb(query: string, context: WebAccessContext) {
+function searchInput(query: string) {
+	const input = query.trim();
+	if (!input || input.length > 512) throw new WebAccessError("malformed");
+	return input;
+}
+
+/** Deduplicates by URL and takes results round-robin in region order, so each region that returned anything shows. */
+function interleave<T extends { url: string }>(lists: T[][]) {
+	const seen = new Set<string>();
+	const merged: T[] = [];
+	const longest = Math.max(...lists.map((list) => list.length));
+	for (let index = 0; index < longest; index++) {
+		for (const list of lists) {
+			const item = list[index];
+			if (!item || seen.has(item.url)) continue;
+			seen.add(item.url);
+			merged.push(item);
+		}
+	}
+	return merged.slice(0, MAX_SEARCH_RESULTS);
+}
+
+/**
+ * One rate-limited search. Each region gets its own provider call, with `queryFor(region)` as its query when given,
+ * in parallel under one deadline. A failed region drops out unless every region fails.
+ */
+export async function searchWeb(query: string, context: WebAccessContext, queryFor?: (region: string) => string) {
 	const signal = deadline(context.signal);
 	const started = Date.now();
 	const provider = context.connection?.provider ?? "builtin";
 	try {
 		await consume(context.userId, signal);
-		if (!context.connection) throw new WebAccessError("unavailable");
-		const input = query.trim();
-		if (!input || input.length > 512) throw new WebAccessError("malformed");
-		const results = await externalSearch(input, {
-			connection: context.connection,
-			signal,
-		});
+		const connection = context.connection;
+		if (!connection) throw new WebAccessError("unavailable");
+		const input = searchInput(query);
+		const searches = (context.regions ?? []).map((region) => ({
+			region,
+			query: queryFor ? searchInput(queryFor(region)) : input,
+		}));
+		let results: Awaited<ReturnType<typeof externalSearch>>;
+		if (searches.length === 0) results = await externalSearch(input, { connection, signal });
+		else {
+			const settled = await Promise.allSettled(
+				searches.map((search) => externalSearch(search.query, { connection, signal, region: search.region })),
+			);
+			const lists = settled.flatMap((outcome) => (outcome.status === "fulfilled" ? [outcome.value] : []));
+			if (lists.length === 0) throw (settled[0] as PromiseRejectedResult).reason;
+			results = interleave(lists);
+		}
 		signal.throwIfAborted();
 		log("search", provider, started, "success");
 		return results;

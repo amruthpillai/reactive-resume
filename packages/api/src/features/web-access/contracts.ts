@@ -14,6 +14,10 @@ export type WebAccessContext = {
 	connection: WebAccessConnection | null;
 	userId: string;
 	signal?: AbortSignal | undefined;
+	/** ISO 3166-1 alpha-2 countries to search, first primary. Absent or empty searches anywhere. */
+	regions?: string[] | undefined;
+	/** The user's UI locale, for place names written into region queries. */
+	locale?: string | undefined;
 };
 
 export type ReadPageResult = {
@@ -58,4 +62,9 @@ export const MAX_CONTENT_CHARS = 20_000;
 export const MAX_SEARCH_RESULTS = 5;
 export const WEB_ACCESS_DEADLINE_MS = 20_000;
 
-export type ProviderRequest = { connection: WebAccessConnection; signal: AbortSignal };
+export type ProviderRequest = {
+	connection: WebAccessConnection;
+	signal: AbortSignal;
+	/** One ISO 3166-1 alpha-2 country for the provider's location parameter. */
+	region?: string | undefined;
+};

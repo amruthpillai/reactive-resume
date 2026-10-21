@@ -54,7 +54,18 @@ const itemSchema = z.object({
 export async function searchFirecrawl(query: string, options: ProviderRequest) {
 	const { data: result } = parseResponse(
 		z.object({ success: z.literal(true), data: searchSchema }),
-		await request("search", { query, sources: ["web"], limit: 5, timeout: 14_000 }, options),
+		await request(
+			"search",
+			{
+				query,
+				sources: ["web"],
+				limit: 5,
+				timeout: 14_000,
+				// ISO country code: https://docs.firecrawl.dev/api-reference/endpoint/search (country, default "US").
+				...(options.region ? { country: options.region } : {}),
+			},
+			options,
+		),
 	);
 	return normalizeSearch(
 		result.web.flatMap((value) => {
