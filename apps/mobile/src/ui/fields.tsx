@@ -5,6 +5,7 @@ import { useLingui } from "@lingui/react/macro";
 import { useEffect, useRef, useState } from "react";
 import { I18nManager, Platform, Pressable, TextInput, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import { filterOptions } from "@reactive-resume/utils/string";
 import { Icon } from "./icon";
 import { ListRow } from "./layout";
 import { haptics } from "./motion";
@@ -194,6 +195,8 @@ export type SelectSheetProps<T extends string> = {
 	disabled?: boolean | undefined;
 	/** `field` (default) looks like a text field with a caret; `row` is a settings row with the value at its end. */
 	appearance?: "field" | "row" | undefined;
+	/** Adds a field above the options that filters them by label, for long lists such as countries. */
+	searchable?: boolean | undefined;
 };
 
 /** A field that opens a sheet of options; picking one closes it. */
@@ -205,11 +208,19 @@ export function SelectSheet<T extends string>({
 	placeholder,
 	disabled,
 	appearance = "field",
+	searchable,
 }: SelectSheetProps<T>) {
+	const { t } = useLingui();
 	const { colors, radius, size, space } = useTheme();
 	const [open, setOpen] = useState(false);
+	const [query, setQuery] = useState("");
 	const selected = options.find((option) => option.value === value);
 	const shown = selected?.label ?? placeholder;
+	const listed = searchable ? filterOptions(options, query) : options;
+	const close = () => {
+		setOpen(false);
+		setQuery("");
+	};
 
 	return (
 		<>
@@ -249,14 +260,32 @@ export function SelectSheet<T extends string>({
 			)}
 			<Sheet
 				open={open}
-				onClose={() => setOpen(false)}
+				onClose={close}
 				title={label}
 				padded={false}
 				// A long list (languages, countries) scrolls in a half-height sheet that can rise to full.
 				detents={options.length > 6 ? [0.5, 0.9] : ["content"]}
 			>
+				{searchable ? (
+					<View style={{ paddingHorizontal: space.s4, paddingBottom: space.s2 }}>
+						<InputBox
+							accessibilityLabel={t`Search`}
+							placeholder={t`Search…`}
+							value={query}
+							onChangeText={setQuery}
+							autoCapitalize="none"
+							autoCorrect={false}
+							returnKeyType="search"
+						/>
+					</View>
+				) : null}
+				{searchable && listed.length === 0 ? (
+					<Text color="ink3" style={{ paddingHorizontal: space.s4, paddingVertical: space.s3 }}>
+						{t`No matches`}
+					</Text>
+				) : null}
 				<View accessibilityRole="radiogroup">
-					{options.map((option) => (
+					{listed.map((option) => (
 						<ListRow
 							key={option.value}
 							title={option.label}
@@ -266,7 +295,7 @@ export function SelectSheet<T extends string>({
 							onPress={() => {
 								haptics.selection();
 								onChange(option.value);
-								setOpen(false);
+								close();
 							}}
 						/>
 					))}

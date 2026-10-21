@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vite-plus/test";
-import { slugify, toUsername } from "./string";
+import { filterOptions, slugify, toUsername } from "./string";
 
 describe("slugify", () => {
 	it("falls back to a non-empty slug for CJK input", () => {
@@ -16,5 +16,28 @@ describe("toUsername", () => {
 	it("truncates to 64 characters max", () => {
 		const longName = "a".repeat(100);
 		expect(toUsername(longName)).toHaveLength(64);
+	});
+});
+
+describe("filterOptions", () => {
+	const options = [
+		{ value: "AT", label: "Österreich" },
+		{ value: "FR", label: "France" },
+		{ value: "DE", label: "Germany" },
+	];
+
+	it("keeps every option for a blank query", () => {
+		expect(filterOptions(options, "  ")).toEqual(options);
+	});
+
+	it("matches part of a label, ignoring case and accents", () => {
+		expect(filterOptions(options, "fra")).toEqual([options[1]]);
+		expect(filterOptions(options, "oster")).toEqual([options[0]]);
+		expect(filterOptions(options, "MANY")).toEqual([options[2]]);
+	});
+
+	it("matches a value only exactly", () => {
+		expect(filterOptions(options, "de")).toEqual([options[2]]);
+		expect(filterOptions(options, "d")).toEqual([]);
 	});
 });

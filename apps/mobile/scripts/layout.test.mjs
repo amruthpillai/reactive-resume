@@ -329,6 +329,7 @@ const { Segmented } = load("ui/fields.tsx", {
 	"./layout": { ListRow },
 	"./overlays": { Sheet: "Sheet" },
 	"./switch": { Switch: "Switch" },
+	"@reactive-resume/utils/string": { filterOptions: (options) => options },
 });
 const { BarItem } = load("shell/app-tabs.tsx", { "react-native-reanimated": animation });
 const { KnowledgeScreen } = load("features/career/knowledge.tsx", {
