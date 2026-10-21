@@ -73,6 +73,21 @@ describe("SearchRegionsField", () => {
 		expect(screen.getByRole("button", { name: "Remove France" })).toBeInTheDocument();
 	});
 
+	it("adds a country with the keyboard alone", async () => {
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<Harness initial={["DE"]} accountTimeZone="Asia/Singapore" onChange={onChange} />);
+		screen.getByRole("combobox", { name: "Add a country" }).focus();
+		await user.keyboard("{Enter}");
+		const search = await screen.findByPlaceholderText("Search countries");
+		await user.type(search, "fra");
+		await user.keyboard("{ArrowDown}{Enter}");
+		expect(onChange).toHaveBeenLastCalledWith(["DE", "FR"]);
+		await user.keyboard("{Escape}");
+		expect(screen.queryByPlaceholderText("Search countries")).not.toBeInTheDocument();
+		expect(screen.getByRole("button", { name: "Remove France" })).toBeInTheDocument();
+	});
+
 	it("can't add a fourth country", async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();
