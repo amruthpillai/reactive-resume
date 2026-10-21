@@ -55,7 +55,8 @@ type ListViewProps = {
  * for bulk moves, tags, closing and deleting. Phones get two-line rows.
  */
 export function ApplicationList({ applications, showClosed, selectedId, onOpen }: ListViewProps) {
-	const phone = useBreakpoint() === "mobile";
+	const breakpoint = useBreakpoint();
+	const phone = breakpoint === "mobile";
 	const [collapsed, setCollapsed] = useState<ReadonlySet<ApplicationStatus>>(new Set());
 	const [sort, setSort] = useState<Sort>({ key: "updated", direction: "desc" });
 	const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
@@ -136,13 +137,13 @@ export function ApplicationList({ applications, showClosed, selectedId, onOpen }
 							</th>
 							{header("role", t`Role`)}
 							{header("next", t`Next step`, "w-1/4")}
-							<th scope="col" className="w-32 px-2 text-start font-medium max-lg:hidden">
+							<th scope="col" className="w-32 px-2 text-start font-medium max-xl:hidden">
 								<Trans>Stage</Trans>
 							</th>
 							<th scope="col" className="w-20 px-2 text-start font-medium">
 								<Trans>Sent</Trans>
 							</th>
-							{header("updated", t`Updated`, "w-28 max-md:hidden")}
+							{header("updated", t`Updated`, "w-28 max-lg:hidden")}
 						</tr>
 					</thead>
 				)}
@@ -153,7 +154,11 @@ export function ApplicationList({ applications, showClosed, selectedId, onOpen }
 					return (
 						<tbody key={status} aria-labelledby={groupId}>
 							<tr>
-								<th scope="colgroup" colSpan={6} className="pt-3 text-start">
+								<th
+									scope="colgroup"
+									colSpan={phone ? 1 : breakpoint === "wide" ? 6 : breakpoint === "desktop" ? 5 : 4}
+									className="pt-3 text-start"
+								>
 									<button
 										type="button"
 										id={groupId}
@@ -287,7 +292,7 @@ function ApplicationRow({ application, phone, selected, checked, onCheck, onOpen
 					<span className="min-w-0 truncate">{next.title}</span>
 				</span>
 			</td>
-			<td className="px-2 max-lg:hidden">
+			<td className="px-2 max-xl:hidden">
 				<span className="flex items-center gap-1.5 text-ink-2">
 					<span
 						aria-hidden="true"
@@ -309,7 +314,7 @@ function ApplicationRow({ application, phone, selected, checked, onCheck, onOpen
 					</span>
 				)}
 			</td>
-			<td className="px-2 text-xs whitespace-nowrap text-ink-3 max-md:hidden">
+			<td className="px-2 text-xs whitespace-nowrap text-ink-3 max-lg:hidden">
 				{formatRelativeTime(application.updatedAt, i18n.locale)}
 			</td>
 		</tr>

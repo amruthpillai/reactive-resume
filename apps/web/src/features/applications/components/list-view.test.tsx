@@ -1,7 +1,7 @@
 import type { Application } from "../types";
 // @vitest-environment happy-dom
 import { render, screen } from "@testing-library/react";
-import { expect, it, vi } from "vitest";
+import { expect, it, vi } from "vite-plus/test";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -74,12 +74,15 @@ it("fixes the table layout so a long follow-up note cannot starve Role", () => {
 	expect(note.className).toContain("min-w-0");
 });
 
-it("sizes the secondary columns so Role alone takes the leftover width", () => {
-	const { container } = renderList([application()]);
-
-	expect(header(container, "Stage").className).toContain("w-32");
-	expect(header(container, "Sent").className).toContain("w-20");
-	expect(header(container, "Updated").className).toContain("w-28");
+it.each([
+	["mobile", 1],
+	["tablet", 4],
+	["desktop", 5],
+	["wide", 6],
+] as const)("spans only visible columns at the %s breakpoint", (breakpoint, columns) => {
+	const { container } = renderList([application()], breakpoint);
+	// Extra spanned columns steal Role's remaining width under fixed table layout.
+	expect(container.querySelector("th[scope=colgroup]")?.getAttribute("colspan")).toBe(String(columns));
 });
 
 it("keeps automatic layout and single-cell rows on phones", () => {
