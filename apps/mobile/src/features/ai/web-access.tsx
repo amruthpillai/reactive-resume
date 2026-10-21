@@ -56,6 +56,8 @@ export function WebAccessSettings() {
 	const [confirmRemove, setConfirmRemove] = useState(false);
 	const status = session.status === "signed-in" && query.isSuccess ? query.data : null;
 	const connected = status?.provider ? services[status.provider] : null;
+	// Older servers leave `searxng` out.
+	const serverSearch = status?.searxng === true;
 	const close = () => {
 		setEditing(false);
 		setApiKey("");
@@ -102,7 +104,11 @@ export function WebAccessSettings() {
 			</Card>
 			<Card style={{ gap: space.s3 }}>
 				<Text variant="title">{t`Search and enhanced reading`}</Text>
-				<Text color="ink2">{t`Search from Applications and the assistant, and read pages the built-in reader can't. One service covers both.`}</Text>
+				<Text color="ink2">
+					{serverSearch
+						? t`Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't.`
+						: t`Search from Applications and the assistant, and read pages the built-in reader can't. One service covers both.`}
+				</Text>
 				{query.error ? (
 					<>
 						<Banner tone="warn" message={t`Web access settings couldn't be saved or loaded.`} />
@@ -132,6 +138,9 @@ export function WebAccessSettings() {
 									onPress={() => void run("test")}
 								/>
 							</>
+						)}
+						{serverSearch && !status.configured && (
+							<Button label={t`Test search`} loading={pending} variant="secondary" onPress={() => void run("test")} />
 						)}
 						{status.canSave && !status.managed && (
 							<>
@@ -168,12 +177,21 @@ export function WebAccessSettings() {
 				{result && (
 					<>
 						<TestCapability result={result.search} label={result.search.success ? t`Search works` : t`Search failed`} />
-						<TestCapability
-							result={result.read}
-							label={result.read.success ? t`Reading works` : t`Enhanced reading failed`}
-						/>
-						{!result.read.success && <Text color="ink3">{t`The built-in reader remains active.`}</Text>}
-						<Text variant="callout" color="ink3">{t`Tested with ${connected}. Only this service was tested.`}</Text>
+						{/* Without a connection only the built-in reader reads, and the test doesn't cover it. */}
+						{connected && (
+							<TestCapability
+								result={result.read}
+								label={result.read.success ? t`Reading works` : t`Enhanced reading failed`}
+							/>
+						)}
+						{connected && !result.read.success && <Text color="ink3">{t`The built-in reader remains active.`}</Text>}
+						<Text variant="callout" color="ink3">
+							{!serverSearch
+								? t`Tested with ${connected}. Only this service was tested.`
+								: connected
+									? t`Search was tested with your server's search, and reading with ${connected}.`
+									: t`Search was tested with your server's search. Links are read with the built-in reader.`}
+						</Text>
 					</>
 				)}
 			</Card>
@@ -182,9 +200,13 @@ export function WebAccessSettings() {
 					? t`Couldn't confirm AI connections. Try again before using the assistant.`
 					: !ai.hasAIProvider
 						? t`Connect an AI provider to use the assistant. Saving and preparing jobs doesn't need one.`
-						: connected
-							? t`The assistant searches and reads pages with ${connected}, whichever AI provider you use.`
-							: t`The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader.`}
+						: serverSearch && connected
+							? t`The assistant searches with your server's search and reads pages with ${connected}, whichever AI provider you use.`
+							: serverSearch
+								? t`The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use.`
+								: connected
+									? t`The assistant searches and reads pages with ${connected}, whichever AI provider you use.`
+									: t`The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader.`}
 			</Text>
 			<Sheet open={editing} onClose={close} title={t`Connect a service`} detents={[0.75]}>
 				{editing && (

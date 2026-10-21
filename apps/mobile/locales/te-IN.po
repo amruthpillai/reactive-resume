@@ -4487,10 +4487,18 @@ msgstr "అది స్కాన్ నుండి వచ్చినట్ల
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "ఎవరైనా మీకు ఈ లింక్‌ని పంపినట్లయితే, కొత్తది కోసం వారిని అడగండి."
 
-#. placeholder {0}: webStatus?.provider ?? provider.provider
+#. placeholder {0}: reader ?? provider.provider
 #: src/api/ai-consent.ts
 msgid "If web access is used, links and search terms also go to {0} and the sites being read."
 msgstr "వెబ్ యాక్సెస్ ఉపయోగించినట్లయితే, లింక్‌లు మరియు శోధన పదాలు కూడా {0} మరియు చదవబడుతున్న సైట్‌లకు వెళ్తాయి."
+
+#: src/api/ai-consent.ts
+msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8136,6 +8144,14 @@ msgid "Search timezones"
 msgstr "టైమ్ జోన్‌లను వెతుకు"
 
 #: src/features/ai/web-access.tsx
+msgid "Search was tested with your server's search, and reading with {connected}."
+msgstr ""
+
+#: src/features/ai/web-access.tsx
+msgid "Search was tested with your server's search. Links are read with the built-in reader."
+msgstr ""
+
+#: src/features/ai/web-access.tsx
 msgid "Search works"
 msgstr "శోధన పనిచేస్తుంది"
 
@@ -9169,6 +9185,10 @@ msgid "Test connection"
 msgstr "పరీక్ష కనెక్షన్"
 
 #: src/features/ai/web-access.tsx
+msgid "Test search"
+msgstr ""
+
+#: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
 msgstr "{connected}తో పరీక్షించబడింది. ఈ సేవ మాత్రమే పరీక్షించబడింది."
 
@@ -9265,6 +9285,14 @@ msgstr "ఈ సర్వర్‌లో అసిస్టెంట్ సెట
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches and reads pages with {connected}, whichever AI provider you use."
 msgstr "అసిస్టెంట్ మీరు ఏ AI ప్రొవైడర్‌ని ఉపయోగించినా {connected}తో పేజీలను శోధిస్తుంది మరియు చదువుతుంది."
+
+#: src/features/ai/web-access.tsx
+msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
+msgstr ""
+
+#: src/features/ai/web-access.tsx
+msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
+msgstr ""
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -11033,6 +11061,10 @@ msgstr "{host}లో మీ రెజ్యూమ్‌లు, కవర్ ల�
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "మీరు ఎంచుకున్న ఫాంట్ కొన్ని అక్షరాలను చూపించలేదు. అవి “?”గా కనిపిస్తాయి. డిజైన్‌లో, వాటిని కలిగి ఉన్న ఫాంట్‌ను ఎంచుకోండి."
+
+#: src/features/ai/web-access.tsx
+msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
+msgstr ""
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

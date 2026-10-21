@@ -4509,11 +4509,19 @@ msgstr "ଯଦି ଏହା ସ୍କାନ୍‌ରୁ ଆସିଥାଏ, ତ�
 msgid "If someone sent you this link, ask them for a new one."
 msgstr "ଯଦି କେହି ଆପଣଙ୍କୁ ଏହି ଲିଙ୍କ୍ ପଠାଇଛନ୍ତି, ତେବେ ସେମାନଙ୍କୁ ଏକ ନୂତନ ପାଇଁ ପଚାରନ୍ତୁ |"
 
-#. placeholder {0}: webStatus?.provider ?? provider.provider
+#. placeholder {0}: reader ?? provider.provider
 #: src/api/ai-consent.ts
 msgid "If web access is used, links and search terms also go to {0} and the sites being read."
 msgstr "|\n"
 "ଯଦି ୱେବ୍ ଆକ୍ସେସ୍ ବ୍ୟବହୃତ ହୁଏ, ଲିଙ୍କ୍ ଏବଂ ସନ୍ଧାନ ସର୍ତ୍ତାବଳୀ ମଧ୍ୟ {0} ଏବଂ ପ are ାଯାଉଥିବା ସାଇଟଗୁଡିକ କୁ ଯାଏ |"
+
+#: src/api/ai-consent.ts
+msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
+msgstr ""
+
+#: src/api/ai-consent.ts
+msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
+msgstr ""
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8174,6 +8182,14 @@ msgid "Search timezones"
 msgstr "ସମୟ ଅଞ୍ଚଳ ଖୋଜନ୍ତୁ"
 
 #: src/features/ai/web-access.tsx
+msgid "Search was tested with your server's search, and reading with {connected}."
+msgstr ""
+
+#: src/features/ai/web-access.tsx
+msgid "Search was tested with your server's search. Links are read with the built-in reader."
+msgstr ""
+
+#: src/features/ai/web-access.tsx
 msgid "Search works"
 msgstr "ସନ୍ଧାନ କାର୍ଯ୍ୟ"
 
@@ -9215,6 +9231,10 @@ msgid "Test connection"
 msgstr "ପରୀକ୍ଷା ସଂଯୋଗ |"
 
 #: src/features/ai/web-access.tsx
+msgid "Test search"
+msgstr ""
+
+#: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
 msgstr "{connected} ସହ ପରୀକ୍ଷିତ। କେବଳ ଏହି ସେବା ପରୀକ୍ଷା ହୋଇଛି।"
 
@@ -9312,6 +9332,14 @@ msgstr "ସହାୟକ ଏହି ସର୍ଭରରେ ସେଟ୍ ଅପ୍ �
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches and reads pages with {connected}, whichever AI provider you use."
 msgstr "ଆପଣ ଯେଉଁ AI ପ୍ରଦାତା ବ୍ୟବହାର କଲେ ମଧ୍ୟ ସହକାରୀ {connected}ରେ ପେଜ୍ ଖୋଜେ ଓ ପଢ଼େ।"
+
+#: src/features/ai/web-access.tsx
+msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
+msgstr ""
+
+#: src/features/ai/web-access.tsx
+msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
+msgstr ""
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -11092,6 +11120,10 @@ msgstr "ଆପଣଙ୍କ ରେଜ୍ୟୁମେ, ଚିଠି ଓ ଆବେ�
 #: src/features/share/messages.ts
 msgid "Your selected font can't display some characters. They show as “?”. In Design, choose a font that has them."
 msgstr "ଆପଣ ଚୟନ କରିଥିବା ଫଣ୍ଟ କିଛି ଅକ୍ଷର ଦେଖାଇପାରିବ ନାହିଁ। ଏଗୁଡ଼ିକ “?” ଭାବେ ଦେଖାଯାଏ। ଡିଜାଇନ୍ ଟ୍ୟାବରେ, ଏଗୁଡ଼ିକ ଥିବା ଏକ ଫଣ୍ଟ ବାଛନ୍ତୁ।"
+
+#: src/features/ai/web-access.tsx
+msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
+msgstr ""
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

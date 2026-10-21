@@ -12,6 +12,8 @@ export const webAccessDto = {
 			managed: z.boolean(),
 			canSave: z.boolean(),
 			search: z.boolean(),
+			/** Searches go to the server's SearXNG rather than the connection. Older servers leave it out. */
+			searxng: z.boolean(),
 			read: z.literal(true),
 		}),
 	},

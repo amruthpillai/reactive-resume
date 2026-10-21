@@ -52,6 +52,8 @@ export const webAccessService = {
 			managed: !!global,
 			canSave: !global && !!env.ENCRYPTION_SECRET,
 			search: canSearch(provider !== null),
+			// Searches go to the operator's SearXNG, whatever the connection.
+			searxng: !!env.WEB_SEARCH_SEARXNG_URL,
 			read: true as const,
 		};
 	},

@@ -62,9 +62,15 @@ export async function authorizeAiRequest(
 			: operation === "career.voice.speak"
 				? t`The text to read aloud is sent through your server to this speech provider. It can contain personal information.`
 				: t`Your request and relevant resume, letter, job posting, application, career information, conversation history, and attachments are sent through your server to this AI provider, according to the feature and context you selected. They can contain personal information.`;
-	const webNotice = web
-		? t`If web access is used, links and search terms also go to ${webStatus?.provider ?? provider.provider} and the sites being read.`
-		: "";
+	// Older servers leave `searxng` out. With it, searches go to the server's SearXNG and only reading uses the connection.
+	const reader = webStatus?.provider;
+	const webNotice = !web
+		? ""
+		: webStatus?.searxng !== true
+			? t`If web access is used, links and search terms also go to ${reader ?? provider.provider} and the sites being read.`
+			: reader
+				? t`If web access is used, search terms go to your server's search service and the search engines it uses, and links go to ${reader} and the sites being read.`
+				: t`If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read.`;
 	const scheduleNotice = scheduled
 		? t`This enables recurring processing while the schedule is on, using your server's selected providers. Turn the schedule off to stop future runs.`
 		: "";
