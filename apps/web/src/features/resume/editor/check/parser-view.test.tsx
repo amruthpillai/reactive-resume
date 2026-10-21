@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, render, screen } from "@testing-library/react";
+import { expect, it, vi } from "vite-plus/test";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { expect, it, vi } from "vite-plus/test";
 import { useEditorStore } from "../store";
 import { ParserView } from "./parser-view";
 
