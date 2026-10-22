@@ -62,6 +62,22 @@ describe("SearchRegionsField", () => {
 		expect(onChange).toHaveBeenCalledWith(["AU"]);
 	});
 
+	it("saves the device country again after clearing it and returning to automatic", async () => {
+		deviceTimeZone("Australia/Melbourne");
+		const user = userEvent.setup();
+		const onChange = vi.fn();
+		render(<Harness initial={null} accountTimeZone="UTC" onChange={onChange} />);
+		await user.click(screen.getByRole("button", { name: "Remove Australia" }));
+		expect(screen.getByText("Anywhere")).toBeInTheDocument();
+		await user.click(screen.getByRole("button", { name: "Use my time zone" }));
+		expect(onChange.mock.calls.map(([value]) => value)).toEqual([["AU"], [], null, ["AU"]]);
+		expect(screen.getByText("Australia")).toBeInTheDocument();
+		await user.click(screen.getByRole("button", { name: "Remove Australia" }));
+		await user.click(screen.getByRole("button", { name: "Use my time zone" }));
+		expect(onChange).toHaveBeenLastCalledWith(["AU"]);
+		expect(onChange).toHaveBeenCalledTimes(7);
+	});
+
 	it("adds a country found by searching", async () => {
 		const user = userEvent.setup();
 		const onChange = vi.fn();

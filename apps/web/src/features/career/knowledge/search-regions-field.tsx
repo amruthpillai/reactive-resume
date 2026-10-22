@@ -52,7 +52,11 @@ export function SearchRegionsField({ value, accountTimeZone, onChange }: SearchR
 	// An account still on UTC takes the device's country once, so the server has one to search.
 	const adopted = useRef(false);
 	useEffect(() => {
-		if (!shown.adopt || adopted.current) return;
+		if (!shown.adopt) {
+			adopted.current = false;
+			return;
+		}
+		if (adopted.current) return;
 		adopted.current = true;
 		onChange([shown.adopt]);
 	}, [shown.adopt, onChange]);
