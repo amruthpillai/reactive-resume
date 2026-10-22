@@ -42,11 +42,17 @@ const links = dataLines(backward)
 // Standard-time abbreviations name a time rule, not a country, so tzdata's backing zone says nothing.
 const REGIONLESS = new Set(["CET", "EET", "EST", "HST", "MET", "MST", "WET"]);
 
+// These aliases lack #= hints in backward. Their locations are preserved in tzdata's backzone file.
+const LOCATION_OVERRIDES = new Map([
+	["America/Coral_Harbour", "CA"],
+	["Pacific/Yap", "FM"],
+]);
+
 for (let resolved = true; resolved;) {
 	resolved = false;
 	for (const { target, name, intended } of links) {
 		if (REGIONLESS.has(name) || zoneCountry.has(name)) continue;
-		const country = zoneCountry.get(intended) ?? zoneCountry.get(target);
+		const country = LOCATION_OVERRIDES.get(name) ?? zoneCountry.get(intended) ?? zoneCountry.get(target);
 		if (country) {
 			zoneCountry.set(name, country);
 			resolved = true;

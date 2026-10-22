@@ -25,6 +25,8 @@ describe("countryForTimeZone", () => {
 	it("prefers the zone a legacy name was meant for over a merged canonical zone", () => {
 		expect(countryForTimeZone("Iceland")).toBe("IS");
 		expect(countryForTimeZone("Pacific/Truk")).toBe("FM");
+		expect(countryForTimeZone("America/Coral_Harbour")).toBe("CA");
+		expect(countryForTimeZone("Pacific/Yap")).toBe("FM");
 	});
 
 	it("returns null for UTC, Etc zones and unknown names", () => {
