@@ -18,6 +18,7 @@ import {
 	savedItemSchema,
 } from "../../dto/career";
 import { aiRequestRateLimit } from "../../middleware/rate-limit";
+import { searchScope } from "../web-access/regions";
 import { generateCareer } from "./generate";
 import { careerJobs } from "./jobs";
 import { careerService } from "./service";
@@ -53,7 +54,11 @@ export const careerRouter = {
 		})
 		.input(careerScheduleInputSchema.extend({ id: z.string().optional() }))
 		.output(careerScheduleSchema)
-		.handler(({ context, input }) => careerJobs.save(context.user.id, input)),
+		.handler(async ({ context, input }) => {
+			if (input.kind === "discovery" && input.enabled)
+				await searchScope(context.user.id, context.reqHeaders.get("x-client-timezone") ?? undefined);
+			return careerJobs.save(context.user.id, input);
+		}),
 	deleteSchedule: protectedProcedure
 		.route({
 			method: "DELETE",

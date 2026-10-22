@@ -66,7 +66,7 @@ export const webAccessRouter = {
 		.handler(async ({ context, signal }) => {
 			const [connection, { regions }] = await Promise.all([
 				webAccessService.resolve(context.user.id),
-				searchScope(context.user.id),
+				searchScope(context.user.id, context.reqHeaders.get("x-client-timezone") ?? undefined),
 			]);
 			if (!connection)
 				throw new ORPCError("PRECONDITION_FAILED", { message: "No external web connection is configured." });

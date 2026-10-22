@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vite-plus/test";
 import { createRouterClient } from "@orpc/server";
 import { eq } from "drizzle-orm";
 import { Pool } from "pg";
-import { auth } from "@reactive-resume/auth/config";
+import { auth, linkAnonymousAccount, registerAccountLinkHook } from "@reactive-resume/auth/config";
 import { db, withDatabasePool } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { env } from "@reactive-resume/env/server";
@@ -18,7 +18,19 @@ describe.skipIf(!process.env.OAUTH_TEST_DATABASE_URL)("account wrapper ownership
 	beforeAll(async () => {
 		admin = new Pool({ connectionString: process.env.OAUTH_TEST_DATABASE_URL });
 		await admin.query(`CREATE SCHEMA ${schemaName}`);
-		for (const table of ["user", "session", "apikey", "oauth_resource", "jwks"]) {
+		for (const table of [
+			"user",
+			"session",
+			"apikey",
+			"oauth_resource",
+			"jwks",
+			"resume",
+			"resume_version",
+			"cover_letter",
+			"cover_letter_version",
+			"application",
+			"resume_slug_redirect",
+		]) {
 			await admin.query(`CREATE TABLE ${schemaName}."${table}" (LIKE public."${table}" INCLUDING ALL)`);
 		}
 		pool = new Pool({
@@ -31,6 +43,120 @@ describe.skipIf(!process.env.OAUTH_TEST_DATABASE_URL)("account wrapper ownership
 		await pool?.end();
 		await admin?.query(`DROP SCHEMA IF EXISTS ${schemaName} CASCADE`);
 		await admin?.end();
+	});
+
+	it("links guest documents, versions, attachments and redirects without changing destination assets", async () => {
+		const oldUrl = "https://resume.example/api/uploads/link-guest/pictures/photo.png";
+		const newUrl = "https://resume.example/api/uploads/link-owner/pictures/photo.png";
+		await pool.query(
+			`INSERT INTO resume (id, name, slug, data, user_id) VALUES
+			('guest-resume', 'Guest', 'shared', $1, 'link-guest'),
+			('owner-resume', 'Owner', 'shared', $2, 'link-owner')`,
+			[JSON.stringify({ picture: oldUrl, nested: [oldUrl] }), JSON.stringify({ picture: "existing" })],
+		);
+		await pool.query(
+			`INSERT INTO resume_version (id, resume_id, user_id, data) VALUES ('guest-version', 'guest-resume', 'link-guest', $1)`,
+			[JSON.stringify({ picture: oldUrl })],
+		);
+		await pool.query(
+			`INSERT INTO cover_letter (id, name, user_id, style) VALUES ('guest-letter', 'Guest', 'link-guest', $1)`,
+			[JSON.stringify({ picture: oldUrl })],
+		);
+		await pool.query(
+			`INSERT INTO cover_letter_version (id, cover_letter_id, user_id, data) VALUES ('guest-letter-version', 'guest-letter', 'link-guest', $1)`,
+			[JSON.stringify({ style: { picture: oldUrl } })],
+		);
+		await pool.query(
+			`INSERT INTO application (id, user_id, company, role, resume_file_url, cover_letter_url) VALUES ('guest-application', 'link-guest', 'Example', 'Engineer', $1, NULL)`,
+			[oldUrl],
+		);
+		await pool.query(`INSERT INTO resume_slug_redirect (id, user_id, resume_id, slug, expires_at) VALUES
+			('guest-redirect', 'link-guest', 'guest-resume', 'old', now() + interval '1 day'),
+			('guest-conflict', 'link-guest', 'guest-resume', 'conflict', now() + interval '1 day'),
+			('owner-redirect', 'link-owner', 'owner-resume', 'conflict', now() + interval '1 day')`);
+
+		await withDatabasePool(pool, () => linkAnonymousAccount({ fromUserId: "link-guest", toUserId: "link-owner" }));
+
+		expect((await pool.query("SELECT user_id, slug, data FROM resume WHERE id = 'guest-resume'")).rows).toEqual([
+			{ user_id: "link-owner", slug: "shared-resume", data: { picture: newUrl, nested: [newUrl] } },
+		]);
+		expect((await pool.query("SELECT data FROM resume WHERE id = 'owner-resume'")).rows[0]?.data).toEqual({
+			picture: "existing",
+		});
+		for (const [table, column, value] of [
+			["resume_version", "data", { picture: newUrl }],
+			["cover_letter", "style", { picture: newUrl }],
+			["cover_letter_version", "data", { style: { picture: newUrl } }],
+		] as const) {
+			expect((await pool.query(`SELECT user_id, ${column} AS value FROM ${table}`)).rows).toEqual([
+				{ user_id: "link-owner", value },
+			]);
+		}
+		expect((await pool.query("SELECT user_id, resume_file_url, cover_letter_url FROM application")).rows).toEqual([
+			{ user_id: "link-owner", resume_file_url: newUrl, cover_letter_url: null },
+		]);
+		expect((await pool.query("SELECT id, user_id FROM resume_slug_redirect ORDER BY id")).rows).toEqual([
+			{ id: "guest-redirect", user_id: "link-owner" },
+			{ id: "owner-redirect", user_id: "link-owner" },
+		]);
+	});
+
+	it("rolls back ownership and URLs when upload copying fails", async () => {
+		const data = { picture: "https://resume.example/api/uploads/failed-guest/pictures/a.png" };
+		await pool.query(
+			`INSERT INTO resume (id, name, slug, data, user_id) VALUES ('failed-resume', 'Guest', 'failed', $1, 'failed-guest')`,
+			[JSON.stringify(data)],
+		);
+		const unregister = registerAccountLinkHook(async () => {
+			throw new Error("Copy unavailable");
+		});
+		try {
+			await expect(
+				withDatabasePool(pool, () => linkAnonymousAccount({ fromUserId: "failed-guest", toUserId: "link-owner" })),
+			).rejects.toThrow("Copy unavailable");
+		} finally {
+			unregister();
+		}
+		expect((await pool.query("SELECT user_id, data FROM resume WHERE id = 'failed-resume'")).rows).toEqual([
+			{ user_id: "failed-guest", data },
+		]);
+	});
+
+	it("blocks guest saves while copying and rejects stale ownership after commit", async () => {
+		const data = { picture: "https://resume.example/api/uploads/race-guest/pictures/a.png" };
+		await pool.query(
+			`INSERT INTO resume (id, name, slug, data, user_id) VALUES ('race-resume', 'Guest', 'race', $1, 'race-guest')`,
+			[JSON.stringify(data)],
+		);
+		const copying = Promise.withResolvers<void>();
+		const resumeCopy = Promise.withResolvers<void>();
+		const unregister = registerAccountLinkHook(async () => {
+			copying.resolve();
+			await resumeCopy.promise;
+		});
+		const client = await pool.connect();
+		const linking = withDatabasePool(pool, () =>
+			linkAnonymousAccount({ fromUserId: "race-guest", toUserId: "link-owner" }),
+		);
+		try {
+			await copying.promise;
+			await client.query("SET lock_timeout = '100ms'");
+			await expect(
+				client.query("UPDATE resume SET data = '{}' WHERE id = 'race-resume' AND user_id = 'race-guest'"),
+			).rejects.toMatchObject({ code: "55P03" });
+		} finally {
+			resumeCopy.resolve();
+			await linking;
+			unregister();
+			await client.query("RESET lock_timeout");
+			client.release();
+		}
+		expect(
+			(await pool.query("UPDATE resume SET data = '{}' WHERE id = 'race-resume' AND user_id = 'race-guest'")).rowCount,
+		).toBe(0);
+		expect((await pool.query("SELECT user_id, data FROM resume WHERE id = 'race-resume'")).rows).toEqual([
+			{ user_id: "link-owner", data: { picture: "https://resume.example/api/uploads/link-owner/pictures/a.png" } },
+		]);
 	});
 
 	it("reads only the authenticated profile, ignoring supplied identity and excluding private columns", async () => {

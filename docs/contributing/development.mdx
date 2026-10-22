@@ -258,13 +258,17 @@ Before you open a pull request:
 3. Run `pnpm build` if you changed runtime or bundling behavior.
 4. Keep the pull request focused. Describe the problem, the new behavior, and the checks you ran, and link the related [GitHub issue](https://github.com/reactive-resume/reactive-resume/issues).
 
-Pull requests run these GitHub Actions workflows:
+Pull requests run the **CI** workflow (`.github/workflows/e2e.yml`) with three independent jobs:
 
-| Workflow      | What it checks                                                                                                                |
-| ------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `e2e.yml`     | Unit tests for every workspace (`turbo run test:ci --concurrency=1`), a production build, and the Playwright suite            |
-| `vercel.yml`  | Builds the Vercel artifact offline and checks the backend Function. See [Deployment checks](/contributing/deployment-checks). |
-| `autofix.yml` | Runs `pnpm knip --fix` and `pnpm check`, then pushes any fixes to your branch                                                 |
+| Job                      | What it checks                                                                                                                                            |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit and browser tests   | Unit tests for every workspace (`turbo run test:ci --concurrency=1`), affected-package typechecks, package boundaries, a production build, and Playwright |
+| Vercel artifact          | Builds the Vercel artifact offline and checks the backend Function. See [Deployment checks](/contributing/deployment-checks).                             |
+| Cloudflare compatibility | Checks the Cloudflare build and runs tests against the local Workers runtime without cloud credentials                                                    |
+
+The separate **autofix.ci** workflow (`autofix.yml`) runs `pnpm knip --fix` and `pnpm check`, then pushes any fixes to your branch. The autofix.ci service requires its own workflow name.
+
+New commits to a pull request cancel its superseded CI and autofix runs. Docker publishing and mobile release workflows run separately.
 
 Keep credentials and personal resume data out of code, logs, test fixtures, issues, and pull requests.
 

@@ -53,29 +53,23 @@ describe("SearchRegionsField", () => {
 		expect(onChange).not.toHaveBeenCalled();
 	});
 
-	it("uses the device time zone while the account is on UTC, and saves it once", () => {
+	it("shows the device country for untouched UTC accounts without saving on mount", () => {
 		deviceTimeZone("Australia/Melbourne");
 		const onChange = vi.fn();
 		render(<Harness initial={undefined} accountTimeZone="UTC" onChange={onChange} />);
 		expect(screen.getByText("Australia")).toBeInTheDocument();
-		expect(onChange).toHaveBeenCalledTimes(1);
-		expect(onChange).toHaveBeenCalledWith(["AU"]);
+		expect(onChange).not.toHaveBeenCalled();
 	});
 
-	it("saves the device country again after clearing it and returning to automatic", async () => {
+	it("returns to the account time zone without re-adopting the device country", async () => {
 		deviceTimeZone("Australia/Melbourne");
 		const user = userEvent.setup();
 		const onChange = vi.fn();
-		render(<Harness initial={null} accountTimeZone="UTC" onChange={onChange} />);
+		render(<Harness initial={["AU"]} accountTimeZone="UTC" onChange={onChange} />);
 		await user.click(screen.getByRole("button", { name: "Remove Australia" }));
+		await user.click(screen.getByRole("button", { name: "Use my time zone" }));
+		expect(onChange.mock.calls.map(([value]) => value)).toEqual([[], null]);
 		expect(screen.getByText("Anywhere")).toBeInTheDocument();
-		await user.click(screen.getByRole("button", { name: "Use my time zone" }));
-		expect(onChange.mock.calls.map(([value]) => value)).toEqual([["AU"], [], null, ["AU"]]);
-		expect(screen.getByText("Australia")).toBeInTheDocument();
-		await user.click(screen.getByRole("button", { name: "Remove Australia" }));
-		await user.click(screen.getByRole("button", { name: "Use my time zone" }));
-		expect(onChange).toHaveBeenLastCalledWith(["AU"]);
-		expect(onChange).toHaveBeenCalledTimes(7);
 	});
 
 	it("adds a country found by searching", async () => {

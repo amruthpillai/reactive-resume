@@ -8,6 +8,16 @@ on:
         type: choice
         options: [all, android, ios]
         default: all
+      format:
+        description: Store binaries (AAB/IPA), or a downloadable Android APK
+        type: choice
+        options: [store, apk]
+        default: store
+      abi:
+        description: Android architecture for APK builds (ignored for store binaries)
+        type: choice
+        options: [arm64-v8a, armeabi-v7a, x86_64]
+        default: arm64-v8a
       upload:
         description: Publish to all Play testing tracks and TestFlight groups (no production release)
         type: boolean
@@ -21,6 +31,9 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  FORMAT: ${{ inputs.format }}
+  ABI: ${{ inputs.abi }}
+  MOBILE_UPDATE_CHANNEL: ${{ inputs.format == 'apk' && 'preview' || 'production' }}
   CI: "1"
   EXPO_NO_TELEMETRY: "1"
   FASTLANE_SKIP_UPDATE_CHECK: "1"
@@ -34,7 +47,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       build_number: ${{ steps.release.outputs.build_number }}
-      platforms: ${{ steps.platforms.outputs.platforms }}
+      platforms: ${{ steps.release.outputs.platforms }}
     steps:
       - uses: useblacksmith/checkout@v1
         with:
@@ -42,39 +55,17 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
-      - name: Validate signing setup and allocate version
+      - name: Validate request and allocate version without credentials
         id: release
         env:
           PLATFORM: ${{ inputs.platform }}
           UPLOAD: ${{ inputs.upload }}
           MOBILE_BUILD_NUMBER_BASE: ${{ vars.MOBILE_BUILD_NUMBER_BASE }}
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-          IOS_DISTRIBUTION_P12_BASE64: ${{ secrets.IOS_DISTRIBUTION_P12_BASE64 }}
-          IOS_DISTRIBUTION_P12_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_P12_PASSWORD }}
-          IOS_PROVISION_PROFILE_BASE64: ${{ secrets.IOS_PROVISION_PROFILE_BASE64 }}
-          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
-          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
-          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
-          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
-        run: node tooling/mobile/release.ts
-      - name: Select platforms
-        id: platforms
-        env:
-          PLATFORM: ${{ inputs.platform }}
-        run: |
-          if [[ "$PLATFORM" == all ]]; then
-            echo 'platforms=["android","ios"]' >> "$GITHUB_OUTPUT"
-          else
-            jq -cn --arg platform "$PLATFORM" '{platforms: [$platform]}' \
-              | jq -r '"platforms=" + (.platforms | tojson)' >> "$GITHUB_OUTPUT"
-          fi
+        run: node tooling/mobile/release.ts --prepare
 
   build:
     needs: prepare
+    environment: mobile-signing
     strategy:
       fail-fast: false
       matrix:
@@ -100,7 +91,9 @@ jobs:
           bundler-cache: true
           working-directory: tooling/mobile
       - name: Check signing file handling
-        run: bundle exec ruby tooling/mobile/signing_test.rb
+        run: |
+          bundle exec ruby tooling/mobile/signing_test.rb
+          ruby tooling/mobile/build_test.rb
       - name: Check beta distribution targets
         run: ruby tooling/mobile/distribution_test.rb
       - uses: actions/setup-java@v5
@@ -110,6 +103,8 @@ jobs:
           java-version: "17"
       - uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
         if: matrix.platform == 'android'
+        with:
+          packages: platform-tools platforms;android-37.0 build-tools;37.0.0 ndk;27.1.12297006 ndk;28.2.13676358 cmake;3.22.1
       - run: pnpm install --frozen-lockfile
       - name: Check mobile source
         run: |
@@ -119,9 +114,22 @@ jobs:
         with:
           eas-version: 25.2.0
           token: ${{ secrets.EXPO_TOKEN }}
+      - name: Validate signing credentials after approval
+        env:
+          UPLOAD: "false"
+          MOBILE_BUILD_NUMBER_BASE: ${{ vars.MOBILE_BUILD_NUMBER_BASE }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          ANDROID_KEYSTORE_BASE64: ${{ matrix.platform == 'android' && secrets.ANDROID_KEYSTORE_BASE64 || '' }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ matrix.platform == 'android' && secrets.ANDROID_KEYSTORE_PASSWORD || '' }}
+          ANDROID_KEY_ALIAS: ${{ matrix.platform == 'android' && secrets.ANDROID_KEY_ALIAS || '' }}
+          ANDROID_KEY_PASSWORD: ${{ matrix.platform == 'android' && secrets.ANDROID_KEY_PASSWORD || '' }}
+          IOS_DISTRIBUTION_P12_BASE64: ${{ matrix.platform == 'ios' && secrets.IOS_DISTRIBUTION_P12_BASE64 || '' }}
+          IOS_DISTRIBUTION_P12_PASSWORD: ${{ matrix.platform == 'ios' && secrets.IOS_DISTRIBUTION_P12_PASSWORD || '' }}
+          IOS_PROVISION_PROFILE_BASE64: ${{ matrix.platform == 'ios' && secrets.IOS_PROVISION_PROFILE_BASE64 || '' }}
+        run: node tooling/mobile/release.ts
       - name: Fetch reviewed native Forme binaries
         run: node packages/forme-native/scripts/fetch-prebuilt.mjs --platform "$PLATFORM"
-      - name: Build signed store binary with production environment
+      - name: Build signed binary with selected update environment
         working-directory: apps/mobile
         env:
           ANDROID_KEYSTORE_BASE64: ${{ matrix.platform == 'android' && secrets.ANDROID_KEYSTORE_BASE64 || '' }}
@@ -132,32 +140,58 @@ jobs:
           IOS_DISTRIBUTION_P12_PASSWORD: ${{ matrix.platform == 'ios' && secrets.IOS_DISTRIBUTION_P12_PASSWORD || '' }}
           IOS_PROVISION_PROFILE_BASE64: ${{ matrix.platform == 'ios' && secrets.IOS_PROVISION_PROFILE_BASE64 || '' }}
         run: |
-          eas env:exec production --non-interactive \
-            'pnpm exec expo prebuild --platform "$PLATFORM" --clean --no-install && cd ../../tooling/mobile && bundle exec fastlane "$PLATFORM" build'
+          eas env:exec "$MOBILE_UPDATE_CHANNEL" --non-interactive \
+            'pnpm exec expo prebuild --platform "$PLATFORM" --clean --no-install && cd ../../tooling/mobile && if [ "$FORMAT" = apk ]; then bundle exec fastlane android build abi:"$ABI"; else bundle exec fastlane "$PLATFORM" build; fi'
+      - name: Verify APK signature and architecture
+        if: inputs.format == 'apk'
+        run: |
+          set -euo pipefail
+          apk="$RUNNER_TEMP/mobile-release/reactive-resume-$ABI.apk"
+          "$ANDROID_HOME/build-tools/37.0.0/apksigner" verify --verbose --print-certs "$apk"
+          abis=$(unzip -Z1 "$apk" | awk -F/ '/^lib\/[^/]+\/.*\.so$/ {print $2}' | sort -u)
+          [[ "$abis" == "$ABI" ]]
+          unzip -Z1 "$apk" > "$RUNNER_TEMP/apk-entries.txt"
+          grep -Fx "lib/$ABI/libforme_native.so" "$RUNNER_TEMP/apk-entries.txt"
+
       - name: Record native runtime fingerprint
         working-directory: apps/mobile
         run: |
-          eas fingerprint:generate --platform "$PLATFORM" --environment production --json --non-interactive \
+          eas fingerprint:generate --platform "$PLATFORM" --environment "$MOBILE_UPDATE_CHANNEL" --json --non-interactive \
             > "$RUNNER_TEMP/mobile-release/fingerprint.json"
           jq -n --arg sha "$GITHUB_SHA" --arg platform "$PLATFORM" --arg build "$MOBILE_BUILD_NUMBER" \
+            --arg format "$FORMAT" --arg abi "$ABI" --arg channel "$MOBILE_UPDATE_CHANNEL" \
             --arg xcode "$(if [[ "$PLATFORM" == ios ]]; then xcodebuild -version; fi)" \
-            '{commit: $sha, platform: $platform, buildNumber: $build, channel: "production", xcode: $xcode}' \
+            '{commit: $sha, platform: $platform, buildNumber: $build, format: $format, abi: $abi, channel: $channel, xcode: $xcode}' \
             > "$RUNNER_TEMP/mobile-release/release.json"
-      - name: Save signed binary and debugging artifacts
+      - name: Save signed binary
         uses: actions/upload-artifact@v7
         with:
           name: mobile-${{ matrix.platform }}-${{ needs.prepare.outputs.build_number }}
-          path: ${{ runner.temp }}/mobile-release/
+          path: |
+            ${{ runner.temp }}/mobile-release/*.apk
+            ${{ runner.temp }}/mobile-release/*.aab
+            ${{ runner.temp }}/mobile-release/*.ipa
           if-no-files-found: error
-          retention-days: 14
+          retention-days: ${{ inputs.format == 'apk' && 14 || 90 }}
+      - name: Archive release manifest, fingerprint, symbols and mappings
+        uses: actions/upload-artifact@v7
+        with:
+          name: mobile-${{ matrix.platform }}-${{ needs.prepare.outputs.build_number }}-evidence
+          path: |
+            ${{ runner.temp }}/mobile-release/
+            !${{ runner.temp }}/mobile-release/*.apk
+            !${{ runner.temp }}/mobile-release/*.aab
+            !${{ runner.temp }}/mobile-release/*.ipa
+          if-no-files-found: error
+          retention-days: 90
       - name: Summarize build
         run: |
           echo "### $PLATFORM build $MOBILE_BUILD_NUMBER" >> "$GITHUB_STEP_SUMMARY"
-          echo "Commit: $GITHUB_SHA. OTA channel: production. Fingerprint and debugging artifacts attached to this run." >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit: $GITHUB_SHA. Format: $FORMAT. OTA channel: $MOBILE_UPDATE_CHANNEL. Release evidence retained for 90 days." >> "$GITHUB_STEP_SUMMARY"
 
   upload:
     needs: [prepare, build]
-    if: inputs.upload
+    if: inputs.upload && inputs.format == 'store'
     environment: mobile-store
     strategy:
       fail-fast: false
@@ -172,6 +206,9 @@ jobs:
       - uses: useblacksmith/checkout@v1
         with:
           persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -189,4 +226,6 @@ jobs:
           ASC_KEY_ID: ${{ matrix.platform == 'ios' && secrets.ASC_KEY_ID || '' }}
           ASC_ISSUER_ID: ${{ matrix.platform == 'ios' && secrets.ASC_ISSUER_ID || '' }}
           ASC_PRIVATE_KEY: ${{ matrix.platform == 'ios' && secrets.ASC_PRIVATE_KEY || '' }}
-        run: bundle exec fastlane "$PLATFORM" upload
+        run: |
+          node release.ts --upload
+          bundle exec fastlane "$PLATFORM" upload

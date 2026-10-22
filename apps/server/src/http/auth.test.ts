@@ -5,6 +5,8 @@ const mocks = vi.hoisted(() => ({
 	consent: vi.fn(),
 	continueOAuth: vi.fn(),
 	handler: vi.fn(),
+	registerAccountLinkHook: vi.fn(),
+	migrateUserStorage: vi.fn(),
 	env: {
 		SERVER_PORT: 3001,
 		APP_URL: "http://localhost:3000",
@@ -21,6 +23,11 @@ vi.mock("@reactive-resume/auth/config", () => ({
 		},
 		handler: mocks.handler,
 	},
+	registerAccountLinkHook: mocks.registerAccountLinkHook,
+}));
+
+vi.mock("@reactive-resume/api/features/storage", () => ({
+	migrateUserStorage: mocks.migrateUserStorage,
 }));
 
 vi.mock("@reactive-resume/db/client", () => ({ db: {} }));
@@ -223,4 +230,35 @@ describe("OAuth provider response validation", () => {
 			expect(mocks.consent).not.toHaveBeenCalled();
 		},
 	);
+});
+
+describe("account link storage migration", () => {
+	it("registers an account link hook that delegates to migrateUserStorage", async () => {
+		const { registerAccountLinkStorageMigration } = await import("./auth");
+		registerAccountLinkStorageMigration();
+		expect(mocks.registerAccountLinkHook).toHaveBeenCalled();
+		const registeredHook = mocks.registerAccountLinkHook.mock.calls.at(-1)?.[0];
+		expect(typeof registeredHook).toBe("function");
+
+		const cleanup = vi.fn();
+		mocks.migrateUserStorage.mockResolvedValueOnce(cleanup);
+		expect(await registeredHook({ fromUserId: "guest-old", toUserId: "user-new" })).toBe(cleanup);
+		expect(cleanup).not.toHaveBeenCalled();
+		expect(mocks.migrateUserStorage).toHaveBeenCalledWith("guest-old", "user-new");
+	});
+
+	it("logs and rethrows when migrateUserStorage fails", async () => {
+		const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+		mocks.migrateUserStorage.mockRejectedValueOnce(new Error("Storage unavailable"));
+		const { registerAccountLinkStorageMigration } = await import("./auth");
+		registerAccountLinkStorageMigration();
+		const registeredHook = mocks.registerAccountLinkHook.mock.calls.at(-1)?.[0];
+		expect(typeof registeredHook).toBe("function");
+
+		await expect(registeredHook({ fromUserId: "guest-old", toUserId: "user-new" })).rejects.toThrow(
+			"Storage unavailable",
+		);
+		expect(consoleError).toHaveBeenCalled();
+		consoleError.mockRestore();
+	});
 });

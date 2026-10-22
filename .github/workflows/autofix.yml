@@ -8,11 +8,16 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   autofix:
+    timeout-minutes: 20
     runs-on: ${{ vars.USE_BLACKSMITH == 'true' && 'blacksmith-32vcpu-ubuntu-2404' || 'ubuntu-latest' }}
 
     steps:

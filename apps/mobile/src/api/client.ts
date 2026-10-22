@@ -52,6 +52,7 @@ async function withCredentials(
 }
 
 const bearer = (credentials: Credentials, headers: Headers) => {
+	headers.set("x-client-timezone", Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
 	if (credentials.accessToken) headers.set("authorization", `Bearer ${credentials.accessToken}`);
 	else headers.delete("authorization");
 	return headers;

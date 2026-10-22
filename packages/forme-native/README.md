@@ -1,6 +1,6 @@
 # Native Forme bridge
 
-Expo SDK 58 / React Native 0.88 module backed by `forme-pdf = "=0.28.0"`. No WASM or WebView is used by the renderer or subsetter.
+Expo SDK 58 / React Native 0.88 module backed by `forme-pdf = "=0.29.0"`. No WASM or WebView is used by the renderer or subsetter.
 
 ## Build
 

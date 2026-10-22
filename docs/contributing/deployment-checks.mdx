@@ -3,11 +3,11 @@ title: "Deployment checks"
 description: "How CI verifies the Vercel build artifact on every pull request, and how to run the deployment smoke test against a Vercel or Docker installation."
 ---
 
-Reactive Resume ships as a Docker image and as a Vercel project. The **Vercel Compatibility** workflow (`.github/workflows/vercel.yml`) catches problems that only show up in a deployed build. It has two jobs: an offline artifact build that runs on every pull request, and a live smoke test you start by hand. You can run the same smoke test against your own installation.
+Reactive Resume ships as a Docker image and as a Vercel project. The **CI** workflow (`.github/workflows/e2e.yml`) includes an offline Vercel artifact build that runs on every pull request and a live smoke test you start by hand. These jobs catch problems that only show up in a deployed build. You can run the same smoke test against your own installation.
 
 ## Artifact build
 
-The `artifact` job runs on every pull request, every push to `main`, and every manual run. It needs no Vercel account and no secrets, so pull requests from forks run it safely.
+The `artifact` job runs on every pull request, every push to `main`, and manual runs with `live_smoke` left off. It needs no Vercel account and no secrets, so pull requests from forks run it safely.
 
 The job:
 
@@ -24,7 +24,7 @@ If a new server dependency breaks the loading check, add it and its own dependen
 
 ## Live smoke test
 
-The `live-smoke` job runs only when you start the workflow manually (`workflow_dispatch`). It uses the `vercel-smoke` GitHub environment and runs `tooling/deployment/smoke.mjs` against the installation at `VERCEL_SMOKE_URL`.
+The `live-smoke` job runs only when you start **CI** manually (`workflow_dispatch`) with `live_smoke` enabled. This skips the other CI jobs. It uses the `vercel-smoke` GitHub environment and runs `tooling/deployment/smoke.mjs` against the installation at `VERCEL_SMOKE_URL`.
 
 <Warning>
   Point the smoke test only at a dedicated test installation. It signs up a new account, publishes a resume, and uploads

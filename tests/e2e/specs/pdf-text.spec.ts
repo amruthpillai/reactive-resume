@@ -5,6 +5,12 @@ test("browser PDF downloads preserve shaped scripts and name unsupported text wi
 	authPage: page,
 }, testInfo) => {
 	test.setTimeout(180_000);
+	// Chromium's direct CDN connections can fail on CI; still fetch and render the real font bytes.
+	await page.route(/^https:\/\/fonts\.gstatic\.(?:com|cn)\//, async (route) => {
+		const fontResponse = await route.fetch();
+		expect(fontResponse.ok()).toBe(true);
+		await route.fulfill({ response: fontResponse });
+	});
 	const created = await page.request.post("/api/openapi/resumes", {
 		data: { name: `PDF ${testInfo.testId}`, tags: [] },
 	});

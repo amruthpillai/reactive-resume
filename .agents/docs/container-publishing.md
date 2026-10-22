@@ -34,6 +34,32 @@ builds. An older build still publishes its SHA and timestamped nightly aliases, 
 the current main HEAD updates the moving `nightly` alias. Architecture-specific build
 outputs use `sha-<full-commit>-amd64` and `sha-<full-commit>-arm64`.
 
+### Explicit product releases and manual APKs
+
+A push to `main` publishes container images and compatible preview OTA updates only.
+It never builds Android APKs, creates Git tags, or creates GitHub Releases. Product
+GitHub Releases and `v*` tags are created only by an explicit versioned release operation.
+Docker promotion consumes an existing tag or commit; it does not create either.
+
+For a sideloadable APK, dispatch **Mobile Release** on `main` with `platform=android`,
+`format=apk`, the desired `abi`, and `upload=false`. Signing requires approval through
+`mobile-signing`. The preview APK is a downloadable Actions artifact for 14 days;
+release evidence is retained for 90 days. No GitHub tag or release is created.
+See [manual Android downloads](./mobile-release-handoff.md#manual-android-downloads).
+
+Forme's manually published, checksum-pinned binary assets remain available at their
+existing URLs. Moving those rare artifacts to dedicated storage is deferred; never
+remove an asset still referenced by `packages/forme-native/scripts/prebuilt.json`.
+
+### Stable promotions
+
+Before moving any container aliases or deploying production, the latest `e2e.yml`
+CI run from a `main` push must have completed successfully for the exact full commit
+SHA being promoted. Missing, failed, cancelled, or pending CI blocks promotion;
+PR checks and manual smoke-only runs cannot authorize it. If historical CI was
+removed, that commit is no longer eligible for this promotion path. This check runs
+before registry mutations and does not rebuild the source image.
+
 Release tags must be `vMAJOR.MINOR.PATCH`, optionally with a prerelease suffix, and match
 `package.json` at the tagged commit. Promotion resolves that commit's GHCR
 `sha-<full-commit>` image, validates both architectures, and copies the complete image index

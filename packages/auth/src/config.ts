@@ -147,6 +147,116 @@ type WithoutEndpointMetadata<TPlugin> = TPlugin extends { endpoints: infer TEndp
 		}
 	: TPlugin;
 
+/** Prepare external resources before commit; optional cleanup runs only after commit. */
+export type AccountLinkHook = (params: {
+	fromUserId: string;
+	toUserId: string;
+}) => Promise<(() => Promise<void>) | void>;
+
+const accountLinkHooks = new Set<AccountLinkHook>();
+
+export function registerAccountLinkHook(hook: AccountLinkHook): () => void {
+	accountLinkHooks.add(hook);
+	return () => {
+		accountLinkHooks.delete(hook);
+	};
+}
+
+export function clearAccountLinkHooks(): void {
+	accountLinkHooks.clear();
+}
+
+export async function linkAnonymousAccount({
+	fromUserId,
+	toUserId,
+}: {
+	fromUserId: string;
+	toUserId: string;
+}): Promise<void> {
+	if (fromUserId === toUserId) return;
+
+	const cleanups: (() => Promise<void>)[] = [];
+	await db.transaction(async (tx) => {
+		const rewriteUploadsJson = (column: unknown) =>
+			sql`cast(replace(cast(${column} as text), 'uploads/' || ${fromUserId} || '/', 'uploads/' || ${toUserId} || '/') as jsonb)`;
+
+		const rewriteUploadsUrl = (column: unknown) =>
+			sql`case when ${column} is not null then replace(${column}, 'uploads/' || ${fromUserId} || '/', 'uploads/' || ${toUserId} || '/') else null end`;
+
+		// An existing account may already use a slug; suffix the guest's copy to keep (user, slug) unique.
+		await tx
+			.update(schema.resume)
+			.set({
+				userId: toUserId,
+				slug: sql`case when exists (select 1 from resume r where r.user_id = ${toUserId} and r.slug = resume.slug) then resume.slug || '-' || right(resume.id, 6) else resume.slug end`,
+				data: rewriteUploadsJson(schema.resume.data),
+			})
+			.where(eq(schema.resume.userId, fromUserId));
+
+		await tx
+			.update(schema.resumeVersion)
+			.set({
+				userId: toUserId,
+				data: rewriteUploadsJson(schema.resumeVersion.data),
+			})
+			.where(eq(schema.resumeVersion.userId, fromUserId));
+
+		await tx
+			.update(schema.coverLetter)
+			.set({
+				userId: toUserId,
+				style: rewriteUploadsJson(schema.coverLetter.style),
+			})
+			.where(eq(schema.coverLetter.userId, fromUserId));
+
+		await tx
+			.update(schema.coverLetterVersion)
+			.set({
+				userId: toUserId,
+				data: rewriteUploadsJson(schema.coverLetterVersion.data),
+			})
+			.where(eq(schema.coverLetterVersion.userId, fromUserId));
+
+		await tx
+			.update(schema.application)
+			.set({
+				userId: toUserId,
+				resumeFileUrl: rewriteUploadsUrl(schema.application.resumeFileUrl),
+				coverLetterUrl: rewriteUploadsUrl(schema.application.coverLetterUrl),
+			})
+			.where(eq(schema.application.userId, fromUserId));
+
+		await tx
+			.delete(schema.resumeSlugRedirect)
+			.where(
+				and(
+					eq(schema.resumeSlugRedirect.userId, fromUserId),
+					sql`exists (select 1 from resume_slug_redirect rsr where rsr.user_id = ${toUserId} and rsr.slug = resume_slug_redirect.slug)`,
+				),
+			);
+
+		await tx
+			.update(schema.resumeSlugRedirect)
+			.set({ userId: toUserId })
+			.where(eq(schema.resumeSlugRedirect.userId, fromUserId));
+
+		// Ownership updates lock document rows, so guest saves cannot add uncopied references during copying.
+		for (const hook of accountLinkHooks) {
+			const cleanup = await hook({ fromUserId, toUserId });
+			if (cleanup) cleanups.push(cleanup);
+		}
+	});
+
+	const results = await Promise.allSettled(
+		cleanups.map(async (cleanup) => {
+			await cleanup();
+		}),
+	);
+	for (const result of results) {
+		if (result.status === "rejected") console.warn("Failed to clean up linked account resources:", result.reason);
+	}
+}
+
 const getAuthConfig = () => {
 	const authConfigs: GenericOAuthConfig[] = [];
 
@@ -478,25 +588,9 @@ const getAuthConfig = () => {
 				// Signing up or in from a guest session moves the guest's documents to that account; the plugin then
 				// deletes the guest account, along with anything not moved here (assistant threads, career data).
 				onLinkAccount: async ({ anonymousUser, newUser }) => {
-					const from = anonymousUser.user.id;
-					const to = newUser.user.id;
-					await db.transaction(async (tx) => {
-						// An existing account may already use a slug; suffix the guest's copy to keep (user, slug) unique.
-						await tx
-							.update(schema.resume)
-							.set({
-								userId: to,
-								slug: sql`case when exists (select 1 from resume r where r.user_id = ${to} and r.slug = resume.slug) then resume.slug || '-' || right(resume.id, 6) else resume.slug end`,
-							})
-							.where(eq(schema.resume.userId, from));
-						for (const table of [
-							schema.resumeVersion,
-							schema.coverLetter,
-							schema.coverLetterVersion,
-							schema.application,
-						]) {
-							await tx.update(table).set({ userId: to }).where(eq(table.userId, from));
-						}
+					await linkAnonymousAccount({
+						fromUserId: anonymousUser.user.id,
+						toUserId: newUser.user.id,
 					});
 				},
 			}),

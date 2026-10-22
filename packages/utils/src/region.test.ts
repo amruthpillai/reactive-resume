@@ -98,7 +98,6 @@ describe("shownSearchRegions", () => {
 		expect(shownSearchRegions(["DE", "FR"], "Asia/Singapore", "Asia/Singapore")).toEqual({
 			codes: ["DE", "FR"],
 			automatic: false,
-			adopt: null,
 		});
 	});
 
@@ -106,7 +105,6 @@ describe("shownSearchRegions", () => {
 		expect(shownSearchRegions([], "Asia/Singapore", "Asia/Singapore")).toEqual({
 			codes: [],
 			automatic: false,
-			adopt: null,
 		});
 	});
 
@@ -114,34 +112,33 @@ describe("shownSearchRegions", () => {
 		expect(shownSearchRegions(null, "Asia/Singapore", "Australia/Melbourne")).toEqual({
 			codes: ["SG"],
 			automatic: true,
-			adopt: null,
 		});
 		expect(shownSearchRegions(undefined, "Asia/Singapore", null)).toEqual({
 			codes: ["SG"],
 			automatic: true,
-			adopt: null,
 		});
 	});
 
-	it("falls back to the device time zone while the account is still on UTC, and asks to save it", () => {
-		expect(shownSearchRegions(null, "UTC", "Australia/Melbourne")).toEqual({
+	it("shows the device country only for untouched UTC accounts", () => {
+		expect(shownSearchRegions(undefined, "UTC", "Australia/Melbourne")).toEqual({
 			codes: ["AU"],
 			automatic: true,
-			adopt: "AU",
 		});
 		expect(shownSearchRegions(undefined, undefined, "Australia/Melbourne")).toEqual({
 			codes: ["AU"],
 			automatic: true,
-			adopt: "AU",
 		});
 	});
 
+	it("keeps explicit automatic mode on the account time zone", () => {
+		expect(shownSearchRegions(null, "UTC", "Australia/Melbourne")).toEqual({ codes: [], automatic: true });
+	});
+
 	it("shows no country when neither zone names one", () => {
-		expect(shownSearchRegions(null, "UTC", "UTC")).toEqual({ codes: [], automatic: true, adopt: null });
+		expect(shownSearchRegions(null, "UTC", "UTC")).toEqual({ codes: [], automatic: true });
 		expect(shownSearchRegions(null, "Etc/GMT+5", "Australia/Melbourne")).toEqual({
 			codes: [],
 			automatic: true,
-			adopt: null,
 		});
 	});
 });

@@ -1,6 +1,6 @@
 import type { SearchRegionsAction } from "@reactive-resume/utils/region";
 import { useLingui } from "@lingui/react/macro";
-import { useEffect, useMemo, useRef } from "react";
+import { useMemo } from "react";
 import { View } from "react-native";
 import {
 	countryName,
@@ -32,18 +32,6 @@ export function SearchRegionsField({ value, accountTimeZone, onChange }: SearchR
 			),
 		[i18n.locale],
 	);
-
-	// An account still on UTC takes the device's country once, so the server has one to search.
-	const adopted = useRef(false);
-	useEffect(() => {
-		if (!shown.adopt) {
-			adopted.current = false;
-			return;
-		}
-		if (adopted.current) return;
-		adopted.current = true;
-		onChange([shown.adopt]);
-	}, [shown.adopt, onChange]);
 
 	const apply = (action: SearchRegionsAction) => {
 		const next = nextSearchRegions(shown.codes, action);
