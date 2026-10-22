@@ -102,9 +102,10 @@ WEB_SEARCH_SEARXNG_URL="http://searxng:8080"
 
 Use the base URL without `/search`; Reactive Resume appends it and requests JSON. Every web search then goes to SearXNG
 for all users, whether or not they have a web connection. Shared and personal `WEB_ACCESS_*` connections keep working
-beside it. Each of a user's search countries becomes one SearXNG request whose `language` combines the user's
-interface language with that country, such as `en-AU` or `de-SG`, or English with the country when the interface
-language is unknown. Engines that honour the locale favour that country, and the language part also favours pages
+beside it. Each of a user's search countries becomes one SearXNG request. Posting search combines the request's
+interface language with that country in `language`, such as `en-AU` or `de-SG`, falling back to English when the
+interface language is unknown. Assistant search, the connection test and background discovery currently use English with
+the selected country. Engines that honour the locale favour that country, and the language part also favours pages
 written in that language. A search with no country sends no `language`, so SearXNG uses its own default.
 
 SearXNG only searches. Reading a page still uses the user's or the server's Firecrawl, Tavily or Exa connection, then

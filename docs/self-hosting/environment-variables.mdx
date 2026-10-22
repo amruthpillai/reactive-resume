@@ -240,8 +240,9 @@ for Tavily/Exa, or a custom URL for those providers stops startup instead of sil
 `WEB_SEARCH_SEARXNG_URL` is independent of the `WEB_ACCESS_*` variables, so shared and personal connections keep
 working beside it. When it is set, Applications search, role discovery and assistant web search go to that SearXNG
 instance for every user, with or without a web connection, and the instance must list `json` in `search.formats`.
-Each of a user's search countries is one SearXNG request whose `language` is the user's interface language and that
-country, such as `en-AU` or `de-SG`, falling back to English. Reading still uses the web connection, then the built-in
+Each of a user's search countries is one SearXNG request. Posting search combines the request's interface language with
+that country, such as `en-AU` or `de-SG`, falling back to English. Assistant search, the connection test and background
+discovery currently use English with the selected country. Reading still uses the web connection, then the built-in
 reader, so sites that block plain fetches still need Firecrawl, Tavily or Exa. With it set, **Test connection** tests
 search against SearXNG and reading against the connection. See
 [Search directly from Reactive Resume](/self-hosting/job-search-and-ai#search-directly-from-reactive-resume).
