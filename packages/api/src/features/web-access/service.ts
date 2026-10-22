@@ -128,15 +128,18 @@ export async function searchWeb(query: string, context: WebAccessContext, queryF
 			query: queryFor ? searchInput(queryFor(region)) : input,
 		}));
 		let results: SearchResults;
+		let partial: string | undefined;
 		if (searches.length === 0) results = await backend.search(input);
 		else {
 			const settled = await Promise.allSettled(searches.map((search) => backend.search(search.query, search.region)));
 			const lists = settled.flatMap((outcome) => (outcome.status === "fulfilled" ? [outcome.value] : []));
 			if (lists.length === 0) throw (settled[0] as PromiseRejectedResult).reason;
+			const failed = settled.length - lists.length;
+			if (failed) partial = `${failed}/${settled.length}-regions-failed`;
 			results = interleave(lists);
 		}
 		signal.throwIfAborted();
-		log("search", provider, started, "success");
+		log("search", provider, started, "success", partial);
 		return results;
 	} catch (error) {
 		log(
