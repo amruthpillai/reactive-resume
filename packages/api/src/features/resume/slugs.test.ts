@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
-const dbMock = vi.hoisted(() => ({ insert: vi.fn(), delete: vi.fn() }));
+const dbMock = vi.hoisted(() => ({ insert: vi.fn(), delete: vi.fn(), select: vi.fn() }));
 vi.mock("@reactive-resume/db/client", () => ({ db: dbMock }));
 
-const { recordSlugChange } = await import("./slugs");
+const { matchesSlug, recordSlugChange } = await import("./slugs");
 
 beforeEach(() => {
 	for (const mock of Object.values(dbMock)) mock.mockReset();
@@ -24,5 +24,20 @@ describe("recordSlugChange", () => {
 		const expiresIn = (values.mock.calls[0]?.[0].expiresAt.getTime() ?? 0) - Date.now();
 		expect(Math.round(expiresIn / (24 * 60 * 60 * 1000))).toBe(30);
 		expect(onConflictDoUpdate).toHaveBeenCalled();
+	});
+});
+
+describe("matchesSlug", () => {
+	it("builds condition checking resume slug or unexpired redirect subquery", () => {
+		const where = vi.fn((condition: unknown) => condition);
+		const from = vi.fn(() => ({ where }));
+		dbMock.select.mockReturnValue({ from });
+
+		const condition = matchesSlug("old-slug");
+
+		expect(condition).toBeDefined();
+		expect(dbMock.select).toHaveBeenCalled();
+		expect(from).toHaveBeenCalled();
+		expect(where).toHaveBeenCalled();
 	});
 });
