@@ -102,18 +102,18 @@ WEB_SEARCH_SEARXNG_URL="http://searxng:8080"
 
 Use the base URL without `/search`; Reactive Resume appends it and requests JSON. Every web search then goes to SearXNG
 for all users, whether or not they have a web connection. Shared and personal `WEB_ACCESS_*` connections keep working
-beside it. Each of a user's search countries becomes one SearXNG request. Posting search combines the request's
-interface language with that country in `language`, such as `en-AU` or `de-SG`, falling back to English when the
-interface language is unknown. Assistant search, the connection test and background discovery currently use English with
-the selected country. Engines that honour the locale favour that country, and the language part also favours pages
-written in that language. A search with no country sends no `language`, so SearXNG uses its own default.
+beside it. Each of a user's search countries becomes one SearXNG request. The server uses that country's likely language
+in `language`, such as `en-AU`, `ja-JP` or `pt-BR`, for Applications, the assistant, discovery and connection tests.
+The interface language does not change this country signal. Engines that honour the locale favour that country.
+A search with no country sends no `language`, so SearXNG uses its own default.
 
 SearXNG only searches. Reading a page still uses the user's or the server's Firecrawl, Tavily or Exa connection, then
 the built-in reader. Some job sites block plain fetches, so keep a provider connection for reading if your users rely
 on those sites. **Test connection** then tests search against SearXNG and reading against that connection.
 
-When every SearXNG engine fails, SearXNG still answers with an empty result list, so searches show no results rather
-than an error. If results stay empty, check SearXNG's logs and the `unresponsive_engines` field of its JSON response.
+SearXNG can return HTTP 200 even when engines fail. Empty responses containing `unresponsive_engines` are reported
+as search failures, including in **Test connection**. Useful results from working engines are kept, and a clean empty
+response still means no results. Check SearXNG's logs and the `unresponsive_engines` field when diagnosing failures.
 
 ### Search through self-hosted Firecrawl
 

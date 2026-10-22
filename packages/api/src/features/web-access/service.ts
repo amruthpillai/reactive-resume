@@ -43,14 +43,6 @@ async function externalSearch(query: string, options: ProviderRequest) {
 	}
 }
 
-async function searxngSearch(query: string, options: Parameters<typeof searchSearxng>[1]) {
-	try {
-		return await searchSearxng(query, options);
-	} catch (error) {
-		throw safeFailure(error, options.signal);
-	}
-}
-
 async function externalRead(url: string, options: ProviderRequest) {
 	try {
 		switch (options.connection.provider) {
@@ -107,7 +99,7 @@ function searchBackend(context: WebAccessContext, signal: AbortSignal) {
 		return {
 			name: "searxng",
 			search: (query: string, region?: string): Promise<SearchResults> =>
-				searxngSearch(query, { baseUrl, region, locale: context.locale, signal }),
+				searchSearxng(query, { baseUrl, region, signal }),
 		};
 	const connection = context.connection;
 	if (!connection) return null;
@@ -236,7 +228,7 @@ export async function probeWebAccess(
 		const provider = operation === "search" && searxng ? "searxng" : (connection?.provider ?? "builtin");
 		try {
 			if (operation === "search" && searxng)
-				await searxngSearch("example domain", { baseUrl: searxng, region: context.region, signal });
+				await searchSearxng("example domain", { baseUrl: searxng, region: context.region, signal });
 			else if (!connection) throw new WebAccessError("unavailable");
 			else if (operation === "search")
 				await externalSearch("example domain", { connection, signal, region: context.region });

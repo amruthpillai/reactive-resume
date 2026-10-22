@@ -584,7 +584,7 @@ describe("search through a self-hosted SearXNG", () => {
 		expect(requests[0]?.auth).toBeUndefined();
 	});
 
-	it("searches each region in the user's language through the same fan-out", async () => {
+	it("keeps country targeting independent of the UI language through the same fan-out", async () => {
 		respond = ({ provider }) =>
 			provider === ("searxng" as WebAccessProvider) ? { body: searxngResults } : { status: 500 };
 		const results = await searchWeb(
@@ -594,14 +594,17 @@ describe("search through a self-hosted SearXNG", () => {
 		);
 		expect(results).toEqual([{ url: URL, title: "Designer", snippet: "Berlin" }]);
 		expect(Object.fromEntries(searxng().map((request) => [language(request), request.url]))).toEqual({
-			"de-AU": "/searxng/search?q=designer+in+AU&format=json&language=de-AU",
-			"de-SG": "/searxng/search?q=designer+in+SG&format=json&language=de-SG",
+			"en-AU": "/searxng/search?q=designer+in+AU&format=json&language=en-AU",
+			"en-SG": "/searxng/search?q=designer+in+SG&format=json&language=en-SG",
 		});
 	});
 
-	it("returns no results when SearXNG's engines all fail", async () => {
+	it("reports a failed search probe when SearXNG's engines all fail", async () => {
 		respond = () => ({ body: { results: [], unresponsive_engines: [["google", "timeout"]] } });
-		expect(await searchWeb("designer", { userId: "user", connection: null, regions: ["AU"] })).toEqual([]);
+		expect(await probeWebAccess(null, { userId: "user", region: "AU" })).toEqual({
+			search: { success: false, error: "unreachable" },
+			read: { success: false, error: "unavailable" },
+		});
 	});
 
 	it("reports an unreachable SearXNG safely", async () => {

@@ -7,7 +7,7 @@ let reply: () => Response;
 
 const json = (body: unknown, status = 200) =>
 	new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
-const search = (options: { region?: string; locale?: string; baseUrl?: string } = {}) =>
+const search = (options: { region?: string; baseUrl?: string } = {}) =>
 	searchSearxng("designer jobs", { baseUrl: BASE, signal: AbortSignal.timeout(5_000), ...options });
 
 beforeEach(() => {
@@ -36,15 +36,15 @@ describe("SearXNG search request", () => {
 		expect(calls[0]?.url.toString()).toBe("https://search.example.com/searxng/search?q=designer+jobs&format=json");
 	});
 
-	it.each<[string | undefined, string]>([
-		["de-DE", "de-AU"],
-		["en-US", "en-AU"],
-		["pt_BR", "pt-AU"],
-		[undefined, "en-AU"],
-		["", "en-AU"],
-		["not a locale", "en-AU"],
-	])("searches region AU in the language of locale %j as %s", async (locale, language) => {
-		await search({ region: "AU", ...(locale === undefined ? {} : { locale }) });
+	it.each([
+		["AU", "en-AU"],
+		["SG", "en-SG"],
+		["JP", "ja-JP"],
+		["BR", "pt-BR"],
+		["DE", "de-DE"],
+		["FR", "fr-FR"],
+	])("uses a real regional locale for %s: %s", async (region, language) => {
+		await search({ region });
 		expect(calls[0]?.url.searchParams.get("language")).toBe(language);
 		expect(calls[0]?.url.searchParams.get("q")).toBe("designer jobs");
 		expect(calls[0]?.url.searchParams.get("format")).toBe("json");
@@ -76,7 +76,7 @@ describe("SearXNG search response", () => {
 		]);
 	});
 
-	it("returns no results, not a failure, when every engine failed", async () => {
+	it("reports an empty result with engine failures as unavailable", async () => {
 		reply = () =>
 			json({
 				query: "designer jobs",
@@ -86,7 +86,18 @@ describe("SearXNG search response", () => {
 					["bing", "CAPTCHA"],
 				],
 			});
-		expect(await search({ region: "SG" })).toEqual([]);
+		await expect(search({ region: "SG" })).rejects.toMatchObject({ reason: "unreachable" });
+	});
+
+	it("keeps useful results when another engine failed, and accepts a clean empty search", async () => {
+		reply = () =>
+			json({
+				results: [{ url: "https://jobs.example.com/1", title: "One" }],
+				unresponsive_engines: [["bing", "timeout"]],
+			});
+		expect(await search()).toEqual([{ url: "https://jobs.example.com/1", title: "One" }]);
+		reply = () => json({ results: [], unresponsive_engines: [] });
+		expect(await search()).toEqual([]);
 	});
 
 	it.each([500, 502, 404])("reports HTTP %i as unreachable", async (status) => {
