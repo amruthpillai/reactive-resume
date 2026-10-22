@@ -37,25 +37,25 @@ export const MAX_SEARCH_REGIONS = 3;
 /** Every code `countryCodeSchema` accepts, sorted, for country pickers. */
 export const SEARCH_REGION_CODES: readonly string[] = [...COUNTRY_CODES].sort();
 
-/** What a search-regions picker shows: its chips, whether they come from a time zone, and a country to save once. */
-export type ShownSearchRegions = { codes: string[]; automatic: boolean; adopt: string | null };
+/** What a search-regions picker shows: its chips and whether they come from a time zone. */
+export type ShownSearchRegions = { codes: string[]; automatic: boolean };
 
 /**
- * The chips for a stored `searchRegions` value. Automatic (null or absent) shows the account time zone's country,
- * or while the account is still on UTC the device time zone's, which `adopt` asks the client to save once.
+ * The chips follow explicit choices or the account time zone. Only an untouched UTC account shows the device
+ * country, which the server adopts before its first search or discovery schedule.
  */
 export function shownSearchRegions(
 	value: readonly string[] | null | undefined,
 	accountTimeZone: string | null | undefined,
 	deviceTimeZone: string | null | undefined,
 ): ShownSearchRegions {
-	if (value) return { codes: [...value], automatic: false, adopt: null };
-	if (accountTimeZone && accountTimeZone !== "UTC") {
-		const code = countryForTimeZone(accountTimeZone);
-		return { codes: code ? [code] : [], automatic: true, adopt: null };
+	if (value) return { codes: [...value], automatic: false };
+	if (value === null || (accountTimeZone && accountTimeZone !== "UTC")) {
+		const code = accountTimeZone ? countryForTimeZone(accountTimeZone) : null;
+		return { codes: code ? [code] : [], automatic: true };
 	}
 	const device = deviceTimeZone ? countryForTimeZone(deviceTimeZone) : null;
-	return { codes: device ? [device] : [], automatic: true, adopt: device };
+	return { codes: device ? [device] : [], automatic: true };
 }
 
 /** A picker action on the shown chips: add a country, remove one, or return to automatic. */

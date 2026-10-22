@@ -15,10 +15,20 @@ export function resolveRegions(stored: string[] | null | undefined, accountTimeZ
 }
 
 /** A user's resolved search regions and preferred locations, from one profile read and one account read. */
-export async function searchScope(userId: string): Promise<{ regions: string[]; locations: string[] }> {
+export async function searchScope(
+	userId: string,
+	deviceTimeZone?: string | undefined,
+): Promise<{ regions: string[]; locations: string[] }> {
 	const [profile, [owner]] = await Promise.all([
 		careerService.profile(userId),
 		db.select({ timezone: user.timezone }).from(user).where(eq(user.id, userId)),
 	]);
-	return { regions: resolveRegions(profile.searchRegions, owner?.timezone ?? "UTC"), locations: profile.locations };
+	const resolved =
+		profile.searchRegions === undefined &&
+		owner?.timezone === "UTC" &&
+		deviceTimeZone &&
+		countryForTimeZone(deviceTimeZone)
+			? await careerService.initializeSearchRegions(userId, deviceTimeZone)
+			: profile;
+	return { regions: resolveRegions(resolved.searchRegions, owner?.timezone ?? "UTC"), locations: resolved.locations };
 }

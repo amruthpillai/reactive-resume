@@ -182,7 +182,7 @@ export const aiRouter = {
 		.handler(async ({ context, input, signal }) => {
 			const [connection, scope] = await Promise.all([
 				webAccessService.resolve(context.user.id),
-				searchScope(context.user.id),
+				searchScope(context.user.id, context.reqHeaders.get("x-client-timezone") ?? undefined),
 			]);
 			if (!webAccessService.canSearch(connection !== null)) throw new ORPCError("SEARCH_UNAVAILABLE", { status: 503 });
 			try {

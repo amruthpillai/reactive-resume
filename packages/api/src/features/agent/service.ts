@@ -111,6 +111,7 @@ type MessageContext = {
 
 type SendMessageInput = {
 	userId: string;
+	deviceTimeZone?: string | undefined;
 	threadId: string;
 	message: UIMessage;
 	attachmentIds?: unknown;
@@ -738,6 +739,7 @@ async function proposeEdits(input: {
 }
 
 function createAgent(input: {
+	deviceTimeZone?: string | undefined;
 	career?: {
 		context: Awaited<ReturnType<typeof careerService.context>>;
 		shareApplication: boolean;
@@ -812,7 +814,7 @@ function createAgent(input: {
 		handlers: {
 			searchWeb: timedToolHandler("search_web", async (query: string, signal: AbortSignal) => {
 				// General research searches the user's countries but keeps the query as written.
-				const { regions } = await searchScope(input.userId);
+				const { regions } = await searchScope(input.userId, input.deviceTimeZone);
 				const result = await searchWeb(query, {
 					connection: input.connection,
 					userId: input.userId,
@@ -1357,6 +1359,7 @@ export const agentService = {
 				if (careerContext && careerContext.memoryVersion !== (await careerService.memoryVersion(input.userId)))
 					throw new ORPCError("CONFLICT", { message: "Career memory changed. Please retry with current information." });
 				const agent = createAgent({
+					deviceTimeZone: input.deviceTimeZone,
 					userId: input.userId,
 					threadId: input.threadId,
 					document:

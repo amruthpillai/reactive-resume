@@ -1,0 +1,185 @@
+import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import * as schema from "@reactive-resume/db/schema";
+
+const mocks = vi.hoisted(() => {
+	const updateWhere = vi.fn((_where?: unknown) => Promise.resolve([]));
+	const updateSet = vi.fn((_values: Record<string, unknown>) => ({
+		where: updateWhere,
+	}));
+	const update = vi.fn((_table: unknown) => ({
+		set: updateSet,
+	}));
+	const deleteWhere = vi.fn((_where?: unknown) => Promise.resolve([]));
+	const deleteFn = vi.fn((_table: unknown) => ({
+		where: deleteWhere,
+	}));
+	const transaction = vi.fn(async (cb: (tx: unknown) => Promise<unknown>) => cb({ update, delete: deleteFn }));
+	return { update, updateSet, updateWhere, delete: deleteFn, deleteWhere, transaction };
+});
+
+vi.mock("better-auth", async (importOriginal) => ({
+	...(await importOriginal<typeof import("better-auth")>()),
+	betterAuth: () => ({ $context: Promise.resolve({}), api: {} }),
+}));
+vi.mock("@reactive-resume/db/client", () => ({
+	db: { transaction: mocks.transaction },
+}));
+vi.mock("@reactive-resume/email/transport", () => ({ sendEmail: vi.fn() }));
+vi.mock("@reactive-resume/env/server", () => ({
+	env: { APP_URL: "https://resume.example", AUTH_SECRET: "link-test" },
+}));
+
+const { clearAccountLinkHooks, linkAnonymousAccount, registerAccountLinkHook } = await import("./config");
+
+beforeEach(() => {
+	mocks.update.mockClear();
+	mocks.updateSet.mockClear();
+	mocks.updateWhere.mockClear();
+	mocks.delete.mockClear();
+	mocks.deleteWhere.mockClear();
+	mocks.transaction.mockClear();
+	clearAccountLinkHooks();
+});
+
+describe("linkAnonymousAccount", () => {
+	it("copies before commit and cleans up only after commit", async () => {
+		const events: string[] = [];
+		registerAccountLinkHook(async () => {
+			expect(mocks.updateWhere).toHaveBeenCalled();
+			events.push("copy");
+			return async () => {
+				events.push("cleanup");
+			};
+		});
+		mocks.transaction.mockImplementationOnce(async (cb) => {
+			await cb({ update: mocks.update, delete: mocks.delete });
+			events.push("commit");
+		});
+
+		await linkAnonymousAccount({ fromUserId: "guest-123", toUserId: "user-456" });
+		expect(events).toEqual(["copy", "commit", "cleanup"]);
+	});
+
+	it("preserves originals when the database transition fails", async () => {
+		const cleanup = vi.fn();
+		registerAccountLinkHook(async () => cleanup);
+		mocks.transaction.mockRejectedValueOnce(new Error("Database unavailable"));
+
+		await expect(linkAnonymousAccount({ fromUserId: "guest-123", toUserId: "user-456" })).rejects.toThrow(
+			"Database unavailable",
+		);
+		expect(cleanup).not.toHaveBeenCalled();
+	});
+
+	it("does not reject a committed link or skip remaining cleanup when one cleanup fails", async () => {
+		const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+		const cleanup = vi.fn().mockResolvedValue(undefined);
+		registerAccountLinkHook(async () => async () => {
+			throw new Error("Cleanup unavailable");
+		});
+		registerAccountLinkHook(async () => cleanup);
+
+		await expect(linkAnonymousAccount({ fromUserId: "guest-123", toUserId: "user-456" })).resolves.toBeUndefined();
+		expect(cleanup).toHaveBeenCalledOnce();
+		expect(warn).toHaveBeenCalled();
+		warn.mockRestore();
+	});
+
+	it("updates document ownership, rewrites upload URLs in DB, and executes registered hooks", async () => {
+		const hook = vi.fn().mockResolvedValue(undefined);
+		registerAccountLinkHook(hook);
+
+		await linkAnonymousAccount({
+			fromUserId: "guest-123",
+			toUserId: "user-456",
+		});
+
+		expect(mocks.transaction).toHaveBeenCalledOnce();
+
+		// Check resume update includes data rewrite
+		const resumeUpdateCall = mocks.update.mock.calls.find((call) => call[0] === schema.resume);
+		expect(resumeUpdateCall).toBeDefined();
+		const resumeSetArg = mocks.updateSet.mock.calls[0]?.[0];
+		expect(resumeSetArg).toMatchObject({ userId: "user-456" });
+		expect(resumeSetArg).toHaveProperty("data");
+
+		// Check resumeVersion update includes data rewrite
+		const resumeVersionUpdateCall = mocks.update.mock.calls.find((call) => call[0] === schema.resumeVersion);
+		expect(resumeVersionUpdateCall).toBeDefined();
+		const resumeVersionSetArg = mocks.updateSet.mock.calls.find(
+			(_, idx) => mocks.update.mock.calls[idx]?.[0] === schema.resumeVersion,
+		)?.[0];
+		expect(resumeVersionSetArg).toMatchObject({ userId: "user-456" });
+		expect(resumeVersionSetArg).toHaveProperty("data");
+
+		// Check application update includes resumeFileUrl and coverLetterUrl rewrites
+		const appUpdateCall = mocks.update.mock.calls.find((call) => call[0] === schema.application);
+		expect(appUpdateCall).toBeDefined();
+		const appSetArg = mocks.updateSet.mock.calls.find(
+			(_, idx) => mocks.update.mock.calls[idx]?.[0] === schema.application,
+		)?.[0];
+		expect(appSetArg).toMatchObject({ userId: "user-456" });
+		expect(appSetArg).toHaveProperty("resumeFileUrl");
+		expect(appSetArg).toHaveProperty("coverLetterUrl");
+
+		// Check coverLetter update includes style rewrite
+		const coverLetterUpdateCall = mocks.update.mock.calls.find((call) => call[0] === schema.coverLetter);
+		expect(coverLetterUpdateCall).toBeDefined();
+		const coverLetterSetArg = mocks.updateSet.mock.calls.find(
+			(_, idx) => mocks.update.mock.calls[idx]?.[0] === schema.coverLetter,
+		)?.[0];
+		expect(coverLetterSetArg).toMatchObject({ userId: "user-456" });
+		expect(coverLetterSetArg).toHaveProperty("style");
+
+		// Check coverLetterVersion update includes data rewrite
+		const coverLetterVersionUpdateCall = mocks.update.mock.calls.find((call) => call[0] === schema.coverLetterVersion);
+		expect(coverLetterVersionUpdateCall).toBeDefined();
+		const coverLetterVersionSetArg = mocks.updateSet.mock.calls.find(
+			(_, idx) => mocks.update.mock.calls[idx]?.[0] === schema.coverLetterVersion,
+		)?.[0];
+		expect(coverLetterVersionSetArg).toMatchObject({ userId: "user-456" });
+		expect(coverLetterVersionSetArg).toHaveProperty("data");
+
+		// Check resumeSlugRedirect deduplication and update
+		const redirectDeleteCall = mocks.delete.mock.calls.find((call) => call[0] === schema.resumeSlugRedirect);
+		expect(redirectDeleteCall).toBeDefined();
+
+		const redirectUpdateCall = mocks.update.mock.calls.find((call) => call[0] === schema.resumeSlugRedirect);
+		expect(redirectUpdateCall).toBeDefined();
+		const redirectSetArg = mocks.updateSet.mock.calls.find(
+			(_, idx) => mocks.update.mock.calls[idx]?.[0] === schema.resumeSlugRedirect,
+		)?.[0];
+		expect(redirectSetArg).toMatchObject({ userId: "user-456" });
+
+		// Check hook execution
+		expect(hook).toHaveBeenCalledWith({
+			fromUserId: "guest-123",
+			toUserId: "user-456",
+		});
+	});
+
+	it("supports unsubscribing hooks and prevents duplicate executions", async () => {
+		const hook = vi.fn().mockResolvedValue(undefined);
+		const unregister = registerAccountLinkHook(hook);
+		registerAccountLinkHook(hook); // Duplicate registration of same reference
+
+		await linkAnonymousAccount({ fromUserId: "g1", toUserId: "u1" });
+		expect(hook).toHaveBeenCalledOnce();
+
+		hook.mockClear();
+		unregister();
+
+		await linkAnonymousAccount({ fromUserId: "g2", toUserId: "u2" });
+		expect(hook).not.toHaveBeenCalled();
+	});
+
+	it("does nothing when fromUserId equals toUserId", async () => {
+		const hook = vi.fn().mockResolvedValue(undefined);
+		registerAccountLinkHook(hook);
+
+		await linkAnonymousAccount({ fromUserId: "user-1", toUserId: "user-1" });
+
+		expect(mocks.transaction).not.toHaveBeenCalled();
+		expect(hook).not.toHaveBeenCalled();
+	});
+});

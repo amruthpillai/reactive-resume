@@ -54,6 +54,7 @@ export const messagesRouter = {
 		.handler(({ context, input }) =>
 			agentService.messages.send({
 				userId: context.user.id,
+				deviceTimeZone: context.reqHeaders.get("x-client-timezone") ?? undefined,
 				threadId: input.threadId,
 				message: input.message,
 				...(input.attachmentIds ? { attachmentIds: input.attachmentIds } : {}),

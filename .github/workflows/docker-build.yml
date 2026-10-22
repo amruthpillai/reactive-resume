@@ -192,6 +192,7 @@ jobs:
       PURGE_CLOUDFLARE: ${{ secrets.CLOUDFLARE_ZONE_ID != '' && secrets.CLOUDFLARE_API_TOKEN != '' }}
 
     permissions:
+      actions: read
       contents: read
       packages: write
       id-token: write
@@ -240,6 +241,16 @@ jobs:
             echo "prerelease=$prerelease"
             echo "tagged=$tagged"
           } >> "$GITHUB_OUTPUT"
+
+      - name: Require successful CI for the exact promotion commit
+        if: ${{ needs.mode.outputs.release == 'true' }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          COMMIT_SHA: ${{ steps.version.outputs.sha }}
+        with:
+          script: |
+            const { requireSuccessfulCI } = await import(`${process.env.GITHUB_WORKSPACE}/tooling/docker/check-ci.mjs`);
+            await requireSuccessfulCI({ github, repo: context.repo, sha: process.env.COMMIT_SHA });
 
       - name: Download digests
         if: ${{ needs.mode.outputs.release != 'true' }}

@@ -488,13 +488,7 @@ describe("getBySlug", () => {
 
 describe("statistics.recordDownload", () => {
 	it("lets the owner download a password-protected resume without an unlock cookie", async () => {
-		dbMock.select.mockReturnValueOnce({
-			from: () => ({
-				innerJoin: () => ({
-					where: () => Promise.resolve([{ id: "r1", userId: "u1", isPublic: true, passwordHash: "hash" }]),
-				}),
-			}),
-		});
+		dbMock.select.mockReturnValueOnce(slugLookup([{ id: "r1", userId: "u1", isPublic: true, passwordHash: "hash" }]));
 		await expect(
 			resumeService.statistics.recordDownload({
 				username: "owner",
@@ -505,11 +499,56 @@ describe("statistics.recordDownload", () => {
 		).resolves.toBe(true);
 	});
 	it("does not look in Trash for the resume", async () => {
-		const where = vi.fn((_condition: unknown) => Promise.resolve([]));
+		const where = vi.fn((_condition: unknown) => ({ orderBy: () => ({ limit: () => Promise.resolve([]) }) }));
 		dbMock.select.mockReturnValueOnce({ from: () => ({ innerJoin: () => ({ where }) }) });
 		await expect(
 			resumeService.statistics.recordDownload({ username: "owner", slug: "resume", requestHeaders: new Headers() }),
 		).rejects.toMatchObject({ code: "NOT_FOUND" });
 		expect(where.mock.calls[0]?.[0]).toContainEqual(["trashed_at"]);
+	});
+
+	it("matches renamed slugs via matchesSlug and orders by exact slug match", async () => {
+		const limit = vi.fn(() => Promise.resolve([{ id: "r1", userId: "u1", isPublic: true, passwordHash: null }]));
+		const orderBy = vi.fn((_order: unknown) => ({ limit }));
+		const where = vi.fn((_condition: unknown) => ({ orderBy }));
+		dbMock.select.mockReturnValueOnce({ from: () => ({ innerJoin: () => ({ where }) }) });
+
+		await expect(
+			resumeService.statistics.recordDownload({
+				username: "owner",
+				slug: "old-slug",
+				requestHeaders: new Headers(),
+			}),
+		).resolves.toBe(true);
+
+		expect(where.mock.calls[0]?.[0]).toContainEqual(["slug", "old-slug"]);
+		expect(orderBy).toHaveBeenCalledTimes(1);
+		expect(orderBy.mock.calls[0]?.[0]).toMatchObject({ values: ["slug", "old-slug"] });
+		expect(limit).toHaveBeenCalledWith(1);
+	});
+
+	it("requires password when downloading via renamed slug", async () => {
+		dbMock.select.mockReturnValueOnce(slugLookup([{ id: "r1", userId: "u1", isPublic: true, passwordHash: "hash" }]));
+		await expect(
+			resumeService.statistics.recordDownload({
+				username: "owner",
+				slug: "old-slug",
+				requestHeaders: new Headers(),
+			}),
+		).rejects.toMatchObject({
+			code: "NEED_PASSWORD",
+			data: { username: "owner", slug: "old-slug" },
+		});
+	});
+
+	it("throws NOT_FOUND when renamed slug redirect has expired or does not exist", async () => {
+		dbMock.select.mockReturnValueOnce(slugLookup([]));
+		await expect(
+			resumeService.statistics.recordDownload({
+				username: "owner",
+				slug: "expired-slug",
+				requestHeaders: new Headers(),
+			}),
+		).rejects.toMatchObject({ code: "NOT_FOUND" });
 	});
 });

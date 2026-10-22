@@ -17,6 +17,7 @@ import {
 	type careerStoryInputSchema,
 	type SavedItemData,
 } from "@reactive-resume/schema/career";
+import { countryForTimeZone } from "@reactive-resume/utils/region";
 import { generateId } from "@reactive-resume/utils/string";
 import { requestRunCancellation } from "../agent/cancellation";
 import { applicationService, recordSentResume } from "../applications/service";
@@ -298,6 +299,25 @@ export const careerService = {
 		const [row] = await db.select().from(tables.careerProfile).where(eq(tables.careerProfile.userId, userId));
 		return careerProfileDataSchema.parse(row?.data ?? {});
 	},
+	/** Only untouched UTC accounts adopt a device country. Share the save lock so explicit choices always win. */
+	initializeSearchRegions: (userId: string, deviceTimeZone: string) =>
+		db.transaction(async (tx) => {
+			await lockCareerUser(tx, userId);
+			const [row] = await tx
+				.select({ data: tables.careerProfile.data, timezone: tables.user.timezone })
+				.from(tables.user)
+				.leftJoin(tables.careerProfile, eq(tables.careerProfile.userId, tables.user.id))
+				.where(eq(tables.user.id, userId));
+			const data = careerProfileDataSchema.parse(row?.data ?? {});
+			const country = countryForTimeZone(deviceTimeZone);
+			if (row?.timezone !== "UTC" || data.searchRegions !== undefined || !country) return data;
+			data.searchRegions = [country];
+			await tx
+				.insert(tables.careerProfile)
+				.values({ userId, data })
+				.onConflictDoUpdate({ target: tables.careerProfile.userId, set: { data, updatedAt: new Date() } });
+			return data;
+		}),
 	saveProfile: (userId: string, input: CareerProfileData) =>
 		db.transaction(async (tx) => {
 			await lockCareerUser(tx, userId);

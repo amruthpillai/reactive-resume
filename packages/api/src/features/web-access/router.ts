@@ -66,7 +66,7 @@ export const webAccessRouter = {
 		.handler(async ({ context, signal }) => {
 			const [connection, { regions }] = await Promise.all([
 				webAccessService.resolve(context.user.id),
-				searchScope(context.user.id),
+				searchScope(context.user.id, context.reqHeaders.get("x-client-timezone") ?? undefined),
 			]);
 			// The server's SearXNG can be tested without a connection; reading then reports the built-in reader only.
 			if (!webAccessService.canSearch(connection !== null))

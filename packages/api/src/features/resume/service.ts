@@ -197,13 +197,9 @@ const statistics = {
 			})
 			.from(schema.resume)
 			.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
-			.where(
-				and(
-					eq(schema.resume.slug, input.slug),
-					eq(schema.user.username, input.username),
-					isNull(schema.resume.trashedAt),
-				),
-			);
+			.where(and(matchesSlug(input.slug), eq(schema.user.username, input.username), isNull(schema.resume.trashedAt)))
+			.orderBy(desc(sql`${schema.resume.slug} = ${input.slug}`))
+			.limit(1);
 
 		if (!resume) throw new ORPCError("NOT_FOUND");
 		const viewer = input.currentUserId ? { id: input.currentUserId } : null;

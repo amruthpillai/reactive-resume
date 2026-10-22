@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
-import { dirname, extname, join } from "node:path";
+import { dirname, extname, join, relative } from "node:path";
 import {
 	DeleteObjectCommand,
 	GetObjectCommand,
-	ListObjectsV2Command,
+	paginateListObjectsV2,
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
@@ -124,15 +124,33 @@ class LocalStorageService implements StorageService {
 
 	async list(prefix: string): Promise<string[]> {
 		const fullPath = this.resolvePath(prefix);
+		const normalizedPrefix = prefix.replace(/\\/g, "/").replace(/\/+$/, "");
 
 		try {
-			const files = await fs.readdir(fullPath, { recursive: true });
+			const entries = await fs.readdir(fullPath, { recursive: true, withFileTypes: true });
 
-			return files.map((file) => join(prefix, file));
+			return entries
+				.filter((entry) => entry.isFile())
+				.map((entry) => {
+					const parent = entry.parentPath;
+					const relativePath = relative(fullPath, join(parent, entry.name)).replaceAll("\\", "/");
+					return normalizedPrefix ? `${normalizedPrefix}/${relativePath}` : relativePath;
+				});
 		} catch (error: unknown) {
-			// If directory doesn't exist, return empty array
-			if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
-				return [];
+			if (error && typeof error === "object" && "code" in error) {
+				if (error.code === "ENOENT") {
+					return [];
+				}
+				if (error.code === "ENOTDIR") {
+					try {
+						const stats = await fs.stat(fullPath);
+						if (stats.isFile()) {
+							return [normalizedPrefix || prefix.replace(/\\/g, "/")];
+						}
+					} catch {
+						return [];
+					}
+				}
 			}
 
 			throw error;
@@ -247,10 +265,13 @@ class S3StorageService implements StorageService {
 	}
 
 	async list(prefix: string): Promise<string[]> {
-		const command = new ListObjectsV2Command({ Bucket: this.bucket, Prefix: prefix });
-		const response = await this.client.send(command);
-		if (!response.Contents) return [];
-		return response.Contents.map((object) => object.Key ?? "");
+		const keys: string[] = [];
+		for await (const page of paginateListObjectsV2({ client: this.client }, { Bucket: this.bucket, Prefix: prefix })) {
+			for (const object of page.Contents ?? []) {
+				if (object.Key) keys.push(object.Key);
+			}
+		}
+		return keys;
 	}
 
 	async write({ key, data, contentType }: StorageWriteInput): Promise<void> {
@@ -288,7 +309,8 @@ class S3StorageService implements StorageService {
 
 	async delete(keyOrPrefix: string): Promise<boolean> {
 		// Use list to find all matching keys (handles both single file and folder/prefix)
-		const keys = await this.list(keyOrPrefix);
+		const prefix = keyOrPrefix.endsWith("/") ? keyOrPrefix : `${keyOrPrefix}/`;
+		const keys = (await this.list(keyOrPrefix)).filter((key) => key === keyOrPrefix || key.startsWith(prefix));
 
 		if (keys.length === 0) return false;
 
@@ -357,4 +379,35 @@ export async function uploadFile(input: UploadFileInput): Promise<UploadFileResu
 	const key = buildFileKey(input.userId, input.contentType);
 	await getStorageService().write({ key, data: input.data, contentType: input.contentType });
 	return { key, url: buildPublicUrl(key) };
+}
+
+/** Copy before linking; caller runs returned cleanup only after ownership commits. */
+export async function migrateUserStorage(fromUserId: string, toUserId: string): Promise<(() => Promise<void>) | void> {
+	if (fromUserId === toUserId) return;
+
+	const storageService = getStorageService();
+	const fromPrefix = `uploads/${fromUserId}/`;
+	const toPrefix = `uploads/${toUserId}/`;
+	const keys = (await storageService.list(fromPrefix)).filter((key) => key.startsWith(fromPrefix));
+
+	for (const key of keys) {
+		const file = await storageService.read(key);
+		if (!file) throw new Error(`Could not read storage key ${key}; source files were kept.`);
+		await storageService.write({
+			key: `${toPrefix}${key.slice(fromPrefix.length)}`,
+			data: file.data,
+			contentType: file.contentType ?? inferContentType(key),
+			...(key.startsWith(`${fromPrefix}agent/`) ? { private: true } : {}),
+		});
+	}
+
+	return async () => {
+		// Never delete the prefix: uploads outside this copy snapshot must survive.
+		const results = await Promise.allSettled(keys.map((key) => storageService.delete(key)));
+		for (const [index, result] of results.entries()) {
+			if (result.status === "rejected" || !result.value) {
+				console.warn("Failed to delete migrated storage key %s:", keys[index], result);
+			}
+		}
+	};
 }
