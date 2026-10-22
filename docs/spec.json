@@ -1,7 +1,7 @@
 {
 	"info": {
 		"title": "Reactive Resume",
-		"version": "6.0.3",
+		"version": "6.0.4",
 		"description": "Reactive Resume API. Mutations do not support Idempotency-Key. Do not automatically retry POST, PUT, PATCH or DELETE requests after a timeout: first read the resource to determine whether the operation succeeded. Existing enum values and response shapes are retained for compatibility.",
 		"license": {
 			"name": "MIT",
@@ -34764,6 +34764,21 @@
 															],
 															"type": "string",
 															"default": "ask"
+														},
+														"searchRegions": {
+															"anyOf": [
+																{
+																	"type": "array",
+																	"maxItems": 3,
+																	"items": {
+																		"type": "string",
+																		"pattern": "^[A-Z]{2}$"
+																	}
+																},
+																{
+																	"type": "null"
+																}
+															]
 														}
 													}
 												},
@@ -39056,6 +39071,21 @@
 											],
 											"type": "string",
 											"default": "ask"
+										},
+										"searchRegions": {
+											"anyOf": [
+												{
+													"type": "array",
+													"maxItems": 3,
+													"items": {
+														"type": "string",
+														"pattern": "^[A-Z]{2}$"
+													}
+												},
+												{
+													"type": "null"
+												}
+											]
 										}
 									}
 								}
@@ -39223,6 +39253,21 @@
 										],
 										"type": "string",
 										"default": "ask"
+									},
+									"searchRegions": {
+										"anyOf": [
+											{
+												"type": "array",
+												"maxItems": 3,
+												"items": {
+													"type": "string",
+													"pattern": "^[A-Z]{2}$"
+												}
+											},
+											{
+												"type": "null"
+											}
+										]
 									}
 								}
 							}
@@ -39334,6 +39379,21 @@
 											],
 											"type": "string",
 											"default": "ask"
+										},
+										"searchRegions": {
+											"anyOf": [
+												{
+													"type": "array",
+													"maxItems": 3,
+													"items": {
+														"type": "string",
+														"pattern": "^[A-Z]{2}$"
+													}
+												},
+												{
+													"type": "null"
+												}
+											]
 										}
 									}
 								}
