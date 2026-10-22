@@ -2,7 +2,7 @@ import { appendFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
-// Reserve 99 attempts per workflow run; changing the offset later must never decrease store versions.
+// One number per workflow run; retries reuse that run's number.
 export function buildNumber(env: NodeJS.ProcessEnv) {
 	const integer = (name: string) => {
 		const value = env[name];
@@ -14,9 +14,8 @@ export function buildNumber(env: NodeJS.ProcessEnv) {
 	const base = integer("MOBILE_BUILD_NUMBER_BASE");
 	if (base < 1) throw new Error("MOBILE_BUILD_NUMBER_BASE must be positive");
 	const run = integer("GITHUB_RUN_NUMBER");
-	const attempt = integer("GITHUB_RUN_ATTEMPT");
-	if (run < 1 || attempt < 1 || attempt > 99) throw new Error("Run must be positive; attempt must be 1–99");
-	const number = base + (run - 1) * 100 + (attempt - 1);
+	if (run < 1) throw new Error("Run must be positive");
+	const number = base + (run - 1);
 	if (!Number.isSafeInteger(number) || number > 2_100_000_000) throw new Error("Android versionCode limit exceeded");
 	return number;
 }

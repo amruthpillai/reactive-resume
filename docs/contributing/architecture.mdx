@@ -140,6 +140,35 @@ Keep helpers inside the feature that uses them. Don't reintroduce technical-laye
 
 Default section titles in the PDF come from a generated catalog, `packages/pdf/src/section-title-catalog.json`, built from the web app's translations. See [Contributing translations](/contributing/translations#updating-catalogs-in-a-checkout).
 
+### Cover letters
+
+The same templates also lay out cover letters. `createCoverLetterResumeData` in `@reactive-resume/resume/cover-letter` turns a letter into the `ResumeData` the renderer expects, and returns it: one full-width page whose only section is the letter's `cover-letter` custom section, holding the composed `recipient` and `content`. Compose those first with `composeCoverLetter`, which adds the greeting, body and sign-off.
+
+`createResumePdfFile` from `@reactive-resume/pdf/server` then takes that data and resolves to a `File` of type `application/pdf`:
+
+```ts
+import { createCoverLetterResumeData } from "@reactive-resume/resume/cover-letter";
+import { createResumePdfFile } from "@reactive-resume/pdf/server";
+
+const data = createCoverLetterResumeData({ name, recipient, content, style });
+const file = await createResumePdfFile({
+  data,
+  filename: "cover-letter.pdf",
+  renderOptions: { includeCoverLetterHeader: true },
+});
+```
+
+A letter-only document prints no resume header unless `renderOptions.includeCoverLetterHeader` is set, because `shouldShowResumeHeader` sees that every visible layout section is a cover letter. The browser adapter, `createResumePdfBlob` from `@reactive-resume/pdf/browser`, takes the same data and options. For the user-facing side, see [Writing a cover letter](/guides/writing-a-cover-letter).
+
+## DOCX export
+
+`buildDocx(data, resolveTitle?)` in `packages/docx` returns a `Blob`. It reads the same `ResumeData` and template as the PDF and follows the same layout plan from `templateLayouts`, but draws it with Word's own model instead of Forme:
+
+- A full-width page prints no sidebar, a one-column template prints its sidebar sections after the main ones, and a two-column template with sidebar sections becomes a two-column table with invisible borders.
+- Fonts come from the family names in `metadata.typography` (falling back to Calibri), not the PDF's downloadable webfonts and script fallback stacks, so a font the reader lacks substitutes on their machine.
+- Page size and margins follow `metadata.page`, but Word pages are fixed: free-form resumes fall back to A4.
+- Colors come from `metadata.design.colors`. A template with a sidebar keeps its own treatment from `SIDEBAR_BACKGROUND`: `solid` fills it with the primary color and inverts the text, `tint` blends it with white at 20%.
+
 ## MCP
 
 `packages/mcp` implements the MCP server with canonical, unprefixed tool names such as `list_resumes`, `read_resume`, `apply_resume_patch`, `list_cover_letters`, and `list_applications`. The server process imports it from `@reactive-resume/mcp` and injects an in-process oRPC router client, so MCP tools run the same business logic as the web app. MCP must never import code from `apps/web`. For the user-facing side, see [Using the MCP server](/guides/using-the-mcp-server).

@@ -240,7 +240,10 @@ describe("account link storage migration", () => {
 		const registeredHook = mocks.registerAccountLinkHook.mock.calls.at(-1)?.[0];
 		expect(typeof registeredHook).toBe("function");
 
-		await registeredHook({ fromUserId: "guest-old", toUserId: "user-new" });
+		const cleanup = vi.fn();
+		mocks.migrateUserStorage.mockResolvedValueOnce(cleanup);
+		expect(await registeredHook({ fromUserId: "guest-old", toUserId: "user-new" })).toBe(cleanup);
+		expect(cleanup).not.toHaveBeenCalled();
 		expect(mocks.migrateUserStorage).toHaveBeenCalledWith("guest-old", "user-new");
 	});
 

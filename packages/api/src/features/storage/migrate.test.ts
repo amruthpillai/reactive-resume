@@ -42,7 +42,9 @@ describe("migrateUserStorage", () => {
 		mocks.write.mockResolvedValue(undefined);
 		mocks.delete.mockResolvedValue(true);
 
-		await migrateUserStorage("guest-1", "user-2");
+		const cleanup = await migrateUserStorage("guest-1", "user-2");
+		expect(mocks.delete).not.toHaveBeenCalled();
+		await cleanup?.();
 
 		expect(mocks.list).toHaveBeenCalledWith("uploads/guest-1/");
 		expect(mocks.write).toHaveBeenCalledWith({
@@ -85,7 +87,9 @@ describe("migrateUserStorage", () => {
 	it("skips keys that do not start with fromPrefix", async () => {
 		mocks.list.mockResolvedValue(["other-prefix/photo.png"]);
 
-		await migrateUserStorage("guest-1", "user-2");
+		const cleanup = await migrateUserStorage("guest-1", "user-2");
+		expect(mocks.delete).not.toHaveBeenCalled();
+		await cleanup?.();
 
 		expect(mocks.read).not.toHaveBeenCalled();
 		expect(mocks.write).not.toHaveBeenCalled();
@@ -103,7 +107,7 @@ describe("migrateUserStorage", () => {
 		expect(mocks.delete).not.toHaveBeenCalled();
 	});
 
-	it("attempts to delete all copied keys and clean up prefix even if deleting one file fails", async () => {
+	it("attempts every copied key cleanup even if one delete fails, without deleting the prefix", async () => {
 		const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
 		const guestKey1 = "uploads/guest-1/pictures/photo1.png";
 		const guestKey2 = "uploads/guest-1/pictures/photo2.png";
@@ -116,15 +120,18 @@ describe("migrateUserStorage", () => {
 		mocks.write.mockResolvedValue(undefined);
 		mocks.delete.mockRejectedValueOnce(new Error("Storage timeout on key 1")).mockResolvedValue(true);
 
-		await migrateUserStorage("guest-1", "user-2");
+		const cleanup = await migrateUserStorage("guest-1", "user-2");
+		expect(mocks.delete).not.toHaveBeenCalled();
+		await cleanup?.();
 		expect(mocks.delete).toHaveBeenCalledWith(guestKey1);
 		expect(mocks.delete).toHaveBeenCalledWith(guestKey2);
-		expect(mocks.delete).toHaveBeenCalledWith("uploads/guest-1/");
+		expect(mocks.delete).not.toHaveBeenCalledWith("uploads/guest-1/");
+		expect(mocks.delete).toHaveBeenCalledTimes(2);
 		expect(consoleWarn).toHaveBeenCalled();
 		consoleWarn.mockRestore();
 	});
 
-	it("does not delete prefix and throws when some files cannot be read", async () => {
+	it("preserves every source file when one listed file cannot be read", async () => {
 		const guestKey1 = "uploads/guest-1/pictures/photo1.png";
 		const guestKey2 = "uploads/guest-1/pictures/photo2.png";
 		mocks.list.mockResolvedValue([guestKey1, guestKey2]);
@@ -135,7 +142,7 @@ describe("migrateUserStorage", () => {
 		mocks.write.mockResolvedValue(undefined);
 		mocks.delete.mockResolvedValue(true);
 
-		await expect(migrateUserStorage("guest-1", "user-2")).rejects.toThrow();
-		expect(mocks.delete).not.toHaveBeenCalledWith("uploads/guest-1/");
+		await expect(migrateUserStorage("guest-1", "user-2")).rejects.toThrow("Could not read");
+		expect(mocks.delete).not.toHaveBeenCalled();
 	});
 });

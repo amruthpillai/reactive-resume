@@ -174,6 +174,169 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  mobile-apk:
+    needs: mode
+    if: ${{ needs.mode.outputs.nightly == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        abi: [arm64-v8a, armeabi-v7a, x86_64]
+    runs-on: ${{ vars.USE_BLACKSMITH == 'true' && 'blacksmith-32vcpu-ubuntu-2404' || 'ubuntu-latest' }}
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    env:
+      CI: "1"
+      EXPO_NO_TELEMETRY: "1"
+      FASTLANE_SKIP_UPDATE_CHECK: "1"
+      FASTLANE_HIDE_CHANGELOG: "1"
+      FASTLANE_OPT_OUT_USAGE: "1"
+      BUNDLE_GEMFILE: ${{ github.workspace }}/tooling/mobile/Gemfile
+      MOBILE_UPDATE_CHANNEL: preview
+      MOBILE_BUILD_NUMBER: "1"
+
+    steps:
+      - name: Check Android signing credentials
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          for name in EXPO_TOKEN ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_ALIAS ANDROID_KEY_PASSWORD; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing Actions secret: $name"
+              exit 1
+            fi
+          done
+
+      - name: Checkout Repository
+        if: ${{ vars.USE_BLACKSMITH != 'true' }}
+        uses: actions/checkout@v7
+        with: &checkout-mobile-apk
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Checkout Repository (Blacksmith)
+        if: ${{ vars.USE_BLACKSMITH == 'true' }}
+        uses: useblacksmith/checkout@v1
+        with: *checkout-mobile-apk
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Ruby and Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: tooling/mobile
+
+      - name: Check Android build and signing behavior
+        run: ruby tooling/mobile/build_test.rb
+
+      - name: Setup Android SDK and Forme NDK
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
+        with:
+          packages: platform-tools platforms;android-37.0 build-tools;37.0.0 ndk;27.1.12297006 ndk;28.2.13676358 cmake;3.22.1
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v9
+        with:
+          eas-version: 25.2.0
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Build signed architecture APK
+        working-directory: apps/mobile
+        env:
+          ABI: ${{ matrix.abi }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          node ../../packages/forme-native/scripts/fetch-prebuilt.mjs --platform android
+          eas env:exec preview --non-interactive \
+            'pnpm exec expo prebuild --platform android --clean --no-install && cd ../../tooling/mobile && bundle exec fastlane android build abi:"$ABI"'
+
+      - name: Verify APK signature and architecture
+        env:
+          ABI: ${{ matrix.abi }}
+        run: |
+          set -euo pipefail
+          apk="$RUNNER_TEMP/mobile-release/reactive-resume-$ABI.apk"
+          "$ANDROID_HOME/build-tools/37.0.0/apksigner" verify --verbose --print-certs "$apk"
+          abis=$(unzip -Z1 "$apk" | awk -F/ '/^lib\/[^/]+\/.*\.so$/ {print $2}' | sort -u)
+          [[ "$abis" == "$ABI" ]]
+          unzip -Z1 "$apk" > "$RUNNER_TEMP/apk-entries.txt"
+          grep -Fx "lib/$ABI/libforme_native.so" "$RUNNER_TEMP/apk-entries.txt"
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: nightly-apk-${{ matrix.abi }}
+          path: ${{ runner.temp }}/mobile-release/*.apk
+          if-no-files-found: error
+          retention-days: 14
+
+  nightly-release:
+    needs: [mode, merge, mobile-apk]
+    if: ${{ needs.mode.outputs.nightly == 'true' }}
+    runs-on: ${{ vars.USE_BLACKSMITH == 'true' && 'blacksmith-2vcpu-ubuntu-2404' || 'ubuntu-latest' }}
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: read
+
+    steps:
+      - name: Checkout Repository
+        if: ${{ vars.USE_BLACKSMITH != 'true' }}
+        uses: actions/checkout@v7
+        with: &checkout-nightly-release
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Checkout Repository (Blacksmith)
+        if: ${{ vars.USE_BLACKSMITH == 'true' }}
+        uses: useblacksmith/checkout@v1
+        with: *checkout-nightly-release
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - name: Download architecture APKs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: nightly-apk-*
+          path: ${{ runner.temp }}/apks
+          merge-multiple: true
+
+      - name: Publish nightly release with changelog
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        with:
+          script: |
+            const { publishNightly } = await import(`${process.env.GITHUB_WORKSPACE}/tooling/releases/nightly.mjs`);
+            await publishNightly({ github, context, artifactDir: `${process.env.RUNNER_TEMP}/apks` });
+
   merge:
     # Release runs skip build; failed builds must never publish partial indexes.
     if: ${{ !cancelled() && needs.mode.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'skipped') }}

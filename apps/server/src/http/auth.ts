@@ -8,7 +8,7 @@ import { isAllowedOAuthRedirectUri } from "@reactive-resume/utils/url-security.n
 
 const accountLinkStorageMigrationHook = async ({ fromUserId, toUserId }: { fromUserId: string; toUserId: string }) => {
 	try {
-		await migrateUserStorage(fromUserId, toUserId);
+		return await migrateUserStorage(fromUserId, toUserId);
 	} catch (error) {
 		console.error("Failed to migrate storage from %s to %s:", fromUserId, toUserId, error);
 		throw error;

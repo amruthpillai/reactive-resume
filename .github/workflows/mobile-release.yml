@@ -100,7 +100,9 @@ jobs:
           bundler-cache: true
           working-directory: tooling/mobile
       - name: Check signing file handling
-        run: bundle exec ruby tooling/mobile/signing_test.rb
+        run: |
+          bundle exec ruby tooling/mobile/signing_test.rb
+          ruby tooling/mobile/build_test.rb
       - name: Check beta distribution targets
         run: ruby tooling/mobile/distribution_test.rb
       - uses: actions/setup-java@v5

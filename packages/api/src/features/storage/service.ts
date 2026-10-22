@@ -4,7 +4,7 @@ import { dirname, extname, join, relative } from "node:path";
 import {
 	DeleteObjectCommand,
 	GetObjectCommand,
-	ListObjectsV2Command,
+	paginateListObjectsV2,
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
@@ -132,7 +132,7 @@ class LocalStorageService implements StorageService {
 			return entries
 				.filter((entry) => entry.isFile())
 				.map((entry) => {
-					const parent = entry.parentPath ?? (entry as { path?: string }).path ?? fullPath;
+					const parent = entry.parentPath;
 					const relativePath = relative(fullPath, join(parent, entry.name)).replaceAll("\\", "/");
 					return normalizedPrefix ? `${normalizedPrefix}/${relativePath}` : relativePath;
 				});
@@ -265,10 +265,13 @@ class S3StorageService implements StorageService {
 	}
 
 	async list(prefix: string): Promise<string[]> {
-		const command = new ListObjectsV2Command({ Bucket: this.bucket, Prefix: prefix });
-		const response = await this.client.send(command);
-		if (!response.Contents) return [];
-		return response.Contents.map((object) => object.Key ?? "");
+		const keys: string[] = [];
+		for await (const page of paginateListObjectsV2({ client: this.client }, { Bucket: this.bucket, Prefix: prefix })) {
+			for (const object of page.Contents ?? []) {
+				if (object.Key) keys.push(object.Key);
+			}
+		}
+		return keys;
 	}
 
 	async write({ key, data, contentType }: StorageWriteInput): Promise<void> {
@@ -306,7 +309,8 @@ class S3StorageService implements StorageService {
 
 	async delete(keyOrPrefix: string): Promise<boolean> {
 		// Use list to find all matching keys (handles both single file and folder/prefix)
-		const keys = await this.list(keyOrPrefix);
+		const prefix = keyOrPrefix.endsWith("/") ? keyOrPrefix : `${keyOrPrefix}/`;
+		const keys = (await this.list(keyOrPrefix)).filter((key) => key === keyOrPrefix || key.startsWith(prefix));
 
 		if (keys.length === 0) return false;
 
@@ -377,51 +381,33 @@ export async function uploadFile(input: UploadFileInput): Promise<UploadFileResu
 	return { key, url: buildPublicUrl(key) };
 }
 
-export async function migrateUserStorage(fromUserId: string, toUserId: string): Promise<void> {
+/** Copy before linking; caller runs returned cleanup only after ownership commits. */
+export async function migrateUserStorage(fromUserId: string, toUserId: string): Promise<(() => Promise<void>) | void> {
 	if (fromUserId === toUserId) return;
 
 	const storageService = getStorageService();
 	const fromPrefix = `uploads/${fromUserId}/`;
 	const toPrefix = `uploads/${toUserId}/`;
+	const keys = (await storageService.list(fromPrefix)).filter((key) => key.startsWith(fromPrefix));
 
-	const keys = await storageService.list(fromPrefix);
-	const keysToMigrate = keys.filter((key) => key.startsWith(fromPrefix));
-
-	const copiedKeys: string[] = [];
-	const unreadKeys: string[] = [];
-	for (const key of keysToMigrate) {
-		const targetKey = `${toPrefix}${key.slice(fromPrefix.length)}`;
+	for (const key of keys) {
 		const file = await storageService.read(key);
-		if (file) {
-			await storageService.write({
-				key: targetKey,
-				data: file.data,
-				contentType: file.contentType ?? inferContentType(key),
-			});
-			copiedKeys.push(key);
-		} else {
-			unreadKeys.push(key);
-		}
+		if (!file) throw new Error(`Could not read storage key ${key}; source files were kept.`);
+		await storageService.write({
+			key: `${toPrefix}${key.slice(fromPrefix.length)}`,
+			data: file.data,
+			contentType: file.contentType ?? inferContentType(key),
+			...(key.startsWith(`${fromPrefix}agent/`) ? { private: true } : {}),
+		});
 	}
 
-	if (copiedKeys.length > 0) {
-		const deleteResults = await Promise.allSettled(copiedKeys.map((key) => storageService.delete(key)));
-		for (const result of deleteResults) {
-			if (result.status === "rejected") {
-				console.warn("Failed to delete migrated storage key:", result.reason);
+	return async () => {
+		// Never delete the prefix: uploads outside this copy snapshot must survive.
+		const results = await Promise.allSettled(keys.map((key) => storageService.delete(key)));
+		for (const [index, result] of results.entries()) {
+			if (result.status === "rejected" || !result.value) {
+				console.warn("Failed to delete migrated storage key %s:", keys[index], result);
 			}
 		}
-
-		if (unreadKeys.length === 0) {
-			try {
-				await storageService.delete(fromPrefix);
-			} catch (error) {
-				console.warn("Failed to clean up storage prefix %s:", fromPrefix, error);
-			}
-		}
-	}
-
-	if (unreadKeys.length > 0) {
-		throw new Error(`Could not read ${unreadKeys.length} storage key(s) under ${fromPrefix}; source files were kept.`);
-	}
+	};
 }

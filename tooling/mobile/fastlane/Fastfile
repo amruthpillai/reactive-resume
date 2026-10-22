@@ -14,23 +14,27 @@ def secret_file(directory, name, value, base64: false)
 end
 
 platform :android do
-  desc "Build a signed production App Bundle"
-  lane :build do
+  desc "Build a signed production App Bundle, or a nightly APK for the requested ABI"
+  lane :build do |options|
+    abi = options[:abi]
+    UI.user_error!("Unsupported Android ABI") if abi && !%w[arm64-v8a armeabi-v7a x86_64].include?(abi)
     FileUtils.mkdir_p(OUTPUT)
     Dir.mktmpdir("android-signing-", ENV.fetch("RUNNER_TEMP")) do |directory|
       keystore = secret_file(directory, "upload.jks", ENV.fetch("ANDROID_KEYSTORE_BASE64"), base64: true)
       gradle(
         project_dir: File.join(MOBILE, "android"),
-        task: "bundle", build_type: "Release", flags: "--no-daemon",
+        task: abi ? "assemble" : "bundle", build_type: "Release", flags: "--no-daemon",
         print_command: false,
         properties: {
           "android.injected.signing.store.file" => keystore,
           "android.injected.signing.store.password" => ENV.fetch("ANDROID_KEYSTORE_PASSWORD"),
           "android.injected.signing.key.alias" => ENV.fetch("ANDROID_KEY_ALIAS"),
           "android.injected.signing.key.password" => ENV.fetch("ANDROID_KEY_PASSWORD")
-        }
+        }.merge(abi ? { "reactNativeArchitectures" => abi } : {})
       )
-      FileUtils.cp(lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH], File.join(OUTPUT, "ReactiveResume.aab"))
+      source = lane_context[abi ? SharedValues::GRADLE_APK_OUTPUT_PATH : SharedValues::GRADLE_AAB_OUTPUT_PATH]
+      name = abi ? "reactive-resume-#{abi}.apk" : "ReactiveResume.aab"
+      FileUtils.cp(source, File.join(OUTPUT, name))
       maps = File.join(MOBILE, "android/app/build/generated/sourcemaps/react/release")
       FileUtils.cp_r(maps, File.join(OUTPUT, "sourcemaps")) if Dir.exist?(maps)
     end

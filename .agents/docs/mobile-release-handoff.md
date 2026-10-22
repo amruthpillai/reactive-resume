@@ -164,7 +164,32 @@ binaries and deploy the backend first.
 7. Run the [signed-device test matrix](#signed-device-test-matrix) on the store-installed builds before promoting to production.
 8. Confirm that a later OTA update reaches the new binary, because its fingerprint and runtime version changed.
 
-Distribution is store-only. No IPA, AAB, or APK is attached to GitHub Releases. An IPA cannot be installed outside the App Store or TestFlight, and an AAB cannot be installed directly. A sideloaded APK would need a separate build profile and signing key. It could not upgrade a Play install or be upgraded by one, so users would lose local drafts on switching. Its certificate fingerprint would also need adding to `MOBILE_ANDROID_CERT_SHA256` for App Links and native sign-in to work.
+Stable distribution uses the App Store and Play Store. IPA and AAB files are not attached to GitHub Releases. Nightly Android APKs are published separately for sideloading as described below; they do not replace store builds or store review.
+
+### Nightly Android downloads
+
+Every push to `main` builds signed APKs for `arm64-v8a`, `armeabi-v7a`, and `x86_64`
+with Expo Prebuild, Gradle, and the existing Fastlane Android build lane. Builds use
+the Android upload keystore already stored in Actions secrets; `EXPO_TOKEN` loads
+the preview environment. `MOBILE_UPDATE_CHANNEL=preview` embeds the preview update
+channel. Nightlies use version code 1 without allocating store build numbers.
+
+Once all APKs and the matching Docker image succeed, CI publishes a GitHub prerelease
+named `nightly-<workflow-run-id>` at that exact main commit. It contains the three
+APKs, SHA-256 checksums, and a changelog of that push's full commit messages and merged
+PR descriptions. Each push is preserved even when builds finish out of order. Stable
+release aliases and production OTA publishing follow their existing promotion flow.
+
+The APKs retain package `me.rxresu`. Their upload signing certificate may differ from
+Play App Signing, so they cannot necessarily upgrade a Play installation or be
+upgraded by one. Back up local drafts before uninstalling to switch distributions.
+Retain the same upload signing key for future APK updates. For verified App Links,
+add its certificate fingerprint to the backend's `MOBILE_ANDROID_CERT_SHA256` list
+alongside the Play fingerprint; do not replace the Play fingerprint. Test native
+sign-in on an actual sideloaded build before advertising it as verified.
+
+See [container publishing](./container-publishing.md#nightly-android-apks-and-github-releases)
+for artifact retention, draft recovery, runner tools, and release permissions.
 
 ## Native artifacts and signing
 

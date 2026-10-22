@@ -48,11 +48,20 @@ it("migrates guest upload pictures so they are accessible via the new user URL a
 	const guestKey = "uploads/guest-user/pictures/avatar.png";
 	const pngData = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 	await storage.write({ key: guestKey, data: pngData, contentType: "image/png" });
+	await storage.write({
+		key: "uploads/guest-user/agent/thread-1/attachment-1",
+		data: pngData,
+		contentType: "image/png",
+		private: true,
+	});
 
 	const beforeResponse = await handleUpload(new Request(`${envMock.APP_URL}/api/${guestKey}`));
 	expect(beforeResponse.status).toBe(200);
 
-	await migrateUserStorage("guest-user", "registered-user");
+	const cleanup = await migrateUserStorage("guest-user", "registered-user");
+	// Sources remain usable until the database transition succeeds.
+	expect((await handleUpload(new Request(`${envMock.APP_URL}/api/${guestKey}`))).status).toBe(200);
+	await cleanup?.();
 
 	const oldResponse = await handleUpload(new Request(`${envMock.APP_URL}/api/${guestKey}`));
 	expect(oldResponse.status).toBe(404);
@@ -61,6 +70,11 @@ it("migrates guest upload pictures so they are accessible via the new user URL a
 	const newResponse = await handleUpload(new Request(`${envMock.APP_URL}/api/${newKey}`));
 	expect(newResponse.status).toBe(200);
 	expect(new Uint8Array(await newResponse.arrayBuffer())).toEqual(pngData);
+	if (process.platform !== "win32")
+		expect(
+			(await stat(join(envMock.LOCAL_STORAGE_PATH, "uploads/registered-user/agent/thread-1/attachment-1"))).mode &
+				0o777,
+		).toBe(0o600);
 });
 
 it("lists single file key when prefix points directly to an existing file", async () => {

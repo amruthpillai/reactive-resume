@@ -42,6 +42,49 @@ beforeEach(() => {
 });
 
 describe("linkAnonymousAccount", () => {
+	it("copies before commit and cleans up only after commit", async () => {
+		const events: string[] = [];
+		registerAccountLinkHook(async () => {
+			expect(mocks.updateWhere).toHaveBeenCalled();
+			events.push("copy");
+			return async () => {
+				events.push("cleanup");
+			};
+		});
+		mocks.transaction.mockImplementationOnce(async (cb) => {
+			await cb({ update: mocks.update, delete: mocks.delete });
+			events.push("commit");
+		});
+
+		await linkAnonymousAccount({ fromUserId: "guest-123", toUserId: "user-456" });
+		expect(events).toEqual(["copy", "commit", "cleanup"]);
+	});
+
+	it("preserves originals when the database transition fails", async () => {
+		const cleanup = vi.fn();
+		registerAccountLinkHook(async () => cleanup);
+		mocks.transaction.mockRejectedValueOnce(new Error("Database unavailable"));
+
+		await expect(linkAnonymousAccount({ fromUserId: "guest-123", toUserId: "user-456" })).rejects.toThrow(
+			"Database unavailable",
+		);
+		expect(cleanup).not.toHaveBeenCalled();
+	});
+
+	it("does not reject a committed link or skip remaining cleanup when one cleanup fails", async () => {
+		const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+		const cleanup = vi.fn().mockResolvedValue(undefined);
+		registerAccountLinkHook(async () => async () => {
+			throw new Error("Cleanup unavailable");
+		});
+		registerAccountLinkHook(async () => cleanup);
+
+		await expect(linkAnonymousAccount({ fromUserId: "guest-123", toUserId: "user-456" })).resolves.toBeUndefined();
+		expect(cleanup).toHaveBeenCalledOnce();
+		expect(warn).toHaveBeenCalled();
+		warn.mockRestore();
+	});
+
 	it("updates document ownership, rewrites upload URLs in DB, and executes registered hooks", async () => {
 		const hook = vi.fn().mockResolvedValue(undefined);
 		registerAccountLinkHook(hook);

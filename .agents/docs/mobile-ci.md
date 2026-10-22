@@ -8,7 +8,7 @@ existing Docker release workflow.
 
 Setup verified on **2026-10-21**: all eleven signing/upload secrets were copied from
 existing EAS credentials into repository Actions secrets; the existing `EXPO_TOKEN`
-was retained. `MOBILE_BUILD_NUMBER_BASE` is **100**. Live store counters were iOS **6**
+was retained. The initial `MOBILE_BUILD_NUMBER_BASE` was **100**. Live store counters were iOS **6**
 and Android **8**; workflow run 1, attempt 1 will allocate **100**. Environment
 `mobile-store` requires approval from `amruthpillai`, allows self-review, disallows admin
 bypass, and accepts only branch `main`. The workflow is manually dispatched after its
@@ -53,21 +53,25 @@ Play App Signing retains its existing app-signing certificate. Do not replace
 `MOBILE_ANDROID_CERT_SHA256` with the upload-keystore fingerprint. Keep bundle/package
 ID `me.rxresu`, Apple team, keychain groups, and associated domains unchanged.
 
-Set repository Actions variable `MOBILE_BUILD_NUMBER_BASE` to an integer **greater than
-every build number/version code already allocated in EAS or uploaded to either store**.
-Read current counters; do not use the historical 4/5 values in the handoff as live data.
+Set repository Actions variable `MOBILE_BUILD_NUMBER_BASE` so the next workflow run
+allocates a number **greater than every build number/version code already allocated
+in EAS or uploaded to either store**. For next run number N and desired build B,
+set the base to `B - (N - 1)`. Read current counters; do not use the historical 4/5
+values in the handoff as live data.
 The workflow allocates both platforms' versions as:
 
 ```text
-MOBILE_BUILD_NUMBER_BASE + (GITHUB_RUN_NUMBER - 1) * 100 + (GITHUB_RUN_ATTEMPT - 1)
+MOBILE_BUILD_NUMBER_BASE + (GITHUB_RUN_NUMBER - 1)
 ```
 
-The first run starts at the configured base: base 100 allocates 100 on attempt 1,
-101 on attempt 2, and 200 on run 2's first attempt. This reserves 99 attempts per run
-and fails before compilation on missing/invalid
-configuration or Android's 2,100,000,000 limit. Never decrease the base or reset the
-workflow counter. Rerunning an older run after a newer upload can produce an older
-version; dispatch a fresh run instead. Stop EAS store builds after migration so two
+Each new workflow run increments by one. Retries reuse the same build number;
+if an upload already used that number, dispatch a fresh run instead of rebuilding
+and uploading it again. The October 21 migration from the old 100-number stride
+uses base **298**: run 3 already allocated 300, so run 4 allocates 301, then run 5
+allocates 302. Change the base only while no release is running, and never reset
+the workflow counter. Missing/invalid configuration and Android's 2,100,000,000
+limit fail before compilation. Rerunning an older run after a newer upload can
+produce an older version; dispatch a fresh run instead. Stop EAS store builds after migration so two
 systems do not allocate competing versions. `eas.json` remains legacy configuration;
 its remote counters and auto-increment do not govern this workflow.
 
@@ -90,8 +94,9 @@ paths are manual, and signing is limited to `main`.
    `fingerprint.json`, available source maps, and iOS symbols. Raw build logs are not
    uploaded because toolchains can include environment values in them. Download the
    fingerprint and keep it with the store release record before the 14-day Actions
-   retention expires. Binaries stay in workflow artifacts; no GitHub Release assets
-   or public sideload distribution are created.
+   retention expires. Store binaries stay in workflow artifacts. Separately, each main
+   push builds Android APKs for public sideloading through the same Fastlane build
+   lane; see [nightly downloads](./mobile-release-handoff.md#nightly-android-downloads).
 4. Dispatch with **upload** enabled when ready. Upload jobs start only after every
    selected platform built successfully, then pass the `mobile-store` environment gate.
    They publish the exact signed artifacts from that run. Android creates a **completed
@@ -114,7 +119,8 @@ Apple resources. Renew certificates/profiles before expiry and update Actions se
 ## OTA compatibility and observability
 
 The update URL, EAS project and fingerprint policy remain unchanged. The production
-channel is explicitly embedded through `updates.requestHeaders`; setting a channel in
+channel is explicitly embedded through `updates.requestHeaders`; nightly APK builds
+select `preview` with `MOBILE_UPDATE_CHANNEL`. Setting a channel in
 `eas.json` alone does not configure a build produced outside EAS Build. Build numbers
 are excluded from Expo's normalized config fingerprint. Native project output and
 generated Forme binaries remain excluded through `fingerprint.config.js`; reviewed
