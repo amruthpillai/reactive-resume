@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vite-plus/test";
+import { describe, expect, it, vi } from "vite-plus/test";
 import { filterOptions, slugify, toUsername } from "./string";
 
 describe("slugify", () => {
@@ -39,5 +39,18 @@ describe("filterOptions", () => {
 	it("matches a value only exactly", () => {
 		expect(filterOptions(options, "de")).toEqual([options[2]]);
 		expect(filterOptions(options, "d")).toEqual([]);
+	});
+
+	it("matches independently of a Turkish runtime's default casing", () => {
+		const lower = String.prototype.toLocaleLowerCase;
+		const locale = vi.spyOn(String.prototype, "toLocaleLowerCase").mockImplementation(function (this: string) {
+			return lower.call(this, "tr-TR");
+		});
+		try {
+			const iceland = { value: "IS", label: "Iceland" };
+			expect(filterOptions([iceland], "ice")).toEqual([iceland]);
+		} finally {
+			locale.mockRestore();
+		}
 	});
 });
