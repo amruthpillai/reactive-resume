@@ -432,14 +432,30 @@ describe.each(PROVIDERS)("%s adapter at shared boundary", (provider) => {
 		const results = await searchWeb("designer", { ...context(provider), regions: ["DE", "FR"] });
 		expect(requests).toHaveLength(2);
 		expect(results.map((result) => result.title)).toEqual(["DE1", "FR1", "DE2", "shared", "FR2"]);
+		expect(console.info).toHaveBeenCalledWith("[web-access]", {
+			provider,
+			operation: "search",
+			durationMs: expect.any(Number),
+			outcome: "success",
+		});
 	});
 
-	it("keeps the results of a region whose request succeeds when another region's fails", async () => {
+	it.each<[string[], string]>([
+		[["DE", "FR"], "1/2-regions-failed"],
+		[["DE", "FR", "AU"], "2/3-regions-failed"],
+	])("keeps available results and logs regional failures for %j", async (regions, fallback) => {
 		respond = ({ body }) =>
 			regionOf(provider, body) === "FR" ? { body: resultsFor(provider, [job("FR1"), job("FR2")]) } : { status: 500 };
-		const results = await searchWeb("designer", { ...context(provider), regions: ["DE", "FR"] });
-		expect(requests).toHaveLength(2);
+		const results = await searchWeb("designer", { ...context(provider), regions });
+		expect(requests).toHaveLength(regions.length);
 		expect(results.map((result) => result.title)).toEqual(["FR1", "FR2"]);
+		expect(console.info).toHaveBeenCalledWith("[web-access]", {
+			provider,
+			operation: "search",
+			durationMs: expect.any(Number),
+			outcome: "success",
+			fallback,
+		});
 	});
 
 	it("throws the existing failure when every region's request fails", async () => {
