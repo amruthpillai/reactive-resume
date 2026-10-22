@@ -80,7 +80,7 @@ const fold = (text: string) =>
 	text
 		.normalize("NFD")
 		.replace(/[̀-ͯ]/g, "")
-		.toLocaleLowerCase();
+		.toLowerCase();
 
 /** The options whose label contains the query, ignoring case and accents, or whose value is the whole query. */
 export function filterOptions<T extends { value: string; label: string }>(options: readonly T[], query: string): T[] {

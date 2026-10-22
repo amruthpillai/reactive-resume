@@ -69,6 +69,24 @@ function findImpossibleRequestSchemas(spec: GeneratedSpecView) {
 }
 
 describe("generateOpenApiSpec", () => {
+	it("documents distinct search countries in every occurrence", async () => {
+		let count = 0;
+		const visit = (value: unknown) => {
+			if (!value || typeof value !== "object") return;
+			for (const [key, child] of Object.entries(value)) {
+				if (key === "searchRegions") {
+					const region = child as { anyOf?: Record<string, unknown>[] };
+					expect(region.anyOf ?? [region]).toContainEqual(
+						expect.objectContaining({ type: "array", maxItems: 3, uniqueItems: true }),
+					);
+					count++;
+				} else visit(child);
+			}
+		};
+		visit(await generateSpec());
+		expect(count).toBe(4);
+	}, 15_000);
+
 	it("keeps instance homepage resolution out of the public API", async () => {
 		const spec = (await generateSpec()) as GeneratedSpecView;
 		expect(spec.paths).not.toHaveProperty("/resume/getRoot");

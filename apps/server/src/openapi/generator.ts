@@ -1,12 +1,13 @@
 import type { OpenAPI } from "@orpc/openapi";
 import { OpenAPIGenerator } from "@orpc/openapi";
-import { JSON_SCHEMA_INPUT_REGISTRY, ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
+import { JSON_SCHEMA_INPUT_REGISTRY, JSON_SCHEMA_REGISTRY, ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { downloadResumePdfProcedure } from "@reactive-resume/api/features/resume/export";
 import { restAliases } from "@reactive-resume/api/rest";
 import router from "@reactive-resume/api/routers";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { createResumeDataJsonSchema } from "@reactive-resume/schema/resume/json-schema";
 import { writableResumeDataSchema } from "@reactive-resume/schema/resume/write";
+import { searchRegionsSchema } from "@reactive-resume/utils/region";
 
 export const openAPIRouter = {
 	...router,
@@ -21,6 +22,7 @@ const { $schema: _dialect, ...resumeDataInputSchema } = createResumeDataJsonSche
 type ResumeDataInputJsonSchema = Parameters<typeof JSON_SCHEMA_INPUT_REGISTRY.add<typeof resumeDataSchema>>[1];
 JSON_SCHEMA_INPUT_REGISTRY.add(resumeDataSchema, resumeDataInputSchema as unknown as ResumeDataInputJsonSchema);
 JSON_SCHEMA_INPUT_REGISTRY.add(writableResumeDataSchema, resumeDataInputSchema as unknown as ResumeDataInputJsonSchema);
+JSON_SCHEMA_REGISTRY.add(searchRegionsSchema.unwrap().unwrap(), { uniqueItems: true });
 const importResumeInputSchema = openAPIRouter.resume.import["~orpc"].inputSchema;
 if (importResumeInputSchema) {
 	JSON_SCHEMA_INPUT_REGISTRY.add(importResumeInputSchema, {
