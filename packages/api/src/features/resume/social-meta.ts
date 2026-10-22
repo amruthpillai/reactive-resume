@@ -34,6 +34,10 @@ const findResume = async ({ username, slug }: PublicResumeSocialMetaInput) => {
 	return resume ?? null;
 };
 
+/**
+ * Loads metadata (title, description, image) for social card previews of a public resume.
+ * Redacts hidden sections and respects password gating and trashed state.
+ */
 export async function getPublicResumeSocialMeta(input: PublicResumeSocialMetaInput): Promise<ResumeSocialMeta | null> {
 	const resume = await findResume(input);
 	if (!resume) return null;

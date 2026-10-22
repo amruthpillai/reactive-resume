@@ -77,7 +77,9 @@ describe("createPublicResumePdf", () => {
 
 		const [query] = pg.queries;
 		expect(query?.text).toContain('"resume_slug_redirect"');
-		expect(query?.text).toContain("order by");
+		expect(query?.text).toContain('"resume_slug_redirect"."expires_at" > now()');
+		expect(query?.text).toContain('"resume_slug_redirect"."user_id" = "resume"."user_id"');
+		expect(query?.text).toContain('order by "resume"."slug" = $4 desc');
 		expect(query?.params[0]).toBe("old-slug");
 		expect(query?.params[1]).toBe("old-slug");
 		expect(query?.params[2]).toBe("jane");
@@ -109,9 +111,9 @@ describe("createPublicResumePdf", () => {
 		});
 	});
 
-	it("rejects with NOT_FOUND when renamed slug redirect does not match or has expired", async () => {
+	it("rejects with NOT_FOUND when redirect or resume does not exist", async () => {
 		pg.rows = [];
-		await expect(createPublicResumePdf({ ...input, slug: "expired-slug" })).rejects.toMatchObject({
+		await expect(createPublicResumePdf({ ...input, slug: "missing-slug" })).rejects.toMatchObject({
 			code: "NOT_FOUND",
 		});
 	});

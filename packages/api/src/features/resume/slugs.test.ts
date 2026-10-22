@@ -28,16 +28,20 @@ describe("recordSlugChange", () => {
 });
 
 describe("matchesSlug", () => {
-	it("builds condition checking resume slug or unexpired redirect subquery", () => {
-		const where = vi.fn((condition: unknown) => condition);
-		const from = vi.fn(() => ({ where }));
-		dbMock.select.mockReturnValue({ from });
+	it("builds condition checking resume slug or unexpired redirect subquery", async () => {
+		const { PgDialect } = await import("drizzle-orm/pg-core");
+		const { drizzle } = await import("drizzle-orm/node-postgres");
+		const testDb = drizzle({ client: {} as never });
+		dbMock.select.mockImplementation((fields?: unknown) => testDb.select(fields as never));
 
 		const condition = matchesSlug("old-slug");
+		if (!condition) throw new Error("Expected condition");
+		const query = new PgDialect().sqlToQuery(condition);
 
-		expect(condition).toBeDefined();
-		expect(dbMock.select).toHaveBeenCalled();
-		expect(from).toHaveBeenCalled();
-		expect(where).toHaveBeenCalled();
+		expect(query.sql).toContain('"resume"."slug" = $1');
+		expect(query.sql).toContain('"resume_slug_redirect"."slug" = $2');
+		expect(query.sql).toContain('"resume_slug_redirect"."user_id" = "resume"."user_id"');
+		expect(query.sql).toContain('"resume_slug_redirect"."expires_at" > now()');
+		expect(query.params).toEqual(["old-slug", "old-slug"]);
 	});
 });

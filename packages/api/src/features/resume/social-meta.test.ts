@@ -46,7 +46,9 @@ describe("getPublicResumeSocialMeta", () => {
 
 		const [query] = pg.queries;
 		expect(query?.text).toContain('"resume_slug_redirect"');
-		expect(query?.text).toContain("order by");
+		expect(query?.text).toContain('"resume_slug_redirect"."expires_at" > now()');
+		expect(query?.text).toContain('"resume_slug_redirect"."user_id" = "resume"."user_id"');
+		expect(query?.text).toContain('order by "resume"."slug" = $5 desc');
 		expect(query?.params[0]).toBe("old-slug");
 		expect(query?.params[1]).toBe("old-slug");
 		expect(query?.params[2]).toBe("jane");
@@ -54,8 +56,8 @@ describe("getPublicResumeSocialMeta", () => {
 		expect(meta).toMatchObject({ name: expect.stringContaining("Jane Doe") });
 	});
 
-	it("returns null when redirect has expired or does not exist", async () => {
-		const meta = await getPublicResumeSocialMeta({ username: "jane", slug: "expired-slug" });
+	it("returns null when redirect or resume does not exist", async () => {
+		const meta = await getPublicResumeSocialMeta({ username: "jane", slug: "missing-slug" });
 		expect(meta).toBeNull();
 	});
 });

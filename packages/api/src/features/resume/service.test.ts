@@ -523,7 +523,7 @@ describe("statistics.recordDownload", () => {
 
 		expect(where.mock.calls[0]?.[0]).toContainEqual(["slug", "old-slug"]);
 		expect(orderBy).toHaveBeenCalledTimes(1);
-		expect(orderBy.mock.calls[0]?.[0]).toBeDefined();
+		expect(orderBy.mock.calls[0]?.[0]).toMatchObject({ values: ["slug", "old-slug"] });
 		expect(limit).toHaveBeenCalledWith(1);
 	});
 

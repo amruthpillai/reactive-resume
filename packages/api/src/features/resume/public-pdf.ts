@@ -65,6 +65,10 @@ const defaultDependencies: PublicResumePdfDependencies = {
 		(await import("@reactive-resume/pdf/server")).createResumePdfFile({ ...input, uploadOrigin: env.APP_URL }),
 };
 
+/**
+ * Renders a PDF for a public resume identified by username and slug (current or unexpired redirect).
+ * Enforces visibility, password access, and rate limiting before generating the file.
+ */
 export async function createPublicResumePdf(
 	input: CreatePublicResumePdfInput,
 	dependencies: Partial<PublicResumePdfDependencies> = {},
