@@ -126,8 +126,8 @@ export const publicProcedure = base
 	});
 
 /**
- * The scope a route needs. Moving a document to Trash removes it like a delete (and Trash is purged after 30 days),
- * so its RPC and REST aliases need `delete` too. MCP tools reuse this, so every transport agrees.
+ * The scope a route needs. Moving a document to Trash removes it like a delete, so its RPC and REST aliases need
+ * `delete` too. MCP tools check the same rule before calling a procedure.
  */
 export function requiredPermission(route: { method?: string | undefined; operationId?: string | undefined }) {
 	if (route.method === "GET") return "read";

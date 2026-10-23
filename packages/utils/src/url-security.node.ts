@@ -6,7 +6,7 @@ import { lookup as lookupAddresses, resolve4, resolve6 } from "node:dns/promises
 import { Agent as HttpAgent, request as httpRequest } from "node:http";
 import { Agent as HttpsAgent, request as httpsRequest } from "node:https";
 import { BlockList, isIP } from "node:net";
-import { Readable } from "node:stream";
+import { pipeline, Readable } from "node:stream";
 import { createBrotliDecompress, createGunzip, createInflate } from "node:zlib";
 
 function normalizeHostname(hostname: string) {
@@ -113,8 +113,9 @@ const MAX_PUBLIC_RESPONSE_BYTES = 64 * 1024 * 1024;
 let publicAgents: { http: HttpAgent; https: HttpsAgent } | undefined;
 const publicAgent = (protocol: string) => {
 	publicAgents ??= {
-		http: new HttpAgent({ keepAlive: true, lookup: publicLookup }),
-		https: new HttpsAgent({ keepAlive: true, lookup: publicLookup }),
+		// Like Node's global agent: idle sockets close after 5 s, before servers usually drop them.
+		http: new HttpAgent({ keepAlive: true, timeout: 5000, lookup: publicLookup }),
+		https: new HttpsAgent({ keepAlive: true, timeout: 5000, lookup: publicLookup }),
 	};
 	return protocol === "https:" ? publicAgents.https : publicAgents.http;
 };
@@ -134,12 +135,12 @@ function capped(body: ReadableStream<Uint8Array>) {
 }
 
 // fetch decodes these itself; a response read from a socket has to be decoded here.
-const decoders: Record<string, () => Transform> = {
-	gzip: createGunzip,
-	"x-gzip": createGunzip,
-	deflate: createInflate,
-	br: createBrotliDecompress,
-};
+const decoders = new Map<string, () => Transform>([
+	["gzip", createGunzip],
+	["x-gzip", createGunzip],
+	["deflate", createInflate],
+	["br", createBrotliDecompress],
+]);
 
 /**
  * `fetch` for endpoints a user chose. It connects only to public addresses, checking every DNS answer when the socket
@@ -177,16 +178,14 @@ export async function fetchPublic(input: RequestInfo | URL, init?: RequestInit):
 					}
 					const empty = request.method === "HEAD" || [204, 205, 304].includes(status);
 					let stream: Readable = incoming;
-					const decode =
-						decoders[
-							String(incoming.headers["content-encoding"] ?? "")
-								.trim()
-								.toLowerCase()
-						];
+					const decode = decoders.get(
+						String(incoming.headers["content-encoding"] ?? "")
+							.trim()
+							.toLowerCase(),
+					);
 					if (!empty && decode) {
-						const decoder = decode();
-						incoming.on("error", (error) => decoder.destroy(error));
-						stream = incoming.pipe(decoder);
+						// pipeline closes the socket too when the decoder stops (cap reached, body canceled).
+						stream = pipeline(incoming, decode(), () => {});
 						responseHeaders.delete("content-encoding");
 						responseHeaders.delete("content-length");
 					}

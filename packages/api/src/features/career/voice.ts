@@ -13,12 +13,12 @@ import { AI_VOICE_MODELS } from "@reactive-resume/ai/types";
 import { db } from "@reactive-resume/db/client";
 import { careerTranscript } from "@reactive-resume/db/schema";
 import { protectedProcedure } from "../../context";
-import { aiRequestRateLimit } from "../../middleware/rate-limit";
+import { aiVoiceRateLimit } from "../../middleware/rate-limit";
 import { aiProvidersService } from "../ai-providers/service";
 import { aiTransport, resolveAiBaseUrl } from "../ai/url-policy";
 import { requireCareerApplication } from "./service";
 
-const procedure = protectedProcedure.use(aiRequestRateLimit);
+const procedure = protectedProcedure.use(aiVoiceRateLimit);
 
 /** The connection for one voice job, refused unless it offers that model (see `AI_VOICE_MODELS`). */
 async function voiceConnection(userId: string, id: string, kind: "transcription" | "speech", model: string) {

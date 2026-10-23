@@ -29,10 +29,14 @@ async function requestConsent(accept: boolean, oauthQuery: string) {
 }
 
 function redirectDestination(redirectUri: string | null) {
-	if (!redirectUri || !URL.canParse(redirectUri)) return null;
-	const url = new URL(redirectUri);
-	// Native apps return through their own scheme, which has no host.
-	return url.host || url.protocol.replace(/:$/, "");
+	if (!redirectUri) return null;
+	try {
+		const url = new URL(redirectUri);
+		// Native apps return through their own scheme, which has no host.
+		return url.host || url.protocol.replace(/:$/, "");
+	} catch {
+		return null;
+	}
 }
 
 export function OAuthConsentPage({ oauthQuery, email }: OAuthConsentPageProps) {

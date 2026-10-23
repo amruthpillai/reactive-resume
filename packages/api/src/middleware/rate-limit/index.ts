@@ -47,6 +47,7 @@ const resumePasswordLimiter = createRateLimiter("resumePasswordLimiter", rateLim
 const pdfLimiter = createRateLimiter("pdfLimiter", rateLimitConfig.orpc.pdfExport);
 const resumeDownloadLimiter = createRateLimiter("resumeDownloadLimiter", rateLimitConfig.orpc.pdfExport);
 const aiLimiter = createRateLimiter("aiLimiter", rateLimitConfig.orpc.aiRequest);
+const aiVoiceLimiter = createRateLimiter("aiVoiceLimiter", rateLimitConfig.orpc.aiRequest);
 const storageUploadLimiter = createRateLimiter("storageUploadLimiter", rateLimitConfig.orpc.storageUpload);
 const storageDeleteLimiter = createRateLimiter("storageDeleteLimiter", rateLimitConfig.orpc.storageDelete);
 const resumeMutationLimiter = createRateLimiter("resumeMutationLimiter", rateLimitConfig.orpc.resumeMutations);
@@ -109,6 +110,12 @@ export const resumeDownloadRateLimit = createRatelimitMiddleware<
 export const aiRequestRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
 	limiter: productionLimiter(aiLimiter),
 	key: ({ context }) => `ai-request:${getUserKey(context)}`,
+});
+
+// Voice practice transcribes and speaks every turn, so it has its own account budget beside the chat's.
+export const aiVoiceRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
+	limiter: productionLimiter(aiVoiceLimiter),
+	key: ({ context }) => `ai-voice:${getUserKey(context)}`,
 });
 
 export const storageUploadRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({

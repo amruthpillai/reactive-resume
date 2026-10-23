@@ -129,14 +129,14 @@ export function applyResumePatches(data: ResumeData, operations: Operation[]): R
 				// An unresolvable `from` is left to applyOperation, which reports it as OPERATION_FROM_UNRESOLVABLE.
 				const copied = resolvePointer(patched, operation.from);
 				if (copied !== undefined) size += JSON.stringify(copied).length;
-			}
-			if (size > MAX_PATCHED_DOCUMENT_CHARS) {
-				throw new ResumePatchError(
-					"PATCH_TOO_LARGE",
-					"The patch copies more content than a resume can hold.",
-					index,
-					operation,
-				);
+				if (size > MAX_PATCHED_DOCUMENT_CHARS) {
+					throw new ResumePatchError(
+						"PATCH_TOO_LARGE",
+						"The patch copies more content than a resume can hold.",
+						index,
+						operation,
+					);
+				}
 			}
 			patched = jsonpatch.applyOperation(patched, operation, true, true, true, index).newDocument;
 		} catch (error: unknown) {

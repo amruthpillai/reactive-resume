@@ -183,7 +183,7 @@ REST data responses use `Cache-Control: no-store`. Uploaded profile images are p
 | PDF downloads of one resume (`GET /resumes/{id}/pdf`)                                           | 5 per minute                                                  |
 | Public PDF checks per client address                                                            | 5 per minute                                                  |
 | REST request body size (before endpoint-specific limits)                                        | 40 MiB                                                        |
-| AI requests                                                                                     | 20 per minute                                                 |
+| AI requests per account (voice transcription and speech count separately)                       | 20 per minute                                                 |
 | Request body size on Vercel installations                                                       | 4.5 MB (see [Large RPC requests](/guides/large-rpc-requests)) |
 
 Procedure limits apply in production. When you hit a limit, the API responds with `429`. On a self-hosted installation, `FLAG_DISABLE_API_RATE_LIMIT` turns off the per-key limit together with the sign-in limits; the procedure limits also turn off (see [Environment variables](/self-hosting/environment-variables)).

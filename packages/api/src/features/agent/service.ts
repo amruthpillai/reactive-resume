@@ -655,6 +655,19 @@ async function cleanupActiveRun(input: {
 	}
 }
 
+/**
+ * Compares links the way people write them: a fragment, a trailing slash or the punctuation ending a sentence
+ * ("read https://example.com/job.") doesn't make it a different page. Host case is normalized by URL.
+ */
+function sourceKey(value: string): string | null {
+	try {
+		const url = new URL(value.trim().replace(/[.,;:!?'"*)\]]+$/, ""));
+		return `${url.protocol}//${url.host}${url.pathname.replace(/\/+$/, "")}${url.search}`;
+	} catch {
+		return null;
+	}
+}
+
 function messageText(message: UIMessage) {
 	const textParts: string[] = [];
 
@@ -749,8 +762,8 @@ function createAgent(input: {
 		offers: Awaited<ReturnType<typeof careerService.savedItems>>;
 		sourceMessageId: string | undefined;
 	};
-	/** Pages the model may read: links in the conversation or this message, and results it found by searching. */
-	allowedSources: Set<string>;
+	/** Pages the model may read: links the user wrote or sources found earlier; search results join them. */
+	allowedSources: Iterable<string>;
 	userId: string;
 	threadId: string;
 	/** Null when the message leaves the document out. */
@@ -798,14 +811,18 @@ function createAgent(input: {
 		};
 
 	const { document } = input;
-	const { allowedSources } = input;
+	const allowedSources = new Set<string>();
+	const allow = (url: string | null | undefined) => {
+		const key = url ? sourceKey(url) : null;
+		if (key) allowedSources.add(key);
+	};
+	for (const url of input.allowedSources) allow(url);
 	if (input.career?.shareApplication) {
 		const application = input.career.context.application;
-		if (application?.sourceUrl) allowedSources.add(application.sourceUrl);
+		allow(application?.sourceUrl);
 		const interview = input.career.context.interview;
 		if (interview?.type === "interview")
-			for (const participant of interview.participants ?? [])
-				if (participant.profileUrl) allowedSources.add(participant.profileUrl);
+			for (const participant of interview.participants ?? []) allow(participant.profileUrl);
 	}
 	const tools = buildAgentTools({
 		document: document?.kind ?? null,
@@ -822,19 +839,21 @@ function createAgent(input: {
 					signal,
 					regions,
 				});
-				for (const resultSource of result) allowedSources.add(resultSource.url);
+				for (const resultSource of result) allow(resultSource.url);
 				return result;
 			}),
 			readPage: timedToolHandler("read_page", async (url: string, signal: AbortSignal) => {
 				// Text the model reads (pages, attachments, postings) can ask it to put data in a URL; an allowlist keeps
 				// every request to a page the user or a search chose.
-				if (!allowedSources.has(url)) throw new Error("Read only retrieved URLs or public links supplied by the user.");
+				const key = sourceKey(url);
+				if (!key || !allowedSources.has(key))
+					throw new Error("Read only retrieved URLs or public links supplied by the user.");
 				const { html: _html, ...page } = await readPage(url, {
 					connection: input.connection,
 					userId: input.userId,
 					signal,
 				});
-				allowedSources.add(page.resolvedUrl ?? page.requestedUrl);
+				allow(page.resolvedUrl ?? page.requestedUrl);
 				return page;
 			}),
 			readDocument: timedToolHandler("read_document", async () => {
@@ -1383,10 +1402,12 @@ export const agentService = {
 								},
 							}
 						: {}),
-					allowedSources: new Set([
+					allowedSources: [
 						...messages.flatMap((message) => agentWebSources(message).map((source) => source.url)),
-						...(messageText(input.message).match(/https?:\/\/[^\s<>")]+/g) ?? []),
-					]),
+						...[...messages.filter((message) => message.role === "user"), input.message].flatMap(
+							(message) => messageText(message).match(/https?:\/\/[^\s<>")]+/g) ?? [],
+						),
+					],
 					posting,
 					connection,
 					search,

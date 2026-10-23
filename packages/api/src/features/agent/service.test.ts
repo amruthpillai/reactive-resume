@@ -376,7 +376,7 @@ describe("agentService.messages.send", () => {
 		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
 
 		const { agentService } = await import("./service");
-		const send = async (context?: { document: boolean; posting: boolean }) => {
+		const send = async (context?: { document: boolean; posting: boolean }, text = "Hi") => {
 			const privateHistory = {
 				...persistedMessage,
 				id: "old-message",
@@ -406,7 +406,7 @@ describe("agentService.messages.send", () => {
 				message: {
 					id: "ui-message-1",
 					role: "user",
-					parts: [{ type: "text", text: "Hi" }],
+					parts: [{ type: "text", text }],
 					// oxlint-disable-next-line typescript/no-explicit-any -- minimal fixture for unit test
 				} as any,
 				...(context ? { context } : {}),
@@ -465,6 +465,13 @@ describe("agentService.messages.send", () => {
 		await send();
 		expect(webAccessService.canSearch).toHaveBeenLastCalledWith(false);
 		expect(vi.mocked(buildAgentTools).mock.calls[2]?.[0]).toMatchObject({ externalSearch: true });
+
+		// A link the user wrote still reads, however the sentence around it ends or the model spells it.
+		await send(undefined, "Tailor it to https://jobs.example.com/role-42.");
+		vi.mocked(readPage).mockResolvedValueOnce({ requestedUrl: "https://jobs.example.com/role-42/" } as never);
+		await expect(
+			vi.mocked(buildAgentTools).mock.calls.at(-1)?.[0].handlers.readPage("https://JOBS.example.com/role-42/", signal),
+		).resolves.toMatchObject({ requestedUrl: "https://jobs.example.com/role-42/" });
 	});
 
 	it("persists canonical attachment UI parts, links selected attachments, and appends server-read model parts", async () => {
