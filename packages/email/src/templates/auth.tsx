@@ -179,13 +179,13 @@ interface VerifyEmailChangeProps {
 export function VerifyEmailChange({ url, previousEmail, newEmail }: VerifyEmailChangeProps) {
 	return (
 		<AuthEmailLayout
-			preview={`Confirm your new ${appName} email address`}
-			heading="Confirm Email Change"
-			intro={`You asked to change your ${appName} email from ${previousEmail} to ${newEmail}.`}
-			details="The change takes effect once you confirm it here."
-			actionLabel="Verify New Email"
+			preview={`Approve changing your ${appName} email address`}
+			heading="Approve Email Change"
+			intro={`Someone asked to change your ${appName} email from ${previousEmail} to ${newEmail}.`}
+			details={`If you approve, we'll send a link to ${newEmail} to finish the change.`}
+			actionLabel="Approve Change"
 			actionUrl={url}
-			outro="If you did not request this change, ignore this email. The address on the account will not change unless it is confirmed here."
+			outro="If you did not request this change, ignore this email and change your password. The address on the account will not change without your approval."
 		/>
 	);
 }

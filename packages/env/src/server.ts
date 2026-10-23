@@ -238,6 +238,18 @@ if (
 	throw new Error("Server AI requires AI_PROVIDER, AI_MODEL and AI_API_KEY (the key is optional for Ollama).");
 }
 
+// `.env.example` is public, and production Compose loads it as the base `env_file`: its secrets would let anyone sign
+// auth tokens or read stored provider keys.
+if (process.env.NODE_ENV === "production") {
+	for (const [name, value] of [
+		["AUTH_SECRET", env.AUTH_SECRET],
+		["ENCRYPTION_SECRET", env.ENCRYPTION_SECRET],
+	] as const) {
+		if (value?.startsWith("change-me-to-a-secure-"))
+			throw new Error(`${name} still has the example value from .env.example. Set a random one: openssl rand -hex 32`);
+	}
+}
+
 if (env.AI_PROVIDER === "openai-compatible" && !env.AI_BASE_URL) {
 	throw new Error("The openai-compatible server AI provider requires AI_BASE_URL.");
 }

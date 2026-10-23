@@ -54,7 +54,6 @@ describe("createProfileMapper", () => {
 					id: "user-1",
 					accountId: "legacy-user-id",
 					email: "Legacy.User@Example.COM",
-					emailVerified: true,
 					username: "octo-cat",
 					displayUsername: "Octo-Cat",
 					name: "Legacy User",
@@ -84,7 +83,6 @@ describe("createProfileMapper", () => {
 			image: "https://example.com/new.png",
 			username: "octo-cat-1",
 			displayUsername: "octo-cat-1",
-			emailVerified: true,
 		});
 	});
 
@@ -93,7 +91,6 @@ describe("createProfileMapper", () => {
 			{
 				id: "user-1",
 				email: "Legacy.User@Example.COM",
-				emailVerified: false,
 				username: "legacy.user",
 				displayUsername: "legacy.user",
 				name: "Legacy User",
@@ -120,7 +117,6 @@ describe("createProfileMapper", () => {
 			image: "https://example.com/new.png",
 			username: "legacy.user",
 			displayUsername: "legacy.user",
-			emailVerified: false,
 		});
 	});
 });

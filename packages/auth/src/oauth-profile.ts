@@ -9,7 +9,6 @@ import { generateId, toUsername } from "@reactive-resume/utils/string";
 interface ExistingOAuthUser {
 	id: string;
 	email: string;
-	emailVerified: boolean;
 	username: string;
 	displayUsername: string;
 	name: string;
@@ -28,7 +27,6 @@ async function findExistingUserByEmail(email: string): Promise<ExistingOAuthUser
 		.select({
 			id: schema.user.id,
 			email: schema.user.email,
-			emailVerified: schema.user.emailVerified,
 			username: schema.user.username,
 			displayUsername: schema.user.displayUsername,
 			name: schema.user.name,
@@ -55,7 +53,6 @@ async function findLegacyGithubUser(
 			id: schema.user.id,
 			accountId: schema.account.accountId,
 			email: schema.user.email,
-			emailVerified: schema.user.emailVerified,
 			username: schema.user.username,
 			displayUsername: schema.user.displayUsername,
 			name: schema.user.name,
@@ -184,6 +181,8 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 
 			// Better Auth 1.7 forbids `mapProfileToUser` from returning `id`; provider identity is
 			// resolved by `accountSubject` and existing local users are matched by `account.accountLinking`.
+			// Never return `emailVerified`: it would replace the provider's own proof, which Better Auth needs
+			// to decide whether an untrusted provider may link to this local account.
 			const existingImage = image ?? existingUser.image;
 
 			return {
@@ -192,7 +191,6 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 				...(existingImage ? { image: existingImage } : {}),
 				username: existingUser.username,
 				displayUsername: existingUser.displayUsername,
-				emailVerified: existingUser.emailVerified,
 			};
 		}
 
@@ -206,7 +204,6 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 			...(image ? { image } : {}),
 			username,
 			displayUsername: username,
-			emailVerified: true,
 		};
 	};
 }

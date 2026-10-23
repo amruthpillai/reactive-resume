@@ -450,10 +450,13 @@ const getAuthConfig = () => {
 		user: {
 			changeEmail: {
 				enabled: true,
+				// Better Auth's two-step change: the current address approves first, then the new address gets its own
+				// verification link. Sending this step to the new address would let anyone holding a session move the
+				// account to an address they control without the owner's approval.
 				sendChangeEmailConfirmation: async ({ user, newEmail, url }) => {
 					await sendEmail({
-						to: newEmail,
-						subject: "Verify your new email",
+						to: user.email,
+						subject: "Approve your email change",
 						react: createElement(VerifyEmailChange, { url, previousEmail: user.email, newEmail }),
 					});
 				},
