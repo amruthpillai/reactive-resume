@@ -62,6 +62,13 @@ export const careerJobs = {
 			if (!input.aiProviderId)
 				throw new ORPCError("BAD_REQUEST", { message: "Choose a tested AI connection for scheduled preparation." });
 			await aiProvidersService.getRunnableById({ userId, id: input.aiProviderId });
+		} else if (input.aiProviderId) {
+			// Any other schedule may name a connection too; it still has to be one of the account's own.
+			const [provider] = await db
+				.select({ id: tables.aiProvider.id })
+				.from(tables.aiProvider)
+				.where(and(eq(tables.aiProvider.id, input.aiProviderId), eq(tables.aiProvider.userId, userId)));
+			if (!provider) throw new ORPCError("NOT_FOUND", { message: "That AI connection doesn't exist." });
 		}
 		if (input.email) {
 			const [owner] = await db

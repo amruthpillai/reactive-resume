@@ -144,6 +144,21 @@ async function requireFacts(input: Owned, ids: string[], reader: typeof db | Car
 	return rows;
 }
 
+/**
+ * The account's own facts among those workspace answers cite. Answers are a draft the client saves, so a saved item
+ * records only facts that belong to the account (a deleted or foreign id is dropped).
+ */
+async function ownedFactIds(reader: typeof db | CareerTransaction, userId: string, answers: { factIds: string[] }[]) {
+	const ids = [...new Set(answers.flatMap((answer) => answer.factIds))];
+	if (!ids.length) return [];
+	const rows = await reader
+		.select({ id: tables.careerFact.id })
+		.from(tables.careerFact)
+		.where(and(eq(tables.careerFact.userId, userId), inArray(tables.careerFact.id, ids)));
+	const owned = new Set(rows.map((row) => row.id));
+	return ids.filter((id) => owned.has(id));
+}
+
 export const modelFact = (fact: typeof tables.careerFact.$inferSelect) => ({
 	id: fact.id,
 	text: fact.text,
@@ -973,7 +988,7 @@ export const careerService = {
 					interviewId: null,
 					title: "Application answers",
 					data: { kind: "answers", answers: sent },
-					evidence: { factIds: [...new Set(sent.flatMap((answer) => answer.factIds))], storyIds: [] },
+					evidence: { factIds: await ownedFactIds(tx, userId, sent), storyIds: [] },
 					inputVersion: hash(JSON.stringify([applicationId, at, sent])),
 				});
 		});
@@ -1016,7 +1031,7 @@ export const careerService = {
 				interviewId: null,
 				title: "Application answers",
 				data: { kind: "answers", answers },
-				evidence: { factIds: [...new Set(answers.flatMap((answer) => answer.factIds))], storyIds: [] },
+				evidence: { factIds: await ownedFactIds(tx, userId, answers), storyIds: [] },
 				inputVersion: hash(JSON.stringify(answers)),
 			});
 		}),
