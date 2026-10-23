@@ -1,10 +1,12 @@
 import { createHash } from "node:crypto";
 import { basename, normalize } from "node:path";
-import { getStorageService, inferContentType } from "@reactive-resume/api/features/storage";
+import { getStorageService, inferContentType, isPublicUploadOwner } from "@reactive-resume/api/features/storage";
 
 // Uploads share the app origin and S3/Blob hand back the client-declared type, so only raster
 // images render inline. Anything else (HTML, SVG, PDF, unknown) downloads, whatever was stored.
 const INLINE_CONTENT_TYPES = new Set(["image/gif", "image/jpeg", "image/png", "image/webp"]);
+// Short enough that a deleted picture, or one whose owner was banned, leaves shared caches within the hour.
+const PUBLIC_PICTURE_CACHE_CONTROL = "public, max-age=3600";
 
 export async function handleUpload(request: Request) {
 	const { userId, filePath } = parseRouteParams(request.url);
@@ -22,6 +24,8 @@ export async function handleUpload(request: Request) {
 	const filename = filePath.split("/").pop() ?? filePath;
 	const contentType = storedFile.contentType ?? inferContentType(filename);
 	const isPublicPicture = filePath.startsWith("pictures/") && INLINE_CONTENT_TYPES.has(contentType);
+	if (isPublicPicture && !(await isPublicUploadOwner(userId)))
+		return new Response("Not Found", { status: 404, headers: { "Cache-Control": "no-store" } });
 	if (!isPublicPicture) {
 		const { resolveAuthenticationFromRequestHeaders } = await import("@reactive-resume/api/context");
 		const authentication = await resolveAuthenticationFromRequestHeaders(request.headers).catch(() => null);
@@ -42,7 +46,7 @@ export async function handleUpload(request: Request) {
 		headers.set("Content-Disposition", `attachment; filename="${encodeURIComponent(basename(filename))}"`);
 	}
 
-	headers.set("Cache-Control", isPublicPicture ? "public, max-age=31536000, immutable" : "private, no-store");
+	headers.set("Cache-Control", isPublicPicture ? PUBLIC_PICTURE_CACHE_CONTROL : "private, no-store");
 	headers.set("ETag", etag);
 	headers.set("X-Content-Type-Options", "nosniff");
 	headers.set("X-Robots-Tag", "noindex, nofollow");
@@ -96,7 +100,7 @@ function isNotModified(headers: Headers, etag: string): boolean {
 function makeNotModifiedResponse(etag: string): Response {
 	return new Response(null, {
 		status: 304,
-		headers: { ETag: etag, "Cache-Control": "public, max-age=31536000, immutable" },
+		headers: { ETag: etag, "Cache-Control": PUBLIC_PICTURE_CACHE_CONTROL },
 	});
 }
 

@@ -1042,6 +1042,10 @@ msgid "Access"
 msgstr "Dostop"
 
 #: src/features/auth/pages/consent.tsx
+msgid "Access is sent to"
+msgstr "Dostop je omogočen"
+
+#: src/features/auth/pages/consent.tsx
 msgid "Access your account through the API, including reading, changing and deleting your documents and job applications."
 msgstr "Dostopajte do svojega računa prek API, vključno z branjem, spreminjanjem in brisanjem vaših dokumentov in prošenj za delo."
 
@@ -1108,7 +1112,7 @@ msgstr "Dodajte »{0}«"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "Dodajte državo"
 
 #: src/features/career/knowledge/facts.tsx
 msgid "Add a fact, for example “I mentored two associate PMs in 2025”"
@@ -1714,7 +1718,7 @@ msgstr "Karkoli si zapomniti o tej službi"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "Kjerkoli"
 
 #: src/features/assistant/provider-setup.tsx
 #: src/features/settings/ai/providers.tsx
@@ -3565,7 +3569,7 @@ msgstr "Šteje se ločeno od ocene razčlenjevanja. Pokritost ne napoveduje nič
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Countries"
-msgstr ""
+msgstr "Države"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Counts every application that reached each stage, including ones now closed."
@@ -3638,8 +3642,8 @@ msgid "Create account"
 msgstr "Ustvari račun"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Create and change your documents and job applications."
-msgstr "Ustvarite in spremenite svoje dokumente in prijave za delo."
+msgid "Create and change your documents and job applications, seeing each one it changes in full, and change your profile and username."
+msgstr "Ta aplikacija lahko ustvarja in ureja vaše dokumente in prošnje za delo. Prebere lahko celotno vsebino vsakega dokumenta ali prošnje za delo, ki jo ureja. Prav tako lahko spremeni vaš profil in uporabniško ime."
 
 #: src/features/documents/new-document-dialog.tsx
 msgid "Create and open"
@@ -5238,7 +5242,7 @@ msgstr "Iz vašega življenjepisa"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "Glede na vaš časovni pas"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Full name"
@@ -7381,7 +7385,7 @@ msgstr "Brez popravkov"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "No country matches."
-msgstr ""
+msgstr "Najdena ni bila nobena država."
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -8929,16 +8933,16 @@ msgid "Read the self-hosting guide"
 msgstr "Preberite vodnik za samostojno gostovanje"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Read your documents and job applications."
-msgstr "Preberite svoje dokumente in prijave za delo."
-
-#: src/features/auth/pages/consent.tsx
 msgid "Read your email address."
 msgstr "Preberite svoj e-poštni naslov."
 
 #: src/features/auth/pages/consent.tsx
 msgid "Read your profile information."
 msgstr "Preberite podatke o svojem profilu."
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your whole account, including a full data export: your profile and email, documents, job applications, career data and coaching conversations."
+msgstr "Preberite vse podatke v svojem računu, vključno s celotnim izvozom podatkov: vaš profil in e-poštni naslov, dokumente, prijave za zaposlitev, podatke o karieri in pogovore o coachingu."
 
 #: src/features/settings/ai/api-keys.tsx
 msgid "Read, write and delete"
@@ -9236,7 +9240,7 @@ msgstr "Odstranite {chip}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Remove {country}"
-msgstr ""
+msgstr "Odstrani {country}"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Remove {value}"
@@ -9983,7 +9987,7 @@ msgstr "Ukazi za iskanje"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Search countries"
-msgstr ""
+msgstr "Iskanje držav"
 
 #: src/features/documents/documents-page.tsx
 msgid "Search covers titles, tags and linked applications."
@@ -10037,11 +10041,11 @@ msgstr "Išči časovne pasove"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connectedProvider}."
-msgstr ""
+msgstr "Iskanje je bilo preizkušeno z iskanjem vašega strežnika in branjem z {connectedProvider}."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "Iskanje je bilo preizkušeno z iskanjem vašega strežnika. Povezave se berejo z vgrajenim bralnikom."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search works"
@@ -10066,11 +10070,11 @@ msgstr "Išče in bere strani z {connectedProvider}, ne glede na ponudnika AI, k
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "Išče z iskanjem vašega strežnika in bere povezave z vgrajenim bralnikom, ne glede na ponudnika AI, ki ga uporabljate."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads pages with {connectedProvider}, whichever AI provider you use."
-msgstr ""
+msgstr "Išče z iskanjem vašega strežnika in bere strani z {connectedProvider}, ne glede na ponudnika AI, ki ga uporabljate."
 
 #: src/features/applications/components/add-application-dialog.tsx
 msgid "Searching job postings…"
@@ -11268,7 +11272,7 @@ msgstr "Testna povezava"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "Preizkusite funkcijo iskanja"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Tested with {connectedProvider}. Only this service was tested."
@@ -11285,11 +11289,11 @@ msgstr "Preizkušanje povezave ..."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search, and reading with {connectedProvider}…"
-msgstr ""
+msgstr "Testiranje iskalne storitve na vašem strežniku in branje spletne strani z {connectedProvider}…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search…"
-msgstr ""
+msgstr "Preizkušanje iskalne storitve na vašem strežniku ..."
 
 #: src/features/settings/ai/providers.tsx
 msgid "Testing…"
@@ -11615,6 +11619,14 @@ msgstr "Pregleda ni bilo mogoče dokončati. poskusi ponovno"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "Ista vrstica se ponovi na vsaki strani."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "Shranjeni ključ ni poslan na nov osnovni URL. Znova vnesite ključ, če ta strežnik zahteva ključ."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "Shranjeni ključ ni poslan na nov osnovni URL. Ponovno vnesite ključ."
 
 #: src/libs/error-message.ts
 msgid "The saved provider key can't be decrypted. Enter the key again in Settings → AI & developer."
@@ -12487,7 +12499,7 @@ msgstr "Uporabljajte male črke, številke in posamezne pomišljaje."
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "Uporabi moj časovni pas"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Use one column"
@@ -12767,6 +12779,10 @@ msgstr "Preberemo stran in shranimo objavo za Čeka, asistenta in vaše pismo."
 msgid "We sent a confirmation link to {email}. Open it to finish the change."
 msgstr "Poslali smo potrditveno povezavo na {email}. Odprite ga, da dokončate spremembo."
 
+#: src/features/settings/account/profile.tsx
+msgid "We sent a link to {currentEmail} to approve the change. After that, confirm {email} from its own email."
+msgstr "Poslali smo povezavo na {currentEmail} za odobritev spremembe. Nato potrdite {email} s sporočilom, poslanim na ta e-poštni naslov."
+
 #. placeholder {0}: user.email
 #: src/features/settings/account/profile.tsx
 msgid "We sent a new verification link to {0}."
@@ -12795,7 +12811,7 @@ msgstr "Spletno iskanje ni uspelo: {0}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "Spletno iskanje išče službe v teh državah. Izberite do tri države."
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Website"
@@ -12983,7 +12999,7 @@ msgstr "Kje delate"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "Kjer iščete delo"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Where your applications went"
@@ -13540,7 +13556,7 @@ msgstr "Izbrana pisava ne more prikazati nekaterih znakov. Prikažejo se kot “
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "Vaš strežnik omogoča spletno iskanje v razdelku Prijave in za pomočnika. Povežite storitev za branje spletnih strani, ki jih vgrajeni bralnik ne more prebrati."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

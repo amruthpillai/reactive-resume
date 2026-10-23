@@ -49,6 +49,22 @@ describe("writableResumeDataSchema", () => {
 		expect(parseResumeDataForWrite(data).metadata.styleRules).toEqual([]);
 	});
 
+	it("caps each text field and the whole document, exempting URLs from the per-field cap", () => {
+		const withSummary = (content: string) => ({
+			...defaultResumeData,
+			summary: { ...defaultResumeData.summary, content },
+		});
+		const withPicture = (url: string) => ({ ...defaultResumeData, picture: { ...defaultResumeData.picture, url } });
+
+		expect(writableResumeDataSchema.safeParse(withSummary("a".repeat(200_000))).success).toBe(true);
+		expect(writableResumeDataSchema.safeParse(withSummary("a".repeat(200_001))).error?.issues[0]?.path).toEqual([
+			"summary",
+			"content",
+		]);
+		expect(writableResumeDataSchema.safeParse(withPicture(`data:,${"a".repeat(300_000)}`)).success).toBe(true);
+		expect(writableResumeDataSchema.safeParse(withPicture(`data:,${"a".repeat(10_000_000)}`)).success).toBe(false);
+	});
+
 	it("rejects bounds within custom-section item arrays", () => {
 		const data = {
 			...defaultResumeData,

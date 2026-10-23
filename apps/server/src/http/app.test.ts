@@ -267,15 +267,19 @@ it.each(["/auth/consent", "/auth/consent/", "/auth/login"])("prevents framing or
 	expect(response.headers.get("cache-control")).toBe("no-store");
 });
 
-it("rejects oversized REST requests before parsing multipart uploads", async () => {
+it.each([
+	{ path: "/api/openapi/files", limit: 40 * 1024 * 1024, handler: mocks.handleOpenApi },
+	{ path: "/api/rpc/resume/import", limit: 160 * 1024 * 1024, handler: mocks.handleRpc },
+	{ path: "/api/auth/oauth2/register", limit: 1024 * 1024, handler: mocks.handleAuth },
+])("rejects oversized bodies for $path before parsing them", async ({ path, limit, handler }) => {
 	const { createApp } = await import("./app");
-	const response = await createApp().request("http://localhost:3000/api/openapi/files", {
+	const response = await createApp().request(`http://localhost:3000${path}`, {
 		method: "POST",
-		headers: { "Content-Length": String(40 * 1024 * 1024 + 1) },
+		headers: { "Content-Length": String(limit + 1) },
 		body: "x",
 	});
 	expect(response.status).toBe(413);
 	expect(await response.json()).toMatchObject({ code: "PAYLOAD_TOO_LARGE", status: 413 });
 	expect(response.headers.get("cache-control")).toBe("no-store");
-	expect(mocks.handleOpenApi).not.toHaveBeenCalled();
+	expect(handler).not.toHaveBeenCalled();
 });

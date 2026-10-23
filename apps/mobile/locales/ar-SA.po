@@ -837,7 +837,7 @@ msgstr "يضيف"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "أضف دولة"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "أي شيء يجب تذكره حول هذه الوظيفة"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "في أي مكان"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "من إدخالات تجربتك"
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "بناءً على منطقتك الزمنية"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "إذا تم استخدام الوصول إلى الويب، فإن ال�
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "في حالة استخدام الوصول إلى الويب، تنتقل مصطلحات البحث إلى خدمة البحث الخاصة بخادمك ومحركات البحث التي تستخدمها، وتنتقل الروابط إلى {reader} والمواقع التي تتم قراءتها."
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "في حالة استخدام الوصول إلى الويب، تنتقل مصطلحات البحث إلى خدمة البحث الخاصة بخادمك ومحركات البحث التي تستخدمها، وتنتقل الروابط إلى المواقع التي تتم قراءتها."
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "ابحث في المناطق الزمنية"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "تم اختبار البحث باستخدام بحث الخادم الخاص بك، والقراءة باستخدام {connected}."
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "تم اختبار البحث باستخدام بحث الخادم الخاص بك. تتم قراءة الروابط باستخدام القارئ المدمج."
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "اتصال الاختبار"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "اختبار وظيفة البحث"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "يقوم المساعد بالبحث عن صفحات الويب وقرا
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "يقوم المساعد بالبحث باستخدام بحث الخادم الخاص بك ويقرأ الروابط باستخدام القارئ المدمج، أيًا كان مزود الذكاء الاصطناعي الذي تستخدمه."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "يبحث المساعد باستخدام بحث الخادم الخاص بك ويقرأ الصفحات باستخدام {connected}، أيًا كان مزود الذكاء الاصطناعي الذي تستخدمه."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "السيرة الذاتية كما هي"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "يتكرر السطر نفسه في كل صفحة."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "لا يتم إرسال المفتاح المحفوظ إلى عنوان URL أساسي جديد. أدخل المفتاح مرة أخرى إذا كان هذا الخادم يتطلب مفتاحًا."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "لا يتم إرسال المفتاح المحفوظ إلى عنوان URL أساسي جديد. أدخل المفتاح مرة أخرى."
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "استخدم الحروف الصغيرة والأرقام والشرطا
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "استخدم المنطقة الزمنية الخاصة بي"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "فشل البحث في الويب: {0}"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "تبحث عمليات البحث على الويب عن وظائف في هذه البلدان. اختر ما يصل إلى ثلاث دول."
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "مكان العمل"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "حيث كنت تبحث عن عمل"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "اتصال الذكاء الاصطناعي لديك"
 msgid "Your AI connection"
 msgstr "اتصال الذكاء الاصطناعي لديك"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "لقد تغيرت إعدادات الذكاء الاصطناعي الخاصة بك أثناء اتخاذك القرار. لم يتم إرسال أي شيء. حاول ثانية."
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "إجابتك"
@@ -11064,7 +11076,7 @@ msgstr "لا يمكن للخط الذي اخترته عرض بعض الأحرف.
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "يوفر الخادم الخاص بك إمكانية البحث على الويب في قسم الطلبات وللمساعد. قم بتوصيل خدمة لقراءة صفحات الويب التي لا يستطيع القارئ المدمج قراءتها."
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

@@ -15,7 +15,6 @@ import { createPerplexity } from "@ai-sdk/perplexity";
 import { createTogetherAI } from "@ai-sdk/togetherai";
 import { createXai } from "@ai-sdk/xai";
 import { APICallError, createGateway, generateText, LoadAPIKeyError, NoSuchModelError } from "ai";
-import { strFromU8, unzipSync } from "fflate";
 import { createOllama } from "ollama-ai-provider-v2";
 import { match } from "ts-pattern";
 import { z } from "zod";
@@ -28,8 +27,10 @@ import {
 import { buildAiExtractionTemplate } from "@reactive-resume/ai/resume/extraction-template";
 import { sanitizeAndParseResumeJson } from "@reactive-resume/ai/resume/sanitize";
 import { AI_PROVIDER_DEFAULT_BASE_URLS, AI_PROVIDER_DISPLAY_NAMES, aiProviderSchema } from "@reactive-resume/ai/types";
+import { ZipEntryTooLargeError, unzipEntries } from "@reactive-resume/import/zip";
 import { isDirectOpenAIProvider } from "./capabilities";
-import { resolveAiBaseUrl } from "./url-policy";
+import { aiDeadline } from "./generate-json";
+import { aiTransport, resolveAiBaseUrl } from "./url-policy";
 
 const aiExtractionTemplate = buildAiExtractionTemplate();
 
@@ -86,33 +87,37 @@ const TEST_CONNECTION_TIMEOUT_MS = z.coerce
 	.catch(30_000)
 	.parse(process.env.AI_TEST_TIMEOUT_MS?.trim() || undefined);
 const DOCX_DOCUMENT_XML_PATH = "word/document.xml";
+// Resume bodies are kilobytes; this leaves room for long documents without trusting the archive's declared size.
+const MAX_DOCX_DOCUMENT_XML_BYTES = 20 * 1024 * 1024;
 
 export function getModel(input: GetModelInput) {
 	const { provider, model, apiKey } = input;
 	const baseURL = resolveAiBaseUrl(input);
+	const settings = { apiKey, baseURL, ...aiTransport() };
 
 	return match(provider)
-		.with("openai", () => createOpenAI({ apiKey, baseURL }).chat(model))
-		.with("anthropic", () => createAnthropic({ apiKey, baseURL }).languageModel(model))
-		.with("gemini", () => createGoogleGenerativeAI({ apiKey, baseURL }).languageModel(model))
-		.with("vercel-ai-gateway", () => createGateway({ apiKey, baseURL }).languageModel(model))
-		.with("openrouter", () => createOpenAICompatible({ name: "openrouter", apiKey, baseURL }).languageModel(model))
-		.with("mistral", () => createMistral({ apiKey, baseURL }).languageModel(model))
-		.with("cohere", () => createCohere({ apiKey, baseURL }).languageModel(model))
-		.with("xai", () => createXai({ apiKey, baseURL }).languageModel(model))
-		.with("groq", () => createGroq({ apiKey, baseURL }).languageModel(model))
-		.with("deepseek", () => createDeepSeek({ apiKey, baseURL }).languageModel(model))
-		.with("togetherai", () => createTogetherAI({ apiKey, baseURL }).languageModel(model))
-		.with("fireworks", () => createFireworks({ apiKey, baseURL }).languageModel(model))
-		.with("cerebras", () => createCerebras({ apiKey, baseURL }).languageModel(model))
-		.with("perplexity", () => createPerplexity({ apiKey, baseURL }).languageModel(model))
+		.with("openai", () => createOpenAI(settings).chat(model))
+		.with("anthropic", () => createAnthropic(settings).languageModel(model))
+		.with("gemini", () => createGoogleGenerativeAI(settings).languageModel(model))
+		.with("vercel-ai-gateway", () => createGateway(settings).languageModel(model))
+		.with("openrouter", () => createOpenAICompatible({ name: "openrouter", ...settings }).languageModel(model))
+		.with("mistral", () => createMistral(settings).languageModel(model))
+		.with("cohere", () => createCohere(settings).languageModel(model))
+		.with("xai", () => createXai(settings).languageModel(model))
+		.with("groq", () => createGroq(settings).languageModel(model))
+		.with("deepseek", () => createDeepSeek(settings).languageModel(model))
+		.with("togetherai", () => createTogetherAI(settings).languageModel(model))
+		.with("fireworks", () => createFireworks(settings).languageModel(model))
+		.with("cerebras", () => createCerebras(settings).languageModel(model))
+		.with("perplexity", () => createPerplexity(settings).languageModel(model))
 		.with("openai-compatible", () =>
-			createOpenAICompatible({ name: "openai-compatible", apiKey, baseURL }).languageModel(model),
+			createOpenAICompatible({ name: "openai-compatible", ...settings }).languageModel(model),
 		)
 		.with("ollama", () => {
 			const ollama = createOllama({
 				name: "ollama",
 				baseURL,
+				...aiTransport(),
 				...(apiKey ? { headers: { Authorization: `Bearer ${apiKey}` } } : {}),
 			});
 
@@ -125,7 +130,9 @@ export function getAgentModel(input: GetModelInput) {
 	if (!isDirectOpenAIProvider(input)) return getModel(input);
 
 	// Direct OpenAI assistants use Responses for reasoning with function tools.
-	return createOpenAI({ apiKey: input.apiKey, baseURL: resolveAiBaseUrl(input) }).responses(input.model);
+	return createOpenAI({ apiKey: input.apiKey, baseURL: resolveAiBaseUrl(input), ...aiTransport() }).responses(
+		input.model,
+	);
 }
 
 const aiCredentialsSchema = z.object({
@@ -137,7 +144,8 @@ const aiCredentialsSchema = z.object({
 
 export const fileInputSchema = z.object({
 	name: z.string(),
-	data: z.string().max(MAX_AI_FILE_BASE64_CHARS, "File is too large. Maximum size is 10MB."),
+	// File bytes only: the AI SDK would download a URL here on the server.
+	data: z.base64().max(MAX_AI_FILE_BASE64_CHARS, "File is too large. Maximum size is 10MB."),
 });
 
 type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
@@ -292,7 +300,7 @@ function buildResumeParsingMessages({ userPrompt, file, mediaType }: BuildResume
 			role: "user",
 			content: [
 				{ type: "text", text: userPrompt },
-				{ type: "file", data: file.data, mediaType, filename: file.name },
+				{ type: "file", data: Buffer.from(file.data, "base64"), mediaType, filename: file.name },
 			],
 		},
 	];
@@ -317,6 +325,7 @@ async function parsePdf(input: ParsePdfInput): Promise<ResumeData> {
 
 	const result = await generateText({
 		model,
+		abortSignal: aiDeadline(),
 		system: buildResumeParsingSystemPrompt(pdfParserSystemPrompt),
 		messages: buildResumeParsingMessages({
 			userPrompt: pdfParserUserPrompt,
@@ -336,13 +345,18 @@ type ParseDocxInput = z.infer<typeof aiCredentialsSchema> & {
 function readDocumentXml(data: string): string {
 	let entries: Record<string, Uint8Array>;
 	try {
-		entries = unzipSync(Buffer.from(data, "base64"), { filter: (file) => file.name === DOCX_DOCUMENT_XML_PATH });
-	} catch {
+		entries = unzipEntries(
+			Buffer.from(data, "base64"),
+			(name) => name === DOCX_DOCUMENT_XML_PATH,
+			MAX_DOCX_DOCUMENT_XML_BYTES,
+		);
+	} catch (error) {
+		if (error instanceof ZipEntryTooLargeError) throw new Error("DOCX document content is too large.");
 		throw new Error("Invalid DOCX archive.");
 	}
 	const xml = entries[DOCX_DOCUMENT_XML_PATH];
 	if (!xml) throw new Error("DOCX document content not found.");
-	return strFromU8(xml);
+	return new TextDecoder().decode(xml);
 }
 
 function decodeXmlEntities(value: string): string {
@@ -352,9 +366,10 @@ function decodeXmlEntities(value: string): string {
 		if (token === "gt") return ">";
 		if (token === "quot") return '"';
 		if (token === "apos") return "'";
-		if (token.toLowerCase().startsWith("#x")) return String.fromCodePoint(Number.parseInt(token.slice(2), 16));
-		if (token.startsWith("#")) return String.fromCodePoint(Number.parseInt(token.slice(1), 10));
-		return entity;
+		const code = token.toLowerCase().startsWith("#x")
+			? Number.parseInt(token.slice(2), 16)
+			: Number.parseInt(token.slice(1), 10);
+		return code <= 0x10ffff ? String.fromCodePoint(code) : entity;
 	});
 }
 
@@ -362,14 +377,17 @@ function extractDocxText(file: z.infer<typeof fileInputSchema>): string {
 	const documentXml = readDocumentXml(file.data);
 	// ponytail: minimal OOXML body-text extraction; add a DOCX parser dependency if tracked changes matter.
 	const text = decodeXmlEntities(
+		// `[^<>]` keeps each match from scanning past the next tag, so malformed markup costs linear time.
 		documentXml
-			.replace(/<w:tab\b[^>]*\/>/g, "\t")
-			.replace(/<w:br\b[^>]*\/>/g, "\n")
+			.replace(/<w:tab\b[^<>]*\/>/g, "\t")
+			.replace(/<w:br\b[^<>]*\/>/g, "\n")
 			.replace(/<\/w:p>/g, "\n")
-			.replace(/<[^>]+>/g, ""),
+			.replace(/<[^<>]*>/g, ""),
 	)
 		.replace(/\r/g, "")
-		.replace(/[ \t]+\n/g, "\n")
+		.split("\n")
+		.map((line) => line.trimEnd())
+		.join("\n")
 		.replace(/\n{3,}/g, "\n\n")
 		.trim();
 
@@ -390,6 +408,7 @@ async function parseDocx(input: ParseDocxInput): Promise<ResumeData> {
 
 	const result = await generateText({
 		model,
+		abortSignal: aiDeadline(),
 		system: buildResumeParsingSystemPrompt(docxParserSystemPrompt),
 		messages,
 	}).catch((error: unknown) => logAndRethrow("Failed to generate the text with the model", error));

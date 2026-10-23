@@ -837,7 +837,7 @@ msgstr "추가"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "국가 추가"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "이 직업에 대해 기억에 남는 것이 있다면"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "어딘가에"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "귀하의 경험 항목에서"
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "귀하의 시간대를 기준으로"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "웹 액세스를 사용하는 경우 링크와 검색어도 {0} 및 읽�
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "웹 액세스를 사용하는 경우 검색어는 서버의 검색 서비스와 사용하는 검색 엔진으로 이동하고 링크는 {reader} 및 읽고 있는 사이트로 이동합니다."
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "웹 액세스를 사용하는 경우 검색어는 서버의 검색 서비스와 해당 서비스가 사용하는 검색 엔진으로 이동하고 링크는 읽고 있는 사이트로 이동합니다."
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "시간대 검색"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "검색은 서버 검색 및 {connected} 읽기로 테스트되었습니다."
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "검색은 서버의 검색으로 테스트되었습니다. 링크는 내장된 리더로 읽습니다."
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "테스트 연결"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "검색 기능 테스트"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "어시스턴트는 귀하가 사용하는 AI 공급자인 {connected}로
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "보조자는 귀하가 사용하는 AI 공급자에 관계없이 서버의 검색으로 검색하고 내장 리더로 링크를 읽습니다."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "어시스턴트는 서버의 검색으로 검색하고 사용하는 AI 공급자인 {connected}이 포함된 페이지를 읽습니다."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "이력서는 그대로"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "같은 줄이 모든 페이지에 반복됩니다."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "저장된 키는 새 기본 URL로 전송되지 않습니다. 이 서버에 키가 필요한 경우 키를 다시 입력하세요."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "저장된 키는 새 기본 URL로 전송되지 않습니다. 키를 다시 입력하세요."
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "소문자, 숫자, 단일 대시를 사용하세요."
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "내 시간대 사용"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "웹 검색 실패: {0}"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "웹 검색을 통해 해당 국가의 일자리를 찾아보세요. 최대 3개 국가를 선택하세요."
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "근무지"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "당신이 일자리를 찾고 있는 곳"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "내 AI 연결"
 msgid "Your AI connection"
 msgstr "내 AI 연결"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "결정하는 동안 AI 설정이 변경되었습니다. 아무것도 전송되지 않았습니다. 다시 시도해 보세요."
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "내 답변"
@@ -11064,7 +11076,7 @@ msgstr "선택한 글꼴로는 일부 문자를 표시할 수 없어 “?”로 
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "서버는 지원 목록 섹션과 보조자에 대한 웹 검색을 제공합니다. 내장 리더가 읽을 수 없는 웹페이지를 읽으려면 서비스를 연결하세요."
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

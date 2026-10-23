@@ -1,7 +1,7 @@
 import type { SQL } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { BetterAuthError } from "better-auth";
-import { and, eq, or, sql } from "drizzle-orm";
+import { and, eq, gt, or, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { generateId, toUsername } from "@reactive-resume/utils/string";
@@ -9,7 +9,6 @@ import { generateId, toUsername } from "@reactive-resume/utils/string";
 interface ExistingOAuthUser {
 	id: string;
 	email: string;
-	emailVerified: boolean;
 	username: string;
 	displayUsername: string;
 	name: string;
@@ -28,7 +27,6 @@ async function findExistingUserByEmail(email: string): Promise<ExistingOAuthUser
 		.select({
 			id: schema.user.id,
 			email: schema.user.email,
-			emailVerified: schema.user.emailVerified,
 			username: schema.user.username,
 			displayUsername: schema.user.displayUsername,
 			name: schema.user.name,
@@ -55,7 +53,6 @@ async function findLegacyGithubUser(
 			id: schema.user.id,
 			accountId: schema.account.accountId,
 			email: schema.user.email,
-			emailVerified: schema.user.emailVerified,
 			username: schema.user.username,
 			displayUsername: schema.user.displayUsername,
 			name: schema.user.name,
@@ -96,8 +93,27 @@ function appendUsernameSuffix(base: string, suffix: string): string {
 	return `${base.slice(0, maxBaseLength)}${suffix}`;
 }
 
+// Old public links still point at a released username, so for 30 days only its previous owner can take it again.
+const USERNAME_RESERVED_MS = 30 * 24 * 60 * 60 * 1000;
+
+/** Whether someone other than `userId` released this username recently. */
+export async function isUsernameReserved(username: string, userId?: string | null): Promise<boolean> {
+	const [released] = await db
+		.select({ userId: schema.releasedUsername.userId })
+		.from(schema.releasedUsername)
+		.where(
+			and(
+				eq(schema.releasedUsername.username, username.trim().toLowerCase()),
+				gt(schema.releasedUsername.releasedAt, new Date(Date.now() - USERNAME_RESERVED_MS)),
+			),
+		)
+		.limit(1);
+	return Boolean(released) && released?.userId !== userId;
+}
+
 async function isUsernameTaken(candidate: string): Promise<boolean> {
 	const normalizedCandidate = candidate.trim().toLowerCase();
+	if (await isUsernameReserved(normalizedCandidate)) return true;
 
 	// Both columns are stored lowercase (the username plugin normalizes them), so plain equality uses their unique
 	// indexes; `lower()` read every user on each check (#3593).
@@ -184,6 +200,8 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 
 			// Better Auth 1.7 forbids `mapProfileToUser` from returning `id`; provider identity is
 			// resolved by `accountSubject` and existing local users are matched by `account.accountLinking`.
+			// Never return `emailVerified`: it would replace the provider's own proof, which Better Auth needs
+			// to decide whether an untrusted provider may link to this local account.
 			const existingImage = image ?? existingUser.image;
 
 			return {
@@ -192,7 +210,6 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 				...(existingImage ? { image: existingImage } : {}),
 				username: existingUser.username,
 				displayUsername: existingUser.displayUsername,
-				emailVerified: existingUser.emailVerified,
 			};
 		}
 
@@ -206,7 +223,6 @@ export function createProfileMapper<TProfile extends OAuthProfile>({
 			...(image ? { image } : {}),
 			username,
 			displayUsername: username,
-			emailVerified: true,
 		};
 	};
 }

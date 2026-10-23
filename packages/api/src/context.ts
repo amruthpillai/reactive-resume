@@ -125,19 +125,24 @@ export const publicProcedure = base
 		});
 	});
 
+/**
+ * The scope a route needs. Moving a document to Trash removes it like a delete, so its RPC and REST aliases need
+ * `delete` too. MCP tools check the same rule before calling a procedure.
+ */
+export function requiredPermission(route: { method?: string | undefined; operationId?: string | undefined }) {
+	if (route.method === "GET") return "read";
+	if (route.method === "DELETE" || /^(delete|bulkDelete|purge|trash)|^putDocumentTrash$/i.test(route.operationId ?? ""))
+		return "delete";
+	return "write";
+}
+
 export const protectedProcedure = publicProcedure
 	.route({
 		spec: (operation) => ({ ...operation, security: [{ apiKey: [] }, { bearerAuth: [] }, { cookieAuth: [] }] }),
 	})
 	.use(({ context, procedure, next }) => {
 		if (!context.user) throw new ORPCError("UNAUTHORIZED");
-		const route = procedure["~orpc"].route;
-		const permission =
-			route.method === "GET"
-				? "read"
-				: route.method === "DELETE" || /^(delete|bulkDelete|purge)/i.test(route.operationId ?? "")
-					? "delete"
-					: "write";
+		const permission = requiredPermission(procedure["~orpc"].route);
 		if (!context.authentication?.permissions.includes(permission)) {
 			context.resHeaders?.set("WWW-Authenticate", `Bearer error="insufficient_scope", scope="api:${permission}"`);
 			throw new ORPCError("FORBIDDEN", { message: `This credential requires api:${permission} permission.` });

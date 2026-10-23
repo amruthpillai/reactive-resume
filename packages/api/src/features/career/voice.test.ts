@@ -15,7 +15,7 @@ vi.mock("../../context", async () => {
 	return { protectedProcedure: os.$context<{ user: { id: string } }>() };
 });
 vi.mock("../../middleware/rate-limit", () => ({
-	aiRequestRateLimit: ({ next }: { next: () => unknown }) => next(),
+	aiVoiceRateLimit: ({ next }: { next: () => unknown }) => next(),
 }));
 vi.mock("@reactive-resume/db/client", () => ({ db: { insert: mocks.insert } }));
 vi.mock("../ai-providers/service", () => ({ aiProvidersService: { getRunnableById: mocks.provider } }));

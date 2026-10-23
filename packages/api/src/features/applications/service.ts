@@ -265,11 +265,10 @@ function storageKeyFromApplicationUrl(userId: string, value: string | null | und
 		return null;
 	}
 
-	const match = pathname.match(/^\/(?:api\/)?uploads\/(.+)$/);
-	if (!match?.[1]) return null;
-
-	const key = `uploads/${match[1]}`;
-	return key.startsWith(`uploads/${userId}/`) ? key : null;
+	// Only the single file uploadFile writes (pictures/<uuid>.pdf, older ones <timestamp>.pdf): an edited URL
+	// must never point delete at a folder or another kind of file.
+	const key = pathname.match(/^\/(?:api\/)?(uploads\/[^/]+\/pictures\/[\w-]+\.pdf)$/)?.[1];
+	return key?.startsWith(`uploads/${userId}/`) ? key : null;
 }
 
 async function deleteApplicationAttachments(
@@ -515,6 +514,8 @@ export const applicationService = {
 			input.userId,
 			input.items.map((item) => item.resumeId),
 		);
+		const coverLetterIds = new Set(input.items.map((item) => item.coverLetterId).filter((id) => !!id));
+		await Promise.all([...coverLetterIds].map((id) => assertOwnedCoverLetter(input.userId, id)));
 
 		const values = input.items.map(({ status, stageEnteredAt, ...fields }) => {
 			const initialStatus = status ?? ("saved" as ApplicationStatus);
@@ -529,8 +530,13 @@ export const applicationService = {
 			};
 		});
 
-		const rows = await db.insert(schema.application).values(values).returning({ id: schema.application.id });
-		return { imported: rows.length };
+		// Rows imported as already sent keep what went out, as create does.
+		return db.transaction(async (tx) => {
+			await lockApplicationUser(tx, input.userId);
+			const rows = await tx.insert(schema.application).values(values).returning();
+			for (const row of rows) await recordSentResume(row, tx);
+			return { imported: rows.length };
+		});
 	},
 
 	update: async (

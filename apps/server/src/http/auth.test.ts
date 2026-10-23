@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
 	continueOAuth: vi.fn(),
 	handler: vi.fn(),
 	registerAccountLinkHook: vi.fn(),
+	registerUserDeleteHook: vi.fn(),
 	migrateUserStorage: vi.fn(),
 	env: {
 		SERVER_PORT: 3001,
@@ -24,6 +25,7 @@ vi.mock("@reactive-resume/auth/config", () => ({
 		handler: mocks.handler,
 	},
 	registerAccountLinkHook: mocks.registerAccountLinkHook,
+	registerUserDeleteHook: mocks.registerUserDeleteHook,
 }));
 
 vi.mock("@reactive-resume/api/features/storage", () => ({
@@ -95,6 +97,24 @@ describe("handleAuth", () => {
 			error: "invalid_redirect_uri",
 			error_description: "redirect_uri is not allowed",
 		});
+		expect(mocks.handler).not.toHaveBeenCalled();
+	});
+
+	it.each([
+		["create-client", { post_logout_redirect_uris: ["https://10.0.0.1/logout"] }, "invalid_redirect_uri"],
+		["create-client", { backchannel_logout_uri: "https://example.com/logout" }, "invalid_client_metadata"],
+		["update-client", { client_id: "c", update: { redirect_uris: ["https://[::1]/cb"] } }, "invalid_redirect_uri"],
+	])("rejects unsafe client metadata on %s: %j", async (endpoint, body, error) => {
+		const { handleAuth } = await import("./auth");
+		const response = await handleAuth(
+			new Request(`http://localhost:3000/api/auth/oauth2/${endpoint}`, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify(body),
+			}),
+		);
+		expect(response.status).toBe(400);
+		await expect(response.json()).resolves.toMatchObject({ error });
 		expect(mocks.handler).not.toHaveBeenCalled();
 	});
 

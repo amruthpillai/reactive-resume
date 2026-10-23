@@ -7,6 +7,12 @@ const envMock = vi.hoisted(() => ({
 }));
 
 vi.mock("@reactive-resume/env/server", () => ({ env: envMock }));
+// Provider requests still reach the stubbed global fetch; fetchPublic's own network checks are tested in utils.
+const fetchPublicMock = vi.hoisted(() => vi.fn((input: RequestInfo | URL, init?: RequestInit) => fetch(input, init)));
+vi.mock("@reactive-resume/utils/url-security.node", async (original) => ({
+	...(await original<typeof import("@reactive-resume/utils/url-security.node")>()),
+	fetchPublic: fetchPublicMock,
+}));
 
 afterEach(() => {
 	vi.unstubAllGlobals();
@@ -87,6 +93,8 @@ describe("AI chat service", () => {
 		).resolves.toEqual({ ok: true });
 
 		expect(openAiCompatible.fetchMock).toHaveBeenCalledTimes(1);
+		// A user-chosen endpoint is reached only through the public-address transport.
+		expect(fetchPublicMock).toHaveBeenCalledTimes(1);
 		expect(openAiCompatible.getRequestBody()).not.toHaveProperty("response_format");
 		expect(openAiCompatible.getRequestBody()).toMatchObject({ max_tokens: 128 });
 	});

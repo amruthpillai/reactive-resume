@@ -1,12 +1,16 @@
 import type { ContactEntities, ExtractedDocument, RawExtraction, TextLine } from "../types";
 
-const EMAIL_PATTERN = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
+// Each pattern starts only where its leading run starts (the lookbehinds), so a long run with no
+// match is scanned once rather than once per character.
+const EMAIL_PATTERN = /(?<![\w.+-])[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g;
 /** Same shape without `g`: a stateful `lastIndex` would make `.test()` alternate between calls. */
-const EMAIL_TEST = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
+const EMAIL_TEST = /(?<![\w.+-])[\w.+-]+@[\w-]+(?:\.[\w-]+)+/;
 /** Seven to fifteen digits, the ITU range, with the separators people actually type. */
 const PHONE_PATTERN = /(?:\+\d{1,3}[\s.-]?)?(?:\(\d{1,4}\)[\s.-]?)?\d[\d\s.()-]{5,17}\d/g;
 const URL_PATTERN = /(?:https?:\/\/|www\.)[^\s<>"')\]]+/gi;
-const BARE_DOMAIN_PATTERN = /\b(?:[\w-]+\.)+(?:com|org|net|io|dev|me|co|ai|app|xyz|edu|gov)(?:\/[^\s<>"')\]]*)?/gi;
+/** The lookbehind skips starts an earlier start in the same dotted run already covered. */
+const BARE_DOMAIN_PATTERN =
+	/\b(?<!\w-*\.?)(?:[\w-]+\.)+(?:com|org|net|io|dev|me|co|ai|app|xyz|edu|gov)(?:\/[^\s<>"')\]]*)?/gi;
 
 const PROFESSIONAL_HOSTS = ["linkedin.com", "github.com", "gitlab.com", "behance.net", "dribbble.com", "medium.com"];
 
@@ -48,7 +52,7 @@ function hostOf(value: string): string | null {
 }
 
 /** An address whose pieces are all present but interrupted: `ada @ example . com`. */
-const SPACED_EMAIL = /[\w.+-]+\s*@\s*[\w-]+(?:\s*\.\s*[\w-]+)+/g;
+const SPACED_EMAIL = /(?<![\w.+-])[\w.+-]+\s*@\s*[\w-]+(?:\s*\.\s*[\w-]+)+/g;
 
 /**
  * An email that survived layout but not extraction shows up as `name @ example.com` — every
@@ -142,7 +146,7 @@ export function analyzeContact(raw: RawExtraction, document: ExtractedDocument):
 	const locationLine =
 		firstPageLines
 			.slice(0, FIRST_PAGE_CONTACT_LINES)
-			.flatMap((line) => line.text.split(/\s*[·|•]\s*/))
+			.flatMap((line) => line.text.split(/[·|•]/).map((part) => part.trim()))
 			.find(
 				(candidate) =>
 					/^[\p{L}\p{M} .'-]+,\s*[\p{L}\p{M} .'-]+$/u.test(candidate) &&

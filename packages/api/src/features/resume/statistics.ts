@@ -3,6 +3,7 @@ import { protectedProcedure, publicProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeDownloadRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
+import { ownerViewer } from "./sharing";
 
 export const resumeStatisticsRouter = {
 	recordDownload: publicProcedure
@@ -23,7 +24,8 @@ export const resumeStatisticsRouter = {
 			resumeService.statistics.recordDownload({
 				...input,
 				requestHeaders: context.reqHeaders,
-				...(context.user?.id ? { currentUserId: context.user.id } : {}),
+				...(context.trustedClient ? { trustedClient: context.trustedClient } : {}),
+				...ownerViewer(context),
 			}),
 		),
 

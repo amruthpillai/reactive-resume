@@ -54,7 +54,6 @@ describe("createProfileMapper", () => {
 					id: "user-1",
 					accountId: "legacy-user-id",
 					email: "Legacy.User@Example.COM",
-					emailVerified: true,
 					username: "octo-cat",
 					displayUsername: "Octo-Cat",
 					name: "Legacy User",
@@ -62,7 +61,10 @@ describe("createProfileMapper", () => {
 				},
 			],
 			[],
+			// Each username check first looks for a recent release, then for an account holding it.
+			[],
 			[{ id: "user-1" }],
+			[],
 			[],
 		);
 
@@ -76,7 +78,7 @@ describe("createProfileMapper", () => {
 			avatar_url: "https://example.com/new.png",
 		});
 
-		expect(dbMock.select).toHaveBeenCalledTimes(4);
+		expect(dbMock.select).toHaveBeenCalledTimes(6);
 		expect(dbMock.update).not.toHaveBeenCalled();
 		expect(result).toEqual({
 			name: "Provider Name",
@@ -84,7 +86,6 @@ describe("createProfileMapper", () => {
 			image: "https://example.com/new.png",
 			username: "octo-cat-1",
 			displayUsername: "octo-cat-1",
-			emailVerified: true,
 		});
 	});
 
@@ -93,7 +94,6 @@ describe("createProfileMapper", () => {
 			{
 				id: "user-1",
 				email: "Legacy.User@Example.COM",
-				emailVerified: false,
 				username: "legacy.user",
 				displayUsername: "legacy.user",
 				name: "Legacy User",
@@ -120,7 +120,6 @@ describe("createProfileMapper", () => {
 			image: "https://example.com/new.png",
 			username: "legacy.user",
 			displayUsername: "legacy.user",
-			emailVerified: false,
 		});
 	});
 });

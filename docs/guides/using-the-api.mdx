@@ -20,7 +20,7 @@ The Reactive Resume REST API lets your own scripts, extensions and automations r
     In the **API keys** section, select **New key**.
   </Step>
   <Step title="Name the key and choose when it expires">
-    Under **What's it for?**, enter a name that reminds you where the key is used, such as "Resume sync script". Under **Expires**, choose **30 days**, **90 days** or **Never**, then select **Create key**.
+    Under **What's it for?**, enter a name that reminds you where the key is used, such as "Resume sync script". Under **Expires**, choose **30 days**, **90 days** or **Never**, then select **Create key**. If you signed in more than a day ago, you're asked to sign in again first.
 
     <Frame caption="The New API key dialog">
       <img src="/images/guides/using-the-api/new-api-key-dialog.webp" alt="New API key dialog with the name Resume sync script entered and 90 days selected under Expires" />
@@ -181,9 +181,10 @@ REST data responses use `Cache-Control: no-store`. Uploaded profile images are p
 | Requests per API key                                                                            | 1,000 per hour                                                |
 | Changes to one resume, document or application (create, update, patch, lock, duplicate, delete) | 300 per minute                                                |
 | PDF downloads of one resume (`GET /resumes/{id}/pdf`)                                           | 5 per minute                                                  |
+| PDF downloads across all your resumes                                                           | 30 per minute                                                 |
 | Public PDF checks per client address                                                            | 5 per minute                                                  |
 | REST request body size (before endpoint-specific limits)                                        | 40 MiB                                                        |
-| AI requests                                                                                     | 20 per minute                                                 |
+| AI requests per account (voice transcription and speech count separately)                       | 20 per minute                                                 |
 | Request body size on Vercel installations                                                       | 4.5 MB (see [Large RPC requests](/guides/large-rpc-requests)) |
 
 Procedure limits apply in production. When you hit a limit, the API responds with `429`. On a self-hosted installation, `FLAG_DISABLE_API_RATE_LIMIT` turns off the per-key limit together with the sign-in limits; the procedure limits also turn off (see [Environment variables](/self-hosting/environment-variables)).

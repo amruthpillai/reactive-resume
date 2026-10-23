@@ -837,7 +837,7 @@ msgstr "Добавлять"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "Добавить страну"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "Все, что следует помнить об этой работе"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "Где угодно"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "Из записей вашего опыта"
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "В зависимости от вашего часового пояса"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "Если используется веб-доступ, ссылки и �
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "Если используется веб-доступ, условия поиска передаются в поисковую службу вашего сервера и в используемые им поисковые системы, а ссылки передаются на {reader} и читаемые сайты."
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "Если используется веб-доступ, условия поиска передаются в поисковую службу вашего сервера и в используемые им поисковые системы, а ссылки передаются на читаемые сайты."
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "Поиск часовых поясов"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "Поиск был протестирован с использованием поиска на вашем сервере и чтения с помощью {connected}."
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "Поиск был протестирован с помощью поиска вашего сервера. Ссылки читаются встроенной читалкой."
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "Тестовое соединение"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "Протестируйте функцию поиска"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "Помощник ищет и читает веб-страницы с п�
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "Помощник осуществляет поиск с помощью поиска вашего сервера и читает ссылки с помощью встроенного считывателя, независимо от того, какого поставщика искусственного интеллекта вы используете."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "Помощник выполняет поиск с помощью поиска вашего сервера и читает страницы с {connected}, независимо от того, какого поставщика искусственного интеллекта вы используете."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "Резюме как оно есть"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "Одна и та же строка повторяется на каждой странице."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "Сохраненный ключ не отправляется на новый базовый URL-адрес. Введите ключ еще раз, если этому серверу требуется ключ."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "Сохраненный ключ не отправляется на новый базовый URL-адрес. Введите ключ еще раз."
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "Используйте строчные буквы, цифры и оди
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "Используйте мой часовой пояс"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "Не удалось выполнить поиск в Интернете:
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "Поиск в Интернете ищет работу в этих странах. Выберите до трех стран."
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "Где вы будете работать"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "Где вы ищете работу"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "ваше подключение ИИ"
 msgid "Your AI connection"
 msgstr "Ваше подключение ИИ"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "Пока вы принимали решение, ваши настройки ИИ изменились. Ничего не было отправлено; Попробуйте еще раз."
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "Ваш ответ"
@@ -11064,7 +11076,7 @@ msgstr "Выбранный шрифт не может отобразить не�
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "Ваш сервер обеспечивает веб-поиск по разделу Заявки и помощнику. Подключите службу для чтения веб-страниц, которые не может прочитать встроенная программа чтения."
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

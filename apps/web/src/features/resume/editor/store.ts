@@ -54,8 +54,10 @@ type EditorStore = {
 	assistantInstant: boolean;
 	/** The assistant's conversation: a thread id, "new" for a fresh one, or null for the document's latest. */
 	assistantThread: string | null;
-	/** A message to send once the assistant is ready, from ⌘K Ask or Prepare for next step. */
+	/** A message to send once the assistant is ready, from ⌘K Ask or Job match. Never from a link. */
 	assistantPrompt: string | null;
+	/** Text from a link (`?ask=`) put in the composer, sent only when the user presses Send. */
+	assistantDraft: string | null;
 	/** The assistant's pending edits, marked on the page and counted in the outline. */
 	assistantProposals: readonly Proposal[];
 	/** Prepare for next step (Applications) opens the assistant with suggestions for the application. */
@@ -107,6 +109,7 @@ type EditorStore = {
 	setAssistantOpen: (open: boolean, instant?: boolean) => void;
 	setAssistantThread: (thread: string | null) => void;
 	setAssistantPrompt: (prompt: string | null) => void;
+	setAssistantDraft: (draft: string | null) => void;
 	setAssistantProposals: (proposals: readonly Proposal[]) => void;
 	setAssistantSuggestions: (suggestions: "prepare" | null) => void;
 	setSectionOpen: (sectionId: string, open: boolean) => void;
@@ -153,6 +156,7 @@ const initialState = {
 	assistantInstant: false,
 	assistantThread: null,
 	assistantPrompt: null,
+	assistantDraft: null,
 	assistantProposals: [],
 	assistantSuggestions: null,
 	openSections: [],
@@ -185,6 +189,7 @@ export const useEditorStore = create<EditorStore>()((set) => ({
 	setAssistantOpen: (assistantOpen, instant = false) => set({ assistantOpen, assistantInstant: instant }),
 	setAssistantThread: (assistantThread) => set({ assistantThread }),
 	setAssistantPrompt: (assistantPrompt) => set({ assistantPrompt }),
+	setAssistantDraft: (assistantDraft) => set({ assistantDraft }),
 	setAssistantProposals: (assistantProposals) => set({ assistantProposals }),
 	setAssistantSuggestions: (assistantSuggestions) => set({ assistantSuggestions }),
 	setSectionOpen: (sectionId, open) =>

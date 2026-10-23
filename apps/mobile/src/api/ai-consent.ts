@@ -39,16 +39,23 @@ export async function authorizeAiRequest(
 	};
 	current();
 	const options = { context: { scope: scope ?? undefined }, ...(signal ? { signal } : {}) };
-	const providers = await api.aiProviders.list({}, options);
-	let id = fields.aiProviderId ?? fields.providerId ?? (connectionTest ? fields.id : undefined);
-	if (chat && typeof fields.threadId === "string") {
-		const conversation = await api.agent.threads.get({ id: fields.threadId }, options);
-		id = conversation.thread.aiProviderId;
-	}
-	const usable = providers.filter((provider) => provider.enabled && provider.testStatus === "success");
-	const provider =
-		providers.find((entry) => entry.managed) ??
-		(id ? providers.find((entry) => entry.id === id && (connectionTest || usable.includes(entry))) : usable[0]);
+	// The provider the server will use: the one named, the thread's, or the default (same order as the server).
+	const resolveProvider = async () => {
+		const providers = await api.aiProviders.list({}, options);
+		let id = fields.aiProviderId ?? fields.providerId ?? (connectionTest ? fields.id : undefined);
+		if (chat && typeof fields.threadId === "string") {
+			const conversation = await api.agent.threads.get({ id: fields.threadId }, options);
+			id = conversation.thread.aiProviderId;
+		}
+		const usable = providers.filter((provider) => provider.enabled && provider.testStatus === "success");
+		return (
+			providers.find((entry) => entry.managed) ??
+			(id ? providers.find((entry) => entry.id === id && (connectionTest || usable.includes(entry))) : usable[0])
+		);
+	};
+	const destinationOf = (entry: { id: string; provider: string; model: string; baseURL?: string | null }) =>
+		[entry.id, entry.provider, entry.model, entry.baseURL ?? ""].join("|");
+	const provider = await resolveProvider();
 	if (!provider) throw new Error(t`Choose a tested AI provider before sharing data.`);
 	const destination = `${provider.label} (${provider.provider}${provider.baseURL ? ` · ${new URL(provider.baseURL).origin}` : ""})`;
 	const web = path[0] === "applications" || chat || scheduled;
@@ -90,6 +97,12 @@ export async function authorizeAiRequest(
 		});
 		current();
 		if (!allowed) throw new DOMException(t`Data sharing cancelled. Nothing was sent to the AI provider.`, "AbortError");
+		// The approval covers the provider shown. If its settings or the default changed while the dialog was open,
+		// nothing is sent.
+		const approved = await resolveProvider();
+		current();
+		if (!approved || destinationOf(approved) !== destinationOf(provider))
+			throw new Error(t`Your AI settings changed while you were deciding. Nothing was sent; try again.`);
 	});
 	dialogs = result.catch(() => undefined);
 	await result;

@@ -1042,6 +1042,10 @@ msgid "Access"
 msgstr "액세스"
 
 #: src/features/auth/pages/consent.tsx
+msgid "Access is sent to"
+msgstr "다음에 대한 액세스 권한이 부여됩니다."
+
+#: src/features/auth/pages/consent.tsx
 msgid "Access your account through the API, including reading, changing and deleting your documents and job applications."
 msgstr "문서 및 입사 지원서 읽기, 변경 및 삭제를 포함하여 API를 통해 계정에 액세스하세요."
 
@@ -1108,7 +1112,7 @@ msgstr "\"{0}\" 추가"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "국가 추가"
 
 #: src/features/career/knowledge/facts.tsx
 msgid "Add a fact, for example “I mentored two associate PMs in 2025”"
@@ -1714,7 +1718,7 @@ msgstr "이 직업에 대해 기억에 남는 것이 있다면"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "어딘가에"
 
 #: src/features/assistant/provider-setup.tsx
 #: src/features/settings/ai/providers.tsx
@@ -3565,7 +3569,7 @@ msgstr "파싱 점수와는 별도로 계산됩니다. 커버리지는 아무것
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Countries"
-msgstr ""
+msgstr "국가"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Counts every application that reached each stage, including ones now closed."
@@ -3638,8 +3642,8 @@ msgid "Create account"
 msgstr "계정 만들기"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Create and change your documents and job applications."
-msgstr "문서와 입사 지원서를 작성하고 변경하세요."
+msgid "Create and change your documents and job applications, seeing each one it changes in full, and change your profile and username."
+msgstr "이 응용 프로그램은 문서와 입사 지원서를 작성하고 편집할 수 있습니다. 편집하는 각 문서나 업무 지원서의 전체 내용을 읽을 수 있습니다. 프로필과 사용자 이름도 변경할 수 있습니다."
 
 #: src/features/documents/new-document-dialog.tsx
 msgid "Create and open"
@@ -5238,7 +5242,7 @@ msgstr "이력서에서"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "귀하의 시간대를 기준으로"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Full name"
@@ -7381,7 +7385,7 @@ msgstr "수정 내역 없음"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "No country matches."
-msgstr ""
+msgstr "국가를 찾을 수 없습니다."
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -8929,16 +8933,16 @@ msgid "Read the self-hosting guide"
 msgstr "셀프 호스팅 가이드 읽기"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Read your documents and job applications."
-msgstr "문서와 입사 지원서를 읽어보세요."
-
-#: src/features/auth/pages/consent.tsx
 msgid "Read your email address."
 msgstr "이메일 주소를 읽습니다."
 
 #: src/features/auth/pages/consent.tsx
 msgid "Read your profile information."
 msgstr "프로필 정보를 읽습니다."
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your whole account, including a full data export: your profile and email, documents, job applications, career data and coaching conversations."
+msgstr "프로필, 이메일 주소, 문서, 입사 지원서, 경력 데이터, 코칭 대화 등 전체 데이터 내보내기를 포함하여 계정의 모든 데이터를 읽어보세요."
 
 #: src/features/settings/ai/api-keys.tsx
 msgid "Read, write and delete"
@@ -9236,7 +9240,7 @@ msgstr "{chip} 제거"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Remove {country}"
-msgstr ""
+msgstr "{country} 제거"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Remove {value}"
@@ -9983,7 +9987,7 @@ msgstr "검색 명령"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Search countries"
-msgstr ""
+msgstr "국가 검색"
 
 #: src/features/documents/documents-page.tsx
 msgid "Search covers titles, tags and linked applications."
@@ -10037,11 +10041,11 @@ msgstr "시간대 검색"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connectedProvider}."
-msgstr ""
+msgstr "검색은 서버 검색 및 {connectedProvider} 읽기로 테스트되었습니다."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "검색은 서버의 검색으로 테스트되었습니다. 링크는 내장된 리더로 읽습니다."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search works"
@@ -10066,11 +10070,11 @@ msgstr "어떤 AI 공급자를 사용하든 {connectedProvider}로 페이지를 
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "어떤 AI 공급자를 사용하든 서버의 검색으로 검색하고 내장 리더로 링크를 읽습니다."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads pages with {connectedProvider}, whichever AI provider you use."
-msgstr ""
+msgstr "어떤 AI 제공자를 사용하든 서버의 검색으로 검색하고 {connectedProvider}이 포함된 페이지를 읽습니다."
 
 #: src/features/applications/components/add-application-dialog.tsx
 msgid "Searching job postings…"
@@ -11268,7 +11272,7 @@ msgstr "테스트 연결"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "검색 기능 테스트"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Tested with {connectedProvider}. Only this service was tested."
@@ -11285,11 +11289,11 @@ msgstr "연결 테스트 중…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search, and reading with {connectedProvider}…"
-msgstr ""
+msgstr "{connectedProvider}을 사용하여 서버 및 웹 페이지 읽기에서 검색 서비스를 테스트합니다…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search…"
-msgstr ""
+msgstr "서버에서 검색 서비스를 테스트하는 중…"
 
 #: src/features/settings/ai/providers.tsx
 msgid "Testing…"
@@ -11615,6 +11619,14 @@ msgstr "검토가 완료되지 못했습니다. 다시 시도해 보세요."
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "같은 줄이 모든 페이지에 반복됩니다."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "저장된 키는 새 기본 URL로 전송되지 않습니다. 이 서버에 키가 필요한 경우 키를 다시 입력하세요."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "저장된 키는 새 기본 URL로 전송되지 않습니다. 키를 다시 입력하세요."
 
 #: src/libs/error-message.ts
 msgid "The saved provider key can't be decrypted. Enter the key again in Settings → AI & developer."
@@ -12487,7 +12499,7 @@ msgstr "소문자, 숫자, 단일 대시를 사용하세요."
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "내 시간대 사용"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Use one column"
@@ -12767,6 +12779,10 @@ msgstr "우리는 페이지를 읽고 수표, 조수 및 귀하의 편지에 대
 msgid "We sent a confirmation link to {email}. Open it to finish the change."
 msgstr "{email}로 확인 링크를 보냈습니다. 이를 열어 변경을 완료합니다."
 
+#: src/features/settings/account/profile.tsx
+msgid "We sent a link to {currentEmail} to approve the change. After that, confirm {email} from its own email."
+msgstr "변경 사항을 승인하기 위해 {currentEmail}에 링크를 보냈습니다. 그런 다음 해당 이메일 주소로 전송된 메시지를 사용하여 {email}을 확인하세요."
+
 #. placeholder {0}: user.email
 #: src/features/settings/account/profile.tsx
 msgid "We sent a new verification link to {0}."
@@ -12795,7 +12811,7 @@ msgstr "웹 검색 실패: {0}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "웹 검색을 통해 해당 국가의 일자리를 찾아보세요. 최대 3개 국가를 선택하세요."
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Website"
@@ -12983,7 +12999,7 @@ msgstr "근무지"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "당신이 일자리를 찾고 있는 곳"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Where your applications went"
@@ -13540,7 +13556,7 @@ msgstr "선택한 글꼴로는 일부 문자를 표시할 수 없어 “?”로 
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "서버는 지원 목록 섹션과 보조자에 대한 웹 검색을 제공합니다. 내장 리더가 읽을 수 없는 웹페이지를 읽으려면 서비스를 연결하세요."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

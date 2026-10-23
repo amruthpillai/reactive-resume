@@ -16,6 +16,7 @@ import {
 	serialize,
 } from "@formepdf/react";
 import { cloneElement, createElement, isValidElement } from "react";
+import { toSafeLink } from "@reactive-resume/utils/link";
 import { NODE_CONTENT_PREFIX, NODE_SOURCE_PREFIX, RESUME_NODE_PROP } from "../page-map";
 import { HOST } from "./primitives";
 import { flattenAlpha, flattenStyle, toFormeStyle, toPoints, WHITE } from "./style";
@@ -548,7 +549,10 @@ function convertNode(node: HostNode, parentContext: Context, key: number): React
 				tagNode(element, props, context);
 				return element;
 			}
-			const href = node.type === HOST.link && typeof props.src === "string" ? props.src : undefined;
+			// Resume links come from any client (API, MCP, imports), so only web, mail and phone links reach the PDF:
+			// desktop viewers would otherwise follow `file:`, `javascript:` or custom-scheme links.
+			const href =
+				node.type === HOST.link && typeof props.src === "string" ? (toSafeLink(props.src) ?? undefined) : undefined;
 			const hasBlockChild = node.children.some(
 				(child) => child.type !== "#text" && child.type !== HOST.text && child.type !== HOST.link,
 			);

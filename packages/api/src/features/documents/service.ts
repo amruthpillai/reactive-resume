@@ -1,6 +1,6 @@
 import type { DocumentSummary } from "../../dto/documents";
 import { ORPCError } from "@orpc/client";
-import { and, count, eq, isNotNull, isNull, lt, sql } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, isNull, lt, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { applicationService } from "../applications/service";
@@ -91,16 +91,22 @@ async function assertUnlocked(ref: DocumentRef) {
 	return state;
 }
 
-/** Deletes for good: resumes through their own path (storage too), letters directly. */
-async function deleteForGood(ref: DocumentRef) {
-	if (ref.type === "resume") return resumeService.delete({ id: ref.id, userId: ref.userId });
+/**
+ * Deletes for good: resumes through their own path (storage too), letters directly. With `trashedBefore` (Trash
+ * expiry), only a document still in Trash since then goes, whether or not it's locked.
+ */
+async function deleteForGood(ref: DocumentRef, trashedBefore?: Date) {
+	if (ref.type === "resume")
+		return resumeService.delete({ id: ref.id, userId: ref.userId, ...(trashedBefore ? { trashedBefore } : {}) });
 	await db.transaction(async (tx) => {
 		await lockDocumentOwner(tx, ref.userId);
-		await tx.delete(schema.coverLetter).where(owned(ref));
+		await tx
+			.delete(schema.coverLetter)
+			.where(and(owned(ref), trashedBefore ? lt(schema.coverLetter.trashedAt, trashedBefore) : undefined));
 	});
 }
 
-/** Documents trashed more than 30 days ago go for good. Runs only through the explicit authenticated cleanup operation. */
+/** One account's documents trashed more than 30 days ago go for good; runs when the account lists its documents. */
 async function purgeExpired(userId: string) {
 	const cutoff = new Date(Date.now() - TRASH_RETENTION_MS);
 	const [resumes, letters] = await Promise.all([
@@ -115,16 +121,49 @@ async function purgeExpired(userId: string) {
 	]);
 
 	await Promise.allSettled([
-		...resumes.map(({ id }) => deleteForGood({ userId, type: "resume", id })),
-		...letters.map(({ id }) => deleteForGood({ userId, type: "letter", id })),
+		...resumes.map(({ id }) => deleteForGood({ userId, type: "resume", id }, cutoff)),
+		...letters.map(({ id }) => deleteForGood({ userId, type: "letter", id }, cutoff)),
+	]);
+}
+
+/**
+ * Trash keeps documents for 30 days, as the app promises, even for accounts that never come back: each scheduler tick
+ * deletes a batch of expired documents across all accounts.
+ */
+async function purgeExpiredTrash(limit = 50) {
+	const cutoff = new Date(Date.now() - TRASH_RETENTION_MS);
+	const [resumes, letters] = await Promise.all([
+		db
+			.select({ id: schema.resume.id, userId: schema.resume.userId })
+			.from(schema.resume)
+			.where(lt(schema.resume.trashedAt, cutoff))
+			.orderBy(asc(schema.resume.trashedAt))
+			.limit(limit),
+		db
+			.select({ id: schema.coverLetter.id, userId: schema.coverLetter.userId })
+			.from(schema.coverLetter)
+			.where(lt(schema.coverLetter.trashedAt, cutoff))
+			.orderBy(asc(schema.coverLetter.trashedAt))
+			.limit(limit),
+	]);
+
+	await Promise.allSettled([
+		...resumes.map(({ id, userId }) => deleteForGood({ userId, type: "resume", id }, cutoff)),
+		...letters.map(({ id, userId }) => deleteForGood({ userId, type: "letter", id }, cutoff)),
 	]);
 }
 
 export const documentsService = {
-	/** Every live resume and letter (or everything in Trash), newest edit first. The app filters and sorts them. */
 	purgeExpired,
+	purgeExpiredTrash,
 
+	/** Every live resume and letter (or everything in Trash), newest edit first. The app filters and sorts them. */
 	list: async (input: { userId: string; trashed: boolean }): Promise<DocumentSummary[]> => {
+		// Trash never shows a document past its 30 days, whether or not the scheduler has reached it yet.
+		if (input.trashed)
+			await purgeExpired(input.userId).catch((error: unknown) =>
+				console.error("[documents] Trash purge failed", error),
+			);
 		const [resumes, letters] = await Promise.all([
 			db
 				.select({

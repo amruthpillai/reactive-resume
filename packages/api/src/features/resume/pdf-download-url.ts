@@ -45,8 +45,11 @@ function decodeJson(value: string): unknown {
 	return JSON.parse(Buffer.from(value, "base64url").toString("utf8"));
 }
 
+// A key of its own, derived from AUTH_SECRET, so this signature can't stand in for any other use of the secret.
+const signingKey = () => createHmac("sha256", env.AUTH_SECRET).update("reactive-resume:pdf-download:v1").digest();
+
 function sign(payload: string) {
-	return createHmac("sha256", env.AUTH_SECRET).update(payload).digest("base64url");
+	return createHmac("sha256", signingKey()).update(payload).digest("base64url");
 }
 
 function parsePayload(value: unknown): PdfDownloadTokenPayload | null {

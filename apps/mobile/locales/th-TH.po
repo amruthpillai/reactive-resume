@@ -837,7 +837,7 @@ msgstr "เพิ่ม"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "เพิ่มประเทศ"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "มีอะไรให้จำเกี่ยวกับงานน
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "ที่ไหนก็ได้"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "จากรายการประสบการณ์ของคุ
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "ขึ้นอยู่กับเขตเวลาของคุณ"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "หากใช้การเข้าถึงเว็บ ลิง�
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "หากใช้การเข้าถึงเว็บ ข้อความค้นหาจะไปที่บริการค้นหาของเซิร์ฟเวอร์ของคุณและเครื่องมือค้นหาที่ใช้ และลิงก์ไปที่ {reader} และไซต์ที่กำลังอ่าน"
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "หากใช้การเข้าถึงเว็บ ข้อความค้นหาจะไปที่บริการค้นหาของเซิร์ฟเวอร์ของคุณและเครื่องมือค้นหาที่ใช้ และลิงก์ไปยังเว็บไซต์ที่กำลังอ่าน"
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "ค้นหาเขตเวลา"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "การค้นหาได้รับการทดสอบด้วยการค้นหาของเซิร์ฟเวอร์ของคุณและการอ่านด้วย {connected}"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "การค้นหาได้รับการทดสอบกับการค้นหาของเซิร์ฟเวอร์ของคุณ ลิงก์ถูกอ่านด้วยตัวอ่านในตัว"
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "ทดสอบการเชื่อมต่อ"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "ทดสอบฟังก์ชั่นการค้นหา"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "ผู้ช่วยค้นหาและอ่านเพจด้
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "ผู้ช่วยค้นหาด้วยการค้นหาเซิร์ฟเวอร์ของคุณและอ่านลิงก์ด้วยโปรแกรมอ่านในตัว ไม่ว่าคุณจะใช้ผู้ให้บริการ AI รายใด"
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "ผู้ช่วยค้นหาด้วยการค้นหาของเซิร์ฟเวอร์ของคุณและอ่านหน้าด้วย {connected} ไม่ว่าคุณจะใช้ผู้ให้บริการ AI รายใด"
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "ประวัติย่อตามที่เป็นอยู่
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "บรรทัดเดียวกันซ้ำในทุกหน้า"
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "คีย์ที่บันทึกไว้จะไม่ถูกส่งไปยัง URL ฐานใหม่ ป้อนรหัสอีกครั้งหากเซิร์ฟเวอร์นี้ต้องการรหัส"
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "คีย์ที่บันทึกไว้จะไม่ถูกส่งไปยัง URL ฐานใหม่ ป้อนรหัสอีกครั้ง"
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "ใช้ตัวอักษรพิมพ์เล็ก ตัว�
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "ใช้เขตเวลาของฉัน"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "การค้นหาเว็บล้มเหลว: {0}"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "การค้นหาเว็บหางานในประเทศเหล่านี้ เลือกได้ถึงสามประเทศ"
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "สถานที่ทำงาน"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "ที่คุณกำลังมองหางาน"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "การเชื่อมต่อ AI ของคุณ"
 msgid "Your AI connection"
 msgstr "การเชื่อมต่อ AI ของคุณ"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "การตั้งค่า AI ของคุณเปลี่ยนไปในขณะที่คุณกำลังตัดสินใจ ไม่มีอะไรถูกส่งไป ลองอีกครั้ง"
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "คำตอบของคุณ"
@@ -11064,7 +11076,7 @@ msgstr "ฟอนต์ที่คุณเลือกแสดงอักข
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "เซิร์ฟเวอร์ของคุณให้บริการการค้นหาเว็บในส่วน ใบสมัคร และสำหรับผู้ช่วย เชื่อมต่อบริการเพื่ออ่านหน้าเว็บที่โปรแกรมอ่านในตัวไม่สามารถอ่านได้"
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

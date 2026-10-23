@@ -35,6 +35,16 @@ const accountProcedure = protectedProcedure.use(accountRateLimit).use(async ({ n
 	}
 });
 
+// Sessions last a week; a key that never expires, or deleting the account, needs a sign-in from the last day.
+const RECENT_SIGN_IN_MS = 24 * 60 * 60 * 1000;
+
+async function assertRecentSignIn(headers: Headers | undefined) {
+	const session = headers ? await auth.api.getSession({ headers, query: { disableCookieCache: true } }) : null;
+	const signedInAt = session ? new Date(session.session.createdAt).getTime() : 0;
+	if (Date.now() - signedInAt > RECENT_SIGN_IN_MS)
+		throw new ORPCError("FORBIDDEN", { message: "For your security, sign out and sign in again, then try again." });
+}
+
 export const authRouter = {
 	getProfile: accountProcedure
 		.route({
@@ -184,6 +194,7 @@ export const authRouter = {
 		.handler(async ({ context, input }) => {
 			if (context.authentication?.method !== "session")
 				throw new ORPCError("FORBIDDEN", { message: "Create API keys in your browser settings." });
+			await assertRecentSignIn(context.reqHeaders);
 			const result = await auth.api.createApiKey({
 				body: {
 					userId: context.user.id,
@@ -267,6 +278,7 @@ export const authRouter = {
 		.handler(async ({ context }) => {
 			if (context.authentication?.method !== "session")
 				throw new ORPCError("FORBIDDEN", { message: "Account deletion must be performed in your browser settings." });
+			await assertRecentSignIn(context.reqHeaders);
 			await authService.deleteAccount({ userId: context.user.id });
 		}),
 };

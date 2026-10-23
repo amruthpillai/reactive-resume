@@ -1042,6 +1042,10 @@ msgid "Access"
 msgstr "Acceso"
 
 #: src/features/auth/pages/consent.tsx
+msgid "Access is sent to"
+msgstr "Se concede acceso a"
+
+#: src/features/auth/pages/consent.tsx
 msgid "Access your account through the API, including reading, changing and deleting your documents and job applications."
 msgstr "Acceda a su cuenta a través del API, incluida la lectura, modificación y eliminación de sus documentos y solicitudes de empleo."
 
@@ -1108,7 +1112,7 @@ msgstr "Añadir “{0}”"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "Añadir un país"
 
 #: src/features/career/knowledge/facts.tsx
 msgid "Add a fact, for example “I mentored two associate PMs in 2025”"
@@ -1714,7 +1718,7 @@ msgstr "Algo para recordar sobre este trabajo."
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "En cualquier lugar"
 
 #: src/features/assistant/provider-setup.tsx
 #: src/features/settings/ai/providers.tsx
@@ -3565,7 +3569,7 @@ msgstr "Se cuenta aparte de la puntuación de lectura. La cobertura no predice n
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Countries"
-msgstr ""
+msgstr "Países"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Counts every application that reached each stage, including ones now closed."
@@ -3638,8 +3642,8 @@ msgid "Create account"
 msgstr "Crear cuenta"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Create and change your documents and job applications."
-msgstr "Crea y modifica tus documentos y solicitudes de empleo."
+msgid "Create and change your documents and job applications, seeing each one it changes in full, and change your profile and username."
+msgstr "Esta aplicación puede crear y editar sus documentos y solicitudes de empleo. Puede leer el contenido completo de cada documento o solicitud de empleo que edite. También puede cambiar su perfil y nombre de usuario."
 
 #: src/features/documents/new-document-dialog.tsx
 msgid "Create and open"
@@ -5238,7 +5242,7 @@ msgstr "De tu currículum"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "Según tu zona horaria"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Full name"
@@ -7381,7 +7385,7 @@ msgstr "Sin correcciones"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "No country matches."
-msgstr ""
+msgstr "No se encontraron países."
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -8929,16 +8933,16 @@ msgid "Read the self-hosting guide"
 msgstr "Lea la guía de autohospedaje"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Read your documents and job applications."
-msgstr "Lea sus documentos y solicitudes de empleo."
-
-#: src/features/auth/pages/consent.tsx
 msgid "Read your email address."
 msgstr "Leer tu dirección de correo electrónico."
 
 #: src/features/auth/pages/consent.tsx
 msgid "Read your profile information."
 msgstr "Leer la información de tu perfil."
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your whole account, including a full data export: your profile and email, documents, job applications, career data and coaching conversations."
+msgstr "Lea todos los datos de su cuenta, incluida una exportación de datos completa: su perfil y dirección de correo electrónico, documentos, solicitudes de empleo, datos profesionales y conversaciones de coaching."
 
 #: src/features/settings/ai/api-keys.tsx
 msgid "Read, write and delete"
@@ -9236,7 +9240,7 @@ msgstr "Elimine {chip}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Remove {country}"
-msgstr ""
+msgstr "Eliminar {country}"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Remove {value}"
@@ -9983,7 +9987,7 @@ msgstr "Comandos de búsqueda"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Search countries"
-msgstr ""
+msgstr "Buscar países"
 
 #: src/features/documents/documents-page.tsx
 msgid "Search covers titles, tags and linked applications."
@@ -10037,11 +10041,11 @@ msgstr "Buscar zonas horarias"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connectedProvider}."
-msgstr ""
+msgstr "La búsqueda se probó con la búsqueda de su servidor y se leyó con {connectedProvider}."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "La búsqueda fue probada con la búsqueda de su servidor. Los enlaces se leen con el lector incorporado."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search works"
@@ -10066,11 +10070,11 @@ msgstr "Busca y lee páginas con {connectedProvider}, independientemente del pro
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "Busca con la búsqueda de su servidor y lee enlaces con el lector integrado, independientemente del proveedor de IA que utilice."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads pages with {connectedProvider}, whichever AI provider you use."
-msgstr ""
+msgstr "Busca con la búsqueda de su servidor y lee páginas con {connectedProvider}, cualquier proveedor de IA que utilice."
 
 #: src/features/applications/components/add-application-dialog.tsx
 msgid "Searching job postings…"
@@ -11268,7 +11272,7 @@ msgstr "Conexión de prueba"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "Probar búsqueda"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Tested with {connectedProvider}. Only this service was tested."
@@ -11285,11 +11289,11 @@ msgstr "Probando la conexión..."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search, and reading with {connectedProvider}…"
-msgstr ""
+msgstr "Probando el servicio de búsqueda en su servidor y leyendo la página web con {connectedProvider}…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search…"
-msgstr ""
+msgstr "Probando el servicio de búsqueda en su servidor…"
 
 #: src/features/settings/ai/providers.tsx
 msgid "Testing…"
@@ -11615,6 +11619,14 @@ msgstr "La reseña no pudo terminar. Intentar otra vez."
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "La misma línea se repite en todas las páginas."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "La clave guardada no se envía a una nueva URL base. Ingrese la clave nuevamente si este servidor requiere una clave."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "La clave guardada no se envía a una nueva URL base. Ingrese la clave nuevamente."
 
 #: src/libs/error-message.ts
 msgid "The saved provider key can't be decrypted. Enter the key again in Settings → AI & developer."
@@ -12487,7 +12499,7 @@ msgstr "Utilice letras minúsculas, números y guiones simples."
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "Usar mi zona horaria"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Use one column"
@@ -12767,6 +12779,10 @@ msgstr "Leemos la página y guardamos la oferta de trabajo para Check, el asiste
 msgid "We sent a confirmation link to {email}. Open it to finish the change."
 msgstr "Enviamos un enlace de confirmación a {email}. Ábrelo para finalizar el cambio."
 
+#: src/features/settings/account/profile.tsx
+msgid "We sent a link to {currentEmail} to approve the change. After that, confirm {email} from its own email."
+msgstr "Enviamos un enlace a {currentEmail} para aprobar el cambio. Luego confirme {email} usando el mensaje enviado a esa dirección de correo electrónico."
+
 #. placeholder {0}: user.email
 #: src/features/settings/account/profile.tsx
 msgid "We sent a new verification link to {0}."
@@ -12795,7 +12811,7 @@ msgstr "La búsqueda web falló: {0}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "Las búsquedas web buscan empleo en estos países. Elija hasta tres países."
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Website"
@@ -12983,7 +12999,7 @@ msgstr "Dónde trabajas"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "donde buscas trabajo"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Where your applications went"
@@ -13540,7 +13556,7 @@ msgstr "La fuente seleccionada no puede mostrar algunos caracteres. Aparecen com
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "Su servidor proporciona búsqueda web en la sección Candidaturas y para el asistente. Conecte un servicio para leer páginas web que el lector integrado no puede leer."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

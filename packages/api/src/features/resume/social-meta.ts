@@ -1,13 +1,13 @@
 import type { ResumeSocialMeta } from "@reactive-resume/resume/social-meta";
 import { getResumeSocialMeta } from "@reactive-resume/resume/social-meta";
-import { redactResumeForViewer } from "./access-policy";
+import { ownerIsNotBanned, redactResumeForViewer } from "./access-policy";
 import { parseStoredResumeData } from "./resume-data-validation";
 
 export type PublicResumeSocialMetaInput = { username: string; slug: string };
 
-// Only public, password-free resumes outside Trash are matched. Password-protected resumes must not
-// leak their summary to an unauthenticated crawler, and this read deliberately skips the view counting
-// and access gating in resumeService.getBySlug — a card render is not a visit.
+// Only public, password-free resumes outside Trash with an unbanned owner are matched. Password-protected
+// resumes must not leak their summary to an unauthenticated crawler, and this read deliberately skips the view
+// counting and access gating in resumeService.getBySlug — a card render is not a visit.
 const findResume = async ({ username, slug }: PublicResumeSocialMetaInput) => {
 	const [{ db }, schema, { and, desc, eq, isNull, sql }, { matchesSlug }] = await Promise.all([
 		import("@reactive-resume/db/client"),
@@ -26,6 +26,7 @@ const findResume = async ({ username, slug }: PublicResumeSocialMetaInput) => {
 				eq(schema.resume.isPublic, true),
 				isNull(schema.resume.password),
 				isNull(schema.resume.trashedAt),
+				ownerIsNotBanned(),
 			),
 		)
 		.orderBy(desc(sql`${schema.resume.slug} = ${slug}`))

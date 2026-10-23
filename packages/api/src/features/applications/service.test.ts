@@ -449,6 +449,29 @@ describe("applicationService.bulkDelete", () => {
 		expect(storageDeleteMock).toHaveBeenCalledWith("uploads/user-1/agent/coach-1");
 		expect(storageDeleteMock).not.toHaveBeenCalledWith("uploads/user-2/pictures/ignored.pdf");
 	});
+
+	it("never deletes a folder or non-PDF that an edited document URL points at", async () => {
+		setSelectResults(
+			[
+				{ ...existing, resumeFileUrl: "/api/uploads/user-1", coverLetterUrl: "/api/uploads/user-1/agent/coach-1" },
+				{ ...existing, id: "app-2", resumeFileUrl: "/uploads/user-1/pictures", coverLetterUrl: null },
+				{ ...existing, id: "app-3", resumeFileUrl: "/api/uploads/user-1/pictures/a/b.pdf", coverLetterUrl: null },
+				{ ...existing, id: "app-4", resumeFileUrl: "/api/uploads/user-1/pictures/photo.jpeg", coverLetterUrl: null },
+			],
+			[],
+			[{ id: "user-1" }],
+			[],
+		);
+		dbMock.delete.mockReturnValue({
+			where: () => ({
+				returning: () => Promise.resolve([{ id: "app-1" }, { id: "app-2" }, { id: "app-3" }, { id: "app-4" }]),
+			}),
+		});
+
+		await applicationService.bulkDelete({ userId: "user-1", ids: ["app-1", "app-2", "app-3", "app-4"] });
+
+		expect(storageDeleteMock).not.toHaveBeenCalled();
+	});
 });
 
 describe("applicationService interviews", () => {
@@ -598,5 +621,42 @@ describe("application attachment lifecycle", () => {
 		await applicationService.removeDocument({ id: "app-1", userId: "user-1", kind: "resume" });
 		expect(row().resumeFileUrl).toBeNull();
 		expect(storageDeleteMock).toHaveBeenCalledExactlyOnceWith("uploads/user-1/pictures/resume.pdf");
+	});
+});
+
+describe("applicationService.importMany", () => {
+	it("rejects another account's cover letter before inserting anything", async () => {
+		const { coverLetterService } = await import("../cover-letters/service");
+		vi.mocked(coverLetterService.getById).mockRejectedValueOnce(new Error("NOT_FOUND"));
+		await expect(
+			applicationService.importMany({
+				userId: "user-1",
+				items: [{ company: "Stripe", role: "Engineer", coverLetterId: "someone-elses-letter" }],
+			}),
+		).rejects.toThrow("NOT_FOUND");
+		expect(coverLetterService.getById).toHaveBeenCalledWith({ id: "someone-elses-letter", userId: "user-1" });
+		expect(dbMock.insert).not.toHaveBeenCalled();
+	});
+
+	it("saves the sent version for rows imported at Applied or later", async () => {
+		const data = structuredClone((await import("@reactive-resume/schema/resume/default")).defaultResumeData);
+		const imported = { ...existing, status: "applied" as const, resumeId: "resume-1", sentResumeVersionId: null };
+		setSelectResults([{ id: "user-1" }], [{ id: "resume-1", data }]);
+		dbMock.insert.mockReturnValue({ values: () => ({ returning: () => Promise.resolve([imported]) }) });
+		const set = vi.fn(() => ({ where: () => ({ returning: () => Promise.resolve([imported]) }) }));
+		dbMock.update.mockReturnValue({ set });
+
+		await expect(
+			applicationService.importMany({
+				userId: "user-1",
+				items: [{ company: "Stripe", role: "Engineer", status: "applied", resumeId: "resume-1" }],
+			}),
+		).resolves.toEqual({ imported: 1 });
+
+		expect(writeVersionMock).toHaveBeenCalledWith(
+			expect.anything(),
+			expect.objectContaining({ resumeId: "resume-1", kind: "sent", data }),
+		);
+		expect(set).toHaveBeenCalledWith({ sentResumeVersionId: "version-1", sentCheckScore: expect.any(Number) });
 	});
 });

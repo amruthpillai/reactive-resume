@@ -37,13 +37,11 @@ export function AskCommandGroup() {
 			toast.add({ description: t`Create a resume first, then ask about it.` });
 			return;
 		}
+		// Passed in memory: a question in the URL (`?ask=`) only fills the composer, since anyone can make a link.
+		openAssistantFrom({ ask: question });
 		if (latest.type === "letter")
-			await navigate({
-				to: "/builder/letter/$coverLetterId",
-				params: { coverLetterId: latest.id },
-				search: { ask: question },
-			});
-		else await navigate({ to: "/builder/$resumeId", params: { resumeId: latest.id }, search: { ask: question } });
+			await navigate({ to: "/builder/letter/$coverLetterId", params: { coverLetterId: latest.id } });
+		else await navigate({ to: "/builder/$resumeId", params: { resumeId: latest.id } });
 	};
 
 	return (

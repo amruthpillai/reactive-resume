@@ -53,9 +53,13 @@ export function buildCareerInstructions(
 	},
 ) {
 	const { context } = input;
-	const company = context.application?.company;
+	// The role and company are application data too: name them only when the user shares the application.
+	const application =
+		context.application && input.shareApplication
+			? ` (${context.application.role} at ${context.application.company})`
+			: "";
 	const task = context.application
-		? `Help with this one application (${context.application.role} at ${company}). ${input.tab ? `The user is ${TABS[input.tab]}.` : ""}`
+		? `Help with this one application${application}. ${input.tab ? `The user is ${TABS[input.tab]}.` : ""}`
 		: "Help with the whole search, across applications. Use list_opportunities to compare them.";
 	const selected = {
 		...(input.shareApplication
@@ -69,10 +73,13 @@ export function buildCareerInstructions(
 			? { offers: input.offers.map(({ application, data }) => ({ ...application, terms: data })) }
 			: {}),
 	};
-	return careerSystemPromptTemplate
-		.replace("{{TASK}}", task)
-		.replace("{{MEMORY}}", input.shareMemory ? MEMORY[context.profile.memoryMode] : MEMORY.off)
-		.replace("{{CONTEXT}}", JSON.stringify(selected));
+	// One pass with a function replacer: text inside a value (`{{CONTEXT}}`, `$&`) is never read as a placeholder.
+	const fill: Record<string, string> = {
+		TASK: task,
+		MEMORY: input.shareMemory ? MEMORY[context.profile.memoryMode] : MEMORY.off,
+		CONTEXT: JSON.stringify(selected),
+	};
+	return careerSystemPromptTemplate.replace(/\{\{(\w+)\}\}/g, (match, key: string) => fill[key] ?? match);
 }
 
 export function buildCareerTools(input: CareerToolsInput): ToolSet {

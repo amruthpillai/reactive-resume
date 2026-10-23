@@ -1,8 +1,23 @@
 import type { LanguageModel } from "ai";
-import type { z } from "zod";
 import { ORPCError } from "@orpc/client";
 import { generateText } from "ai";
+import { z } from "zod";
 import { safetySystemPrompt } from "@reactive-resume/ai/prompts";
+
+// A provider that stops responding can't hold a standalone request open forever. Streamed chats have their own budgets.
+// Self-hosted local models that need longer (a CPU model reading a long PDF) can raise AI_REQUEST_TIMEOUT_MS.
+const AI_REQUEST_TIMEOUT_MS = z.coerce
+	.number()
+	.int()
+	.positive()
+	.max(2_147_483_647)
+	.catch(300_000)
+	.parse(process.env.AI_REQUEST_TIMEOUT_MS?.trim() || undefined);
+
+export function aiDeadline(signal?: AbortSignal) {
+	const timeout = AbortSignal.timeout(AI_REQUEST_TIMEOUT_MS);
+	return signal ? AbortSignal.any([signal, timeout]) : timeout;
+}
 
 export type GenerateJsonPrompt = {
 	system?: string;
@@ -24,7 +39,7 @@ export async function generateJson<T>(
 ): Promise<T> {
 	const { text } = await generateText({
 		model,
-		...(signal ? { abortSignal: signal } : {}),
+		abortSignal: aiDeadline(signal),
 		system: `${safetySystemPrompt}\n\n${system ?? ""}`,
 		messages: [{ role: "user", content: prompt }],
 	});

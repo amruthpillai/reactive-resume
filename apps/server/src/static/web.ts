@@ -1,4 +1,5 @@
 import type { Locale } from "@reactive-resume/utils/locale";
+import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -66,14 +67,53 @@ function isPublicResumePath(pathname: string): boolean {
 	return segments.length === 2 && firstSegment !== undefined && !reservedPublicResumeSegments.has(firstSegment);
 }
 
+/**
+ * Scripts run only from the app's own files and the inline scripts of the page served, allowed by hash; `wasm-unsafe-eval`
+ * lets the PDF engine (Forme, WebAssembly) start. Pictures, avatars and fonts can live on any https host (a resume's
+ * picture URL, a sign-in provider's avatar) and the PDF engine fetches them, so images, fonts and connections stay open
+ * to https. Recordings, previews and workers use blob: URLs.
+ */
+function contentSecurityPolicy(html = "") {
+	const inlineScripts = html.matchAll(
+		/<script(?![^>]*\bsrc=)(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g,
+	);
+	const hashes = [...inlineScripts].map(
+		([, body]) =>
+			`'sha256-${createHash("sha256")
+				.update(body ?? "")
+				.digest("base64")}'`,
+	);
+	return [
+		"default-src 'self'",
+		["script-src 'self' 'wasm-unsafe-eval'", ...hashes].join(" "),
+		"style-src 'self' 'unsafe-inline'",
+		"img-src 'self' data: blob: https:",
+		"font-src 'self' data: https:",
+		"connect-src 'self' data: blob: https:",
+		"media-src 'self' data: blob:",
+		"worker-src 'self' blob:",
+		"frame-src 'self' blob:",
+		"frame-ancestors 'none'",
+		"base-uri 'self'",
+		// Print and template previews show a PDF from a blob: URL, which Chromium's viewer loads as a plugin.
+		"object-src blob:",
+	].join("; ");
+}
+
 const BASE_SECURITY_HEADERS = {
 	"X-Frame-Options": "DENY",
 	"X-Content-Type-Options": "nosniff",
 	"Referrer-Policy": "strict-origin-when-cross-origin",
-	// `wasm-unsafe-eval` lets the PDF engine (Forme, WebAssembly) start in the browser.
-	"Content-Security-Policy-Report-Only":
-		"default-src 'self'; img-src 'self' data: blob:; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'",
+	"Content-Security-Policy": contentSecurityPolicy(),
 };
+
+/**
+ * An HTML page whose policy allows exactly the inline scripts of its template. Hashes come from the template before
+ * any resume-derived markup goes in, so text that slipped past escaping could never allow itself.
+ */
+function htmlResponse(html: string, headers: Record<string, string>, template = html) {
+	return new Response(html, { headers: { ...headers, "Content-Security-Policy": contentSecurityPolicy(template) } });
+}
 
 const githubUrl = "https://github.com/reactive-resume/reactive-resume";
 // The English copy, for a build without prerendered pages; a prerendered page carries its own locale's title and
@@ -204,7 +244,7 @@ function createPageSeoMarkup(options: PageSeoOptions) {
 		<meta name="twitter:title" content="${options.title}">
 		<meta name="twitter:description" content="${options.description}">
 		<meta name="twitter:image" content="${options.imageUrl}">
-		<script type="application/ld+json">${JSON.stringify(options.structuredData)}</script>
+		<script type="application/ld+json">${JSON.stringify(options.structuredData).replaceAll("<", "\\u003c")}</script>
 	`;
 }
 
@@ -236,7 +276,7 @@ async function createPublicResumeSeoMarkup(pathname: string, origin: string) {
 		.catch(() => null);
 	if (!meta) return null;
 
-	const canonicalUrl = `${origin}/${username}/${slug}`;
+	const canonicalUrl = escapeAttribute(`${origin}/${username}/${slug}`);
 	const imageUrl = `${origin}/opengraph/banner.jpg`;
 	const pageTitle = escapeAttribute(`${meta.name} - Reactive Resume`);
 	const title = escapeAttribute(meta.title);
@@ -270,6 +310,9 @@ export const serveWebDistStatic = env.CLOUDFLARE
 				if (context.req.path.startsWith("/assets/") || /^\/videos\/.*-v\d+\.(?:mp4|webp)$/.test(context.req.path)) {
 					context.header("Cache-Control", "public, max-age=31536000, immutable");
 				}
+				// `/index.html` is the app shell too; it must not be frameable either.
+				if (context.req.path.endsWith(".html"))
+					for (const [name, value] of Object.entries(BASE_SECURITY_HEADERS)) context.header(name, value);
 			},
 		});
 
@@ -399,9 +442,10 @@ export async function handleWebApp(request: Request, readFile: ReadWebFile = (pa
 			.replace(/<title>[^<]*<\/title>/, "<title>Reactive Resume</title>")
 			.replace(/<meta\s+name="description"[^>]*>/, '<meta name="description" content="">');
 		const markup = `<link rel="canonical" href="${escapeAttribute(canonicalUrl)}" data-root-resume-shell><meta name="robots" content="noindex, follow" data-root-resume-shell>`;
-		return new Response(
+		return htmlResponse(
 			shell.replace("</head>", () => `${markup}</head>`),
-			{ headers },
+			headers,
+			html,
 		);
 	}
 
@@ -423,9 +467,10 @@ export async function handleWebApp(request: Request, readFile: ReadWebFile = (pa
 		});
 
 		// The saved locale changes what this address shows, so caches have to key on the cookie.
-		return new Response(
+		return htmlResponse(
 			page.replace("</head>", () => `${markup}</head>`),
-			{ headers: { ...headers, Vary: "Cookie" } },
+			{ ...headers, Vary: "Cookie" },
+			page,
 		);
 	}
 
@@ -441,12 +486,13 @@ export async function handleWebApp(request: Request, readFile: ReadWebFile = (pa
 					() => `<meta name="description" content="${resumeSeo.description}">`,
 				);
 
-			return new Response(
+			return htmlResponse(
 				withTitle.replace("</head>", () => `${resumeSeo.markup}</head>`),
-				{ headers },
+				headers,
+				html,
 			);
 		}
 	}
 
-	return new Response(html, { headers });
+	return htmlResponse(html, headers);
 }

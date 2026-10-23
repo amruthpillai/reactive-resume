@@ -49,7 +49,9 @@ describe("redactResumeForViewer", () => {
 		const data = structuredClone(sampleResumeData);
 		data.picture.hidden = true;
 		data.summary.hidden = true;
+		data.summary.title = "Private summary heading";
 		data.sections.references.hidden = true;
+		data.sections.references.title = "References at my current employer";
 		data.sections.projects.items = data.sections.projects.items.map((item, index) => ({ ...item, hidden: index > 0 }));
 		data.customSections = data.customSections.map((section) => ({ ...section, hidden: true }));
 
@@ -57,7 +59,9 @@ describe("redactResumeForViewer", () => {
 
 		expect(shared.picture.url).toBe("");
 		expect(shared.summary.content).toBe("");
+		expect(shared.summary.title).toBe("");
 		expect(shared.sections.references.items).toEqual([]);
+		expect(shared.sections.references.title).toBe("");
 		expect(shared.sections.projects.items).toEqual(data.sections.projects.items.slice(0, 1));
 		expect(shared.customSections).toEqual([]);
 		expect(shared.sections.education).toEqual(data.sections.education);

@@ -10,8 +10,10 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5432:5432"
+    # Not exposed on the host by default: these credentials are public, and Docker's published ports bypass
+    # host firewalls. Uncomment the ports block below if you need host access for tooling.
+    # ports:
+    #   - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
     healthcheck:
@@ -50,8 +52,10 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=seaweedfs
       - AWS_SECRET_ACCESS_KEY=seaweedfs
-    ports:
-      - "8333:8333"
+    # Not exposed on the host by default: the bucket holds private uploads and these keys are public. The app
+    # reaches it over the Docker network. Uncomment the ports block below if you need host access for tooling.
+    # ports:
+    #   - "127.0.0.1:8333:8333"
     volumes:
       - seaweedfs_data:/data
     healthcheck:

@@ -837,7 +837,7 @@ msgstr "Hozzáadás"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "Adjon hozzá egy országot"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "Amire emlékezni kell erről a munkáról"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "Bárhol"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "A tapasztalati bejegyzéseidből"
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "Az időzóna alapján"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "Webes hozzáférés használata esetén a hivatkozások és a keresési 
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "Ha webes hozzáférést használ, a keresőkifejezések a szerver keresőszolgáltatásához és az általa használt keresőmotorokhoz, a hivatkozások pedig a {reader} címre és az éppen olvasott webhelyekre mennek."
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "Webes hozzáférés használata esetén a keresőkifejezések a szerver keresőszolgáltatásához és az általa használt keresőmotorokhoz, a hivatkozások pedig az éppen olvasott webhelyekre mennek."
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "Időzónák keresése"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "A keresést a szerver keresésével, az olvasást pedig a {connected} segítségével teszteltük."
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "A keresést a szerver keresésével teszteltük. A hivatkozásokat a beépített olvasóval olvassa el."
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "Teszt kapcsolat"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "Tesztelje a keresési funkciót"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "Az asszisztens oldalakat keres és olvas a {connected} használatával, 
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "Az asszisztens a szerver keresésével keres, és a beépített olvasóval olvassa be a hivatkozásokat, függetlenül attól, hogy melyik AI-szolgáltatót használja."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "Az asszisztens az Ön szerverének keresésével keres, és a {connected} segítségével olvassa be az oldalakat, függetlenül attól, hogy melyik AI-szolgáltatót használja."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "Az önéletrajz úgy ahogy van"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "Ugyanaz a sor ismétlődik minden oldalon."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "A mentett kulcsot nem küldi el új alap URL-re. Adja meg újra a kulcsot, ha a szervernek kulcsra van szüksége."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "A mentett kulcsot nem küldi el új alap URL-re. Írja be újra a kulcsot."
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "Használjon kisbetűket, számokat és kötőjeleket."
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "Használd az időzónámat"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "A webes keresés sikertelen: {0}"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "Az internetes keresések ezekben az országokban keresnek állást. Válasszon legfeljebb három országot."
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "Munkavégzés helye"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "Ahol munkát keresel"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "az AI-kapcsolatod"
 msgid "Your AI connection"
 msgstr "Az AI-kapcsolatod"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "Az AI-beállításai módosultak a döntés során. Nem küldtek semmit; próbáld újra."
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "A válaszod"
@@ -11064,7 +11076,7 @@ msgstr "A kiválasztott betűtípus nem tud megjeleníteni néhány karaktert. E
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "Az Ön szervere webes keresést biztosít a Jelentkezések részben és az asszisztens számára. Csatlakoztasson egy szolgáltatást olyan weboldalak olvasásához, amelyeket a beépített olvasó nem tud elolvasni."
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

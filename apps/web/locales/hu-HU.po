@@ -1042,6 +1042,10 @@ msgid "Access"
 msgstr "Hozzáférés"
 
 #: src/features/auth/pages/consent.tsx
+msgid "Access is sent to"
+msgstr "A hozzáférés biztosított"
+
+#: src/features/auth/pages/consent.tsx
 msgid "Access your account through the API, including reading, changing and deleting your documents and job applications."
 msgstr "Hozzáférhet fiókjához a API-n keresztül, beleértve a dokumentumok és álláspályázatok olvasását, módosítását és törlését."
 
@@ -1108,7 +1112,7 @@ msgstr "„{0}” hozzáadása"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "Adjon hozzá egy országot"
 
 #: src/features/career/knowledge/facts.tsx
 msgid "Add a fact, for example “I mentored two associate PMs in 2025”"
@@ -1714,7 +1718,7 @@ msgstr "Amire emlékezni kell erről a munkáról"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "Bárhol"
 
 #: src/features/assistant/provider-setup.tsx
 #: src/features/settings/ai/providers.tsx
@@ -3565,7 +3569,7 @@ msgstr "A feldolgozási pontszámtól külön számít. A lefedettség semmit se
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Countries"
-msgstr ""
+msgstr "Országok"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Counts every application that reached each stage, including ones now closed."
@@ -3638,8 +3642,8 @@ msgid "Create account"
 msgstr "Fiók létrehozása"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Create and change your documents and job applications."
-msgstr "Hozzon létre és módosítson dokumentumokat és álláspályázatokat."
+msgid "Create and change your documents and job applications, seeing each one it changes in full, and change your profile and username."
+msgstr "Ez az alkalmazás létrehozhatja és szerkesztheti dokumentumait és álláspályázatait. Elolvashatja az általa szerkesztett dokumentumok és álláspályázatok teljes tartalmát. Módosíthatja profilját és felhasználónevét is."
 
 #: src/features/documents/new-document-dialog.tsx
 msgid "Create and open"
@@ -5238,7 +5242,7 @@ msgstr "Az önéletrajzodból"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "Az időzóna alapján"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Full name"
@@ -7381,7 +7385,7 @@ msgstr "Nincs javítás"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "No country matches."
-msgstr ""
+msgstr "Nem található ország."
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -8929,16 +8933,16 @@ msgid "Read the self-hosting guide"
 msgstr "Olvassa el az önkiszolgálási útmutatót"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Read your documents and job applications."
-msgstr "Olvassa el dokumentumait és álláspályázatait."
-
-#: src/features/auth/pages/consent.tsx
 msgid "Read your email address."
 msgstr "Olvassa el az e-mail címét."
 
 #: src/features/auth/pages/consent.tsx
 msgid "Read your profile information."
 msgstr "Olvassa el profiladatait."
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your whole account, including a full data export: your profile and email, documents, job applications, career data and coaching conversations."
+msgstr "Olvassa el a fiókjában található összes adatot, beleértve a teljes adatexportálást is: profilja és e-mail címe, dokumentumok, álláspályázatok, karrieradatok és coaching beszélgetések."
 
 #: src/features/settings/ai/api-keys.tsx
 msgid "Read, write and delete"
@@ -9236,7 +9240,7 @@ msgstr "Távolítsa el a {chip}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Remove {country}"
-msgstr ""
+msgstr "{country} eltávolítása"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Remove {value}"
@@ -9983,7 +9987,7 @@ msgstr "Keresési parancsok"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Search countries"
-msgstr ""
+msgstr "Országok keresése"
 
 #: src/features/documents/documents-page.tsx
 msgid "Search covers titles, tags and linked applications."
@@ -10037,11 +10041,11 @@ msgstr "Időzónák keresése"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connectedProvider}."
-msgstr ""
+msgstr "A keresést a szerver keresésével, az olvasást pedig a {connectedProvider} segítségével teszteltük."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "A keresést a szerver keresésével teszteltük. A hivatkozásokat a beépített olvasóval olvassa el."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search works"
@@ -10066,11 +10070,11 @@ msgstr "Oldalakat keres és olvas a {connectedProvider} segítségével, függet
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "A szerver keresésével keres, és a beépített olvasóval olvassa be a hivatkozásokat, függetlenül attól, hogy melyik AI-szolgáltatót használja."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads pages with {connectedProvider}, whichever AI provider you use."
-msgstr ""
+msgstr "A szerver keresésével keres, és az oldalakat a {connectedProvider} segítségével olvassa be, függetlenül attól, hogy melyik AI-szolgáltatót használja."
 
 #: src/features/applications/components/add-application-dialog.tsx
 msgid "Searching job postings…"
@@ -11268,7 +11272,7 @@ msgstr "Teszt kapcsolat"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "Tesztelje a keresési funkciót"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Tested with {connectedProvider}. Only this service was tested."
@@ -11285,11 +11289,11 @@ msgstr "A kapcsolat tesztelése…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search, and reading with {connectedProvider}…"
-msgstr ""
+msgstr "A keresőszolgáltatás tesztelése a szerveren és a weboldal olvasása a {connectedProvider} segítségével…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search…"
-msgstr ""
+msgstr "A keresőszolgáltatás tesztelése a szerveren…"
 
 #: src/features/settings/ai/providers.tsx
 msgid "Testing…"
@@ -11615,6 +11619,14 @@ msgstr "A felülvizsgálatot nem lehetett befejezni. Próbáld újra."
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "Ugyanaz a sor ismétlődik minden oldalon."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "A mentett kulcsot nem küldi el új alap URL-re. Adja meg újra a kulcsot, ha a szervernek kulcsra van szüksége."
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "A mentett kulcsot nem küldi el új alap URL-re. Írja be újra a kulcsot."
 
 #: src/libs/error-message.ts
 msgid "The saved provider key can't be decrypted. Enter the key again in Settings → AI & developer."
@@ -12487,7 +12499,7 @@ msgstr "Használjon kisbetűket, számokat és kötőjeleket."
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "Használd az időzónámat"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Use one column"
@@ -12767,6 +12779,10 @@ msgstr "Elolvastuk az oldalt, és elmentjük a csekk, az asszisztens és az Ön 
 msgid "We sent a confirmation link to {email}. Open it to finish the change."
 msgstr "Megerősítő linket küldtünk a {email} címre. Nyissa meg a módosítás befejezéséhez."
 
+#: src/features/settings/account/profile.tsx
+msgid "We sent a link to {currentEmail} to approve the change. After that, confirm {email} from its own email."
+msgstr "A változtatás jóváhagyásához linket küldtünk a {currentEmail} címre. Ezután erősítse meg {email}-t az erre az e-mail címre küldött üzenettel."
+
 #. placeholder {0}: user.email
 #: src/features/settings/account/profile.tsx
 msgid "We sent a new verification link to {0}."
@@ -12795,7 +12811,7 @@ msgstr "A webes keresés sikertelen: {0}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "Az internetes keresések ezekben az országokban keresnek állást. Válasszon legfeljebb három országot."
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Website"
@@ -12983,7 +12999,7 @@ msgstr "Munkavégzés helye"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "Ahol munkát keresel"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Where your applications went"
@@ -13540,7 +13556,7 @@ msgstr "A kiválasztott betűtípus nem tud megjeleníteni néhány karaktert. E
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "Az Ön szervere webes keresést biztosít a Jelentkezések részben és az asszisztens számára. Csatlakoztasson egy szolgáltatást olyan weboldalak olvasásához, amelyeket a beépített olvasó nem tud elolvasni."
 
 #: src/features/career/coach.tsx
 msgid "your stories"

@@ -7,8 +7,11 @@ const RESUME_ACCESS_TTL_SECONDS = 60 * 10; // 10 minutes
 
 const getResumeAccessCookieName = (resumeId: string) => `${RESUME_ACCESS_COOKIE_PREFIX}_${resumeId}`;
 
+// A key of its own, derived from AUTH_SECRET, so this signature can't stand in for any other use of the secret.
+const accessKey = () => createHmac("sha256", env.AUTH_SECRET).update("reactive-resume:resume-access:v1").digest();
+
 const signResumeAccessToken = (resumeId: string, passwordHash: string, expires: number): string =>
-	createHmac("sha256", env.AUTH_SECRET)
+	createHmac("sha256", accessKey())
 		.update(JSON.stringify([resumeId, passwordHash, expires]))
 		.digest("hex");
 

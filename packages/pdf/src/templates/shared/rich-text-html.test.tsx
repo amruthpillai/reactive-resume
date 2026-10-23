@@ -94,6 +94,16 @@ describe("normalizeRichTextHtml", () => {
 		expect(run.children[2]).toEqual({ type: "#text", text: " after" });
 	});
 
+	it("draws a tag named like an Object.prototype member as plain markup", () => {
+		const [root] = renderHostTree(<Html>{"<constructor>a</constructor>"}</Html>);
+
+		expect((root as HostElement).children[0]).toMatchObject({
+			type: HOST.view,
+			props: { style: [] },
+			children: [{ type: HOST.text, children: [{ text: "a" }] }],
+		});
+	});
+
 	it("preserves authored Unicode spaces around bare rich text", () => {
 		expect(normalizeRichTextHtml("\u3000text\u00a0")).toBe("<p>\u3000text\u00a0</p>");
 	});

@@ -138,12 +138,16 @@ describe("credential authorization", () => {
 		{ permissions: { api: ["write"] }, method: "DELETE" as const, allowed: false },
 		{ permissions: null, method: "POST" as const, allowed: true },
 		{ permissions: {}, method: "GET" as const, allowed: false },
-	])("enforces API-key permissions at procedure execution: %j", async ({ permissions, method, allowed }) => {
+		// Moving to Trash deletes the document from view, then for good after 30 days.
+		{ permissions: { api: ["write"] }, method: "POST" as const, operationId: "trashDocument", allowed: false },
+		{ permissions: { api: ["write"] }, method: "PUT" as const, operationId: "putDocumentTrash", allowed: false },
+		{ permissions: { api: ["delete"] }, method: "POST" as const, operationId: "trashDocument", allowed: true },
+	])("enforces API-key permissions at procedure execution: %j", async ({ permissions, method, allowed, ...route }) => {
 		reset();
 		authMock.api.verifyApiKey.mockResolvedValue({ valid: true, key: { referenceId: "owner", permissions } });
 		setupDbResolves({ id: "owner" });
 		const operation = createProcedureClient(
-			protectedProcedure.route({ method }).handler(() => "executed"),
+			protectedProcedure.route({ method, ...route }).handler(() => "executed"),
 			{
 				context: { locale: "en-US", reqHeaders: new Headers({ "x-api-key": "key" }) },
 			},

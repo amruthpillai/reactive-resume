@@ -1,6 +1,6 @@
 import type { AIProvider } from "@reactive-resume/ai/types";
 import { ORPCError } from "@orpc/client";
-import { and, asc, desc, eq, ne, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNull, ne, sql } from "drizzle-orm";
 import { aiProviderSchema } from "@reactive-resume/ai/types";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
@@ -228,13 +228,23 @@ export const aiProvidersService = {
 		const existing = await getOwnedProvider(input);
 		const provider = input.provider ?? aiProviderSchema.parse(existing.provider);
 		const nextApiKey = input.apiKey?.trim();
-		const encrypted = nextApiKey ? encryptCredential(nextApiKey) : {};
-		const credentialChanged = !!nextApiKey;
 		const nextBaseUrl =
 			input.baseURL !== undefined ? normalizeBaseUrl({ provider, baseURL: input.baseURL }) : existing.baseUrl;
 		const providerChanged = input.provider !== undefined && input.provider !== existing.provider;
 		const modelChanged = input.model !== undefined && input.model.trim() !== existing.model;
 		const baseUrlChanged = input.baseURL !== undefined && nextBaseUrl !== existing.baseUrl;
+		const hostChanged = providerChanged || baseUrlChanged;
+
+		// The saved key only goes where it was saved for: a new provider or address needs the key sent with it.
+		if (hostChanged && nextApiKey === undefined) {
+			throw new ORPCError("BAD_REQUEST", {
+				message: "Enter the API key again to change the provider or base URL.",
+			});
+		}
+
+		// On a new host the key is replaced even when empty (Ollama runs without one).
+		const encrypted = nextApiKey || hostChanged ? encryptCredential(nextApiKey ?? "") : {};
+		const credentialChanged = !!nextApiKey;
 		const runtimeChanged = credentialChanged || providerChanged || modelChanged || baseUrlChanged;
 
 		if (input.enabled === true && existing.testStatus !== "success" && !runtimeChanged) {
@@ -275,6 +285,18 @@ export const aiProvidersService = {
 		const provider = await getOwnedProvider(input);
 		const parsedProvider = aiProviderSchema.parse(provider.provider);
 		const apiKey = decryptCredential(provider.encryptedApiKey);
+		// A result applies only to the settings it tested: an edit made while the request ran resets the connection
+		// to untested, and a late result must not mark the new settings as working.
+		const tested = and(
+			eq(schema.aiProvider.id, input.id),
+			eq(schema.aiProvider.userId, input.userId),
+			eq(schema.aiProvider.provider, provider.provider),
+			eq(schema.aiProvider.model, provider.model),
+			provider.baseUrl === null ? isNull(schema.aiProvider.baseUrl) : eq(schema.aiProvider.baseUrl, provider.baseUrl),
+			eq(schema.aiProvider.encryptedApiKey, provider.encryptedApiKey),
+		);
+		const changed = () =>
+			new ORPCError("CONFLICT", { message: "The connection changed during the test. Test it again." });
 
 		try {
 			const result = await testConnection({
@@ -294,12 +316,13 @@ export const aiProvidersService = {
 					testError: result.ok ? null : result.message,
 					lastTestedAt: new Date(),
 				})
-				.where(and(eq(schema.aiProvider.id, input.id), eq(schema.aiProvider.userId, input.userId)))
+				.where(tested)
 				.returning();
 
-			if (!updated) throw new ORPCError("NOT_FOUND");
+			if (!updated) throw changed();
 			return toResponse(updated);
 		} catch (error) {
+			if (error instanceof ORPCError && error.code === "CONFLICT") throw error;
 			// Only unexpected failures reach here now: provider-side outcomes come back as data above.
 			await db
 				.update(schema.aiProvider)
@@ -309,7 +332,7 @@ export const aiProvidersService = {
 					testError: error instanceof Error ? error.message : "Failed to test provider.",
 					lastTestedAt: new Date(),
 				})
-				.where(and(eq(schema.aiProvider.id, input.id), eq(schema.aiProvider.userId, input.userId)));
+				.where(tested);
 
 			throw error;
 		}

@@ -837,7 +837,7 @@ msgstr "追加"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "国を追加"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "この仕事について覚えておくべきこと"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "どこでも"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "体験エントリーから"
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "あなたのタイムゾーンに基づいて"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "Web アクセスが使用されている場合、リンクと検索語�
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "Web アクセスが使用されている場合、検索用語はサーバーの検索サービスとサーバーが使用する検索エンジンに移動し、リンクは {reader} と読まれているサイトに移動します。"
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "Web アクセスが使用されている場合、検索用語はサーバーの検索サービスとサーバーが使用する検索エンジンに移動し、リンクは読まれているサイトに移動します。"
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "タイムゾーンを検索"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "検索はサーバーの検索と {connected} での読み取りでテストされました。"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "検索はサーバーの検索でテストされました。リンクは内蔵リーダーで読み取られます。"
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "テスト接続"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "検索機能をテストする"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "使用するAIプロバイダーにかかわらず、アシスタント�
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "アシスタントは、使用している AI プロバイダーに関係なく、サーバーの検索を使用して検索し、内蔵リーダーでリンクを読み取ります。"
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "アシスタントは、使用している AI プロバイダーに関係なく、サーバーの検索を使用して検索し、{connected} を含むページを読み取ります。"
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "履歴書そのまま"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "同じ行がすべてのページに繰り返し表示されています。"
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "保存されたキーは新しいベース URL には送信されません。このサーバーにキーが必要な場合は、キーを再度入力します。"
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "保存されたキーは新しいベース URL には送信されません。再度キーを入力してください。"
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "小文字、数字、単一ダッシュを使用してください。"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "私のタイムゾーンを使用してください"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "Web 検索が失敗しました: {0}"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "ウェブ検索でこれらの国での仕事を探します。最大 3 か国を選択します。"
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "勤務場所"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "仕事を探している場所"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "あなたのAI接続"
 msgid "Your AI connection"
 msgstr "あなたのAI接続"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "決定している間に AI 設定が変更されました。何も送信されませんでした。もう一度やり直してください。"
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "あなたの回答"
@@ -11064,7 +11076,7 @@ msgstr "選択したフォントでは一部の文字を表示できないため
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "サーバーは、応募 セクションおよびアシスタント用の Web 検索を提供します。サービスを接続して、内蔵リーダーでは読み取れない Web ページを読みます。"
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

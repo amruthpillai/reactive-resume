@@ -14,9 +14,14 @@ const TRAILING_CONNECTORS = new Set(["+", "#"]);
 
 type Segment = { text: string; isWordLike: boolean };
 
+// Built once: constructing a segmenter costs more than segmenting a short run of text.
+const segmenter =
+	typeof Intl !== "undefined" && typeof Intl.Segmenter === "function"
+		? new Intl.Segmenter("en", { granularity: "word" })
+		: null;
+
 function segment(text: string): Segment[] {
-	if (typeof Intl !== "undefined" && typeof Intl.Segmenter === "function") {
-		const segmenter = new Intl.Segmenter("en", { granularity: "word" });
+	if (segmenter) {
 		return [...segmenter.segment(text)].map((entry) => ({
 			text: entry.segment,
 			isWordLike: entry.isWordLike ?? false,

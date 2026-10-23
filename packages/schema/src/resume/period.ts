@@ -155,7 +155,8 @@ type Tokens = { months: ReadonlyMap<string, MonthName>; present: ReadonlySet<str
 function parseEndpoint(raw: string, { months, present }: Tokens): EndpointResult | null {
 	const value = normalizeWhitespace(raw);
 	if (!value) return null;
-	if (present.has(value.replace(/\p{P}+$/u, ""))) return "ongoing";
+	// The lookbehind starts only at a punctuation run's first character, so inner runs are scanned once.
+	if (present.has(value.replace(/(?<!\p{P})\p{P}+$/u, ""))) return "ongoing";
 
 	const yearOnly = /^(\d{4})$/.exec(value);
 	if (yearOnly?.[1]) return read(toEndpoint(Number(yearOnly[1])), "year");
@@ -218,8 +219,14 @@ function splitOnce(value: string, separator: RegExp): [string, string] | null {
 	return [left, right];
 }
 
+/**
+ * A start endpoint is at most a month name, a day and a year (no locale's month name passes 25 characters),
+ * so a dash further in can't end one. Stopping there keeps long dashed text linear.
+ */
+const MAX_START_CHARS = 64;
+
 function* dashSplits(value: string): Generator<[string, string]> {
-	for (let index = 0; index < value.length; index++) {
+	for (let index = 0; index < Math.min(value.length, MAX_START_CHARS); index++) {
 		const char = value[index];
 		if (!char || !DASH_CHARS.has(char)) continue;
 

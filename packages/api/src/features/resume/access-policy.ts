@@ -1,5 +1,7 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { ORPCError } from "@orpc/client";
+import { sql } from "drizzle-orm";
+import * as schema from "@reactive-resume/db/schema";
 
 /**
  * Single source of truth for "who can view/edit a resume" and "what fields
@@ -18,6 +20,14 @@ type Resume = {
 };
 
 type Viewer = { id: string } | null;
+
+/**
+ * Query condition: the joined `user` (the content's owner) is not banned. Same rule as `findActiveUser`
+ * in context.ts, so a banned owner's public resumes and pictures stop serving to everyone.
+ */
+export function ownerIsNotBanned() {
+	return sql`(${schema.user.banned} is not true or ${schema.user.banExpires} <= now())`;
+}
 
 export function isOwner(resume: Resume, viewer: Viewer): boolean {
 	return viewer !== null && viewer.id === resume.userId;
@@ -46,7 +56,7 @@ export function assertCanView(resume: Resume, viewer: Viewer): void {
  *     issues, job-posting terms hidden as "not true for me").
  *   - Everything the author hid: hidden sections, summary, picture and items
  *     "aren't printed or shared". Hidden custom sections are dropped; built-in
- *     ones keep their (now empty) slot because the schema requires it.
+ *     ones keep their (now empty, untitled) slot because the schema requires it.
  *
  * Everything else (including `data.basics.name`, the person's name on the
  * resume itself) is part of the public payload and is returned unchanged.
@@ -63,8 +73,10 @@ export function redactResumeForViewer<T extends { name: string; data: ResumeData
 	data.metadata.notes = "";
 	data.metadata.check = undefined;
 	if (data.picture.hidden) data.picture.url = "";
-	if (data.summary.hidden) data.summary.content = "";
+	if (data.summary.hidden) Object.assign(data.summary, { title: "", content: "" });
 	data.customSections = data.customSections.filter((section) => !section.hidden);
+	// A hidden built-in section keeps its slot but not its heading, which the author may have written privately too.
+	for (const section of Object.values(data.sections)) if (section.hidden) section.title = "";
 	const sections: { hidden: boolean; items: { hidden: boolean }[] }[] = [
 		...Object.values(data.sections),
 		...data.customSections,

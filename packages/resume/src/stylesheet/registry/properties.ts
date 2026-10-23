@@ -341,4 +341,8 @@ const properties = {
 	}),
 } satisfies PropertyRegistry;
 
-export const PROPERTY_REGISTRY_V1: PropertyRegistry = properties;
+// Null prototype: an authored property named `constructor` or `__proto__` must look up as unknown.
+export const PROPERTY_REGISTRY_V1: PropertyRegistry = Object.assign(
+	Object.create(null) as PropertyRegistry,
+	properties,
+);

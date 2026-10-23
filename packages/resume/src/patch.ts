@@ -62,6 +62,18 @@ const patchErrorMessages: Record<string, string> = {
 	TEST_OPERATION_FAILED: "Test operation failed -- the value at the given path did not match the expected value.",
 };
 
+// Only `copy` makes a resume larger than the request carrying the patch. Copying a section into itself a few dozen
+// times would otherwise build gigabytes in memory, so copies stop once the document would pass this size.
+const MAX_PATCHED_DOCUMENT_CHARS = 10_000_000;
+
+function resolvePointer(document: unknown, pointer: string): unknown {
+	try {
+		return jsonpatch.getValueByPointer(document, pointer);
+	} catch {
+		return undefined;
+	}
+}
+
 /**
  * Checks whether an error is a `JsonPatchError` from `fast-json-patch`.
  * The library doesn't export the class directly, so we duck-type it.
@@ -102,19 +114,36 @@ function toResumePatchError(error: JsonPatchError): ResumePatchError {
  * @throws {Error} If the patched document does not conform to the `ResumeData` schema.
  */
 export function applyResumePatches(data: ResumeData, operations: Operation[]): ResumeData {
-	// Validate operations structurally before applying.
-	const validationError = jsonpatch.validate(operations, data);
+	// Validate the operations' shape; each is checked against the document as it's applied. (Validating against the
+	// document up front would apply the whole patch to a copy, before any size check.)
+	const validationError = jsonpatch.validate(operations);
 	if (validationError) throw toResumePatchError(validationError);
 
-	// Apply operations. applyPatch throws on `test` failures.
-	let patched: ResumeData;
+	// Apply operations one by one; applyOperation throws on invalid paths and `test` failures.
+	let patched: ResumeData = jsonpatch.deepClone(data);
+	let size = JSON.stringify(data).length;
 
-	try {
-		const result = jsonpatch.applyPatch(data, operations, false, false);
-		patched = result.newDocument;
-	} catch (error: unknown) {
-		if (isJsonPatchError(error)) throw toResumePatchError(error);
-		throw error;
+	for (const [index, operation] of operations.entries()) {
+		try {
+			if (operation.op === "copy") {
+				// An unresolvable `from` is left to applyOperation, which reports it as OPERATION_FROM_UNRESOLVABLE.
+				const copied = resolvePointer(patched, operation.from);
+				if (copied !== undefined) size += JSON.stringify(copied).length;
+				if (size > MAX_PATCHED_DOCUMENT_CHARS) {
+					throw new ResumePatchError(
+						"PATCH_TOO_LARGE",
+						"The patch copies more content than a resume can hold.",
+						index,
+						operation,
+					);
+				}
+			}
+			patched = jsonpatch.applyOperation(patched, operation, true, true, true, index).newDocument;
+		} catch (error: unknown) {
+			if (error instanceof ResumePatchError) throw error;
+			if (isJsonPatchError(error)) throw toResumePatchError(error);
+			throw error;
+		}
 	}
 
 	try {

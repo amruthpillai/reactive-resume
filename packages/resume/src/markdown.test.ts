@@ -24,7 +24,7 @@ describe("htmlToMarkdown", () => {
 			htmlToMarkdown(
 				'<ol start="3"><li><p><strong>Lead</strong> <em>work</em> with <a href="https://example.com"><strong>proof</strong></a></p></li><li><p><s>Old</s> <u>New</u></p></li></ol>',
 			),
-		).toBe("3. **Lead** _work_ with [**proof**](https://example.com)\n4. ~~Old~~ <u>New</u>");
+		).toBe("3. **Lead** _work_ with [**proof**](https://example.com/)\n4. ~~Old~~ <u>New</u>");
 	});
 	it("keeps nested list markers beneath their parent", () => {
 		expect(htmlToMarkdown("<ul><li><p>Parent</p><ol><li><p>Child</p></li></ol></li></ul>")).toBe(
@@ -38,7 +38,7 @@ describe("htmlToMarkdown", () => {
 
 	it("converts anchors to Markdown links and decodes entities", () => {
 		expect(htmlToMarkdown('<p>See <a href="https://x.com">Tom &amp; Jerry</a></p>')).toBe(
-			"See [Tom & Jerry](https://x.com)",
+			"See [Tom & Jerry](https://x.com/)",
 		);
 	});
 });

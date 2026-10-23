@@ -18,9 +18,14 @@ const { dbMock, queryMock, queryState } = vi.hoisted(() => {
 		}),
 		limit: vi.fn(async () => state.rows),
 	};
+	const update = {
+		set: vi.fn(() => update),
+		where: vi.fn(() => update),
+		returning: vi.fn(async () => state.rows),
+	};
 
 	return {
-		dbMock: { select: vi.fn(() => query) },
+		dbMock: { select: vi.fn(() => query), update: vi.fn(() => update) },
 		queryMock: query,
 		queryState: state,
 	};
@@ -67,6 +72,7 @@ vi.mock("../ai/service", () => ({ testConnection: vi.fn() }));
 vi.mock("../ai/url-policy", () => ({ resolveAiBaseUrl: vi.fn() }));
 
 const { aiProvidersService } = await import("./service");
+const { resolveAiBaseUrl } = await import("../ai/url-policy");
 
 function providerRow(overrides: Record<string, unknown> = {}) {
 	return {
@@ -130,5 +136,22 @@ describe("aiProvidersService", () => {
 			{ type: "asc", value: "ai_provider.created_at" },
 		]);
 		expect(queryMock.limit).toHaveBeenCalledWith(1);
+	});
+
+	it("sends a saved key only to the host it was saved for", async () => {
+		queryState.rows = [providerRow()];
+		vi.mocked(resolveAiBaseUrl).mockReturnValue("https://other.example/v1");
+		const owner = { id: "provider-1", userId: "user-1" };
+
+		for (const change of [{ baseURL: "https://other.example/v1" }, { provider: "anthropic" as const }])
+			await expect(aiProvidersService.update({ ...owner, ...change })).rejects.toMatchObject({
+				code: "BAD_REQUEST",
+				message: "Enter the API key again to change the provider or base URL.",
+			});
+		expect(dbMock.update).not.toHaveBeenCalled();
+
+		await expect(
+			aiProvidersService.update({ ...owner, baseURL: "https://other.example/v1", apiKey: "new-key" }),
+		).resolves.toMatchObject({ id: "provider-1" });
 	});
 });

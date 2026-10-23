@@ -299,10 +299,12 @@ git pull
 docker compose up -d --build --no-deps reactive_resume
 ```
 
-<Warning>
-  The repository file publishes PostgreSQL (`5432`) and SeaweedFS (`8333`) on the host, with default passwords. Remove
-  those `ports` entries or bind them to `127.0.0.1` before using it on a server reachable from the internet.
-</Warning>
+<Note>
+  PostgreSQL and SeaweedFS use default passwords in this file, so it keeps them on the Docker network and doesn't
+  publish their ports. To reach them from the host, uncomment their `ports` entries, which bind to `127.0.0.1` only. In
+  production, the server refuses to start while `AUTH_SECRET` or `ENCRYPTION_SECRET` still has its example value from
+  `.env.example`.
+</Note>
 
 ## Unraid, Synology and other homelab platforms
 

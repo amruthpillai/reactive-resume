@@ -1042,6 +1042,10 @@ msgid "Access"
 msgstr "访问权限"
 
 #: src/features/auth/pages/consent.tsx
+msgid "Access is sent to"
+msgstr "访问权限授予对象"
+
+#: src/features/auth/pages/consent.tsx
 msgid "Access your account through the API, including reading, changing and deleting your documents and job applications."
 msgstr "通过 API 访问您的账户，包括读取、修改和删除您的文档及求职申请。"
 
@@ -1108,7 +1112,7 @@ msgstr "添加“{0}”"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "添加国家"
 
 #: src/features/career/knowledge/facts.tsx
 msgid "Add a fact, for example “I mentored two associate PMs in 2025”"
@@ -1714,7 +1718,7 @@ msgstr "关于这份工作有什么需要记住的"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "任何地方"
 
 #: src/features/assistant/provider-setup.tsx
 #: src/features/settings/ai/providers.tsx
@@ -3565,7 +3569,7 @@ msgstr "与解析得分分开计算。覆盖率并不能预测任何事情。"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Countries"
-msgstr ""
+msgstr "国家"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Counts every application that reached each stage, including ones now closed."
@@ -3638,8 +3642,8 @@ msgid "Create account"
 msgstr "创建账户"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Create and change your documents and job applications."
-msgstr "创建和修改您的文档及求职申请。"
+msgid "Create and change your documents and job applications, seeing each one it changes in full, and change your profile and username."
+msgstr "该应用程序可以创建和编辑您的文档和工作申请。它可以读取其编辑的每个文档或工作申请的完整内容。它还可以更改您的个人资料和用户名。"
 
 #: src/features/documents/new-document-dialog.tsx
 msgid "Create and open"
@@ -5238,7 +5242,7 @@ msgstr "来自您的简历"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "根据您的时区"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Full name"
@@ -7381,7 +7385,7 @@ msgstr "无更正"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "No country matches."
-msgstr ""
+msgstr "没有匹配的国家。"
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -8929,16 +8933,16 @@ msgid "Read the self-hosting guide"
 msgstr "阅读自托管指南"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Read your documents and job applications."
-msgstr "读取您的文档及求职申请。"
-
-#: src/features/auth/pages/consent.tsx
 msgid "Read your email address."
 msgstr "读取你的电子邮箱地址。"
 
 #: src/features/auth/pages/consent.tsx
 msgid "Read your profile information."
 msgstr "读取你的个人资料信息。"
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your whole account, including a full data export: your profile and email, documents, job applications, career data and coaching conversations."
+msgstr "读取您帐户中的所有数据，包括完整的数据导出：您的个人资料和电子邮件地址、文档、工作申请、职业数据和辅导对话。"
 
 #: src/features/settings/ai/api-keys.tsx
 msgid "Read, write and delete"
@@ -9236,7 +9240,7 @@ msgstr "移除 {chip}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Remove {country}"
-msgstr ""
+msgstr "删除 {country}"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Remove {value}"
@@ -9983,7 +9987,7 @@ msgstr "搜索命令"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Search countries"
-msgstr ""
+msgstr "搜索国家"
 
 #: src/features/documents/documents-page.tsx
 msgid "Search covers titles, tags and linked applications."
@@ -10037,11 +10041,11 @@ msgstr "搜索时区"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connectedProvider}."
-msgstr ""
+msgstr "搜索已通过服务器的搜索进行了测试，并使用 {connectedProvider} 进行阅读。"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "搜索已通过您服务器的搜索进行了测试。使用内置阅读器读取链接。"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search works"
@@ -10066,11 +10070,11 @@ msgstr "使用 {connectedProvider} 搜索和读取页面，无论您使用哪个
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "无论您使用哪个人工智能提供商，都可以使用服务器的搜索进行搜索，并使用内置阅读器读取链接。"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads pages with {connectedProvider}, whichever AI provider you use."
-msgstr ""
+msgstr "使用服务器的搜索进行搜索，并使用 {connectedProvider} 读取页面，无论您使用哪个 AI 提供商。"
 
 #: src/features/applications/components/add-application-dialog.tsx
 msgid "Searching job postings…"
@@ -11268,7 +11272,7 @@ msgstr "测试连接"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "测试搜索功能"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Tested with {connectedProvider}. Only this service was tested."
@@ -11285,11 +11289,11 @@ msgstr "测试连接..."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search, and reading with {connectedProvider}…"
-msgstr ""
+msgstr "在您的服务器上测试搜索服务并使用 {connectedProvider} 读取网页..."
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search…"
-msgstr ""
+msgstr "在您的服务器上测试搜索服务..."
 
 #: src/features/settings/ai/providers.tsx
 msgid "Testing…"
@@ -11615,6 +11619,14 @@ msgstr "审核无法完成。再试一次。"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "同一行文字在每一页都重复出现。"
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "保存的密钥不会发送到新的基本 URL。如果该服务器需要密钥，请再次输入密钥。"
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "保存的密钥不会发送到新的基本 URL。再次输入密钥。"
 
 #: src/libs/error-message.ts
 msgid "The saved provider key can't be decrypted. Enter the key again in Settings → AI & developer."
@@ -12487,7 +12499,7 @@ msgstr "使用小写字母、数字和单破折号。"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "使用我的时区"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Use one column"
@@ -12767,6 +12779,10 @@ msgstr "我们会读取该页面并保存职位发布，供检查、助理和您
 msgid "We sent a confirmation link to {email}. Open it to finish the change."
 msgstr "我们向 {email} 发送了确认链接。打开它以完成更改。"
 
+#: src/features/settings/account/profile.tsx
+msgid "We sent a link to {currentEmail} to approve the change. After that, confirm {email} from its own email."
+msgstr "我们发送了一个链接到 {currentEmail} 以批准更改。然后使用发送到该电子邮件地址的消息确认 {email}。"
+
 #. placeholder {0}: user.email
 #: src/features/settings/account/profile.tsx
 msgid "We sent a new verification link to {0}."
@@ -12795,7 +12811,7 @@ msgstr "网页搜索失败：{0}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "网络搜索寻找这些国家的工作机会。最多选择三个国家。"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Website"
@@ -12983,7 +12999,7 @@ msgstr "工作地点"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "您在哪里找工作"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Where your applications went"
@@ -13540,7 +13556,7 @@ msgstr "您选择的字体无法显示部分字符，它们会显示为“?”�
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "您的服务器在 申请 部分和助手中提供网络搜索。连接服务以读取内置阅读器无法读取的网页。"
 
 #: src/features/career/coach.tsx
 msgid "your stories"

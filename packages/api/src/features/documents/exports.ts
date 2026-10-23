@@ -109,7 +109,7 @@ export const documentExports = {
 			};
 			const composed = composeCoverLetter(letter, {
 				...words,
-				greeting: (name) => words.greeting.replace("{name}", name),
+				greeting: (name) => words.greeting.replace("{name}", () => name),
 				formatDate: (date) =>
 					new Date(`${date}T12:00:00Z`).toLocaleDateString(letter.style.metadata.page.locale, {
 						day: "numeric",

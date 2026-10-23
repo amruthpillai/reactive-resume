@@ -2,10 +2,11 @@ import type { LookupAddress } from "node:dns";
 import { request } from "node:https";
 import sanitizeHtml from "sanitize-html";
 import {
+	abortable,
 	fetchWorkerPublicUrl,
 	isPrivateOrLoopbackHost,
 	parseUrl,
-	publicLookup,
+	publicHttpsAgent,
 	resolveHostAddresses,
 } from "@reactive-resume/utils/url-security.node";
 import { MAX_PAGE_BYTES, WebAccessError } from "./contracts";
@@ -22,16 +23,6 @@ export function assertPublicPageUrl(input: string): URL {
 
 const allPublic = (addresses: readonly Pick<LookupAddress, "address">[]) =>
 	addresses.length > 0 && addresses.every((entry) => !isPrivateOrLoopbackHost(entry.address));
-
-/** DNS cannot be cancelled, but abort immediately stops waiting and prevents a subsequent provider request. */
-export function abortable<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
-	signal.throwIfAborted();
-	return new Promise((resolve, reject) => {
-		const aborted = () => reject(signal.reason);
-		signal.addEventListener("abort", aborted, { once: true });
-		promise.then(resolve, reject).finally(() => signal.removeEventListener("abort", aborted));
-	});
-}
 
 export async function assertPublicTarget(input: string, signal: AbortSignal) {
 	const url = assertPublicPageUrl(input);
@@ -57,7 +48,8 @@ export function readBuiltinPage(
 			url,
 			{
 				method: "GET",
-				lookup: publicLookup,
+				// Its own pool: a reused socket was always opened through publicLookup.
+				agent: publicHttpsAgent(),
 				signal,
 				headers: {
 					accept: "text/html,application/xhtml+xml,text/plain;q=0.9",

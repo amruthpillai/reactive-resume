@@ -1042,6 +1042,10 @@ msgid "Access"
 msgstr "アクセス"
 
 #: src/features/auth/pages/consent.tsx
+msgid "Access is sent to"
+msgstr "アクセス権の付与先"
+
+#: src/features/auth/pages/consent.tsx
 msgid "Access your account through the API, including reading, changing and deleting your documents and job applications."
 msgstr "API を通じてアカウントにアクセスし、ドキュメントや求人応募の読み取り、変更、削除を行います。"
 
@@ -1108,7 +1112,7 @@ msgstr "「{0}」を追加"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "国を追加"
 
 #: src/features/career/knowledge/facts.tsx
 msgid "Add a fact, for example “I mentored two associate PMs in 2025”"
@@ -1714,7 +1718,7 @@ msgstr "この仕事について覚えておくべきこと"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "どこでも"
 
 #: src/features/assistant/provider-setup.tsx
 #: src/features/settings/ai/providers.tsx
@@ -3565,7 +3569,7 @@ msgstr "解析スコアとは別に集計されます。カバレッジは何か
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Countries"
-msgstr ""
+msgstr "国"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Counts every application that reached each stage, including ones now closed."
@@ -3638,8 +3642,8 @@ msgid "Create account"
 msgstr "アカウントを作成"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Create and change your documents and job applications."
-msgstr "書類や応募書類を作成、変更します。"
+msgid "Create and change your documents and job applications, seeing each one it changes in full, and change your profile and username."
+msgstr "このアプリケーションは、あなたの文書や求人への応募情報を作成・編集できます。編集する各文書や応募情報の内容をすべて閲覧できます。プロフィールやユーザー名も変更できます。"
 
 #: src/features/documents/new-document-dialog.tsx
 msgid "Create and open"
@@ -5238,7 +5242,7 @@ msgstr "履歴書から"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "あなたのタイムゾーンに基づいて"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Full name"
@@ -7381,7 +7385,7 @@ msgstr "修正なし"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "No country matches."
-msgstr ""
+msgstr "一致する国がありません。"
 
 #: src/features/ats-checker/messages.ts
 msgid "No dates were found."
@@ -8929,16 +8933,16 @@ msgid "Read the self-hosting guide"
 msgstr "セルフホスティング ガイドを読む"
 
 #: src/features/auth/pages/consent.tsx
-msgid "Read your documents and job applications."
-msgstr "書類や応募書類を読んでください。"
-
-#: src/features/auth/pages/consent.tsx
 msgid "Read your email address."
 msgstr "メールアドレスを読み取ります。"
 
 #: src/features/auth/pages/consent.tsx
 msgid "Read your profile information."
 msgstr "プロフィール情報を読み取ります。"
+
+#: src/features/auth/pages/consent.tsx
+msgid "Read your whole account, including a full data export: your profile and email, documents, job applications, career data and coaching conversations."
+msgstr "完全なデータのエクスポートを含む、アカウント内のすべてのデータを読み取ります。これには、プロファイルと電子メール アドレス、書類、求人応募書、キャリア データ、コーチングでの会話が含まれます。"
 
 #: src/features/settings/ai/api-keys.tsx
 msgid "Read, write and delete"
@@ -9236,7 +9240,7 @@ msgstr "{chip} を削除する"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Remove {country}"
-msgstr ""
+msgstr "{country} を削除します"
 
 #: src/features/applications/components/application-detail-sheet.tsx
 msgid "Remove {value}"
@@ -9983,7 +9987,7 @@ msgstr "検索コマンド"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Search countries"
-msgstr ""
+msgstr "国を検索する"
 
 #: src/features/documents/documents-page.tsx
 msgid "Search covers titles, tags and linked applications."
@@ -10037,11 +10041,11 @@ msgstr "タイムゾーンを検索"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connectedProvider}."
-msgstr ""
+msgstr "検索はサーバーの検索と {connectedProvider} での読み取りでテストされました。"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "検索はサーバーの検索でテストされました。リンクは内蔵リーダーで読み取られます。"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Search works"
@@ -10066,11 +10070,11 @@ msgstr "どの AI プロバイダーを使用しても、{connectedProvider} で
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "どの AI プロバイダーを使用しても、サーバーの検索で検索し、内蔵リーダーでリンクを読み取ります。"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Searches with your server's search and reads pages with {connectedProvider}, whichever AI provider you use."
-msgstr ""
+msgstr "どの AI プロバイダーを使用しても、サーバーの検索で検索し、{connectedProvider} を含むページを読み取ります。"
 
 #: src/features/applications/components/add-application-dialog.tsx
 msgid "Searching job postings…"
@@ -11268,7 +11272,7 @@ msgstr "テスト接続"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "検索機能をテストする"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Tested with {connectedProvider}. Only this service was tested."
@@ -11285,11 +11289,11 @@ msgstr "接続をテストしています…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search, and reading with {connectedProvider}…"
-msgstr ""
+msgstr "サーバー上の検索サービスと {connectedProvider} による Web ページの読み取りをテストしています…"
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Testing your server's search…"
-msgstr ""
+msgstr "サーバー上で検索サービスをテストしています…"
 
 #: src/features/settings/ai/providers.tsx
 msgid "Testing…"
@@ -11615,6 +11619,14 @@ msgstr "レビューを完了できませんでした。もう一度やり直し
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "同じ行がすべてのページに繰り返し表示されています。"
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "保存されたキーは新しいベース URL には送信されません。このサーバーにキーが必要な場合は、キーを再度入力します。"
+
+#: src/features/settings/ai/providers.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "保存されたキーは新しいベース URL には送信されません。再度キーを入力してください。"
 
 #: src/libs/error-message.ts
 msgid "The saved provider key can't be decrypted. Enter the key again in Settings → AI & developer."
@@ -12487,7 +12499,7 @@ msgstr "小文字、数字、単一ダッシュを使用してください。"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "私のタイムゾーンを使用してください"
 
 #: src/features/resume/editor/check/issues.ts
 msgid "Use one column"
@@ -12767,6 +12779,10 @@ msgstr "私たちはページを読み、Check、アシスタント、および�
 msgid "We sent a confirmation link to {email}. Open it to finish the change."
 msgstr "確認リンクを {email} に送信しました。それを開いて変更を完了します。"
 
+#: src/features/settings/account/profile.tsx
+msgid "We sent a link to {currentEmail} to approve the change. After that, confirm {email} from its own email."
+msgstr "変更を承認するために {currentEmail} にリンクを送信しました。次に、その電子メール アドレスに送信されたメッセージを使用して {email} を確認します。"
+
 #. placeholder {0}: user.email
 #: src/features/settings/account/profile.tsx
 msgid "We sent a new verification link to {0}."
@@ -12795,7 +12811,7 @@ msgstr "Web 検索が失敗しました: {0}"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "ウェブ検索でこれらの国での仕事を探します。最大 3 か国を選択します。"
 
 #: src/features/resume/editor/write/basics-card.tsx
 msgid "Website"
@@ -12983,7 +12999,7 @@ msgstr "勤務場所"
 
 #: src/features/career/knowledge/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "仕事を探している場所"
 
 #: src/features/applications/components/insights-view.tsx
 msgid "Where your applications went"
@@ -13540,7 +13556,7 @@ msgstr "選択したフォントでは一部の文字を表示できないため
 
 #: src/features/settings/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "サーバーは、応募 セクションおよびアシスタント用の Web 検索を提供します。サービスを接続して、内蔵リーダーでは読み取れない Web ページを読みます。"
 
 #: src/features/career/coach.tsx
 msgid "your stories"

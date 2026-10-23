@@ -5,6 +5,7 @@ import { env } from "@reactive-resume/env/server";
 const CIPHER = "aes-256-gcm";
 const CREDENTIAL_VERSION = "v1";
 const IV_BYTES = 12;
+const AUTH_TAG_BYTES = 16;
 const SALT_BYTES = 16;
 
 type StoredCredentialFields = {
@@ -47,7 +48,7 @@ function fingerprintCredential(apiKey: string, salt: string) {
 export function encryptCredential(apiKey: string): StoredCredentialFields {
 	const iv = randomBytes(IV_BYTES);
 	const salt = encode(randomBytes(SALT_BYTES));
-	const cipher = createCipheriv(CIPHER, getEncryptionKey(), iv);
+	const cipher = createCipheriv(CIPHER, getEncryptionKey(), iv, { authTagLength: AUTH_TAG_BYTES });
 
 	const ciphertext = Buffer.concat([cipher.update(apiKey, "utf8"), cipher.final()]);
 	const authTag = cipher.getAuthTag();
@@ -75,7 +76,8 @@ export function decryptCredential(payload: string) {
 
 	const key = getEncryptionKey();
 	try {
-		const decipher = createDecipheriv(CIPHER, key, decode(encodedIv));
+		// A fixed tag length: Node would otherwise accept a truncated tag.
+		const decipher = createDecipheriv(CIPHER, key, decode(encodedIv), { authTagLength: AUTH_TAG_BYTES });
 		decipher.setAuthTag(decode(encodedAuthTag));
 		return Buffer.concat([decipher.update(decode(encodedCiphertext)), decipher.final()]).toString("utf8");
 	} catch {

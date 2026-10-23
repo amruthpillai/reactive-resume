@@ -401,15 +401,22 @@ export const hasUnsupportedTableMarkup = (html: string) => {
 	return false;
 };
 
-const preservedStyle = {
+// Keeps the table formatting the editor supports and drops every other declaration, including for unsupported markup
+// shown read-only: imported HTML must not apply arbitrary CSS (overlays, external resources) just by being opened.
+const preservedStyle = (styles: ReadonlyMap<string, ValueValidator>) => ({
 	default: null,
-	parseHTML: (element: HTMLElement) => element.getAttribute("style"),
+	parseHTML: (element: HTMLElement) => {
+		const declarations = (readStyleDeclarations(element) ?? []).filter(({ property, value }) =>
+			styles.get(property)?.(value, element),
+		);
+		return declarations.length ? declarations.map(({ property, value }) => `${property}: ${value}`).join("; ") : null;
+	},
 	renderHTML: (attributes: { style?: string | null }) => (attributes.style ? { style: attributes.style } : {}),
-};
+});
 
 const StyledTable = Table.extend({
 	addAttributes() {
-		return { ...this.parent?.(), style: preservedStyle };
+		return { ...this.parent?.(), style: preservedStyle(tableStyles) };
 	},
 	renderHTML({ HTMLAttributes }) {
 		return ["table", HTMLAttributes, ["tbody", 0]];
@@ -418,19 +425,19 @@ const StyledTable = Table.extend({
 
 const StyledTableRow = TableRow.extend({
 	addAttributes() {
-		return { ...this.parent?.(), style: preservedStyle };
+		return { ...this.parent?.(), style: preservedStyle(rowStyles) };
 	},
 });
 
 const StyledTableHeader = TableHeader.extend({
 	addAttributes() {
-		return { ...this.parent?.(), style: preservedStyle };
+		return { ...this.parent?.(), style: preservedStyle(cellStyles) };
 	},
 });
 
 const StyledTableCell = TableCell.extend({
 	addAttributes() {
-		return { ...this.parent?.(), style: preservedStyle };
+		return { ...this.parent?.(), style: preservedStyle(cellStyles) };
 	},
 });
 

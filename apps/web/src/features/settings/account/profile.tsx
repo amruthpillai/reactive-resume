@@ -150,9 +150,13 @@ export function ProfileSection({ session }: ProfileSectionProps) {
 	const changeEmail = async (email: string) => {
 		const { error } = await authClient.changeEmail({ newEmail: email, callbackURL: "/dashboard/settings/account" });
 		if (error) return getReadableErrorMessage(error, t`Couldn't change the email. Try again.`);
+		// A verified address approves the change first; Better Auth then sends the new address its own link.
+		const currentEmail = user.email;
 		toast.add({
 			type: "success",
-			description: t`We sent a confirmation link to ${email}. Open it to finish the change.`,
+			description: user.emailVerified
+				? t`We sent a link to ${currentEmail} to approve the change. After that, confirm ${email} from its own email.`
+				: t`We sent a confirmation link to ${email}. Open it to finish the change.`,
 		});
 		return null;
 	};

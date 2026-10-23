@@ -111,18 +111,24 @@ function ProviderForm({ saved, onClose, onReady }: ProviderFormProps) {
 	const invalidate = () => queryClient.invalidateQueries({ queryKey: orpc.aiProviders.list.key() });
 	const set = (patch: Partial<typeof fields>) => setFields((previous) => ({ ...previous, ...patch }));
 	const baseline = saved ?? current;
+	const defaultURL = providerDefaults(provider).baseURL;
+	// An empty field means the provider's own address.
+	const newURL = !!baseline && (fields.baseURL.trim() || defaultURL) !== (baseline.baseURL ?? defaultURL);
+	const apiKey = fields.apiKey.trim();
+	// The server won't send the saved key to a new address, so the key comes with it (Ollama may have none).
+	const keyMissing = newURL && provider !== "ollama" && !apiKey;
 	const changes = {
 		...(fields.label.trim() && fields.label.trim() !== baseline?.label ? { label: fields.label.trim() } : {}),
 		...(fields.model.trim() && fields.model.trim() !== baseline?.model ? { model: fields.model.trim() } : {}),
-		...(fields.baseURL.trim() !== (baseline?.baseURL ?? providerDefaults(provider).baseURL)
-			? { baseURL: fields.baseURL.trim() }
-			: {}),
-		...(fields.apiKey.trim() ? { apiKey: fields.apiKey.trim() } : {}),
+		// The provider rides along so validation accepts Ollama's empty key.
+		...(newURL ? { provider, baseURL: fields.baseURL.trim() } : {}),
+		...(newURL || apiKey ? { apiKey } : {}),
 	};
 	const changed = Object.keys(changes).length > 0;
 	const ready = !!(
 		fields.model.trim() &&
-		(current || provider === "ollama" || fields.apiKey.trim()) &&
+		(current || provider === "ollama" || apiKey) &&
+		!keyMissing &&
 		(!saved || changed)
 	);
 
@@ -233,11 +239,18 @@ function ProviderForm({ saved, onClose, onReady }: ProviderFormProps) {
 				importantForAutofill="no"
 				editable={!pending}
 				placeholder={
-					current
+					current && !newURL
 						? t`Leave empty to keep the saved key`
 						: provider === "ollama"
 							? t`Optional for local Ollama`
 							: t`Paste your key`
+				}
+				helper={
+					!newURL
+						? undefined
+						: provider === "ollama"
+							? t`The saved key isn't sent to a new base URL. Enter it again if this server needs one.`
+							: t`The saved key isn't sent to a new base URL. Enter it again.`
 				}
 				trailing={
 					<IconButton

@@ -146,14 +146,18 @@ const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"'
 
 const decodeEntities = (text: string) =>
 	text.replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (entity, name: string) => {
-		if (name.startsWith("#x") || name.startsWith("#X")) return String.fromCodePoint(Number.parseInt(name.slice(2), 16));
-		if (name.startsWith("#")) return String.fromCodePoint(Number.parseInt(name.slice(1), 10));
+		if (name.startsWith("#")) {
+			const code = /^#x/i.test(name) ? Number.parseInt(name.slice(2), 16) : Number.parseInt(name.slice(1), 10);
+			// Out of range (`&#99999999;`) stays as written instead of throwing.
+			return code <= 0x10ffff ? String.fromCodePoint(code) : entity;
+		}
 		return ENTITIES[name.toLowerCase()] ?? entity;
 	});
 
 /** The visible text of some HTML, on one line. */
 export const blockText = (html: string) =>
-	decodeEntities(html.replace(/<[^>]*>/g, ""))
+	// `[^<>]` stops a run of unclosed `<` from rescanning to the end once per bracket.
+	decodeEntities(html.replace(/<[^<>]*>/g, ""))
 		.replace(/\s+/g, " ")
 		.trim();
 

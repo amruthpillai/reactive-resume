@@ -1,8 +1,13 @@
 import type { LookupAddress } from "node:dns";
 import type { LookupFunction } from "node:net";
+import type { Transform } from "node:stream";
 import { lookup } from "node:dns";
 import { lookup as lookupAddresses, resolve4, resolve6 } from "node:dns/promises";
+import { Agent as HttpAgent, request as httpRequest } from "node:http";
+import { Agent as HttpsAgent, request as httpsRequest } from "node:https";
 import { BlockList, isIP } from "node:net";
+import { pipeline, Readable } from "node:stream";
+import { createBrotliDecompress, createGunzip, createInflate } from "node:zlib";
 
 function normalizeHostname(hostname: string) {
 	return hostname.trim().toLowerCase();
@@ -31,7 +36,8 @@ const blockedIpv4Cidrs: Array<[string, number]> = [
 ];
 
 const blockedIpv6Cidrs: Array<[string, number]> = [
-	["::", 128],
+	// Unspecified, loopback and the deprecated IPv4-compatible block (an IPv4 address in the low 32 bits).
+	["::", 96],
 	["::1", 128],
 	["::ffff:0:0", 96],
 	["64:ff9b::", 96],
@@ -47,6 +53,7 @@ const blockedIpv6Cidrs: Array<[string, number]> = [
 	["5f00::", 16],
 	["fc00::", 7],
 	["fe80::", 10],
+	["fec0::", 10],
 	["ff00::", 8],
 ];
 
@@ -92,6 +99,119 @@ export async function resolveHostAddresses(hostname: string): Promise<Pick<Looku
 	);
 }
 
+/** DNS cannot be cancelled, but abort immediately stops waiting and prevents a subsequent request. */
+export function abortable<T>(promise: Promise<T>, signal: AbortSignal): Promise<T> {
+	signal.throwIfAborted();
+	return new Promise((resolve, reject) => {
+		const aborted = () => reject(signal.reason);
+		signal.addEventListener("abort", aborted, { once: true });
+		promise.then(resolve, reject).finally(() => signal.removeEventListener("abort", aborted));
+	});
+}
+
+const unsafeUrl = () => new Error("Private network address refused", { cause: "unsafe-url" });
+const MAX_PUBLIC_RESPONSE_BYTES = 64 * 1024 * 1024;
+// Own connection pools: a reused socket was always opened through `publicLookup`, never by other code.
+let publicAgents: { http: HttpAgent; https: HttpsAgent } | undefined;
+const publicAgent = (protocol: string) => {
+	publicAgents ??= {
+		// Like Node's global agent: idle sockets close after 5 s, before servers usually drop them.
+		http: new HttpAgent({ keepAlive: true, timeout: 5000, lookup: publicLookup }),
+		https: new HttpsAgent({ keepAlive: true, timeout: 5000, lookup: publicLookup }),
+	};
+	return protocol === "https:" ? publicAgents.https : publicAgents.http;
+};
+/** The pooled HTTPS agent that resolves every connection through `publicLookup`. */
+export const publicHttpsAgent = () => publicAgent("https:") as HttpsAgent;
+
+/** Errors the body once it passes the cap, so an endpoint can't fill memory however it frames the response. */
+function capped(body: ReadableStream<Uint8Array>) {
+	let size = 0;
+	return body.pipeThrough(
+		new TransformStream<Uint8Array, Uint8Array>({
+			transform(chunk, controller) {
+				size += chunk.byteLength;
+				if (size > MAX_PUBLIC_RESPONSE_BYTES) controller.error(new Error("Response too large"));
+				else controller.enqueue(chunk);
+			},
+		}),
+	);
+}
+
+// fetch decodes these itself; a response read from a socket has to be decoded here.
+const decoders = new Map<string, () => Transform>([
+	["gzip", createGunzip],
+	["x-gzip", createGunzip],
+	["deflate", createInflate],
+	["br", createBrotliDecompress],
+]);
+
+/**
+ * `fetch` for endpoints a user chose. It connects only to public addresses, checking every DNS answer when the socket
+ * connects (so rebinding can't swap one in), never follows redirects (the 3xx comes back as is, and credentials never
+ * reach another host), and stops reading a response past 64 MiB.
+ */
+export async function fetchPublic(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+	const request = new Request(input, init);
+	const url = new URL(request.url);
+	if (!/^https?:$/.test(url.protocol) || url.username || url.password || isPrivateOrLoopbackHost(url.hostname))
+		throw unsafeUrl();
+	// Workers' global_fetch_strictly_public refuses private destinations, including after DNS changes.
+	if (process.env.CLOUDFLARE === "1") {
+		const response = await fetch(request, { redirect: "manual" });
+		const { status, statusText, headers } = response;
+		return new Response(response.body ? capped(response.body) : null, { status, statusText, headers });
+	}
+
+	const body = request.body ? Buffer.from(await request.arrayBuffer()) : null;
+	const headers = Object.fromEntries(request.headers);
+	if (body) headers["content-length"] = String(body.byteLength);
+	const send = url.protocol === "https:" ? httpsRequest : httpRequest;
+	return new Promise((resolve, reject) => {
+		const outgoing = send(
+			url,
+			{ method: request.method, headers, agent: publicAgent(url.protocol), signal: request.signal },
+			(incoming) => {
+				try {
+					const status = incoming.statusCode ?? 0;
+					// Response accepts 200-599 only; anything else would throw outside this promise.
+					if (status < 200 || status > 599) throw new Error(`Invalid response status ${status}`);
+					const responseHeaders = new Headers();
+					for (const [name, value] of Object.entries(incoming.headers)) {
+						for (const item of [value ?? []].flat()) responseHeaders.append(name, item);
+					}
+					const empty = request.method === "HEAD" || [204, 205, 304].includes(status);
+					let stream: Readable = incoming;
+					const decode = decoders.get(
+						String(incoming.headers["content-encoding"] ?? "")
+							.trim()
+							.toLowerCase(),
+					);
+					if (!empty && decode) {
+						// pipeline closes the socket too when the decoder stops (cap reached, body canceled).
+						stream = pipeline(incoming, decode(), () => {});
+						responseHeaders.delete("content-encoding");
+						responseHeaders.delete("content-length");
+					}
+					if (empty) incoming.resume();
+					resolve(
+						new Response(empty ? null : capped(Readable.toWeb(stream) as ReadableStream<Uint8Array>), {
+							status,
+							statusText: incoming.statusMessage ?? "",
+							headers: responseHeaders,
+						}),
+					);
+				} catch (error) {
+					incoming.destroy();
+					reject(error);
+				}
+			},
+		);
+		outgoing.on("error", (error) => reject(error.cause === "unsafe-url" ? unsafeUrl() : error));
+		outgoing.end(body ?? undefined);
+	});
+}
+
 /** Requires global_fetch_strictly_public: Workers enforces public routing at connection time, including rebinding. */
 export async function fetchWorkerPublicUrl(
 	input: URL,
@@ -101,12 +221,11 @@ export async function fetchWorkerPublicUrl(
 	let url = input;
 	for (let redirects = 0; redirects <= 3; redirects++) {
 		if (!/^https?:$/.test(url.protocol) || url.username || url.password || isPrivateOrLoopbackHost(url.hostname)) {
-			throw new Error("Private network address refused", { cause: "unsafe-url" });
+			throw unsafeUrl();
 		}
-		const addresses = await resolveHostAddresses(url.hostname);
-		options.signal.throwIfAborted();
+		const addresses = await abortable(resolveHostAddresses(url.hostname), options.signal);
 		if (!addresses.length || addresses.some(({ address }) => isPrivateOrLoopbackHost(address))) {
-			throw new Error("Private network address refused", { cause: "unsafe-url" });
+			throw unsafeUrl();
 		}
 		const response = await fetch(url, { ...options, redirect: "manual" });
 		const location = response.headers.get("location");
@@ -135,6 +254,8 @@ type OAuthRedirectUriOptions = {
 export function isAllowedOAuthRedirectUri(input: string, trustedOrigins: string[], options?: OAuthRedirectUriOptions) {
 	const parsed = parseUrl(input);
 	if (!parsed) return false;
+	// Script and local schemes stay refused even in unsafe mode.
+	if (["javascript:", "data:", "vbscript:", "file:", "blob:"].includes(parsed.protocol)) return false;
 	if (options?.allowUnsafe) return true;
 	if (parsed.username || parsed.password) return false;
 	if (parsed.hash) return false;

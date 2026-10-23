@@ -394,6 +394,17 @@ describe("verifyPassword", () => {
 		).rejects.toMatchObject({ code: "INVALID_PASSWORD" });
 		expect(grantResumeAccessMock).not.toHaveBeenCalled();
 	});
+
+	it("checks a password even when no shared resume matches, so timing doesn't reveal which exist", async () => {
+		dbMock.select.mockReturnValueOnce(slugLookup([]));
+		compareMock.mockResolvedValueOnce(true);
+
+		await expect(
+			resumeService.verifyPassword({ slug: "s", username: "u", password: "p", responseHeaders: new Headers() }),
+		).rejects.toMatchObject({ code: "INVALID_PASSWORD" });
+		expect(compareMock).toHaveBeenCalledOnce();
+		expect(grantResumeAccessMock).not.toHaveBeenCalled();
+	});
 });
 
 describe("delete", () => {

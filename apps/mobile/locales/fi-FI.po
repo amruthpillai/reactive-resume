@@ -837,7 +837,7 @@ msgstr "Lisää"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "Lisää maa"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "Mitä tulee mieleen tästä työstä"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "Missä tahansa"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "Kokemuksistasi"
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "Aikavyöhykkeesi perusteella"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "Jos käytetään verkkoyhteyttä, linkit ja hakutermit menevät myös {0
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "Jos käytetään verkkoyhteyttä, hakutermit menevät palvelimesi hakupalveluun ja sen käyttämiin hakukoneisiin, ja linkit menevät osoitteeseen {reader} ja luettaviin sivustoihin."
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "Jos käytetään verkkoyhteyttä, hakutermit menevät palvelimesi hakupalveluun ja sen käyttämiin hakukoneisiin, ja linkit menevät luettaville sivustoille."
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "Hae aikavyöhykkeitä"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "Hakua testattiin palvelimesi haulla ja lukemista {connected}."
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "Hakua testattiin palvelimesi haulla. Linkit luetaan sisäänrakennetulla lukijalla."
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "Testaa yhteys"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "Testaa hakutoimintoa"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "Assistentti etsii ja lukee verkkosivuja {connected}:n avulla tekoälypal
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "Assistentti tekee hakuja palvelimesi haulla ja lukee linkkejä sisäänrakennetulla lukijalla riippumatta siitä, mitä tekoälypalveluntarjoajaa käytät."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "Assistentti tekee hakuja palvelimesi haulla ja lukee sivuja {connected}, käyttämäsi tekoälypalveluntarjoajan mukaan."
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "Ansioluettelo sellaisena kuin se on"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "Sama rivi toistuu jokaisella sivulla."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "Tallennettua avainta ei lähetetä uuteen perus-URL-osoitteeseen. Anna avain uudelleen, jos tämä palvelin vaatii avaimen."
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "Tallennettua avainta ei lähetetä uuteen perus-URL-osoitteeseen. Anna avain uudelleen."
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "Käytä pieniä kirjaimia, numeroita ja yksittäisiä viivoja."
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "Käytä aikavyöhykettäni"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "Verkkohaku epäonnistui: {0}"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "Verkkohaulla etsitään töitä näistä maista. Valitse enintään kolme maata."
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "Työskentelypaikka"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "Mistä etsit työtä"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "tekoälyyhteytesi"
 msgid "Your AI connection"
 msgstr "Tekoälyyhteytesi"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "AI-asetuksesi muuttuivat päätöksenteon aikana. Mitään ei lähetetty; yritä uudelleen."
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "Vastauksesi"
@@ -11064,7 +11076,7 @@ msgstr "Valitsemasi fontti ei pysty näyttämään joitakin merkkejä. Ne näkyv
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "Palvelimesi tarjoaa verkkohaun Hakemukset-osiossa ja avustajalle. Yhdistä palvelu lukeaksesi verkkosivuja, joita sisäänrakennettu lukija ei voi lukea."
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."

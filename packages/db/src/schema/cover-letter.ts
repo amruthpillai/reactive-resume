@@ -46,7 +46,14 @@ export const coverLetter = pg.pgTable(
 			.defaultNow()
 			.$onUpdate(() => new Date()),
 	},
-	(table) => [pg.index().on(table.userId, table.updatedAt.desc(), table.id.desc())],
+	(table) => [
+		pg.index().on(table.userId, table.updatedAt.desc(), table.id.desc()),
+		// Finds letters past Trash retention without scanning every letter.
+		pg
+			.index()
+			.on(table.trashedAt)
+			.where(sql`${table.trashedAt} is not null`),
+	],
 );
 
 export const COVER_LETTER_VERSION_KINDS = ["created", "auto", "named", "before-restore", "restored", "sent"] as const;

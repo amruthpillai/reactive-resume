@@ -307,9 +307,11 @@ type ProviderFieldsProps = {
 	onChange: (value: ProviderFields) => void;
 	/** Editing: an empty key keeps the saved one. */
 	keyOptional?: boolean;
+	/** Editing with a new base URL: the saved key isn't sent there, so it's entered again. */
+	keyAgain?: boolean;
 };
 
-function ProviderFieldsForm({ provider, value, onChange, keyOptional }: ProviderFieldsProps) {
+function ProviderFieldsForm({ provider, value, onChange, keyOptional, keyAgain }: ProviderFieldsProps) {
 	const id = useId();
 	const set = (patch: Partial<ProviderFields>) => onChange({ ...value, ...patch });
 	const defaults = providerDefaults(provider);
@@ -338,15 +340,26 @@ function ProviderFieldsForm({ provider, value, onChange, keyOptional }: Provider
 					type="password"
 					value={value.apiKey}
 					placeholder={
-						keyOptional
+						keyOptional && !keyAgain
 							? t`Leave empty to keep the saved key`
 							: provider === "ollama"
 								? t`Optional for local Ollama`
 								: undefined
 					}
+					required={keyAgain && provider !== "ollama"}
+					aria-describedby={keyAgain ? `${id}-key-hint` : undefined}
 					onChange={(event) => set({ apiKey: event.target.value })}
 					{...secretInputProps}
 				/>
+				{keyAgain && (
+					<p id={`${id}-key-hint`} className="text-xs leading-5 text-ink-3">
+						{provider === "ollama" ? (
+							<Trans>The saved key isn't sent to a new base URL. Enter it again if this server needs one.</Trans>
+						) : (
+							<Trans>The saved key isn't sent to a new base URL. Enter it again.</Trans>
+						)}
+					</p>
+				)}
 			</div>
 			<div className="grid gap-1.5 sm:col-span-2">
 				<Label htmlFor={`${id}-model`}>
@@ -578,13 +591,18 @@ function EditProviderForm({ provider, onClose }: EditProviderFormProps) {
 	const remove = useMutation(orpc.aiProviders.delete.mutationOptions({ meta: { noInvalidate: true } }));
 	const test = useProviderTest();
 
+	const defaultURL = AI_PROVIDER_DEFAULT_BASE_URLS[provider.provider] ?? "";
+	// An empty field means the provider's own address.
+	const newURL = (fields.baseURL.trim() || defaultURL) !== (provider.baseURL ?? defaultURL);
+	const apiKey = fields.apiKey.trim();
+	// The server won't send the saved key to a new address, so the key comes with it (Ollama may have none).
+	const keyMissing = newURL && provider.provider !== "ollama" && !apiKey;
 	const changes = {
 		...(fields.label.trim() && fields.label.trim() !== provider.label ? { label: fields.label.trim() } : {}),
 		...(fields.model.trim() && fields.model.trim() !== provider.model ? { model: fields.model.trim() } : {}),
-		...(fields.baseURL.trim() !== (provider.baseURL ?? AI_PROVIDER_DEFAULT_BASE_URLS[provider.provider] ?? "")
-			? { baseURL: fields.baseURL.trim() }
-			: {}),
-		...(fields.apiKey.trim() ? { apiKey: fields.apiKey.trim() } : {}),
+		// The provider rides along so validation accepts Ollama's empty key.
+		...(newURL ? { provider: provider.provider, baseURL: fields.baseURL.trim() } : {}),
+		...(newURL || apiKey ? { apiKey } : {}),
 	};
 	const changed = Object.keys(changes).length > 0;
 
@@ -623,10 +641,16 @@ function EditProviderForm({ provider, onClose }: EditProviderFormProps) {
 				className="grid gap-4"
 				onSubmit={(event) => {
 					event.preventDefault();
-					if (changed) void save();
+					if (changed && !keyMissing) void save();
 				}}
 			>
-				<ProviderFieldsForm provider={provider.provider} value={fields} onChange={setFields} keyOptional />
+				<ProviderFieldsForm
+					provider={provider.provider}
+					value={fields}
+					onChange={setFields}
+					keyOptional
+					keyAgain={newURL}
+				/>
 				<div className="flex items-center justify-between gap-3 text-sm">
 					<span className="grid gap-0.5">
 						<span id={`${provider.id}-use`} className="font-medium">
@@ -680,7 +704,7 @@ function EditProviderForm({ provider, onClose }: EditProviderFormProps) {
 					</Button>
 					<Button
 						type="submit"
-						disabled={!changed || update.isPending || test.isPending}
+						disabled={!changed || keyMissing || update.isPending || test.isPending}
 						loading={update.isPending || test.isPending}
 					>
 						<Trans>Save and test</Trans>

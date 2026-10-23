@@ -1,6 +1,5 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import type { ResumeDates } from "@reactive-resume/schema/resume/dates";
-import { unzipSync } from "fflate";
 import { resumeDataSchema } from "@reactive-resume/schema/resume/data";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { generateId } from "@reactive-resume/utils/string";
@@ -8,6 +7,7 @@ import { formatDate, toRangeDates, toSingleDates } from "./date";
 import { rethrowAsImportError } from "./error";
 import { toHtml } from "./html";
 import { parseLevel } from "./level";
+import { ZipEntryTooLargeError, unzipEntries } from "./zip";
 
 const LINKEDIN_CSVS = new Set([
 	"profile.csv",
@@ -29,6 +29,9 @@ const LANGUAGE_LEVELS: Record<string, number> = {
 	"limited working": 2,
 	elementary: 1,
 };
+
+// Own keys only: a proficiency like "constructor" must not resolve to an Object member.
+const knownLanguageLevel = (name: string) => (Object.hasOwn(LANGUAGE_LEVELS, name) ? LANGUAGE_LEVELS[name] : undefined);
 
 const MONTHS: Record<string, string> = {
 	jan: "01",
@@ -85,7 +88,8 @@ function linkedInSingleDates(value?: string): ResumeDates | undefined {
 const textToHtml = (text = "") => toHtml(text.split(/\r\n?|\n/));
 
 const languageLevel = (proficiency = "") =>
-	LANGUAGE_LEVELS[proficiency.toLowerCase().replace(/\s*proficiency$/, "")] ?? parseLevel(proficiency);
+	// The lookbehind starts the match only at a whitespace run's first character, keeping long runs linear.
+	knownLanguageLevel(proficiency.toLowerCase().replace(/(?<!\s)\s*proficiency$/, "")) ?? parseLevel(proficiency);
 
 const basename = (path: string) => path.slice(path.lastIndexOf("/") + 1).toLowerCase();
 
@@ -161,25 +165,29 @@ const linkWebsite = (url?: string) => (url ? { url, label: url, inlineLink: fals
  */
 export function parseLinkedInExport(zipBytes: Uint8Array): ResumeData {
 	let files: Record<string, Uint8Array>;
-	let oversized = "";
+	const selected = new Set<string>();
 
 	try {
-		// Only inflate the CSVs we read; the rest of the export (messages, media, ...) can be large.
-		files = unzipSync(zipBytes, {
-			filter: (file) => {
-				if (!LINKEDIN_CSVS.has(basename(file.name))) return false;
-				if (file.originalSize > MAX_CSV_BYTES) oversized ||= file.name;
-				return !oversized;
+		// Only inflate the first copy of each CSV we read; the rest of the export (messages, media, ...) can be large.
+		files = unzipEntries(
+			zipBytes,
+			(name) => {
+				const file = basename(name);
+				if (!LINKEDIN_CSVS.has(file) || selected.has(file)) return false;
+				selected.add(file);
+				return true;
 			},
-		});
-	} catch {
+			MAX_CSV_BYTES,
+		);
+	} catch (error) {
+		if (error instanceof ZipEntryTooLargeError) {
+			throw new Error(
+				`"${error.entry}" in this ZIP is larger than 5 MB, which is too large for a LinkedIn data export.`,
+			);
+		}
 		throw new Error(
 			'This file could not be read as a ZIP archive. Export your data from LinkedIn\'s "Get a copy of your data" page and upload the ZIP as-is.',
 		);
-	}
-
-	if (oversized) {
-		throw new Error(`"${oversized}" in this ZIP is larger than 5 MB, which is too large for a LinkedIn data export.`);
 	}
 
 	const profile = findCsv(files, "profile.csv")[0];

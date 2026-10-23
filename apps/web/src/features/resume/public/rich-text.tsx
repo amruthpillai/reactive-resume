@@ -46,7 +46,8 @@ function toReact(node: Node, key: number): ReactNode {
 		return createElement("a", { key, href, target: "_blank", rel: "noopener noreferrer nofollow" }, ...children);
 	}
 
-	const allowed = TAGS[tag];
+	// Own keys only: an element named after an Object.prototype member (`<constructor>`) must not resolve to it.
+	const allowed = Object.hasOwn(TAGS, tag) ? TAGS[tag] : undefined;
 	// Anything else (spans, divs, tables, scripts…) keeps only its text.
 	if (!allowed) return children.length ? createElement("span", { key }, ...children) : null;
 	if (allowed === "br") return createElement("br", { key });

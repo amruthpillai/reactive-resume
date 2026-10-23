@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import sharp from "sharp";
 
 const mocks = vi.hoisted(() => ({
 	list: vi.fn(),
@@ -8,15 +9,15 @@ const mocks = vi.hoisted(() => ({
 	healthcheck: vi.fn(),
 }));
 
-vi.mock("@reactive-resume/env/server", () => ({
-	env: {
-		APP_URL: "https://resume.example",
-		STORAGE_BACKEND: "local",
-		LOCAL_STORAGE_PATH: "./data",
-	},
+const env = vi.hoisted(() => ({
+	APP_URL: "https://resume.example",
+	STORAGE_BACKEND: "local",
+	LOCAL_STORAGE_PATH: "./data",
+	FLAG_DISABLE_IMAGE_PROCESSING: false,
 }));
+vi.mock("@reactive-resume/env/server", () => ({ env }));
 
-const { configureStorageService, migrateUserStorage } = await import("./service");
+const { configureStorageService, migrateUserStorage, processImageForUpload } = await import("./service");
 
 beforeEach(() => {
 	mocks.list.mockReset();
@@ -144,5 +145,36 @@ describe("migrateUserStorage", () => {
 
 		await expect(migrateUserStorage("guest-1", "user-2")).rejects.toThrow("Could not read");
 		expect(mocks.delete).not.toHaveBeenCalled();
+	});
+});
+
+describe("processImageForUpload", () => {
+	it("stores the format the bytes have, not the one the client declared, and rejects anything else", async () => {
+		const png = new Uint8Array(
+			await sharp({ create: { width: 2, height: 2, channels: 3, background: "#fff" } })
+				.png()
+				.toBuffer(),
+		);
+		const html = new TextEncoder().encode("<html><script>alert(1)</script></html>");
+
+		await expect(processImageForUpload(new File([png], "a.gif", { type: "image/gif" }))).resolves.toMatchObject({
+			contentType: "image/jpeg",
+		});
+		await expect(processImageForUpload(new File([html], "a.png", { type: "image/png" }))).rejects.toMatchObject({
+			code: "BAD_REQUEST",
+		});
+
+		env.FLAG_DISABLE_IMAGE_PROCESSING = true;
+		try {
+			await expect(processImageForUpload(new File([png], "a.gif", { type: "image/gif" }))).resolves.toEqual({
+				data: png,
+				contentType: "image/png",
+			});
+			await expect(processImageForUpload(new File([html], "a.png", { type: "image/png" }))).rejects.toMatchObject({
+				code: "BAD_REQUEST",
+			});
+		} finally {
+			env.FLAG_DISABLE_IMAGE_PROCESSING = false;
+		}
 	});
 });

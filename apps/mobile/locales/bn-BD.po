@@ -837,7 +837,7 @@ msgstr "যোগ করুন"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Add a country"
-msgstr ""
+msgstr "একটি দেশ যোগ করুন"
 
 #: src/features/career/facts.tsx
 msgid "Add a fact"
@@ -1361,7 +1361,7 @@ msgstr "এই কাজ সম্পর্কে কিছু মনে রা�
 
 #: src/features/career/search-regions-field.tsx
 msgid "Anywhere"
-msgstr ""
+msgstr "যে কোন জায়গায়"
 
 #: src/features/ai/provider-editor.tsx
 #: src/features/ai/web-access.tsx
@@ -4166,7 +4166,7 @@ msgstr "আপনার অভিজ্ঞতা এন্ট্রি থেক
 
 #: src/features/career/search-regions-field.tsx
 msgid "From your time zone"
-msgstr ""
+msgstr "আপনার সময় অঞ্চলের উপর ভিত্তি করে"
 
 #: src/features/write/basics-screen.tsx
 msgid "Full name"
@@ -4494,11 +4494,11 @@ msgstr "যদি ওয়েব অ্যাক্সেস ব্যবহা
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to {reader} and the sites being read."
-msgstr ""
+msgstr "যদি ওয়েব অ্যাক্সেস ব্যবহার করা হয়, অনুসন্ধান শব্দগুলি আপনার সার্ভারের অনুসন্ধান পরিষেবা এবং এটি যে সার্চ ইঞ্জিনগুলি ব্যবহার করে সেখানে যায় এবং লিঙ্কগুলি {reader} এবং পঠিত সাইটগুলিতে যায়৷"
 
 #: src/api/ai-consent.ts
 msgid "If web access is used, search terms go to your server's search service and the search engines it uses, and links go to the sites being read."
-msgstr ""
+msgstr "যদি ওয়েব অ্যাক্সেস ব্যবহার করা হয়, অনুসন্ধান শব্দগুলি আপনার সার্ভারের অনুসন্ধান পরিষেবা এবং এটি ব্যবহার করা অনুসন্ধান ইঞ্জিনগুলিতে যায় এবং লিঙ্কগুলি পঠিত সাইটগুলিতে যায়৷"
 
 #: src/features/check/screen.tsx
 msgid "Ignore"
@@ -8145,11 +8145,11 @@ msgstr "টাইমজোন খুঁজুন"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search, and reading with {connected}."
-msgstr ""
+msgstr "অনুসন্ধান আপনার সার্ভারের অনুসন্ধান এবং {connected} এর সাথে পড়ার সাথে পরীক্ষা করা হয়েছিল।"
 
 #: src/features/ai/web-access.tsx
 msgid "Search was tested with your server's search. Links are read with the built-in reader."
-msgstr ""
+msgstr "অনুসন্ধানটি আপনার সার্ভারের অনুসন্ধানের সাথে পরীক্ষা করা হয়েছিল। লিংক বিল্ট-ইন রিডার দিয়ে পড়া হয়।"
 
 #: src/features/ai/web-access.tsx
 msgid "Search works"
@@ -9186,7 +9186,7 @@ msgstr "পরীক্ষা সংযোগ"
 
 #: src/features/ai/web-access.tsx
 msgid "Test search"
-msgstr ""
+msgstr "অনুসন্ধান ফাংশন পরীক্ষা করুন"
 
 #: src/features/ai/web-access.tsx
 msgid "Tested with {connected}. Only this service was tested."
@@ -9288,11 +9288,11 @@ msgstr "সহকারী {connected} এর সাথে পৃষ্ঠাগ
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads links with the built-in reader, whichever AI provider you use."
-msgstr ""
+msgstr "সহকারী আপনার সার্ভারের অনুসন্ধানের সাথে অনুসন্ধান করে এবং বিল্ট-ইন রিডারের সাথে লিঙ্কগুলি পড়ে, আপনি যে কোনও AI প্রদানকারী ব্যবহার করেন৷"
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant searches with your server's search and reads pages with {connected}, whichever AI provider you use."
-msgstr ""
+msgstr "সহকারী আপনার সার্ভারের অনুসন্ধানের সাথে অনুসন্ধান করে এবং {connected} এর সাথে পৃষ্ঠাগুলি পড়ে, আপনি যে কোনও AI প্রদানকারী ব্যবহার করুন৷"
 
 #: src/features/ai/web-access.tsx
 msgid "The assistant uses your AI provider's own web search where supported, and reads links with the built-in reader."
@@ -9439,6 +9439,14 @@ msgstr "জীবনবৃত্তান্ত যেমন আছে"
 #: src/features/ats-checker/messages.ts
 msgid "The same line repeats on every page."
 msgstr "একই লাইন প্রতিটি পৃষ্ঠায় পুনরাবৃত্তি হয়।"
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again if this server needs one."
+msgstr "সংরক্ষিত কী একটি নতুন বেস URL-এ পাঠানো হয় না। এই সার্ভারে একটি কী প্রয়োজন হলে আবার কী লিখুন।"
+
+#: src/features/ai/provider-editor.tsx
+msgid "The saved key isn't sent to a new base URL. Enter it again."
+msgstr "সংরক্ষিত কী একটি নতুন বেস URL-এ পাঠানো হয় না। আবার কী লিখুন।"
 
 #: src/features/check/screen.tsx
 msgid "The score counts how reliably software reads your resume. It doesn't predict whether you'll be shortlisted."
@@ -10286,7 +10294,7 @@ msgstr "ছোট হাতের অক্ষর, সংখ্যা এবং 
 
 #: src/features/career/search-regions-field.tsx
 msgid "Use my time zone"
-msgstr ""
+msgstr "আমার সময় অঞ্চল ব্যবহার করুন"
 
 #: src/features/check/issues.ts
 msgid "Use one column"
@@ -10535,7 +10543,7 @@ msgstr "ওয়েব অনুসন্ধান ব্যর্থ হয়
 
 #: src/features/career/search-regions-field.tsx
 msgid "Web searches look for work here, up to three countries."
-msgstr ""
+msgstr "ওয়েব অনুসন্ধান এই দেশগুলিতে চাকরির সন্ধান করে। তিনটি পর্যন্ত দেশ বেছে নিন।"
 
 #: src/features/write/basics-screen.tsx
 msgid "Website"
@@ -10664,7 +10672,7 @@ msgstr "কাজের স্থান"
 
 #: src/features/career/search-regions-field.tsx
 msgid "Where you're looking for work"
-msgstr ""
+msgstr "যেখানে আপনি কাজ খুঁজছেন"
 
 #: src/features/applications-board/insights-screen.tsx
 msgid "Where your applications went"
@@ -10901,6 +10909,10 @@ msgstr "আপনার এআই সংযোগ"
 msgid "Your AI connection"
 msgstr "আপনার এআই সংযোগ"
 
+#: src/api/ai-consent.ts
+msgid "Your AI settings changed while you were deciding. Nothing was sent; try again."
+msgstr "আপনি সিদ্ধান্ত নেওয়ার সময় আপনার AI সেটিংস পরিবর্তন হয়েছে। কিছুই পাঠানো হয়নি; আবার চেষ্টা করুন"
+
 #: src/features/workspace/tabs/practise.tsx
 msgid "Your answer"
 msgstr "আপনার উত্তর"
@@ -11064,7 +11076,7 @@ msgstr "আপনার নির্বাচিত ফন্ট কিছু �
 
 #: src/features/ai/web-access.tsx
 msgid "Your server provides search for Applications and the assistant. Connect a service to read pages the built-in reader can't."
-msgstr ""
+msgstr "আপনার সার্ভার আবেদন বিভাগে এবং সহকারীর জন্য ওয়েব অনুসন্ধান প্রদান করে। অন্তর্নির্মিত পাঠক পড়তে পারে না এমন ওয়েব পৃষ্ঠাগুলি পড়ার জন্য একটি পরিষেবা সংযুক্ত করুন৷"
 
 #: src/api/ai-consent.ts
 msgid "Your server sends a test prompt and the saved API key to this provider."
