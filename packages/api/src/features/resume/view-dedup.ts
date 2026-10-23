@@ -1,3 +1,4 @@
+import { getCoordination } from "@reactive-resume/db/coordination";
 import { getRedis, redisKey } from "@reactive-resume/db/redis";
 
 export { getClientKey as clientKeyFromHeaders } from "../../middleware/rate-limit";
@@ -14,6 +15,9 @@ const seen = new Map<string, number>(); // key -> expiry timestamp
 export async function shouldCountView(key: string, now: number): Promise<boolean> {
 	const redis = getRedis();
 	if (redis) return (await redis.set(redisKey("view", key), "1", "PX", WINDOW_MS, "NX")) === "OK";
+	// Cloudflare isolates share no memory; its coordination service counts each viewer once across all of them.
+	const coordination = getCoordination();
+	if (coordination) return (await coordination.consume(redisKey("view", key), { window: WINDOW_MS, max: 1 })).allowed;
 	const expiry = seen.get(key);
 	if (expiry !== undefined && expiry > now) return false;
 

@@ -1,8 +1,16 @@
+import type { RequestAuthentication } from "../../context";
 import z from "zod";
 import { protectedProcedure, publicProcedure } from "../../context";
 import { resumeDto } from "../../dto/resume";
 import { resumeMutationRateLimit, resumePasswordRateLimit } from "../../middleware/rate-limit";
 import { resumeService } from "./service";
+
+/** Only a credential that may read the owner's resumes sees the owner's view: private, unredacted, no password. */
+export function ownerViewer(context: { user?: { id: string } | null; authentication?: RequestAuthentication | null }) {
+	return context.user?.id && context.authentication?.permissions.includes("read")
+		? { currentUserId: context.user.id }
+		: {};
+}
 
 export const sharingRouter = {
 	getBySlug: publicProcedure
@@ -23,9 +31,7 @@ export const sharingRouter = {
 				...input,
 				requestHeaders: context.reqHeaders,
 				...(context.trustedClient ? { trustedClient: context.trustedClient } : {}),
-				...(context.user?.id && context.authentication?.permissions.includes("read")
-					? { currentUserId: context.user.id }
-					: {}),
+				...ownerViewer(context),
 			}),
 		),
 

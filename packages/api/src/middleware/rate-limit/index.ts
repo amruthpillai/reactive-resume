@@ -104,9 +104,11 @@ export const resumeDownloadRateLimit = createRatelimitMiddleware<
 		`resume-download:${input.username}:${input.slug}:${getUserKey(context)}:${getClientKey(context.trustedClient)}`,
 });
 
+// Per account, not per document or thread: each new ID would otherwise get a fresh budget, and server-managed AI is
+// paid for by the operator.
 export const aiRequestRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
 	limiter: productionLimiter(aiLimiter),
-	key: ({ context }, input) => `ai-request:${getUserKey(context)}:${getInputKeyPart(input)}`,
+	key: ({ context }) => `ai-request:${getUserKey(context)}`,
 });
 
 export const storageUploadRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
@@ -114,9 +116,10 @@ export const storageUploadRateLimit = createRatelimitMiddleware<ContextWithHeade
 	key: ({ context }) => `storage-upload:${getUserKey(context)}`,
 });
 
+// Per account: spellings of one filename (`a.jpg`, `/a.jpg`, `//a.jpg`) name the same file but would each get a budget.
 export const storageDeleteRateLimit = createRatelimitMiddleware<ContextWithHeaders, { filename: string }>({
 	limiter: productionLimiter(storageDeleteLimiter),
-	key: ({ context }, input) => `storage-delete:${getUserKey(context)}:${input.filename}`,
+	key: ({ context }) => `storage-delete:${getUserKey(context)}`,
 });
 
 export const resumeMutationRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({

@@ -515,6 +515,8 @@ export const applicationService = {
 			input.userId,
 			input.items.map((item) => item.resumeId),
 		);
+		const coverLetterIds = new Set(input.items.map((item) => item.coverLetterId).filter((id) => !!id));
+		await Promise.all([...coverLetterIds].map((id) => assertOwnedCoverLetter(input.userId, id)));
 
 		const values = input.items.map(({ status, stageEnteredAt, ...fields }) => {
 			const initialStatus = status ?? ("saved" as ApplicationStatus);

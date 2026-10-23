@@ -4,6 +4,7 @@ import type { AnyProcedure, InferRouterInitialContext, RouterClient } from "@orp
 import type { RequestAuthentication } from "@reactive-resume/api/context";
 import { call, ORPCError } from "@orpc/server";
 import z from "zod";
+import { requiredPermission } from "@reactive-resume/api/context";
 import { restAliases } from "@reactive-resume/api/rest";
 import router from "@reactive-resume/api/routers";
 import { env } from "@reactive-resume/env/server";
@@ -433,13 +434,7 @@ export function registerParityTools(
 			meta,
 			withErrorHandling(path, async (params) => {
 				const userId = context.authentication.user.id;
-				const route = definition.route;
-				const permission =
-					route.method === "GET"
-						? "read"
-						: route.method === "DELETE" || /^(delete|bulkDelete|purge)/i.test(route.operationId ?? "")
-							? "delete"
-							: "write";
+				const permission = requiredPermission(definition.route);
 				if (!context.authentication.permissions.includes(permission))
 					throw new ORPCError("FORBIDDEN", { message: `This credential requires api:${permission} permission.` });
 				const maxBytes =

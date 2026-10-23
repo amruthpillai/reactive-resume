@@ -600,3 +600,18 @@ describe("application attachment lifecycle", () => {
 		expect(storageDeleteMock).toHaveBeenCalledExactlyOnceWith("uploads/user-1/pictures/resume.pdf");
 	});
 });
+
+describe("applicationService.importMany", () => {
+	it("rejects another account's cover letter before inserting anything", async () => {
+		const { coverLetterService } = await import("../cover-letters/service");
+		vi.mocked(coverLetterService.getById).mockRejectedValueOnce(new Error("NOT_FOUND"));
+		await expect(
+			applicationService.importMany({
+				userId: "user-1",
+				items: [{ company: "Stripe", role: "Engineer", coverLetterId: "someone-elses-letter" }],
+			}),
+		).rejects.toThrow("NOT_FOUND");
+		expect(coverLetterService.getById).toHaveBeenCalledWith({ id: "someone-elses-letter", userId: "user-1" });
+		expect(dbMock.insert).not.toHaveBeenCalled();
+	});
+});
