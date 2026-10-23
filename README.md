@@ -29,6 +29,10 @@
     <a href="https://opencollective.com/reactive-resume/donate"><img src="https://img.shields.io/opencollective/backers/reactive-resume?style=flat-square&label=donations" alt="Donations" /></a>
   </p>
 
+  <p>
+    [![Deploy to Railyard](https://app.railyard.run/deploy/badge)](https://app.railyard.run/deploy?repo=https://github.com/reactive-resume/reactive-resume)
+  </p>
+
   <p><sub>Sponsored by</sub></p>
 
   <table align="center">
