@@ -2,6 +2,8 @@
 import porter2 from "wink-porter2-stemmer";
 import { SKILL_SURFACE_FORMS } from "./aliases";
 
+const MAX_STEM_LENGTH = 64;
+
 /**
  * Stems free-text vocabulary only.
  *
@@ -12,7 +14,8 @@ import { SKILL_SURFACE_FORMS } from "./aliases";
 export function stemFreeText(token: string): string {
 	if (SKILL_SURFACE_FORMS.has(token)) return token;
 	if (/[+#./]/.test(token)) return token;
-	if (token.length < 4) return token;
+	// The stemmer is quadratic in word length; no real word is this long.
+	if (token.length < 4 || token.length > MAX_STEM_LENGTH) return token;
 	if (!/^[a-z][a-z-]*$/.test(token)) return token;
 
 	return porter2(token);

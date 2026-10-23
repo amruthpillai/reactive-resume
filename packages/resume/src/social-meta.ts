@@ -27,7 +27,8 @@ const truncate = (text: string) => {
 export const getResumeSocialMeta = (data: ResumeData, fallbackName = "Resume"): ResumeSocialMeta => {
 	const name = data.basics.name || fallbackName;
 	const summary = data.summary.content
-		.replace(/<[^>]+>/g, " ")
+		// `[^<>]` keeps a run of unclosed `<` linear; Tiptap escapes literal brackets, so tags match as before.
+		.replace(/<[^<>]+>/g, " ")
 		.replace(/\s+/g, " ")
 		.trim();
 

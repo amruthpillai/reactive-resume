@@ -30,6 +30,9 @@ const LANGUAGE_LEVELS: Record<string, number> = {
 	elementary: 1,
 };
 
+// Own keys only: a proficiency like "constructor" must not resolve to an Object member.
+const knownLanguageLevel = (name: string) => (Object.hasOwn(LANGUAGE_LEVELS, name) ? LANGUAGE_LEVELS[name] : undefined);
+
 const MONTHS: Record<string, string> = {
 	jan: "01",
 	feb: "02",
@@ -85,7 +88,8 @@ function linkedInSingleDates(value?: string): ResumeDates | undefined {
 const textToHtml = (text = "") => toHtml(text.split(/\r\n?|\n/));
 
 const languageLevel = (proficiency = "") =>
-	LANGUAGE_LEVELS[proficiency.toLowerCase().replace(/\s*proficiency$/, "")] ?? parseLevel(proficiency);
+	// The lookbehind starts the match only at a whitespace run's first character, keeping long runs linear.
+	knownLanguageLevel(proficiency.toLowerCase().replace(/(?<!\s)\s*proficiency$/, "")) ?? parseLevel(proficiency);
 
 const basename = (path: string) => path.slice(path.lastIndexOf("/") + 1).toLowerCase();
 

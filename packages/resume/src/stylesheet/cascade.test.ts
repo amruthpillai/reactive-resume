@@ -276,6 +276,12 @@ describe("Semantic CSS cascade and structural resolution", () => {
 		});
 	});
 
+	it("rejects property names inherited from Object.prototype instead of crashing", () => {
+		const compiled = compileStylesheet({ languageVersion: 1, text: "@version 1;item { constructor: red; }" });
+
+		expect(compiled.diagnostics).toContainEqual(expect.objectContaining({ code: "UNSUPPORTED_PROPERTY" }));
+	});
+
 	it("keeps valid resolved declarations when a neighboring value is invalid", () => {
 		const result = resolve("section-heading { color: red; opacity: var(--missing); }");
 

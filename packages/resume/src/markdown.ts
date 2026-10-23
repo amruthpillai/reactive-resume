@@ -1,4 +1,5 @@
 import type { CustomSection, CustomSectionType, ResumeData, SectionType } from "@reactive-resume/schema/resume/data";
+import { toSafeLink } from "@reactive-resume/utils/link";
 import { isCoverLetterOnlyDocument } from "./export-sections";
 
 type Sections = ResumeData["sections"];
@@ -70,7 +71,14 @@ function renderHeader(basics: ResumeData["basics"]): string[] {
 
 // --- Shared helpers ---
 
-const link = (label: string, url: string) => (url ? `[${label || url}](${url})` : "");
+// Like the DOCX, ODT and PDF exports, only web, mail and phone links survive; anything else keeps its label as text.
+// The normalized URL has no spaces, and encoded parentheses can't end the Markdown link early.
+const markdownHref = (url: string) => toSafeLink(url)?.replaceAll("(", "%28").replaceAll(")", "%29") ?? null;
+
+const link = (label: string, url: string) => {
+	const href = url ? markdownHref(url) : null;
+	return href ? `[${label || url}](${href})` : label;
+};
 
 const heading = (title: string) => (title ? `## ${title}` : "");
 
@@ -312,12 +320,12 @@ export function htmlToMarkdown(html: string): string {
 	if (!html) return "";
 
 	// Convert innermost lists first so nested items retain their own numbering and indentation.
-	const list = /<(ul|ol)\b([^>]*)>((?:(?!<(?:ul|ol)\b).)*?)<\/\1>/gis;
+	const list = /<(ul|ol)\b([^<>]*)>((?:(?!<(?:ul|ol)\b).)*?)<\/\1>/gis;
 	let content = html;
 	while (/<(?:ul|ol)\b/i.test(content)) {
 		const next = content.replace(list, (_match, tag: string, attributes: string, inner: string) => {
 			let index = Number(/\bstart=["']?(\d+)/i.exec(attributes)?.[1] ?? 1);
-			const items = inner.replace(/<li\b[^>]*>(.*?)<\/li>/gis, (_item, body: string) => {
+			const items = inner.replace(/<li\b[^<>]*>((?:(?!<li\b)[\s\S])*?)<\/li>/gi, (_item, body: string) => {
 				const prefix = tag.toLowerCase() === "ol" ? `${index++}. ` : "- ";
 				return `${prefix}${htmlToMarkdown(body).replace(/\n/g, `\n${" ".repeat(prefix.length)}`)}\n`;
 			});
@@ -326,18 +334,23 @@ export function htmlToMarkdown(html: string): string {
 		if (next === content) break;
 		content = next;
 	}
+	// Each element pattern stops at the next opening of the same tag, so unclosed tags can't make it rescan the rest
+	// of the text (quadratic time on crafted input).
 	return content
-		.replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gis, (_m, url, inner) => `[${htmlToMarkdown(inner)}](${url})`)
-		.replace(/<(strong|b)>(.*?)<\/\1>/gis, "**$2**")
-		.replace(/<(em|i)>(.*?)<\/\1>/gis, "_$2_")
-		.replace(/<(s|strike|del)\b[^>]*>(.*?)<\/\1>/gis, "~~$2~~")
-		.replace(/<u\b[^>]*>(.*?)<\/u>/gis, "<u>$1</u>")
-		.replace(/<li[^>]*>(.*?)<\/li>/gis, (_m, inner) => `- ${htmlToMarkdown(inner).trim()}\n`)
+		.replace(/<a\b[^<>]*href="([^"<>]*)"[^<>]*>((?:(?!<a\b)[\s\S])*?)<\/a>/gi, (_m, url: string, inner: string) => {
+			const href = markdownHref(url);
+			return href ? `[${htmlToMarkdown(inner)}](${href})` : htmlToMarkdown(inner);
+		})
+		.replace(/<(strong|b)>((?:(?!<\1>)[\s\S])*?)<\/\1>/gi, "**$2**")
+		.replace(/<(em|i)>((?:(?!<\1>)[\s\S])*?)<\/\1>/gi, "_$2_")
+		.replace(/<(s|strike|del)\b[^<>]*>((?:(?!<\1\b)[\s\S])*?)<\/\1>/gi, "~~$2~~")
+		.replace(/<u\b[^<>]*>((?:(?!<u\b)[\s\S])*?)<\/u>/gi, "<u>$1</u>")
+		.replace(/<li\b[^<>]*>((?:(?!<li\b)[\s\S])*?)<\/li>/gi, (_m, inner) => `- ${htmlToMarkdown(inner).trim()}\n`)
 		.replace(/<br\s*\/?>/gi, "\n")
 		.replace(/<\/(p|div|h[1-6]|ul|ol)>/gi, "\n\n")
-		.replace(/<(?!\/?u>)[^>]+>/g, "")
+		.replace(/<(?!\/?u>)[^<>]+>/g, "")
 		.replace(/&#39;|&nbsp;|&quot;|&amp;|&lt;|&gt;/g, (m) => ENTITIES[m] ?? m)
-		.replace(/[ \t]+\n/g, "\n")
+		.replace(/(?<![ \t])[ \t]+\n/g, "\n")
 		.replace(/\n{3,}/g, "\n\n")
 		.trim();
 }

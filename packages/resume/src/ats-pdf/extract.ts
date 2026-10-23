@@ -8,6 +8,12 @@ import type {
 	TextSpan,
 } from "./types";
 
+// Loops rather than Math.min(...values): spreading a page's worth of spans can exceed the call-argument limit.
+const minOf = <T>(items: readonly T[], value: (item: T) => number) =>
+	items.reduce((min, item) => Math.min(min, value(item)), Number.POSITIVE_INFINITY);
+const maxOf = <T>(items: readonly T[], value: (item: T) => number) =>
+	items.reduce((max, item) => Math.max(max, value(item)), Number.NEGATIVE_INFINITY);
+
 /** Vertical slack when deciding two spans share a line, as a share of the modal font size. */
 const LINE_TOLERANCE_RATIO = 0.35;
 const MIN_LINE_TOLERANCE_PT = 2;
@@ -27,6 +33,13 @@ const MARGIN_PERCENTILE = 0.05;
 /** A gutter has to sit somewhere near the middle; a wide right margin is not a column break. */
 const GUTTER_SEARCH_MIN = 0.2;
 const GUTTER_SEARCH_MAX = 0.8;
+
+/**
+ * Text caps. A real resume line is a few hundred characters and a whole resume a few thousand;
+ * the caps keep a hostile file from feeding megabytes into every analyzer and importer downstream.
+ */
+const MAX_LINE_CHARS = 1_000;
+const MAX_TEXT_CHARS = 100_000;
 
 function fontSizeOf(item: RawPage["items"][number]): number {
 	if (item.height > 0) return item.height;
@@ -125,6 +138,7 @@ function toLine(group: readonly TextSpan[], pageNumber: number): TextLine {
 	let previous: TextSpan | null = null;
 
 	for (const span of ordered) {
+		if (text.length >= MAX_LINE_CHARS) break;
 		if (previous) {
 			const gap = span.x - (previous.x + previous.width);
 			const threshold = SPACE_GAP_RATIO * Math.max(previous.fontSize, span.fontSize, 1);
@@ -136,16 +150,16 @@ function toLine(group: readonly TextSpan[], pageNumber: number): TextLine {
 		previous = span;
 	}
 
-	const x = Math.min(...ordered.map((span) => span.x));
-	const right = Math.max(...ordered.map((span) => span.x + span.width));
-	const y = Math.min(...ordered.map((span) => span.y));
-	const bottom = Math.max(...ordered.map((span) => span.y + span.height));
+	const x = minOf(ordered, (span) => span.x);
+	const right = maxOf(ordered, (span) => span.x + span.width);
+	const y = minOf(ordered, (span) => span.y);
+	const bottom = maxOf(ordered, (span) => span.y + span.height);
 
 	const meanStreamIndex = ordered.reduce((total, span) => total + span.streamIndex, 0) / ordered.length;
 
 	return {
 		page: pageNumber,
-		text,
+		text: text.slice(0, MAX_LINE_CHARS),
 		spans: ordered,
 		x,
 		y,
@@ -219,8 +233,8 @@ function findGutter(spans: readonly TextSpan[], page: RawPage): ColumnGutter | n
 		for (let bin = from; bin <= to; bin += 1) occupied[bin] = true;
 	}
 
-	const textLeft = Math.min(...spans.map((span) => span.x));
-	const textRight = Math.max(...spans.map((span) => span.x + span.width));
+	const textLeft = minOf(spans, (span) => span.x);
+	const textRight = maxOf(spans, (span) => span.x + span.width);
 	const textWidth = textRight - textLeft;
 	if (textWidth <= 0) return null;
 
@@ -375,16 +389,32 @@ function buildPage(page: RawPage, tolerance: number): PageGeometry {
 	};
 }
 
+/** Clips each text item to a line's worth and drops text past the document budget. */
+function capText(pages: readonly RawPage[]): RawPage[] {
+	let budget = MAX_TEXT_CHARS;
+
+	return pages.map((page) => ({
+		...page,
+		// Items are clipped, never removed, so stream indices still match the source order.
+		items: page.items.map((item) => {
+			const str = item.str.slice(0, Math.min(MAX_LINE_CHARS, budget));
+			budget -= str.length;
+			return str.length === item.str.length ? item : { ...item, str };
+		}),
+	}));
+}
+
 /**
  * Derives page geometry from a raw extraction. Pure: the same bytes always produce the same
  * document, whatever order the reader happened to emit text items in.
  */
 export function buildExtractedDocument(raw: RawExtraction): ExtractedDocument {
-	const allFontSizes = raw.pages.flatMap((page) => page.items.filter((item) => item.str.trim()).map(fontSizeOf));
+	const rawPages = capText(raw.pages);
+	const allFontSizes = rawPages.flatMap((page) => page.items.filter((item) => item.str.trim()).map(fontSizeOf));
 	const modalFontSize = modalOf(allFontSizes.filter((size) => size > 0));
 	const tolerance = Math.max(MIN_LINE_TOLERANCE_PT, LINE_TOLERANCE_RATIO * (modalFontSize ?? MIN_LINE_TOLERANCE_PT));
 
-	const pages = raw.pages.map((page) => buildPage(page, tolerance));
+	const pages = rawPages.map((page) => buildPage(page, tolerance));
 	const lines = pages.flatMap((page) => page.lines);
 
 	const fullText = pages.map((page) => page.lines.map((line) => line.text).join("\n")).join("\n\n");
@@ -393,7 +423,7 @@ export function buildExtractedDocument(raw: RawExtraction): ExtractedDocument {
 	const fontRefs = new Set<string>();
 	const fontWeights = new Map<string, number>();
 
-	for (const page of raw.pages) {
+	for (const page of rawPages) {
 		for (const item of page.items) {
 			if (!item.fontRef) continue;
 			fontRefs.add(item.fontRef);

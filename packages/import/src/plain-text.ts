@@ -83,17 +83,22 @@ const SECTION_ALIASES: Readonly<Record<string, SectionKey>> = {
 	"social profiles": "profiles",
 };
 
-const EMAIL_PATTERN = /[\w.+-]+@[\w-]+\.[\w.-]*\w/;
+// Lookbehinds below start a word or address only at its first character, so a long run is scanned once instead of
+// once per character.
+const EMAIL_PATTERN = /(?<![\w.+-])[\w.+-]+@[\w-]+\.[\w.-]*\w/;
 const URL_PATTERN = /\b(?:https?:\/\/|www\.)[^\s,;|•·]+/gi;
 const PHONE_CANDIDATE = /[+(]?\d[\d\s().+-]{5,}\d/g;
 const URL_TEST = /\b(?:https?:\/\/|www\.)\S+/i;
 const HEADER_SCAN_LINES = 6;
 const ENTRY_PREAMBLE_LOOKAHEAD = 4;
 const PERIOD_CANDIDATE =
-	/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}\s*(?:[-–—~]|to|until|through)\s*(?:(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}|\p{L}+)/giu;
+	/(?:(?<!\p{L})\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}\s*(?:[-–—~]|to|until|through)\s*(?:(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?\d{4}|\p{L}+)/giu;
 const STRONG_SEPARATOR = /\s*[|•·]\s*|\s{2,}|\s+[–—]\s+/;
 const SENTENCE_END = /[.!?]$/;
-const TRAILING_DATES = [/(?:\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?(?:19|20)\d{2}$/u, /(?:\d{1,2}[/.])?(?:19|20)\d{2}$/];
+const TRAILING_DATES = [
+	/(?:(?<!\p{L})\p{L}{3,}\.?\s+)?(?:\d{1,2}[/.])?(?:19|20)\d{2}$/u,
+	/(?:\d{1,2}[/.])?(?:19|20)\d{2}$/,
+];
 
 const normalizeHeading = (line: string) =>
 	line

@@ -97,7 +97,9 @@ const tagOf = (element: HTMLElement) => element.rawTagName?.toLowerCase() ?? "";
 
 function matchingStyles(element: HTMLElement, tag: string, stylesheet: Record<string, Style>): Style[] {
 	const styles: Style[] = [];
-	if (TAG_STYLES[tag]) styles.push(TAG_STYLES[tag]);
+	// Own keys only: a tag named like an Object.prototype member (`<constructor>`) has no default style.
+	const tagStyle = Object.hasOwn(TAG_STYLES, tag) ? TAG_STYLES[tag] : undefined;
+	if (tagStyle) styles.push(tagStyle);
 	for (const [selector, style] of Object.entries(stylesheet)) {
 		const matches = selector.startsWith(".") ? element.classList.contains(selector.slice(1)) : selector === tag;
 		if (matches) styles.push(style);
@@ -158,7 +160,8 @@ function renderChildren(parent: HtmlElement | undefined, nodes: Node[], options:
 		if (typeof item === "string" && options.collapse) {
 			if (lastBlock !== false && !inlineParent) item = item.replace(/^[\t\n\f\r ]+/, "");
 			const next = converted[index + 1];
-			if (next && isBlock(next)) item = item.replace(/[\t\n\f\r ]+$/, "");
+			// The lookbehind starts only at a run's first character, so inner runs are scanned once.
+			if (next && isBlock(next)) item = item.replace(/(?<![\t\n\f\r ])[\t\n\f\r ]+$/, "");
 			item = collapseWhitespace(item);
 		}
 		if (item === "") return;
@@ -186,7 +189,7 @@ function renderNode(node: Converted, options: RenderOptions, key: number): React
 	const tag = tagOf(node);
 	const preserve = tag === "pre" || node.getAttribute("data-resume-whitespace") === "preserve";
 	const children = renderChildren(node, node.childNodes, preserve ? { ...options, collapse: false } : options);
-	const renderer = options.renderers[tag];
+	const renderer = Object.hasOwn(options.renderers, tag) ? options.renderers[tag] : undefined;
 	if (renderer) return createElement(Fragment, { key }, renderer({ element: node, style: node.styles, children }));
 	return createElement(isBlock(node) ? View : Text, { key, style: node.styles }, children);
 }

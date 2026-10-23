@@ -34,7 +34,7 @@ type PhosphorIconProps = {
  * unknown name draws nothing.
  */
 export function PhosphorIcon({ name, size = 16, color = "currentColor", opacity, display, style }: PhosphorIconProps) {
-	const markup = icons?.[name];
+	const markup = icons && Object.hasOwn(icons, name) ? icons[name] : undefined;
 	if (!markup || display === "none") return null;
 	// "currentColor" means the colour the template set on the icon's style, as in react-pdf.
 	const { opacity: styleOpacity, ...flat } = flattenStyle(style);
