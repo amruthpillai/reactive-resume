@@ -82,6 +82,19 @@ function assertValidPatchPointers(operation: JsonPatchOperation, index: number) 
 	}
 }
 
+const activeResumeConditions = (id: string, userId: string) => [
+	eq(schema.resume.id, id),
+	eq(schema.resume.userId, userId),
+	isNull(schema.resume.trashedAt),
+];
+
+/** Matches an active resume (not in Trash) owned by the user. */
+const activeResumeWhere = (id: string, userId: string) => and(...activeResumeConditions(id, userId));
+
+/** Matches an active, editable (unlocked and not in Trash) resume owned by the user. */
+const activeUnlockedResumeWhere = (id: string, userId: string) =>
+	and(...activeResumeConditions(id, userId), eq(schema.resume.isLocked, false));
+
 async function applyResumePatchTx(
 	client: DbOrTx,
 	input: {
@@ -99,7 +112,7 @@ async function applyResumePatchTx(
 			updatedAt: schema.resume.updatedAt,
 		})
 		.from(schema.resume)
-		.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+		.where(activeResumeWhere(input.id, input.userId))
 		.for("update");
 
 	if (!existing) throw new ORPCError("NOT_FOUND");
@@ -142,9 +155,7 @@ async function applyResumePatchTx(
 	const [resume] = await client
 		.update(schema.resume)
 		.set({ data: patchedData })
-		.where(
-			and(eq(schema.resume.id, input.id), eq(schema.resume.isLocked, false), eq(schema.resume.userId, input.userId)),
-		)
+		.where(activeUnlockedResumeWhere(input.id, input.userId))
 		.returning({
 			id: schema.resume.id,
 			name: schema.resume.name,
@@ -181,7 +192,7 @@ const tags = {
 		const result = await db
 			.select({ tags: schema.resume.tags })
 			.from(schema.resume)
-			.where(eq(schema.resume.userId, input.userId));
+			.where(and(eq(schema.resume.userId, input.userId), isNull(schema.resume.trashedAt)));
 
 		return [...new Set(result.flatMap((tag) => tag.tags))].sort((a, b) => a.localeCompare(b));
 	},
@@ -248,7 +259,7 @@ const statistics = {
 			})
 			.from(schema.resumeStatistics)
 			.rightJoin(schema.resume, eq(schema.resumeStatistics.resumeId, schema.resume.id))
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+			.where(activeResumeWhere(input.id, input.userId));
 
 		if (!statistics) throw new ORPCError("NOT_FOUND");
 
@@ -308,7 +319,7 @@ const statistics = {
 		const [resume] = await db
 			.select({ id: schema.resume.id })
 			.from(schema.resume)
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+			.where(activeResumeWhere(input.id, input.userId));
 
 		if (!resume) throw new ORPCError("NOT_FOUND");
 
@@ -372,12 +383,13 @@ async function notifyResumeUpdated(event: ResumeUpdatedEvent) {
 }
 
 // One conditional UPDATE skips locked rows atomically; only a miss pays for the read that says why.
+// Resumes in Trash miss both the update and the fallback read (activeResumeWhere), throwing NOT_FOUND without leaking lock state.
 async function updateResumePassword(input: { id: string; userId: string; password: string | null }) {
-	const owned = and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId));
+	const owned = activeResumeWhere(input.id, input.userId);
 	const [resume] = await db
 		.update(schema.resume)
 		.set({ password: input.password })
-		.where(and(owned, eq(schema.resume.isLocked, false)))
+		.where(activeUnlockedResumeWhere(input.id, input.userId))
 		.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
 
 	if (!resume) {
@@ -502,7 +514,7 @@ export const resumeService = {
 				applicationId: schema.resume.applicationId,
 			})
 			.from(schema.resume)
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
+			.where(activeResumeWhere(input.id, input.userId));
 
 		if (!resume) throw new ORPCError("NOT_FOUND");
 
@@ -667,7 +679,7 @@ export const resumeService = {
 						updatedAt: schema.resume.updatedAt,
 					})
 					.from(schema.resume)
-					.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+					.where(activeResumeWhere(input.id, input.userId))
 					.for("update");
 
 				if (!existing) throw new ORPCError("NOT_FOUND");
@@ -714,13 +726,7 @@ export const resumeService = {
 				const [updated] = await tx
 					.update(schema.resume)
 					.set(updateData)
-					.where(
-						and(
-							eq(schema.resume.id, input.id),
-							eq(schema.resume.isLocked, false),
-							eq(schema.resume.userId, input.userId),
-						),
-					)
+					.where(activeUnlockedResumeWhere(input.id, input.userId))
 					.returning({
 						id: schema.resume.id,
 						name: schema.resume.name,
@@ -790,7 +796,7 @@ export const resumeService = {
 		const [resume] = await db
 			.update(schema.resume)
 			.set({ isLocked: input.isLocked })
-			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)))
+			.where(activeResumeWhere(input.id, input.userId))
 			.returning({ id: schema.resume.id, updatedAt: schema.resume.updatedAt });
 
 		if (!resume) throw new ORPCError("NOT_FOUND");
