@@ -17,4 +17,10 @@ describe("RichText", () => {
 		expect(container.querySelector("a")).toBeNull();
 		expect(container.textContent).toBe("Hix");
 	});
+
+	it("renders an element named after an Object member as its text", () => {
+		const { container } = render(<RichText html="<p><constructor>Plain</constructor> <strong>bold</strong></p>" />);
+		expect(container.textContent).toBe("Plain bold");
+		expect(container.querySelector("strong")?.textContent).toBe("bold");
+	});
 });

@@ -97,6 +97,8 @@ function EntryView({ type, entry }: { type: string; entry: Entry }) {
 
 type ContactPill = { icon: IconName; label: string; href?: string };
 
+const SAFE_HREF = /^(https?:|mailto:|tel:)/i;
+
 function contactPills(basics: ResumeData["basics"]): ContactPill[] {
 	const pills: ContactPill[] = [];
 	if (basics.email) pills.push({ icon: "envelope-simple", label: basics.email, href: `mailto:${basics.email}` });
@@ -105,14 +107,14 @@ function contactPills(basics: ResumeData["basics"]): ContactPill[] {
 		pills.push({
 			icon: "globe",
 			label: basics.website.label || basics.website.url.replace(/^https?:\/\//, ""),
-			href: basics.website.url,
+			...(SAFE_HREF.test(basics.website.url) ? { href: basics.website.url } : {}),
 		});
 	for (const field of basics.customFields)
 		if (field.text)
 			pills.push({
 				icon: "link-simple-horizontal",
 				label: field.text,
-				...(/^(https?:|mailto:|tel:)/i.test(field.link) ? { href: field.link } : {}),
+				...(SAFE_HREF.test(field.link) ? { href: field.link } : {}),
 			});
 	return pills;
 }
