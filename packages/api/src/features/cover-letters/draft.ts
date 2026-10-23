@@ -4,6 +4,7 @@ import { streamText } from "ai";
 import { letterDraftSystemPrompt } from "@reactive-resume/ai/prompts";
 import { buildMarkdown } from "@reactive-resume/resume/markdown";
 import { aiProvidersService } from "../ai-providers/service";
+import { dataBlock } from "../ai/data-block";
 import { getModel } from "../ai/service";
 import { applicationService } from "../applications/service";
 import { resumeService } from "../resume/service";
@@ -31,9 +32,9 @@ function buildLetterDraftPrompt(input: PromptInput): string {
 	return [
 		previous ? REQUESTS[input.variant] : REQUESTS.draft,
 		input.job && `## The job\n\n${input.job}`,
-		input.posting && `## The posting\n\n<<<POSTING_START>>>\n${input.posting}\n<<<POSTING_END>>>`,
-		input.resume && `## The resume\n\n<<<RESUME_START>>>\n${input.resume}\n<<<RESUME_END>>>`,
-		previous && `## The previous draft\n\n<<<DRAFT_START>>>\n${previous}\n<<<DRAFT_END>>>`,
+		input.posting && `## The posting\n\n${dataBlock("POSTING", input.posting)}`,
+		input.resume && `## The resume\n\n${dataBlock("RESUME", input.resume)}`,
+		previous && `## The previous draft\n\n${dataBlock("DRAFT", previous)}`,
 	]
 		.filter(Boolean)
 		.join("\n\n");

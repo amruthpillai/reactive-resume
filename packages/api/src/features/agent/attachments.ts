@@ -17,8 +17,13 @@ export const attachmentsRouter = {
 		.input(
 			z.object({
 				threadId: z.string(),
-				filename: z.string().trim().min(1),
-				mediaType: z.string().trim().min(1),
+				filename: z.string().trim().min(1).max(255),
+				// Bare type/subtype only: it is stored and quoted to the model.
+				mediaType: z
+					.string()
+					.trim()
+					.max(255)
+					.regex(/^[\w.+-]+\/[\w.+-]+$/),
 				data: z
 					.base64()
 					.min(1)

@@ -228,13 +228,23 @@ export const aiProvidersService = {
 		const existing = await getOwnedProvider(input);
 		const provider = input.provider ?? aiProviderSchema.parse(existing.provider);
 		const nextApiKey = input.apiKey?.trim();
-		const encrypted = nextApiKey ? encryptCredential(nextApiKey) : {};
-		const credentialChanged = !!nextApiKey;
 		const nextBaseUrl =
 			input.baseURL !== undefined ? normalizeBaseUrl({ provider, baseURL: input.baseURL }) : existing.baseUrl;
 		const providerChanged = input.provider !== undefined && input.provider !== existing.provider;
 		const modelChanged = input.model !== undefined && input.model.trim() !== existing.model;
 		const baseUrlChanged = input.baseURL !== undefined && nextBaseUrl !== existing.baseUrl;
+		const hostChanged = providerChanged || baseUrlChanged;
+
+		// The saved key only goes where it was saved for: a new provider or address needs the key sent with it.
+		if (hostChanged && nextApiKey === undefined) {
+			throw new ORPCError("BAD_REQUEST", {
+				message: "Enter the API key again to change the provider or base URL.",
+			});
+		}
+
+		// On a new host the key is replaced even when empty (Ollama runs without one).
+		const encrypted = nextApiKey || hostChanged ? encryptCredential(nextApiKey ?? "") : {};
+		const credentialChanged = !!nextApiKey;
 		const runtimeChanged = credentialChanged || providerChanged || modelChanged || baseUrlChanged;
 
 		if (input.enabled === true && existing.testStatus !== "success" && !runtimeChanged) {

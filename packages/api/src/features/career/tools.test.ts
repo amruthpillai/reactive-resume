@@ -17,3 +17,15 @@ it("names the application's role and company only when the user shares the appli
 	expect(instructions(false)).not.toMatch(/Staff Engineer|Acme Robotics/);
 	expect(instructions(true)).toContain("Staff Engineer at Acme Robotics");
 });
+
+it("keeps placeholder-like text in a value as plain text", () => {
+	const context = {
+		application: { role: "Engineer {{CONTEXT}}", company: "Acme $& Co" },
+		profile: { memoryMode: "off" },
+		facts: [],
+		stories: [],
+	} as unknown as Parameters<typeof buildCareerInstructions>[0]["context"];
+	const instructions = buildCareerInstructions({ context, shareApplication: true, shareMemory: false, tab: undefined });
+
+	expect(instructions).toContain("Engineer {{CONTEXT}} at Acme $& Co");
+});

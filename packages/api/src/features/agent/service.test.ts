@@ -1079,8 +1079,8 @@ describe("agentService.attachments.create", () => {
 			agentService.attachments.create(upload),
 		]);
 		await vi.waitFor(() => expect(storageServiceMock.write).toHaveBeenCalledTimes(1));
-		// The first upload's two quota reads (unsent count, thread bytes); the second waits on the lock.
-		expect(quotaRead).toHaveBeenCalledTimes(2);
+		// The first upload's three quota reads (unsent count, thread bytes, account bytes); the second waits on the lock.
+		expect(quotaRead).toHaveBeenCalledTimes(3);
 		storageWrite.resolve();
 		const settled = await results;
 		expect(settled[0]?.status).toBe("fulfilled");

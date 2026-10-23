@@ -1090,7 +1090,10 @@ export const careerService = {
 			db.select().from(tables.careerArtifact).where(eq(tables.careerArtifact.userId, userId)),
 			db.select().from(tables.careerSchedule).where(eq(tables.careerSchedule.userId, userId)),
 			db.select().from(tables.careerNotification).where(eq(tables.careerNotification.userId, userId)),
-			db.select().from(tables.agentThread).where(eq(tables.agentThread.userId, userId)),
+			db
+				.select()
+				.from(tables.agentThread)
+				.where(and(eq(tables.agentThread.userId, userId), isNull(tables.agentThread.deletedAt))),
 			db.select().from(tables.agentMessage).where(eq(tables.agentMessage.userId, userId)),
 			db.select().from(tables.agentAttachment).where(eq(tables.agentAttachment.userId, userId)),
 			db.select().from(tables.careerOpportunity).where(eq(tables.careerOpportunity.userId, userId)),

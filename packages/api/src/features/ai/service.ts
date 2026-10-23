@@ -144,7 +144,8 @@ const aiCredentialsSchema = z.object({
 
 export const fileInputSchema = z.object({
 	name: z.string(),
-	data: z.string().max(MAX_AI_FILE_BASE64_CHARS, "File is too large. Maximum size is 10MB."),
+	// File bytes only: the AI SDK would download a URL here on the server.
+	data: z.base64().max(MAX_AI_FILE_BASE64_CHARS, "File is too large. Maximum size is 10MB."),
 });
 
 type TestConnectionInput = z.infer<typeof aiCredentialsSchema>;
@@ -299,7 +300,7 @@ function buildResumeParsingMessages({ userPrompt, file, mediaType }: BuildResume
 			role: "user",
 			content: [
 				{ type: "text", text: userPrompt },
-				{ type: "file", data: file.data, mediaType, filename: file.name },
+				{ type: "file", data: Buffer.from(file.data, "base64"), mediaType, filename: file.name },
 			],
 		},
 	];

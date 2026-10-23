@@ -62,6 +62,7 @@ const AGENT_TIMEOUT_MESSAGE = "Time limit reached. Your progress is saved. Ask m
 const MAX_ATTACHMENTS_PER_MESSAGE = 10;
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 const MAX_THREAD_ATTACHMENT_BYTES = 100 * 1024 * 1024;
+const MAX_ACCOUNT_ATTACHMENT_BYTES = 1024 * 1024 * 1024;
 const READABLE_ATTACHMENT_TYPES = new Set(["text/plain", "text/markdown", "application/json"]);
 const DIRECT_MODEL_FILE_ATTACHMENT_TYPES = new Set([
 	"application/pdf",
@@ -195,10 +196,21 @@ function withAttachmentUiParts(message: UIMessage, attachments: AgentAttachmentR
 	};
 }
 
+/**
+ * Drops file parts the model mustn't see as sent: attachment references (the server adds what it read) and, from
+ * user messages, any other URL, which the AI SDK would download on the server for every turn.
+ */
 function withoutAgentAttachmentUiParts(message: UIMessage): UIMessage {
 	return {
 		...message,
-		parts: message.parts.filter((part) => !(part.type === "file" && part.url.startsWith(AGENT_ATTACHMENT_URL_PREFIX))),
+		parts: message.parts.filter(
+			(part) =>
+				!(
+					part.type === "file" &&
+					(part.url.startsWith(AGENT_ATTACHMENT_URL_PREFIX) ||
+						(message.role === "user" && !part.url.startsWith("data:")))
+				),
+		),
 	};
 }
 
@@ -1141,6 +1153,10 @@ export const agentService = {
 			try {
 				if (thread.activeRunId) await requestRunCancellation(thread.activeRunId, "USER_DELETED");
 			} finally {
+				// Deleting a conversation deletes what was said in it; the thread row stays only as a tombstone.
+				await db
+					.delete(schema.agentMessage)
+					.where(and(eq(schema.agentMessage.threadId, input.id), eq(schema.agentMessage.userId, input.userId)));
 				await db.delete(schema.agentAttachment).where(eq(schema.agentAttachment.threadId, input.id));
 				try {
 					await getStorageService().delete(`uploads/${input.userId}/agent/${input.id}`);
@@ -1216,6 +1232,9 @@ export const agentService = {
 					message: "Invalid UI message parts.",
 				});
 			}
+			// Files reach the model only as uploaded attachments: a URL here would make the server download it.
+			if (input.message.parts.some((part) => part.type === "file" && !part.url.startsWith(AGENT_ATTACHMENT_URL_PREFIX)))
+				throw new ORPCError("BAD_REQUEST", { message: "Attach files by uploading them." });
 
 			const loaded = document ? await loadDocument(input.userId, document) : null;
 			if (loaded?.locked)
@@ -1690,6 +1709,16 @@ export const agentService = {
 					if (Number(stats?.totalBytes ?? 0) + input.data.byteLength > MAX_THREAD_ATTACHMENT_BYTES) {
 						throw new ORPCError("BAD_REQUEST");
 					}
+					// New threads would otherwise each bring a fresh 100 MiB.
+					// ponytail: uploads to two threads at once can pass this together; lock the user row if that matters.
+					const [account] = await tx
+						.select({ totalBytes: sql<number>`coalesce(sum(${schema.agentAttachment.size}), 0)` })
+						.from(schema.agentAttachment)
+						.where(eq(schema.agentAttachment.userId, input.userId));
+					if (Number(account?.totalBytes ?? 0) + input.data.byteLength > MAX_ACCOUNT_ATTACHMENT_BYTES)
+						throw new ORPCError("BAD_REQUEST", {
+							message: "Your assistant attachments use all their storage. Delete conversations you no longer need.",
+						});
 
 					// ponytail: hold the thread lock during storage I/O; reserve quota first if uploads contend.
 					storageAttempted = true;
