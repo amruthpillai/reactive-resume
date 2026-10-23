@@ -4,6 +4,14 @@ import { ORPCError } from "@orpc/client";
 import { generateText } from "ai";
 import { safetySystemPrompt } from "@reactive-resume/ai/prompts";
 
+// A provider that stops responding can't hold a standalone request open forever. Streamed chats have their own budgets.
+const AI_REQUEST_TIMEOUT_MS = 300_000;
+
+export function aiDeadline(signal?: AbortSignal) {
+	const timeout = AbortSignal.timeout(AI_REQUEST_TIMEOUT_MS);
+	return signal ? AbortSignal.any([signal, timeout]) : timeout;
+}
+
 export type GenerateJsonPrompt = {
 	system?: string;
 	prompt: string;
@@ -24,7 +32,7 @@ export async function generateJson<T>(
 ): Promise<T> {
 	const { text } = await generateText({
 		model,
-		...(signal ? { abortSignal: signal } : {}),
+		abortSignal: aiDeadline(signal),
 		system: `${safetySystemPrompt}\n\n${system ?? ""}`,
 		messages: [{ role: "user", content: prompt }],
 	});

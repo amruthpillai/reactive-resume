@@ -1,7 +1,11 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-/** The assistant's reply as Markdown. Memoized on the text, so finished replies stop re-rendering while one streams. */
+/**
+ * The assistant's reply as Markdown. Memoized on the text, so finished replies stop re-rendering while one streams.
+ * Images render as their alt text: a reply shaped by text the model read (a page, a posting) could otherwise load an
+ * image URL carrying the user's data the moment it appears.
+ */
 export const AssistantMarkdown = function AssistantMarkdown({ text }: { text: string }) {
 	return (
 		<ReactMarkdown
@@ -35,6 +39,7 @@ export const AssistantMarkdown = function AssistantMarkdown({ text }: { text: st
 				),
 				th: ({ children }) => <th className="border border-line px-2 py-1 font-semibold">{children}</th>,
 				td: ({ children }) => <td className="border border-line px-2 py-1 align-top">{children}</td>,
+				img: ({ alt }) => alt ?? null,
 			}}
 		>
 			{text}

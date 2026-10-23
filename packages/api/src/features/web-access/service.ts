@@ -7,8 +7,9 @@ import type {
 } from "./contracts";
 import { env } from "@reactive-resume/env/server";
 import { rateLimitConfig } from "@reactive-resume/utils/rate-limit";
+import { abortable } from "@reactive-resume/utils/url-security.node";
 import { createRateLimiter } from "../../redis";
-import { abortable, assertPublicTarget, htmlToText, readBuiltinPage } from "./builtin";
+import { assertPublicTarget, htmlToText, readBuiltinPage } from "./builtin";
 import { MAX_SEARCH_QUERY_CHARS, MAX_SEARCH_RESULTS, WEB_ACCESS_DEADLINE_MS, WebAccessError } from "./contracts";
 import { readExa, searchExa } from "./exa";
 import { readFirecrawl, searchFirecrawl } from "./firecrawl";

@@ -1,7 +1,7 @@
 import type { AIProvider } from "@reactive-resume/ai/types";
 import { AI_PROVIDER_DEFAULT_BASE_URLS } from "@reactive-resume/ai/types";
 import { env } from "@reactive-resume/env/server";
-import { isPrivateOrLoopbackHost, parseUrl } from "@reactive-resume/utils/url-security.node";
+import { fetchPublic, isPrivateOrLoopbackHost, parseUrl } from "@reactive-resume/utils/url-security.node";
 
 type ResolveAiBaseUrlInput = {
 	provider: AIProvider;
@@ -28,4 +28,12 @@ export function resolveAiBaseUrl(input: ResolveAiBaseUrlInput) {
 	if (!baseURL) throw new Error("INVALID_AI_BASE_URL");
 
 	return assertSafeUrl(baseURL, "INVALID_AI_BASE_URL", { allowUnsafe: env.FLAG_ALLOW_UNSAFE_AI_BASE_URL });
+}
+
+/**
+ * Where a user chooses the endpoint, requests may only reach public addresses, checked when each connection opens, and
+ * never follow redirects. Server AI (`AI_PROVIDER`) and the unsafe flag are operator choices, so they use plain fetch.
+ */
+export function aiTransport(): { fetch?: typeof fetch } {
+	return env.AI_PROVIDER || env.FLAG_ALLOW_UNSAFE_AI_BASE_URL ? {} : { fetch: fetchPublic };
 }

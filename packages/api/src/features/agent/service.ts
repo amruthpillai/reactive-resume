@@ -748,8 +748,9 @@ function createAgent(input: {
 		tab: WorkspaceTab | undefined;
 		offers: Awaited<ReturnType<typeof careerService.savedItems>>;
 		sourceMessageId: string | undefined;
-		allowedSources: Set<string>;
 	};
+	/** Pages the model may read: links in the conversation or this message, and results it found by searching. */
+	allowedSources: Set<string>;
 	userId: string;
 	threadId: string;
 	/** Null when the message leaves the document out. */
@@ -797,7 +798,7 @@ function createAgent(input: {
 		};
 
 	const { document } = input;
-	const allowedSources = input.career?.allowedSources ?? new Set<string>();
+	const { allowedSources } = input;
 	if (input.career?.shareApplication) {
 		const application = input.career.context.application;
 		if (application?.sourceUrl) allowedSources.add(application.sourceUrl);
@@ -825,8 +826,9 @@ function createAgent(input: {
 				return result;
 			}),
 			readPage: timedToolHandler("read_page", async (url: string, signal: AbortSignal) => {
-				if (input.career && !allowedSources.has(url))
-					throw new Error("Read only retrieved URLs or public links supplied by the user.");
+				// Text the model reads (pages, attachments, postings) can ask it to put data in a URL; an allowlist keeps
+				// every request to a page the user or a search chose.
+				if (!allowedSources.has(url)) throw new Error("Read only retrieved URLs or public links supplied by the user.");
 				const { html: _html, ...page } = await readPage(url, {
 					connection: input.connection,
 					userId: input.userId,
@@ -1378,13 +1380,13 @@ export const agentService = {
 											)
 										: [],
 									sourceMessageId,
-									allowedSources: new Set([
-										...messages.flatMap((message) => agentWebSources(message).map((source) => source.url)),
-										...(messageText(input.message).match(/https?:\/\/[^\s<>")]+/g) ?? []),
-									]),
 								},
 							}
 						: {}),
+					allowedSources: new Set([
+						...messages.flatMap((message) => agentWebSources(message).map((source) => source.url)),
+						...(messageText(input.message).match(/https?:\/\/[^\s<>")]+/g) ?? []),
+					]),
 					posting,
 					connection,
 					search,

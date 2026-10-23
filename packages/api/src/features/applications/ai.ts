@@ -8,7 +8,7 @@ import { generateId, slugify } from "@reactive-resume/utils/string";
 import { protectedProcedure } from "../../context";
 import { aiRequestRateLimit } from "../../middleware/rate-limit";
 import { aiProvidersService } from "../ai-providers/service";
-import { generateJson as sharedGenerateJson } from "../ai/generate-json";
+import { aiDeadline, generateJson as sharedGenerateJson } from "../ai/generate-json";
 import { getModel } from "../ai/service";
 import { coverLetterService } from "../cover-letters/service";
 import { resumeService } from "../resume/service";
@@ -85,6 +85,7 @@ export async function generatePlainText(model: Awaited<ReturnType<typeof resolve
 	try {
 		const { text } = await generateText({
 			model,
+			abortSignal: aiDeadline(),
 			system: safetySystemPrompt,
 			messages: [{ role: "user", content: prompt }],
 		});

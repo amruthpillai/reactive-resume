@@ -1,8 +1,20 @@
+import { createServer } from "node:http";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
-import { fetchWorkerPublicUrl, isAllowedOAuthRedirectUri, isPrivateOrLoopbackHost } from "./url-security.node";
+import {
+	fetchPublic,
+	fetchWorkerPublicUrl,
+	isAllowedOAuthRedirectUri,
+	isPrivateOrLoopbackHost,
+} from "./url-security.node";
 
 const dns = vi.hoisted(() => ({ lookup: vi.fn(), resolve4: vi.fn(), resolve6: vi.fn() }));
 vi.mock("node:dns/promises", () => dns);
+// The socket's own lookup: a public-looking name that answers with a private address.
+vi.mock("node:dns", async (original) => ({
+	...(await original<typeof import("node:dns")>()),
+	lookup: (_hostname: string, _options: unknown, callback: (error: null, addresses: object[]) => void) =>
+		callback(null, [{ address: "127.0.0.1", family: 4 }]),
+}));
 
 describe("isPrivateOrLoopbackHost", () => {
 	it.each([
@@ -192,4 +204,24 @@ describe("fetchWorkerPublicUrl", () => {
 			expect(network).toHaveBeenCalledTimes(1);
 		},
 	);
+});
+
+describe("fetchPublic", () => {
+	it("refuses a public-looking host whose address is private when the connection opens", async () => {
+		const reached = vi.fn();
+		const server = createServer((_request, response) => {
+			reached();
+			response.end("internal");
+		});
+		await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+		const { port } = server.address() as { port: number };
+		try {
+			await expect(fetchPublic(`http://ai.example.test:${port}/v1/chat`, { method: "POST" })).rejects.toMatchObject({
+				cause: "unsafe-url",
+			});
+			expect(reached).not.toHaveBeenCalled();
+		} finally {
+			server.close();
+		}
+	});
 });
