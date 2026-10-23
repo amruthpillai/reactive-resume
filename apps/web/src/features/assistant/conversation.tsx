@@ -621,6 +621,8 @@ type ComposerProps = {
 	ensureThread?: () => Promise<string>;
 	onSend: (text: string, attachments?: ChatAttachment[]) => void;
 	onStop: () => void;
+	/** Text the box starts with (a link's `?ask=`); the user still presses Send. */
+	initialText?: string | undefined;
 };
 
 /**
@@ -630,7 +632,7 @@ type ComposerProps = {
 export function Composer(props: ComposerProps) {
 	const { document, context, onContextChange, streaming, disabled } = props;
 	const id = useId();
-	const [text, setText] = useState("");
+	const [text, setText] = useState(props.initialText ?? "");
 	const [attachments, setAttachments] = useState<ChatAttachment[]>([]);
 	const [uploading, setUploading] = useState(false);
 	const fileInput = useRef<HTMLInputElement>(null);

@@ -106,9 +106,12 @@ const BASE_SECURITY_HEADERS = {
 	"Content-Security-Policy": contentSecurityPolicy(),
 };
 
-/** An HTML page with a policy that allows exactly its own inline scripts. */
-function htmlResponse(html: string, headers: Record<string, string>) {
-	return new Response(html, { headers: { ...headers, "Content-Security-Policy": contentSecurityPolicy(html) } });
+/**
+ * An HTML page whose policy allows exactly the inline scripts of its template. Hashes come from the template before
+ * any resume-derived markup goes in, so text that slipped past escaping could never allow itself.
+ */
+function htmlResponse(html: string, headers: Record<string, string>, template = html) {
+	return new Response(html, { headers: { ...headers, "Content-Security-Policy": contentSecurityPolicy(template) } });
 }
 
 const githubUrl = "https://github.com/reactive-resume/reactive-resume";
@@ -441,6 +444,7 @@ export async function handleWebApp(request: Request, readFile: ReadWebFile = (pa
 		return htmlResponse(
 			shell.replace("</head>", () => `${markup}</head>`),
 			headers,
+			html,
 		);
 	}
 
@@ -465,6 +469,7 @@ export async function handleWebApp(request: Request, readFile: ReadWebFile = (pa
 		return htmlResponse(
 			page.replace("</head>", () => `${markup}</head>`),
 			{ ...headers, Vary: "Cookie" },
+			page,
 		);
 	}
 
@@ -483,6 +488,7 @@ export async function handleWebApp(request: Request, readFile: ReadWebFile = (pa
 			return htmlResponse(
 				withTitle.replace("</head>", () => `${resumeSeo.markup}</head>`),
 				headers,
+				html,
 			);
 		}
 	}

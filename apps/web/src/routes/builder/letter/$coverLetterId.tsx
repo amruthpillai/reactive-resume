@@ -15,8 +15,9 @@ const searchSchema = z.object({
 	mode: z.enum(["write", "design"]).optional().catch(undefined),
 	// Opens History on this version, read-only; Applications' "Open" on what was sent links here.
 	version: z.string().optional().catch(undefined),
-	// Opens the assistant on a conversation ("new" for a fresh one), or on a question to send (⌘K Ask).
+	// Opens the assistant on a conversation ("new" for a fresh one).
 	assistant: z.string().optional().catch(undefined),
+	// Fills the assistant's composer. Never sent without the user pressing Send: anyone can make a link.
 	ask: z.string().max(2_000).optional().catch(undefined),
 	applicationId: z.string().optional().catch(undefined),
 });

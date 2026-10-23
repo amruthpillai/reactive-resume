@@ -113,12 +113,18 @@ export function OAuthConsentPage({ oauthQuery, email }: OAuthConsentPageProps) {
 							<>
 								{scopes.has("api:read") && (
 									<li>
-										<Trans>Read your documents and job applications.</Trans>
+										<Trans>
+											Read your whole account, including a full data export: your profile and email, documents, job
+											applications, career data and coaching conversations.
+										</Trans>
 									</li>
 								)}
 								{scopes.has("api:write") && (
 									<li>
-										<Trans>Create and change your documents and job applications.</Trans>
+										<Trans>
+											Create and change your documents and job applications, seeing each one it changes in full, and
+											change your profile and username.
+										</Trans>
 									</li>
 								)}
 								{scopes.has("api:delete") && (
