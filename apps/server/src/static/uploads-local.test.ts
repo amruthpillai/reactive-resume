@@ -9,6 +9,10 @@ const envMock = vi.hoisted(() => ({
 	LOCAL_STORAGE_PATH: "",
 }));
 vi.mock("@reactive-resume/env/server", () => ({ env: envMock }));
+vi.mock("@reactive-resume/api/features/storage", async (original) => ({
+	...(await original<typeof import("@reactive-resume/api/features/storage")>()),
+	isPublicUploadOwner: async () => true,
+}));
 
 let storage: ReturnType<typeof import("@reactive-resume/api/features/storage").getStorageService>;
 let handleUpload: typeof import("./uploads").handleUpload;

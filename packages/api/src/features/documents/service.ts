@@ -1,6 +1,6 @@
 import type { DocumentSummary } from "../../dto/documents";
 import { ORPCError } from "@orpc/client";
-import { and, count, eq, isNotNull, isNull, lt, sql } from "drizzle-orm";
+import { and, asc, count, eq, isNotNull, isNull, lt, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { applicationService } from "../applications/service";
@@ -91,12 +91,18 @@ async function assertUnlocked(ref: DocumentRef) {
 	return state;
 }
 
-/** Deletes for good: resumes through their own path (storage too), letters directly. */
-async function deleteForGood(ref: DocumentRef) {
-	if (ref.type === "resume") return resumeService.delete({ id: ref.id, userId: ref.userId });
+/**
+ * Deletes for good: resumes through their own path (storage too), letters directly. With `trashedBefore` (Trash
+ * expiry), only a document still in Trash since then goes, whether or not it's locked.
+ */
+async function deleteForGood(ref: DocumentRef, trashedBefore?: Date) {
+	if (ref.type === "resume")
+		return resumeService.delete({ id: ref.id, userId: ref.userId, ...(trashedBefore ? { trashedBefore } : {}) });
 	await db.transaction(async (tx) => {
 		await lockDocumentOwner(tx, ref.userId);
-		await tx.delete(schema.coverLetter).where(owned(ref));
+		await tx
+			.delete(schema.coverLetter)
+			.where(and(owned(ref), trashedBefore ? lt(schema.coverLetter.trashedAt, trashedBefore) : undefined));
 	});
 }
 
@@ -115,8 +121,8 @@ async function purgeExpired(userId: string) {
 	]);
 
 	await Promise.allSettled([
-		...resumes.map(({ id }) => deleteForGood({ userId, type: "resume", id })),
-		...letters.map(({ id }) => deleteForGood({ userId, type: "letter", id })),
+		...resumes.map(({ id }) => deleteForGood({ userId, type: "resume", id }, cutoff)),
+		...letters.map(({ id }) => deleteForGood({ userId, type: "letter", id }, cutoff)),
 	]);
 }
 
@@ -131,17 +137,19 @@ async function purgeExpiredTrash(limit = 50) {
 			.select({ id: schema.resume.id, userId: schema.resume.userId })
 			.from(schema.resume)
 			.where(lt(schema.resume.trashedAt, cutoff))
+			.orderBy(asc(schema.resume.trashedAt))
 			.limit(limit),
 		db
 			.select({ id: schema.coverLetter.id, userId: schema.coverLetter.userId })
 			.from(schema.coverLetter)
 			.where(lt(schema.coverLetter.trashedAt, cutoff))
+			.orderBy(asc(schema.coverLetter.trashedAt))
 			.limit(limit),
 	]);
 
 	await Promise.allSettled([
-		...resumes.map(({ id, userId }) => deleteForGood({ userId, type: "resume", id })),
-		...letters.map(({ id, userId }) => deleteForGood({ userId, type: "letter", id })),
+		...resumes.map(({ id, userId }) => deleteForGood({ userId, type: "resume", id }, cutoff)),
+		...letters.map(({ id, userId }) => deleteForGood({ userId, type: "letter", id }, cutoff)),
 	]);
 }
 

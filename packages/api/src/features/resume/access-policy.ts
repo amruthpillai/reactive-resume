@@ -1,5 +1,7 @@
 import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { ORPCError } from "@orpc/client";
+import { sql } from "drizzle-orm";
+import * as schema from "@reactive-resume/db/schema";
 
 /**
  * Single source of truth for "who can view/edit a resume" and "what fields
@@ -18,6 +20,14 @@ type Resume = {
 };
 
 type Viewer = { id: string } | null;
+
+/**
+ * Query condition: the joined `user` (the content's owner) is not banned. Same rule as `findActiveUser`
+ * in context.ts, so a banned owner's public resumes and pictures stop serving to everyone.
+ */
+export function ownerIsNotBanned() {
+	return sql`(${schema.user.banned} is not true or ${schema.user.banExpires} <= now())`;
+}
 
 export function isOwner(resume: Resume, viewer: Viewer): boolean {
 	return viewer !== null && viewer.id === resume.userId;

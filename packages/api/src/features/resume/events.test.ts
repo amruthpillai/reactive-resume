@@ -122,35 +122,31 @@ const makeFakeClient = () => {
 };
 
 describe("subscribeResumeUpdated", () => {
-	it("yields events whose resumeId and userId match the subscription", async () => {
+	it("shares one listening connection between subscribers and yields only their events", async () => {
 		const client = makeFakeClient();
 		pool.connect.mockResolvedValueOnce(client);
 
-		const controller = new AbortController();
-		const iterator = subscribeResumeUpdated({
-			resumeId: "r1",
-			userId: "u1",
-			signal: controller.signal,
-		});
-
-		// Kick the generator so listeners are installed, then push a notification.
-		const firstP = iterator.next();
-		await Promise.resolve();
-		await Promise.resolve();
-		await Promise.resolve();
+		const first = new AbortController();
+		const second = new AbortController();
+		const mine = subscribeResumeUpdated({ resumeId: "r1", userId: "u1", signal: first.signal });
+		const theirs = subscribeResumeUpdated({ resumeId: "r2", userId: "u2", signal: second.signal });
+		const mineNext = mine.next();
+		const theirsNext = theirs.next();
+		await vi.waitFor(() => expect(client.query).toHaveBeenCalledWith("LISTEN resume_updated"));
+		await new Promise((resolve) => setImmediate(resolve));
 
 		client.__notify("resume_updated", JSON.stringify(exampleEvent));
+		client.__notify("resume_updated", JSON.stringify({ ...exampleEvent, resumeId: "r2", userId: "u2" }));
 
-		const first = await firstP;
-		expect(first.done).toBe(false);
-		expect(first.value).toEqual(exampleEvent);
+		expect(await mineNext).toEqual({ done: false, value: exampleEvent });
+		expect((await theirsNext).value).toMatchObject({ resumeId: "r2" });
+		expect(pool.connect).toHaveBeenCalledTimes(1);
 
-		controller.abort();
-		const last = await iterator.next();
-		expect(last.done).toBe(true);
-
-		expect(client.query).toHaveBeenCalledWith("LISTEN resume_updated");
-		expect(client.query).toHaveBeenCalledWith("UNLISTEN resume_updated");
-		expect(client.release).toHaveBeenCalled();
+		first.abort();
+		second.abort();
+		expect((await mine.next()).done).toBe(true);
+		expect((await theirs.next()).done).toBe(true);
+		// The connection stays for the next subscriber.
+		expect(client.release).not.toHaveBeenCalled();
 	});
 });

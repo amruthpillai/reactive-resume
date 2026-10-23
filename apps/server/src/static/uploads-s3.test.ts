@@ -21,6 +21,11 @@ vi.mock("@reactive-resume/api/context", () => ({
 	resolveAuthenticationFromRequestHeaders: resolveAuthentication,
 	resolveUserFromRequestHeaders: async (headers: Headers) => (await resolveAuthentication(headers))?.user ?? null,
 }));
+const isPublicUploadOwner = vi.hoisted(() => vi.fn());
+vi.mock("@reactive-resume/api/features/storage", async (original) => ({
+	...(await original<typeof import("@reactive-resume/api/features/storage")>()),
+	isPublicUploadOwner,
+}));
 
 const objects = new Map<string, StoredObject>();
 const requests: StorageRequest[] = [];
@@ -69,6 +74,7 @@ beforeAll(async () => {
 
 beforeEach(() => {
 	resolveAuthentication.mockReset();
+	isPublicUploadOwner.mockReset().mockResolvedValue(true);
 	objects.clear();
 	requests.length = 0;
 });
@@ -88,8 +94,18 @@ it("stores images without ACLs and serves them through the signed application pr
 	const response = await handleUpload(new Request(`${envMock.APP_URL}/api/${key}`));
 	expect(response.status).toBe(200);
 	expect(response.headers.get("Content-Type")).toBe("image/png");
+	expect(response.headers.get("Cache-Control")).toBe("public, max-age=3600");
 	expect(new Uint8Array(await response.arrayBuffer())).toEqual(data);
 	expect(requests.at(-1)?.headers.authorization).toMatch(/^AWS4-HMAC-SHA256 /);
+});
+
+it("stops serving a banned owner's public pictures", async () => {
+	const key = "uploads/user-1/pictures/photo.png";
+	await storage.write({ key, data: new Uint8Array([137, 80, 78, 71]), contentType: "image/png" });
+	isPublicUploadOwner.mockResolvedValue(false);
+	const response = await handleUpload(new Request(`${envMock.APP_URL}/api/${key}`));
+	expect(response.status).toBe(404);
+	expect(isPublicUploadOwner).toHaveBeenCalledWith("user-1");
 });
 
 it("stores private attachments without ACLs while keeping them outside the public proxy", async () => {

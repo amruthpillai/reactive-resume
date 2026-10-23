@@ -84,9 +84,14 @@ export const pdfExportRateLimit = createRatelimitMiddleware<ContextWithHeaders, 
 	key: ({ context }, input) => `pdf-export:${getUserKey(context)}:${input.id}`,
 });
 
+// Each document has its own small budget; this one bounds an account rendering many documents.
+const pdfAccountLimiter = createRateLimiter("pdfAccountLimiter", { maxRequests: 30, window: 60 * 1000 });
+
 /** Shared by REST exports and signed download links, at the actual rendering boundary. */
 export async function consumePdfExportLimit(input: { id: string; userId: string; resHeaders?: Headers }) {
-	const result = await productionLimiter(pdfLimiter).limit(`pdf-export:${input.userId}:${input.id}`);
+	const account = await productionLimiter(pdfAccountLimiter).limit(`pdf-export-account:${input.userId}`);
+	const document = await productionLimiter(pdfLimiter).limit(`pdf-export:${input.userId}:${input.id}`);
+	const result = account.success ? document : account;
 	const reset = result.reset ?? Date.now() + 60_000;
 	input.resHeaders?.set("ratelimit-remaining", String(result.remaining));
 	input.resHeaders?.set("ratelimit-reset", String(reset));

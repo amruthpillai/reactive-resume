@@ -2,7 +2,7 @@ import type { ResumeData } from "@reactive-resume/schema/resume/data";
 import { ORPCError } from "@orpc/server";
 import { env } from "@reactive-resume/env/server";
 import { generateFilename } from "@reactive-resume/utils/file";
-import { assertCanView } from "./access-policy";
+import { assertCanView, ownerIsNotBanned } from "./access-policy";
 import { publicRenderRateLimiter } from "./public-render-rate-limit";
 import { parseStoredResumeData } from "./resume-data-validation";
 
@@ -46,7 +46,9 @@ const findResume = async ({ username, slug }: Pick<CreatePublicResumePdfInput, "
 		})
 		.from(schema.resume)
 		.innerJoin(schema.user, eq(schema.resume.userId, schema.user.id))
-		.where(and(matchesSlug(slug), eq(schema.user.username, username), isNull(schema.resume.trashedAt)))
+		.where(
+			and(matchesSlug(slug), eq(schema.user.username, username), isNull(schema.resume.trashedAt), ownerIsNotBanned()),
+		)
 		.orderBy(desc(sql`${schema.resume.slug} = ${slug}`))
 		.limit(1);
 	return resume ?? null;
@@ -59,7 +61,9 @@ const defaultDependencies: PublicResumePdfDependencies = {
 	resolveCurrentUserId: async (requestHeaders) =>
 		(await import("../../context"))
 			.resolveAuthenticationFromRequestHeaders(requestHeaders)
-			.then((authentication) => (authentication?.permissions.includes("read") ? authentication.user.id : undefined)),
+			.then((authentication) => (authentication?.permissions.includes("read") ? authentication.user.id : undefined))
+			// A cross-site session is refused (FORBIDDEN); fall back to the anonymous view, like /uploads.
+			.catch(() => undefined),
 	rateLimiter: publicRenderRateLimiter,
 	renderPdf: async (input) =>
 		(await import("@reactive-resume/pdf/server")).createResumePdfFile({ ...input, uploadOrigin: env.APP_URL }),

@@ -24,6 +24,7 @@ export const resumeStatisticsRouter = {
 			resumeService.statistics.recordDownload({
 				...input,
 				requestHeaders: context.reqHeaders,
+				...(context.trustedClient ? { trustedClient: context.trustedClient } : {}),
 				...ownerViewer(context),
 			}),
 		),

@@ -18,11 +18,17 @@ export function createPublicRenderRateLimiter(
 		maxRequests: options.capacity ?? 6,
 		window: options.refillWindowMs ?? 60_000,
 	});
+	// Each resume has its own budget per visitor; this one bounds a visitor rendering many resumes.
+	const clientLimiter = createRateLimiter("public-render-client", {
+		maxRequests: (options.capacity ?? 6) * 5,
+		window: options.refillWindowMs ?? 60_000,
+	});
 
 	return {
 		async consume(input) {
 			const trustedClient = input.trustedClient.trim() || "unknown";
-			const { success } = await limiter.limit(`${trustedClient}:${input.resumeId}`);
+			const client = await clientLimiter.limit(trustedClient);
+			const { success } = client.success ? await limiter.limit(`${trustedClient}:${input.resumeId}`) : client;
 
 			if (!success) {
 				throw new ORPCError("RATE_LIMIT_EXCEEDED", {

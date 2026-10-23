@@ -1,4 +1,4 @@
-import { on, once } from "node:events";
+import { EventEmitter, on, once } from "node:events";
 import { getPool } from "@reactive-resume/db/client";
 import { getCoordination } from "@reactive-resume/db/coordination";
 import { getRedis, redisKey } from "@reactive-resume/db/redis";
@@ -64,6 +64,28 @@ function readEvent(payload: string | undefined, resumeId: string, userId: string
 
 const isAbort = (error: unknown) => error instanceof Error && error.name === "AbortError";
 
+// Without Redis, one PostgreSQL connection per process listens and fans notifications out in memory. A connection per
+// open editor would use up the pool after a handful of subscribers.
+let pgNotifications: Promise<EventEmitter> | undefined;
+function sharedPgNotifications() {
+	pgNotifications ??= (async () => {
+		const client = await getPool().connect();
+		const emitter = new EventEmitter().setMaxListeners(0);
+		client.on("notification", (notification) => emitter.emit("notification", notification));
+		client.on("error", (error) => {
+			pgNotifications = undefined;
+			client.release(error);
+			emitter.emit("error", error);
+		});
+		await client.query(`LISTEN ${RESUME_UPDATED_CHANNEL}`);
+		return emitter;
+	})().catch((error: unknown) => {
+		pgNotifications = undefined;
+		throw error;
+	});
+	return pgNotifications;
+}
+
 export async function* subscribeResumeUpdated({ resumeId, userId, signal }: SubscribeResumeUpdatedInput) {
 	if (signal?.aborted) return;
 	const shared = getCoordination();
@@ -75,13 +97,13 @@ export async function* subscribeResumeUpdated({ resumeId, userId, signal }: Subs
 		return;
 	}
 	const subscriber = getRedis()?.duplicate({ commandTimeout: 5_000 });
-	const client = subscriber ? undefined : await getPool().connect();
+	const listener = subscriber ? undefined : await sharedPgNotifications();
 	const channel = subscriber ? redisKey(RESUME_UPDATED_CHANNEL) : RESUME_UPDATED_CHANNEL;
 	// `on` queues notifications from now on, so none that arrive while subscribing are lost. It rethrows the
 	// connection's "error" event and ends with an AbortError when the signal aborts.
 	const notifications = subscriber
 		? on(subscriber, "message", { signal })
-		: on(client as NonNullable<typeof client>, "notification", { signal });
+		: on(listener as EventEmitter, "notification", { signal });
 
 	try {
 		if (subscriber) {
@@ -89,7 +111,7 @@ export async function* subscribeResumeUpdated({ resumeId, userId, signal }: Subs
 			const aborted = signal ? once(signal, "abort") : new Promise<never>(() => {});
 			await Promise.race([subscriber.subscribe(channel), aborted]);
 			if (signal?.aborted) return;
-		} else await client?.query(`LISTEN ${RESUME_UPDATED_CHANNEL}`);
+		}
 
 		for await (const args of notifications) {
 			const [notificationChannel, payload] = subscriber
@@ -102,15 +124,8 @@ export async function* subscribeResumeUpdated({ resumeId, userId, signal }: Subs
 	} catch (error) {
 		if (!isAbort(error) || !signal?.aborted) throw error;
 	} finally {
-		if (subscriber) {
-			// The duplicate connection exists only for this subscription; closing it unsubscribes.
-			subscriber.disconnect();
-		} else if (client) {
-			try {
-				await client.query(`UNLISTEN ${RESUME_UPDATED_CHANNEL}`);
-			} finally {
-				client.release();
-			}
-		}
+		// The duplicate connection exists only for this subscription; closing it unsubscribes. The shared PostgreSQL
+		// listener stays for the next subscriber.
+		subscriber?.disconnect();
 	}
 }

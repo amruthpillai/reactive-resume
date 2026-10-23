@@ -8,6 +8,7 @@ import {
 	PutObjectCommand,
 	S3Client,
 } from "@aws-sdk/client-s3";
+import { ORPCError } from "@orpc/server";
 import sharp from "sharp";
 import { env } from "@reactive-resume/env/server";
 import { getLocalDataDirectory } from "@reactive-resume/utils/monorepo.node";
@@ -94,25 +95,60 @@ interface ProcessedImage {
 	contentType: string;
 }
 
+// The real format from the file's first bytes; the client-declared type is never trusted.
+function detectImageType(bytes: Uint8Array): string | undefined {
+	const ascii = (start: number, length: number) => String.fromCharCode(...bytes.subarray(start, start + length));
+	if (ascii(0, 8) === "\x89PNG\r\n\x1a\n") return "image/png";
+	if (bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "image/jpeg";
+	if (ascii(0, 6) === "GIF87a" || ascii(0, 6) === "GIF89a") return "image/gif";
+	if (ascii(0, 4) === "RIFF" && ascii(8, 4) === "WEBP") return "image/webp";
+	return undefined;
+}
+
+const SHARP_INPUT_FORMATS = new Set(["jpeg", "png", "webp", "gif"]);
+
+const invalidImage = () => new ORPCError("BAD_REQUEST", { message: "Pictures must be PNG, JPEG, WebP or GIF images." });
+
 export async function processImageForUpload(file: File): Promise<ProcessedImage> {
-	const fileBuffer = await file.arrayBuffer();
+	const data = new Uint8Array(await file.arrayBuffer());
+	const contentType = detectImageType(data);
+	if (!contentType) throw invalidImage();
 
-	if (env.FLAG_DISABLE_IMAGE_PROCESSING) {
-		return {
-			data: new Uint8Array(fileBuffer),
-			contentType: file.type,
-		};
-	}
+	if (env.FLAG_DISABLE_IMAGE_PROCESSING) return { data, contentType };
 
-	const processedBuffer = await sharp(fileBuffer)
+	// The pixel cap stops a small file from decoding into a huge bitmap.
+	const image = sharp(data, { limitInputPixels: 25_000_000 });
+	const { format } = await image.metadata().catch(() => ({ format: undefined }));
+	if (!format || !SHARP_INPUT_FORMATS.has(format)) throw invalidImage();
+
+	const processedBuffer = await image
 		.resize(800, 800, { fit: "inside", withoutEnlargement: true })
 		.jpeg({ quality: 80 })
-		.toBuffer();
+		.toBuffer()
+		.catch(() => {
+			throw invalidImage();
+		});
 
 	return {
 		data: new Uint8Array(processedBuffer),
 		contentType: "image/jpeg",
 	};
+}
+
+/** Public pictures stop serving once their owner is banned or gone. */
+export async function isPublicUploadOwner(userId: string): Promise<boolean> {
+	const [{ db }, { user }, { and, eq }, { ownerIsNotBanned }] = await Promise.all([
+		import("@reactive-resume/db/client"),
+		import("@reactive-resume/db/schema"),
+		import("drizzle-orm"),
+		import("../resume/access-policy"),
+	]);
+	const [owner] = await db
+		.select({ id: user.id })
+		.from(user)
+		.where(and(eq(user.id, userId), ownerIsNotBanned()))
+		.limit(1);
+	return owner !== undefined;
 }
 
 class LocalStorageService implements StorageService {
