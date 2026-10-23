@@ -1,6 +1,7 @@
 import { eventIterator } from "@orpc/server";
 import z from "zod";
 import { protectedProcedure } from "../../context";
+import { resumeUpdatesRateLimit, resumeUpdatesUserRateLimit } from "../../middleware/rate-limit";
 import { subscribeResumeUpdated } from "./events";
 import { resumeService } from "./service";
 
@@ -28,6 +29,8 @@ export const updatesRouter = {
 				}),
 			),
 		)
+		.use(resumeUpdatesUserRateLimit)
+		.use(resumeUpdatesRateLimit)
 		.handler(async function* ({ context, input, signal }) {
 			const resume = await resumeService.getById({ id: input.id, userId: context.user.id });
 

@@ -46,5 +46,7 @@ export const rateLimitConfig = {
 		storageUpload: { maxRequests: 20, window: 60 * 1000 },
 		storageDelete: { maxRequests: 30, window: 60 * 1000 },
 		resumeMutations: { maxRequests: 300, window: 60 * 1000 },
+		resumeUpdates: { maxRequests: 20, window: 60 * 1000 },
+		resumeUpdatesUser: { maxRequests: 60, window: 60 * 1000 },
 	},
 } as const;

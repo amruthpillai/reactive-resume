@@ -50,6 +50,8 @@ const aiLimiter = createRateLimiter("aiLimiter", rateLimitConfig.orpc.aiRequest)
 const storageUploadLimiter = createRateLimiter("storageUploadLimiter", rateLimitConfig.orpc.storageUpload);
 const storageDeleteLimiter = createRateLimiter("storageDeleteLimiter", rateLimitConfig.orpc.storageDelete);
 const resumeMutationLimiter = createRateLimiter("resumeMutationLimiter", rateLimitConfig.orpc.resumeMutations);
+const resumeUpdatesLimiter = createRateLimiter("resumeUpdatesLimiter", rateLimitConfig.orpc.resumeUpdates);
+const resumeUpdatesUserLimiter = createRateLimiter("resumeUpdatesUserLimiter", rateLimitConfig.orpc.resumeUpdatesUser);
 const accountLimiter = createRateLimiter("accountLimiter", {
 	maxRequests: rateLimitConfig.betterAuth.global.max,
 	window: rateLimitConfig.betterAuth.global.window * 1000,
@@ -128,4 +130,14 @@ const pdfAnalysisLimiter = createRateLimiter("pdfAnalysisLimiter", rateLimitConf
 export const pdfAnalysisRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
 	limiter: productionLimiter(pdfAnalysisLimiter),
 	key: ({ context }) => `pdf-analysis:${getClientKey(context.trustedClient)}`,
+});
+
+export const resumeUpdatesRateLimit = createRatelimitMiddleware<ContextWithHeaders, { id: string }>({
+	limiter: productionLimiter(resumeUpdatesLimiter),
+	key: ({ context }, input) => `resume-updates:${getUserKey(context)}:${input.id}`,
+});
+
+export const resumeUpdatesUserRateLimit = createRatelimitMiddleware<ContextWithHeaders, unknown>({
+	limiter: productionLimiter(resumeUpdatesUserLimiter),
+	key: ({ context }) => `resume-updates-user:${getUserKey(context)}`,
 });

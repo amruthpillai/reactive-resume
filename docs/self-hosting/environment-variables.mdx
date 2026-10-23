@@ -203,8 +203,10 @@ Shared credentials stay in the environment and do not require `ENCRYPTION_SECRET
 Redis is optional on a single server. Without it, everything works, with these limits:
 
 - An Assistant reply that is interrupted by a page reload can't be picked up again.
-- Rate limits, **Stop** on a running Assistant reply, live updates between open tabs and the check that counts each
-  public resume view once an hour are kept in the memory of one server process.
+- Rate limits, **Stop** on a running Assistant reply and the check that counts each public resume view once an hour
+  are kept in the memory of one server process.
+- Live resume updates fall back to PostgreSQL `LISTEN`/`NOTIFY`, sharing a single connection per server process
+  across all active subscriptions.
 
 Set `REDIS_URL` when you run more than one server process, or when you want replies to survive a reload. When Redis is
 configured, the [health endpoint](/self-hosting/docker#check-the-health-endpoint) also checks it.

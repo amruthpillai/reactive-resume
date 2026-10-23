@@ -1,12 +1,15 @@
-import { EventEmitter } from "node:events";
-import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { EventEmitter, getEventListeners } from "node:events";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vite-plus/test";
+import { Pool } from "pg";
 
 const pool = vi.hoisted(() => ({
 	query: vi.fn().mockResolvedValue(undefined),
 	connect: vi.fn(),
 }));
+// Tests that need real checkout limits swap in a real pg Pool here.
+const database = vi.hoisted(() => ({ pool: undefined as unknown }));
 
-vi.mock("@reactive-resume/db/client", () => ({ getPool: () => pool }));
+vi.mock("@reactive-resume/db/client", () => ({ getPool: () => database.pool ?? pool }));
 const redis = vi.hoisted(() => ({ getRedis: vi.fn(), publish: vi.fn(), duplicate: vi.fn() }));
 vi.mock("@reactive-resume/db/redis", () => ({
 	getRedis: redis.getRedis,
@@ -152,5 +155,217 @@ describe("subscribeResumeUpdated", () => {
 		expect(client.query).toHaveBeenCalledWith("LISTEN resume_updated");
 		expect(client.query).toHaveBeenCalledWith("UNLISTEN resume_updated");
 		expect(client.release).toHaveBeenCalled();
+	});
+});
+
+type Callback = (error: Error | null, result?: unknown) => void;
+
+/** Stands in for a Postgres socket; the Pool around it is the real pg-pool with its checkout limits. */
+class FakePostgresSocket extends EventEmitter {
+	static opened: FakePostgresSocket[] = [];
+	listening = false;
+	_queryable = true;
+	_ending = false;
+
+	constructor() {
+		super();
+		FakePostgresSocket.opened.push(this);
+	}
+
+	connect(callback?: Callback) {
+		if (callback) return void setImmediate(() => callback(null));
+		return Promise.resolve();
+	}
+
+	query(text: unknown, values?: unknown, callback?: Callback) {
+		if (text === "LISTEN resume_updated") this.listening = true;
+		if (text === "UNLISTEN resume_updated") this.listening = false;
+		const done = typeof values === "function" ? (values as Callback) : callback;
+		const result = { rows: [], rowCount: 0 };
+		if (done) return void setImmediate(() => done(null, result));
+		return Promise.resolve(result);
+	}
+
+	notify(event: typeof exampleEvent) {
+		this.emit("notification", { channel: "resume_updated", payload: JSON.stringify(event) });
+	}
+
+	end(callback?: () => void) {
+		callback?.();
+		return Promise.resolve();
+	}
+}
+
+const tick = () => new Promise((resolve) => setTimeout(resolve, 20));
+
+describe("Postgres resume subscriptions share one connection", () => {
+	let realPool: Pool;
+	type Handle = {
+		controller: AbortController;
+		iterator: ReturnType<typeof subscribeResumeUpdated>;
+		next: Promise<IteratorResult<unknown>>;
+	};
+	const active: Handle[] = [];
+
+	beforeEach(() => {
+		FakePostgresSocket.opened = [];
+		realPool = new Pool({ max: 10, connectionTimeoutMillis: 200, Client: FakePostgresSocket as never });
+		database.pool = realPool;
+	});
+
+	afterEach(async () => {
+		for (const handle of active.splice(0)) {
+			handle.controller.abort();
+			await handle.iterator.return().catch(() => {});
+		}
+		await tick();
+		database.pool = undefined;
+		await realPool.end();
+	});
+
+	function open(resumeId: string) {
+		const controller = new AbortController();
+		const iterator = subscribeResumeUpdated({ resumeId, userId: "u1", signal: controller.signal });
+		const handle = { controller, iterator, next: iterator.next() };
+		active.push(handle);
+		return handle;
+	}
+
+	it("keeps the pool available to other queries with more open builders than pool slots", async () => {
+		const subscriptions = Array.from({ length: 20 }, (_, index) => open(`r${index}`));
+		for (const subscription of subscriptions) subscription.next.catch(() => {});
+		await tick();
+
+		expect(realPool.totalCount).toBe(1);
+		await expect(realPool.query("SELECT 1")).resolves.toBeDefined();
+	});
+
+	it("delivers each subscription its own resume's events, then returns the connection when the last one leaves", async () => {
+		const first = open("r1");
+		const second = open("r2");
+		await tick();
+		const [socket] = FakePostgresSocket.opened;
+		socket?.notify({ ...exampleEvent, resumeId: "r2" });
+		socket?.notify(exampleEvent);
+
+		expect(await first.next).toEqual({ done: false, value: exampleEvent });
+		expect(await second.next).toEqual({ done: false, value: { ...exampleEvent, resumeId: "r2" } });
+
+		first.controller.abort();
+		expect((await first.iterator.next()).done).toBe(true);
+		expect(socket?.listening).toBe(true);
+
+		second.controller.abort();
+		expect((await second.iterator.next()).done).toBe(true);
+		expect(socket?.listening).toBe(false);
+		expect(socket?.listenerCount("notification")).toBe(0);
+		expect(realPool.idleCount).toBe(1);
+		expect(realPool.totalCount).toBe(1);
+	});
+
+	it("ends every subscription when the shared connection breaks, and the next one reconnects", async () => {
+		const first = open("r1");
+		const second = open("r2");
+		await tick();
+		const [broken] = FakePostgresSocket.opened;
+		broken?.emit("error", new Error("terminating connection due to administrator command"));
+
+		await expect(first.next).rejects.toThrow("terminating connection");
+		await expect(second.next).rejects.toThrow("terminating connection");
+		await tick();
+		expect(realPool.totalCount).toBe(0);
+
+		const retry = open("r1");
+		await tick();
+		const [, fresh] = FakePostgresSocket.opened;
+		expect(fresh?.listening).toBe(true);
+		fresh?.notify(exampleEvent);
+		expect(await retry.next).toEqual({ done: false, value: exampleEvent });
+	});
+
+	it("ends promptly when aborted while connection is hanging", async () => {
+		const controller = new AbortController();
+		const hangingPool = { connect: () => new Promise(() => {}) };
+		database.pool = hangingPool;
+		const iterator = subscribeResumeUpdated({ resumeId: "r1", userId: "u1", signal: controller.signal });
+		const nextPromise = iterator.next();
+		// Abort after readFeed started
+		controller.abort();
+		const result = await Promise.race([
+			nextPromise,
+			new Promise((_, reject) => setTimeout(() => reject(new Error("HUNG")), 200)),
+		]);
+		expect(result).toEqual({ done: true, value: undefined });
+	});
+
+	it("does not leak abort listeners on signal when subscription completes or is closed", async () => {
+		const controller = new AbortController();
+		const iterator = subscribeResumeUpdated({ resumeId: "r1", userId: "u1", signal: controller.signal });
+		const nextPromise = iterator.next();
+		await tick();
+		const [socket] = FakePostgresSocket.opened;
+		socket?.notify(exampleEvent);
+		await nextPromise;
+		await iterator.return();
+		expect(getEventListeners(controller.signal, "abort")).toHaveLength(0);
+	});
+});
+
+describe("Redis resume subscriptions share one subscriber", () => {
+	it("shares one duplicate connection across all open subscriptions", async () => {
+		const subscriber = makeSubscriber();
+		redis.getRedis.mockReturnValue(redis);
+		redis.duplicate.mockReturnValue(subscriber);
+		const controllers = [new AbortController(), new AbortController()];
+		const iterators = controllers.map((controller, index) =>
+			subscribeResumeUpdated({ resumeId: `r${index + 1}`, userId: "u1", signal: controller.signal }),
+		);
+		const nexts = iterators.map((iterator) => iterator.next());
+		await tick();
+		subscriber.send("reactive-resume:preview:resume_updated", JSON.stringify({ ...exampleEvent, resumeId: "r2" }));
+		subscriber.send("reactive-resume:preview:resume_updated", JSON.stringify(exampleEvent));
+
+		expect(await nexts[0]).toEqual({ done: false, value: exampleEvent });
+		expect(await nexts[1]).toEqual({ done: false, value: { ...exampleEvent, resumeId: "r2" } });
+		expect(redis.duplicate).toHaveBeenCalledTimes(1);
+
+		controllers[0]?.abort();
+		await iterators[0]?.next();
+		expect(subscriber.disconnect).not.toHaveBeenCalled();
+		controllers[1]?.abort();
+		await iterators[1]?.next();
+		expect(subscriber.disconnect).toHaveBeenCalledTimes(1);
+	});
+
+	it("ends promptly when signal is already aborted before subscribing", async () => {
+		const controller = new AbortController();
+		controller.abort();
+		const subscriber = makeSubscriber();
+		subscriber.subscribe = vi.fn(() => new Promise(() => {}));
+		redis.getRedis.mockReturnValue(redis);
+		redis.duplicate.mockReturnValue(subscriber);
+
+		const iterator = subscribeResumeUpdated({ resumeId: "r1", userId: "u1", signal: controller.signal });
+		const nextPromise = iterator.next();
+		const result = await Promise.race([
+			nextPromise,
+			new Promise((_, reject) => setTimeout(() => reject(new Error("HUNG")), 200)),
+		]);
+
+		expect(result).toEqual({ done: true, value: undefined });
+		expect(subscriber.subscribe).not.toHaveBeenCalled();
+	});
+
+	it("ends cleanly when aborted with a custom error reason", async () => {
+		const subscriber = makeSubscriber();
+		redis.getRedis.mockReturnValue(redis);
+		redis.duplicate.mockReturnValue(subscriber);
+		const controller = new AbortController();
+		const iterator = subscribeResumeUpdated({ resumeId: "r1", userId: "u1", signal: controller.signal });
+		const nextPromise = iterator.next();
+		await tick();
+		controller.abort(new Error("custom cancellation"));
+		expect(await nextPromise).toEqual({ done: true, value: undefined });
+		expect(subscriber.disconnect).toHaveBeenCalledTimes(1);
 	});
 });
