@@ -100,7 +100,13 @@ export const env = createEnv({
 		STRICT_SCHEMA_CHECK: z.stringbool().default(false),
 
 		// Authentication
-		AUTH_SECRET: z.string().min(1),
+		// It keys every session, auth token and signed link: production needs a random value, not a word.
+		AUTH_SECRET: z
+			.string()
+			.min(1)
+			.refine((value) => process.env.NODE_ENV !== "production" || value.length >= 32, {
+				message: "AUTH_SECRET must be at least 32 characters in production. Generate one with openssl rand -hex 32.",
+			}),
 		BETTER_AUTH_API_KEY: z.string().min(1).optional(),
 		// Domain verification token from the OpenAI plugin portal, served at /.well-known/openai-apps-challenge.
 		OPENAI_APPS_CHALLENGE_TOKEN: z.string().trim().min(1).optional(),

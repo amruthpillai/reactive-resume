@@ -30,6 +30,7 @@ describe.skipIf(!process.env.OAUTH_TEST_DATABASE_URL)("account wrapper ownership
 			"cover_letter_version",
 			"application",
 			"resume_slug_redirect",
+			"released_username",
 		]) {
 			await admin.query(`CREATE TABLE ${schemaName}."${table}" (LIKE public."${table}" INCLUDING ALL)`);
 		}

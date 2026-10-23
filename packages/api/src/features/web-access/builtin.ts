@@ -6,7 +6,7 @@ import {
 	fetchWorkerPublicUrl,
 	isPrivateOrLoopbackHost,
 	parseUrl,
-	publicLookup,
+	publicHttpsAgent,
 	resolveHostAddresses,
 } from "@reactive-resume/utils/url-security.node";
 import { MAX_PAGE_BYTES, WebAccessError } from "./contracts";
@@ -48,7 +48,8 @@ export function readBuiltinPage(
 			url,
 			{
 				method: "GET",
-				lookup: publicLookup,
+				// Its own pool: a reused socket was always opened through publicLookup.
+				agent: publicHttpsAgent(),
 				signal,
 				headers: {
 					accept: "text/html,application/xhtml+xml,text/plain;q=0.9",

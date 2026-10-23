@@ -44,6 +44,17 @@ export const user = pg.pgTable(
 	(t) => [pg.index().on(t.createdAt.asc()), pg.uniqueIndex("user_email_lower_unique_idx").on(lower(t.email))],
 );
 
+/**
+ * Usernames people stopped using (renamed or deleted accounts). Old public links point at them, so for a while only
+ * their previous owner can take one again. A trigger in the migration records them on every rename or deletion.
+ */
+export const releasedUsername = pg.pgTable("released_username", {
+	username: pg.text("username").primaryKey(),
+	/** The account that released it, or null when that account was deleted. */
+	userId: pg.text("user_id"),
+	releasedAt: pg.timestamp("released_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const session = pg.pgTable(
 	"session",
 	{

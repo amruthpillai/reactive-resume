@@ -1,7 +1,8 @@
 import type { AuthProvider } from "@reactive-resume/auth/types";
 import { ORPCError } from "@orpc/client";
+import { symmetricDecrypt } from "better-auth/crypto";
 import { and, eq } from "drizzle-orm";
-import { isCustomOAuthProviderEnabled } from "@reactive-resume/auth/config";
+import { auth, isCustomOAuthProviderEnabled } from "@reactive-resume/auth/config";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { env } from "@reactive-resume/env/server";
@@ -107,8 +108,16 @@ export const authService = {
 			.select({ refreshToken: schema.account.refreshToken, accessToken: schema.account.accessToken })
 			.from(schema.account)
 			.where(and(eq(schema.account.userId, input.userId), eq(schema.account.providerId, "apple")));
+		// Provider tokens are stored encrypted; rows written before that stay plaintext and fail to decrypt.
+		const { secretConfig: key } = await auth.$context;
+		const readToken = async (token: string | null) =>
+			token && (await symmetricDecrypt({ key, data: token }).catch(() => token));
 		for (const tokens of appleAccounts) {
-			if (!(await revokeAppleAuthorization(tokens))) {
+			const plaintext = {
+				refreshToken: await readToken(tokens.refreshToken),
+				accessToken: await readToken(tokens.accessToken),
+			};
+			if (!(await revokeAppleAuthorization(plaintext))) {
 				console.warn(
 					"Apple authorization revocation unavailable during account deletion; manual revocation instructions apply.",
 				);

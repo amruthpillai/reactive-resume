@@ -36,7 +36,8 @@ const blockedIpv4Cidrs: Array<[string, number]> = [
 ];
 
 const blockedIpv6Cidrs: Array<[string, number]> = [
-	["::", 128],
+	// Unspecified, loopback and the deprecated IPv4-compatible block (an IPv4 address in the low 32 bits).
+	["::", 96],
 	["::1", 128],
 	["::ffff:0:0", 96],
 	["64:ff9b::", 96],
@@ -52,6 +53,7 @@ const blockedIpv6Cidrs: Array<[string, number]> = [
 	["5f00::", 16],
 	["fc00::", 7],
 	["fe80::", 10],
+	["fec0::", 10],
 	["ff00::", 8],
 ];
 
@@ -119,6 +121,8 @@ const publicAgent = (protocol: string) => {
 	};
 	return protocol === "https:" ? publicAgents.https : publicAgents.http;
 };
+/** The pooled HTTPS agent that resolves every connection through `publicLookup`. */
+export const publicHttpsAgent = () => publicAgent("https:") as HttpsAgent;
 
 /** Errors the body once it passes the cap, so an endpoint can't fill memory however it frames the response. */
 function capped(body: ReadableStream<Uint8Array>) {
@@ -250,6 +254,8 @@ type OAuthRedirectUriOptions = {
 export function isAllowedOAuthRedirectUri(input: string, trustedOrigins: string[], options?: OAuthRedirectUriOptions) {
 	const parsed = parseUrl(input);
 	if (!parsed) return false;
+	// Script and local schemes stay refused even in unsafe mode.
+	if (["javascript:", "data:", "vbscript:", "file:", "blob:"].includes(parsed.protocol)) return false;
 	if (options?.allowUnsafe) return true;
 	if (parsed.username || parsed.password) return false;
 	if (parsed.hash) return false;

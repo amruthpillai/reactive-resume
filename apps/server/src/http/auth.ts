@@ -1,7 +1,7 @@
 import { isIP } from "node:net";
 import { APIError } from "better-auth/api";
-import { migrateUserStorage } from "@reactive-resume/api/features/storage";
-import { auth, registerAccountLinkHook } from "@reactive-resume/auth/config";
+import { getStorageService, migrateUserStorage } from "@reactive-resume/api/features/storage";
+import { auth, registerAccountLinkHook, registerUserDeleteHook } from "@reactive-resume/auth/config";
 import { env } from "@reactive-resume/env/server";
 import { TRUSTED_IP_HEADERS } from "@reactive-resume/utils/rate-limit";
 import { isAllowedOAuthRedirectUri } from "@reactive-resume/utils/url-security.node";
@@ -20,6 +20,11 @@ export function registerAccountLinkStorageMigration(): () => void {
 }
 
 registerAccountLinkStorageMigration();
+
+// Better Auth's own user deletion (guest cleanup after linking, admin removal) leaves uploads behind.
+registerUserDeleteHook(async (userId) => {
+	await getStorageService().delete(`uploads/${userId}`);
+});
 
 const oauthAuthorizeSanitizedParams = [
 	"prompt",
@@ -115,28 +120,43 @@ async function defaultPublicClientRegistration(request: Request): Promise<Reques
 	});
 }
 
-async function validateDynamicClientRegistrationRequest(request: Request): Promise<Response | undefined> {
+// Every endpoint that writes client metadata; update-client nests it under `update`.
+const clientMetadataPaths = ["/oauth2/register", "/oauth2/create-client", "/oauth2/update-client"];
+
+async function validateOAuthClientMetadata(request: Request): Promise<Response | undefined> {
 	if (request.method !== "POST") return;
 
 	const url = new URL(request.url);
-	if (!url.pathname.endsWith("/oauth2/register")) return;
+	const path = clientMetadataPaths.find((suffix) => url.pathname.endsWith(suffix));
+	if (!path) return;
 
 	const cloned = request.clone();
 	let body: Record<string, unknown>;
 
 	try {
 		const payload: unknown = await cloned.json();
-		if (!isRegistrationPayload(payload)) {
+		const metadata = path === "/oauth2/update-client" && isRegistrationPayload(payload) ? payload.update : payload;
+		if (!isRegistrationPayload(metadata)) {
 			return Response.json({ message: "Invalid registration payload" }, { status: 400 });
 		}
-		body = payload;
+		body = metadata;
 	} catch {
 		return Response.json({ message: "Invalid registration payload" }, { status: 400 });
 	}
 
+	// The provider would POST to this URL on sign-out; nothing here needs back-channel logout.
+	if (body.backchannel_logout_uri !== undefined) {
+		return Response.json(
+			{ error: "invalid_client_metadata", error_description: "backchannel_logout_uri is not supported" },
+			{ status: 400 },
+		);
+	}
+
 	const oauthTrustedOrigins = [new URL(env.APP_URL).origin.toLowerCase()];
 
-	const redirectUris = Array.isArray(body.redirect_uris) ? body.redirect_uris : [];
+	const redirectUris = [body.redirect_uris, body.post_logout_redirect_uris].flatMap((uris) =>
+		Array.isArray(uris) ? uris : [],
+	);
 	for (const redirectUri of redirectUris) {
 		if (
 			typeof redirectUri !== "string" ||
@@ -158,7 +178,7 @@ export async function handleAuth(incomingRequest: Request, trustedClient = "unkn
 	for (const name of TRUSTED_IP_HEADERS) headers.delete(name);
 	if (isIP(trustedClient)) headers.set("X-Real-IP", trustedClient);
 	const request = new Request(incomingRequest, { headers });
-	const registrationValidationError = await validateDynamicClientRegistrationRequest(request);
+	const registrationValidationError = await validateOAuthClientMetadata(request);
 	if (registrationValidationError) return registrationValidationError;
 
 	const sanitizedRequest = sanitizeOAuthAuthorizeRequest(request);

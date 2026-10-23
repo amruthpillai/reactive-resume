@@ -22,6 +22,14 @@ describe("session freshness", () => {
 	});
 });
 
+it.each([
+	["GET", "/token"],
+	["POST", "/delete-anonymous-user"],
+])("does not serve %s %s", async (method, path) => {
+	const response = await auth.handler(new Request(`${env.APP_URL}/api/auth${path}`, { method }));
+	expect(response.status).toBe(404);
+});
+
 it("publishes the configured native authentication HTTP contract", async () => {
 	const response = await auth.handler(new Request(`${env.APP_URL}/api/auth/open-api/generate-schema`));
 	expect(response.status).toBe(200);

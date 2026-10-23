@@ -1,7 +1,7 @@
 import type { SQL } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 import { BetterAuthError } from "better-auth";
-import { and, eq, or, sql } from "drizzle-orm";
+import { and, eq, gt, or, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as schema from "@reactive-resume/db/schema";
 import { generateId, toUsername } from "@reactive-resume/utils/string";
@@ -93,8 +93,27 @@ function appendUsernameSuffix(base: string, suffix: string): string {
 	return `${base.slice(0, maxBaseLength)}${suffix}`;
 }
 
+// Old public links still point at a released username, so for 30 days only its previous owner can take it again.
+const USERNAME_RESERVED_MS = 30 * 24 * 60 * 60 * 1000;
+
+/** Whether someone other than `userId` released this username recently. */
+export async function isUsernameReserved(username: string, userId?: string | null): Promise<boolean> {
+	const [released] = await db
+		.select({ userId: schema.releasedUsername.userId })
+		.from(schema.releasedUsername)
+		.where(
+			and(
+				eq(schema.releasedUsername.username, username.trim().toLowerCase()),
+				gt(schema.releasedUsername.releasedAt, new Date(Date.now() - USERNAME_RESERVED_MS)),
+			),
+		)
+		.limit(1);
+	return Boolean(released) && released?.userId !== userId;
+}
+
 async function isUsernameTaken(candidate: string): Promise<boolean> {
 	const normalizedCandidate = candidate.trim().toLowerCase();
+	if (await isUsernameReserved(normalizedCandidate)) return true;
 
 	// Both columns are stored lowercase (the username plugin normalizes them), so plain equality uses their unique
 	// indexes; `lower()` read every user on each check (#3593).

@@ -2,7 +2,8 @@ import { expect, it, vi } from "vite-plus/test";
 import { createProcedureClient } from "@orpc/server";
 
 const createApiKey = vi.hoisted(() => vi.fn());
-vi.mock("@reactive-resume/auth/config", () => ({ auth: { api: { createApiKey } } }));
+const getSession = vi.hoisted(() => vi.fn(async () => ({ session: { createdAt: new Date() } })));
+vi.mock("@reactive-resume/auth/config", () => ({ auth: { api: { createApiKey, getSession } } }));
 vi.mock("./service", () => ({ authService: {} }));
 const { authRouter } = await import("./router");
 
@@ -40,3 +41,28 @@ it.each(["apiKey", "bearer", "session"] as const)(
 		}
 	},
 );
+
+it("asks for a fresh sign-in before issuing a key from an old session", async () => {
+	createApiKey.mockReset();
+	getSession.mockResolvedValueOnce({ session: { createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) } });
+	const issue = createProcedureClient(authRouter.createApiKey, {
+		context: {
+			locale: "en-US",
+			reqHeaders: new Headers(),
+			authentication: {
+				user: {
+					id: "owner",
+					name: "Owner",
+					email: "owner@example.test",
+					emailVerified: true,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				method: "session",
+				permissions: ["read", "write", "delete"],
+			},
+		},
+	});
+	await expect(issue({ name: "Full", access: "full", expiresIn: null })).rejects.toMatchObject({ code: "FORBIDDEN" });
+	expect(createApiKey).not.toHaveBeenCalled();
+});

@@ -61,7 +61,10 @@ describe("createProfileMapper", () => {
 				},
 			],
 			[],
+			// Each username check first looks for a recent release, then for an account holding it.
+			[],
 			[{ id: "user-1" }],
+			[],
 			[],
 		);
 
@@ -75,7 +78,7 @@ describe("createProfileMapper", () => {
 			avatar_url: "https://example.com/new.png",
 		});
 
-		expect(dbMock.select).toHaveBeenCalledTimes(4);
+		expect(dbMock.select).toHaveBeenCalledTimes(6);
 		expect(dbMock.update).not.toHaveBeenCalled();
 		expect(result).toEqual({
 			name: "Provider Name",

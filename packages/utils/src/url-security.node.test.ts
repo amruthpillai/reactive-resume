@@ -46,6 +46,8 @@ describe("isPrivateOrLoopbackHost", () => {
 	it.each([
 		"::",
 		"::1",
+		"::8.8.8.8",
+		"::808:808",
 		"::ffff:8.8.8.8",
 		"::ffff:0808:0808",
 		"64:ff9b::1",
@@ -65,6 +67,8 @@ describe("isPrivateOrLoopbackHost", () => {
 		"fe80::1",
 		"fe81::1",
 		"febf::1",
+		"fec0::1",
+		"feff::1",
 		"ff00::1",
 		"ff02::1",
 	])("matches non-public/special-use IPv6 address %s", (address) => {
@@ -143,6 +147,13 @@ describe("isAllowedOAuthRedirectUri", () => {
 	it("allows a trusted origin on a private network, for LAN-only self-hosted deployments", () => {
 		expect(isAllowedOAuthRedirectUri("https://192.168.1.5/cb", ["https://192.168.1.5"])).toBe(true);
 	});
+
+	it.each(["javascript:alert(1)", "data:text/html,x", "vbscript:x", "file:///etc/passwd", "blob:https://a.example/x"])(
+		"rejects %s even in unsafe mode",
+		(uri) => {
+			expect(isAllowedOAuthRedirectUri(uri, trustedOrigins, { allowUnsafe: true })).toBe(false);
+		},
+	);
 
 	it("allows public https hosts outside trusted origins, so dynamic client registration works", () => {
 		expect(isAllowedOAuthRedirectUri("https://api.example.com/cb", trustedOrigins)).toBe(true);
