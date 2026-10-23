@@ -1,7 +1,7 @@
 import type { careerScheduleInputSchema } from "@reactive-resume/schema/career";
 import type z from "zod";
 import { ORPCError } from "@orpc/client";
-import { and, asc, desc, eq, inArray, isNull, lte, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, inArray, isNull, lte, notInArray, or, sql } from "drizzle-orm";
 import { db } from "@reactive-resume/db/client";
 import * as tables from "@reactive-resume/db/schema";
 import { sendCareerNotification } from "@reactive-resume/email/transport";
@@ -29,6 +29,11 @@ function assertRunner() {
 			message: "Configure CRON_SECRET on Vercel before enabling schedules.",
 		});
 }
+
+// Enough for a discovery search per field plus briefings and follow-ups for a busy search.
+const MAX_SCHEDULES_PER_USER = 100;
+// Due jobs inspected per claim; owners that are busy or locked are skipped, not waited on.
+const CLAIM_CANDIDATES = 20;
 
 export const careerJobs = {
 	list: (userId: string) =>
@@ -89,6 +94,22 @@ export const careerJobs = {
 					.update(tables.careerJob)
 					.set({ status: "canceled", lease: null, leaseUntil: null })
 					.where(and(eq(tables.careerJob.scheduleId, id), sql`${tables.careerJob.status} in ('queued', 'running')`));
+			}
+			if (!id) {
+				// Serialize this user's creates so the cap holds under concurrent requests.
+				await tx
+					.select({ id: tables.user.id })
+					.from(tables.user)
+					.where(eq(tables.user.id, userId))
+					.for("no key update");
+				const [count] = await tx
+					.select({ total: sql<number>`count(*)::int` })
+					.from(tables.careerSchedule)
+					.where(eq(tables.careerSchedule.userId, userId));
+				if ((count?.total ?? 0) >= MAX_SCHEDULES_PER_USER)
+					throw new ORPCError("BAD_REQUEST", {
+						message: `You can keep up to ${MAX_SCHEDULES_PER_USER} schedules. Delete one you no longer need first.`,
+					});
 			}
 			const [row] = id
 				? await tx
@@ -238,10 +259,14 @@ async function enqueue() {
 	});
 }
 
-function claim() {
+/**
+ * Claims the oldest due job whose owner has no other job running and hasn't been served this tick, so one account's
+ * backlog can't hold up everyone else's schedules. Jobs of banned accounts are canceled.
+ */
+function claim(servedUsers: ReadonlySet<string>) {
 	return db.transaction(async (tx) => {
 		const now = new Date();
-		const [job] = await tx
+		const candidates = await tx
 			.select()
 			.from(tables.careerJob)
 			.where(
@@ -255,43 +280,41 @@ function claim() {
 						),
 						and(eq(tables.careerJob.status, "running"), lte(tables.careerJob.leaseUntil, now)),
 					),
+					servedUsers.size ? notInArray(tables.careerJob.userId, [...servedUsers]) : undefined,
+					sql`not exists (select 1 from career_job as running_job where running_job.user_id = ${tables.careerJob.userId} and running_job.status = 'running' and running_job.id <> ${tables.careerJob.id} and running_job.lease_until > ${now})`,
 				),
 			)
 			.orderBy(asc(tables.careerJob.dueAt))
-			.limit(1)
+			.limit(CLAIM_CANDIDATES)
 			.for("update", { skipLocked: true });
-		if (!job) return null;
-		// Publication takes the user mutex before its job lock; never wait for that mutex in reverse order.
-		const [owner] = await tx
-			.select({ id: tables.user.id })
-			.from(tables.user)
-			.where(eq(tables.user.id, job.userId))
-			.for("no key update", { skipLocked: true });
-		if (!owner) return null;
-		const [running] = await tx
-			.select({ id: tables.careerJob.id })
-			.from(tables.careerJob)
-			.where(
-				and(
-					eq(tables.careerJob.userId, job.userId),
-					eq(tables.careerJob.status, "running"),
-					sql`${tables.careerJob.id} <> ${job.id}`,
-					sql`${tables.careerJob.leaseUntil} > ${now}`,
-				),
-			)
-			.limit(1);
-		if (running) return null;
-		const [claimed] = await tx
-			.update(tables.careerJob)
-			.set({
-				status: "running",
-				attempts: job.attempts + 1,
-				lease: generateId(),
-				leaseUntil: new Date(Date.now() + STALE_AGENT_RUN_TTL_MS + 60_000),
-			})
-			.where(eq(tables.careerJob.id, job.id))
-			.returning();
-		return claimed ?? null;
+		for (const job of candidates) {
+			// Publication takes the user mutex before its job lock; never wait for that mutex in reverse order.
+			const [owner] = await tx
+				.select({ id: tables.user.id, banned: tables.user.banned, banExpires: tables.user.banExpires })
+				.from(tables.user)
+				.where(eq(tables.user.id, job.userId))
+				.for("no key update", { skipLocked: true });
+			if (!owner) continue;
+			if (owner.banned && (!owner.banExpires || owner.banExpires > now)) {
+				await tx
+					.update(tables.careerJob)
+					.set({ status: "canceled", lease: null, leaseUntil: null })
+					.where(eq(tables.careerJob.id, job.id));
+				continue;
+			}
+			const [claimed] = await tx
+				.update(tables.careerJob)
+				.set({
+					status: "running",
+					attempts: job.attempts + 1,
+					lease: generateId(),
+					leaseUntil: new Date(Date.now() + STALE_AGENT_RUN_TTL_MS + 60_000),
+				})
+				.where(eq(tables.careerJob.id, job.id))
+				.returning();
+			if (claimed) return claimed;
+		}
+		return null;
 	});
 }
 
@@ -477,10 +500,16 @@ async function sendPendingEmail() {
 		});
 		if (!notification) break;
 		const [owner] = await db
-			.select({ email: tables.user.email, verified: tables.user.emailVerified })
+			.select({
+				email: tables.user.email,
+				verified: tables.user.emailVerified,
+				banned: tables.user.banned,
+				banExpires: tables.user.banExpires,
+			})
 			.from(tables.user)
 			.where(eq(tables.user.id, notification.userId));
-		if (notification && owner?.verified) {
+		const banned = owner?.banned && (!owner.banExpires || owner.banExpires > new Date());
+		if (notification && owner?.verified && !banned) {
 			try {
 				const sent = await sendCareerNotification({
 					to: owner.email,
@@ -539,9 +568,11 @@ export async function runCareerJobs() {
 			.onConflictDoNothing();
 	await enqueue();
 	let processed = 0;
+	const servedUsers = new Set<string>();
 	for (let i = 0; i < 2; i++) {
-		const job = await claim();
+		const job = await claim(servedUsers);
 		if (!job) break;
+		servedUsers.add(job.userId);
 		try {
 			await execute(job);
 		} catch {
