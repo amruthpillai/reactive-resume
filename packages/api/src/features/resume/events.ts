@@ -122,7 +122,7 @@ async function endFeed(owner: FeedOwner, feed: Feed, error?: unknown) {
 	if (feed.ended) return;
 	feed.ended = true;
 	if (feeds.get(owner) === feed) feeds.delete(owner);
-	feed.cancel.abort();
+	feed.cancel.abort(error);
 	// Subscribers end with the error, so clients reconnect and the next subscription opens a fresh connection.
 	if (error !== undefined && feed.events.listenerCount("error") > 0) feed.events.emit("error", error);
 	await feed.open?.close(error);

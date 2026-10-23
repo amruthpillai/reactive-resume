@@ -125,6 +125,34 @@ const makeFakeClient = () => {
 };
 
 describe("subscribeResumeUpdated", () => {
+	it.each(["postgres", "redis"] as const)(
+		"preserves %s connection errors during setup for every subscriber",
+		async (backend) => {
+			const client = makeFakeClient();
+			const subscriber = makeSubscriber();
+			if (backend === "postgres") {
+				client.query.mockReturnValue(new Promise(() => {}));
+				pool.connect.mockResolvedValueOnce(client);
+			} else {
+				subscriber.subscribe.mockReturnValue(new Promise(() => {}));
+				redis.getRedis.mockReturnValue(redis);
+				redis.duplicate.mockReturnValue(subscriber);
+			}
+			const results = Promise.allSettled(
+				["r1", "r2"].map((resumeId) => subscribeResumeUpdated({ resumeId, userId: "u1" }).next()),
+			);
+			await vi.waitFor(() => expect(backend === "postgres" ? client.query : subscriber.subscribe).toHaveBeenCalled());
+			const error = new Error("connection failed during setup");
+			(backend === "postgres" ? client : subscriber).emit("error", error);
+
+			expect(await results).toEqual([
+				{ status: "rejected", reason: error },
+				{ status: "rejected", reason: error },
+			]);
+			expect(backend === "postgres" ? client.release : subscriber.disconnect).toHaveBeenCalledTimes(1);
+		},
+	);
+
 	it("shares one listening connection between subscribers and yields only their events", async () => {
 		const client = makeFakeClient();
 		pool.connect.mockResolvedValueOnce(client);
