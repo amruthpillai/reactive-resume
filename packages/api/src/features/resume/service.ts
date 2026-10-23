@@ -514,7 +514,8 @@ export const resumeService = {
 				applicationId: schema.resume.applicationId,
 			})
 			.from(schema.resume)
-			.where(activeResumeWhere(input.id, input.userId));
+			// Read-only and owner-scoped, so resumes in Trash stay readable for their thumbnails; writes reject them.
+			.where(and(eq(schema.resume.id, input.id), eq(schema.resume.userId, input.userId)));
 
 		if (!resume) throw new ORPCError("NOT_FOUND");
 

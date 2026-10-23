@@ -678,14 +678,14 @@ describe("tags.list", () => {
 });
 
 describe("getById", () => {
-	it("does not look in Trash for the resume", async () => {
+	it("reads a resume in Trash so its thumbnail can render", async () => {
 		const where = vi.fn((_condition: unknown) => Promise.resolve([]));
 		dbMock.select.mockReturnValueOnce({ from: () => ({ where }) });
 
 		await expect(resumeService.getById({ id: "r1", userId: "u1" })).rejects.toMatchObject({
 			code: "NOT_FOUND",
 		});
-		expect(where.mock.calls[0]?.[0]).toContainEqual(["trashed_at"]);
+		expect(where.mock.calls[0]?.[0]).not.toContainEqual(["trashed_at"]);
 	});
 });
 
