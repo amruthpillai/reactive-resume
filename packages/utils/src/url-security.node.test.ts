@@ -207,6 +207,30 @@ describe("fetchWorkerPublicUrl", () => {
 });
 
 describe("fetchPublic", () => {
+	afterEach(() => {
+		vi.unstubAllGlobals();
+		vi.unstubAllEnvs();
+	});
+
+	it("stops reading a response past its size cap", async () => {
+		vi.stubEnv("CLOUDFLARE", "1");
+		const chunk = new Uint8Array(1024 * 1024);
+		let sent = 0;
+		const endless = new ReadableStream<Uint8Array>({
+			pull(controller) {
+				sent++;
+				controller.enqueue(chunk);
+			},
+		});
+		vi.stubGlobal(
+			"fetch",
+			vi.fn(async () => new Response(endless)),
+		);
+		const response = await fetchPublic("https://ai.example.test/v1/chat", { method: "POST", body: "{}" });
+		await expect(response.arrayBuffer()).rejects.toThrow("Response too large");
+		expect(sent).toBeLessThan(80);
+	});
+
 	it("refuses a public-looking host whose address is private when the connection opens", async () => {
 		const reached = vi.fn();
 		const server = createServer((_request, response) => {

@@ -302,6 +302,20 @@ function claim(servedUsers: ReadonlySet<string>) {
 					.where(eq(tables.careerJob.id, job.id));
 				continue;
 			}
+			// Checked again under the owner's lock: another worker may have claimed this owner's job since the select.
+			const [running] = await tx
+				.select({ id: tables.careerJob.id })
+				.from(tables.careerJob)
+				.where(
+					and(
+						eq(tables.careerJob.userId, job.userId),
+						eq(tables.careerJob.status, "running"),
+						sql`${tables.careerJob.id} <> ${job.id}`,
+						sql`${tables.careerJob.leaseUntil} > ${now}`,
+					),
+				)
+				.limit(1);
+			if (running) continue;
 			const [claimed] = await tx
 				.update(tables.careerJob)
 				.set({

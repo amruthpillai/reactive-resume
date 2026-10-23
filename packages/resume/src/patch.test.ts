@@ -25,6 +25,12 @@ describe("applyResumePatches", () => {
 		);
 	});
 
+	it("reports a copy from a missing path as OPERATION_FROM_UNRESOLVABLE", () => {
+		expect(() =>
+			applyResumePatches(defaultResumeData, [{ op: "copy", from: "/missing/nested", path: "/basics/name" }]),
+		).toThrow(expect.objectContaining({ code: "OPERATION_FROM_UNRESOLVABLE", index: 0 }));
+	});
+
 	it("throws ResumePatchError for unresolvable path", () => {
 		expect(() =>
 			applyResumePatches(defaultResumeData, [{ op: "replace", path: "/does/not/exist", value: "x" }]),

@@ -1,11 +1,13 @@
 import type { LookupAddress } from "node:dns";
 import type { LookupFunction } from "node:net";
+import type { Transform } from "node:stream";
 import { lookup } from "node:dns";
 import { lookup as lookupAddresses, resolve4, resolve6 } from "node:dns/promises";
 import { Agent as HttpAgent, request as httpRequest } from "node:http";
 import { Agent as HttpsAgent, request as httpsRequest } from "node:https";
 import { BlockList, isIP } from "node:net";
 import { Readable } from "node:stream";
+import { createBrotliDecompress, createGunzip, createInflate } from "node:zlib";
 
 function normalizeHostname(hostname: string) {
 	return hostname.trim().toLowerCase();
@@ -117,6 +119,28 @@ const publicAgent = (protocol: string) => {
 	return protocol === "https:" ? publicAgents.https : publicAgents.http;
 };
 
+/** Errors the body once it passes the cap, so an endpoint can't fill memory however it frames the response. */
+function capped(body: ReadableStream<Uint8Array>) {
+	let size = 0;
+	return body.pipeThrough(
+		new TransformStream<Uint8Array, Uint8Array>({
+			transform(chunk, controller) {
+				size += chunk.byteLength;
+				if (size > MAX_PUBLIC_RESPONSE_BYTES) controller.error(new Error("Response too large"));
+				else controller.enqueue(chunk);
+			},
+		}),
+	);
+}
+
+// fetch decodes these itself; a response read from a socket has to be decoded here.
+const decoders: Record<string, () => Transform> = {
+	gzip: createGunzip,
+	"x-gzip": createGunzip,
+	deflate: createInflate,
+	br: createBrotliDecompress,
+};
+
 /**
  * `fetch` for endpoints a user chose. It connects only to public addresses, checking every DNS answer when the socket
  * connects (so rebinding can't swap one in), never follows redirects (the 3xx comes back as is, and credentials never
@@ -128,7 +152,11 @@ export async function fetchPublic(input: RequestInfo | URL, init?: RequestInit):
 	if (!/^https?:$/.test(url.protocol) || url.username || url.password || isPrivateOrLoopbackHost(url.hostname))
 		throw unsafeUrl();
 	// Workers' global_fetch_strictly_public refuses private destinations, including after DNS changes.
-	if (process.env.CLOUDFLARE === "1") return fetch(request, { redirect: "manual" });
+	if (process.env.CLOUDFLARE === "1") {
+		const response = await fetch(request, { redirect: "manual" });
+		const { status, statusText, headers } = response;
+		return new Response(response.body ? capped(response.body) : null, { status, statusText, headers });
+	}
 
 	const body = request.body ? Buffer.from(await request.arrayBuffer()) : null;
 	const headers = Object.fromEntries(request.headers);
@@ -139,25 +167,41 @@ export async function fetchPublic(input: RequestInfo | URL, init?: RequestInit):
 			url,
 			{ method: request.method, headers, agent: publicAgent(url.protocol), signal: request.signal },
 			(incoming) => {
-				let size = 0;
-				incoming.on("data", (chunk: Buffer) => {
-					size += chunk.length;
-					if (size > MAX_PUBLIC_RESPONSE_BYTES) incoming.destroy(new Error("Response too large"));
-				});
-				const responseHeaders = new Headers();
-				for (const [name, value] of Object.entries(incoming.headers)) {
-					for (const item of [value ?? []].flat()) responseHeaders.append(name, item);
+				try {
+					const status = incoming.statusCode ?? 0;
+					// Response accepts 200-599 only; anything else would throw outside this promise.
+					if (status < 200 || status > 599) throw new Error(`Invalid response status ${status}`);
+					const responseHeaders = new Headers();
+					for (const [name, value] of Object.entries(incoming.headers)) {
+						for (const item of [value ?? []].flat()) responseHeaders.append(name, item);
+					}
+					const empty = request.method === "HEAD" || [204, 205, 304].includes(status);
+					let stream: Readable = incoming;
+					const decode =
+						decoders[
+							String(incoming.headers["content-encoding"] ?? "")
+								.trim()
+								.toLowerCase()
+						];
+					if (!empty && decode) {
+						const decoder = decode();
+						incoming.on("error", (error) => decoder.destroy(error));
+						stream = incoming.pipe(decoder);
+						responseHeaders.delete("content-encoding");
+						responseHeaders.delete("content-length");
+					}
+					if (empty) incoming.resume();
+					resolve(
+						new Response(empty ? null : capped(Readable.toWeb(stream) as ReadableStream<Uint8Array>), {
+							status,
+							statusText: incoming.statusMessage ?? "",
+							headers: responseHeaders,
+						}),
+					);
+				} catch (error) {
+					incoming.destroy();
+					reject(error);
 				}
-				const status = incoming.statusCode ?? 502;
-				const empty = request.method === "HEAD" || [204, 205, 304].includes(status);
-				if (empty) incoming.resume();
-				resolve(
-					new Response(empty ? null : (Readable.toWeb(incoming) as ReadableStream<Uint8Array>), {
-						status,
-						statusText: incoming.statusMessage ?? "",
-						headers: responseHeaders,
-					}),
-				);
 			},
 		);
 		outgoing.on("error", (error) => reject(error.cause === "unsafe-url" ? unsafeUrl() : error));

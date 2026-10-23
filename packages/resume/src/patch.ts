@@ -66,6 +66,14 @@ const patchErrorMessages: Record<string, string> = {
 // times would otherwise build gigabytes in memory, so copies stop once the document would pass this size.
 const MAX_PATCHED_DOCUMENT_CHARS = 10_000_000;
 
+function resolvePointer(document: unknown, pointer: string): unknown {
+	try {
+		return jsonpatch.getValueByPointer(document, pointer);
+	} catch {
+		return undefined;
+	}
+}
+
 /**
  * Checks whether an error is a `JsonPatchError` from `fast-json-patch`.
  * The library doesn't export the class directly, so we duck-type it.
@@ -118,7 +126,9 @@ export function applyResumePatches(data: ResumeData, operations: Operation[]): R
 	for (const [index, operation] of operations.entries()) {
 		try {
 			if (operation.op === "copy") {
-				size += JSON.stringify(jsonpatch.getValueByPointer(patched, operation.from) ?? null).length;
+				// An unresolvable `from` is left to applyOperation, which reports it as OPERATION_FROM_UNRESOLVABLE.
+				const copied = resolvePointer(patched, operation.from);
+				if (copied !== undefined) size += JSON.stringify(copied).length;
 			}
 			if (size > MAX_PATCHED_DOCUMENT_CHARS) {
 				throw new ResumePatchError(
