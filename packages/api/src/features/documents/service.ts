@@ -100,7 +100,7 @@ async function deleteForGood(ref: DocumentRef) {
 	});
 }
 
-/** Documents trashed more than 30 days ago go for good. Runs only through the explicit authenticated cleanup operation. */
+/** One account's documents trashed more than 30 days ago go for good; runs when the account lists its documents. */
 async function purgeExpired(userId: string) {
 	const cutoff = new Date(Date.now() - TRASH_RETENTION_MS);
 	const [resumes, letters] = await Promise.all([
@@ -120,11 +120,42 @@ async function purgeExpired(userId: string) {
 	]);
 }
 
-export const documentsService = {
-	/** Every live resume and letter (or everything in Trash), newest edit first. The app filters and sorts them. */
-	purgeExpired,
+/**
+ * Trash keeps documents for 30 days, as the app promises, even for accounts that never come back: each scheduler tick
+ * deletes a batch of expired documents across all accounts.
+ */
+async function purgeExpiredTrash(limit = 50) {
+	const cutoff = new Date(Date.now() - TRASH_RETENTION_MS);
+	const [resumes, letters] = await Promise.all([
+		db
+			.select({ id: schema.resume.id, userId: schema.resume.userId })
+			.from(schema.resume)
+			.where(lt(schema.resume.trashedAt, cutoff))
+			.limit(limit),
+		db
+			.select({ id: schema.coverLetter.id, userId: schema.coverLetter.userId })
+			.from(schema.coverLetter)
+			.where(lt(schema.coverLetter.trashedAt, cutoff))
+			.limit(limit),
+	]);
 
+	await Promise.allSettled([
+		...resumes.map(({ id, userId }) => deleteForGood({ userId, type: "resume", id })),
+		...letters.map(({ id, userId }) => deleteForGood({ userId, type: "letter", id })),
+	]);
+}
+
+export const documentsService = {
+	purgeExpired,
+	purgeExpiredTrash,
+
+	/** Every live resume and letter (or everything in Trash), newest edit first. The app filters and sorts them. */
 	list: async (input: { userId: string; trashed: boolean }): Promise<DocumentSummary[]> => {
+		// Trash never shows a document past its 30 days, whether or not the scheduler has reached it yet.
+		if (input.trashed)
+			await purgeExpired(input.userId).catch((error: unknown) =>
+				console.error("[documents] Trash purge failed", error),
+			);
 		const [resumes, letters] = await Promise.all([
 			db
 				.select({

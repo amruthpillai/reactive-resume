@@ -50,6 +50,11 @@ export const resume = pg.pgTable(
 		pg.index().on(t.createdAt.asc()),
 		pg.index().on(t.userId, t.updatedAt.desc()),
 		pg.index().on(t.isPublic, t.slug, t.userId),
+		// Finds documents past Trash retention without scanning every resume.
+		pg
+			.index()
+			.on(t.trashedAt)
+			.where(sql`${t.trashedAt} is not null`),
 	],
 );
 

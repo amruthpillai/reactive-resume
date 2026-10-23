@@ -10,6 +10,7 @@ import { generateId } from "@reactive-resume/utils/string";
 import { STALE_AGENT_RUN_TTL_MS } from "../agent/runs";
 import { aiProvidersService } from "../ai-providers/service";
 import { readOpenPosting, searchJobPostings } from "../applications/posting";
+import { documentsService } from "../documents/service";
 import { webAccessService } from "../web-access/credentials";
 import { searchScope } from "../web-access/regions";
 import { generateCareer } from "./generate";
@@ -620,5 +621,9 @@ export async function runCareerJobs() {
 		processed++;
 	}
 	await sendPendingEmail();
+	// The scheduler tick is the one periodic job every platform runs; Trash expiry rides on it.
+	await documentsService
+		.purgeExpiredTrash()
+		.catch((error: unknown) => console.error("[documents] Expired Trash purge failed", error));
 	return { processed };
 }
