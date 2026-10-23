@@ -13,6 +13,18 @@ describe("applyResumePatches", () => {
 		expect(result.basics.email).toBe("alice@example.com");
 	});
 
+	it("stops copies before they grow the resume past its size limit", () => {
+		// Each copy doubles the document; forty of them would need terabytes.
+		const operations = Array.from({ length: 40 }, (_, index) => ({
+			op: "copy" as const,
+			from: "",
+			path: `/copy${index}`,
+		}));
+		expect(() => applyResumePatches(defaultResumeData, operations)).toThrow(
+			expect.objectContaining({ code: "PATCH_TOO_LARGE" }),
+		);
+	});
+
 	it("throws ResumePatchError for unresolvable path", () => {
 		expect(() =>
 			applyResumePatches(defaultResumeData, [{ op: "replace", path: "/does/not/exist", value: "x" }]),

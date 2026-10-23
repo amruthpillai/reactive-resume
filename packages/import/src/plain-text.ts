@@ -214,11 +214,19 @@ function headerBoundary(lines: string[]): number {
 	return boundary;
 }
 
+const HEADER_PUNCTUATION = /[\s,;|•·–—-]/;
+
+// A scan instead of `/[…]+$/`, which retries from every character of a long separator run (quadratic time).
+function trimHeaderPunctuation(part: string): string {
+	let start = 0;
+	let end = part.length;
+	while (start < end && HEADER_PUNCTUATION.test(part.charAt(start))) start++;
+	while (end > start && HEADER_PUNCTUATION.test(part.charAt(end - 1))) end--;
+	return part.slice(start, end);
+}
+
 function splitHeaderParts(text: string): string[] {
-	return text
-		.split(STRONG_SEPARATOR)
-		.map((part) => part.replace(/^[\s,;|•·–—-]+|[\s,;|•·–—-]+$/g, "").trim())
-		.filter(Boolean);
+	return text.split(STRONG_SEPARATOR).map(trimHeaderPunctuation).filter(Boolean);
 }
 
 function splitList(lines: string[]): string[] {

@@ -74,10 +74,13 @@ export async function detectImportKind(file: File): Promise<ImportKind | null> {
 		const { unzipSync } = await import("fflate");
 		let accountArchive = false;
 		try {
-			const files = unzipSync(new Uint8Array(await file.arrayBuffer()), {
-				filter: (entry) => entry.name === "account.json",
+			// Only the entry names matter: the filter never selects anything, so nothing is inflated.
+			unzipSync(new Uint8Array(await file.arrayBuffer()), {
+				filter: (entry) => {
+					if (entry.name === "account.json") accountArchive = true;
+					return false;
+				},
 			});
-			accountArchive = "account.json" in files;
 		} catch {
 			// The LinkedIn reader reports malformed archives when the file is read.
 		}
