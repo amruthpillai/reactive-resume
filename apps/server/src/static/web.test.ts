@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import { beforeEach, describe, expect, it, vi } from "vite-plus/test";
 
@@ -160,13 +161,25 @@ describe("web app fallback classification", () => {
 		});
 	});
 
-	it.each(["/", "/alice/resume"])("sets framing and report-only CSP security headers on %s", async (pathname) => {
+	it.each(["/", "/alice/resume"])("sets framing and CSP security headers on %s", async (pathname) => {
 		const response = await handleWebApp(new Request(`https://example.com${pathname}`));
 
 		expect(response.status).toBe(200);
 		expect(response.headers.get("X-Frame-Options")).toBe("DENY");
 		expect(response.headers.get("X-Content-Type-Options")).toBe("nosniff");
-		expect(response.headers.get("Content-Security-Policy-Report-Only")).toContain("frame-ancestors 'none'");
+		expect(response.headers.get("Content-Security-Policy")).toContain("frame-ancestors 'none'");
+	});
+
+	it("allows exactly the page's own inline scripts, by hash", async () => {
+		const response = await handleWebApp(
+			new Request("https://example.com/dashboard"),
+			async () => '<html><script>boot()</script><script type="module" src="/app.js"></script></html>',
+		);
+		const scripts = response.headers.get("Content-Security-Policy")?.match(/script-src ([^;]*)/)?.[1];
+
+		expect(scripts).toBe(
+			`'self' 'wasm-unsafe-eval' 'sha256-${createHash("sha256").update("boot()").digest("base64")}'`,
+		);
 	});
 
 	it.each(["/auth/login", "/dashboard", "/builder/resume-1", "/agent", "/templates", "/templates/azurill.pdf"])(

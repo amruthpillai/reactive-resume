@@ -78,7 +78,8 @@ export function createApp(options: AppOptions = {}) {
 
 	app.use("/auth/*", async (c, next) => {
 		await next();
-		c.header("Content-Security-Policy", "frame-ancestors 'none'");
+		// The app shell already carries a full policy that forbids framing; only add one where it's missing.
+		if (!c.res.headers.has("Content-Security-Policy")) c.header("Content-Security-Policy", "frame-ancestors 'none'");
 		c.header("X-Frame-Options", "DENY");
 		c.header("Referrer-Policy", "no-referrer");
 		c.header("Cache-Control", "no-store");
