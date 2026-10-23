@@ -4,6 +4,45 @@ description: "Release notes for Reactive Resume covering new features, resume bu
 rss: true
 ---
 
+<Update label="v6.0.5" description="23rd October 2026">
+
+## Highlights
+
+- **Keep guest uploads when you create an account.** Photos and attachments now move with your documents when you sign up or sign in, with protection against interrupted transfers and concurrent saves. Thanks to @iwmywn. [a74b0a614](https://github.com/reactive-resume/reactive-resume/commit/a74b0a614)
+- **Choose where to search for work.** Career preferences now let you select search countries, use your timezone's country, or search anywhere. Applications, the assistant and scheduled discovery share these preferences on web and mobile. Thanks to @thelogicmatrix. [f389c8fd1](https://github.com/reactive-resume/reactive-resume/commit/f389c8fd1)
+- **Search through your own SearXNG instance.** Self-hosters can set `WEB_SEARCH_SEARXNG_URL` to supply web search for all users while keeping their existing page-reading connections. Thanks to @thelogicmatrix. [381dd7bc4](https://github.com/reactive-resume/reactive-resume/commit/381dd7bc4)
+
+## Resume Builder, Import & Sharing
+
+- Fixed public PDF downloads, social previews and download counts for resumes whose share links were renamed. Thanks to @iwmywn. [2559c42c7](https://github.com/reactive-resume/reactive-resume/commit/2559c42c7)
+- Preserved all extracted text when imported PDFs place multiple columns on the same row. Thanks to @santhiprakash. [4e6c0f9f5](https://github.com/reactive-resume/reactive-resume/commit/4e6c0f9f5)
+- Fixed page backgrounds in PDF rendering and updated the native PDF engine to match. Installed mobile apps need a new compatible app build for native rendering changes. [06f504509](https://github.com/reactive-resume/reactive-resume/commit/06f504509), [e6127219a](https://github.com/reactive-resume/reactive-resume/commit/e6127219a)
+- Improved live resume updates across open tabs and made subscription limits apply per user, reducing connection contention on busy installations. Thanks to @iwmywn. [21f0b9cca](https://github.com/reactive-resume/reactive-resume/commit/21f0b9cca)
+
+## Mobile & Everyday Use
+
+- Improved mobile navigation, sheet sizing, pull-to-refresh feedback and PDF zoom controls, and added a setting to turn haptics off. [a988406ee](https://github.com/reactive-resume/reactive-resume/commit/a988406ee), [5d75e81b3](https://github.com/reactive-resume/reactive-resume/commit/5d75e81b3), [83bd2b989](https://github.com/reactive-resume/reactive-resume/commit/83bd2b989)
+- Repaired the Android return-to-app flow after browser sign-in and refreshed the native sign-in screen. [b242aadcf](https://github.com/reactive-resume/reactive-resume/commit/b242aadcf)
+- Fixed unlinking connected sign-in providers and stopped resume-update requests after sign-out. Thanks to @iwmywn. [c3d67add4](https://github.com/reactive-resume/reactive-resume/commit/c3d67add4), [17b01399b](https://github.com/reactive-resume/reactive-resume/commit/17b01399b)
+- Kept application titles readable beside long follow-up notes. [0bfb2a264](https://github.com/reactive-resume/reactive-resume/commit/0bfb2a264)
+- Added a public resume-template gallery and clearer template previews to help you choose a layout before starting. [205939cf3](https://github.com/reactive-resume/reactive-resume/commit/205939cf3)
+
+## Translations
+
+- Completed missing web and mobile translations, including search-country preferences and web-access settings. [8ac04cdd6](https://github.com/reactive-resume/reactive-resume/commit/8ac04cdd6)
+
+## Security & Self-Hosting
+
+- Hardened authentication, document access, imports, web fetching and provider connections against unsafe input and unauthorized access, and updated dependencies. **Before upgrading, check your secrets: production requires an `AUTH_SECRET` of at least 32 characters and rejects example values for both `AUTH_SECRET` and `ENCRYPTION_SECRET`.** Keep valid existing secrets unchanged to preserve sessions and encrypted data. [c080f6c0e](https://github.com/reactive-resume/reactive-resume/commit/c080f6c0e)
+- Made password resets revoke sessions, API keys and connected-app grants. Sensitive account actions now require a sign-in from the last 24 hours, and released usernames stay reserved for their previous owner for 30 days. [c080f6c0e](https://github.com/reactive-resume/reactive-resume/commit/c080f6c0e)
+- Enforced the documented 30-day Trash retention period. Startup migrations add username reservations and Trash indexes, and remove messages left behind by previously deleted conversations. Back up your database before upgrading. [c080f6c0e](https://github.com/reactive-resume/reactive-resume/commit/c080f6c0e)
+- Stopped exposing PostgreSQL and storage ports through production Compose by default. Host-side tools need the documented loopback port mappings enabled. Personal AI endpoints must resolve to public addresses without redirects; trusted self-hosted exceptions require the operator's `FLAG_ALLOW_UNSAFE_AI_BASE_URL` setting. [c080f6c0e](https://github.com/reactive-resume/reactive-resume/commit/c080f6c0e)
+- Required successful CI for the exact release commit before container promotion and production deployment. Mobile APK builds remain explicit manual operations. [85a98054c](https://github.com/reactive-resume/reactive-resume/commit/85a98054c)
+
+**Full Changelog**: [v6.0.4...v6.0.5](https://github.com/reactive-resume/reactive-resume/compare/v6.0.4...v6.0.5)
+
+</Update>
+
 <Update label="v6.0.4" description="18th October 2026">
 
 ## Highlights
