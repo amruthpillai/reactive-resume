@@ -84,16 +84,21 @@ export function createApp(options: AppOptions = {}) {
 		c.header("Cache-Control", "no-store");
 	});
 
-	app.use(
-		"/api/openapi/*",
+	// Caps every body parsed in memory before authentication or validation can reject it. RPC allows a batch of
+	// agent attachments (the same 160 MiB ceiling as staged Vercel bodies); auth payloads are small JSON or forms.
+	const limitBody = (maxSize: number) =>
 		bodyLimit({
-			maxSize: 40 * 1024 * 1024,
+			maxSize,
 			onError: (c) => {
 				c.header("Cache-Control", "no-store");
 				return c.json({ defined: false, code: "PAYLOAD_TOO_LARGE", status: 413, message: "Payload too large" }, 413);
 			},
-		}),
-	);
+		});
+	app.use("/api/openapi/*", limitBody(40 * 1024 * 1024));
+	app.use("/api/rpc", limitBody(160 * 1024 * 1024));
+	app.use("/api/rpc/*", limitBody(160 * 1024 * 1024));
+	app.use("/api/auth/*", limitBody(1024 * 1024));
+	app.use("/api/storage/stage", limitBody(64 * 1024));
 
 	app.post("/api/storage/stage", (c) => prepareStagedBody(c.req.raw));
 	app.all("/api/rpc", (c) => withStagedBody(c.req.raw, (request) => handleRpc(request, client(c))));

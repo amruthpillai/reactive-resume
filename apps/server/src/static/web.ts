@@ -204,7 +204,7 @@ function createPageSeoMarkup(options: PageSeoOptions) {
 		<meta name="twitter:title" content="${options.title}">
 		<meta name="twitter:description" content="${options.description}">
 		<meta name="twitter:image" content="${options.imageUrl}">
-		<script type="application/ld+json">${JSON.stringify(options.structuredData)}</script>
+		<script type="application/ld+json">${JSON.stringify(options.structuredData).replaceAll("<", "\\u003c")}</script>
 	`;
 }
 
@@ -236,7 +236,7 @@ async function createPublicResumeSeoMarkup(pathname: string, origin: string) {
 		.catch(() => null);
 	if (!meta) return null;
 
-	const canonicalUrl = `${origin}/${username}/${slug}`;
+	const canonicalUrl = escapeAttribute(`${origin}/${username}/${slug}`);
 	const imageUrl = `${origin}/opengraph/banner.jpg`;
 	const pageTitle = escapeAttribute(`${meta.name} - Reactive Resume`);
 	const title = escapeAttribute(meta.title);
@@ -270,6 +270,9 @@ export const serveWebDistStatic = env.CLOUDFLARE
 				if (context.req.path.startsWith("/assets/") || /^\/videos\/.*-v\d+\.(?:mp4|webp)$/.test(context.req.path)) {
 					context.header("Cache-Control", "public, max-age=31536000, immutable");
 				}
+				// `/index.html` is the app shell too; it must not be frameable either.
+				if (context.req.path.endsWith(".html"))
+					for (const [name, value] of Object.entries(BASE_SECURITY_HEADERS)) context.header(name, value);
 			},
 		});
 

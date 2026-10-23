@@ -17,7 +17,9 @@ const rpcHandler = new RPCHandler(router, {
 });
 
 export async function handleRpc(request: Request, trustedClient: string) {
-	const resHeaders = new Headers();
+	// RPC answers depend on the caller's cookies or credentials (private resumes, unlocked password-protected ones),
+	// so no browser or shared cache may keep them.
+	const resHeaders = new Headers({ "Cache-Control": "private, no-store" });
 	const { response } = await rpcHandler.handle(request, {
 		prefix: "/api/rpc",
 		context: {
@@ -28,6 +30,6 @@ export async function handleRpc(request: Request, trustedClient: string) {
 		},
 	});
 
-	if (!response) return new Response("NOT_FOUND", { status: 404 });
+	if (!response) return new Response("NOT_FOUND", { status: 404, headers: { "Cache-Control": "private, no-store" } });
 	return mergeResponseHeaders(response, resHeaders);
 }
