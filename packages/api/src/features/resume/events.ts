@@ -71,6 +71,7 @@ function raceSignal<T>(promise: Promise<T>, signal?: AbortSignal, onAbort?: (rea
 	if (!signal) return promise;
 	if (signal.aborted) {
 		onAbort?.(signal.reason);
+		promise.catch(() => {});
 		return Promise.reject(signal.reason);
 	}
 	return new Promise<T>((resolve, reject) => {
