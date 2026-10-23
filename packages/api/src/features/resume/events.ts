@@ -72,10 +72,15 @@ function sharedPgNotifications() {
 		const client = await getPool().connect();
 		const emitter = new EventEmitter().setMaxListeners(0);
 		client.on("notification", (notification) => emitter.emit("notification", notification));
+		// A dropped connection is replaced on the next subscription. Open subscriptions end with the error; with none
+		// open, emitting an unheard "error" would crash the process.
 		client.on("error", (error) => {
 			pgNotifications = undefined;
 			client.release(error);
-			emitter.emit("error", error);
+			if (emitter.listenerCount("error") > 0) emitter.emit("error", error);
+		});
+		client.on("end", () => {
+			pgNotifications = undefined;
 		});
 		await client.query(`LISTEN ${RESUME_UPDATED_CHANNEL}`);
 		return emitter;

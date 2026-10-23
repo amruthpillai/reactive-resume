@@ -632,5 +632,10 @@ export async function runCareerJobs() {
 	await documentsService
 		.purgeExpiredTrash()
 		.catch((error: unknown) => console.error("[documents] Expired Trash purge failed", error));
+	// Released usernames are reserved for 30 days; older rows no longer matter.
+	await db
+		.delete(tables.releasedUsername)
+		.where(lte(tables.releasedUsername.releasedAt, new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)))
+		.catch((error: unknown) => console.error("[auth] Released username cleanup failed", error));
 	return { processed };
 }

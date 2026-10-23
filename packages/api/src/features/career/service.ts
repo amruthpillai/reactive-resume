@@ -1094,7 +1094,22 @@ export const careerService = {
 				.select()
 				.from(tables.agentThread)
 				.where(and(eq(tables.agentThread.userId, userId), isNull(tables.agentThread.deletedAt))),
-			db.select().from(tables.agentMessage).where(eq(tables.agentMessage.userId, userId)),
+			// Messages of live conversations only: a deleted conversation's words aren't part of the account any more.
+			db
+				.select()
+				.from(tables.agentMessage)
+				.where(
+					and(
+						eq(tables.agentMessage.userId, userId),
+						inArray(
+							tables.agentMessage.threadId,
+							db
+								.select({ id: tables.agentThread.id })
+								.from(tables.agentThread)
+								.where(and(eq(tables.agentThread.userId, userId), isNull(tables.agentThread.deletedAt))),
+						),
+					),
+				),
 			db.select().from(tables.agentAttachment).where(eq(tables.agentAttachment.userId, userId)),
 			db.select().from(tables.careerOpportunity).where(eq(tables.careerOpportunity.userId, userId)),
 			db.select().from(tables.careerJob).where(eq(tables.careerJob.userId, userId)),

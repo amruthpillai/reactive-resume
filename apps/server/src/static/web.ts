@@ -95,7 +95,8 @@ function contentSecurityPolicy(html = "") {
 		"frame-src 'self' blob:",
 		"frame-ancestors 'none'",
 		"base-uri 'self'",
-		"object-src 'none'",
+		// Print and template previews show a PDF from a blob: URL, which Chromium's viewer loads as a plugin.
+		"object-src blob:",
 	].join("; ");
 }
 

@@ -1233,7 +1233,10 @@ export const agentService = {
 				});
 			}
 			// Files reach the model only as uploaded attachments: a URL here would make the server download it.
-			if (input.message.parts.some((part) => part.type === "file" && !part.url.startsWith(AGENT_ATTACHMENT_URL_PREFIX)))
+			if (
+				input.message.role === "user" &&
+				input.message.parts.some((part) => part.type === "file" && !part.url.startsWith(AGENT_ATTACHMENT_URL_PREFIX))
+			)
 				throw new ORPCError("BAD_REQUEST", { message: "Attach files by uploading them." });
 
 			const loaded = document ? await loadDocument(input.userId, document) : null;

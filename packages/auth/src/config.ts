@@ -346,7 +346,8 @@ const getAuthConfig = () => {
 		hooks: {
 			before: createAuthMiddleware(async (ctx) => {
 				const user = accountUser.getStore();
-				const requestedUsername: unknown = ctx.body?.username;
+				// Sign-up copies displayUsername into username when username is missing, so either one claims the name.
+				const requestedUsername: unknown = ctx.body?.username ?? ctx.body?.displayUsername;
 				if (
 					typeof requestedUsername === "string" &&
 					["/sign-up/email", "/update-user", "/is-username-available"].includes(ctx.path)
