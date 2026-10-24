@@ -60,6 +60,21 @@ Each section has display settings and a list of items:
 
 An empty `title` means the template's default heading in the resume's language.
 
+### Skill items
+
+Every item in a section gets `id` (a UUID string) and `hidden` (a boolean) from the shared base item schema, `baseItemSchema`. A skill item adds:
+
+| Property | Type | Contents |
+| --- | --- | --- |
+| `icon` | string | A Phosphor icon name, or an empty string for no icon. |
+| `iconColor` | string | The icon colour as `rgba(r, g, b, a)`; empty uses the template default. |
+| `name` | string | The skill name. Empty while the entry is a draft, which isn't printed. |
+| `proficiency` | string | Free text such as `"Beginner"`, `"Intermediate"` or `"Advanced"`. |
+| `level` | number | A value from 0 to 5; 0 hides the level icons. Defaults to 0. |
+| `keywords` | string[] | Tags shown below the name. Defaults to an empty array. |
+
+A skill item has no `description` field. Use `keywords` for tools or topics, and the section's `keywordLayout` to print them inline or as a list.
+
 ## Things to know
 
 - **Dates.** Dated items have a `dates` object with `start`, `end` (a year like `"2022"` or a year and month like `"2022-03"`) and `present`. The text in `period` (or `date` for awards, certifications and publications) is still required and still exported, but Reactive Resume rewrites it from `dates` whenever it saves. Write `dates`. See [Using the patch API](/guides/using-the-patch-api#dates).
