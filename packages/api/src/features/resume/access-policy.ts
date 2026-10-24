@@ -29,7 +29,7 @@ export function ownerIsNotBanned() {
 	return sql`(${schema.user.banned} is not true or ${schema.user.banExpires} <= now())`;
 }
 
-export function isOwner(resume: Resume, viewer: Viewer): boolean {
+export function isOwner(resume: { userId: string }, viewer: Viewer): boolean {
 	return viewer !== null && viewer.id === resume.userId;
 }
 
@@ -42,6 +42,21 @@ export function assertCanView(resume: Resume, viewer: Viewer): void {
 	if (isOwner(resume, viewer)) return;
 	if (resume.isPublic) return;
 	throw new ORPCError("NOT_FOUND");
+}
+
+type PasswordProtectedResume = {
+	userId: string;
+	passwordHash?: string | null;
+	hasPassword?: boolean;
+};
+
+/**
+ * Returns true if the viewer must satisfy the password gate before viewing or downloading
+ * the resume. The owner is exempt from their own password challenge.
+ */
+export function requiresPassword(resume: PasswordProtectedResume, viewer: Viewer): boolean {
+	if (isOwner(resume, viewer)) return false;
+	return Boolean(resume.passwordHash || resume.hasPassword);
 }
 
 /**

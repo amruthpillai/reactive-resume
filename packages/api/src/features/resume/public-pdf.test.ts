@@ -58,6 +58,52 @@ describe("createPublicResumePdf", () => {
 		expect(passwordDependencies.renderPdf).not.toHaveBeenCalled();
 	});
 
+	it("exempts the resume owner from the password gate", async () => {
+		const passwordDependencies = dependencies(buildResume({ passwordHash: "hash" }));
+		passwordDependencies.hasPasswordAccess.mockReturnValue(false);
+		passwordDependencies.resolveCurrentUserId.mockResolvedValue("owner-1");
+
+		await expect(createPublicResumePdf(input, passwordDependencies)).resolves.toMatchObject({
+			filename: "resume.pdf",
+		});
+		expect(passwordDependencies.renderPdf).toHaveBeenCalled();
+		expect(passwordDependencies.hasPasswordAccess).not.toHaveBeenCalled();
+	});
+
+	it("allows the owner to render private and password-protected resumes", async () => {
+		const privatePasswordDeps = dependencies(buildResume({ isPublic: false, passwordHash: "hash" }));
+		privatePasswordDeps.hasPasswordAccess.mockReturnValue(false);
+		privatePasswordDeps.resolveCurrentUserId.mockResolvedValue("owner-1");
+
+		await expect(createPublicResumePdf(input, privatePasswordDeps)).resolves.toMatchObject({
+			filename: "resume.pdf",
+		});
+		expect(privatePasswordDeps.renderPdf).toHaveBeenCalled();
+		expect(privatePasswordDeps.hasPasswordAccess).not.toHaveBeenCalled();
+	});
+
+	it("enforces the password gate for authenticated non-owners", async () => {
+		const passwordDependencies = dependencies(buildResume({ passwordHash: "hash" }));
+		passwordDependencies.hasPasswordAccess.mockReturnValue(false);
+		passwordDependencies.resolveCurrentUserId.mockResolvedValue("other-user");
+
+		await expect(createPublicResumePdf(input, passwordDependencies)).rejects.toMatchObject({
+			code: "NEED_PASSWORD",
+		});
+		expect(passwordDependencies.renderPdf).not.toHaveBeenCalled();
+	});
+
+	it("hides private password-protected resumes from authenticated non-owners", async () => {
+		const privatePasswordDeps = dependencies(buildResume({ isPublic: false, passwordHash: "hash" }));
+		privatePasswordDeps.hasPasswordAccess.mockReturnValue(false);
+		privatePasswordDeps.resolveCurrentUserId.mockResolvedValue("other-user");
+
+		await expect(createPublicResumePdf(input, privatePasswordDeps)).rejects.toMatchObject({
+			code: "NOT_FOUND",
+		});
+		expect(privatePasswordDeps.renderPdf).not.toHaveBeenCalled();
+	});
+
 	it("does not look in Trash, so a trashed resume's link stops serving its PDF", async () => {
 		await expect(createPublicResumePdf(input)).rejects.toMatchObject({ code: "NOT_FOUND" });
 		expect(pg.queries.at(-1)?.text).toContain('"resume"."trashed_at" is null');
