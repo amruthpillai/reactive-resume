@@ -22,6 +22,7 @@ import {
 	isOwner,
 	ownerIsNotBanned,
 	redactResumeForViewer,
+	requiresPassword,
 	shouldCountForStatistics,
 } from "./access-policy";
 import { publishResumeUpdated } from "./events";
@@ -229,11 +230,7 @@ const statistics = {
 		if (!resume) throw new ORPCError("NOT_FOUND");
 		const viewer = input.currentUserId ? { id: input.currentUserId } : null;
 		assertCanView(resume, viewer);
-		if (
-			resume.passwordHash &&
-			!isOwner(resume, viewer) &&
-			!hasResumeAccess(input.requestHeaders, resume.id, resume.passwordHash)
-		) {
+		if (requiresPassword(resume, viewer) && !hasResumeAccess(input.requestHeaders, resume.id, resume.passwordHash)) {
 			throw new ORPCError("NEED_PASSWORD", {
 				status: 401,
 				data: { username: input.username, slug: input.slug },
@@ -570,11 +567,7 @@ export const resumeService = {
 		const viewer = input.currentUserId ? { id: input.currentUserId } : null;
 		assertCanView(resume, viewer);
 
-		if (
-			resume.hasPassword &&
-			!isOwner(resume, viewer) &&
-			!hasResumeAccess(input.requestHeaders, resume.id, resume.passwordHash)
-		) {
+		if (requiresPassword(resume, viewer) && !hasResumeAccess(input.requestHeaders, resume.id, resume.passwordHash)) {
 			throw new ORPCError("NEED_PASSWORD", {
 				status: 401,
 				data: { username: input.username, slug: input.slug },

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 import { defaultResumeData } from "@reactive-resume/schema/resume/default";
 import { sampleResumeData } from "@reactive-resume/schema/resume/sample";
-import { assertCanView, redactResumeForViewer } from "./access-policy";
+import { assertCanView, redactResumeForViewer, requiresPassword } from "./access-policy";
 
 describe("assertCanView", () => {
 	it("throws NOT_FOUND for private resume viewed by non-owner", () => {
@@ -65,5 +65,26 @@ describe("redactResumeForViewer", () => {
 		expect(shared.sections.projects.items).toEqual(data.sections.projects.items.slice(0, 1));
 		expect(shared.customSections).toEqual([]);
 		expect(shared.sections.education).toEqual(data.sections.education);
+	});
+});
+
+describe("requiresPassword", () => {
+	it("returns false for the resume owner regardless of password state", () => {
+		expect(requiresPassword({ userId: "u1", passwordHash: "hash" }, { id: "u1" })).toBe(false);
+		expect(requiresPassword({ userId: "u1", hasPassword: true }, { id: "u1" })).toBe(false);
+		expect(requiresPassword({ userId: "u1", passwordHash: null }, { id: "u1" })).toBe(false);
+	});
+
+	it("returns true for non-owner when passwordHash or hasPassword is set", () => {
+		expect(requiresPassword({ userId: "u1", passwordHash: "hash" }, { id: "u2" })).toBe(true);
+		expect(requiresPassword({ userId: "u1", hasPassword: true }, { id: "u2" })).toBe(true);
+		expect(requiresPassword({ userId: "u1", passwordHash: "hash" }, null)).toBe(true);
+		expect(requiresPassword({ userId: "u1", hasPassword: true }, null)).toBe(true);
+	});
+
+	it("returns false when resume has no password", () => {
+		expect(requiresPassword({ userId: "u1", passwordHash: null }, { id: "u2" })).toBe(false);
+		expect(requiresPassword({ userId: "u1", hasPassword: false }, { id: "u2" })).toBe(false);
+		expect(requiresPassword({ userId: "u1", passwordHash: null }, null)).toBe(false);
 	});
 });
